@@ -1484,7 +1484,8 @@ tolled. It closed at 14:27, before the save that carried Session 8 (`b3f68d1`,
   check as still to build are in the 09-10 and 09-09 blocks, written before it
   landed and true on their day.
 - TASKS.md's corpus-split and citation-check boxes are stale -- both landed
-  2026-09-10. Not ticked: that list is his.
+  2026-09-10. Not ticked: that list is his. Ticked later the same day, on his
+  word: "tick the corpus split and citation check boxes".
 
 **Drift** — none in the pass.
 
@@ -1505,4 +1506,5 @@ the next atlas number, which carries the release.yml fix and would be
 `version-tag`'s first firing; the auth wiring -- the glass's `ConfigureAuth`
 still has no caller, and the door's holds stay off until it runs with
 `--auth`, a relaunch and his call; SPEC section 4's five OPEN lines; and his
-own: TASKS' stale boxes and SITTING LAW 6's second half.
+own: TASKS' stale boxes (ticked later the same day, on his word) and SITTING
+LAW 6's second half.

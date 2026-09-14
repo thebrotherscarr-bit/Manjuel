@@ -1087,16 +1087,19 @@ Kept so nobody re-derives them and starts.
     saying something it did not get from a tool. The order is the order I
     would take them; the gate is unchanged and the tag is his.
 
-    [ ]  THE CORPUS SPLIT (C+D, ruled 2026-09-10). semantic_search answers
+    [x]  THE CORPUS SPLIT (C+D, ruled 2026-09-10). semantic_search answers
          from SOURCES by default; the transcripts are a separate explicit
          reach; a log is indexed by its DELIVERY, not its mid-run reasoning.
          Measured: 81.5% of indexed documents and 60.6% of ranked passages
          are old runs; "what does the covenant say" returns eight old runs
          and never the covenant.
-    [ ]  THE CITATION CHECK (SPEC 4.3, s82 finding 4). A claim about what a
+         BUILT 2026-09-10, in 0.1.9 (CHANGELOG "0.1.9 OPENS"), 12 strokes.
+    [x]  THE CITATION CHECK (SPEC 4.3, s82 finding 4). A claim about what a
          tool result SAID, with nothing tying it to the result. The largest
          piece left in the spec; C+D first, because a citation is only worth
          checking once the source is a source.
+         BUILT 2026-09-10, in 0.1.9 (CHANGELOG "THE CITATION CHECK"), 6
+         strokes; SPEC 4.3's second half MET.
     [x]  THE DOOR INVENTS NUMBERS (SPEC 4.7) -- STAMPED 2026-09-10. "35 for
          37"; "300 to 1200 bytes" 2026-09-09. recompose compares the
          delivery's numbers with the run's tool results and stamps the
