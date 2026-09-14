@@ -562,6 +562,11 @@ clock or a lock; no model is asked.
 - **The standup judges seats** (`tests/standup.py`): failed stages, OUT
   OF TIME, the seats a case names, the judge's last word, and THE NUMBER
   CHECK -- a number in the delivery from no tool result is a miss.
+  (2026-09-14: and an error the ENGINE wrote counts as a source. A seat cut
+  at its bound is quoted into the delivery under SEATS THAT FAILED, and that
+  morning's court was faulted for the 92 and the 500 inside the bound's own
+  message. A seat's numbers are judged exactly as before. Stroked:
+  `test_the_engines_own_words_are_a_source`.)
 - **The ruling loop is twelve** (`MAX_RULING_TURNS`, his number); the
   turn's clock is what keeps twelve honest.
 

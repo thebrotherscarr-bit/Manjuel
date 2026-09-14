@@ -259,7 +259,20 @@ def _judge(o: Outcome, live: bool = True) -> None:
         if c.expect_seats and o.seats and o.seats[-1] != c.expect_seats[-1]:
             o.faults.append(f"the last word was {o.seats[-1]}'s, not {c.expect_seats[-1]}'s")
         # THE NUMBER CHECK: a number in the delivery from no tool result.
-        made_up = unsourced_numbers(o.delivery, o.results, c.objective)
+        #
+        # AN ERROR THE ENGINE WROTE IS PART OF WHAT THE RUN RETURNED
+        # (2026-09-14). A seat cut at its bound leaves the ENGINE's message in
+        # StepResult.error, and recompose quotes it into the delivery under
+        # SEATS THAT FAILED. That morning's court was faulted for "500" and
+        # "92", and both were in the bound's own words ("sitting 92: Jesster,
+        # 760s, then a 500"); no seat wrote either. The live guard never sees
+        # that block -- recompose judges the closing seat's words before it
+        # appends anything -- but this harness reads the delivery after. A
+        # check that fires on the estate's own record is one a reviewer
+        # learns to skip.
+        made_up = unsourced_numbers(o.delivery,
+                                    o.results + [err for _, err in o.failed],
+                                    c.objective)
         if made_up and not o.refused:
             # QUOTE THE PHRASE, not just the digits. "15, 2026" reads as a
             # mystery to be investigated; "...2026, 12:15 (local)..." is
@@ -368,6 +381,35 @@ def render(outs: list[Outcome], sess, live: bool) -> str:
     return "\n".join(head)
 
 
+def honour_env(root: Path, live: bool) -> list[str]:
+    """On a LIVE run, read the ground's `.env` as the REPL and the door do,
+    and return the lines they print: KEY NAMES ONLY, never a value (LAW 9).
+
+    FOUND 2026-09-14. cli.main and serve.main read `.env` before they build a
+    Session; this harness built its own with no read at all, so a dial set in
+    `.env` turned for the REPL and the door and never for the standup. That
+    morning's standup `git_status` said remote operations OFF
+    (logs/2026-09-14_090438_git_status.md) while the engine's own runs in the
+    record say ALLOWED -- and MANJUEL_GIT_REMOTE is named in `.env`, not in
+    the shell. A standup on other dials than the REPL's measures a
+    configuration nobody runs.
+
+    The old dials are carried AFTER the read, as cli.main does: the carry at
+    import saw only the shell, so a CHAINKIT_* name in `.env` would otherwise
+    be dead (manjuel/__init__.py, measured 2026-09-09).
+
+    NOT ON A DRY RUN. `--dry` is the harness proving itself on a stub, in CI
+    as well as here, and a dry result that depended on the `.env` beside it
+    would prove the file rather than the harness.
+    """
+    if not live:
+        return []
+    from manjuel import carry_old_dials, dotenv
+    lines = dotenv.report(*dotenv.load(Path(root) / ".env"))
+    carry_old_dials()
+    return lines
+
+
 def main() -> int:
     live = "--dry" not in sys.argv
     only = ""
@@ -410,6 +452,8 @@ def main() -> int:
 
     label = {"court": "the court", "partial": "a partial standup"}.get(suite, "the standup")
     print("\n  manjuel — " + label + (" (dry)" if not live else ""))
+    for line in honour_env(ROOT, live):
+        print(line)
     sess = cli.Session()
     if not sess.load():
         return 2

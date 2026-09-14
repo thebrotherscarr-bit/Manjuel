@@ -157,7 +157,12 @@ The pages, in the order the panel lists them:
                        commit body carries the sitting id. A button that
                        shelled out to git would be a second write-path past
                        everything the estate checks.
-    4. Close sitting   pays the toll, writes `ended`, and reaps the engine.
+    4. Close sitting   writes `ended` and reaps the engine, and pays the toll
+                       -- unattended -- if the sitting ran anything. A sitting
+                       that ran nothing closes with no toll: sitting 220,
+                       closed here 2026-09-14 with zero runs, reads
+                       `toll_paid: false`. (Until that day this line said a
+                       close always pays the toll.)
                        DO THIS. A sitting left open is what makes the next
                        Boot refuse.
 

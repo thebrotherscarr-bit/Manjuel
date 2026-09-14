@@ -34,6 +34,139 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### RUNBOOK says what Close sitting pays (operator, 2026-09-14: "keep going")
+
+The last of the diagnostics pass's findings a hand could fix. Docs only; no code
+moved, no restart.
+
+RUNBOOK's four-click loop said step 4, Close sitting, "pays the toll, writes
+`ended`, and reaps the engine". The record disagrees for a sitting that ran
+nothing: sitting 220, booted and closed from the dashboard that morning with
+zero runs, reads `ended` 09:21:46 and `toll_paid: false`. `serve.py`'s own
+account of the wire says a close pays the toll "unattended if runs happened",
+and the 2026-09-09 entry "THE GLASS REACHES THE COUNCIL" records a close with
+one run paying it. The line now carries both halves, and says that until today
+it said a close always pays.
+
+The mirror stayed green over the change: strokes 2358/2358, smoke 60/60,
+`standup --dry` 9/9, buildmap clean.
+
+**Left as found, and named for him:** the dashboard's own words repeat the old
+claim -- the hero's "closing pays its toll", Close's progress line "(the toll is
+paid, `ended` is written)", and the sidebar button's tooltip "pays its toll and
+reaps the engine" (`atlas/webapp/static/js/home.js` and `app.js`).
+
+### Every branch that picks a tool says so, and the stamp stops crediting the objective (operator, 2026-09-14: "keep going")
+
+The second piece of the diagnostics pass's findings. **RESTART REQUIRED** --
+`manjuel/pipeline.py` moved, and an engine opened before this runs the old code.
+
+**THE RECORD SAID THE OBJECTIVE CHOSE A TOOL IT NEVER NAMED.** The court
+(`logs/standup_2026-09-14_091729.md`) asked "should a court of three seats run on
+one model?", and its notes read "dispatched to the reader (asks_the_ground)" and,
+one line later, "intent: objective names `semantic_search`"; the delivery said the
+same: "This objective named `semantic_search`". Sitting 81 fixed that account for
+one branch by setting `named_by` ("chosen by asks_about_a_tool"). Three branches
+set it and four did not -- `is_big_objective`, `names_a_file`,
+`decomposes_to_search`, `asks_the_ground` -- so their picks read as the
+objective's. And the recompose stamp never read `named_by` at all: even
+`asks_about_a_tool`'s pick was stamped "This objective named `skill_search`".
+
+**FIXED AT THE CONTRACT, NOT THE SENTENCE.** `context.py` already documents
+`named_by` as "HOW that skill was chosen, when something other than the objective
+naming it did the choosing", and `decided_call`'s docstring reads it that way. The
+four branches now name themselves; the intent note and the decided note follow
+without a change of their own ("`semantic_search` chosen by asks_the_ground",
+"decided by arithmetic (names_a_file)"); and the stamp reads "`X` was chosen for
+this objective (<branch>)" unless the objective named the tool itself (`named_by`
+empty, or "the words").
+
+**`named_by` IS LOAD-BEARING, SO DISPATCH WAS HELD STILL AND MEASURED.** Two
+things read it. `decided_call`: none of the tools those four branches pick can be
+decided by its rules -- each declares an argument, only `index_ground` has a
+Takes: rule, and the checked-file clause does not read `named_by`. And the
+follow-up withdrawal, which read `""` as a guess: the four names are added to its
+list, so a follow-up withdraws exactly what it withdrew before, in the same words.
+MEASURED RATHER THAN ARGUED: 42 objectives, each fresh and inside a conversation,
+through `run_pipeline` on stub models before and after the change -- 84 runs, and
+not one changed its named tool, flags, seats, calls, decided call, withdrawal,
+notes or delivery except for who is credited; 38 now credit the branch that chose.
+
+Strokes 2343 -> 2358 on the mirror: `test_every_branch_that_chooses_a_tool_says_so`
+-- each of the five sites credited; a checked file still decided, naming its
+branch; the court's stamp and `asks_about_a_tool`'s crediting their chooser; a tool
+the objective named (`named_by` "" and "the words") still stamped as the
+objective's; an alias (`read pipelines.md`) still the objective's; and a follow-up
+still withdrawing each of the four guesses, with the same note. PROVEN BY
+REVERSAL: seven undos on the mirror -- each branch's line, the follow-up list, the
+stamp -- each turn their own strokes red. THE FIRST RUN OF THAT REVERSAL FOUND THE
+STROKE TOO LOOSE: asserting only "withdrawn" left two follow-ups green over the old
+list, because the branch below it withdraws a search guess under a different
+sentence. The stroke pins the sentence now. And a fixture of mine was wrong on the
+first run: `read pipelines.md` never reaches `names_a_file`, because "read" is an
+alias that names `ground_read` outright. Smoke 60/60, `standup --dry` 9/9,
+BUILDMAP regenerated and `--check` clean.
+
+**LEFT FOR HIM, in one line:** the Router's prompt still says "The objective names
+the skill `X`" for a branch's pick (`_router_prompt`). That is what a model reads,
+not the record, so changing it could change what the Router does.
+
+The release gate on the ground after this pass: still REFUSED 3 of 9 -- strokes,
+smoke and the standup stale, the same three as the entry below. Nothing new
+refuses.
+
+### The standup reads the ground's dials, and stops calling the engine's own numbers invented (operator, 2026-09-14: "address the found issues")
+
+The first piece of the diagnostics pass's findings. Two faults, both in
+`tests/standup.py`, both measured in that morning's live runs. No file in
+`manjuel/` moved; no restart required.
+
+**THE STANDUP NEVER READ `.env`.** `cli.main` and `serve.main` read it before
+they build a Session; the standup built its own with no read at all, so every
+dial set in `.env` turned for the REPL and the door and never for the morning
+set. Measured: the standup's `git_status` said `remote operations: OFF`
+(`logs/2026-09-14_090438_git_status.md`) where the engine's own runs in the
+record say ALLOWED (`logs/2026-09-10_054037_git_status.md`), and
+`MANJUEL_GIT_REMOTE` is named in `.env` and not in the shell -- checked by key
+name, no value read out. A standup on other dials than the REPL's measures a
+configuration nobody runs.
+
+`honour_env(root, live)` reads it the way `cli.main` does -- `dotenv.load`,
+then `carry_old_dials` AFTER the read, because the carry at import saw only
+the shell -- and prints the names it set, never a value (LAW 9). NOT ON A DRY
+RUN: CI runs `standup.py --dry` to prove the harness, and a dry result that
+depended on the `.env` beside it would prove the file.
+
+**THE NUMBER CHECK FAULTED THE ENGINE'S OWN WORDS.** The court
+(`logs/standup_2026-09-14_091729.md`) was faulted, beside its real faults, for
+"numbers in the delivery that no tool returned: 500 ... 92". Both sit in the
+seat bound's own message -- "(LAW 7; sitting 92: Jesster, 760s, then a 500)",
+written by `runtime._seat_refusal` -- which recompose quotes into the delivery
+under SEATS THAT FAILED. No seat wrote either. The engine's live guard never
+sees that block, because recompose judges the closing seat's words before it
+appends anything; the harness judges the delivery after. So the seats' errors
+as the engine wrote them (`Outcome.failed`) now count as sources beside the
+tool results. A seat's numbers are judged exactly as before, and a failed seat
+is still a fault.
+
+Strokes 2331 -> 2343 on the mirror: `test_the_standup_reads_the_grounds_env`
+(a planted `.env` in a temp dir, every name taken back out of the environment
+after; a dry run reads nothing, a live one sets the name and prints it without
+the value, an old `CHAINKIT_` dial in the file turns, and `main()` reads before
+it builds the Session) and `test_the_engines_own_words_are_a_source` (through
+the real recompose and the real seat-bound message: the engine's numbers pass,
+the cut seat is still named, and an invented 46 beside them is still caught).
+PROVEN BY REVERSAL: each of the four halves, undone on the mirror, turns its
+own stroke red. Smoke 60/60, `standup --dry` 9/9, BUILDMAP regenerated and
+`--check` clean. REFUSALS §21 carries the sourcing line, dated.
+
+**NOT LIVE-PROVEN, AND THE GATE SAYS SO.** `release.py --check` on the ground
+after this pass: REFUSED 3 of 9 -- strokes 2333/2333 and smoke 60/60 STALE,
+and the standup's 9/9 before the newest edit -- because `tests/` moved after
+their stamps. That is the gate working. The suites on his terminal and a live
+standup clear it, and the live standup is also the proof of the first half: it
+should print `.env: set ...` before its sitting opens.
+
 ### TASKS: the citation check's two older boxes ticked too (operator, 2026-09-14: "tick those two older citation check boxes too")
 
 The same task under the names it carried before 0.1.9: Layer 2's "A CLAIM ABOUT
