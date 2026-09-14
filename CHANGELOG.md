@@ -34,6 +34,16 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### TASKS: the citation check's two older boxes ticked too (operator, 2026-09-14: "tick those two older citation check boxes too")
+
+The same task under the names it carried before 0.1.9: Layer 2's "A CLAIM ABOUT
+A TOOL RESULT, CARRYING NO CITATION, IS UNCHECKED" (sitting 82, finding 4) and
+the 2026-09-08 OPEN list's "a claim about a tool result with no citation is
+unchecked (s82)". Both ticked on his word, each carrying the same landed line as
+the 0.1.9 box: built 2026-09-10 in 0.1.9, 6 strokes, SPEC 4.3's second half MET.
+The entry below names these two as not ticked, and stands as written -- it was
+true until this one.
+
 ### TASKS: the corpus split and the citation check ticked (operator, 2026-09-14: "tick the corpus split and citation check boxes")
 
 Both boxes in TASKS' 0.1.9 section, on his word -- the list is his, and the
