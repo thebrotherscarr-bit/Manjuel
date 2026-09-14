@@ -375,7 +375,7 @@ when a seat says so.
          DONE WHEN: an overcommitted card says so in words, and the two
          numbers are either the same quantity or labelled as two.
 
-    [ ]  A CLAIM ABOUT A TOOL RESULT, CARRYING NO CITATION, IS UNCHECKED.
+    [x]  A CLAIM ABOUT A TOOL RESULT, CARRYING NO CITATION, IS UNCHECKED.
          Sitting 82, run 3. The Router read the parity logs and told the
          court:
 
@@ -413,6 +413,8 @@ when a seat says so.
          that a check is arithmetic or it is another opinion. What is
          arithmetic here: the Router's testimony is already labelled and
          already sits beside the exact tool text it read.
+         BUILT 2026-09-10, in 0.1.9 (CHANGELOG "THE CITATION CHECK"), 6
+         strokes; SPEC 4.3's second half MET.
 
     [x]  2026-09-07. COVERAGE, NOT EXISTENCE — a partial read spoken as a whole one.
          Named 2026-09-03 after an agent grepped `parity.py`, asserted
@@ -1055,7 +1057,9 @@ Kept so nobody re-derives them and starts.
          6: the rules and every law, directive and context file read, and
          law/SITTING_LAWS_2.md; his seal: python law\law.py direct
     [ ]  the door invents numbers (35 for 37; 34 for 37) -- stamp or reseat
-    [ ]  a claim about a tool result with no citation is unchecked (s82)
+    [x]  a claim about a tool result with no citation is unchecked (s82)
+         BUILT 2026-09-10, in 0.1.9 (CHANGELOG "THE CITATION CHECK"), 6
+         strokes; SPEC 4.3's second half MET.
     [ ]  the door parrots the record's labels / answers the previous
          question / ships an empty flag scaffold
     [ ]  `ground/` on the workspace reader (unjail read_file)
