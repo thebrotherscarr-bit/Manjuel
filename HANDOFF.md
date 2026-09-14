@@ -712,7 +712,8 @@ corrected in place, Session 9 written, and this block.
 boxes are stale, and ticking them is his. The 09-12 block below was to have
 its citation-check line corrected, and it has none; the lines that name the
 check as still to build (09-10, 09-09) were written before it landed on
-2026-09-10, and were true on their day.
+2026-09-10, and were true on their day. Later the same day, on his word, the
+two TASKS boxes were ticked.
 
 **Open, named, not fixed** -- the next hand's list:
 
@@ -725,7 +726,8 @@ check as still to build (09-10, 09-09) were written before it landed on
     DAYBOOK                 no session entry covers 2026-09-10 or 09-11 (77
                             sittings, 126–202); Session 8's header calls
                             2026-09-12 a Friday, and it was a Saturday
-    his                     TASKS' stale boxes; SITTING LAW 6's second half
+    his                     TASKS' stale boxes (ticked later the same day, on
+                            his word); SITTING LAW 6's second half
 
 
 ## HANDOFF FOR 2026-09-12 — read this before anything below it

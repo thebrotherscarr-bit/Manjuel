@@ -34,6 +34,22 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### TASKS: the corpus split and the citation check ticked (operator, 2026-09-14: "tick the corpus split and citation check boxes")
+
+Both boxes in TASKS' 0.1.9 section, on his word -- the list is his, and the
+entry below says why this pass had left them. Both landed 2026-09-10 in 0.1.9:
+the corpus split in "0.1.9 OPENS" (12 strokes), the citation check in "THE
+CITATION CHECK" (6 strokes, SPEC 4.3's second half MET). Each tick carries that
+line beside it, the way its ticked neighbours do.
+
+The four places this pass's record said the boxes were still waiting --
+DAYBOOK Session 9's Found and Next session, HANDOFF 2026-09-14's NOT TOUCHED
+and Open -- keep their words and say they were ticked later the same day.
+
+NOT TICKED: the same citation-check task also stands open under two older
+names -- Layer 2's "A CLAIM ABOUT A TOOL RESULT, CARRYING NO CITATION, IS
+UNCHECKED" and the 2026-09-08 OPEN list's line for it. He named two boxes.
+
 ### The record caught up with its tags (operator, 2026-09-14: "bring the record up to date first")
 
 **v0.1.11 WAS CUT 2026-09-12 15:34, ON c766ce7, AND THIS FILE STILL FILED IT AS
