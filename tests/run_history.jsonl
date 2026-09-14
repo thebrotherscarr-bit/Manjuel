@@ -329,3 +329,5 @@
 {"suite": "strokes", "at": 1789247426.6707428, "state": "finished", "passed": 2333, "total": 2333, "green": true, "failed": []}
 {"suite": "strokes", "at": 1789248374.010903, "state": "finished", "passed": 2333, "total": 2333, "green": true, "failed": []}
 {"suite": "standup", "at": 1789248448.1124718, "state": "finished", "passed": 9, "total": 9, "green": true, "failed": [], "report": "logs/standup_2026-09-12_142727.md"}
+{"suite": "standup", "at": 1789401948.0022378, "state": "finished", "passed": 9, "total": 9, "green": true, "failed": [], "report": "logs/standup_2026-09-14_090547.md"}
+{"suite": "court", "at": 1789402649.8610036, "state": "finished", "passed": 0, "total": 1, "green": false, "failed": ["the court"], "report": "logs/standup_2026-09-14_091729.md"}

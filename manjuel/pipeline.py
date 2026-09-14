@@ -1285,6 +1285,7 @@ def run_pipeline(
     # head. The gate is hard to trip on purpose -- see is_big_objective.
     if not named and intent.is_big_objective(ctx.objective):
         named = "decompose_task"        # the `if named:` block below arms it
+        ctx.named_by = "is_big_objective"
         ctx.notes.append("intent: several acts in one objective -- routed "
                          "first, then worked step by step (decompose_task)")
     elif not named and intent.wants_running(ctx.objective):
@@ -1328,6 +1329,7 @@ def run_pipeline(
     elif not named and intent.names_a_file(ctx.objective):
         # A named file WITHOUT a write verb is a read request.
         named = "ground_read"
+        ctx.named_by = "names_a_file"
         ctx.notes.append(f"intent: objective names the file "
                          f"`{intent.names_a_file(ctx.objective)}`")
     elif not named and intent.names_a_folder(ctx.objective):
@@ -1359,6 +1361,7 @@ def run_pipeline(
                                  f"not one in the ground -- the reader decides")
                 if intent.asks_the_ground(ctx.objective):
                     named = "semantic_search"
+                    ctx.named_by = "asks_the_ground"
                     ctx.notes.append("intent: question carries a term worth looking "
                                      "up -- dispatched to the reader (asks_the_ground)")
     elif not named and intent.wants_action(ctx.objective):
@@ -1377,6 +1380,7 @@ def run_pipeline(
         # anything that is not an imperative falls through to conversation
         # -- the operator's balance, ruled in the same conversation.
         named = "semantic_search"
+        ctx.named_by = "decomposes_to_search"
         ctx.notes.append(
             f"intent: decomposed as an order to search the ground "
             f"(payload: {intent.decomposes_to_search(ctx.objective)!r})")
@@ -1387,6 +1391,7 @@ def run_pipeline(
         # holds NOTHING, s61) comes back as evidence instead of a void the
         # front seat fills from its own head.
         named = "semantic_search"
+        ctx.named_by = "asks_the_ground"
         ctx.notes.append("intent: question carries a term worth looking up "
                          "-- dispatched to the reader (asks_the_ground)")
     if named:
@@ -1394,6 +1399,17 @@ def run_pipeline(
         ctx.named_tool = named
         # ...and do not say the OBJECTIVE named it when an earlier branch
         # chose it. One turn, one account of how the tool was picked.
+        #
+        # FOUR BRANCHES STILL SAID NOTHING, until 2026-09-14.
+        # asks_about_a_tool, wants_running and names_a_folder set named_by;
+        # is_big_objective, names_a_file, decomposes_to_search and
+        # asks_the_ground did not, so their pick read as the objective's.
+        # That day's court standup logged "objective names
+        # `semantic_search`" for "should a court of three seats run on one
+        # model?" -- which names nothing -- and its delivery said the same.
+        # Each branch names itself now, which is what named_by is documented
+        # to mean (context.py: "HOW that skill was chosen, when something
+        # other than the objective naming it did the choosing").
         why = getattr(ctx, "named_by", "")
         ctx.notes.append(
             f"intent: `{named}` chosen by {why} -- Router woken directly"
@@ -1489,8 +1505,16 @@ def run_pipeline(
             ctx.notes.append("intent: a question about this sitting -- the door "
                              "answers from the story")
         followup = True
+    # THE GUESSES A FOLLOW-UP WITHDRAWS, by name. Until 2026-09-14 four of
+    # these branches left named_by empty, and the "" here is what caught
+    # them. They name themselves now, so they are named here too, and a
+    # follow-up withdraws exactly what it withdrew before. names_a_folder and
+    # wants_running already set named_by, are not in this list, and are not
+    # withdrawn -- unchanged.
     if followup and ctx.named_tool and getattr(ctx, "named_by", "") in (
-            "", "asks_about_a_tool") and not intent.names_a_tool(ctx.objective, skills):
+            "", "asks_about_a_tool", "asks_the_ground", "decomposes_to_search",
+            "names_a_file", "is_big_objective") and not intent.names_a_tool(
+                ctx.objective, skills):
         ctx.notes.append(f"intent: `{ctx.named_tool}` withdrawn -- this turn "
                          f"points back at the conversation, and the Router "
                          f"cannot see it; the door answers")
@@ -2628,8 +2652,17 @@ def recompose(ctx: RunContext, report=print) -> bool:
 
     blocks: list[str] = []
     if missed:
+        # WHO CHOSE IT, SAID TRULY (2026-09-14). This read "This objective
+        # named `X`" whatever had chosen X, and the day's court delivery said
+        # so over "should a court of three seats run on one model?" -- where
+        # asks_the_ground had picked semantic_search. named_by is empty only
+        # when the objective named the tool itself, and "the words" means its
+        # words carried the argument as well; anything else is who chose.
+        by = (getattr(ctx, "named_by", "") or "").strip()
+        chose = (f"This objective named `{missed}`" if by in ("", "the words")
+                 else f"`{missed}` was chosen for this objective ({by})")
         blocks.append(
-            f"THE NAMED TOOL DID NOT RUN. This objective named `{missed}` and "
+            f"THE NAMED TOOL DID NOT RUN. {chose} and "
             f"the engine woke the Router to run it; what ran instead was "
             f"{', '.join(sorted(called)) or 'nothing'}. Whatever the words "
             f"above say, `{missed}` did not happen. Machine-emitted by "

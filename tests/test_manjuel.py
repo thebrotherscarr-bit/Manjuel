@@ -3131,6 +3131,127 @@ def test_the_p0_of_the_review(reg, lib, book):
           str(_unsourced("on 2026-09-09 we were at 0917c6d4a", facts)))
 
 
+def test_the_standup_reads_the_grounds_env(reg, lib, book):
+    """THE STANDUP RUNS ON THE REPL'S DIALS (2026-09-14, the diagnostics pass).
+
+    cli.main and serve.main read `.env` before they build a Session, and
+    tests/standup.py built its own with no read at all -- so a dial set in
+    `.env` turned for the REPL and the door and never for the standup. Its
+    `git_status` that morning said remote operations OFF; the engine's own
+    runs in the record say ALLOWED; MANJUEL_GIT_REMOTE is named in `.env` and
+    not in the shell.
+
+    Hermetic: the `.env` here is a temp file of planted names, and every one
+    is taken back out of the environment whatever happens. The ground's own
+    `.env` is never opened by this stroke.
+    """
+    import inspect as _inspect
+    import os as _os
+    sys.path.insert(0, str(ROOT / "tests"))
+    import standup as _su
+
+    g = Path(tempfile.mkdtemp())
+    planted = {"MANJUEL_STANDUP_ENV_PROBE": "probe-value-never-printed",
+               "CHAINKIT_STANDUP_OLD_DIAL": "old-dial-value-never-printed"}
+    (g / ".env").write_text("".join(f"{k}={v}\n" for k, v in planted.items()),
+                            encoding="utf-8", newline="\r\n")
+    names = list(planted) + ["MANJUEL_STANDUP_OLD_DIAL"]
+    saved = {k: _os.environ.pop(k, None) for k in names}
+    try:
+        # ---- NOT FIRING: a dry run proves the harness, never a .env -------
+        check("a DRY standup reads no .env, so CI proves the harness and not a file",
+              _su.honour_env(g, live=False) == []
+              and "MANJUEL_STANDUP_ENV_PROBE" not in _os.environ)
+
+        # ---- FIRING: a live one reads it, the way cli.main does -----------
+        said = _su.honour_env(g, live=True)
+        check("a LIVE standup reads the ground's .env into its own process",
+              _os.environ.get("MANJUEL_STANDUP_ENV_PROBE")
+              == planted["MANJUEL_STANDUP_ENV_PROBE"])
+        check("   and prints the names it set, the lines the REPL prints at launch",
+              any("MANJUEL_STANDUP_ENV_PROBE" in l for l in said), str(said))
+        check("   by NAME only -- no planted value reaches a printed line (LAW 9)",
+              not any(v in l for l in said for v in planted.values()),
+              "a planted value was printed")
+        check("an old CHAINKIT_ dial in .env turns too, because the carry runs after the read",
+              _os.environ.get("MANJUEL_STANDUP_OLD_DIAL")
+              == planted["CHAINKIT_STANDUP_OLD_DIAL"])
+        check("a live standup on a ground with no .env reads nothing and prints nothing",
+              _su.honour_env(Path(tempfile.mkdtemp()), live=True) == [])
+    finally:
+        for k, v in saved.items():
+            _os.environ.pop(k, None)
+            if v is not None:
+                _os.environ[k] = v
+
+    # ---- the wiring: the dials are read before the Session, as in cli.main
+    src = _inspect.getsource(_su.main)
+    check("the standup reads the dials BEFORE it builds its Session",
+          "honour_env(ROOT, live)" in src
+          and -1 < src.find("honour_env(ROOT, live)") < src.find("cli.Session()"),
+          "main() builds its Session before .env is read, or no longer reads it")
+
+
+def test_the_engines_own_words_are_a_source(reg, lib, book):
+    """THE STANDUP'S NUMBER CHECK JUDGES SEATS, NOT THE ENGINE (2026-09-14).
+
+    logs/standup_2026-09-14_091729.md: Manjuel was cut at its 179s bound and
+    recompose quoted the engine's own message into the delivery under SEATS
+    THAT FAILED. The standup then faulted the court -- beside its true faults
+    -- for "numbers in the delivery that no tool returned: 500 ... 92". Both
+    were in the seat bound's message, "(LAW 7; sitting 92: Jesster, 760s, then
+    a 500)", which runtime.py writes. No seat wrote either.
+
+    The engine's live guard never sees that block: recompose judges the
+    closing seat's words BEFORE it appends. The harness judges the delivery
+    after, so what the engine appended has to count as what the run returned.
+
+    STROKE IT BOTH WAYS, through the real recompose and the real message: the
+    engine's numbers pass, the failed seat is still a fault, and a number a
+    seat invented beside them is still named.
+    """
+    from manjuel.pipeline import recompose
+    from manjuel.runtime import _seat_refusal
+    sys.path.insert(0, str(ROOT / "tests"))
+    import standup as _su
+
+    court = next(c for c in _su.CASES if c.name == "the court")
+    judge_seat = reg.get("Manjuel")
+    err = str(_seat_refusal(judge_seat, 179, 179))
+
+    def judged(counsel):
+        ctx = RunContext(objective=court.objective, review_only=True)
+        ctx.steps.append(StepResult(agent="Jesster", model="m", output=counsel))
+        ctx.steps.append(StepResult(agent="Manjuel", model=judge_seat.model,
+                                    output="", error=err))
+        recompose(ctx, report=lambda *a, **k: None)
+        o = _su.Outcome(case=court)
+        # what run_cases reads off a finished context, line for line
+        o.seats = [s.agent for s in ctx.steps if s.ok and (s.output or "").strip()]
+        o.failed = [(s.agent, s.error or "") for s in ctx.steps if s.error]
+        o.results = [str(r) for s in ctx.steps for r in (s.tool_results or [])]
+        o.notes = ["law: ok"]
+        o.delivery = (ctx.last_output() or "").strip()
+        _su._judge(o, live=True)
+        return o, [f for f in o.faults if f.startswith("numbers in the delivery")]
+
+    o, nums = judged("The counsel holds that one model cannot seat three.")
+    check("recompose quotes the seat bound's own numbers into the delivery",
+          "SEATS THAT FAILED" in o.delivery and "sitting 92" in o.delivery
+          and "then a 500" in o.delivery, o.delivery[-300:])
+    check("the standup does not call the engine's own numbers invented",
+          nums == [], str(nums))
+    check("   and the cut seat is still a fault -- a source is not a pardon",
+          any(f.startswith("Manjuel FAILED") for f in o.faults), str(o.faults))
+
+    o2, nums2 = judged("The counsel holds, on 46 models, that one cannot seat three.")
+    check("a number a seat invented beside the engine's is still named",
+          len(nums2) == 1 and "46 in" in nums2[0], str(nums2))
+    check("   and the engine's numbers are not named with it",
+          bool(nums2) and "92 in" not in nums2[0] and "500 in" not in nums2[0],
+          str(nums2))
+
+
 def test_the_sitting_story(reg, lib, book):
     """0.1.6. THE SITTING STORY: what THIS sitting has done, read off the
     ledger and handed to the door and the court (the operator, 2026-09-07:
@@ -8927,6 +9048,121 @@ def test_one_turn_gives_one_account_of_how_a_tool_was_chosen(reg, lib, book):
           "chosen by" not in n2, n2[:160])
 
 
+def test_every_branch_that_chooses_a_tool_says_so(reg, lib, book):
+    """SITTING 81'S RULING, FINISHED (2026-09-14): one turn, one account of how
+    the tool was chosen -- for every branch that chooses, not three of seven.
+
+    logs/standup_2026-09-14_091729.md: the court asked "should a court of
+    three seats run on one model?", and the record said "intent: objective
+    names `semantic_search`" one line below the note that asks_the_ground had
+    dispatched it; the delivery then said "This objective named
+    `semantic_search`". The objective names nothing. asks_about_a_tool,
+    wants_running and names_a_folder set named_by; is_big_objective,
+    names_a_file, decomposes_to_search and asks_the_ground did not -- and the
+    recompose stamp never read named_by at all, so even asks_about_a_tool's
+    pick was stamped as the objective's.
+
+    named_by IS LOAD-BEARING, which is why this is stroked both ways. The
+    decided call reads it and a follow-up's withdrawal reads it, so naming
+    the four branches must move the ACCOUNT and nothing the engine DOES: the
+    follow-up that withdrew each guess still withdraws it, and the call a
+    checked file decides is still decided.
+    """
+    from manjuel.pipeline import recompose
+
+    g = Path(tempfile.mkdtemp())
+    (g / "pipelines.md").write_text("# pipelines\n", encoding="utf-8", newline="\r\n")
+    thread = [("operator", "what does this system need?", 0.0),
+              ("steward", "Refused: `content` must be a PATH, and \"The estate's core "
+                          "memory document\" is a description of one. Name the folder "
+                          "or file itself.", 0.0)]
+
+    def run(objective, dialogue=()):
+        r = Stub(reply="x")
+        c = RunContext(objective=objective, feed="", dialogue=list(dialogue))
+        e = env_for(g, reg, r, skills=lib)
+        e.ground = g
+        run_pipeline(c, reg, r, lib, e, steps=book.get("default"),
+                     report=lambda *a, **k: None)
+        return c
+
+    # ---- FIRING: every branch that chooses is the one credited ------------
+    seen = {}
+    for objective, tool, branch in (
+            ("should a court of three seats run on one model?", "semantic_search",
+             "asks_the_ground"),
+            ("what is in the nosuch dir", "semantic_search", "asks_the_ground"),
+            ("search the ground find the warden estate!", "semantic_search",
+             "decomposes_to_search"),
+            ("what does pipelines.md say", "ground_read", "names_a_file"),
+            ("read the rack, then write a note about it, then commit it",
+             "decompose_task", "is_big_objective")):
+        c = seen[objective] = run(objective)
+        notes = " || ".join(c.notes)
+        check(f"{branch} is credited with choosing `{tool}`: {objective[:30]!r}",
+              c.named_tool == tool and c.named_by == branch
+              and f"`{tool}` chosen by {branch}" in notes
+              and f"objective names `{tool}`" not in notes, notes[-260:])
+
+    said = seen["what does pipelines.md say"].notes
+    check("a checked file is still a DECIDED call, and says which branch decided it",
+          any("decided by arithmetic (names_a_file)" in n for n in said),
+          str([n for n in said if "decided" in n]))
+
+    # NOT FIRING. The first draft of this stroke used `read pipelines.md` for
+    # names_a_file and went red: "read" is an ALIAS, so names_a_tool names
+    # ground_read outright and the branch never runs. An alias is the objective
+    # naming the tool, and it must keep reading that way.
+    alias = run("read pipelines.md")
+    check("an alias is still the objective naming the tool: 'read pipelines.md'",
+          alias.named_by == ""
+          and "objective names `ground_read`" in " || ".join(alias.notes)
+          and any("decided by arithmetic (the objective)" in n for n in alias.notes),
+          str([n for n in alias.notes if "ground_read" in n]))
+
+    # ---- THE STAMP says who chose, and still says the objective when it did
+    out = seen["should a court of three seats run on one model?"].last_output()
+    check("the court's stamp credits asks_the_ground, not the objective",
+          "`semantic_search` was chosen for this objective (asks_the_ground)" in out
+          and "This objective named" not in out, out[-300:])
+    asked = run("what does deep research do?").last_output()
+    check("asks_about_a_tool's pick is stamped as its own too -- the stamp never "
+          "read named_by",
+          "`skill_search` was chosen for this objective (asks_about_a_tool)" in asked,
+          asked[-300:])
+    for by in ("", "the words"):
+        c = RunContext(objective="push the committed work to the remote")
+        c.named_tool, c.named_by = "git_push", by
+        c.steps.append(StepResult(agent="Router", model="m", output="done",
+                                  tool_calls=["git_status"]))
+        recompose(c, report=lambda *a, **k: None)
+        check(f"a tool the objective named is still stamped as the objective's "
+              f"(named_by={by!r})",
+              "This objective named `git_push`" in c.last_output(),
+              c.last_output()[-200:])
+
+    # ---- AND NOTHING THE ENGINE DOES MOVED: each guess still withdraws ------
+    # WITH THE SAME WORDS. A search guess would still be withdrawn with only
+    # the two old names in the list -- the branch below it catches
+    # semantic_search by its notes -- but under a different sentence, and the
+    # record is part of what must not move. Proved by reversal on the mirror:
+    # asserting only "withdrawn" left two of the four green over the old list.
+    for objective, branch in (
+            ("what does that last part mean, the refused bit", "asks_the_ground"),
+            ("search the ground for that", "decomposes_to_search"),
+            ("what does that mean in pipelines.md", "names_a_file"),
+            ("check that error, then fix the router config", "is_big_objective")):
+        fresh, follow = run(objective), run(objective, thread)
+        check(f"a follow-up still withdraws {branch}'s guess -- the account moved, "
+              f"dispatch did not",
+              bool(fresh.named_tool) and fresh.named_by == branch
+              and follow.named_tool == ""
+              and any("withdrawn -- this turn points back at the conversation" in n
+                      for n in follow.notes),
+              f"fresh={fresh.named_tool}/{fresh.named_by} follow={follow.named_tool} "
+              f"{[n for n in follow.notes if 'withdrawn' in n]}")
+
+
 def test_a_courtesy_preamble_does_not_bury_the_question(reg, lib, book):
     """SITTING 81, second pass, and it is the GREETING BUG'S MIRROR.
 
@@ -12380,6 +12616,8 @@ def main() -> int:
     test_the_loops_of_2026_09_08(reg, lib, book)
     test_the_release_gate(reg, lib, book)
     test_the_p0_of_the_review(reg, lib, book)
+    test_the_standup_reads_the_grounds_env(reg, lib, book)
+    test_the_engines_own_words_are_a_source(reg, lib, book)
     test_the_sitting_story(reg, lib, book)
     test_the_headless_door(reg, lib, book)
     test_the_ground_flag(reg, lib, book)
@@ -12473,6 +12711,7 @@ def main() -> int:
     test_parity_reads_the_seat_map_not_a_constant(reg, lib, book)
     test_index_ground_says_which_mode_it_ran(reg, lib, book)
     test_one_turn_gives_one_account_of_how_a_tool_was_chosen(reg, lib, book)
+    test_every_branch_that_chooses_a_tool_says_so(reg, lib, book)
     test_a_courtesy_preamble_does_not_bury_the_question(reg, lib, book)
     test_the_chain_can_say_what_it_has_proved(reg, lib, book)
     test_a_malformed_flag_is_still_read_and_still_stripped(reg, lib, book)
