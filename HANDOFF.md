@@ -14,9 +14,9 @@ RUN THE SMOKE SUITE, not just the strokes. It was RED at 34/50 from 14e2711
 to 2026-09-02 because its StubRuntime had not been moved with pipeline.py,
 and nothing noticed: the strokes were green the whole time.
 
-**START AT `## HANDOFF FOR 2026-09-12`** (search for it — the day blocks
+**START AT `## HANDOFF FOR 2026-09-14`** (search for it — the day blocks
 stack newest first above `## Open`). CHANGELOG.md carries the versions;
-DAYBOOK.md Session 5 carries the day's intent. Everything between here and
+DAYBOOK.md's last entry carries the day's intent. Everything between here and
 there is standing reference that has not moved.
 
 ## Numbers (as of 2026-09-04, sitting 86 — see SEAT_LOG for the outside hands)
@@ -669,6 +669,64 @@ dropped by operator ruling 2026-09-01 — see the fix log.
     5. CHECK THE DISK BEFORE THE TRANSCRIPT. A seat's account of what it did
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
+
+## HANDOFF FOR 2026-09-14 — read this before anything below it
+
+**Where the ground stands.** core `main@c766ce7`, carrying **`v0.1.11` THE
+CODING UPDATE** (cut 2026-09-12 15:34); atlas `main@5e56055`, with **`v0.1.5`
+THE FLOW CONFIRMATION** on `3dacdbc` (cut 15:37) and five commits after it.
+Both were level with `origin/main` at open. No sitting has opened since 217
+(2026-09-12 14:26–14:27, the standup, 9/9, tolled), and the proofs the gate
+reads are that day's: strokes 2333/2333, smoke 60/60. The release gate after
+today's pass: **PASSED 9 of 9**. This block, DAYBOOK Session 9 and the
+CHANGELOG entry are that pass; they land through Version control once written.
+
+**EVERYTHING AFTER THE 09-12 BLOCK BELOW IS ATLAS, AND ALL OF IT WAS THAT
+SATURDAY AFTERNOON AND EVENING.** Sunday has nothing in either repository.
+
+    the marks      `git_tag` (list, cut, send) and "Version marks" on Version
+                   control. Using it found three faults with every stroke
+                   green: no tag verb anywhere, a column printing the tag
+                   object's own sha, and a Send confirm() the browser
+                   dismissed without showing it
+    the release    release.yml's first real firing, on v0.1.5, died at the Go
+                   tests: the spine built in release, the door looked in
+                   debug. NO DRAFT RELEASE WAS MADE FOR 0.1.5; the mark was
+                   not moved; the fix, `94c085d`, rides the next number
+    version-tag    a seven-node flow, saved and validated, NEVER FIRED
+    retry          a node may be retried; a verdict may not
+    the holds      RULE 6 as a gate: a writing tool called by anything but
+                   the glass's service wire parks under "Waiting for your
+                   hand" on Version control. INERT WITHOUT `--auth`, and
+                   RUNBOOK's door line carries none
+
+**TODAY: THE RECORD CAUGHT UP WITH ITS TAGS.** SPEC: skills 37 -> 42, "hands"
+struck from the release gate's row, 4.5's terminators re-counted for a core
+that no longer holds atlas (LF 143 / CRLF 32 / MIXED 0). atlas's CHANGELOG
+marks [0.1.5] released and moves the two post-tag blocks out of it; its
+DELIVERABLE, ACCEPTANCE and PIPELINES are corrected as measured at the tag.
+Here: v0.1.11 marked released in CHANGELOG, Session 8's false "Next session"
+corrected in place, Session 9 written, and this block.
+
+**NOT TOUCHED, AND WHY.** TASKS.md -- the corpus-split and citation-check
+boxes are stale, and ticking them is his. The 09-12 block below was to have
+its citation-check line corrected, and it has none; the lines that name the
+check as still to build (09-10, 09-09) were written before it landed on
+2026-09-10, and were true on their day.
+
+**Open, named, not fixed** -- the next hand's list:
+
+    the next atlas number   carries the release.yml fix, and would be
+                            `version-tag`'s first firing
+    the auth wiring         the glass's `ConfigureAuth` has no caller outside
+                            its own tests; the door's holds stay off until it
+                            runs with `--auth` (a relaunch, his call)
+    SPEC section 4          five OPEN lines: 4.4 twice, 4.5 twice, 4.7
+    DAYBOOK                 no session entry covers 2026-09-10 or 09-11 (77
+                            sittings, 126–202); Session 8's header calls
+                            2026-09-12 a Friday, and it was a Saturday
+    his                     TASKS' stale boxes; SITTING LAW 6's second half
+
 
 ## HANDOFF FOR 2026-09-12 — read this before anything below it
 

@@ -1381,9 +1381,128 @@ and `ATLAS_AUTH=1` is documented in two comments and read nowhere. The gate
 itself is correct and stroked both ways; only the wiring is missing, and the
 wiring is a decision (the env var, the session path, the service wire). After
 that, the citation check is still the largest thing left in the spec.
+**CORRECTED 2026-09-14, the sentence above kept as written: it was false on the
+day.** The citation check landed 2026-09-10, in 0.1.9 (CHANGELOG, "THE CITATION
+CHECK: a tool result is source material"), and SPEC 4.3's line for it has read
+MET since. What section 4 still holds OPEN is five lines -- 4.4 twice, 4.5
+twice, 4.7. The auth half of this line still stands: `ConfigureAuth` has no
+caller outside the glass's own tests.
 
 **Still his:** the two tags (`v0.1.11`, `v0.1.5`); sealing SITTING LAW 5 onto
 the chain; and two lines on his own task list that today's work touches — "the
 release gate in prove.yml" (still absent from CI; `release.yml` is a different
 gate) and "CRLF or LF (his call)", which today enacted his 2026-09-03 ruling
 rather than making a new call. I did not tick them: that list is his.
+
+## Session 9 — 2026-09-12 (Saturday) to 2026-09-14 (Monday), no sitting opened, the marks and the record
+
+**Standing** — follows session 8 (2026-09-12), whose last code saves were core
+`main@e4cf663` and atlas `main@572186d`, with both tags still his to cut. They
+are cut: `v0.1.11` on core `c766ce7`, `v0.1.5` on atlas `3dacdbc`. No sitting
+opened in this session -- 217 is still the newest. The work was atlas's on
+Saturday afternoon and evening, nothing on Sunday, and the record on Monday.
+
+**Version** — git: core `main@c766ce7` (Session 8's three record saves
+included), atlas `main@572186d`.
+
+**The plan** — his orders, not a plan written ahead. 2026-09-12: "cut the tags
+through the dashboard", then "add the workflow if there is no version control
+workflow existing, use the system to run the tag updates"; that evening, a read
+of his three sovereign-agent-harness folders against this estate, to take what
+was worth merging. 2026-09-14: "bring the record up to date first". DONE for
+the last: the release gate's daybook and handoff checks pass, and both
+repositories land through Version control.
+
+**What ran** — no sitting. Sitting 217 (2026-09-12 14:26–14:27) is the newest
+in the ledger: the nine-case standup Session 8's record pass fired, 9/9,
+tolled. It closed at 14:27, before the save that carried Session 8 (`b3f68d1`,
+14:30), whose header reads 203–216 -- so no entry's header names it.
+
+**What landed, in order** (2026-09-12; atlas unless it says core)
+
+    15:24-15:36  the panel learned to cut a mark -- `git_tag` (list, cut,
+                 send) and "Version marks" on Version control -- and using
+                 it found three faults with every stroke green: no tag verb
+                 existed anywhere; the column printed the tag object's own
+                 sha (that first mark was removed before it was sent); and
+                 the Send button's confirm() was dismissed by the browser
+                 without ever being shown
+    15:34        `v0.1.11` cut on the core, on `c766ce7`: THE CODING UPDATE
+    15:37        `v0.1.5` cut on atlas, on `3dacdbc`: THE FLOW CONFIRMATION
+    15:43        `94c085d` -- release.yml's first real firing, on v0.1.5, died
+                 at the Go tests: the spine was built in release and the door
+                 looked in debug. No draft release was made for 0.1.5, the
+                 mark was not moved to fetch one, and the fix rides the next
+                 number
+    15:50        `6e8248a` -- `version-tag`, a seven-node flow, saved and
+                 validated and NEVER FIRED. The council's only road to
+                 `git_tag` is `mcp_call`, and three links of its four are
+                 proven
+    22:53        `415e768` -- a node may be retried, up to five times with a
+                 backoff; a verdict may not (eval and gate refuse `retries`)
+    23:11-23:19  `7dc6d95`, `5e56055` -- RULE 6 as a gate: a writing tool
+                 called by anything but the glass's service wire PARKS in a
+                 hold queue, answered on Version control under "Waiting for
+                 your hand". INERT WITHOUT `--auth`, and RUNBOOK's door line
+                 carries none
+    09-13        nothing in either repository, and no sitting
+
+**This pass, 2026-09-14** -- the record, and nothing else:
+
+    SPEC.md       skills 37 -> 42, counted; "hands" struck from the release
+                  gate's row (the ledger went 2026-09-09, and release.py
+                  checks nothing by that name); 4.5's terminators re-counted
+                  beside the 2026-09-09 count, now that atlas is its own
+                  repository -- core LF 143 / CRLF 32 / MIXED 0. No section-4
+                  status moved.
+    atlas         CHANGELOG: [0.1.5] marked released on 3dacdbc; the
+                  release.yml fix and the version-tag flow moved to
+                  [Unreleased], each its own entry. DELIVERABLE,
+                  docs/ACCEPTANCE and docs/PIPELINES corrected as measured AT
+                  THE TAG -- 79 tools, 167 line test functions, the glass 15
+                  over 3 packages, two workflows -- every original kept.
+    DAYBOOK.md    Session 8's "Next session" corrected in place; this entry.
+    HANDOFF.md    HANDOFF FOR 2026-09-14, and the START AT pointer moved to it.
+    CHANGELOG.md  v0.1.11 marked released, dated from the tag object; a bare
+                  "## Unreleased" kept on top, because release.py reads it;
+                  one entry for the pass.
+
+**Found** (came up in the pass; NOT the plan)
+- Session 8's "Next session" said the citation check was still the largest
+  thing left in the spec. It had landed 2026-09-10. Corrected in place, dated.
+- Session 8's header calls 2026-09-12 a Friday. It was a Saturday. Left as
+  written; named here.
+- Session 8's next-session line is written `**Next session:**`, and
+  `seatlog.standing_block` matches `**Next session**` -- so the door and the
+  court were handed that entry's Standing and never its next session. This
+  entry uses the form the engine reads. Named, not changed.
+- No session entry covers 2026-09-10 or 2026-09-11: 77 sittings, 126–202 (71
+  and 6). CHANGELOG carries those days and HANDOFF has a 09-10 block; DAYBOOK
+  has nothing. Noted, not back-filled.
+- HANDOFF's 2026-09-12 block has no citation-check line, so the correction
+  asked for there had nothing to land on. The two HANDOFF lines that name the
+  check as still to build are in the 09-10 and 09-09 blocks, written before it
+  landed and true on their day.
+- TASKS.md's corpus-split and citation-check boxes are stale -- both landed
+  2026-09-10. Not ticked: that list is his.
+
+**Drift** — none in the pass.
+
+**Rulings** — none new; his orders are quoted under The plan.
+
+**At close** — core `main@c766ce7` (`v0.1.11`) and atlas `main@5e56055` are
+the last saves before this pass, both level with `origin/main` when it
+opened; this pass's saves follow them through Version control, one in each
+repository, because no entry can name the commit that contains it. The proofs
+the gate reads are 2026-09-12's: strokes 2333/2333, smoke 60/60, the standup
+9/9 in sitting 217. The release gate, run on the ground after the pass's last
+edit: PASSED 9 of 9, exit 0 -- still fresh, because no code has moved since
+those stamps, and spec compared against `v0.1.11` finds no section-4 status
+changed. No sitting open.
+
+**Next session** — not decided by this hand. What the record leaves waiting:
+the next atlas number, which carries the release.yml fix and would be
+`version-tag`'s first firing; the auth wiring -- the glass's `ConfigureAuth`
+still has no caller, and the door's holds stay off until it runs with
+`--auth`, a relaunch and his call; SPEC section 4's five OPEN lines; and his
+own: TASKS' stale boxes and SITTING LAW 6's second half.

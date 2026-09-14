@@ -32,7 +32,67 @@ hand that iterates without updating this file is out of line.
 
 ---
 
-## Unreleased — since 0.1.9
+## Unreleased
+
+### The record caught up with its tags (operator, 2026-09-14: "bring the record up to date first")
+
+**v0.1.11 WAS CUT 2026-09-12 15:34, ON c766ce7, AND THIS FILE STILL FILED IT AS
+UNRELEASED.** Everything the tag holds sat under "Unreleased — since 0.1.9" for
+two days -- the one heading a reader trusts to mean "not shipped". It is
+`## v0.1.11` now, dated from the tag object, with 0.1.10 (a version string that
+was never a tag) riding inside it the way 0.1.8 rode inside 0.1.9. CHECKED, NOT
+ASSUMED: this file at the tag and on disk were identical, line endings aside,
+before the pass -- so nothing under that heading landed after the tag, and no
+entry was moved or reworded. A bare `## Unreleased` stays on top, because
+`tests/release.py` reads that heading.
+
+What else the pass moved in the core, each file read whole first:
+
+    SPEC.md       "thirty-seven" / 37 skills -> forty-two / 42, counted off
+                  `skills/*.md`; "hands" struck from the release gate's row in
+                  section 2 -- the hands ledger went 2026-09-09 and release.py
+                  checks nothing by that name -- and a stray comma dropped from
+                  4.6's gate line (`HANDOFF has today,.`); 4.5's terminator
+                  line RE-COUNTED 2026-09-14 beside the 2026-09-09 count, which
+                  is kept: atlas is its own repository and the core tracks
+                  nothing under `atlas/`, so `git ls-files --eol` reads LF 143,
+                  CRLF 32, MIXED 0. No section-4 status moved.
+    DAYBOOK.md    Session 8's "Next session" said the citation check was
+                  "still the largest thing left in the spec". It landed
+                  2026-09-10, in 0.1.9, and SPEC 4.3 has read MET since.
+                  Corrected in place, dated, the sentence kept. Session 9
+                  written, 2026-09-12 to 09-14, with **At close** -- and, in
+                  its Found, that no session entry covers 2026-09-10 or 09-11
+                  (77 sittings, 126-202).
+    HANDOFF.md    `## HANDOFF FOR 2026-09-14`, which the gate wants; the START
+                  AT pointer moved to it, and the DAYBOOK pointer beside it,
+                  which still named Session 5.
+    atlas         its own CHANGELOG holds its half ("The record caught up with
+                  its own tag").
+
+**ONE THING ASKED FOR WAS NOT THERE.** HANDOFF's 2026-09-12 block was to have its
+citation-check line corrected the same way, and it has no such line. The two
+HANDOFF lines that name the check as still to build sit in the 09-10 and 09-09
+blocks; the 09-10 one was written at 1919 strokes, before the check landed at
+1944 the same day. Both were true on their day, and both stand.
+
+**TASKS.md WAS NOT TOUCHED.** Its corpus-split and citation-check boxes are
+stale -- both landed 2026-09-10 -- and ticking is his.
+
+The release gate on the ground after the pass: **PASSED 9 of 9**, exit 0. The
+proofs it reads are 2026-09-12's and still fresh, because no code has moved:
+strokes 2333/2333, smoke 60/60, the standup 9/9 in sitting 217; spec compared
+against v0.1.11 finds no section-4 status changed.
+
+---
+
+## v0.1.11 — 2026-09-12 15:34 (tag on c766ce7)
+
+**THIS TAG CARRIES 0.1.10 TOO.** 0.1.10 was a version string and never a tag,
+so everything from the 0.1.9 tag to this one ships inside v0.1.11, the way
+0.1.8 shipped inside 0.1.9. Everything below this heading down to 0.1.9 is what
+the tag contains. The heading read "Unreleased — since 0.1.9" until 2026-09-14,
+two days after the tag was cut; the words under it are unchanged.
 
 ### 0.1.11 — THE CODING UPDATE
 
