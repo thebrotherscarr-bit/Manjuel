@@ -60,9 +60,18 @@ from the marks panel, whose name box the door itself had filled with `v0.1.12`, 
 **THREE THINGS THE GLASS CANNOT DO YET**, found by driving it and none of them fixed here:
 `/flows` on a cold load does not know an open sitting, so the council's Commit and Push
 stay greyed unless you walk in from the Dashboard; the nav goes off-canvas under about
-1000px with no toggle, so a narrow window cannot reach the pages; and `git_tag` has `list`,
+1000px with no toggle, so a narrow window cannot reach the pages; and `git_tag` had `list`,
 `cut` and `send` but no way to REMOVE a mark, which is why the wrong one had to be cleared
 outside the glass.
+
+**AND THE THIRD ONE WAS BUILT THE SAME MORNING**, on his word -- *"implement any missing
+features for github repo management that arent on our version control panel yet."* The door
+gained `git_tag remove`, which refuses any mark GitHub has and refuses again when the wall is
+shut and it cannot ASK whether GitHub has it; the marks panel gained a Remove button greyed
+with the door's own sentence; and the card gained the one fact it had never said -- WHICH
+GitHub each world sends to, host and path, never the raw URL (RULE 7). Both binaries were
+rebuilt and restarted on his allowance. `atlas/CHANGELOG.md` carries that entry; the two the
+glass still cannot do stand as written above.
 
 ---
 
