@@ -34,13 +34,48 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The mark was cut through the glass, and the one cut at a terminal was wrong
+
+On his word, 2026-09-17: *"i committed it and cut the tag"* -- and, minutes later, *"wait,
+i didnt commit anything, i was supposed to just push the button bro. bad prep on your
+part."* He was right and the disk said so: `v0.1.12` stood on `7e64f20`, the save from
+2026-09-14, whose `pyproject.toml` says 0.1.11, while thirty-three files of the pointing
+work sat unsaved beside it. A hand had handed him `git tag -a v0.1.12` to type.
+
+**THE BUTTON HAS THE GUARD; THE SHELL HAS NONE.** `tagCut` reads the version the ground
+DECLARED AT THAT COMMIT and refuses a name that does not equal it -- and before that it
+refuses while the tree is dirty, "a mark cut now would point at a commit that is not what
+is on your disk" -- so the glass's Cut button would have stopped this and the save would
+have come first. `git tag` at a terminal answers to no door. That sentence is already in
+this file once, under the six marks on the stripped history.
+
+**WHAT WAS DONE, THROUGH THE ESTATE'S OWN HANDS.** The work was saved by the COUNCIL: the
+objective `git commit: "..."` into the Dashboard's own box, Router -> `git_commit` ->
+`git_status`, delivered in 143.1s under sitting 232, which closed itself and paid its toll
+-- **`15e83d5`**, thirty-three files, the tree clean. The stale mark was then removed on
+this machine (it had never been sent; `git tag -a` reaches no remote) and `v0.1.12` was cut
+from the marks panel, whose name box the door itself had filled with `v0.1.12`, read from
+`pyproject.toml` at HEAD.
+
+**THREE THINGS THE GLASS CANNOT DO YET**, found by driving it and none of them fixed here:
+`/flows` on a cold load does not know an open sitting, so the council's Commit and Push
+stay greyed unless you walk in from the Dashboard; the nav goes off-canvas under about
+1000px with no toggle, so a narrow window cannot reach the pages; and `git_tag` has `list`,
+`cut` and `send` but no way to REMOVE a mark, which is why the wrong one had to be cleared
+outside the glass.
+
+---
+
+## v0.1.12 — 2026-09-18 06:39 (tag on 15e83d5)
+
 ### 0.1.12 — THE POINTING, and the number is his: "0.1.12, prep it all up to the gate"
 
-**THE NUMBER IS CHOSEN AND THE TAG IS NOT CUT.** `pyproject.toml` and
-`manjuel/__init__.py` both say 0.1.12 as of 2026-09-17; `v0.1.12` does not exist and will
-not until the operator cuts it (RULE 6, and the gate's own last line). This heading stays
-`Unreleased` until then -- the same way v0.1.11's read "Unreleased — since 0.1.9" for two
-days after its tag, and was renamed afterwards with the words under it unchanged.
+**THE MARK IS CUT**, 2026-09-18 06:39, annotated `THE POINTING`, on `15e83d5`, from the
+glass's own Cut button. The gate passed **9 of 9** first: the standup's greeting missed
+once at 8/9 on a live pass and answered on the next, which the gate reads out of
+`tests/run_history.jsonl` rather than re-rolling. The heading read `Unreleased` until the
+mark existed -- the same way v0.1.11's read "Unreleased — since 0.1.9" for two days after
+its tag -- and the words under it are unchanged.
 
 **WHAT THE NUMBER HOLDS**, every entry below this one:
 
