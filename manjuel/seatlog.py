@@ -17,6 +17,7 @@ operator, and an unattended close says so rather than inventing them.
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass, field, asdict
 from datetime import datetime
 from pathlib import Path
@@ -105,6 +106,16 @@ class Sitting:
     ended: str = ""
     git_end: dict = field(default_factory=dict)
     toll_paid: bool = False
+    # WHO IS HOLDING IT OPEN (2026-09-17). A sitting's own process can close
+    # it on EOF, on Ctrl-C and on an unhandled exception -- every one of those
+    # is caught. What it cannot do is close it after being KILLED, and a
+    # sitting left open by a dead process is RULE 9's lock held by nothing:
+    # the ground refuses edits for a hand that is not there. The pid makes the
+    # question answerable by the next sitting. Optional and defaulted, so the
+    # 526 lines written before this parse exactly as they did.
+    pid: int = 0
+    # How it closed, when it was not closed by its own hand: "reaped".
+    closed_by: str = ""
 
     @property
     def label(self) -> str:
@@ -144,8 +155,114 @@ def open_sitting(ground: Path, session_id: str) -> Sitting:
         started=datetime.now().isoformat(timespec="seconds"),
         ground=str(ground),
         git_start=gitstate.read(ground).as_dict(),
+        pid=os.getpid(),
     )
     return st
+
+
+def _alive(pid: int) -> bool:
+    """Is that process still running? Every doubt answers YES.
+
+    FAIL CLOSED, and which way that points matters. Believing a live sitting
+    dead would close somebody's open sitting under them -- the worst thing in
+    this file. Believing a dead one live only leaves an orphan for a hand to
+    close, which is where the estate already was. So an error, a permission
+    refusal, a pid we cannot ask about: all alive.
+
+    NEVER `os.kill(pid, 0)` ON WINDOWS. CPython's os.kill there does not send
+    a signal -- for anything but CTRL_C_EVENT/CTRL_BREAK_EVENT it calls
+    TerminateProcess, so the portable-looking liveness probe would KILL the
+    process it was asking about. ctypes asks the kernel instead.
+    """
+    if not pid or pid <= 0:
+        return True                      # nothing to judge: leave it alone
+    if os.name == "nt":
+        try:
+            import ctypes
+            PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+            STILL_ACTIVE = 259
+            k = ctypes.windll.kernel32
+            h = k.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, int(pid))
+            if not h:
+                return False             # no such process
+            code = ctypes.c_ulong()
+            ok = k.GetExitCodeProcess(h, ctypes.byref(code))
+            k.CloseHandle(h)
+            return (not ok) or code.value == STILL_ACTIVE
+        except Exception:
+            return True
+    try:
+        os.kill(int(pid), 0)
+        return True
+    except ProcessLookupError:
+        return False
+    except Exception:
+        return True
+
+
+def reap_orphans(ground: Path, report=lambda s: None) -> list[int]:
+    """Close sittings whose process is gone. Returns the numbers closed.
+
+    EARNED 2026-09-17, on the operator's ground and by this hand: a REPL run
+    with its output piped into `Select-Object -First 45` was killed the moment
+    the pipe closed, mid-print. Sitting 226 stood open in the ledger with no
+    process behind it -- and an open line is what RULE 9 reads as "hands off,
+    someone is sitting", what `tests/release.py` refuses a tag over, and what
+    the door refuses a world for. A lock held by nobody.
+
+    THE THREE WAYS A SITTING ENDS ITSELF ARE ALREADY CAUGHT: EOF and Ctrl-C at
+    the prompt, and any unhandled exception (`main`'s own handler). This is the
+    fourth, which cannot be caught from inside: the kill. So it is answered at
+    the next open instead, which is the only moment another process is
+    certainly looking.
+
+    IT CLOSES ONLY WHAT IT CAN PROVE IS DEAD. A line with no pid -- every line
+    written before today -- is never touched: this cannot tell an old orphan
+    from an old close, and guessing would rewrite history it cannot read.
+    A live pid is left alone, so a second REPL on the same ground never closes
+    the first one's sitting.
+
+    A REAPED SITTING THAT RAN SOMETHING STILL PAYS (LAW 10). The same two calls
+    `cli._close` makes for an unattended close, so the toll cannot be skipped
+    by the process dying.
+    """
+    ground = Path(ground)
+    rows = all_sittings(ground)
+    if not rows:
+        return []
+    latest: dict[int, dict] = {}
+    for row in rows:
+        n = row.get("n")
+        if isinstance(n, int):
+            latest[n] = row            # a closing line supersedes its opening
+    closed: list[int] = []
+    for n in sorted(latest):
+        row = latest[n]
+        if row.get("ended"):
+            continue
+        pid = row.get("pid") or 0
+        if not pid or _alive(pid):
+            continue
+        st = Sitting(
+            n=n, id=row.get("id", ""), started=row.get("started", ""),
+            ground=row.get("ground", "") or str(ground),
+            git_start=row.get("git_start") or {},
+            runs=row.get("runs") or [],
+            toll_paid=bool(row.get("toll_paid")),
+            pid=int(pid), closed_by="reaped",
+        )
+        close_sitting(ground, st)
+        if st.runs and not st.toll_paid:
+            try:
+                pay(ground, render_toll(st, attended=False))
+                st.toll_paid = True
+            except Exception as exc:
+                report(f"  (sitting {n}'s toll was not written: {exc})")
+        record(ground, st)
+        closed.append(n)
+        report(f"  sitting {n} was left open by a process that is gone "
+               f"(pid {pid}); closed{' and tolled' if st.runs else ''}.")
+    return closed
 
 
 def record(ground: Path, sitting: Sitting) -> None:

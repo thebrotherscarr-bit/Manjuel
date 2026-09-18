@@ -12,7 +12,7 @@ from .context import RunContext, StepResult, select_dialogue
 from .pipeline import Aborted, Refused, DEFAULT_PIPELINE, PIPELINES, run_pipeline
 from .registry import AgentRegistry, PipelineBook, RegistryError
 from .runtime import BackendUnreachable, OllamaRuntime, RuntimeError_
-from .skills import SkillExecutionEnv, SkillLibrary
+from .skills import SkillExecutionEnv, SkillLibrary, index_roots
 from . import transcript
 from . import memory as _mem
 from . import seatlog as _log
@@ -359,8 +359,12 @@ def _apply_ground_changes(sess: Session) -> None:
         try:
             from .vectors import VectorIndex
             idx = VectorIndex(ROOT / "index" / "vectors.db", EMBED_MODEL)
+            # The files that changed are not the index's scope, so nothing is
+            # evicted for lying outside them -- only what is gone is pruned
+            # (vectors.VectorIndex.build, 2026-09-15).
             st = idx.build(changed,
-                           lambda c: sess.runtime.embed(EMBED_MODEL, c))
+                           lambda c: sess.runtime.embed(EMBED_MODEL, c),
+                           declared=False)
             idx.close()
             if st.embedded:
                 names = ", ".join(p.name for p in changed[:3])
@@ -1914,10 +1918,11 @@ def main() -> int:
         print(f"  ground: {ROOT}")
 
     env_lines = dotenv.report(*dotenv.load(ROOT / ".env"))
-    # .env is read AFTER import, so an old CHAINKIT_ dial that arrives here
-    # has not been carried to its twin yet. Idempotent; see carry_old_dials.
-    from . import carry_old_dials as _carry
-    _carry()
+    # .env is read AFTER import: every dial a module took at import, and every
+    # old CHAINKIT_ name, predates this line. read_dials carries the old names
+    # and has those modules read their dials again, before the Session is built.
+    from . import read_dials
+    read_dials()
     for line in env_lines:
         print(line)
 
@@ -1934,6 +1939,15 @@ def main() -> int:
     elif not sess.preflight():
         return 1
 
+    # A LOCK HELD BY NOBODY IS RELEASED HERE (2026-09-17). Three ways a
+    # sitting ends itself are already caught -- EOF, Ctrl-C, and any unhandled
+    # exception in main. The fourth cannot be: a killed process closes nothing,
+    # and the line it leaves open is what RULE 9 reads as "someone is sitting",
+    # what the release gate refuses a tag over, and what the door refuses a
+    # world for. The next sitting is the only moment another process is
+    # certainly looking, so it looks -- and closes ONLY what it can prove is
+    # dead (a recorded pid that no longer exists).
+    _log.reap_orphans(ROOT, report=print)
     _log.record(ROOT, sess.sitting)
     # ONE read of the repo at open (the REPL read, 2026-09-08: this line was
     # written twice, and boot.report and boot.brief_facts each read again --
@@ -1950,7 +1964,8 @@ def main() -> int:
             _cmd_warm(sess, quiet=True)      # spine only: the Steward's model
             sess._bg_warm = _warm_reasoner_later(sess)
 
-        sess.watcher = _watch.GroundWatch(ROOT)
+        # It re-embeds only what the index is told to hold (watch.py).
+        sess.watcher = _watch.GroundWatch(ROOT, roots=index_roots(sess.env))
         if sess.watcher.start():
             print(ink.dim("  watching the ground — edits reload and reindex "
                           "themselves between turns"))

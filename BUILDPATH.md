@@ -98,6 +98,11 @@ knows Ollama; nothing else knows either.**
                   test the ENGINE from outside; none let the ESTATE say what
                   it had proved. It reports its own limits every time and
                   refuses the claim it cannot make.
+    doctrine.py   THE RECORD'S STATE AND THE DOCS' TRUTH, as arithmetic:
+                  `python -m manjuel.doctrine` (doc_pass) and `--check`
+                  (doctrine_check). Run directly, never a skill -- they were
+                  skills for an hour on 2026-09-10 and took the Router's
+                  shortlist. Added to this map 2026-09-17.
 
 ## Layer 5 — the record
 
@@ -122,6 +127,12 @@ knows Ollama; nothing else knows either.**
 
     cli.py        the REPL: one prompt, shared typed/voice thread, slash
                   commands, boot + preflight.
+    serve.py      the headless door (2026-09-08): the REPL's turn as JSON
+                  lines on stdin and stdout -- PROTOCOL 1, five commands in,
+                  nineteen events out -- for atlas's door, which spawns one
+                  per open world. An engine with no command for thirty
+                  minutes between turns closes its own sitting (IDLE_CLOSE,
+                  2026-09-16). Added to this map 2026-09-17.
     boot.py       GROUND / RACK / RECORD / GATE / VOICE report; every
                   section degrades alone. And the brief's facts, read off
                   the record at every open (`/brief` has the door say them).
@@ -365,6 +376,135 @@ different clothes -- A SEAT SAYING SOMETHING IT DID NOT GET FROM A TOOL:
 
     THE GATE IS UNCHANGED: `python tests/release.py --check` must pass before
     any of these is tagged, and the tag is his (RULE 6).
+
+## The ladder, 2026-09-17 (his word: "update the records to reflect the current system")
+
+The section above was written 2026-09-10, before its last line was tested.
+What happened after it:
+
+    0.1.10 THE SEAL -- NOT BUILT. 0.1.10 became a version string only
+           ("0.1.10, and a flow that checks a bump rather than making one"),
+           was never tagged, and shipped inside v0.1.11 without any of the
+           seal's work. That work -- the gate in CI, ESTATE LAW 2 as a gate,
+           SITTING LAW 5 sealed, the terminator ruling, the client token, the
+           small-honesty list -- is still open in TASKS, and has no number.
+    0.1.11 THE CODING UPDATE -- TAGGED v0.1.11 on c766ce7, 2026-09-12, his
+           name. The coding loop made real: `edit_file`, `run_python`, the
+           `coder` flow, hooks, `mcp_call`, and verdict lines a check can
+           score (CHANGELOG, v0.1.11).
+    after  unreleased and unnumbered in both repositories: the 2026-09-14
+           diagnostics pass, and his optimization pass of 2026-09-15 to 09-17
+           -- eight pieces, then his rulings on D1 (the Dashboard's own reads
+           are not traces) and D2 (an idle engine closes its own sitting), D3
+           ruled out. The next number is his.
+    atlas  v0.1.5 THE FLOW CONFIRMATION, TAGGED on 3dacdbc, 2026-09-12, with
+           0.1.3 and 0.1.4 built and never tagged inside it. Unreleased
+           since: the release.yml fix, `version-tag`, node retries, the hold
+           queue, and atlas's half of the passes above.
+
+THE MARKS AS GIT HOLDS THEM, read 2026-09-17, because the record and the tags
+disagree:
+
+    core   v0.1.0 82f350f   v0.1.1 0bd8666   v0.1.3 cefdec0   v0.1.4 63fab9e
+           0.1.4 c6dd158    0.1.5 baa4f32    0.1.7 a6f7851    0.1.9 6c82542
+           v0.1.11 c766ce7
+    atlas  v0.1.5 3dacdbc
+
+    - THE FIRST SIX ARE NOT ON `main`. v0.1.0 through v0.1.4, and the
+      lightweight 0.1.4 and 0.1.5, point into `pre-strip-master`, the history
+      kept from before worlds/ was stripped -- and it still carries 383 paths
+      under worlds/, 268 of them under a vault/ folder. Pushing any of those
+      six marks publishes that history (CLAUDE.md RULE 1). Only 0.1.7, 0.1.9
+      and v0.1.11 are on `main`, and `main` carries none.
+    - the lightweight `0.1.5` sits on baa4f32 (2026-09-08 09:12), whose own
+      pyproject says 0.1.4 and which predates the 0.1.5 work; CHANGELOG says
+      0.1.5 was never tagged, and that stays true of its work
+    - a second, lightweight `0.1.4` sits on c6dd158, later on 2026-09-04 than
+      v0.1.4
+    - CHANGELOG's 0.1.7 heading names b22bf81; the `0.1.7` tag is on a6f7851,
+      the commit after it
+    - the names are mixed: `v` on five, none on four. The glass's `git_tag`
+      cuts only the `v` form.
+
+Keeping, moving or removing any mark is his (RULE 6).
+
+**AND ON HIS WORD, 2026-09-17 ("fix the tags"): THE SIX WERE REMOVED.** The
+remote was asked first -- `git ls-remote --tags origin`, one read, at his word
+-- and it holds three marks: `0.1.7`, `0.1.9` and `v0.1.11`, each on the same
+commit as here, each on `main`, none carrying a `worlds/` path. The six were
+local only, so nothing was unpublished and nothing on GitHub changed. They were
+lightweight -- a name and a commit, no message and no tagger -- and their
+commits still stand on `pre-strip-master`, so any of them can be put back from
+the shas above. No mark now reaches a commit that touches `worlds/`.
+
+## The order it goes next (2026-09-17, his word: "set a spec plan and a build path for the vision going forward")
+
+SPEC §8 says what each number MEANS and when it is DONE. This is the order,
+and the rhythm each piece keeps: read what it touches whole -> build the piece
+he named -> prove it on a mirror or a scratch copy, with the reversal -> one
+CHANGELOG entry and the doc lines it moved -> "restart required" if `manjuel/`
+moved -> stop.
+
+    1  HIS TERMINAL, BEFORE ANYTHING ELSE. Both suites and a live standup,
+       then `tests/release.py --check`. Nothing below is tagged until that
+       passes, and the three checks it refuses today are all his terminal's.
+    2  THE TWO NUMBERS. The core's passes and atlas's passes are both
+       unreleased and unnumbered: the pins move, the record folds under the
+       heading, the mark is cut and sent. atlas's is also the first firing of
+       `release.yml` and of the `version-tag` flow.
+    3  THE SEAL. The gate in CI first -- it is the one that keeps the rest
+       honest -- then ESTATE LAW 2 as a gate, then the small-honesty list.
+       The three rulings inside it (SITTING LAW 5 sealed, the terminator, the
+       client token) are his, and are not a hand's to schedule.
+    4  THE DOOR AND THE COURT, measured: the court's own numbers first,
+       because both 2026-09-14 courts cut Manjuel at the seconds the turn had
+       left; then the prose faults SPEC 4.7 still holds open.
+    5  THE REACH (atlas): the glass's address and its auth gate, the door's
+       holds. His decision, then a piece.
+    6  THE LOOP: the standup and the court as flows, fired from the glass,
+       one run measured against the last.
+    7  THE GLASS AS THE FRONT DOOR: atlas's H3 -> H7, governed by
+       `atlas/docs/SPEC_CONTROL_CENTER.md` §10. What is left of H2 -- the
+       per-world ask lock, P0-12/13/14, `route_*`, the intent port -- is read
+       against the code at the start of that piece, because that road and
+       that code have disagreed before.
+
+Two things this order will not do, for reasons already written down: no piece
+starts while a sitting is open (RULE 9), and no version is named or tagged by
+a hand (RULE 6).
+
+## The marks, and how one is cut (2026-09-17)
+
+In one line: ONE MARK PER VERSION, `vMAJOR.MINOR.PATCH`, ON THE MAIN LINE,
+AFTER THE GATE, SENT BY NAME -- and never moved.
+
+    1  bump the pins and SAVE them: `pyproject.toml` and
+       `manjuel/__init__.py` in the core, `version.ps1 set` (ten pins) in
+       atlas. The door reads the version AT THE COMMIT, so an unsaved bump is
+       refused by name.
+    2  fold the record: CHANGELOG's Unreleased entries move under
+       `## vX.Y.Z -- <date> (tag on <commit sha>)`, naming the COMMIT the mark
+       sits on and never the mark's own object; a bare `## Unreleased` stays
+       on top, because `tests/release.py` reads that heading.
+    3  the gate: `python tests\release.py --check vX.Y.Z` on HIS terminal,
+       PASSED 9 of 9 (the core); `python tests/prove.py --check`, both Go
+       modules, gofmt and the door's battery (atlas).
+    4  send the main line FIRST -- Save, then Send to GitHub on Version
+       control -- so the mark's commit is already on origin.
+    5  cut the mark on Version control. The door refuses a name that is not
+       plain semver, a number the version file does not agree with at that
+       commit, a mark that already exists, a dirty tree at HEAD, and
+       (2026-09-17) a commit the main line does not carry.
+    6  send the mark by name. The door refuses to send one whose commit
+       origin's main line does not already carry, so a mark can never publish
+       a history that line has not.
+    7  the mark is his: cutting and sending are buttons, and the hand on them
+       is his (RULE 6).
+
+WHAT THE MARKS ARE, after 2026-09-17: the core carries `0.1.7` (a6f7851),
+`0.1.9` (6c82542) and `v0.1.11` (c766ce7) -- all on `main`, all on GitHub;
+atlas carries `v0.1.5` (3dacdbc). The two without a `v` were sent before the
+rule, and a sent mark is never renamed; everything from v0.1.11 on carries it.
 
 
 ## Reading order for a new hand

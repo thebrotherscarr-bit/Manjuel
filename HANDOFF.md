@@ -14,7 +14,7 @@ RUN THE SMOKE SUITE, not just the strokes. It was RED at 34/50 from 14e2711
 to 2026-09-02 because its StubRuntime had not been moved with pipeline.py,
 and nothing noticed: the strokes were green the whole time.
 
-**START AT `## HANDOFF FOR 2026-09-14`** (search for it — the day blocks
+**START AT `## HANDOFF FOR 2026-09-17`** (search for it — the day blocks
 stack newest first above `## Open`). CHANGELOG.md carries the versions;
 DAYBOOK.md's last entry carries the day's intent. Everything between here and
 there is standing reference that has not moved.
@@ -669,6 +669,94 @@ dropped by operator ruling 2026-09-01 — see the fix log.
     5. CHECK THE DISK BEFORE THE TRANSCRIPT. A seat's account of what it did
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
+
+## HANDOFF FOR 2026-09-17 — read this before anything below it
+
+**Where the ground stands.** core `main@7e64f20`, atlas `main@ec46154` -- the last saves,
+both 2026-09-14 -- and a week of work above them on disk, uncommitted, his to land
+through Version control: core pieces 7 and 8, D2 and this records pass; atlas the trace
+ledger, pieces 1 to 6, D1 and its half of the pass. Versions unmoved: core 0.1.11
+(`v0.1.11`), atlas 0.1.5 (`v0.1.5`); nothing since has a number. **THE DOOR (pid 14512)
+AND THE GLASS (pid 14500) ARE RUNNING**, started by the hand at 08:18 on his word ("start
+the door and glass, test it live"); the door was stopped by pid, rebuilt with the mark
+guards on his allowance and restarted at 11:11, so both stand on their current source. No
+engine and no sitting open: 225 is the newest, and it closed itself.
+
+**THE MARKS, AND WHAT WAS DONE ABOUT THEM (the same day, later).** Six marks -- v0.1.0,
+v0.1.1, v0.1.3, v0.1.4, and the lightweight 0.1.4 and 0.1.5 -- pointed into
+`pre-strip-master`, whose history still carries 383 paths under worlds/, 268 of them
+under a vault/ folder; pushing any one of them would have published it (CLAUDE.md RULE 1).
+The 2026-09-11 check walked branches and remote-tracking refs, never tags. On his word
+("fix the tags") the remote was asked once -- `git ls-remote --tags origin` -- and holds
+only `0.1.7`, `0.1.9`, `v0.1.11`: **none of the six was ever public.** All six names were
+then deleted on his word. The commits stand untouched on `pre-strip-master`; **commits
+touching worlds/ reachable from any remaining mark: 0.**
+
+**STILL TRUE OF ANY PUSH.** `git push --tags` sends every mark this machine holds, and a
+clone taken from this disk before today still has the six. Send a mark BY NAME, from
+Version control, after the main line: the door now refuses to cut a mark on anything the
+main line does not carry, and refuses to send one whose commit origin's main line does not
+already carry. Bare git at a terminal answers to none of that. The seven steps are in
+BUILDPATH, "The marks, and how one is cut"; the plan the numbers sit in is SPEC 8.
+
+**WHAT THE WEEK WAS.** 2026-09-14, the diagnostics pass: five fixes from what live runs
+showed. 2026-09-15, his optimization pass, eight pieces: fewer calls, no stalls, no
+races, nothing indexed that should not be, every dial read. 2026-09-16, his rulings on
+what it left him: "D1 b D2 30 minutes  D3 no". 2026-09-17, D1's build placed, both
+rulings proved live on his own door and glass, then TASKS ticked and the record brought
+up to the system -- and last, the six marks removed, the door taught to refuse a mark cut
+off the main line or sent ahead of it, and the way forward written down (SPEC 8, BUILDPATH's
+next steps and mark procedure). DAYBOOK Session 10 is the story; CHANGELOG and
+atlas/CHANGELOG.md carry each piece.
+
+**PROVED LIVE TODAY.**
+
+    D1   opening the Dashboard kept 5 traces (09-15: 8); 408 background reads in 34
+         minutes kept none; the 324 read after a toast check that could see a toast
+         raised none, and one plain call raised one
+    D2   sitting 225 booted 08:21:37; nothing sent after `/status`; `ended` 08:52:02,
+         runs 0, no toll; the door said no engine within three seconds, and the open
+         Dashboard showed Boot inside the minute
+
+**THE RELEASE GATE: PASSED 9 of 9**, re-proved on his own terminal this evening on his word
+-- strokes **2428/2428**, smoke **65/65**, the nine-case standup **9/9 LIVE** (sitting 228,
+99s) and the court **1/1 LIVE** (sitting 229, 275s), which had been red twice on 09-14.
+buildmap, law, manifest, spec (22 section-4 lines, none changed since v0.1.11), daybook and
+handoff pass. atlas beside it: every Go package green in `line` and `webapp`, the door's own
+battery 125/125, the surface at 81 tools.
+
+**AND THE NUMBER IS 0.1.12** (his word, 2026-09-17). `pyproject.toml` and
+`manjuel/__init__.py` both declare it, the CHANGELOG carries a 0.1.12 block naming what it
+holds, and **the tag is NOT cut** -- that is his hand and no other (RULE 6). The order from
+here, all four steps his: land the work through Version control; the bump is already saved
+with it; cut on the main line after the gate; send the mark BY NAME, after the line. The
+seven steps are in BUILDPATH, "The marks, and how one is cut".
+
+**Open, named, not fixed** -- the next hand's list. TASKS' last section carries each with
+the entry that named it:
+
+    the mark buttons    the panel and the `version-tag` flow (v2) both ask the door
+                        before offering to send -- the flow has still NEVER BEEN FIRED,
+                        and firing it opens a sitting and spends the council
+    the court           both 09-14 courts cut Manjuel at the seconds the turn had left
+    the idle close      recorded like a Dashboard Close; the amber idle line does not
+                        mention it; a sitting that RAN something has not closed idle
+                        live
+    the index lock      the watcher's turn-boundary re-index does not take
+                        _INDEX_BUSY
+    the glass's reach   it listens on every address with its auth gate uncalled, and
+                        Ollama listens on every address too; the holds stay off
+                        without --auth
+    atlas leftovers     GetAgent's pointer; Run.check's 502; /run/listen and
+                        /chat/stream after a browser leaves; the Dashboard's toll
+                        words; a watched turn's bubble left live
+    atlas's release     the release.yml fix rides the next number; no draft release
+                        for v0.1.5; `version-tag` never fired
+    the next numbers    both repositories, and the seal, which 0.1.10 never shipped
+    his                 dotenv's comments; RULE 9's wording against the watcher; the
+                        Router's "names the skill"; the two sitting laws' seal;
+                        SITTING LAW 6's second half
+
 
 ## HANDOFF FOR 2026-09-14 — read this before anything below it
 

@@ -718,6 +718,21 @@ other (LAW 5); now a record that lies is a finding.
 {
   "can_approve": false,
   "covenant": "1512741580b7239b",
+  "id": "symbols",
+  "kind": "skill",
+  "office": "MANJUEL",
+  "reports_to": "manjuel",
+  "source": "skills/symbols.md",
+  "us": 1,
+  "wall": "THE GROUND, READ-ONLY - walks the ground's .py/.go/.js files for what they DECLARE, and reads nothing else. Never a world, never a vault, never a secret (SITTING LAW 2, LAW 9). Bounded at 1500 files and 400KB each; no model, no network, no index.",
+  "writes": false
+}
+```
+
+```json
+{
+  "can_approve": false,
+  "covenant": "1512741580b7239b",
   "id": "time_align",
   "kind": "skill",
   "model": "phi4-mini:latest",

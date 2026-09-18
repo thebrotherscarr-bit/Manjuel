@@ -1,6 +1,6 @@
 """manjuel -- local multi-agent pipeline driven by agents.md."""
 
-__version__ = "0.1.11"
+__version__ = "0.1.12"
 
 # THE OLD DIALS STILL TURN. Renamed from chainkit 2026-09-09 at the
 # operator's word. Twenty-two CHAINKIT_* names are documented in RUNBOOK's
@@ -33,3 +33,25 @@ def carry_old_dials():
 
 _carry_old_dials = carry_old_dials      # the old private name still answers
 OLD_DIALS_CARRIED = carry_old_dials()
+
+
+# THE MODULES THAT TAKE A DIAL WHEN THEY ARE IMPORTED (2026-09-15). Every door
+# imports them before it reads `.env` -- cli.main, serve.main and the standup
+# all load the file after `from manjuel import ...` has run -- so a dial written
+# in `.env` reached the environment and was never read, so dotenv could report
+# ".env: set MANJUEL_SEAT_TIMEOUT" over a seat bound that never moved.
+_DIAL_MODULES = ("runtime", "skills", "pipeline", "voice")
+
+
+def read_dials():
+    """CALL THIS AFTER .env IS READ, in place of carry_old_dials: it carries
+    the old CHAINKIT_ names first, then has every engine module already
+    imported read its dials again. A module not yet imported reads them itself
+    when it is. Returns what the carry carried."""
+    import sys
+    carried = carry_old_dials()
+    for name in _DIAL_MODULES:
+        module = sys.modules.get(f"{__name__}.{name}")
+        if module is not None:
+            module.read_dials()
+    return carried

@@ -320,6 +320,10 @@ when a seat says so.
          2026-09-03 because a stroke's own stated intent said it should be.
          Nothing here says that about `rack_report`.
 
+         2026-09-17: its premise moved. Since 2026-09-10 `rack_report` wakes
+         the Quartermaster only when the question asks for a judgement
+         (SPEC 4.3). Still his question.
+
     [ ]  THE DRIFT METRIC HAS PRODUCED NO NUMBER SINCE THE SPINE MOVED.
          (First written "never" -- wrong: 41 transcripts of 2026-08-29
          carry scores, when runs had a feed. Corrected 2026-09-04.)
@@ -355,6 +359,14 @@ when a seat says so.
 
          DONE WHEN: a run with a feed prints a number, a run without one
          says it was never armed, and neither says "no usable source".
+
+         2026-09-17: half of this moved. Since 2026-09-10 a tool result is
+         source material, so a run that called a tool is scored (drift
+         0.788, live; SPEC 4.3). The two notes for two states are not
+         recorded as built, and both 2026-09-14 court reports still carry
+         "drift: not scored this run (no usable source)" -- the second one
+         after `ground_read` and `semantic_search` had run
+         (logs/standup_2026-09-14_091729.md, _153828.md).
 
     [ ]  THE CARD REPORT CANNOT SAY "OVER".  skills.py:1665:
 
@@ -574,11 +586,14 @@ when a seat says so.
          his rebuild had not happened while it had. First line now reads
          REBUILT or Refreshed, and the banner explains why `unchanged` is 0.
 
-    [ ]  phi4-mini AT THE FRONT DOOR is unsettled either way. SEAT_LOG
+    [-]  phi4-mini AT THE FRONT DOOR is unsettled either way. SEAT_LOG
          2026-09-01: it hallucinated an eight-turn steward:/operator:
          dialogue and refused a benign read; s58 showed it reporting
          honestly once tools engaged. "The move up may be a downgrade at
          the front door" — still unmeasured.
+         SUPERSEDED 2026-09-04 by the tiered rack: the door has been
+         llama3.2 since that morning, and what is unsettled now is llama3.2
+         at the door (SPEC 4.7). Marked 2026-09-17, on his word.
 
 ---
 
@@ -907,6 +922,8 @@ Kept so nobody re-derives them and starts.
          (qwen3.5:9b missing) -- the door abridging a tool result. Class
          (a), small; the rack_report reading fault (sitting 85) is the big
          one and stands open above.
+         2026-09-17: that reading fault closed 2026-09-10 (SPEC 4.3, facts
+         only). The dropped model is not recorded as fixed.
 
     [x]  UNATTENDED CLOSE WRITES ITS LEDGER LINE (cli._close). 2026-09-04.
     [x]  `git commit -m X` TAKES X (skills._commit_subject). 2026-09-04.
@@ -959,6 +976,11 @@ Kept so nobody re-derives them and starts.
          "The operator asked:" in the delivery. The closing prompt says not
          to; a 3B does anyway. Mechanism: strip lines that are the
          record's own labels. logs/2026-09-04_225023_*.md
+         2026-09-17: its condensed line in the 2026-09-08 list was closed in
+         0.1.9 as read, not built -- `_SCAFFOLD_RE` discards an output that
+         OPENS with the conversation block's labels. Whether that reaches
+         these two labels mid-delivery was not re-checked, so this stays
+         open.
 
 ---
 
@@ -1028,6 +1050,8 @@ Kept so nobody re-derives them and starts.
          And the door in the same run answered the PREVIOUS question (the
          rack) -- the stale answer of sitting 77, second live sighting.
          logs/2026-09-07_095206_*.md
+         2026-09-17: the previous-question half was declined by ruling in
+         0.1.9 (below). The recital is not recorded as fixed.
 
     [ ]  THE DOOR AT THE COURT RESTATES THE QUESTION. Sittings 88, 90, 91,
          92: the Steward's counsel on "should a court of three seats run on
@@ -1056,14 +1080,21 @@ Kept so nobody re-derives them and starts.
     [ ]  the two sitting laws (5: nothing edited while a sitting is open;
          6: the rules and every law, directive and context file read, and
          law/SITTING_LAWS_2.md; his seal: python law\law.py direct
-    [ ]  the door invents numbers (35 for 37; 34 for 37) -- stamp or reseat
+    [x]  the door invents numbers (35 for 37; 34 for 37) -- stamp or reseat
+         STAMPED 2026-09-10, in 0.1.9 (its section below); reseating the
+         door is still open (SPEC 4.7). Ticked 2026-09-17 on his word.
     [x]  a claim about a tool result with no citation is unchecked (s82)
          BUILT 2026-09-10, in 0.1.9 (CHANGELOG "THE CITATION CHECK"), 6
          strokes; SPEC 4.3's second half MET.
-    [ ]  the door parrots the record's labels / answers the previous
+    [x]  the door parrots the record's labels / answers the previous
          question / ships an empty flag scaffold
+         CLOSED 2026-09-10 in 0.1.9 as read, not built (its section below):
+         two shapes already guarded, the third declined by ruling. Ticked
+         2026-09-17 on his word.
     [ ]  `ground/` on the workspace reader (unjail read_file)
-    [ ]  the tool-loop dedup is per Router sitting, not per run
+    [x]  the tool-loop dedup is per Router sitting, not per run
+         BUILT 2026-09-10, in 0.1.9 (CHANGELOG "THE TOOL-LOOP DEDUP COVERS
+         THE RUN"), 9 strokes. Ticked 2026-09-17 on his word.
     [ ]  history_block's unused limit; per-turn work that could be once
     [ ]  small honesty: dotenv unreadable .env; MANJUEL_OLLAMA_HOST unread;
          memory.pending swallows; lawgate cache stamp; seatlog "At close";
@@ -1072,10 +1103,25 @@ Kept so nobody re-derives them and starts.
          normalize, zscore, `if True:`); three anaphora sets; the fallback
          ESTATE_PIPELINE order
     [ ]  the release gate in prove.yml; BUILDMAP in index_roots (his call)
+         2026-09-17, on his word: BUILDMAP in index_roots is DONE -- he
+         ruled it 2026-09-09 ("index everything"), SPEC 4.1 MET. What stays
+         open is the gate in CI: read at every boot since 2026-09-09, and in
+         no workflow.
     [ ]  CRLF or LF (his call); the client token in old filenames (his call)
+         2026-09-17: the client token is in 0 log filenames and 0 indexed
+         documents since 2026-09-09 (SPEC 4.5); it still sits in
+         sessions.jsonl and the git pack. The terminator ruling is his.
     [ ]  ESTATE LAW 2 as a gate on worlds/; LAWS 3 and 4 (his call)
     [ ]  rack_report facts-only; the door at court (his call)
-    [ ]  0.1.5 / 0.1.6: restart, measure live, tag when he says
+         2026-09-17: rack_report facts-only is DONE -- built 2026-09-10,
+         SPEC 4.3 MET. The door at court stays open.
+    [x]  0.1.5 / 0.1.6: restart, measure live, tag when he says
+         OVERTAKEN, and ticked 2026-09-17 on his word: both were restarted
+         and measured live, and both shipped inside the `0.1.7` tag
+         (a6f7851, 2026-09-09: the standup 10/10, the gate 9 of 9). Neither
+         number was cut on its own work -- the lightweight `0.1.5` tag in
+         git sits on baa4f32, a pre-strip commit that predates it (see the
+         section at the end of this file).
 
 ## Appended by the operator
 
@@ -1159,5 +1205,104 @@ Kept so nobody re-derives them and starts.
     rack_report facts-only (SPEC 4.3 MET); BUILDMAP in index_roots (he ruled
     it: "index everything"); phrases for the door (SPEC 4.2 MET); the release
     gate is READ AT BOOT though not yet in CI; SITTING_LAWS_2.md is written
-    though not sealed onto the chain.
+    though not sealed onto the chain. Those lines were ticked or annotated
+    2026-09-17, on his word.
+
+## 0.1.10 and 0.1.11 — THE CODING UPDATE (tagged v0.1.11 on c766ce7, 2026-09-12)
+
+    Added 2026-09-17 on his word: "tick the finished work, update the
+    records to reflect the current system." 0.1.10 was a version string and
+    never a tag; it shipped inside v0.1.11, his name for the coding loop made
+    real -- `edit_file`, `run_python`, the `coder` flow, hooks, `mcp_call`,
+    and verdict lines a check can score. CHANGELOG's v0.1.11 section is the
+    list. No box above closed with it: its CRLF work enacted his 2026-09-03
+    ruling on the root docs, and the terminator line stays open (SPEC 4.5).
+
+    [ ]  THE SEAL DID NOT SHIP. The 0.1.9 section sent six things to 0.1.10
+         -- the gate in CI, ESTATE LAW 2 as a gate, SITTING LAW 5 sealed,
+         the terminator ruling, the client token, the small-honesty list.
+         v0.1.11 carried none of them; each is still its own open line in
+         the 2026-09-08 list, and the seal has no number. Naming one is his.
+
+## Since v0.1.11 — unreleased in both repositories, no number yet
+
+    Added 2026-09-17 on his word. What landed is CHANGELOG's Unreleased and
+    atlas/CHANGELOG.md's [Unreleased], each piece whole; DAYBOOK Session 10
+    is the story. The fifteen open lines are what the record names as still
+    owed, each with the entry that named it. The next numbers are his.
+
+    [x]  2026-09-14, the diagnostics pass: the standup reads the ground's
+         dials; every branch that picks a tool says so; RUNBOOK says what
+         Close sitting pays; the boot no longer shows up as a run (atlas);
+         the glass stops rewriting its whole trace store (atlas)
+    [x]  2026-09-15, his optimization pass, pieces 1 to 8: one proofs read
+         per refresh; one event stream per tab; the health check rests while
+         hidden; the door reads the record once per change; the door stops
+         waiting on a browser that left and sees an engine that died; the
+         glass bounds its door calls and its saves stop racing; the watcher
+         feeds the index only its roots; a dial in .env is read, and a turn's
+         deadline stops leaving clients behind
+    [x]  D1, his "D1 b" (2026-09-16): the Dashboard's own reads are not
+         traces. Placed and proved on his glass 2026-09-17
+    [x]  D2, his "D2 30 minutes" (2026-09-16): an engine nobody uses closes
+         its own sitting. Proved on his door 2026-09-17, sitting 225
+    [-]  D3, a slower refresh while no engine is open: RULED OUT, his "D3
+         no" (2026-09-16)
+
+    [x]  THE OLD MARKS HOLD THE STRIPPED HISTORY. v0.1.0, v0.1.1, v0.1.3,
+         v0.1.4 and the lightweight 0.1.4 and 0.1.5 point into
+         pre-strip-master, not main -- and that history still carries 383
+         paths under worlds/, 268 of them under a vault/ folder. Pushing any
+         of those six marks publishes it (CLAUDE.md RULE 1). Whether any is
+         already on the remote is not known from this machine; keeping,
+         moving or deleting them is his (the records pass, 2026-09-17).
+         CLOSED 2026-09-17, his "fix the tags": the remote was asked once and
+         held none of the six; all six names were then deleted on his word.
+         The commits stand on pre-strip-master; worlds/ reachable from any
+         remaining mark: 0. The door now refuses to cut a mark off the main
+         line or send one ahead of it
+    [x]  the marks and CHANGELOG disagree: the `0.1.7` tag is on a6f7851,
+         not b22bf81; `0.1.5` sits on a commit that says 0.1.4; a second
+         `0.1.4` sits on c6dd158 (the records pass, 2026-09-17). CLOSED the
+         same day: the two strays were among the six deleted, and the `0.1.7`
+         sha is recorded beside its own heading, the heading kept
+    [ ]  the court does not fit its turn: both 2026-09-14 courts cut Manjuel
+         at the seconds left, 179 and 34 (logs/standup_2026-09-14_091729.md,
+         _153828.md)
+    [ ]  an idle close is recorded as a Dashboard Close -- the toll says
+         "Closed unattended." and sessions.jsonl has no field for why; the
+         amber idle line does not mention the thirty-minute close; and an
+         idle close of a sitting that RAN something has not been fired live
+         (CHANGELOG, D2)
+    [ ]  the watcher's turn-boundary re-index (cli._apply_ground_changes)
+         builds the index without skills._INDEX_BUSY, so it can overlap a
+         build still running behind a refused index_ground (the records
+         pass, 2026-09-17)
+    [ ]  the glass listens on every address (`:8091`) and its auth gate has
+         no caller; Ollama listens on every address too; the door's holds
+         are off without --auth (the live test, 2026-09-17; DAYBOOK
+         Session 9)
+    [ ]  dotenv keeps a comment after a value as part of it (his call;
+         CHANGELOG, piece 8)
+    [ ]  RULE 9 and SITTING LAW 5 say "any changed text file is
+         re-embedded"; the watcher now feeds only the index roots (his
+         words; CHANGELOG, piece 7)
+    [ ]  the Router's prompt says "The objective names the skill X" for a
+         branch's pick (his call; CHANGELOG, 2026-09-14)
+    [ ]  atlas: GetAgent hands back a pointer into the agents slice, which
+         races UpsertAgent; Run.check reads a 502 as "no engine open"
+         (atlas, piece 6)
+    [ ]  atlas: /run/listen has the stall piece 5 fixed in /run/stream, and
+         /chat/stream writes on after its browser leaves (atlas, piece 5)
+    [ ]  atlas: the Dashboard still says closing always pays its toll -- the
+         hero, Close's progress line, the sidebar tooltip (CHANGELOG,
+         2026-09-14)
+    [ ]  atlas: a watched turn's bubble stays marked live after it lands
+         (atlas, 2026-09-14)
+    [ ]  atlas: the next number carries the release.yml fix; no draft
+         release was made for v0.1.5; `version-tag` has never been fired
+         (HANDOFF 2026-09-14)
+    [ ]  DAYBOOK has no entry for 2026-09-10 or 09-11, and Session 8's
+         "Next session" line is in a form seatlog.standing_block does not
+         read (DAYBOOK Session 9)
 

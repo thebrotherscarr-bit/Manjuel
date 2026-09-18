@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import hashlib
 import os
+import re
 import sqlite3
 import struct
 from dataclasses import dataclass
@@ -231,6 +232,45 @@ def chunk_text(text: str, size: int = CHUNK_CHARS, overlap: int = CHUNK_OVERLAP)
     return [(s, c.strip()) for s, c in out if c.strip()][:MAX_CHUNKS_PER_FILE]
 
 
+# WHERE A PASSAGE SITS, CARRIED WITH IT (2026-09-17, his word: "chunk on
+# structure and carry the heading path").
+#
+# A 1200-character window out of the middle of SPEC.md arrives with no idea
+# that it is section 8.2, so the embedding is of the words alone and the hit
+# cites "chunk 14 @ 18,400" -- a number nobody can navigate to. Naming the
+# section in the chunk fixes both ends at once: the heading's words join the
+# passage's in the vector, and the citation becomes somewhere a person can
+# open.
+#
+# MARKDOWN ONLY, and that is not timidity. `windowed()` in skills.py learned
+# this the hard way: a `#` in a .py file is a COMMENT, so treating one as a
+# heading offered a module's docstring prose as navigable sections. Code is
+# mapped by `ast`, where its real shape is -- never by this.
+_MD_HEADING = re.compile(r"(?m)^(#{1,6})[ \t]+(.+?)[ \t]*$")
+
+
+def heading_trail(text: str) -> list[tuple[int, int, str]]:
+    """(offset, level, title) for every markdown heading, in file order."""
+    return [(m.start(), len(m.group(1)), m.group(2).strip())
+            for m in _MD_HEADING.finditer(text)]
+
+
+def heading_path_at(trail: list, pos: int, depth: int = 3) -> str:
+    """The headings in force at `pos`, outermost first: "8. THE PLAN > 8.2 ...".
+
+    A deeper heading CLOSES the ones beneath it, which is what makes this a
+    path and not a list of everything seen so far.
+    """
+    levels: dict[int, str] = {}
+    for off, lvl, title in trail:
+        if off > pos:
+            break
+        for deeper in [k for k in levels if k > lvl]:
+            levels.pop(deeper)
+        levels[lvl] = title
+    return " > ".join(levels[k] for k in sorted(levels))[:180]
+
+
 def _norm(vec: list[float]) -> list[float]:
     n = sum(x * x for x in vec) ** 0.5
     return [x / n for x in vec] if n else vec
@@ -300,6 +340,36 @@ class VectorIndex:
             CREATE INDEX IF NOT EXISTS chunks_doc ON chunks(doc_id);
             """
         )
+        # EXACT SEARCH BESIDE MEANING (2026-09-17, his word: "hybrid
+        # retrieval"). An embedding is a poor way to find `_INDEX_BUSY`,
+        # `tagSend` or `MANJUEL_GIT_REMOTE`: the vector of an identifier is the
+        # vector of the words around it, so the one passage that DEFINES a name
+        # ranks beside every passage that mentions the subject. BM25 finds the
+        # token itself. Neither is better; they fail differently, which is why
+        # every serious retrieval stack runs both and fuses the ranks.
+        #
+        # FTS5 SHIPS WITH PYTHON'S OWN SQLITE -- no dependency (LAW 6, RULE 4),
+        # no second process, no second file: the same vectors.db carries it.
+        #
+        # `content='chunks'` makes it DERIVED, which is the estate's own rule
+        # for everything that is not the record: it holds no text of its own and
+        # is rebuilt from the chunks table in one statement. Nothing to keep in
+        # step by hand, and nothing that can drift.
+        #
+        # `tokenchars '_'` KEEPS AN IDENTIFIER WHOLE. Without it unicode61
+        # splits on the underscore, `_INDEX_BUSY` becomes `index` + `busy`, and
+        # the exact half of a hybrid search stops being exact about the one
+        # thing it is for.
+        try:
+            self.db.execute(
+                "CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts USING fts5("
+                "text, content='chunks', content_rowid='id', "
+                "tokenize=\"unicode61 tokenchars '_'\")")
+            self.fts = True
+        except sqlite3.OperationalError:
+            # A python built without FTS5 keeps the whole index working and
+            # loses only the exact half. Named on the answer, never silent.
+            self.fts = False
         self.db.commit()
 
     def _check_schema(self) -> None:
@@ -311,6 +381,7 @@ class VectorIndex:
             # The index is derived state, never a record -- it is rebuilt from
             # the ground rather than migrated.
             self.db.executescript(
+                "DROP TABLE IF EXISTS chunks_fts; "
                 "DROP TABLE IF EXISTS chunks; DROP TABLE IF EXISTS docs; DELETE FROM meta;"
             )
             self.db.commit()
@@ -333,6 +404,78 @@ class VectorIndex:
                 f"different models are not comparable. Rebuild with "
                 f"index_ground <rebuild> or restore the old tag."
             )
+
+    # ---- the exact half ----------------------------------------------
+
+    def _refresh_fts(self) -> None:
+        """Re-derive the whole keyword index from the chunks table.
+
+        ONE STATEMENT, and it is the reason this is external-content rather
+        than a table with triggers: `rebuild` reads the chunks as they stand,
+        so the keyword half can never hold a passage the vector half does not,
+        and there is no insert path to forget. It costs no embedding and no
+        model -- on this estate's corpus it is milliseconds, which is why it is
+        simply run after every build rather than tracked.
+        """
+        if not getattr(self, "fts", False):
+            return
+        try:
+            self.db.execute("INSERT INTO chunks_fts(chunks_fts) VALUES('rebuild')")
+            n = self.db.execute("SELECT COUNT(*) FROM chunks").fetchone()[0]
+            self.db.execute("INSERT OR REPLACE INTO meta(key,value) "
+                            "VALUES('fts_built',?)", (str(n),))
+            self.db.commit()
+        except sqlite3.DatabaseError:
+            self.fts = False
+
+    def _fts_ready(self) -> bool:
+        """True when the keyword index holds what the chunks hold.
+
+        AN INDEX BUILT BEFORE THIS EXISTED IS UPGRADED WITHOUT RE-EMBEDDING.
+        The chunk TEXT is already stored; the keyword half is derived from it,
+        so an old vectors.db gains exact search the first time it is searched,
+        with no rebuild, no GPU and nothing for the operator to run.
+
+        ASKED OF `meta`, NOT OF THE TABLE, and that distinction cost a red
+        stroke to find: an external-content FTS5 table answers `COUNT(*)` from
+        the CONTENT table, so an empty keyword index reports the chunk count
+        and looks full. The marker records how many chunks the last refresh
+        covered; a missing or stale one rebuilds.
+        """
+        if not getattr(self, "fts", False):
+            return False
+        try:
+            want = self.db.execute("SELECT COUNT(*) FROM chunks").fetchone()[0]
+            row = self.db.execute(
+                "SELECT value FROM meta WHERE key='fts_built'").fetchone()
+        except sqlite3.DatabaseError:
+            self.fts = False
+            return False
+        if want and (row is None or row[0] != str(want)):
+            self._refresh_fts()
+        return bool(getattr(self, "fts", False))
+
+    def _fts_hits(self, qtext: str) -> dict:
+        """{chunk id: bm25 rank position} for the query's own words.
+
+        THE QUERY IS SANITISED INTO TOKENS, never passed through. FTS5's MATCH
+        takes an expression language -- quotes, `NEAR`, `*`, `^`, a bare `-` --
+        and an operator's sentence is not one. A raw question mark or an
+        unbalanced quote raises, and a search that raises on ordinary English
+        is worse than no exact half at all. Words out, OR between them: the
+        ranking decides which matter, which is what BM25 is for.
+        """
+        toks = [t for t in re.findall(r"[A-Za-z0-9_]+", qtext or "") if len(t) > 1]
+        if not toks or not self._fts_ready():
+            return {}
+        expr = " OR ".join('"' + t.replace('"', '') + '"' for t in toks[:24])
+        try:
+            rows = self.db.execute(
+                "SELECT rowid FROM chunks_fts WHERE chunks_fts MATCH ? "
+                "ORDER BY bm25(chunks_fts) LIMIT 200", (expr,)).fetchall()
+        except sqlite3.DatabaseError:
+            return {}
+        return {r[0]: i for i, r in enumerate(rows)}
 
     # ---- building ---------------------------------------------------
 
@@ -371,7 +514,8 @@ class VectorIndex:
                         return
                     yield root, p
 
-    def build(self, roots: list[Path], embed_fn, report=lambda s: None) -> IndexStats:
+    def build(self, roots: list[Path], embed_fn, report=lambda s: None,
+              declared: bool = True) -> IndexStats:
         st = IndexStats()
         for root, p in self._iter_files(roots):
             st.scanned += 1
@@ -422,6 +566,18 @@ class VectorIndex:
                 # session that produced it, instead of one growing blob.
                 pieces = [(st, tx, lb, sp, ss)
                           for st, tx, lb, sp, ss in _memory.split_entries(text)]
+            elif p.suffix.lower() == ".md":
+                # THE SECTION TRAVELS WITH THE PASSAGE. Its words are part of
+                # what gets embedded -- a passage under "8.2 the versions
+                # ahead" should answer a question about the versions ahead even
+                # when it never repeats the phrase -- and the same string lands
+                # in `label`, which is what the result line already prints.
+                trail = heading_trail(text)
+                pieces = []
+                for off, tx in chunk_text(text):
+                    where = heading_path_at(trail, off)
+                    body = f"[{p.name} > {where}]\n{tx}" if where else tx
+                    pieces.append((off, body, where, "", ""))
             else:
                 pieces = [(st, tx, "", "", "") for st, tx in chunk_text(text)]
             if not pieces:
@@ -463,7 +619,24 @@ class VectorIndex:
             st.chunks += len(pieces)
             report(f"    + {p.name} ({len(pieces)} chunks)")
 
-        self.prune(report, roots=roots)
+        # ONLY A DECLARED SCOPE MAKES AN ORPHAN (2026-09-15). This handed
+        # prune() the `roots` of every build, and two callers build from a
+        # handful of CHANGED FILES rather than from index_roots.txt: the
+        # watcher's drain (cli._apply_ground_changes) and embed_text. Against
+        # those, every other document was "under a root no longer declared".
+        # On the live index (1,290 documents on 2026-09-15) that share is
+        # always over the ceiling, so the eviction was refused -- silently,
+        # neither caller passes a report -- after resolving every indexed
+        # path, on every turn a file had changed. On a small index, where the
+        # changed files were three quarters of it or more, the rest was evicted
+        # for real. A caller whose roots are not the index's scope says so, and
+        # the prune asks only question 1: is the file gone?
+        self.prune(report, roots=roots if declared else None)
+        # The keyword half is DERIVED from the chunks, so it is re-derived
+        # whenever they move -- after the prune, so it never holds a passage
+        # belonging to a document that has just been evicted.
+        if st.embedded or st.chunks:
+            self._refresh_fts()
         return st
 
     # A refresh may evict this share of the corpus and no more. Above it the
@@ -549,13 +722,18 @@ class VectorIndex:
 
         if missing or orphans:
             self.db.commit()
+            self._refresh_fts()
         return len(missing) + len(orphans)
 
     # ---- searching --------------------------------------------------
 
     def search(self, qvec: list[float], limit: int = 5, per_doc: int = 2,
-               scope: str = "all"):
-        """Rank the index. `scope` picks the corpus (his ruling 2026-09-10):
+               scope: str = "all", qtext: str = ""):
+        """Rank the index. `qtext` is the query's own WORDS: given, the keyword
+        half runs beside the vector half and the two rankings are fused (see
+        below). Omitted, this behaves exactly as it always has.
+
+        `scope` picks the corpus (his ruling 2026-09-10):
 
             sources      WHAT IS -- the doctrine, the law, the code, the
                          seats, the specs. Neither transcripts nor ledgers.
@@ -604,31 +782,86 @@ class VectorIndex:
             mat = _np.frombuffer(b"".join(r[5] for r in usable), dtype="<f4")
             mat = mat.reshape(len(usable), len(q))
             sims = mat @ _np.asarray(q, dtype="<f4")
-            scored = [
-                (float(sims[i]), usable[i][6], usable[i][2], usable[i][3],
-                 usable[i][4], usable[i][7], usable[i][8], usable[i][9])
-                for i in range(len(usable))
-            ]
+            cos = [float(sims[i]) for i in range(len(usable))]
         else:
-            scored = [
-                (sum(a * b for a, b in zip(q, _unpack(r[5]))), r[6], r[2], r[3],
-                 r[4], r[7], r[8], r[9])
-                for r in usable
-            ]
+            cos = [sum(a * b for a, b in zip(q, _unpack(r[5]))) for r in usable]
 
-        scored.sort(key=lambda t: t[0], reverse=True)
+        items = [
+            {"cid": r[0], "score": cos[i], "path": r[6], "ord": r[2],
+             "start": r[3], "text": r[4], "label": r[7], "stamp": r[8],
+             "session": r[9], "found": "meaning"}
+            for i, r in enumerate(usable)
+        ]
+        items.sort(key=lambda d: d["score"], reverse=True)
 
-        out, per = [], {}
-        for score, path, ordn, start, text, label, stamp, session in scored:
-            if per.get(path, 0) >= per_doc:
-                continue
-            per[path] = per.get(path, 0) + 1
-            out.append({"score": score, "path": path, "ord": ordn, "start": start,
-                        "text": text, "label": label, "stamp": stamp,
-                        "session": session})
+        # HYBRID: TWO RANKINGS, FUSED BY RANK AND NOT BY SCORE (2026-09-17).
+        #
+        # A cosine and a BM25 number are not on one scale and never will be --
+        # adding them, or weighting one against the other, is a constant nobody
+        # can defend, which is the same objection that refused a recency weight
+        # here in favour of a corpus split. RECIPROCAL RANK FUSION needs no
+        # such constant: each list contributes 1/(k+rank), so a passage both
+        # halves rank highly wins, a passage only ONE half can see still
+        # surfaces, and k=60 -- the published default -- flattens the top so
+        # neither retriever dominates the other's certainties.
+        #
+        # THE EXACT HALF ONLY ADDS. A query whose words appear nowhere returns
+        # no keyword hits and the order is exactly the cosine order it has
+        # always been, which is why this cannot make an existing search worse.
+        fts = self._fts_hits(qtext) if qtext else {}
+        if fts:
+            K = 60.0
+            by_id = {d["cid"]: d for d in items}
+            # WHAT "THE VECTOR HALF FOUND IT" MEANS. Cosine scores every chunk
+            # in the corpus, so "it has a score" says nothing -- the honest
+            # test is whether it ranked where a caller would ever have seen it.
+            reach = {d["cid"] for d in items[:max(20, limit * 4)]}
+            fused = {d["cid"]: 1.0 / (K + i) for i, d in enumerate(items)}
+            for cid, i in fts.items():
+                if cid not in by_id:
+                    continue            # out of this scope: not a candidate
+                fused[cid] = fused.get(cid, 0.0) + 1.0 / (K + i)
+                by_id[cid]["found"] = "both" if cid in reach else "exact"
+            items.sort(key=lambda d: fused.get(d["cid"], 0.0), reverse=True)
+
+        out, per, seen = [], {}, set()
+
+        def take(d) -> bool:
+            if d["cid"] in seen or per.get(d["path"], 0) >= per_doc:
+                return False
+            seen.add(d["cid"])
+            per[d["path"]] = per.get(d["path"], 0) + 1
+            out.append(d)
+            return True
+
+        for d in items:
             if len(out) >= limit:
                 break
-        return out
+            take(d)
+
+        # AND THE EXACT HALF KEEPS A SEAT AT THE TABLE.
+        #
+        # MEASURED 2026-09-17, on a corpus built to look like this one. A query
+        # that names an identifier AND two ordinary words -- which is how a
+        # person actually asks -- gives the ordinary words a vote in BOTH
+        # rankings and the identifier a vote in one. Fusion then puts a passage
+        # both halves quite like above the single passage that carries the
+        # name, and the one line the operator asked for is not in the answer at
+        # all. The keyword half had it at rank 1; the fusion lost it.
+        #
+        # So the ORDER stays the fusion's, and the PRESENCE of the best keyword
+        # hits is guaranteed: up to two of them displace the weakest fused
+        # entries. A slot is a count, not a weight -- there is no constant here
+        # for anyone to argue about, and nothing is reordered to flatter it.
+        if fts and len(out) >= limit:
+            best = [c for c, _ in sorted(fts.items(), key=lambda kv: kv[1])][:2]
+            for cid in [c for c in best if c in by_id and c not in seen]:
+                dropped = out.pop()
+                seen.discard(dropped["cid"])
+                per[dropped["path"]] = max(0, per.get(dropped["path"], 1) - 1)
+                take(by_id[cid])
+
+        return [{k: v for k, v in d.items() if k != "cid"} for d in out]
 
     def stats(self) -> dict:
         d = self.db.execute("SELECT COUNT(*) FROM docs").fetchone()[0]

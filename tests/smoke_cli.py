@@ -283,6 +283,41 @@ def main() -> int:
               "the smoke test ran" in log and "wire the toll into CI" in log)
 
     check("the sitting was recorded", (ground / "sessions" / "sessions.jsonl").exists())
+
+    # --- A LOCK HELD BY NOBODY (2026-09-17) ------------------------------
+    #
+    # A REPL closes its own sitting on EOF, on Ctrl-C and on an unhandled
+    # exception -- all three are caught in cli. It cannot close one after being
+    # KILLED, and the line it leaves open is what RULE 9 reads as "someone is
+    # sitting", what the release gate refuses a tag over, and what the door
+    # refuses a world for. So the next open reaps what it can prove is dead.
+    #
+    # DRIVEN THROUGH main(), not by calling the reaper: the question is whether
+    # a REPL launch releases the lock, and a stroke that called the function
+    # directly would pass with the call deleted from cli.
+    import os as _os
+    import subprocess as _sp
+    from manjuel import seatlog as _sl
+
+    gone = _sp.Popen([sys.executable, "-c", "pass"])
+    gone.wait(timeout=30)
+    _sl.record(ground, _sl.Sitting(n=98, id="S-live", started="2026-09-17T00:00:00",
+                                   ground=str(ground), pid=_os.getpid()))
+    _sl.record(ground, _sl.Sitting(n=99, id="S-orphan", started="2026-09-17T00:00:00",
+                                   ground=str(ground), pid=gone.pid))
+    _, out_reap = run_repl("/exit\n", ground, StubRuntime())
+    rows = {r["n"]: r for r in _sl.all_sittings(ground)}
+    check("a sitting left open by a process that is gone is closed at the next open",
+          bool(rows.get(99, {}).get("ended")), str(rows.get(99, {}))[:200])
+    check("and the closing line says it was not closed by its own hand",
+          rows.get(99, {}).get("closed_by") == "reaped", str(rows.get(99, {}))[:200])
+    check("the next sitting says out loud what it released",
+          "left open by a process that is gone" in out_reap,
+          [l for l in out_reap.splitlines() if "left open" in l][:1])
+    check("a sitting whose process is STILL ALIVE is left exactly as it is",
+          not rows.get(98, {}).get("ended"), str(rows.get(98, {}))[:200])
+    check("the REPL's own sitting carries the process holding it",
+          (rows.get(1, {}).get("pid") or 0) > 0, str(rows.get(1, {}))[:160])
     check("the model was actually called", len(rt.calls) >= 5, str(rt.calls))
     check("models are warmed at launch, AT RUN CONTEXT, not inside the first question",
           any(c.startswith("warm:") for c in rt.calls), str(rt.calls[:3]))

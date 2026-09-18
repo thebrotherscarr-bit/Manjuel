@@ -67,6 +67,11 @@ running one, or refused / aborted / cancelled / unreachable. A client
 pumps until one arrives, so a turn that ended silently hung the wire
 forever -- which is what every command did until this was added.
 
+AN ENGINE NOBODY USES CLOSES ITSELF (2026-09-16). With no command for
+IDLE_CLOSE seconds -- thirty minutes -- between turns, the door closes the
+sitting exactly as `close` does and emits `closed` unasked, the reason in
+its `why`. Never mid-turn, and never while a needs_answer is waiting.
+
 An `objective` is anything the REPL would take at its prompt: a plain
 turn, a `/command`, `@seat words`, "pay the toll", "remember that". One
 turn at a time, in order; an objective sent mid-run waits its turn. The
@@ -115,6 +120,19 @@ EVENTS = ("opened", "text", "run", "report", "seat", "token", "tool",
 # carries on.
 TERMINAL = ("delivery", "refused", "aborted", "cancelled", "unreachable",
             "command")
+
+# AN ENGINE NOBODY USES CLOSES ITS OWN SITTING (2026-09-16, his ruling on the
+# optimization pass: "D2 30 minutes"). The record held 13.8 engine-hours of
+# engines standing after their last turn -- 7.2 of them sitting 208's, 429
+# minutes after its fourth run -- and 58 sittings that ran nothing; the
+# Dashboard's amber "idle" line only helps while someone is looking at it.
+# The door waits this long for the next command BETWEEN turns, then closes the
+# sitting the way a client's `close` does. Never mid-turn (a turn does not wait
+# on the inbox), never while a question is pending (ask() waits without a
+# bound), and never in the REPL, which does not come through here. It is the
+# runtime's default keep-alive too, so by then Ollama has let the seats' models
+# go and a reboot costs little more than the next turn would have.
+IDLE_CLOSE = 30 * 60
 
 # The first characters of a tool result that mean it failed -- the
 # pipeline's own test (pipeline.py, the tool loop), repeated here so the
@@ -369,7 +387,7 @@ class Door:
     stands where it stands (the suites hand in a stand-in)."""
 
     def __init__(self, sess, wire: Wire, inbox: Inbox, ground: Path | None = None,
-                 closer=None):
+                 closer=None, idle_close: float | None = None):
         from . import cli as _cli
         self.sess = sess
         self.wire = wire
@@ -379,6 +397,9 @@ class Door:
         # "bye"). The suites hand in a stand-in so no stroke pays a toll
         # into the record it runs beside.
         self.closer = closer if closer is not None else _cli._close
+        # How long the door waits for a command between turns before it closes
+        # the sitting itself (IDLE_CLOSE). The suites hand in seconds.
+        self.idle_close = IDLE_CLOSE if idle_close is None else float(idle_close)
         self.asked = 0
         self._deferred: list[dict] = []
         if not isinstance(getattr(sess, "runtime", None), _Runtime):
@@ -456,7 +477,8 @@ class Door:
     def _next(self) -> dict | None:
         if self._deferred:
             return self._deferred.pop(0)
-        return self.inbox.take()
+        # Bounded: the one wait in this door that is not inside a turn.
+        return self.inbox.take(timeout=self.idle_close)
 
     # ---- the loop ------------------------------------------------------
 
@@ -473,6 +495,14 @@ class Door:
                     self._close("the client hung up")
                     return 0
                 cmd = row.get("cmd")
+                if cmd == "_timeout":
+                    # Nothing came for IDLE_CLOSE: the client's own close, unasked.
+                    span = (f"{self.idle_close / 60:g} minutes" if self.idle_close >= 60
+                            else f"{self.idle_close:g} seconds")
+                    print(f"\n  No command in {span} -- closing the sitting. "
+                          f"(the record keeps)\n")
+                    self._close(f"idle: no command in {span}")
+                    return 0
                 if cmd == "close":
                     self._close("closed by the client")
                     return 0
@@ -727,7 +757,7 @@ def main(argv: list[str] | None = None) -> int:
     from . import boot, dotenv, gitstate, ink
     from . import seatlog as _log
     from . import watch as _watch
-    from .skills import EMBED_MODEL
+    from .skills import EMBED_MODEL, index_roots
 
     wire, inbox = open_wire()
     inbox.start()
@@ -750,11 +780,12 @@ def main(argv: list[str] | None = None) -> int:
     print("\nManjuel -- local multi-agent pipeline (headless door)")
     if ground is not None:
         print(f"  ground: {ROOT}")
-    # .env is read AFTER import, so an old CHAINKIT_ dial that arrives here
-    # has not been carried to its twin yet. Idempotent; see carry_old_dials.
-    from . import carry_old_dials as _carry
+    # .env is read AFTER import: every dial a module took at import, and every
+    # old CHAINKIT_ name, predates this line. read_dials carries the old names
+    # and has those modules read their dials again, before the Session is built.
+    from . import read_dials
     _dotenv_lines = dotenv.report(*dotenv.load(ROOT / ".env"))
-    _carry()
+    read_dials()
     for line in _dotenv_lines:
         print(line)
 
@@ -789,7 +820,7 @@ def main(argv: list[str] | None = None) -> int:
         if sess.rack_ok:
             _cli._cmd_warm(sess, quiet=True)
             sess._bg_warm = _cli._warm_reasoner_later(sess)
-        sess.watcher = _watch.GroundWatch(ROOT)
+        sess.watcher = _watch.GroundWatch(ROOT, roots=index_roots(sess.env))
         if sess.watcher.start():
             print(ink.dim("  watching the ground — edits reload and reindex "
                           "themselves between turns"))

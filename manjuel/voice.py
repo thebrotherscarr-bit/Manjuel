@@ -51,7 +51,18 @@ MIN_SPEECH_BLOCKS = 5           # <150ms of sound is a click, not a sentence
 # told not to, and a silent network call in the voice path breaks the one rule
 # this estate is built on. The model is found on disk or the chain says so and
 # stops -- it does not quietly go and get one.
-STT_MODEL = os.environ.get("MANJUEL_WHISPER_MODEL", "").strip() or "base.en"
+def read_dials() -> None:
+    """STT_MODEL, from MANJUEL_WHISPER_MODEL as the environment stands NOW.
+
+    Run once here, at import, and again by manjuel.read_dials() once a door
+    has read `.env` -- which every door does after this module is imported,
+    so until 2026-09-15 a model named there was never read. The other voice
+    dials are read where they are used."""
+    global STT_MODEL
+    STT_MODEL = os.environ.get("MANJUEL_WHISPER_MODEL", "").strip() or "base.en"
+
+
+read_dials()
 STT_DIR_ENV = "MANJUEL_WHISPER_DIR"
 
 # The estate's proper nouns, and what whisper turns them into. Sitting 25:

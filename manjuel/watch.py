@@ -13,8 +13,10 @@ Two kinds of change matter, and they are handled differently:
 
   DECLARATIONS  agents/*.md, skills/*.md, pipelines.md, commands.md,
                 providers of behavior -> queue a reload.
-  MATERIAL      indexable files under the ground -> queue an incremental
-                re-embed, so semantic_search stops lying about fresh edits.
+  MATERIAL      indexable files under a root index_roots.txt declares -> queue
+                an incremental re-embed, so semantic_search stops lying about
+                fresh edits. A file the index is not told to hold is not
+                material, however it is edited.
 
 Secrets are refused by name here too -- a .env touched is a .env IGNORED.
 """
@@ -25,7 +27,7 @@ import importlib.util
 import threading
 from pathlib import Path
 
-from .vectors import TEXT_SUFFIXES, is_protected, is_secret
+from .vectors import SKIP_DIRS, TEXT_SUFFIXES, is_protected, is_secret
 
 _DECLARATION_DIRS = {"agents", "skills"}
 _DECLARATION_FILES = {"pipelines.md", "commands.md", "agents.md"}
@@ -60,14 +62,54 @@ class GroundWatch:
     real observer thread; the observer is only wired when watchdog exists.
     """
 
-    def __init__(self, ground: Path):
+    def __init__(self, ground: Path, roots=None):
         self.ground = Path(ground).resolve()
         self._lock = threading.Lock()
         self._reload_needed = False
         self._changed: set[Path] = set()
         self._observer = None
+        # WHAT THE INDEX IS TOLD TO HOLD (2026-09-15). The doors hand in
+        # index_roots.txt as index_ground reads it (skills.index_roots), once,
+        # when the sitting opens: the standing's shape -- a list edited
+        # mid-sitting is read at the next launch. Until then this queued any
+        # text file under the ground the lists above did not excuse, and the
+        # next turn embedded it into the live index, declared or not. On
+        # 2026-09-15 that index held 12
+        # documents under no root, and no version of index_roots.txt in git
+        # ever declared one: flows/ (10), state/rack_ledger.jsonl, and
+        # law/chain.jsonl -- the ledger index_roots.txt keeps out by listing
+        # the laws "Five FILES, not the folder".
+        #
+        # None keeps the old reach, every indexable file under the ground, for
+        # a caller that cannot say what the index holds.
+        self._roots: list[Path] | None = None
+        if roots is not None:
+            self._roots = []
+            for r in roots:
+                try:
+                    self._roots.append(Path(r).resolve())
+                except OSError:
+                    continue
 
     # ---- classification (pure; unit-tested directly) -----------------
+
+    def held(self, p: Path) -> bool:
+        """Would index_ground take this file? Its roots, walked its way.
+
+        A file root is held when it IS the file. A folder root holds what is
+        under it, except below a folder the indexer's own walk skips
+        (vectors.SKIP_DIRS, and any dot-folder) -- so a build/ or .cache/ under
+        manjuel/ is not material here either."""
+        if self._roots is None:
+            return True
+        for root in self._roots:
+            if p == root:
+                return True
+            if root in p.parents:
+                below = p.relative_to(root).parts[:-1]
+                if not any(d in SKIP_DIRS or d.startswith(".") for d in below):
+                    return True
+        return False
 
     def note(self, path) -> None:
         """One changed path, classified. Called by the observer thread."""
@@ -82,15 +124,26 @@ class GroundWatch:
             return
         if rel.name in _SELF_WRITTEN:
             return                        # the record's own hand
-        if is_secret(p.name) or is_protected(p):
-            return          # secrets and client data: touched is ignored
+        if is_secret(p.name):
+            return                        # a secret: touched is ignored
+        declaration = ((rel.parts[0] in _DECLARATION_DIRS and p.suffix == ".md")
+                       or rel.name in _DECLARATION_FILES)
+        # logs are indexed too, but they change every turn by our own hand --
+        # indexing them stays with /index, not the watcher.
+        material = (p.suffix.lower() in TEXT_SUFFIXES and rel.parts[0] != "logs"
+                    and self.held(p))
+        if not (declaration or material):
+            # NOTHING HERE WOULD ACT ON IT, SO NOTHING IS OPENED. is_protected
+            # reads a file's first 2 KB for the client token, and it was asked
+            # of every event under the ground -- the door's and the glass's
+            # logs under atlas/ among them, as they write.
+            return
+        if is_protected(p):
+            return                        # client data: touched is ignored
         with self._lock:
-            if (rel.parts and rel.parts[0] in _DECLARATION_DIRS
-                    and p.suffix == ".md") or rel.name in _DECLARATION_FILES:
+            if declaration:
                 self._reload_needed = True
-            if p.suffix.lower() in TEXT_SUFFIXES and rel.parts[0] != "logs":
-                # logs are indexed too, but they change every turn by our own
-                # hand -- indexing them stays with /index, not the watcher.
+            if material:
                 self._changed.add(p)
 
     # ---- draining (called by the CLI at turn boundaries) -------------

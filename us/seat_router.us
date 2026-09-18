@@ -60,6 +60,7 @@ reason the estate can say a seat never touches the filesystem.
     "speak",
     "statistics",
     "subtask",
+    "symbols",
     "time_align",
     "when",
     "write_file"

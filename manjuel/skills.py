@@ -81,10 +81,26 @@ GATE_MARK = "[LAW 8]"
 # all, so a handler that hung took the REPL with it and Ctrl-C was the only
 # way out. Overridable with MANJUEL_SKILL_TIMEOUT for a legitimately slow
 # ground (index_ground over thousands of documents).
-try:
-    SKILL_TIMEOUT = float(os.environ.get("MANJUEL_SKILL_TIMEOUT") or 300)
-except ValueError:
-    SKILL_TIMEOUT = 300.0
+def read_dials() -> None:
+    """SKILL_TIMEOUT and RUN_TIMEOUT, from the environment as it stands NOW.
+
+    Run once here, at import, and again by manjuel.read_dials() once a door
+    has read `.env` -- which every door does after this module is imported, so
+    until 2026-09-15 a value written there was never read. RUN_TIMEOUT's
+    reasons are beside run_python. A value that is not a number falls back to
+    the default; RUN_TIMEOUT used to raise on one, at import."""
+    global SKILL_TIMEOUT, RUN_TIMEOUT
+    try:
+        SKILL_TIMEOUT = float(os.environ.get("MANJUEL_SKILL_TIMEOUT") or 300)
+    except ValueError:
+        SKILL_TIMEOUT = 300.0
+    try:
+        RUN_TIMEOUT = float(os.environ.get("MANJUEL_RUN_TIMEOUT") or 60)
+    except ValueError:
+        RUN_TIMEOUT = 60.0
+
+
+read_dials()
 
 
 def _run_bounded(handler, env, args, seconds: float):
@@ -440,6 +456,8 @@ REVIEW_ONLY_SKILLS = {
     "read_file", "list_directory", "git_status", "rack_list",
     "skill_report", "extract_facts", "classify_sentiment", "statistics",
     "sitting", "when", "skill_search",
+    # `symbols` reads declarations off the disk and writes nothing (2026-09-17).
+    "symbols",
     # `proved` reads tests/last_run.json, run_history.jsonl and the manifest
     # and writes nothing. It was left out when it was added on 2026-09-03,
     # and the stroke that should have caught that had an `or` clause which
@@ -1209,6 +1227,289 @@ def _skill_search(env: SkillExecutionEnv, args: dict) -> str:
     return "\n".join(out)
 
 
+# =====================================================================
+# The map of the ground: where a name is DEFINED, and what the estate is
+# shaped like
+# =====================================================================
+#
+# EARNED 2026-09-17, by the operator, about every agent that has worked this
+# ground including this one: "A LOT of what I am getting burned by is claude,
+# not CHECKING FILES and not reading the damn docs ... then it starts ACTUALLY
+# UNDERSTANDING, which is INSANE."
+#
+# The diagnosis is mechanical, not moral. An agent that does not know WHERE a
+# thing is asks the only tool it has -- `semantic_search` -- which answers with
+# passages that are ABOUT a subject. "Where is tagSend defined" has an exact
+# answer, one line long, and an embedding is the wrong instrument for it: the
+# vector of an identifier is the vector of the prose around it. Twenty minutes
+# of reading the wrong files is what that costs, every session, before anything
+# starts.
+#
+# So: a deterministic map. No model, no embedding, nothing to hallucinate, read
+# off the disk on every call so it can never be stale. `ast` for Python -- the
+# same instrument `windowed()` already cuts a .py with -- and the language's own
+# declaration shapes for Go and JavaScript.
+#
+# AND THE SHAPE OF THE WHOLE, when nothing is named. Which files does this
+# estate's own code lean on most? That is not a judgement, it is arithmetic:
+# count how many OTHER files name each file's symbols. What comes back is the
+# ground's skeleton in a page, which is the thing a session's first minutes are
+# otherwise spent rebuilding by hand.
+SYMBOL_SUFFIXES = {".py", ".go", ".js"}
+SYMBOL_MAX_FILES = 1500
+SYMBOL_SKIP_DIRS = {".git", "__pycache__", "node_modules", ".venv", "venv",
+                    "target", "dist", "build", ".mypy_cache", ".pytest_cache",
+                    "index", "logs", "agent_workspace",
+                    # SITTING LAW 2: a world is never walked, named or mapped.
+                    "worlds", "vault"}
+
+_GO_FUNC = re.compile(r"(?m)^func\s+(?:\([^)]*\)\s*)?([A-Za-z_]\w*)\s*\(")
+_GO_TYPE = re.compile(r"(?m)^type\s+([A-Za-z_]\w*)\s")
+# TOP LEVEL ONLY, and the indentation is the whole test. A first cut allowed
+# leading whitespace and swept up every `const el = ...` inside every function:
+# app.js came back with 152 "symbols", most of them one-letter locals, and the
+# map ranked it first in the ground because `el`, `box` and `r` appear as words
+# in almost every file. A local is not a declaration anyone navigates to.
+_JS_FUNC = re.compile(r"(?m)^(?:export\s+)?(?:async\s+)?function\s+([A-Za-z_$][\w$]*)")
+_JS_BIND = re.compile(r"(?m)^(?:export\s+)?(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=")
+_WORDS = re.compile(r"[A-Za-z_][A-Za-z0-9_]{2,}")
+
+
+def _symbols_in(text: str, suffix: str) -> list[tuple[str, int, str]]:
+    """(name, line, kind) a file DECLARES. Never what it merely mentions."""
+    out: list[tuple[str, int, str]] = []
+    if suffix == ".py":
+        try:
+            tree = ast.parse(text)
+        except (SyntaxError, ValueError, RecursionError):
+            return []                    # a file that will not parse declares nothing
+        def add(node, prefix=""):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                out.append((prefix + node.name, node.lineno, "def"))
+            elif isinstance(node, ast.ClassDef):
+                out.append((prefix + node.name, node.lineno, "class"))
+                for child in node.body:
+                    add(child, node.name + ".")
+        for node in tree.body:
+            add(node)
+        return out
+    if suffix == ".go":
+        for m in _GO_FUNC.finditer(text):
+            out.append((m.group(1), text.count("\n", 0, m.start()) + 1, "func"))
+        for m in _GO_TYPE.finditer(text):
+            out.append((m.group(1), text.count("\n", 0, m.start()) + 1, "type"))
+        return out
+    if suffix == ".js":
+        for rx, kind in ((_JS_FUNC, "function"), (_JS_BIND, "const")):
+            for m in rx.finditer(text):
+                out.append((m.group(1), text.count("\n", 0, m.start()) + 1, kind))
+        return out
+    return []
+
+
+def _walk_code(ground: Path):
+    """Every code file in the ground, jails and client ground excluded."""
+    from .vectors import is_protected, is_secret
+    seen = 0
+    for dirpath, dirnames, filenames in os.walk(ground):
+        dirnames[:] = [d for d in dirnames
+                       if d.lower() not in SYMBOL_SKIP_DIRS and not d.startswith(".")]
+        for fn in sorted(filenames):
+            p = Path(dirpath) / fn
+            if p.suffix.lower() not in SYMBOL_SUFFIXES:
+                continue
+            if is_secret(p) or is_protected(p, peek=False):
+                continue
+            seen += 1
+            if seen > SYMBOL_MAX_FILES:
+                return
+            yield p
+
+
+def symbol_table(ground: Path) -> tuple[dict, dict]:
+    """({rel path: [(name, line, kind)...]}, {rel path: {word, ...}}).
+
+    Read fresh on every call. A cached map is a map that is wrong the moment
+    the operator saves a file, and being wrong about where a thing lives is
+    the exact failure this skill exists to end.
+
+    PUBLIC. The boot report asks it the same question the skill does, and one
+    rule with two readers is the estate's own standing preference -- three
+    copies of `source_files`' rule once disagreed here, and only one of them
+    was right.
+    """
+    syms: dict[str, list] = {}
+    words: dict[str, set] = {}
+    for p in _walk_code(ground):
+        try:
+            if p.stat().st_size > 400_000:
+                continue
+            text = p.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        rel = p.relative_to(ground).as_posix()
+        found = _symbols_in(text, p.suffix.lower())
+        if found:
+            syms[rel] = found
+        words[rel] = set(_WORDS.findall(text))
+    return syms, words
+
+
+def _countable(base: str) -> bool:
+    """Whether a declared name can stand as evidence that a file leans on it.
+
+    Short names collide with ordinary words; a dunder is declared by every
+    class there is. Both are dropped BEFORE the ceiling is measured, so they
+    cannot pad the common-word census either.
+    """
+    return len(base) >= 4 and not (base.startswith("__") and base.endswith("__"))
+
+
+def map_rows(syms: dict, words: dict, top: int = 6) -> list[tuple]:
+    """(path, weight, symbol count, top names) for every file, ranked.
+
+    LEANED-ON, NOT BIG. A file's weight is how many OTHER files name what it
+    declares -- the question a person asks opening an unfamiliar repository.
+    Line count answers a different question, and answers it badly.
+
+    AND A NAME EVERYONE USES IS NOT A REFERENCE, IT IS A WORD. `name`, `path`,
+    `text`, `run` are declared somewhere and appear in nearly every file;
+    counting those ranked whichever file happened to declare the most ordinary
+    English. A symbol carried by more than a TWENTIETH of the ground is dropped
+    from the weight -- BM25's IDF reasoning, done as arithmetic over sets
+    because that needs no model and cannot hallucinate.
+
+    THE TWENTIETH WAS MEASURED, NOT PICKED (2026-09-17, on his word "look at
+    the top of the map"). A quarter was the first cut and it was far too loose:
+    the weight was being carried by `String` (in 42 of 195 files), `start`
+    (41), `Close` (38), `vectors` and `chat` (36), `render` (35) -- ordinary
+    words that happen to be declared somewhere -- so a tool script and an
+    end-to-end prover outranked the engine. At a twentieth the top ten are the
+    line's engine and flow, this module, the headless wire, the law's pen, the
+    tool registry and the webapp's handlers: every one a module the ground
+    genuinely leans on.
+
+    (Named in prose, not by filename: a stroke holds that this module never
+    writes the headless door's module name, and the first draft of this
+    paragraph did exactly that and turned it red -- the same trap atlas's own
+    comment records having fallen into.)
+
+    AND A DUNDER IS NEVER A REFERENCE. `__init__` is declared by every class
+    in the estate and appears in nineteen files as itself; counting it says
+    only that Python was used.
+
+    ONE RULE, TWO READERS: the `symbols` skill prints twenty-five of these and
+    the boot report prints ten. A second copy of this arithmetic would drift
+    the first time either was tuned.
+    """
+    ceiling = max(3, len(words) // 20)
+    common: dict[str, int] = {}
+    for _rel, found in syms.items():
+        for n, _, _ in found:
+            base = n.split(".")[-1]
+            if _countable(base) and base not in common:
+                common[base] = sum(1 for ws in words.values() if base in ws)
+    rows = []
+    for rel, found in syms.items():
+        names = {n.split(".")[-1] for n, _, _ in found
+                 if _countable(n.split(".")[-1])
+                 and common.get(n.split(".")[-1], 0) <= ceiling}
+        weight = sum(1 for other, ws in words.items()
+                     if other != rel and (names & ws))
+        shown = [n for n, _, _ in found if "." not in n][:top] or \
+                [n for n, _, _ in found][:top]
+        rows.append((rel, weight, len(found), shown))
+    rows.sort(key=lambda r: (-r[1], r[0]))
+    return rows
+
+
+@skill("symbols")
+def _symbols(env: SkillExecutionEnv, args: dict) -> str:
+    """Where a name is DEFINED -- or, named nothing, the shape of the ground."""
+    ground = Path(env.ground)
+    want = (args.get("content") or args.get("filepath") or "").strip().strip("'\"`")
+    # A sentence is not a symbol. The objective is NOT borrowed here, unlike
+    # the search skills: "what does the door do" is a question, and answering
+    # it with every symbol containing `door` is noise wearing an answer's coat.
+    if len(want.split()) > 1:
+        want = ""
+
+    try:
+        syms, words = symbol_table(ground)
+    except Exception as exc:
+        return f"The ground could not be mapped: {type(exc).__name__}: {exc}"
+    if not syms:
+        return "No code files in this ground declare anything this can read."
+
+    total = sum(len(v) for v in syms.values())
+
+    # ---- a name: where it is declared, and who names it ------------------
+    if want:
+        low = want.lower()
+        exact, near = [], []
+        for rel, found in syms.items():
+            for name, line, kind in found:
+                base = name.split(".")[-1].lower()
+                if base == low or name.lower() == low:
+                    exact.append((rel, name, line, kind))
+                elif low in name.lower():
+                    near.append((rel, name, line, kind))
+        hits = exact or near
+        if not hits:
+            return (f"Nothing in this ground DECLARES {want!r}. "
+                    f"{total} symbols across {len(syms)} files were read. "
+                    f"If it is a word rather than a name, semantic_search "
+                    f"reads prose; this reads declarations only.")
+        out = [f"{want!r} is declared "
+               f"{'here' if len(hits) == 1 else f'in {len(hits)} places'}"
+               + ("" if exact else " (no exact match; these CONTAIN it)") + ":"]
+        for rel, name, line, kind in sorted(hits)[:20]:
+            out.append(f"  {rel}:{line}   {kind} {name}")
+        if len(hits) > 20:
+            out.append(f"  ... and {len(hits) - 20} more")
+        # WHO ELSE NAMES IT. A definition without its callers is half the
+        # answer: the question behind "where is X" is almost always "and what
+        # breaks if I change it".
+        named = sorted(rel for rel, ws in words.items()
+                       if want in ws and rel not in {h[0] for h in hits})
+        if named:
+            out.append("")
+            out.append(f"Named in {len(named)} other file(s): "
+                       + ", ".join(named[:12])
+                       + (" ..." if len(named) > 12 else ""))
+        out.append("")
+        out.append("Read any of them with ground_read; a Python definition can "
+                   "be asked for BY NAME and comes back whole.")
+        return "\n".join(out)
+
+    # ---- no name: the shape of the ground --------------------------------
+    #
+    # LEANED-ON, NOT BIG. A file's weight here is how many OTHER files name
+    # what it declares -- the same question a person asks when they open an
+    # unfamiliar repository and wonder where to start. Line count would answer
+    # a different question, and answer it badly.
+    # AND A NAME EVERYONE USES IS NOT A REFERENCE, IT IS A WORD. `name`,
+    # `path`, `text`, `run` are declared somewhere and appear in nearly every
+    # file; counting those made the map rank whichever file happened to declare
+    # the most ordinary English. A symbol carried by more than a quarter of the
+    # ground is dropped from the weight -- the same reasoning BM25's IDF makes,
+    # done by hand because this is arithmetic over sets and needs no model.
+    rows = map_rows(syms, words)
+    out = [f"THE GROUND, AS ITS OWN CODE DECLARES IT — {len(syms)} files, "
+           f"{total} symbols, read off the disk just now.",
+           "Ordered by how many other files name what each one declares.", ""]
+    for rel, weight, n_sym, top in rows[:25]:
+        out.append(f"  {rel}   ({n_sym} symbols, named by {weight} other files)")
+        out.append(f"      {', '.join(top)}" + (" ..." if n_sym > len(top) else ""))
+    if len(rows) > 25:
+        out.append("")
+        out.append(f"  ... and {len(rows) - 25} more files.")
+    out.append("")
+    out.append("Name any symbol to get the file and line it is declared at. "
+               "This is DECLARATIONS ONLY -- nothing here was read for meaning.")
+    return "\n".join(out)
+
+
 @skill("subtask")
 def _subtask(env: SkillExecutionEnv, args: dict) -> str:
     """Hand one scoped piece of work to a fresh run of its own.
@@ -1677,7 +1978,10 @@ def _embed_text(env: SkillExecutionEnv, args: dict) -> str:
         except Exception as exc:
             return f"Index refused: {exc}"
         try:
-            st = idx.build([path], lambda c: env.runtime.embed(EMBED_MODEL, c))
+            # ONE FILE IS NOT THE INDEX'S SCOPE: prune only what is gone
+            # (vectors.VectorIndex.build, 2026-09-15).
+            st = idx.build([path], lambda c: env.runtime.embed(EMBED_MODEL, c),
+                           declared=False)
             info = idx.stats()
         except Exception as exc:
             return f"Embedding failed: {exc}"
@@ -2592,11 +2896,21 @@ def _wants_rebuild(env: SkillExecutionEnv, args: dict) -> bool:
                                    "start over", "fresh"))
 
 
+def index_roots(env: SkillExecutionEnv) -> list[Path]:
+    """What the index is told to hold: index_roots.txt, read against the ground.
+
+    ONE READER FOR TWO QUESTIONS (2026-09-15). index_ground asks it what to
+    build, and the ground watcher asks it what a changed file must be under
+    before the next turn re-embeds it. Two readings of one file drift the first
+    time a default moves; one cannot."""
+    return load_roots(env.ground / "index_roots.txt", env.default_roots, base=env.ground)
+
+
 @skill("index_ground")
 def _index_ground(env: SkillExecutionEnv, args: dict) -> str:
     """Build or refresh the semantic index over the configured roots."""
     rebuild = _wants_rebuild(env, args)
-    roots = load_roots(env.ground / "index_roots.txt", env.default_roots, base=env.ground)
+    roots = index_roots(env)
     live = [r for r in roots if r.exists()]
     missing = [r for r in roots if not r.exists()]
 
@@ -2644,7 +2958,10 @@ def _index_ground_locked(env: SkillExecutionEnv, rebuild: bool, live: list,
               "none.") if rebuild else ""
     lines: list[str] = []
     try:
-        st = idx.build(live, lambda c: env.runtime.embed(EMBED_MODEL, c), lines.append)
+        # `declared=True`: these roots ARE index_roots.txt, so a document under
+        # none of them is evicted (the prune's question 2, and its ceiling).
+        st = idx.build(live, lambda c: env.runtime.embed(EMBED_MODEL, c), lines.append,
+                       declared=True)
         info = idx.stats()
     except Exception as exc:
         return f"Indexing failed: {exc}"
@@ -2747,7 +3064,12 @@ def _search_scoped(env: SkillExecutionEnv, args: dict, scope: str) -> str:
         except Exception as exc:
             return f"Query embedding failed: {exc}"
 
-        hits = idx.search(qvec, limit=8, per_doc=2, scope=scope)
+        # THE QUERY'S OWN WORDS GO DOWN TOO (2026-09-17). The vector is what
+        # the query MEANS; the words are what it SAYS, and an identifier --
+        # `_INDEX_BUSY`, `tagSend`, `MANJUEL_GIT_REMOTE` -- only ever survives
+        # as the second. The index fuses the two rankings; with no keyword hit
+        # the order is the cosine order it has always been.
+        hits = idx.search(qvec, limit=8, per_doc=2, scope=scope, qtext=query)
     finally:
         idx.close()
 
@@ -2819,7 +3141,14 @@ def _search_scoped(env: SkillExecutionEnv, args: dict, scope: str) -> str:
             where = f"chunk {h['ord']} @ {h['start']}"
         age = _age_of(h["path"])
         stamp = f"  written {age}" if age else ""
-        lines.append(f"{i}. {shown}  [{where}]{stamp}  cosine {h['score']:.4f}")
+        # HOW A HIT WAS FOUND IS PART OF THE HIT. `exact` means the words
+        # themselves are in that passage and the vector half never ranked it --
+        # which for an identifier is the answer, and for a vague question is a
+        # warning that the match may be lexical and nothing more.
+        how = h.get("found") or "meaning"
+        mark = {"exact": "  EXACT match on the words",
+                "both": "  exact AND meaning"}.get(how, "")
+        lines.append(f"{i}. {shown}  [{where}]{stamp}  cosine {h['score']:.4f}{mark}")
         lines.append(f"   {snippet}")
     return "\n".join(lines)
 
@@ -3243,8 +3572,8 @@ def _edit_file(env: SkillExecutionEnv, args: dict) -> str:
 
 # The bound on a child, its own dial because a run is not a skill call: the
 # skill timeout (300s) is the WAIT on a handler, and a script that loops
-# forever should be refused long before that.
-RUN_TIMEOUT = float(os.environ.get("MANJUEL_RUN_TIMEOUT", "60") or 60)
+# forever should be refused long before that. RUN_TIMEOUT (MANJUEL_RUN_TIMEOUT,
+# default 60) is read with SKILL_TIMEOUT, by read_dials() at the top of this file.
 
 # WHAT THE CHILD IS ALLOWED TO SEE. An allowlist, not a scrub: `.env` is
 # loaded into this process's environment (dotenv.load), and a child that

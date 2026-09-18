@@ -32,7 +32,7 @@ court -- six seats, the big models, minutes -- is `--court`, on its own.
 
 ## The dashboard
 
-There is a control plane: `atlas`. Two processes -- an MCP door serving 78
+There is a control plane: `atlas`. Two processes -- an MCP door serving 81
 tools on `:8090`, and a web app on `:8091` -- and the browser is where the
 whole loop lives: boot an engine, type an objective, watch the seats run,
 commit and push through the council, close the sitting. Nothing opens a
@@ -145,7 +145,7 @@ the engine inside a world: that folder's own `agents/`, `skills/`,
 that world's, and this ground's record gains nothing. A path that is not a
 directory is refused, never created.
 
-The forty-two skills are `skills/*.md`; `/skills` lists them and
+The forty-three skills are `skills/*.md`; `/skills` lists them and
 `skill_report` (ask "what can you do") reads them off the disk. The ones
 no earlier doc named: `deep_research`, `ground_report`, `skill_report`,
 `skill_search`, `list_directory`, `write_file`, `linear_regression`,

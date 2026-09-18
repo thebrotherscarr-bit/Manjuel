@@ -1508,3 +1508,132 @@ still has no caller, and the door's holds stay off until it runs with
 `--auth`, a relaunch and his call; SPEC section 4's five OPEN lines; and his
 own: TASKS' stale boxes (ticked later the same day, on his word) and SITTING
 LAW 6's second half.
+
+## Session 10 — 2026-09-14 (Monday) to 2026-09-17 (Thursday), sittings 218–225, the diagnostics and the optimization pass
+
+**Standing** — follows session 9 (2026-09-14, early morning), which caught the record up
+with the two tags. This one ran the estate, fixed what the runs showed, took his
+optimization pass through eight pieces and his two rulings, proved both rulings on his
+own door and glass, and caught the record up again. Written 2026-09-17 by the hand of
+the optimization pass; whether the 2026-09-14 work was the same working session is not
+recorded, so it is carried here rather than left with no entry at all.
+
+**Version** — at open: core `main@42ec220`, atlas `main@7183d52`. The saves in this
+session are 2026-09-14's -- core `39b8b91` and `7e64f20`, atlas `ec46154`; everything
+after them is on disk, uncommitted, his to land.
+
+**The plan** — his orders, as given. 2026-09-14: "address the found issues", then "keep
+going". 2026-09-15: the optimization pass ("ensure there is no leakage and excessive
+calling with system cycles and daemons that are unnecessary ... rather than redesigning
+new systems and schema"), one named piece at a time to piece 8. 2026-09-16: "D1 b D2 30
+minutes  D3 no", then "continue to D2". 2026-09-17: "finish d1, then proceed to d2",
+"start the door and glass, test it live", "tick the finished work, update the
+records to reflect the current system", "check the remote's tag list", and last "fix the
+tags, set a spec plan and a build path for the vision going forward. make sure the
+version tags are being used properly."
+
+**What ran**
+- 2026-09-14. Sitting 218 (09:04–09:05), the nine-case standup, 9/9. 219 (09:07–09:17),
+  the court, red: Manjuel cut at 179s, the turn spent before it, and the report faulting
+  two numbers that were the engine's own. 220 (09:19–09:21), booted and closed from the
+  Dashboard, no run, no toll. The suites at 14:28 -- strokes 2360/2360, smoke 60/60 --
+  and 221 (14:28–14:29), the standup, 9/9: the stamps saved as `7e64f20`, and still the
+  proofs the gate reads. 222 (15:26–15:27), the standup, 9/9. 223 (15:28–15:38), the
+  court, red again: Manjuel cut at 34s. 224 (15:39–15:55), one run, whose Close from the
+  Dashboard did not reach the door for 9m20s -- the glass was rewriting its whole trace
+  store on every call.
+- 2026-09-15 and 09-16: no sitting. The glass was rebuilt and restarted by the hand for
+  pieces 1 to 3 and 6 (as on 09-14, for the watched-turn fix and the trace ledger), the
+  door for pieces 4 and 5; on 09-16 both were down, and D1 was proved on scratch copies
+  of them.
+- 2026-09-17: the door and the glass started at 08:18 on RUNBOOK's own lines, on his
+  word. Sitting 225 (08:21:37–08:52:02), booted by the hand from the Dashboard for D2's
+  live test: nothing sent after the boot's `/status`, and the engine closed its own
+  sitting thirty minutes later -- no runs, no toll.
+
+**What landed, in order** (CHANGELOG and atlas/CHANGELOG.md carry each piece whole)
+
+    09-14  the standup reads the ground's dials and stops faulting the engine's own
+           numbers; every branch that picks a tool says so; the boot no longer shows
+           up as a run, and a watched turn's clock stops (atlas); RUNBOOK says what
+           Close sitting pays; the glass stops rewriting its whole trace store
+           (atlas)
+    09-15  the optimization pass. atlas, pieces 1 to 6: one proofs read per refresh;
+           one event stream per tab; the health check rests while hidden; the door
+           reads the record once per change and looks for old code only where the
+           engine keeps it; the door stops waiting on a browser that left and sees
+           an engine that died; the glass bounds its calls to the door and its saves
+           stop racing. The core, pieces 7 and 8: the watcher feeds the index only
+           its roots, and a change-driven build prunes only what is gone; a dial in
+           .env is read, the embedder keeps the seats' hours, and a turn's deadline
+           stops leaving clients behind -- manjuel/ moved, RESTART REQUIRED
+    09-16  D1, glass only: the Dashboard's own reads are answered and not kept. D2,
+           serve.py: an engine with no command for thirty minutes between turns
+           closes its own sitting -- RESTART REQUIRED. Every engine is spawned fresh
+           per sitting, and 225 ran this code (`stale: false`)
+    09-17  D1's build placed over atlas-webapp.exe, once, on his "Yes, copy it
+           now". Both proved live: opening the Dashboard kept 5 traces where 09-15's
+           kept 8; 408 background reads kept none, and the 324 read after a working
+           toast check raised no toast; sitting 225 closed itself at 08:52:02. Then
+           this records pass: TASKS ticked, the ladder and the marks written down,
+           SPEC and the tool counts brought to the system, this entry, HANDOFF
+    09-17  and last, the marks. The remote was asked once and holds only 0.1.7,
+           0.1.9 and v0.1.11, so none of the six was public; all six names were
+           deleted on his word, their commits left on pre-strip-master. The door
+           learned two refusals -- a mark is cut only on the main line, and sent
+           only after origin's main line carries its commit -- strokes 59 -> 61,
+           proved by reversal and live through /rpc; RESTART REQUIRED, and done.
+           The plan going forward is SPEC 8 and BUILDPATH's next steps and mark
+           procedure
+
+**Found** (came up; NOT the plan)
+- SIX MARKS HOLD THE STRIPPED HISTORY. v0.1.0, v0.1.1, v0.1.3, v0.1.4 and the
+  lightweight 0.1.4 and 0.1.5 are not on `main`; they point into `pre-strip-master`,
+  which still carries 383 paths under worlds/, 268 under a vault/ folder. Pushing any of
+  them would publish it. Whether one is already on the remote is not known here. In
+  CHANGELOG, BUILDPATH, TASKS and HANDOFF; what to do is his. **CLOSED the same day on
+  his word: the remote held none of the six, and all six names were deleted.**
+- The marks and CHANGELOG disagree in three places (the 0.1.7 sha, a 0.1.5 mark on a
+  0.1.4 commit, a second 0.1.4). Noted beside each heading. **Two of the three went with
+  the deletion; the 0.1.7 sha stands recorded beside its heading.**
+- The court does not fit its turn: both 09-14 courts cut Manjuel at the seconds left.
+- The permission check refused to copy a built binary over the live glass on 09-16,
+  and again on his chat order on 09-17; it ran once he answered a question naming that
+  one copy.
+- The first toast check of the live D1 test was blind -- `toast` rewrites one element in
+  place -- and was replaced by a wrapped `toast` before any number was taken.
+- The glass listens on every address (`:8091`) with its auth gate still uncalled, and
+  Ollama listens on every address too.
+- The watcher's turn-boundary re-index builds the index without `_INDEX_BUSY`.
+- TASKS' stale boxes, and a ladder that ended at a seal that never shipped. Ticked and
+  written on his word, 2026-09-17.
+
+**Drift** — none against his orders: every piece was named before it was built, and the
+live test and the records pass were his too.
+
+**Rulings** — "D1 b D2 30 minutes  D3 no" (2026-09-16): the Dashboard's own background
+reads are not traces; an idle headless engine closes its own sitting after thirty
+minutes; no slower refresh while no engine is open.
+
+**At close** — **the number is 0.1.12, his word at the end of the day, and everything is
+prepared up to the gate: `pyproject.toml` and `manjuel/__init__.py` bumped, the CHANGELOG
+carrying a 0.1.12 block that says what the number holds, and the gate re-proved on his own
+terminal.** The tag itself is not cut and will not be by a hand (RULE 6). core
+`main@7e64f20` and atlas `main@ec46154` are the last saves. On disk
+above them, uncommitted: core pieces 7 and 8, D2 and this pass; atlas the trace ledger,
+pieces 1 to 6, D1, the mark guards and its half of this pass. The door (pid 14512) and
+the glass (pid 14500) are running, started by the hand at 08:18 on his word; the door was
+stopped by pid, rebuilt with the mark guards on his allowance and restarted at 11:11, so
+both stand on their current source. No sitting is open -- 225 is the newest, and closed. The proofs the gate reads
+are no longer 2026-09-14's: **every suite was re-run on his terminal this evening on his
+word** -- strokes 2428/2428, smoke 65/65, the nine-case standup 9/9 live (sitting 228, 99s)
+and the court 1/1 live (sitting 229, 275s), the case that had been red twice on 09-14. The
+release gate then read **PASSED 9 of 9**, and reads it again after the version bump and the
+re-proof. atlas beside it: every Go package green in `line` and `webapp`, the door's battery
+125/125.
+
+**Next session** — not decided by this hand. What the record leaves waiting: the suites
+and a live standup on his terminal, then his saves through Version control; the next
+numbers in both repositories, and a number for the seal; step 1 of BUILDPATH's order,
+which is those saves; the owed lines in TASKS' last section; and his own: the glass's
+reach, SITTING LAW 6's second half.

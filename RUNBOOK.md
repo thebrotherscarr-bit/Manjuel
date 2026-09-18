@@ -91,7 +91,7 @@ Rebuild after any Go change. The webapp EMBEDS its own HTML, CSS and
 JavaScript (`go:embed`), so a change to a page is not live until you rebuild
 and restart it -- editing the file on disk does nothing to a running server.
 
-**Start the door.** `atlas-mcp` is the MCP door: it serves the 78 tools and it
+**Start the door.** `atlas-mcp` is the MCP door: it serves the 81 tools and it
 is the only thing that spawns a Manjuel engine. It holds `127.0.0.1:8090`.
 
     cd atlas\line
@@ -165,6 +165,12 @@ The pages, in the order the panel lists them:
                        close always pays the toll.)
                        DO THIS. A sitting left open is what makes the next
                        Boot refuse.
+                       AND IF YOU DO NOT, the engine does it for you: thirty
+                       minutes with no command between turns and it closes
+                       its own sitting exactly as this button does (serve.py
+                       IDLE_CLOSE, 2026-09-16), and the next Boot opens a new
+                       one. Never mid-turn, and never while the council is
+                       waiting on your answer.
 
 **Or the whole turn in one act.** `git_cycle` is step 3's commit and push as a
 single skill, with the proofs read first and the push verified after. Type it
@@ -244,11 +250,17 @@ there is something to push; hover it and it says which.
     python manjuel.py --help     the argument contract
 
 The REPL opens its own sitting and prints the boot report: GROUND (seats,
-skills, pipelines), RACK (what Ollama holds and what is warm), RECORD (index,
-memory, transcripts, what the suites last proved), GATE (git, whether remote
+skills, pipelines, and THE MAP OF THE CODE -- the ten files the rest of the
+ground leans on hardest, with their top names, read off the disk at every
+boot), RACK (what Ollama holds and what is warm), RECORD (index, memory,
+transcripts, what the suites last proved), GATE (git, whether remote
 operations are permitted, and the release gate's verdict) and VOICE. Every
 block degrades on its own -- if the rack is unreachable that block says so and
-the rest still prints.
+the rest still prints, and the same is true of the map.
+
+The map answers "where do I start" without anyone asking. To ask it something
+narrower -- where one name is declared, and which files name it -- the skill
+is `symbols <name>`; with no name it prints twenty-five files instead of ten.
 
 **One engine per world.** The dashboard and the REPL both open a sitting on
 `research`, so they refuse each other by design. Close one before opening the
@@ -264,7 +276,7 @@ for one by keyword and the engine runs it; the law gate can refuse it, and a
 refusal names the law. Read them on Records -> skills, or `commands.md` for
 what can be asked for in words.
 
-**Tools** are what ATLAS serves over MCP -- 78 of them, listed at
+**Tools** are what ATLAS serves over MCP -- 81 of them, listed at
 `http://127.0.0.1:8090/tools` and reachable from the glass through
 `POST /api/tools/call`. They are read-only unless their declaration says
 `Writes: true`. The ones the dashboard itself leans on:
@@ -276,7 +288,7 @@ what can be asked for in words.
     muster    the declared worlds
     rack_list what the rack holds
 
-Thirty-two of the seventy-eight have no page yet -- the record and law readers,
+Thirty-one of the eighty-one have no page yet (counted 2026-09-17) -- the record and law readers,
 the rack commands, the mesh, keys and tenants. They answer over MCP today; they
 have no button.
 
@@ -554,6 +566,15 @@ changed since the last tag has an Unreleased CHANGELOG line naming it;
 DAYBOOK's last entry closed; a HANDOFF block for today; It reads; it never writes. A REFUSED line is the
 thing to do next, not a thing to argue with. PASSED means the tag may be
 cut -- by you (RULE 6).
+
+**AND THE MARK ITSELF (2026-09-17).** One mark per version,
+`vMAJOR.MINOR.PATCH`, cut on the main line after the gate and sent BY NAME
+from Version control -- never `git push --tags`, which sends every mark this
+machine holds. Send the main line first: the door refuses to send a mark whose
+commit origin's main line does not already carry, and refuses to cut one
+anywhere but the main line. The panel asks the door before it offers anything,
+so a mark that may not go is greyed with the reason under it rather than after
+the click. The seven steps are in BUILDPATH, "The marks, and how one is cut".
 
 ---
 

@@ -9517,6 +9517,600 @@ def test_prune_evicts_undeclared_roots_but_refuses_a_large_one(reg, lib, book):
     check("   and keeps what is still within", count(idx4) == 9, f"{count(idx4)}")
 
 
+def test_what_feeds_the_index_keeps_to_its_roots(reg, lib, book):
+    """The optimization pass, piece 7 (2026-09-15, the operator: "continue to
+    piece 7"). The index holds what index_roots.txt declares; nothing that feeds
+    it or prunes it on a change may act on anything else.
+
+    THE WATCHER queued every text file under the ground, and the next turn
+    embedded it into the live index. That morning the index held 12 documents
+    under no declared root -- flows/ (10), state/rack_ledger.jsonl and
+    law/chain.jsonl -- and no version of index_roots.txt in git ever declared
+    one. It also opened every file an event named, for the client token,
+    whether or not anything would be done with it.
+
+    A CHANGE-DRIVEN BUILD pruned as though the files it was handed were the
+    index's scope, so every other document read as "under a root no longer
+    declared". On the live index that is always over the ceiling: refused,
+    silently, after resolving every indexed path. On a small one the rest was
+    evicted for real.
+
+    STROKED BOTH WAYS: the watcher still queues what the index holds and still
+    reloads a declaration; the shield still refuses inside a root; a file that
+    is gone is still pruned; and the declared refresh still evicts a root that
+    left the list.
+    """
+    import contextlib
+    import io
+    from manjuel import cli as _cli
+    from manjuel import vectors as _V
+    from manjuel import watch as _watch
+    from manjuel.skills import EMBED_MODEL, index_roots
+
+    # ---- THE WATCHER: what the index holds, and nothing else -----------
+    g = Path(tempfile.mkdtemp()).resolve()
+    for d in ("manjuel/build", "manjuel/.cache", "agents", "logs",
+              "atlas/webapp/data", "worlds/example", "flows"):
+        (g / d).mkdir(parents=True, exist_ok=True)
+    (g / "index_roots.txt").write_text(
+        "# the fixture's roots\nmanjuel\nagents\nlogs\npipelines.md\nSPEC.md\n",
+        encoding="utf-8", newline="\r\n")
+    e = env_for(g, reg, Stub())
+    e.ground = g
+    roots = index_roots(e)
+    check("index_roots reads index_roots.txt against the ground",
+          [r.name for r in roots] == ["manjuel", "agents", "logs", "pipelines.md", "SPEC.md"]
+          and all(r.parent == g for r in roots), str(roots))
+
+    w = _watch.GroundWatch(g, roots=roots)
+    for rel in ("manjuel/pipeline.py", "SPEC.md", "agents/steward.md",
+                "atlas/webapp/data/store.json", "worlds/example/notes.md",
+                "flows/runs.jsonl", "README.md", "manjuel/build/gen.py",
+                "manjuel/.cache/x.md", "logs/run.md"):
+        w.note(g / rel)
+    reload_needed, changed = w.drain()
+    names = sorted(p.relative_to(g).as_posix() for p in changed)
+    check("a changed file under a declared root is queued, a folder root and a file root",
+          "manjuel/pipeline.py" in names and "SPEC.md" in names, str(names))
+    check("and nothing else is: not atlas/, worlds/, flows/, an undeclared doc or logs/",
+          names == ["SPEC.md", "agents/steward.md", "manjuel/pipeline.py"], str(names))
+    check("nor a file below a folder the indexer's own walk skips (build/, a dot-folder)",
+          not any(n.startswith(("manjuel/build", "manjuel/.cache")) for n in names),
+          str(names))
+    check("a seat edited under a declared root still reloads", reload_needed)
+
+    w.note(g / "commands.md")
+    again, queued = w.drain()
+    check("a declaration the index does not hold still reloads, and is not queued",
+          again is True and queued == [], f"{again} {queued}")
+
+    (g / "manjuel" / "leak.md").write_text("[[CLIENT]]\nescaped the vault",
+                                          encoding="utf-8")
+    w.note(g / "manjuel" / "notes.client.md")
+    w.note(g / "manjuel" / "leak.md")
+    check("the client shield still refuses inside a declared root, by name and by token",
+          w.drain()[1] == [])
+
+    peeked: list = []
+    real_peek = _watch.is_protected
+    _watch.is_protected = lambda p, peek=True: peeked.append(Path(p).name) or real_peek(p, peek)
+    try:
+        w.note(g / "atlas" / "webapp" / "data" / "store.json")
+        w.note(g / "atlas" / "line" / "mcp.log")
+        w.note(g / "manjuel" / "pipeline.py")
+    finally:
+        _watch.is_protected = real_peek
+    w.drain()
+    check("an event nothing would act on is dropped before anything opens the file",
+          "store.json" not in peeked and "mcp.log" not in peeked, str(peeked))
+    check("and one that would be queued is still checked for the client token",
+          "pipeline.py" in peeked, str(peeked))
+
+    old = _watch.GroundWatch(g)
+    old.note(g / "flows" / "runs.jsonl")
+    check("handed no roots, the watcher keeps its old reach -- the strokes before this use it",
+          [p.name for p in old.drain()[1]] == ["runs.jsonl"])
+
+    for name in ("cli.py", "serve.py"):
+        src = (ROOT / "manjuel" / name).read_text(encoding="utf-8")
+        check(f"{name} hands the ground watcher the index's roots",
+              "GroundWatch(ROOT, roots=index_roots(sess.env))" in src
+              and "GroundWatch(ROOT)" not in src, name)
+    sk = (ROOT / "manjuel" / "skills.py").read_text(encoding="utf-8")
+    ig = sk.split('@skill("index_ground")', 1)[1].split("\ndef _index_ground_locked", 1)[0]
+    check("and index_ground reads its roots through that same function",
+          "roots = index_roots(env)" in ig and "load_roots(" not in ig, ig[:160])
+
+    # ---- THE CHANGE-DRIVEN BUILD: only what is gone --------------------
+    # Three indexes, not one, so a red names one thing: a document evicted by
+    # one check must not be the reason the next one fails.
+    def embed(text):
+        return [1.0, 0.0, 0.0]
+
+    def fresh():
+        """Five documents under docs/, indexed as declared roots."""
+        home = Path(tempfile.mkdtemp())
+        (home / "docs").mkdir()
+        docs = [home / "docs" / f"d{i}.md" for i in range(5)]
+        for i, p in enumerate(docs):
+            p.write_text(f"the covenant, document {i}", encoding="utf-8")
+        index = _V.VectorIndex(home / "v.db", "stub-embedder")
+        index.build([home / "docs"], embed)
+        return home, docs, index
+
+    def count(index):
+        return index.db.execute("SELECT COUNT(*) FROM docs").fetchone()[0]
+
+    g2, docs, idx = fresh()
+    check("the fixture index holds five documents", count(idx) == 5, str(count(idx)))
+    for p in docs[:4]:
+        p.write_text(p.read_text(encoding="utf-8") + " -- edited", encoding="utf-8")
+    said: list = []
+    st = idx.build(docs[:4], embed, said.append, declared=False)
+    check("a build handed four changed files re-embeds the four",
+          st.embedded == 4, str(vars(st)))
+    check("and evicts nothing it was not handed -- the fifth document stays",
+          count(idx) == 5, f"{count(idx)} docs; {said}")
+    docs[0].write_text("the covenant, edited again", encoding="utf-8")
+    said = []
+    idx.build([docs[0]], embed, said.append, declared=False)
+    check("a build handed one file reports no refused eviction over the other four",
+          not any("REFUSED" in s for s in said), str(said))
+    idx.close()
+
+    _, docs, idx = fresh()
+    docs[4].unlink()
+    docs[1].write_text("the covenant, edited", encoding="utf-8")
+    said = []
+    idx.build([docs[1]], embed, said.append, declared=False)
+    check("a file that is gone is still pruned by a change-driven build",
+          count(idx) == 4 and any("d4.md (missing)" in s for s in said),
+          f"{count(idx)} docs; {said}")
+    idx.close()
+
+    g2, docs, idx = fresh()
+    (g2 / "old").mkdir()
+    (g2 / "old" / "x.md").write_text("the covenant, under a root about to leave",
+                                     encoding="utf-8")
+    idx.build([g2 / "docs", g2 / "old"], embed)
+    held = count(idx)
+    idx.build([g2 / "docs"], embed)
+    check("a DECLARED build still evicts a root that left the list",
+          count(idx) == held - 1
+          and not any(p.endswith("x.md") for p, in idx.db.execute("SELECT path FROM docs")),
+          f"{held} -> {count(idx)}")
+    idx.close()
+
+    # ---- THE CALLERS ----------------------------------------------------
+    # The turn boundary. set_ground puts the index in a temp ground, and is
+    # put back whatever happens, as test_the_ground_flag does.
+    g3 = Path(tempfile.mkdtemp())
+    (g3 / "docs").mkdir()
+    files = [g3 / "docs" / f"f{i}.md" for i in range(5)]
+    for i, p in enumerate(files):
+        p.write_text(f"the ledger covenant {i}", encoding="utf-8")
+    rt = Stub()
+    pre = _V.VectorIndex(g3 / "index" / "vectors.db", EMBED_MODEL)
+    pre.build([g3 / "docs"], lambda c: rt.embed(EMBED_MODEL, c))
+    pre.close()
+    for p in files[:4]:
+        p.write_text(p.read_text(encoding="utf-8") + " edited", encoding="utf-8")
+
+    class Drained:
+        def drain(self):
+            return False, list(files[:4])
+
+    class TurnSess:
+        watcher = Drained()
+        rack_ok = True
+        runtime = rt
+
+        def load(self):
+            return True
+
+    printed = io.StringIO()
+    keep = _cli.ROOT
+    try:
+        _cli.set_ground(g3)
+        with contextlib.redirect_stdout(printed):
+            _cli._apply_ground_changes(TurnSess())
+    finally:
+        _cli.set_ground(keep)
+    post = _V.VectorIndex(g3 / "index" / "vectors.db", EMBED_MODEL)
+    n = post.db.execute("SELECT COUNT(*) FROM docs").fetchone()[0]
+    post.close()
+    check("the turn boundary re-embeds what changed",
+          "reindexed on change" in printed.getvalue(), printed.getvalue()[:160])
+    check("and evicts nothing it was not handed", n == 5, f"{n} docs")
+
+    # embed_text and index_ground, by what their builds hand the prune.
+    seen: list = []
+    real_prune = _V.VectorIndex.prune
+
+    def spy(self, report=lambda s: None, roots=None):
+        seen.append(roots)
+        return real_prune(self, report, roots=roots)
+
+    _V.VectorIndex.prune = spy
+    try:
+        g4 = Path(tempfile.mkdtemp())
+        e4 = env_for(g4, reg, Stub())
+        e4.ground = g4
+        (e4.workspace / "note.md").write_text("the covenant, written by a seat",
+                                             encoding="utf-8")
+        out = lib.execute("embed_text", {"filepath": "note.md"}, e4)
+        by_embed = list(seen)
+        seen.clear()
+        (g4 / "docs").mkdir()
+        (g4 / "docs" / "a.md").write_text("the covenant", encoding="utf-8")
+        (g4 / "index_roots.txt").write_text("docs\n", encoding="utf-8")
+        out2 = lib.execute("index_ground", {}, e4)
+        by_index = list(seen)
+    finally:
+        _V.VectorIndex.prune = real_prune
+    check("embed_text's build prunes only what is gone -- it hands in no scope",
+          "Indexed" in out and by_embed == [None], f"{out[:80]} {by_embed}")
+    check("index_ground's build prunes against the declared roots",
+          "Refreshed" in out2 and len(by_index) == 1 and by_index[0]
+          and [Path(x).name for x in by_index[0]] == ["docs"], f"{out2[:80]} {by_index}")
+
+
+def test_a_dial_in_env_is_read_and_the_transports_stay_few(reg, lib, book):
+    """The optimization pass, piece 8 (2026-09-15, the operator: "continue to
+    piece 8"). Three faults in the transport and the dials beneath it.
+
+    A DIAL WRITTEN IN `.env` WAS NEVER READ. runtime, skills, pipeline and voice
+    took MANJUEL_SEAT_TIMEOUT, _KEEP_ALIVE, _SKILL_TIMEOUT, _RUN_TIMEOUT,
+    _TURN_DEADLINE and _WHISPER_MODEL when they were imported, and every door
+    imports them before it reads `.env`. `.env.example` says to set them there
+    and dotenv.py that a `.env` changes them; the boot line said ".env: set".
+
+    THE EMBEDDER IGNORED MANJUEL_KEEP_ALIVE. Every chat and warm passed it;
+    embed passed nothing, so the server's own default held the model.
+
+    THE TRANSPORTS GREW WITHOUT BOUND. One per distinct seat bound, made once,
+    held while every bound was declared; the turn deadline cuts a late seat's
+    bound to the seconds left -- a new float on every call -- and each one
+    built a client that was kept until the process ended.
+    """
+    import dataclasses
+    import inspect
+    import manjuel as _pkg
+    import ollama
+    from manjuel import dotenv as _dotenv
+    from manjuel import pipeline as _pl
+    from manjuel import runtime as _rt
+    from manjuel import skills as _sk
+    from manjuel import voice as _vo
+
+    names = ("MANJUEL_SEAT_TIMEOUT", "MANJUEL_KEEP_ALIVE", "MANJUEL_SKILL_TIMEOUT",
+             "MANJUEL_RUN_TIMEOUT", "MANJUEL_TURN_DEADLINE", "MANJUEL_WHISPER_MODEL",
+             "CHAINKIT_TURN_DEADLINE")
+
+    def dials():
+        return (_rt.SEAT_TIMEOUT, _rt.KEEP_ALIVE, _sk.SKILL_TIMEOUT, _sk.RUN_TIMEOUT,
+                _pl.TURN_DEADLINE, _vo.STT_MODEL)
+
+    def clear():
+        for k in names:
+            os.environ.pop(k, None)
+
+    saved = {k: os.environ.get(k) for k in names}
+    before = dials()
+    try:
+        # ---- A DIAL IN .env TURNS ------------------------------------------
+        clear()
+        _pkg.read_dials()
+        check("with no dial set, each reads its default",
+              dials() == (700.0, "30m", 300.0, 60.0, 600.0, "base.en"), str(dials()))
+        rt0 = _rt.OllamaRuntime(host="http://127.0.0.1:9")
+
+        g = Path(tempfile.mkdtemp())
+        (g / ".env").write_text(
+            "MANJUEL_SEAT_TIMEOUT=321\nMANJUEL_KEEP_ALIVE=45m\n"
+            "MANJUEL_SKILL_TIMEOUT=222\nMANJUEL_RUN_TIMEOUT=33\n"
+            "CHAINKIT_TURN_DEADLINE=444\nMANJUEL_WHISPER_MODEL=tiny.en\n",
+            encoding="utf-8", newline="\r\n")
+        _dotenv.load(g / ".env")
+        _pkg.read_dials()
+        check("after .env is read, read_dials puts every dial it set into the engine",
+              dials()[:4] + dials()[5:] == (321.0, "45m", 222.0, 33.0, "tiny.en"),
+              str(dials()))
+        check("and an old CHAINKIT_ name counts too, because the carry runs first",
+              _pl.TURN_DEADLINE == 444.0, str(_pl.TURN_DEADLINE))
+
+        rt = _rt.OllamaRuntime(host="http://127.0.0.1:9")
+        check("a runtime built after the read holds .env's keep_alive",
+              rt.keep_alive == "45m", rt.keep_alive)
+        check("and its default transport carries .env's ceiling",
+              rt._client_for(321.0) is rt._client and rt._client_for(700.0) is not rt._client)
+        check("a runtime built before the read keeps the transport it was built with",
+              rt0._client_for(700.0) is rt0._client and rt0._client_for(321.0) is not rt0._client)
+        bare = dataclasses.replace(reg.get("Steward"), timeout=None)
+        late = RunContext(objective="x")
+        late.deadline_at = time.time() + 500
+        check("the turn deadline cuts a seat against .env's ceiling, not the import-time one",
+              _pl._within_deadline(bare, late) is bare)
+
+        # ---- ...AND A VALUE THAT CANNOT BE READ NEVER BREAKS ANYTHING ------
+        os.environ["MANJUEL_SEAT_TIMEOUT"] = "900  # seconds"
+        os.environ["MANJUEL_RUN_TIMEOUT"] = "soon"
+        os.environ["MANJUEL_KEEP_ALIVE"] = ("30m      # how long Ollama holds a model "
+                                           "after a request")
+        raised = ""
+        try:
+            _pkg.read_dials()
+        except Exception as exc:
+            raised = f"{type(exc).__name__}: {exc}"
+        check("a value that is not a number falls back to the default, and never raises",
+              not raised and _rt.SEAT_TIMEOUT == 700.0 and _sk.RUN_TIMEOUT == 60.0,
+              raised or str(dials()))
+        check("a keep_alive that is not a duration is never sent -- .env.example's own line, as dotenv keeps it",
+              _rt.KEEP_ALIVE == "30m", _rt.KEEP_ALIVE)
+        for good in ("1h30m", "90s", "0", "-1m"):
+            os.environ["MANJUEL_KEEP_ALIVE"] = good
+            _rt.read_dials()
+            check(f"a duration Ollama reads is taken as written: {good}",
+                  _rt.KEEP_ALIVE == good, _rt.KEEP_ALIVE)
+
+        # ---- THE DOORS READ THEM WHERE THEY READ .env ----------------------
+        for name in ("cli.py", "serve.py"):
+            body = (ROOT / "manjuel" / name).read_text(encoding="utf-8").split("def main(", 1)[1]
+            check(f"{name} reads the dials after .env and before it builds the Session",
+                  -1 < body.find('dotenv.load(ROOT / ".env")') < body.find("read_dials()")
+                  < body.find("Session()") and "_carry()" not in body, name)
+        clear()
+        sys.path.insert(0, str(ROOT / "tests"))
+        import standup as _su
+        g2 = Path(tempfile.mkdtemp())
+        (g2 / ".env").write_text("MANJUEL_TURN_DEADLINE=432\n", encoding="utf-8",
+                                 newline="\r\n")
+        _su.honour_env(g2, live=True)
+        check("a live standup reads the engine's dials after its .env too",
+              _pl.TURN_DEADLINE == 432.0, str(_pl.TURN_DEADLINE))
+    finally:
+        clear()
+        for k, v in saved.items():
+            if v is not None:
+                os.environ[k] = v
+        _pkg.read_dials()
+    check("and with the environment put back, every dial reads what it read before",
+          dials() == before, f"{dials()} vs {before}")
+
+    # ---- THE EMBEDDER KEEPS THE SEATS' HOURS --------------------------------
+    seen: dict = {}
+
+    class NewShape:
+        def embed(self, **kw):
+            seen["new"] = kw
+            return {"embeddings": [[0.5, 0.5]]}
+
+    class OldShape:
+        def embeddings(self, **kw):
+            seen["old"] = kw
+            return {"embedding": [0.25, 0.75]}
+
+    rt2 = _rt.OllamaRuntime(host="http://127.0.0.1:9", keep_alive="17m")
+    rt2._client = NewShape()
+    got = rt2.embed("nomic-embed-text", "the covenant")
+    check("an embed carries the runtime's keep_alive, as every chat and warm does",
+          seen.get("new", {}).get("keep_alive") == "17m" and got == [0.5, 0.5], str(seen))
+    rt2._client = OldShape()
+    got = rt2.embed("nomic-embed-text", "the covenant")
+    check("and so does the older embeddings() shape",
+          seen.get("old", {}).get("keep_alive") == "17m" and got == [0.25, 0.75], str(seen))
+    check("the installed ollama client takes keep_alive on both embedding calls",
+          "keep_alive" in inspect.signature(ollama.Client.embed).parameters
+          and "keep_alive" in inspect.signature(ollama.Client.embeddings).parameters)
+
+    # ---- THE TRANSPORTS STAY FEW ------------------------------------------
+    rt3 = _rt.OllamaRuntime(host="http://127.0.0.1:9")
+    closed: list = []
+    own_close = "close" in ollama.Client.__dict__
+    real_close = ollama.Client.close
+    ollama.Client.close = lambda self: (closed.append(self), real_close(self))[1]
+    try:
+        handed = [rt3._client_for(599.0 - i * 1.37) for i in range(40)]
+    finally:
+        if own_close:
+            ollama.Client.close = real_close
+        else:
+            del ollama.Client.close
+    let_go = 40 - len(rt3._bounded)
+    check("forty bounds cut by a turn's deadline leave at most BOUND_TRANSPORTS transports",
+          len(rt3._bounded) <= _rt.BOUND_TRANSPORTS, f"{len(rt3._bounded)} kept")
+    check("and every transport let go is closed, not left holding its pool",
+          let_go > 0 and len(closed) == let_go, f"{len(closed)} closed of {let_go} let go")
+    check("the transport a call has just been handed is never the one closed",
+          handed[-1] not in closed and rt3._bounded.get(599.0 - 39 * 1.37) is handed[-1])
+    reused = rt3._client_for(300.0)
+    check("a bound asked for again while it is kept is handed back, not rebuilt",
+          rt3._client_for(300.0) is reused)
+
+
+def test_an_idle_engine_closes_its_own_sitting(reg, lib, book):
+    """The optimization pass's second decision (2026-09-16, the operator: "D2 30
+    minutes", then "continue to D2"). An engine nobody uses closes its own
+    sitting after thirty minutes with no command.
+
+    THE RECORD SAID WHY. Engines stood 13.8 hours after their last turn before
+    anyone closed them -- 7.2 of those hours sitting 208's -- and 58 sittings
+    ran nothing. The Dashboard's amber "idle" line was the only answer, and it
+    only works while someone is looking at it.
+
+    STROKED BOTH WAYS. It closes, through the client's own close, once, saying
+    why. And it waits: a command starts the wait again, a turn in flight is
+    never timed, a pending question is never timed, a client cannot forge the
+    timeout, and the REPL never comes through this door at all.
+
+    Hermetic: a stand-in session and a stand-in closer, so no stroke opens a
+    sitting or pays a toll into the record beside it.
+    """
+    import builtins as _b
+    import inspect as _inspect
+    import io
+    import json as _json
+    import threading
+    import types
+    from manjuel import cli as _cli
+    from manjuel import seatlog as _sl
+    from manjuel import serve as _sv
+
+    check("the door waits thirty minutes for a command, his number",
+          _sv.IDLE_CLOSE == 30 * 60, str(_sv.IDLE_CLOSE))
+
+    closes: list = []
+
+    def closer(s):
+        closes.append(time.time())
+
+    class Scripted:
+        """An inbox that hands out the rows it was given, and records how long
+        each wait for one was allowed to be."""
+        def __init__(self, rows):
+            self.rows, self.waits = list(rows), []
+
+        def set_state(self, state):
+            pass
+
+        def take(self, timeout=None):
+            self.waits.append(timeout)
+            return self.rows.pop(0) if self.rows else None
+
+    class Hold:
+        """A client that sends what it is given, then says nothing."""
+        def __init__(self, lines):
+            self.lines, self.stop = list(lines), threading.Event()
+
+        def __iter__(self):
+            return self
+
+        def __next__(self):
+            if self.lines:
+                return self.lines.pop(0)
+            self.stop.wait(10)
+            raise StopIteration
+
+    def door(inbox, wire, **kw):
+        sess = types.SimpleNamespace(
+            runtime=Stub(),
+            sitting=_sl.Sitting(n=99, id="S-idle", started="2026-09-16T10:00:00"))
+        return _sv.Door(sess, wire, inbox, ground=Path(tempfile.mkdtemp()),
+                        closer=closer, **kw)
+
+    def serve(d, wire):
+        keep_out, keep_in = sys.stdout, _b.input
+        try:
+            sys.stdout = _sv.TextChannel(wire)
+            return d.serve()
+        finally:
+            sys.stdout, _b.input = keep_out, keep_in
+
+    def events(out):
+        return [_json.loads(l) for l in out.getvalue().splitlines() if l.strip()]
+
+    # ---- THE BOUND: thirty minutes, handed to the one wait between turns --
+    out = io.StringIO()
+    wire = _sv.Wire(out)
+    d = door(Scripted([{"cmd": "close"}]), wire)
+    check("a door built as serve.main builds it waits IDLE_CLOSE, not forever",
+          d.idle_close == _sv.IDLE_CLOSE, str(d.idle_close))
+    serve(d, wire)
+    check("   and hands that bound to the inbox between turns",
+          d.inbox.waits == [_sv.IDLE_CLOSE], str(d.inbox.waits))
+    check("serve.main builds the door with the default bound",
+          "Door(sess, wire, inbox, ground=ROOT)" in _inspect.getsource(_sv.main),
+          "serve.main hands the door a bound of its own")
+
+    # ---- FIRING: nothing came, so the sitting closes -----------------------
+    closes.clear()
+    out = io.StringIO()
+    wire = _sv.Wire(out)
+    d = door(Scripted([{"cmd": "_timeout"}]), wire, idle_close=1800)
+    rc = serve(d, wire)
+    rows = events(out)
+    last = rows[-1] if rows else {}
+    check("no command within the bound closes the sitting, through the client's own close",
+          rc == 0 and len(closes) == 1 and last.get("event") == "closed", repr(rows[-2:]))
+    check("   and `closed` says why, in the reason every close carries",
+          "idle" in str(last.get("why")) and "30 minutes" in str(last.get("why")), repr(last))
+    check("   and the screen says so before it goes",
+          any(r["event"] == "text" and "closing the sitting" in r["text"] for r in rows),
+          repr([r["text"] for r in rows if r["event"] == "text"]))
+
+    closes.clear()
+    out = io.StringIO()
+    wire = _sv.Wire(out)
+    d = door(Scripted([{"cmd": "cancel"}, {"cmd": "_timeout"}]), wire, idle_close=1800)
+    serve(d, wire)
+    kinds = [r["event"] for r in events(out)]
+    check("a command in the meantime starts the whole wait again",
+          d.inbox.waits == [1800, 1800] and "note" in kinds and "closed" in kinds
+          and kinds.index("note") < kinds.index("closed") and len(closes) == 1,
+          f"{d.inbox.waits} {kinds}")
+
+    # ---- ON A REAL INBOX, with a client that has gone quiet ----------------
+    def live(lines, idle, turn=None):
+        out = io.StringIO()
+        wire = _sv.Wire(out)
+        src = Hold(lines)
+        inbox = _sv.Inbox(src, wire)
+        d = door(inbox, wire, idle_close=idle)
+        if turn is not None:
+            d.turn = turn
+        inbox.start()
+        t0 = time.time()
+        try:
+            rc = serve(d, wire)
+        finally:
+            src.stop.set()
+        return rc, time.time() - t0, events(out)
+
+    closes.clear()
+    rc, took, rows = live([], 0.3)
+    check("a real door nobody talks to closes on its own, at the bound",
+          rc == 0 and len(closes) == 1 and 0.25 <= took < 5 and rows
+          and rows[-1]["event"] == "closed" and "idle" in str(rows[-1].get("why")),
+          f"{took:.2f}s {rows[-1:]}")
+
+    ran: list = []
+
+    def long_turn(objective):
+        time.sleep(0.8)
+        ran.append(time.time())
+        return True
+
+    closes.clear()
+    rc, took, rows = live(['{"cmd": "objective", "text": "a long turn"}'], 0.3, long_turn)
+    check("a turn that runs past the bound is never cut by it -- nothing is waiting then",
+          len(ran) == 1 and len(closes) == 1 and closes[0] >= ran[0] and took >= 1.05,
+          f"ran={len(ran)} closes={len(closes)} took={took:.2f}s")
+
+    # ---- AND THE WAITS IT MUST NEVER BOUND ---------------------------------
+    out = io.StringIO()
+    wire = _sv.Wire(out)
+    d = door(Scripted([{"cmd": "answer", "text": "skip"}]), wire, idle_close=0.01)
+    got = d.ask("retry / skip / abort?")
+    check("a pending question is never timed: ask() waits for his answer without a bound",
+          got == "skip" and d.inbox.waits == [None], f"{got!r} {d.inbox.waits}")
+
+    out = io.StringIO()
+    box = _sv.Inbox(iter(['{"cmd": "_timeout"}']), _sv.Wire(out))
+    box._pump()
+    said = [r.get("text", "") for r in events(out) if r["event"] == "error"]
+    check("a client cannot send the timeout: `_timeout` is not a command the wire takes",
+          box.take(timeout=0.01) is None and any("unknown cmd '_timeout'" in s for s in said),
+          str(said))
+
+    cli_src = (ROOT / "manjuel" / "cli.py").read_text(encoding="utf-8")
+    check("the REPL never comes through this door: its loop waits on the keyboard",
+          "input(" in _inspect.getsource(_cli._loop)
+          and "IDLE_CLOSE" not in cli_src and "_timeout" not in cli_src)
+    check("the wire's own account says an idle engine closes itself",
+          "IDLE_CLOSE" in (_sv.__doc__ or "") and "unasked" in (_sv.__doc__ or ""),
+          (_sv.__doc__ or "")[:80])
+
+
 def test_a_commit_subject_is_the_operators_or_gits_never_the_models(reg, lib, book):
     """SITTING 80. Two commits carried invented subjects, and the operator
     found them by reading the transcripts:
@@ -12716,6 +13310,9 @@ def main() -> int:
     test_the_chain_can_say_what_it_has_proved(reg, lib, book)
     test_a_malformed_flag_is_still_read_and_still_stripped(reg, lib, book)
     test_prune_evicts_undeclared_roots_but_refuses_a_large_one(reg, lib, book)
+    test_what_feeds_the_index_keeps_to_its_roots(reg, lib, book)
+    test_a_dial_in_env_is_read_and_the_transports_stay_few(reg, lib, book)
+    test_an_idle_engine_closes_its_own_sitting(reg, lib, book)
     test_a_commit_subject_is_the_operators_or_gits_never_the_models(reg, lib, book)
     test_the_deliberation_renders_as_prose_not_a_column(reg, lib, book)
     test_the_manifest_reconciles_to_the_disk(reg, lib, book)

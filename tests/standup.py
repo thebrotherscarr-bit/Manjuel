@@ -396,7 +396,10 @@ def honour_env(root: Path, live: bool) -> list[str]:
 
     The old dials are carried AFTER the read, as cli.main does: the carry at
     import saw only the shell, so a CHAINKIT_* name in `.env` would otherwise
-    be dead (manjuel/__init__.py, measured 2026-09-09).
+    be dead (manjuel/__init__.py, measured 2026-09-09). And the engine's own
+    dials are read again after it (2026-09-15): runtime, skills, pipeline and
+    voice took theirs when this file imported them, before `.env` was read.
+    read_dials() does both, in that order.
 
     NOT ON A DRY RUN. `--dry` is the harness proving itself on a stub, in CI
     as well as here, and a dry result that depended on the `.env` beside it
@@ -404,9 +407,9 @@ def honour_env(root: Path, live: bool) -> list[str]:
     """
     if not live:
         return []
-    from manjuel import carry_old_dials, dotenv
+    from manjuel import dotenv, read_dials
     lines = dotenv.report(*dotenv.load(Path(root) / ".env"))
-    carry_old_dials()
+    read_dials()
     return lines
 
 

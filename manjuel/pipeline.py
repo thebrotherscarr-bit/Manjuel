@@ -18,7 +18,9 @@ from . import intent
 from . import seating
 from .registry import Agent, AgentRegistry
 from .runtime import OllamaRuntime, RuntimeError_, SALVAGE_MARK
-from .runtime import SEAT_TIMEOUT as _SEAT_TIMEOUT
+# THE MODULE, NOT ITS SEAT_TIMEOUT. A name imported by value is the value at
+# import, and runtime re-reads that dial once `.env` is in (read_dials).
+from . import runtime as _runtime
 from .skills import (GATE_MARK, REVIEW_ONLY_SKILLS, WRITING_SKILLS,
                      SkillExecutionEnv, SkillLibrary, extract_tool_call,
                      args_from_words as skills_args_from_words,
@@ -113,10 +115,20 @@ MAX_RULING_TURNS = 12
 # nothing runs past the line. A sub-run inherits its parent's deadline.
 # Parity cases are runs and take the same deadline ("not run often ...
 # just for measurement", the operator, the same day).
-try:
-    TURN_DEADLINE = float(os.environ.get("MANJUEL_TURN_DEADLINE") or 600)
-except ValueError:
-    TURN_DEADLINE = 600.0
+def read_dials() -> None:
+    """TURN_DEADLINE, from the environment as it stands NOW.
+
+    Run once here, at import, and again by manjuel.read_dials() once a door
+    has read `.env` -- which every door does after this module is imported,
+    so until 2026-09-15 a value written there was never read."""
+    global TURN_DEADLINE
+    try:
+        TURN_DEADLINE = float(os.environ.get("MANJUEL_TURN_DEADLINE") or 600)
+    except ValueError:
+        TURN_DEADLINE = 600.0
+
+
+read_dials()
 
 
 # A skill-shaped word: letters_with_underscores standing alone -- not a
@@ -167,7 +179,7 @@ def _within_deadline(seat: Agent, ctx: RunContext) -> Agent:
     left = _budget(ctx)
     if left is None:
         return seat
-    own = float(getattr(seat, "timeout", None) or _SEAT_TIMEOUT)
+    own = float(getattr(seat, "timeout", None) or _runtime.SEAT_TIMEOUT)
     left = max(1.0, left)
     return replace(seat, timeout=min(own, left)) if left < own else seat
 

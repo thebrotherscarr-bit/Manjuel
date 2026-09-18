@@ -47,7 +47,7 @@ prose. Every guard in it is named after a failure that actually happened.
 - Not a second executor. One seat runs tools. Option A declined 2026-09-04.
 - Not a bigger-model project. SITTING LAW 3: move up only on a measured
   failure.
-- Not a general agent framework. It has fourteen named seats and forty-two
+- Not a general agent framework. It has fourteen named seats and forty-three
   named skills, and adding one is writing a markdown file, not code.
 - Not a chat app with memory. `memory.md` is landed by the operator's hand
   (`/remember`, `/memory`, or `remember that` typed at the door); a model
@@ -110,13 +110,13 @@ A proposal that needs a word uses the nearest one below.
 | **The standing** | what the sitting is FOR, from DAYBOOK's last entry, read not generated, handed to the door and the court | `seatlog.standing_block`; REFUSALS §20 |
 | **The story** | what the sitting has DONE, from its own ledger lines, read not generated, handed to the door and the court; "what happened?" is answered from it | `seatlog.story_block`, `note_for`; `intent.asks_the_sitting`; REFUSALS §22 |
 | **The ruling loop** | a seat that thought and did not rule is asked again, thinking off, at most three times; the Router is never looped | `MAX_RULING_TURNS`; `_press_for_ruling`; REFUSALS §20 |
-| **The bounds** | one seat call: its `Timeout:` by model size (150/300/600/700) or the 700s ceiling, cut at the wire; one turn: 600s, the seats after it named OUT OF TIME, the seats that failed named too; one index build at a time; twelve ruling turns | `runtime.SEAT_TIMEOUT`, `pipeline.TURN_DEADLINE`, `skills._INDEX_BUSY`; REFUSALS §21 |
+| **The bounds** | one seat call: its `Timeout:` by model size (150/300/600/700) or the 700s ceiling, cut at the wire; one turn: 600s, the seats after it named OUT OF TIME, the seats that failed named too; one index build at a time (`index_ground`, `embed_text` -- the watcher's turn-boundary re-index does not take the lock, found 2026-09-17 and open); twelve ruling turns; one headless engine: thirty minutes with no command between turns and it closes its own sitting (2026-09-16) | `runtime.SEAT_TIMEOUT`, `pipeline.TURN_DEADLINE`, `skills._INDEX_BUSY`, `serve.IDLE_CLOSE`; REFUSALS §21; `test_an_idle_engine_closes_its_own_sitting` |
 | **The release gate** | a tag is refused by name until the record is whole: suites, buildmap, standup, law, manifest, SPEC↔CHANGELOG, DAYBOOK, HANDOFF | `tests/release.py --check`; RUNBOOK "Before a tag" |
 | **The record** | every run is a transcript; every sitting is a numbered line and a toll; memory is landed by hand; nothing is deleted | `transcript.py`, `seatlog.py`, `memory.py`; LAW 1, LAW 10 |
 | **The index** | chunked, incremental, bounded, embedder-stamped; client material and secrets never enter it; transcripts age out of retrieval at 45 days | `vectors.py`; REFUSALS §5, §6, §16 |
 | **The rack** | seven models seat fourteen seats; the everyday pipelines fit resident; the court evicts on purpose; `rack.md` is derived from Ollama, never edited | `vram.py`, `rack.py`; `test_vram` |
 | **The suites** | the engine proves offline with every model stubbed; the REPL proves the same way; the standup runs the seats live and writes a report; the map is generated from the code | `tests/test_manjuel.py`, `smoke_cli.py`, `standup.py`, `buildmap.py` |
-| **The toll** | every sitting ends with what proved, what is thin, what is owed — the operator's words, or an honest "not stated" | `seatlog.render_toll`; LAW 10 |
+| **The toll** | every sitting that ran something ends with what proved, what is thin, what is owed — the operator's words, or an honest "not stated". A sitting that ran nothing closes with no toll, from the Dashboard's Close or on its own when idle (RUNBOOK, 2026-09-14; D2, 2026-09-16; this row said "every sitting" until 2026-09-17) | `seatlog.render_toll`; LAW 10 |
 
 ---
 
@@ -169,7 +169,7 @@ are the whole remaining distance.
 - OPEN — ESTATE LAW 2 (originals read-only) is a comment, not a gate: the `ground` jail contains `worlds/`. ESTATE LAW 3 and 4 have no mechanism.
 
 ### 4.5 The record
-- MET — every run a transcript; every sitting a ledger line and a toll (unattended closes now write their line); CHANGELOG from sitting 1; DAYBOOK per session; HANDOFF per day.
+- MET — every run a transcript; every sitting a ledger line and a toll (unattended closes now write their line); CHANGELOG from sitting 1; DAYBOOK per session; HANDOFF per day. NOTED 2026-09-17: a sitting that ran nothing is tolled by nothing -- its ledger line reads `toll_paid: false` and SEAT_LOG has no entry for it (sittings 220 and 225).
 - OPEN, NARROWED (re-measured 2026-09-09) — the client token is in **0** log filenames and **0** indexed documents; what remains is `sessions.jsonl` (24 occurrences) and the git pack (names, not contents). Counted, never printed. The pack cannot be changed without rewriting history, which was refused once already; the ledger is append-only. Both remaining places are the operator's call, not a hand's.
 - OPEN (re-counted 2026-09-09, after atlas landed in the ground) — the two-terminator state: **528 tracked text files LF, 84 CRLF, 4 MIXED**. The ruling is CRLF; the disk is not. And the four MIXED are not all the same thing: three are atlas's byte-exact test fixtures (`chains/*.jsonl` goldens, deliberately never rewritten) and the fourth is `tests/run_history.jsonl`, where `standup.py` appends CRLF lines into an LF file — the one that is a defect rather than a golden. `.gitattributes` declares CRLF and stores LF blobs, so the committed record is consistent either way. Decision (renormalize, or rule LF) is the operator's; then a stroke. **RE-COUNTED 2026-09-14, and the population moved:** atlas is its own repository now (the core tracks nothing under `atlas/`), so its goldens are no longer counted here. The core ground reads **LF 143, CRLF 32, MIXED 0** -- `tests/run_history.jsonl` is no longer mixed, and the suites' own writers are held to one terminator by a stroke (850e2ce). What stays OPEN is the ruling against the disk: CRLF is the ruling and most tracked text is still LF. Recompute: `git ls-files --eol`, counting the `w/` column.
 - NOTE, not OPEN (his ruling 2026-09-09: "doesnt need to carry an open status, but it should be sorted and numbered") — SEAT_LOG numbering has **14 gaps and 10 unmarked duplicates** as of 2026-09-09 17:20, over 119 headings to a maximum of 123 (gaps: 1, 2, 5, 6, 15, 16, 20, 33, 34, 36, 43, 97, 99, 118 -- 118 is the newest, the sitting a wedged boot opened and a killed process left standing, closed by appending and never tolled; duplicated numbers: 22, 26, 40, 42, 57, 60, 63, 64, 79, 85, and nothing in the file marks any of them, so all ten are unmarked). Record, not defect; noted so nobody "fixes" it by rewriting (LAW 1). **HIS ASK, AND THE CONFLICT IN IT (2026-09-09): "it should be sorted and numbered".** SEAT_LOG's own second line is "Append below; never rewrite above", so SORTING THE FILE IS REWRITING THE RECORD — the one thing LAW 1 forbids, and the reason this note exists at all. Proposed instead, and not built: a GENERATED INDEX beside it — every heading read out of SEAT_LOG.md, sorted by number, gaps and duplicates marked, regenerated like BUILDMAP so it can never drift from the file it describes. The log stays append-only; the sorted view is derived. His call which he meant. THE COUNT MOVES whenever a sitting closes untolled, so it carries its date and the way to recompute it rather than a bare number that rots: read the `## <date> - sitting N -` headings out of SEAT_LOG.md, and compare the set against 1..max. It read "11 and 5" for days after it stopped being true.
@@ -232,7 +232,9 @@ index without the engine having checked it against what ran.
    tool result is stamped; a jail name never reaches a reader.
 4. **The record is whole at every tag.** Measure: `tests/release.py
    --check` passes on the operator's terminal before every tag, and the
-   hands ledger closes every hand's session (0.1.6).
+   hands ledger closes every hand's session (0.1.6). (The hands ledger was
+   removed 2026-09-09 at his word, so that half no longer measures
+   anything -- noted 2026-09-17.)
 5. **A stranger runs it in an hour from the docs alone.** Measure: the
    reading order is one order; every command, skill, dial and bound is
    named in a doc; the docs carry no count the suites print.
@@ -300,6 +302,9 @@ unbounded interruptible speak; the dead code named in TASKS.
 - Whether `sessions/`'s untracked ledger should be an index root (it is).
 - The terminator ruling (CRLF or LF) -- 0.1.8.
 - The client token in twelve old filenames -- rename or rule (0.1.8).
+- (Noted 2026-09-17: the client token has been in no filename since
+  2026-09-09, and what remains is in 4.5; "0.1.8" is this section's own
+  date talking -- the ladder has moved twice since, see 7.7.)
 
 ### 7.7 Timeline
 
@@ -308,8 +313,128 @@ is its second half and precedes its tag. Then 0.1.6, 0.1.7, 0.1.8 as
 TASKS "THE PATH TO 0.1.8" orders them, each ending at the release gate.
 THE LADDER MOVED (2026-09-10, BUILDPATH): 0.1.8 was built and never
 tagged, folded into the 0.1.9 tag; the seal is 0.1.10.
+AND MOVED AGAIN (2026-09-17, BUILDPATH): 0.1.10 was only a version string
+and shipped inside v0.1.11, THE CODING UPDATE, without the seal. The seal
+has no number yet; naming one is his.
 DONE is section 4 with no OPEN line, and the operator having run the
 standup on his own terminal and read the report.
+
+---
+
+## 8. THE PLAN GOING FORWARD (2026-09-17, his word: "set a spec plan and a build path for the vision going forward")
+
+Written from the record: section 4's five OPEN lines, TASKS' open sections,
+BUILDPATH's ladder, and atlas's own governing spec
+(`atlas/docs/SPEC_CONTROL_CENTER.md`). BUILDPATH carries the ORDER and the
+mark procedure; this section says what each number MEANS and when it is DONE.
+The numbers and the names are his (RULE 6); this is the shape, not a promise
+that a version will be called any of these.
+
+### 8.1 The vision, in his own words
+
+    the engine      "a chatty front door with enough smarts to know when to
+                    route externally and actually use the tools/skills that
+                    it has access to through a larger routed system"
+                    (2026-09-10)
+    the loop        "semi-automated task runs we can string together as
+                    pipelines/workflows to iterate on the system without
+                    having to type in a series of commands every time"
+                    (2026-09-04)
+    the glass       "i am not running that terminal anymore ... we need that
+                    functionality on the dashboard" (2026-09-09). atlas is
+                    the control plane; Manjuel is the permanent engine
+                    (ADR-001, atlas/docs/SPEC_CONTROL_CENTER.md §11)
+    the discipline  "I don't trust the system, thus i want to see everything
+                    and make sure its all logged and recorded ... measure
+                    from one task to the next" (2026-09-10); "document build
+                    review document ... tiny-recursive loops instead of
+                    massive ones" (2026-09-08)
+    the boundary    local only, no listening socket in the engine, the gate
+                    is his: RULE 4, RULE 6, and BUILDPATH's position
+
+DONE for the engine is still section 4: every line MET or RULED OUT, and the
+operator has run the standup on his own terminal and read the report. This
+plan is the order those OPEN lines close in.
+
+### 8.2 The versions ahead
+
+One theme each, each ending at the same gate (8.3). The pieces are in
+BUILDPATH, "The order it goes next".
+
+    THE PASSES -- the core, unreleased today
+      what it is   the 2026-09-14 diagnostics pass, the optimization pass's
+                   eight pieces, and D2. All landed, none tagged.
+      DONE when    both suites and a live standup on his terminal after the
+                   newest edit; `tests/release.py --check` PASSED 9 of 9;
+                   the pins moved; CHANGELOG's Unreleased folded under the
+                   number; the mark cut on main and sent (8.3)
+
+    THE GLASS'S OWN PASSES -- atlas, unreleased today
+      what it is   the trace ledger, pieces 1 to 6, D1, the release.yml fix,
+                   `version-tag`, node retries, the hold queue, and the mark
+                   guards of 2026-09-17
+      DONE when    `python tests/prove.py --check` 0 broke; both Go modules
+                   green and gofmt clean; the door's battery PROVEN; the ten
+                   version pins in sync; the mark cut and sent -- and
+                   `release.yml` fires on it and leaves a DRAFT release for
+                   his hand, which is the first time that workflow will have
+                   finished
+
+    THE SEAL -- what 0.1.9 sent to 0.1.10 and v0.1.11 never carried
+      what it is   the release gate in CI; ESTATE LAW 2 as a gate on
+                   `worlds/`; SITTING LAW 5 sealed onto the chain (his act);
+                   the terminator ruling (his); the client token's last two
+                   places (his); the small-honesty list
+      DONE when    4.4 and 4.5 hold no OPEN line
+
+    THE DOOR AND THE COURT
+      what it is   the court fits its turn -- both 2026-09-14 courts cut
+                   Manjuel at the seconds the turn had left; llama3.2 at the
+                   door, which 4.7 has held open since it was written; the
+                   closer's recital; drift's two notes; the refusal that
+                   names a reason it never checked; the card report that
+                   cannot say "over"
+      DONE when    4.7 holds no OPEN line, and two live courts running seat
+                   all six with Manjuel ruling inside the turn
+
+    THE LOOP -- his workflow direction of 2026-09-04, still unbuilt here
+      what it is   the standup and the court as flows fired from the glass;
+                   a run measured against the last one; the word `workflow`
+                   given a file, as section 1's vocabulary already promises
+      DONE when    a day's work is one fired flow and a report he reads,
+                   with no typed command in it
+
+    THE GLASS AS THE FRONT DOOR -- atlas H3 then H7, its own spec governs
+      what it is   the Run, Traces, Waterfall, Seats, Rack, Record, Alerts
+                   and Law pages as SPEC_CONTROL_CENTER §4.5 defines them,
+                   and then the terminal becomes optional
+      DONE when    a full sitting -- open, run, toll, close -- runs from the
+                   glass with no terminal, twice running, and the REPL still
+                   proves under the same suites
+
+    THE REACH -- atlas, and a decision before it is a build
+      what it is   the glass listens on every address with its auth gate
+                   uncalled (`ConfigureAuth` has no caller); the door's holds
+                   are off without `--auth`; Ollama listens on every address
+                   too
+      DONE when    nothing on the network can call a writing tool through the
+                   glass, and the holds are armed or he has ruled they stay
+                   off
+
+    NOT IN THIS PLAN, and named so it is not mistaken for forgotten: the
+    appliance and the business (`SYSTEM_DESIGN.md`, `atlas/LAUNCH_PLAN.md`
+    and their T-stones). That work lives in a world, and SITTING LAW 2 keeps
+    a world closed until he points at it. Its plan is dated 2026-09-08 and
+    nothing of it has been built since `--ground`; when he points at it, it
+    is read first and re-dated.
+
+### 8.3 How a version is cut, from here on
+
+Every mark is `vMAJOR.MINOR.PATCH`, cut on the main line, after the gate,
+sent by name, and never moved. The steps are in BUILDPATH, "The marks, and
+how one is cut"; the door refuses the rest by name (`git_tag`, 2026-09-12
+and 2026-09-17), and the six marks that pointed into the stripped history
+were removed 2026-09-17 on his word.
 
 ---
 

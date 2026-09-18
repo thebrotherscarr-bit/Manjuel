@@ -426,6 +426,47 @@ def _gate(ROOT: Path) -> list[str]:
     return out
 
 
+# THE SHAPE OF THE CODE, IN THE OPENING BLOCK (2026-09-17, his word: "I'd
+# rather have the map integral to the system").
+#
+# The map existed as a skill the same afternoon, and a skill is something a
+# caller must think to reach for. The failure it was built against is not
+# knowing WHERE anything is -- and a hand that does not know that does not know
+# to ask for the map either. So it goes where every sitting already begins.
+#
+# BOUNDED, because this is paid at every boot including the sittings that never
+# touch code: ten files, five names each, one line apiece. The skill still
+# prints twenty-five and answers by name; this is the doorway, not the library.
+#
+# IT DEGRADES ON ITS OWN, like every other section of this report: if the walk
+# raises for any reason the line says so and the boot carries on.
+MAP_FILES = 10
+MAP_NAMES = 5
+
+
+def _ground_map(ROOT: Path) -> list[str]:
+    """The ten files the rest of the ground leans on hardest, read off disk."""
+    try:
+        # Deferred: boot is imported by the door before the skill library is
+        # wanted, and this is the one line of it that needs skills.py.
+        from .skills import symbol_table, map_rows
+        syms, words = symbol_table(ROOT)
+        rows = map_rows(syms, words, top=MAP_NAMES)
+    except Exception as exc:
+        return [f"    code     map unavailable ({type(exc).__name__})"]
+    if not rows:
+        return []
+    total = sum(n for _, _, n, _ in rows)
+    out = [f"    code     {len(rows)} files declare {total} symbols — "
+           f"the {min(MAP_FILES, len(rows))} most leaned on:"]
+    for rel, weight, n_sym, top in rows[:MAP_FILES]:
+        out.append(f"      {rel:<44} {n_sym:>4} sym · {weight:>3} refs · "
+                   f"{', '.join(top)}")
+    out.append("      `symbols <name>` gives the file and line anything is "
+               "declared at.")
+    return out
+
+
 def report(sess, ROOT: Path, EMBED_MODEL: str, git=None) -> list[str]:
     live = [str(s) for s in sess.pipeline if not getattr(s, "when", None)]
     resting = len(sess.pipeline) - len(live)
@@ -436,6 +477,7 @@ def report(sess, ROOT: Path, EMBED_MODEL: str, git=None) -> list[str]:
                f"{len(sess.pipeline_names())} pipelines")
     out.append(f"    '{sess.pipeline_name}': {' -> '.join(live)}"
                + (f"   (+{resting} resting)" if resting else ""))
+    out += _ground_map(ROOT)
     out.append("")
 
     out += _models(sess, EMBED_MODEL)

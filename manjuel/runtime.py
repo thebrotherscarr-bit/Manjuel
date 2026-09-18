@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time
 
 import ollama
@@ -12,7 +13,15 @@ import ollama
 # parameter, so manjuel sets it directly -- unlike OLLAMA_NUM_PARALLEL and
 # OLLAMA_MAX_LOADED_MODELS, which the server reads at ITS startup and which no
 # client can change from here.
-KEEP_ALIVE = os.environ.get("MANJUEL_KEEP_ALIVE", "30m")
+#
+# A VALUE THAT IS NOT A DURATION IS NOT SENT (2026-09-15). This string rides
+# on every chat, warm and embed request, and Ollama takes it as a duration --
+# "30m", "1h30m", or "0" to unload at once. `.env.example` has this dial on a
+# live line with a comment after it, and dotenv.py keeps that comment in the
+# value, so read as it stands it would go out on every request the engine
+# makes. Unreadable falls back to the default, as the numeric dials do.
+_DURATION_RE = re.compile(
+    r"0|[+-]?(?:(?:\d+\.?\d*|\.\d+)(?:ns|us|µs|μs|ms|s|m|h))+")
 
 # LAW 7: bounded everything. Skills have had a bound since sitting 68 (300s,
 # skills.py) and SEATS HAD NONE: ollama-python's default timeout is None, so
@@ -30,10 +39,29 @@ KEEP_ALIVE = os.environ.get("MANJUEL_KEEP_ALIVE", "30m")
 # seats 600, gemma4:12b 700); this is the most any seat may take. The
 # TURN is still bounded at 600 (pipeline.TURN_DEADLINE): a 700 seat late
 # in a turn is cut to what is left.
-try:
-    SEAT_TIMEOUT = float(os.environ.get("MANJUEL_SEAT_TIMEOUT") or 700)
-except ValueError:
-    SEAT_TIMEOUT = 700.0
+
+
+def read_dials() -> None:
+    """KEEP_ALIVE and SEAT_TIMEOUT, from the environment as it stands NOW.
+
+    Run once here, at import, and again by manjuel.read_dials() once a door
+    has read `.env` -- which every door does after this module is imported,
+    so until 2026-09-15 a value written there was never read."""
+    global KEEP_ALIVE, SEAT_TIMEOUT
+    keep = os.environ.get("MANJUEL_KEEP_ALIVE", "").strip()
+    KEEP_ALIVE = keep if _DURATION_RE.fullmatch(keep) else "30m"
+    try:
+        SEAT_TIMEOUT = float(os.environ.get("MANJUEL_SEAT_TIMEOUT") or 700)
+    except ValueError:
+        SEAT_TIMEOUT = 700.0
+
+
+read_dials()
+
+# How many seat-bound transports a runtime keeps beside its default one
+# (_client_for). Three is every bound the rack declares under the ceiling
+# today -- 150, 300 and 600 -- and the fourth is the one a turn's deadline cut.
+BOUND_TRANSPORTS = 4
 
 # httpx is what ollama-python speaks through; its timeout exceptions are the
 # non-streaming half of the bound. Absent (a stubbed transport) the name
@@ -208,15 +236,17 @@ def _normalize(tag: str) -> str:
 
 
 class OllamaRuntime:
-    def __init__(self, host: str = "http://127.0.0.1:11434", keep_alive: str = KEEP_ALIVE):
+    def __init__(self, host: str = "http://127.0.0.1:11434", keep_alive: str | None = None):
         self.host = host
-        self.keep_alive = keep_alive
-        self._client = ollama.Client(host=host, timeout=_client_timeout(SEAT_TIMEOUT))
+        # The dials as they stand when the runtime is BUILT, which is after a
+        # door has read `.env` -- not as they stood at import (read_dials).
+        self.keep_alive = KEEP_ALIVE if keep_alive is None else keep_alive
+        self._ceiling = SEAT_TIMEOUT
+        self._client = ollama.Client(host=host, timeout=_client_timeout(self._ceiling))
         self._installed: set[str] | None = None
         self._tool_capable: dict[str, bool] = {}
-        # One transport per distinct seat bound (see _client_for). The
-        # default above carries the ceiling; a seat that declares a tighter
-        # `Timeout:` gets its own, made once.
+        # Transports for the seat bounds under the ceiling (see _client_for),
+        # least recently used first, at most BOUND_TRANSPORTS of them.
         self._bounded: dict[float, object] = {}
 
     def _client_for(self, bound: float):
@@ -227,13 +257,31 @@ class OllamaRuntime:
         with its own ceiling needs its own client. A replaced `_client`
         (the suite's fakes) is honoured as-is: a fake has no transport to
         bound, and the wall clock in the stream loop still applies.
+
+        AT MOST BOUND_TRANSPORTS ARE KEPT, AND ONE LET GO IS CLOSED
+        (2026-09-15). This kept a transport per distinct bound, made once --
+        which held while every bound was a seat's declared `Timeout:`. The turn
+        deadline ended that: pipeline._within_deadline hands a seat seated in a
+        running turn its timeout cut to the seconds left, a different float on
+        every call, and each one built a client, with its own connection pool,
+        that was kept until the process ended. A seat whose own bound is the
+        turn's 600s or more is cut on every call it makes. The least recently
+        used goes first, so the transport a call has just been handed is never
+        the one closed.
         """
-        if bound == SEAT_TIMEOUT or not isinstance(self._client, ollama.Client):
+        if bound == self._ceiling or not isinstance(self._client, ollama.Client):
             return self._client
-        if bound not in self._bounded:
-            self._bounded[bound] = ollama.Client(host=self.host,
-                                                 timeout=_client_timeout(bound))
-        return self._bounded[bound]
+        client = self._bounded.pop(bound, None)
+        if client is None:
+            client = ollama.Client(host=self.host, timeout=_client_timeout(bound))
+        self._bounded[bound] = client
+        while len(self._bounded) > BOUND_TRANSPORTS:
+            stale = self._bounded.pop(next(iter(self._bounded)))
+            try:
+                stale.close()
+            except Exception:
+                pass
+        return client
 
     # ---- health / validation ---------------------------------------
 
@@ -639,12 +687,19 @@ class OllamaRuntime:
         try:
             # ollama-python renamed embeddings() -> embed() and changed the
             # response shape; support both rather than pinning a version.
+            #
+            # THE EMBEDDER KEEPS THE SEATS' HOURS (2026-09-15). Every chat and
+            # every warm passes keep_alive; this passed none, so Ollama held
+            # the embedder for the server's own default instead of
+            # MANJUEL_KEEP_ALIVE -- the model /models calls "always live".
             if hasattr(self._client, "embed"):
-                resp = self._client.embed(model=model, input=text)
+                resp = self._client.embed(model=model, input=text,
+                                          keep_alive=self.keep_alive)
                 data = resp.get("embeddings") if isinstance(resp, dict) else getattr(resp, "embeddings", None)
                 if data:
                     return list(data[0])
-            resp = self._client.embeddings(model=model, prompt=text)
+            resp = self._client.embeddings(model=model, prompt=text,
+                                           keep_alive=self.keep_alive)
             vec = resp.get("embedding") if isinstance(resp, dict) else getattr(resp, "embedding", None)
             if not vec:
                 raise RuntimeError_(f"embedding response had no vector: {resp!r}")
