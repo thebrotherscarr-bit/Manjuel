@@ -490,6 +490,20 @@ WRITING_SKILLS = {
     "edit_file",
 }
 
+# THE WRITERS WHOSE ARGUMENT IS A MESSAGE ONLY THE OPERATOR CAN SUPPLY.
+#
+# Both of these say it in their own declaration -- git_cycle's reads "the
+# commit message, in your own words. It is the one part of this a machine
+# cannot supply" -- and `_commit_subject` has refused the model's `<content>`
+# since sitting 80, when two commits carried invented subjects. So for these
+# two, and only these two, a QUOTED message settles the call at dispatch
+# instead of asking a model whether to act on a sentence that is half
+# instruction and half message (2026-09-18; see `operator_message`).
+#
+# A ROSTER, NOT A RULE ABOUT WRITERS IN GENERAL. Every other writer keeps the
+# 2026-09-08 ruling whole: its argument is the Router's to choose.
+MESSAGE_IS_THE_OPERATORS = {"git_commit", "git_cycle"}
+
 
 @dataclass
 class SkillExecutionEnv:
@@ -2181,6 +2195,58 @@ def _git_status(env: SkillExecutionEnv, args: dict) -> str:
     return _world_said(label, "\n".join(out))
 
 
+# THE MESSAGE TRAVELS AS AN ARGUMENT, NOT AS THE INSTRUCTION (2026-09-18).
+#
+# His word after watching it fail: "fix that, hand the message separately from
+# the objective." What failed: `git commit: "The git skills take a world, so the
+# council can act on a repository that is not the ground"` went to the Router as
+# ONE sentence, and the Router -- correctly reading a sentence that describes
+# what git_commit does -- decided the objective was an explanation rather than
+# an instruction and called nothing. Its own words: "the objective doesn't
+# describe any actual changes being made". Nothing was committed, and the
+# engine's named-tool check said so plainly. A commit message ABOUT the git
+# tooling could talk the engine out of committing.
+#
+# QUOTED, AND ONLY QUOTED. The 2026-09-08 ruling stands -- a writer's argument
+# is never decided by arithmetic over loose words ("remember two things",
+# "write_file notes") -- and this does not touch it. A quotation is not loose
+# words: the operator drew the boundary himself, which is the strongest evidence
+# of intent this engine can have, and it is the exact form the glass's own
+# Commit button emits (`git commit: "..."`). A BARE `git commit` still goes to
+# the Router, as it always did.
+_MESSAGE_RE = re.compile(
+    r"""^\s*(?:please\s+)?git[ _]c(?:ommit|ycle)\b\s*
+        (?:(?:-m|--message)\s*[=:]?\s*)?[:,\-]?\s*
+        (?P<q>["'“‘`])(?P<said>.+)(?P=q)\s*$""",
+    re.IGNORECASE | re.DOTALL | re.VERBOSE)
+# The closing quote git's own `-m "..."` would take: a curly opener closes with
+# its curly partner, which a back-reference alone cannot express.
+_QUOTE_PAIRS = {"“": "”", "‘": "’"}
+
+
+def operator_message(objective: str) -> str:
+    """The message the OPERATOR quoted, or "" when he quoted none.
+
+    ONE RULE, TWO READERS, which is this estate's own doctrine and the reason
+    this is a function rather than a regex in two places: dispatch reads it to
+    decide the call, and `_commit_subject` reads it to write the subject. Three
+    copies of `source_files`' rule once disagreed here and only one was right.
+    """
+    said = " ".join((objective or "").split())
+    if not said:
+        return ""
+    m = _MESSAGE_RE.match(said)
+    if m:
+        return m.group("said").strip()
+    # The curly pair, which a back-reference cannot match against itself.
+    for opener, closer in _QUOTE_PAIRS.items():
+        i, j = said.find(opener), said.rfind(closer)
+        if 0 <= i < j and re.match(r"(?i)^\s*(?:please\s+)?git[ _]c(?:ommit|ycle)\b",
+                                   said[:i]):
+            return said[i + 1:j].strip()
+    return ""
+
+
 def _commit_subject(env: SkillExecutionEnv, args: dict, where=None) -> str:
     """Pick a commit subject a human will still understand in six months.
 
@@ -2286,6 +2352,13 @@ def _commit_subject(env: SkillExecutionEnv, args: dict, where=None) -> str:
     # is no longer a candidate. It is testimony about work it did not do
     # (LAW 5), and the fallback below is FACT read from git -- a worse
     # sentence and a true one.
+    # A QUOTED MESSAGE IS NOT READ AGAIN HERE, AND THAT IS MEASURED RATHER
+    # THAN ASSUMED. `operator_message` decides the CALL at dispatch; a first
+    # cut also read it here, on the "one rule, two readers" argument -- and
+    # reversal showed the line was dead: removing it reddened nothing, because
+    # the invocation-stripping below already yields the same subject for every
+    # quoted form (its own strokes, sitting 81 and 85, cover them). An edit no
+    # stroke can defend does not stay in.
     operator = " ".join((getattr(env, "objective", "") or "").split()).strip()
     # THE OPERATOR TYPES THE COMMAND AND THE SUBJECT IN ONE BREATH.
     # Sitting 81: `git commit " i ran a session, found a bug in the router.`

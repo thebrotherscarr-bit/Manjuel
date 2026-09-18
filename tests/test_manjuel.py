@@ -10372,6 +10372,107 @@ def test_a_git_skill_acts_in_the_world_it_is_given(reg, lib, book):
               str(s and s.path_args))
 
 
+def test_a_quoted_message_is_handed_over_as_the_argument(reg, lib, book):
+    """His word, 2026-09-18: "fix that, hand the message separately from the
+    objective."
+
+    WHAT FAILED, on his ground, an hour earlier. The objective
+
+        git commit: "The git skills take a world, so the council can act on a
+        repository that is not the ground"
+
+    travelled to the Router as ONE sentence. The Router read a sentence that
+    DESCRIBES what git_commit does, concluded it was an explanation rather than
+    an instruction, and called nothing -- "the objective doesn't describe any
+    actual changes being made". Thirteen saved files went uncommitted. The
+    engine's named-tool check reported it honestly, which is the only reason
+    it was not silent.
+
+    THE FIX IS NOT "TRUST THE MODEL MORE". A quoted message is taken as the
+    ARGUMENT at dispatch, so the call is decided by arithmetic and no seat is
+    ever asked whether a sentence is an instruction. The 2026-09-08 ruling --
+    a writer's argument is never decided over LOOSE words -- is untouched: a
+    quotation is a boundary the operator drew himself, and a bare `git commit`
+    still goes to the Router."""
+    import subprocess
+    from manjuel.skills import operator_message, MESSAGE_IS_THE_OPERATORS
+
+    # ---- THE RULE ITSELF, which two readers share ------------------------
+    for said, want in (
+            ('git commit: "Six git skills, 39 strokes, BUILDMAP"',
+             "Six git skills, 39 strokes, BUILDMAP"),
+            ('git commit -m "the seam fix"', "the seam fix"),
+            ('git commit "a plain quoted one"', "a plain quoted one"),
+            ('git_commit: "the underscore spelling"', "the underscore spelling"),
+            ('git cycle: "ship it"', "ship it"),
+    ):
+        check(f"the quoted message is lifted whole: {want[:30]!r}",
+              operator_message(said) == want, repr(operator_message(said)))
+
+    # ...AND NOTHING ELSE IS. Loose words stay the Router's, which is the
+    # 2026-09-08 ruling this must not quietly repeal.
+    for said in ("git commit", "git commit save the work",
+                 "commit the seam fix before the rack moves",
+                 "tell me about git commit messages", ""):
+        check(f"nothing is lifted from unquoted words: {said[:34]!r}",
+              operator_message(said) == "", repr(operator_message(said)))
+
+    check("the roster is the two whose message only he can write",
+          MESSAGE_IS_THE_OPERATORS == {"git_commit", "git_cycle"},
+          str(sorted(MESSAGE_IS_THE_OPERATORS)))
+
+    # ---- AND A LIVE TURN: the call is decided, the Router does not choose --
+    def git(where, *a):
+        subprocess.run(["git", *a], cwd=str(where), capture_output=True,
+                       text=True, stdin=subprocess.DEVNULL, timeout=30)
+
+    def ground_with_work():
+        g = Path(tempfile.mkdtemp())
+        (g / "agent_workspace").mkdir()
+        (g / "first.txt").write_text("the ground", encoding="utf-8")
+        git(g, "init", "-b", "main")
+        git(g, "config", "user.name", "prove")
+        git(g, "config", "user.email", "prove@localhost")
+        git(g, "add", "-A")
+        git(g, "commit", "-m", "the first save")
+        (g / "second.txt").write_text("work to save", encoding="utf-8")
+        return g
+
+    # THE VERY SENTENCE THAT FAILED, as the message this time.
+    said = ("The git skills take a world, so the council can act on a "
+            "repository that is not the ground")
+    g = ground_with_work()
+    asked = []
+
+    def spoke(a):
+        asked.append(a.key)
+        return "the save landed"
+
+    r = Stub(reply=spoke)
+    ctx = RunContext(objective=f'git commit: "{said}"')
+    run_pipeline(ctx, reg, r, lib, env_for(g, reg, r),
+                 steps=book.get("default"), report=lambda m: None)
+
+    notes = " | ".join(ctx.notes)
+    check("the quoted message is taken as the argument at dispatch",
+          "the message the operator quoted" in notes, notes[:200])
+    check("so the call is decided by arithmetic, not chosen by a seat",
+          "decided by arithmetic" in notes, notes[:200])
+    check("and the commit landed, on the sentence that talked the Router out of it",
+          gitstate.read(g).subject == said, gitstate.read(g).subject)
+    check("   with a clean tree behind it",
+          not gitstate.read(g).dirty, gitstate.read(g).stamp())
+
+    # ---- THE OTHER HALF: a bare command still asks the Router -------------
+    g2 = ground_with_work()
+    ctx2 = RunContext(objective="git commit")
+    run_pipeline(ctx2, reg, r, lib, env_for(g2, reg, r),
+                 steps=book.get("default"), report=lambda m: None)
+    notes2 = " | ".join(ctx2.notes)
+    check("a bare `git commit` is NOT decided -- the 2026-09-08 ruling stands",
+          "the message the operator quoted" not in notes2, notes2[:200])
+
+
 def test_the_deliberation_renders_as_prose_not_a_column(reg, lib, book):
     """SITTING 80, MY OWN BUG. The streaming path appends deliberation ONE
     TOKEN AT A TIME, and it was joined with "\\n" -- so 7,212 characters of
@@ -13503,6 +13604,7 @@ def main() -> int:
     test_an_idle_engine_closes_its_own_sitting(reg, lib, book)
     test_a_commit_subject_is_the_operators_or_gits_never_the_models(reg, lib, book)
     test_a_git_skill_acts_in_the_world_it_is_given(reg, lib, book)
+    test_a_quoted_message_is_handed_over_as_the_argument(reg, lib, book)
     test_the_deliberation_renders_as_prose_not_a_column(reg, lib, book)
     test_the_manifest_reconciles_to_the_disk(reg, lib, book)
     test_a_greeting_never_reaches_the_reader(reg, lib, book)

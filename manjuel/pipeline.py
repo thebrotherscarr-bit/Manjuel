@@ -21,11 +21,12 @@ from .runtime import OllamaRuntime, RuntimeError_, SALVAGE_MARK
 # THE MODULE, NOT ITS SEAT_TIMEOUT. A name imported by value is the value at
 # import, and runtime re-reads that dial once `.env` is in (read_dials).
 from . import runtime as _runtime
-from .skills import (GATE_MARK, REVIEW_ONLY_SKILLS, WRITING_SKILLS,
+from .skills import (GATE_MARK, MESSAGE_IS_THE_OPERATORS, REVIEW_ONLY_SKILLS,
+                     WRITING_SKILLS,
                      SkillExecutionEnv, SkillLibrary, extract_tool_call,
                      args_from_words as skills_args_from_words,
                      _inside_ground as skills_inside_ground, declared_path,
-                     unjail)
+                     operator_message, unjail)
 from .drift import DriftChecker
 from . import ink
 from . import lawgate
@@ -1465,6 +1466,37 @@ def run_pipeline(
                     ctx.named_by = "the words"
                     ctx.notes.append(f"intent: `{named}` takes content={rest!r} "
                                      f"-- the words after the name")
+        # AND A MESSAGE THE OPERATOR QUOTED IS HANDED OVER AS THE ARGUMENT
+        # (2026-09-18, his word: "hand the message separately from the
+        # objective").
+        #
+        # WHAT THIS FIXES, measured on his own ground the same morning. `git
+        # commit: "The git skills take a world, so the council can act on a
+        # repository that is not the ground"` travelled as ONE sentence, and the
+        # Router read a sentence DESCRIBING git_commit, concluded the objective
+        # was an explanation rather than an instruction, and called nothing:
+        # "the objective doesn't describe any actual changes being made".
+        # Thirteen saved files went uncommitted, and the named-tool check
+        # reported it honestly. A message about the tooling could talk the
+        # engine out of using the tooling.
+        #
+        # THE 2026-09-08 RULING IS NOT TOUCHED. A writer's argument is still
+        # never decided by arithmetic over LOOSE words. A quotation is not loose
+        # words -- the operator drew its boundary himself -- and only the two
+        # skills whose own declarations say the message is his to write are
+        # asked this question (MESSAGE_IS_THE_OPERATORS). A bare `git commit`
+        # goes to the Router exactly as it always has.
+        elif (spec and not getattr(ctx, "named_by", "")
+              and named in MESSAGE_IS_THE_OPERATORS
+              and "content" not in (ctx.tool_args or {})):
+            said = operator_message(ctx.objective)
+            if said:
+                ctx.tool_args = dict(ctx.tool_args or {}, content=said)
+                ctx.named_by = "the words"
+                ctx.notes.append(
+                    f"intent: `{named}` takes content={said!r} -- the message "
+                    f"the operator quoted, handed over as the argument so no "
+                    f"seat has to read it as an instruction")
         # THE NAMED FILE, CHECKED FOR VIABILITY (sitting 88, the operator:
         # "a step that checks to see if it's even viable and a returned
         # argument"). `read pipelines.md` cost five hops because the Router

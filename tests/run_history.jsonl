@@ -361,3 +361,9 @@
 {"suite": "strokes", "at": 1789745130.7209969, "state": "finished", "passed": 2465, "total": 2467, "green": false, "failed": ["client material is never named: 'worlds/client' is refused", "   and the refusal for a world under worlds/ says which rule it is"]}
 {"suite": "strokes", "at": 1789745323.5291924, "state": "finished", "passed": 2467, "total": 2467, "green": true, "failed": []}
 {"suite": "smoke", "at": 1789745328.6027014, "state": "finished", "passed": 65, "total": 65, "green": true, "failed": []}
+{"suite": "strokes", "at": 1789752093.562613, "state": "finished", "passed": 2483, "total": 2483, "green": true, "failed": []}
+{"suite": "strokes", "at": 1789752145.9107938, "state": "finished", "passed": 2479, "total": 2483, "green": false, "failed": ["the quoted message is taken as the argument at dispatch", "so the call is decided by arithmetic, not chosen by a seat", "and the commit landed, on the sentence that talked the Router out of it", "   with a clean tree behind it"]}
+{"suite": "strokes", "at": 1789752180.500433, "state": "finished", "passed": 2480, "total": 2483, "green": false, "failed": ["`git commit -m X` takes X as the subject", "the `git commit \"` invocation is stripped from the subject", "nothing is lifted from unquoted words: 'git commit save the work'"]}
+{"suite": "strokes", "at": 1789752220.4051685, "state": "finished", "passed": 2483, "total": 2483, "green": true, "failed": []}
+{"suite": "strokes", "at": 1789752294.6923974, "state": "finished", "passed": 2483, "total": 2483, "green": true, "failed": []}
+{"suite": "smoke", "at": 1789752299.7833047, "state": "finished", "passed": 65, "total": 65, "green": true, "failed": []}
