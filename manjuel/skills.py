@@ -732,6 +732,117 @@ def declared_path(spec, args: dict, env):
     return None
 
 
+# =====================================================================
+# WHICH WORLD A GIT SKILL ACTS IN
+# =====================================================================
+#
+# Added 2026-09-18 on his word: "add a world parameter to the git skills."
+# Until today every one of them acted on `env.ground` and nothing else, so
+# atlas -- a repository INSIDE this ground, carried by the door as its own
+# world -- could only be saved by a button on the glass, because no objective
+# the council could be given was able to name it.
+#
+# IT RIDES ON <filepath>, AND THAT IS THE LAW HERE RATHER THAN A COMPROMISE.
+# The Router answers in three tags and there is no fourth, and this estate has
+# already paid for forgetting it: `mcp_call` declared <server> and <tool>, the
+# schema dutifully offered them, the Router had no tag to answer with, and a
+# perfectly routed call arrived as {}. A stroke now refuses any skill that
+# declares an argument the grammar cannot carry. <filepath> already means "a
+# path inside the ground", is already declared per skill as a **Path Args:**
+# jail, and is therefore already refused at DISPATCH by gate_paths before a
+# handler runs -- so naming a world costs no new grammar and no new gate.
+#
+# WHAT IS NOT ADDRESSABLE, and not as a matter of taste: `worlds/` and any
+# `vault/`. SITTING LAW 2 -- client material is never opened, named, or
+# referred to unless the operator points at it in that message, for that act --
+# and a git verb pointed at one could commit it, push it, or read its remote.
+# The gate above stops an escape from the ground; this stops a reach INTO the
+# one part of the ground that is not the estate's to move.
+#
+# AN ABSENT WORLD IS THE GROUND, so every call written before today means
+# exactly what it meant before today.
+WORLD_IS_THE_GROUND = ("", ".", "ground", "research", "here", "this ground")
+_WORLD_NEVER = ("worlds", "vault")
+
+
+def _git_worlds(env) -> list[str]:
+    """The repositories this ground carries, named the way the argument wants
+    them. Top level only and bounded by the disk: a walk looking for `.git`
+    anywhere would descend into `worlds/`, which is the one place this must
+    never name."""
+    base = Path(env.ground)
+    out: list[str] = []
+    try:
+        for child in sorted(base.iterdir()):
+            if not child.is_dir() or child.name.startswith("."):
+                continue
+            if child.name.lower() in _WORLD_NEVER:
+                continue
+            if (child / ".git").exists():
+                out.append(child.name)
+    except OSError:
+        return []
+    return out
+
+
+def _git_world(env, args: dict, must_be_repo: bool = True) -> tuple[Path | None, str, str]:
+    """(the repository to act in, what to call it, a refusal).
+
+    The label is "" for the ground itself, which is how every answer below
+    knows whether it has anything to say about where it acted.
+    """
+    raw = unjail((args.get("filepath") or "").strip().strip("'\"`"))
+    if raw.lower() in WORLD_IS_THE_GROUND:
+        return Path(env.ground), "", ""
+
+    here = _inside_ground(env, raw)
+    if here is None:
+        return None, "", (
+            f"Refused: {raw!r} is not a place in this ground. A world is a folder "
+            f"inside it, named the way any path here is named -- `atlas`. "
+            f"Nothing was done.")
+
+    base = Path(env.ground).resolve()
+    parts = [] if here == base else [p.lower() for p in here.relative_to(base).parts]
+    if any(p in _WORLD_NEVER for p in parts):
+        return None, "", (
+            "Refused: that is not a world a seat may act in. Nothing under "
+            "`worlds/` or a `vault/` is named or touched from here, and a git "
+            "verb pointed at one could send it somewhere it may never go. "
+            "Nothing was done.")
+    if not here.is_dir():
+        return None, "", (
+            f"Refused: {raw!r} is a file, not a world. A world is the folder a "
+            f"repository lives in. Nothing was done.")
+
+    label = "" if here == base else here.relative_to(base).as_posix()
+
+    # A WORLD IS A REPOSITORY'S OWN TOP LEVEL, NOT ANY FOLDER INSIDE ONE, and
+    # this is the defect the stroke caught before the code shipped. `git
+    # rev-parse --is-inside-work-tree` answers TRUE in every subdirectory of
+    # this ground, because the ground is itself a repository -- so asking only
+    # "is there a repository here" accepted `notes`, and the commit that
+    # followed saved THE GROUND while the answer said `notes`. A wrong
+    # repository saved under a right-looking sentence is the worst shape a
+    # fault can take here, so the question is asked of the folder itself.
+    if must_be_repo and not (here / ".git").exists():
+        known = _git_worlds(env)
+        return None, "", (
+            f"Refused: {label} is not a repository of its own -- it is a folder "
+            f"inside this ground's, so saving there would save THE GROUND under "
+            f"a sentence naming {label}. The worlds this ground carries: "
+            f"{', '.join(known) if known else 'only the ground itself'}.")
+    return here, label, ""
+
+
+def _world_said(label: str, text: str) -> str:
+    """Name the world in the answer. A reader sees the ANSWER, never the
+    argument that produced it, so an answer about atlas that reads exactly like
+    an answer about the ground is the kind of ambiguity this estate has been
+    bitten by before (sitting 81's count, which direction it pointed)."""
+    return text if not label else f"{label} -- {text}"
+
+
 @skill("ground_list")
 def _ground_list(env: SkillExecutionEnv, args: dict) -> str:
     """The ground as it stands on disk. Live, read-only.
@@ -2032,7 +2143,10 @@ def _remember(env: SkillExecutionEnv, args: dict) -> str:
 
 @skill("git_status")
 def _git_status(env: SkillExecutionEnv, args: dict) -> str:
-    g = _git.read(env.ground)
+    where, label, refusal = _git_world(env, args, must_be_repo=False)
+    if refusal:
+        return refusal
+    g = _git.read(where)
     # Sitting 38: the closer read counts from two moments and narrated a
     # "discrepancy" that three later turns kept investigating. The numbers
     # carry their moment so there is no before/after to invent.
@@ -2047,15 +2161,34 @@ def _git_status(env: SkillExecutionEnv, args: dict) -> str:
                    f"(it runs `add -A` first). Untracked does not mean excluded.")
     out.append(f"remote operations: {'ALLOWED' if _git.remote_allowed() else 'OFF'}")
     # The seat you ask when you are stuck must be the seat that says why.
-    blocked = _git.lock_state(env.ground) if g.is_repo else ""
+    blocked = _git.lock_state(where) if g.is_repo else ""
     if blocked:
         out.append("")
         out.append(blocked)
-    return "\n".join(out)
+    # A WORLD THAT IS NOT ITS OWN REPOSITORY IS SAID PLAINLY RATHER THAN
+    # REFUSED. This one skill asks `must_be_repo=False` on purpose: "is there
+    # version control here at all" is a fair question about any folder. But
+    # the ANSWER must not be the ground's state wearing another folder's
+    # name -- `git rev-parse` reports this ground's repository from inside any
+    # folder in it, so a bare stamp here would say `notes -- main@ac4295e
+    # clean` about a folder that has no repository at all.
+    if label and not (where / ".git").exists():
+        return (f"{label} is not a repository of its own -- it is a folder "
+                f"inside this ground's, so what git reports from in there is "
+                f"THIS ground's state, not its own. git_init with {label} named "
+                f"would start one; the worlds that already have one: "
+                f"{', '.join(_git_worlds(env)) or 'none but the ground'}.")
+    return _world_said(label, "\n".join(out))
 
 
-def _commit_subject(env: SkillExecutionEnv, args: dict) -> str:
+def _commit_subject(env: SkillExecutionEnv, args: dict, where=None) -> str:
     """Pick a commit subject a human will still understand in six months.
+
+    `where` is the world being committed, which matters for the two facts read
+    off git below -- the previous subject and what actually moved. Reading them
+    from the GROUND while committing atlas would describe one repository in
+    another's message, which is the same class of fault as sitting 72's
+    self-quoting subject. Absent, it is the ground, as it always was.
 
     Session 6 landed 98 files under the subject `git_commit` -- a 3b Router
     echoed the skill's own keyword into <content>. A message that only names
@@ -2075,9 +2208,18 @@ def _commit_subject(env: SkillExecutionEnv, args: dict) -> str:
     # history became each commit quoting its predecessor -- with a STALE
     # description of different work. Same disease as sitting 61's lifted
     # citation: material from a tool result reused as this turn's fact.
+    # BEST-EFFORT, AS BOTH READS BELOW ALREADY WERE. Every git read in this
+    # function is wrapped because a subject must still be chosen when git
+    # cannot answer -- and a stub env with no ground is how several strokes
+    # ask this function the only question they care about. Resolving the
+    # world OUTSIDE that tolerance made this raise where it used to shrug.
+    try:
+        where = Path(where) if where is not None else Path(env.ground)
+    except Exception:
+        where = None
     prior = ""
     try:
-        prior = " ".join((_git.read(env.ground).subject or "").split()).lower()
+        prior = " ".join((_git.read(where).subject or "").split()).lower()
     except Exception:
         prior = ""
 
@@ -2181,19 +2323,22 @@ def _commit_subject(env: SkillExecutionEnv, args: dict) -> str:
     # No subject from the operator. Rather than a placeholder or a guess,
     # say what actually moved -- read from git, so it is fact.
     try:
-        where = _git.areas(env.ground)
+        moved = _git.areas(where)
     except Exception:
-        where = []
-    if where:
-        return "chain: " + ", ".join(where)
+        moved = []
+    if moved:
+        return "chain: " + ", ".join(moved)
     return "chain commit (no subject given)"
 
 
 @skill("git_commit")
 def _git_commit(env: SkillExecutionEnv, args: dict) -> str:
     """Local, additive, recoverable -- so a seat may do it."""
-    msg = _commit_subject(env, args)
-    st = _git.read(env.ground)
+    world, label, refusal = _git_world(env, args)
+    if refusal:
+        return refusal
+    msg = _commit_subject(env, args, world)
+    st = _git.read(world)
     trailer = []
     if st.is_repo and st.dirty:
         trailer.append(f"{st.changed} changed, {st.untracked} untracked")
@@ -2202,9 +2347,9 @@ def _git_commit(env: SkillExecutionEnv, args: dict) -> str:
     if trailer:
         msg = msg + "\n\n" + "\n".join(trailer)
     try:
-        out = _git.commit(env.ground, msg)
+        out = _git.commit(world, msg)
     except _git.GitRefused as exc:
-        return f"Refused: {exc}"
+        return _world_said(label, f"Refused: {exc}")
     # SAY WHICH DIRECTION THE COUNT POINTS. Sitting 81: the result carried
     # "1 changed, 0 untracked" -- meaning INCLUDED IN THIS COMMIT -- and the
     # Router read it forward: "the repository shows one file changed since
@@ -2217,7 +2362,7 @@ def _git_commit(env: SkillExecutionEnv, args: dict) -> str:
         out += (f"\n\nThose {st.changed} changed and {st.untracked} untracked "
                 f"were WHAT WENT IN, not what remains. This is the state "
                 f"BEFORE the commit; run git_status for the state after.")
-    return out
+    return _world_said(label, out)
 
 
 @skill("proved")
@@ -2375,26 +2520,43 @@ def _speak(env: SkillExecutionEnv, args: dict) -> str:
 
 @skill("git_init")
 def _git_init(env: SkillExecutionEnv, args: dict) -> str:
+    # THE ONE VERB THAT MAY NAME A WORLD THAT IS NOT A REPOSITORY YET, because
+    # making one is its whole job. The jail is unchanged: gate_paths has
+    # already refused anything outside the ground, and _git_world refuses
+    # `worlds/`, a vault, and a path that is a file.
+    world, label, refusal = _git_world(env, args, must_be_repo=False)
+    if refusal:
+        return refusal
     try:
-        return _git.init(env.ground)
+        return _world_said(label, _git.init(world))
     except _git.GitRefused as exc:
-        return f"Refused: {exc}"
+        return _world_said(label, f"Refused: {exc}")
 
 
 @skill("git_pull")
 def _git_pull(env: SkillExecutionEnv, args: dict) -> str:
+    world, label, refusal = _git_world(env, args)
+    if refusal:
+        return refusal
     try:
-        return _git.pull(env.ground)
+        return _world_said(label, _git.pull(world))
     except _git.GitRefused as exc:
-        return f"Refused: {exc}"
+        return _world_said(label, f"Refused: {exc}")
 
 
 @skill("git_push")
 def _git_push(env: SkillExecutionEnv, args: dict) -> str:
+    # THE WALL IS THE ESTATE'S, NOT THE WORLD'S. `remote_allowed()` reads one
+    # dial for this whole ground, so naming a world does not open anything:
+    # every world's remote is behind the same shut door, and the refusal a
+    # seat meets is the same one it met before this parameter existed.
+    world, label, refusal = _git_world(env, args)
+    if refusal:
+        return refusal
     try:
-        return _git.push(env.ground)
+        return _world_said(label, _git.push(world))
     except _git.GitRefused as exc:
-        return f"Refused: {exc}"
+        return _world_said(label, f"Refused: {exc}")
 
 
 @skill("git_cycle")
@@ -2430,6 +2592,25 @@ def _git_cycle(env: SkillExecutionEnv, args: dict) -> str:
         return ("Refused: git_cycle needs a commit message. The message is the "
                 "one part of this a machine cannot supply -- everything else "
                 "is read from the ground.")
+
+    # AND IT SHIPS THIS GROUND, NOT A WORLD IN IT (2026-09-18). The world
+    # parameter is honoured here by being REFUSED, out loud, which is the only
+    # honest answer this skill has: what it gates on is tests/last_run.json --
+    # THIS ground's strokes and smoke -- and those numbers say nothing whatever
+    # about another world's code. A cycle that shipped atlas on the core's
+    # green would be claiming a proof it does not hold, which is LAW 6 exactly.
+    # The steps are still available there one at a time, each naming the world.
+    world, label, refusal = _git_world(env, args)
+    if refusal:
+        return refusal
+    if label:
+        return (f"Refused: git_cycle ships THIS ground and no other. What it "
+                f"gates on is the core's own strokes and smoke, read from "
+                f"tests/last_run.json, and they prove nothing about {label} -- "
+                f"shipping {label} on them would be claiming a proof this "
+                f"ground does not have. Use git_status, git_commit and "
+                f"git_push with {label} named, one step at a time, or ask for "
+                f"the cycle here.")
 
     out = []
 

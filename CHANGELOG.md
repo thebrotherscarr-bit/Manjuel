@@ -34,6 +34,71 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The git skills take a world, so the council can act on a repository that is not the ground
+
+On his word, 2026-09-18: *"add a world parameter to the git skills."* **RESTART REQUIRED** --
+`manjuel/skills.py` moved and a REPL already open keeps the old code. (The door spawns a fresh
+engine per sitting, so anything driven through the glass has it already.) No sitting was open.
+
+**WHAT EARNED IT, an hour earlier.** Asked to save both repositories through the council, only
+one could go: the core's `git_commit` commits `env.ground` and takes no world, so an objective
+fired from a research engine would have committed research however it was worded. atlas was
+saved by the panel's own button instead, and the gap was named rather than papered over.
+
+**IT RIDES ON `<filepath>`, AND THAT IS THE LAW HERE RATHER THAN A SHORTCUT.** The Router
+answers in three tags and there is no fourth, and this estate has already paid for forgetting
+it: `mcp_call` declared `<server>` and `<tool>`, the schema offered them, the Router had no tag
+to answer with, and a perfectly routed call arrived as `{}`. A stroke refuses that shape
+generally now. `<filepath>` already means "a path inside the ground", is declared per skill as
+a **Path Args:** jail, and is therefore already refused at DISPATCH by `gate_paths` before a
+handler runs -- so a world costs no new grammar and no new gate. The roster of skills that
+jail a path goes eight -> fourteen, and that roster is written out in the suite on purpose.
+
+**THREE REFUSALS, AND THE FIRST ONE WAS A REAL DEFECT CAUGHT BY ITS OWN STROKE.**
+
+    its own repository   `git rev-parse --is-inside-work-tree` answers TRUE in EVERY folder
+                         under this ground, because the ground is itself a repository. The
+                         first cut asked only "is there a repository here", accepted `notes`,
+                         and committed THE GROUND under a sentence that said `notes`. A world
+                         must hold its own `.git`. A wrong repository saved beneath a
+                         right-looking answer is the worst shape a fault can take here
+    never worlds/        nothing under `worlds/` or a `vault/` is addressable (SITTING LAW 2),
+                         because a git verb pointed at one could commit it or push it
+    outside the ground   `gate_paths` refuses it at dispatch; the handler refuses it again
+
+**AND THE ANSWER NAMES ITS WORLD.** A reader sees the answer, never the argument that produced
+it, so every one of these begins `atlas -- ` when it acted somewhere other than the ground.
+`git_status` on a folder with no repository of its own now says exactly that instead of
+reporting THIS ground's state wearing another folder's name.
+
+**`git_cycle` HONOURS THE PARAMETER BY REFUSING IT**, which is the only honest answer it has:
+what it gates on is `tests/last_run.json` -- this ground's strokes and smoke -- and those
+numbers prove nothing about another world. Shipping atlas on the core's green would be claiming
+a proof this ground does not hold (LAW 6). The steps remain, one at a time, each naming a world.
+
+**WHAT IT COST, MEASURED AND WRITTEN DOWN RATHER THAN DISCOVERED LATER.** `git_status` used to
+declare nothing, so `decided_call` settled it by arithmetic and the Router was never woken --
+and it is the commonest objective in the record. It now declares one real argument, so that
+objective goes to the Router to fill or leave. The stroke that named `git_status` as the
+example of a tool decided without a model call now proves the RULE on `proved`, and a new
+stroke beside it records the change instead of hiding it. Three other standing strokes had
+used `git_status` as their example of a skill declaring no path; each keeps its claim and was
+repointed at one that still declares none.
+
+**PROVED.** Strokes **2467/2467** and smoke **65/65** on the ground, BUILDMAP regenerated, the
+manifest still agreeing (57 records, 0 findings). **By reversal, five ways** -- the world never
+read, a world that need not be its own repository, `worlds/` addressable again, the answer not
+naming its world, and the cycle shipping anything it is given -- each reddens exactly the
+strokes that own it. The `worlds/` reversal reddened NOTHING on the first attempt: the stroke
+had made `worlds/client` a bare folder, so the `.git` guard was answering and SITTING LAW 2's
+guard was never the thing tested. It is a real repository in the stroke now.
+
+**AND FIRED ON HIS GROUND**, sitting 235, through the glass: *"git status in the atlas world"*
+-> the Router on qwen3.5:4b wrote `git_status {"filepath":"atlas"}` from plain words and the
+answer came back `atlas -- git: main@860852383  clean`. Its own deliberation names why: "the
+`git_status` skill has a parameter filepath that can be set to 'atlas' to act on that specific
+world". The declaration reached the model, and the model used it.
+
 ### The mark was cut through the glass, and the one cut at a terminal was wrong
 
 On his word, 2026-09-17: *"i committed it and cut the tag"* -- and, minutes later, *"wait,

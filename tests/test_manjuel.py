@@ -1343,8 +1343,13 @@ def test_the_refusal_a_later_write_answers(reg, lib, book):
     check("run_python declares the workspace path it names",
           bool(lib.spec("run_python") and lib.spec("run_python").path_args),
           str(lib.spec("run_python")))
+    # The example was `git_status` until 2026-09-18, when the git skills grew a
+    # world parameter and it began declaring <filepath> like any other path. The
+    # CLAIM is unchanged -- a skill that declares no path names no file -- so it
+    # is proved with a skill that still declares none, rather than by weakening
+    # the claim to fit.
     check("and a skill declaring no path names no file, so nothing is tracked",
-          declared_path(lib.spec("git_status"), {"filepath": "x.py"}, None)
+          declared_path(lib.spec("list_directory"), {"filepath": "x.py"}, None)
           is None)
 
 
@@ -3907,10 +3912,19 @@ def test_sitting_88_paths_and_evidence(reg, lib, book):
     # can say what is declared.
     from manjuel.pipeline import declares
     from manjuel.skills import WRITING_SKILLS as _WRITES
+    # `git_status` was the example until 2026-09-18. It now declares a WORLD,
+    # so it is no longer a tool that declares nothing, and the stroke below
+    # records what that cost: the commonest objective in the record goes to the
+    # Router to fill or leave that one argument, where the engine used to
+    # decide it outright. The RULE is unchanged and is proved on a tool that
+    # still declares nothing.
     check("a tool that declares NO arguments is decided once the library can say so",
-          decided_call(RunContext(objective="git status", named_tool="git_status"), lib)
-          == "<action>git_status</action>",
-          decided_call(RunContext(objective="git status", named_tool="git_status"), lib))
+          decided_call(RunContext(objective="what has been proved", named_tool="proved"), lib)
+          == "<action>proved</action>",
+          decided_call(RunContext(objective="what has been proved", named_tool="proved"), lib))
+    check("...and git_status, which now declares a world, is the Router's to fill",
+          decided_call(RunContext(objective="git status", named_tool="git_status"), lib) == "",
+          str(declares(lib.spec("git_status"))))
     check("...and a tool that DOES declare one is still the Router's to fill",
           decided_call(RunContext(objective="search the ground for the covenant",
                                   named_tool="semantic_search"), lib) == "",
@@ -10198,6 +10212,166 @@ def test_a_commit_subject_is_the_operators_or_gits_never_the_models(reg, lib, bo
           _commit_subject(Env("", g), {}))
 
 
+def test_a_git_skill_acts_in_the_world_it_is_given(reg, lib, book):
+    """His word, 2026-09-18: "add a world parameter to the git skills."
+
+    WHAT EARNED IT. The council could commit the ground it stood on and
+    nothing else, so `atlas` -- a repository INSIDE this ground, carried by
+    the door as its own world -- had to be saved by a button on the glass:
+    no objective the council could be given was able to name it.
+
+    IT RIDES ON <filepath> AND NOT A NEW TAG. The Router answers in three
+    tags and there is no fourth; a skill that declares an argument the
+    grammar cannot carry is the fault `mcp_call` shipped on the day it was
+    built, and a stroke in this file already refuses it generally. <filepath>
+    is already jailed at dispatch by gate_paths, so naming a world costs no
+    new grammar and no new gate.
+
+    THE TWO HALVES BOTH MATTER: the named world is ACTED ON, and the ground
+    is LEFT ALONE. A parameter that silently fell back to the ground would
+    pass every "did it answer" check and commit the wrong repository."""
+    import subprocess
+    from manjuel.skills import (_git_status, _git_commit, _git_init,
+                                _git_cycle, _git_world)
+
+    class Env:
+        def __init__(self, ground, objective="save the work"):
+            self.ground, self.objective = Path(ground), objective
+            self.skills_ref = lib
+            self.session = "S-test"
+            self.workspace = Path(ground) / "agent_workspace"
+
+    def git(where, *args):
+        subprocess.run(["git", *args], cwd=str(where), capture_output=True,
+                       text=True, stdin=subprocess.DEVNULL, timeout=30)
+
+    def born(where, subject, filename):
+        (Path(where) / filename).write_text("made for the stroke", encoding="utf-8")
+        git(where, "init", "-b", "main")
+        git(where, "config", "user.name", "prove")
+        git(where, "config", "user.email", "prove@localhost")
+        git(where, "add", "-A")
+        git(where, "commit", "-m", subject)
+
+    g = Path(tempfile.mkdtemp())
+    (g / "agent_workspace").mkdir()
+    born(g, "the ground's own save", "root.txt")
+    world = g / "atlas"
+    world.mkdir()
+    born(world, "the world's own save", "door.go")
+
+    # ---- THE DEFAULT IS THE GROUND, exactly as before this existed -------
+    here = _git_status(Env(g), {})
+    check("with no world named, git_status still reads the ground",
+          "the ground's own save" in here and "the world's own save" not in here,
+          here[:120])
+    check("and it says nothing about a world, because there was none",
+          not here.startswith("atlas --"), here[:60])
+
+    # ---- A NAMED WORLD IS THE ONE THAT ANSWERS ---------------------------
+    there = _git_status(Env(g), {"filepath": "atlas"})
+    check("a named world is the repository git_status reads",
+          "the world's own save" in there and "the ground's own save" not in there,
+          there[:120])
+    check("and the answer says which world it came from",
+          there.startswith("atlas --"), there[:60])
+
+    # ---- AND THE GROUND IS LEFT ALONE ------------------------------------
+    (g / "in-the-ground.txt").write_text("unsaved here", encoding="utf-8")
+    (world / "in-the-world.txt").write_text("unsaved there", encoding="utf-8")
+    said = _git_commit(Env(g, "add the world's second file"), {"filepath": "atlas"})
+    check("a commit in a named world lands there", "Committed" in said, said[:140])
+    check("and the answer names the world it landed in",
+          said.startswith("atlas --"), said[:60])
+    check("the world is clean afterwards",
+          not gitstate.read(world).dirty, gitstate.read(world).stamp())
+    check("AND THE GROUND IS STILL DIRTY -- the wrong repository was not saved",
+          gitstate.read(g).dirty, gitstate.read(g).stamp())
+    check("the message that landed is the operator's, in the world's history",
+          gitstate.read(world).subject == "add the world's second file",
+          gitstate.read(world).subject)
+
+    # THE FALLBACK SUBJECT IS READ FROM THE WORLD, NOT THE GROUND. With no
+    # subject from the operator, git's own account of what moved is used --
+    # and reading that off the ground would describe one repository in
+    # another's history.
+    (world / "third.go").write_text("more", encoding="utf-8")
+    said = _git_commit(Env(g, ""), {"filepath": "atlas"})
+    check("the fallback subject names what moved IN THAT WORLD",
+          "third.go" in gitstate.read(world).subject or
+          "chain" in gitstate.read(world).subject,
+          gitstate.read(world).subject)
+    check("and nothing from the ground is in it",
+          "in-the-ground.txt" not in gitstate.read(world).subject,
+          gitstate.read(world).subject)
+
+    # ---- WHAT MAY NOT BE NAMED -------------------------------------------
+    #
+    # AND IT IS A REAL REPOSITORY ON PURPOSE. The first cut of this stroke made
+    # `worlds/client` a bare folder -- so it was refused for having no `.git`,
+    # the SITTING LAW 2 guard was never the thing answering, and removing that
+    # guard entirely left the stroke green. Measured by reversal, which is what
+    # reversal is for. A world under `worlds/` must be refused BECAUSE it is
+    # under `worlds/`, and nothing else about it may be wrong.
+    (g / "worlds").mkdir()
+    client = g / "worlds" / "client"
+    client.mkdir()
+    born(client, "material that may never leave", "brief.md")
+    check("the stroke's own setup is honest: worlds/client IS a repository",
+          (client / ".git").exists())
+
+    for bad, why in (("worlds/client", "client material is never named"),
+                     ("worlds", "client material is never named"),
+                     ("../outside", "a path that leaves the ground"),
+                     ("root.txt", "a file is not a world")):
+        out = _git_commit(Env(g, "save it"), {"filepath": bad})
+        check(f"{why}: {bad!r} is refused", out.startswith("Refused"), out[:100])
+    out = _git_commit(Env(g, "save it"), {"filepath": "worlds/client"})
+    check("   and the refusal for a world under worlds/ says which rule it is",
+          "worlds/" in out and "vault" in out, out[:160])
+    check("   and nothing was saved there",
+          gitstate.read(client).subject == "material that may never leave",
+          gitstate.read(client).subject)
+
+    plain = g / "notes"
+    plain.mkdir()
+    out = _git_status(Env(g), {"filepath": "notes"})
+    check("a folder with no repository is SAID plainly by git_status",
+          "not a repository" in out, out[:120])
+    out = _git_commit(Env(g, "save it"), {"filepath": "notes"})
+    check("but a verb that ACTS there is refused", out.startswith("Refused"), out[:120])
+    check("and the refusal names the worlds that ARE repositories",
+          "atlas" in out, out[:200])
+
+    # ---- init IS the one verb that may name a world with no repository ---
+    out = _git_init(Env(g), {"filepath": "notes"})
+    check("git_init starts one in a named world", "epositor" in out, out[:120])
+    check("and that world is a repository afterwards",
+          gitstate.read(plain).is_repo, out[:80])
+
+    # ---- THE CYCLE SHIPS THIS GROUND AND SAYS SO -------------------------
+    before = gitstate.read(world).head
+    out = _git_cycle(Env(g, "ship it"), {"content": "ship the world",
+                                         "filepath": "atlas"})
+    check("git_cycle refuses a world that is not the ground",
+          out.startswith("Refused") and "atlas" in out, out[:160])
+    check("   and says the proofs are the reason",
+          "strokes and smoke" in out, out[:200])
+    check("   and nothing was committed there",
+          gitstate.read(world).head == before, "the head moved")
+
+    # ---- THE DECLARATION, which is what the Router is offered -------------
+    for kw in ("git_status", "git_commit", "git_push", "git_pull", "git_init",
+               "git_cycle"):
+        s = lib.spec(kw)
+        check(f"{kw} declares the world in its own file",
+              s is not None and "filepath" in s.declared_args,
+              str(s and s.declared_args))
+        check(f"   {kw} jails that world to the ground",
+              s is not None and ("filepath", "ground") in (s.path_args or ()),
+              str(s and s.path_args))
+
+
 def test_the_deliberation_renders_as_prose_not_a_column(reg, lib, book):
     """SITTING 80, MY OWN BUG. The streaming path appends deliberation ONE
     TOKEN AT A TIME, and it was joined with "\\n" -- so 7,212 characters of
@@ -11967,8 +12141,13 @@ def test_native_tool_calling(reg, lib, book):
     check("a skill that declares nothing is asked to fill nothing",
           bare and all(not declares(lib.spec(k)) for k in bare),
           f"{len(bare)} with no parameters: {bare}")
-    check("git_status is one of them -- it was the commonest objective in the record",
-          "git_status" in bare, str(bare))
+    # `git_status` was the example here, because it was the commonest objective
+    # in the record and the 62-second deliberation above was about a phantom
+    # argument. Since 2026-09-18 it declares one REAL argument -- the world --
+    # so it is offered exactly that and nothing else, which is the contract
+    # checked two strokes up. The claim keeps a skill that still declares none.
+    check("list_directory is one of them -- a skill with nothing to fill",
+          "list_directory" in bare, str(bare))
     check("no skill is offered a filepath it never declared",
           not [k for k, t in schemas.items()
                if "filepath" in t["function"]["parameters"]["properties"]
@@ -12339,8 +12518,10 @@ def test_path_gate(reg, lib, book):
           gate_paths(gr, {"content": "."}, env) == "")
     check("an absent argument is the handler's business, not the gate's",
           gate_paths(ws, {}, env) == "")
+    # `git_status` stood here until 2026-09-18, when the git skills grew a
+    # world parameter and began declaring <filepath> like any other path.
     check("a skill declaring no path args is never gated",
-          gate_paths(lib.spec("git_status"), {"content": "../../x"}, env) == "")
+          gate_paths(lib.spec("list_directory"), {"content": "../../x"}, env) == "")
 
     # --- THE ONE THAT CLOSES THE HOLE ---------------------------------
     # Every handler that resolves a caller's path must DECLARE it. Without
@@ -12381,13 +12562,20 @@ def test_path_gate(reg, lib, book):
     # jail (the workspace is inside it) so a reach is refused at dispatch.
     # EIGHT since 2026-09-11: the coding loop's two, `edit_file` and
     # `run_python`, both jail into the workspace exactly as write_file does.
+    # FOURTEEN since 2026-09-18: the six git skills take a WORLD -- a folder
+    # in this ground holding its own repository -- and it rides on <filepath>
+    # because the Router's grammar has no fourth tag to give it. They jail
+    # into the GROUND, so a world outside it is refused at dispatch by the
+    # same gate, before any handler runs.
     # This roster is written out rather than counted on purpose -- a skill
     # that starts taking a path is a skill that must be seen doing it, and a
     # bare count would have let the eighth arrive unnoticed.
-    check("and the declarations are exactly the eight that jail",
-          sorted(declared) == ["edit_file", "embed_text", "ground_list",
-                               "ground_read", "inspect", "read_file",
-                               "run_python", "write_file"], str(sorted(declared)))
+    check("and the declarations are exactly the fourteen that jail",
+          sorted(declared) == ["edit_file", "embed_text", "git_commit",
+                               "git_cycle", "git_init", "git_pull", "git_push",
+                               "git_status", "ground_list", "ground_read",
+                               "inspect", "read_file", "run_python",
+                               "write_file"], str(sorted(declared)))
 
 
 def test_flags_are_not_speech(reg, lib, book):
@@ -13314,6 +13502,7 @@ def main() -> int:
     test_a_dial_in_env_is_read_and_the_transports_stay_few(reg, lib, book)
     test_an_idle_engine_closes_its_own_sitting(reg, lib, book)
     test_a_commit_subject_is_the_operators_or_gits_never_the_models(reg, lib, book)
+    test_a_git_skill_acts_in_the_world_it_is_given(reg, lib, book)
     test_the_deliberation_renders_as_prose_not_a_column(reg, lib, book)
     test_the_manifest_reconciles_to_the_disk(reg, lib, book)
     test_a_greeting_never_reaches_the_reader(reg, lib, book)

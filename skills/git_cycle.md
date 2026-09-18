@@ -1,5 +1,6 @@
 # Skill: The whole version-control turn
 - **Action Keyword:** git_cycle
 - **Description:** Runs the FULL version-control cycle in one act: refuses to ship on red or stale STROKES or SMOKE, and reports the tag's four other proofs without gating on them, shows what is about to be committed, commits with your message, pushes, and then VERIFIES the remote actually moved by comparing the local and remote heads. Use it when you want the work landed, not inspected - git_status, git_commit and git_push remain for one step at a time. It reports what the tools said and nothing else; no seat narrates a commit hash.
-- **Parameters Needed:** <content>The commit message, in your own words. It is the one part of this a machine cannot supply.</content>
+- **Parameters Needed:** <content>The commit message, in your own words. It is the one part of this a machine cannot supply.</content> <filepath>OPTIONAL, and REFUSED for any world but the ground: what this gates on is the core's own strokes and smoke, which prove nothing about another world.</filepath>
+- **Path Args:** filepath -> ground
 - **Says:** ship it | land this | commit and push | push it up | do the git cycle | full git cycle | version this
