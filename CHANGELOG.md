@@ -34,12 +34,35 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The mark was cut from the panel, and the gate refused twice on the way
+
+On his word, 2026-09-18: *"run the standup and the court, then cut 0.1.13."* The standup
+came back **9/9** (sitting 239) and the court **1/1** (sitting 240), both live.
+
+**THE GATE REFUSED THE FIRST ASKING, AND IT WAS RIGHT TO.** Bumping the number touches
+`manjuel/__init__.py`, which is under the roots `newest_edit` watches -- so strokes, smoke
+and the standup all went STALE the moment the version moved, and the gate said so by name:
+"green but STALE: the ground changed since; re-run". A proof older than the code is not a
+proof. All three were run again after the bump, and the gate then read **PASSED 9 of 9**.
+
+**AND THE CUT ITSELF WAITED ON A CLEAN TREE.** The re-run rewrote `tests/last_run.*` and
+`run_history.jsonl`, so the door -- which refuses a mark at HEAD over unsaved work -- would
+have refused. The proofs were saved first (`453fa0f`), and the mark stands on that commit:
+the one whose tree the gate actually read.
+
+Everything in this section went through the COUNCIL, and the mark through the panel's own
+Cut button, which filled `v0.1.13` itself from what the ground declares at HEAD.
+
+---
+
+## v0.1.13 — 2026-09-18 16:54 (tag on 453fa0f)
+
 ### 0.1.13 — THE WORLD AND THE MESSAGE, and the number is his: "cut 0.1.13"
 
-**THE NUMBER IS CHOSEN AND THE TAG IS NOT CUT.** `pyproject.toml` and `manjuel/__init__.py`
-both say 0.1.13 as of 2026-09-18; `v0.1.13` does not exist and will not until it is cut on
-the main line, after the gate. This heading stays `Unreleased` until then, the way v0.1.11's
-and v0.1.12's did.
+**THE MARK IS CUT**, 2026-09-18 16:54, annotated `THE WORLD AND THE MESSAGE`, on `453fa0f`,
+from the glass's own Cut button after the gate read 9 of 9. The heading read `Unreleased`
+until the mark existed, the way v0.1.11's and v0.1.12's did; the words under it are
+unchanged.
 
 **WHAT THE NUMBER HOLDS**, every entry below this one and above `## v0.1.12`:
 
