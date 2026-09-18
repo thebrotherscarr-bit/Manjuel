@@ -34,6 +34,60 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The message is handed over as the argument, so no seat has to read it as an instruction
+
+On his word, 2026-09-18: *"fix that, hand the message separately from the objective."*
+**RESTART REQUIRED** -- `manjuel/skills.py` and `manjuel/pipeline.py` moved. No sitting was open.
+
+**WHAT FAILED, an hour earlier and on this ground.** `git commit: "The git skills take a world,
+so the council can act on a repository that is not the ground"` travelled to the Router as ONE
+sentence. The Router read a sentence DESCRIBING what `git_commit` does, concluded the objective
+was an explanation rather than an instruction, and called nothing -- its own words: *"the
+objective doesn't describe any actual changes being made"*. Thirteen saved files went
+uncommitted. **The engine said so itself**: the named-tool check printed "THE NAMED TOOL DID NOT
+RUN... whatever the seats say above, `git_commit` did not happen", which is the only reason the
+miss was not silent. A message ABOUT the tooling could talk the engine out of using the tooling.
+
+**QUOTED, AND ONLY QUOTED.** `operator_message()` lifts the message the operator put in quotes --
+`git commit: "..."`, `-m "..."`, `--message="..."`, the curly pairs, and the `git_cycle`
+spelling -- and dispatch hands it over as `content`, so `decided_call` settles the call by
+arithmetic and NO SEAT IS ASKED whether the sentence is an instruction. The Router is woken
+afterwards to read the result, which is what it is for.
+
+**THE 2026-09-08 RULING IS NOT TOUCHED**, and that is the whole care of this piece. A writer's
+argument is still never decided by arithmetic over LOOSE words (`remember two things`,
+`write_file notes`). A quotation is not loose words: the operator drew the boundary himself,
+and it is the exact form the glass's own Commit button emits. A bare `git commit` still goes to
+the Router, and only the two skills whose own declarations say the message is his to write are
+asked this question at all -- `MESSAGE_IS_THE_OPERATORS`, a roster beside the estate's others.
+
+**AND ONE EDIT WAS REMOVED BECAUSE REVERSAL COULD NOT DEFEND IT.** A first cut also read
+`operator_message` inside `_commit_subject`, on the "one rule, two readers" argument. Deleting
+that line reddened NOTHING -- the invocation-stripping there already yields the same subject for
+every quoted form, and its own strokes (sittings 81 and 85) cover them. It came out. An edit no
+stroke can defend does not stay in, however good its reasoning sounds.
+
+**PROVED.** Strokes **2483/2483** (+16) and smoke **65/65** on the ground, BUILDMAP regenerated,
+the manifest agreeing (57 records, 0 findings). **By reversal:** the dispatch branch removed
+reddens the three strokes that drive a live turn; unquoted words admitted as a message reddens
+the three that hold the 2026-09-08 line. The live-turn stroke runs the pipeline on a temp ground
+and asserts the commit landed **on the very sentence that talked the Router out of it**.
+
+**AND FIRED ON HIS GROUND**, sitting 236, with that same sentence as the message:
+
+    the call was decided by arithmetic (the words): `git_commit` runs first;
+    the Router reads the result, it does not choose
+    -> skill: git_commit {"content":"The git skills take a world, ..."}
+    ok git_commit
+
+**AND THE COMMIT THAT PROOF MADE CARRIES A SUBJECT THAT DOES NOT DESCRIBE IT, WHICH IS MINE.**
+`fe22aeb` says "The git skills take a world, so the council can act on a repository that is not
+the ground" -- the message chosen to reproduce the failure -- while what it actually carries is
+THIS piece: `pipeline.py`, `skills.py`, 102 lines of strokes and the regenerated BUILDMAP. The
+world parameter itself shipped in `30a7031`, the commit before it. Nothing is rewritten (LAW 1);
+the record says what happened, and it is written here where a reader of that sha will find it.
+The lesson is the ordinary one: a live proof on a dirty ground borrows the tree it finds.
+
 ### The git skills take a world, so the council can act on a repository that is not the ground
 
 On his word, 2026-09-18: *"add a world parameter to the git skills."* **RESTART REQUIRED** --
