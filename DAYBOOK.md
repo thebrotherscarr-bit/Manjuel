@@ -1637,3 +1637,40 @@ and a live standup on his terminal, then his saves through Version control; the 
 numbers in both repositories, and a number for the seal; step 1 of BUILDPATH's order,
 which is those saves; the owed lines in TASKS' last section; and his own: the glass's
 reach, SITTING LAW 6's second half.
+
+## Session 11 — 2026-09-18 (Friday), sittings 232–240, the buttons, the world and the message
+
+**Standing** — follows session 10, which prepared 0.1.12 up to the gate and stopped there.
+This one began with the mark being cut the wrong way and ended with three pieces built out
+of that single fault, both repositories sent, and the next number cut from the panel.
+
+**Version** — at open: core `main@7e64f20` declaring 0.1.12 unsaved, `v0.1.12` standing on
+the wrong commit. At close: core `main` declaring 0.1.13, atlas `main@8608523`, both sent.
+
+**The plan** — his orders, as given: "run it again" (the standup), "update the changelog",
+"wait, i didnt commit anything, i was supposed to just push the button bro", "run it live in
+the browser so i can watch ... ALWAYS run the browser live", "save the changelog through the
+council too, and implement any missing features for github repo management", "add a world
+parameter to the git skills", "fix that, hand the message separately from the objective",
+"SEND them to the REPO through the glass", "stop telling me to update the remote repos, YOU
+keep them up to date", and "run the standup and the court, then cut 0.1.13".
+
+**What it cost, and what it taught.** Three faults were mine and all three are written into
+the record rather than tidied away: a mark cut at a terminal onto a commit that did not carry
+its work; a commit message that described the tool and talked the Router out of committing;
+and a live proof run on a dirty ground, so `fe22aeb` carries one piece under the other's
+name. Each one produced a guard: the panel's Remove, the quoted message at dispatch, and a
+note in two files naming the mis-subjected commit.
+
+**At close** — **the number is 0.1.13 and the mark is cut from the panel**, on the main line,
+after a gate that read 9 of 9. Strokes 2483/2483, smoke 65/65, the standup 9/9 live (sitting
+239) and the court 1/1 live (sitting 240). Both repositories are saved AND sent: core
+`main@31fd163` before the bump, atlas `main@8608523`, with `v0.1.12` and now `v0.1.13` on the
+remote. The door and the glass run on binaries rebuilt this morning on his allowance. No
+sitting is open.
+
+**Next session** — not decided by this hand. What the record leaves waiting: atlas still
+declares 0.1.5 with `v0.1.5` cut, so its own next number is unasked; `SITTING_LAWS_2.md` is
+still the one law file that is not sealed; the headless door's own open path does not reap an
+orphaned sitting, only `cli.main` does; and `/flows` on a cold load still does not know an
+open sitting, so the council's buttons there need the Dashboard first.

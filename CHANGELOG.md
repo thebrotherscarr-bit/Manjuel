@@ -34,6 +34,33 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### 0.1.13 — THE WORLD AND THE MESSAGE, and the number is his: "cut 0.1.13"
+
+**THE NUMBER IS CHOSEN AND THE TAG IS NOT CUT.** `pyproject.toml` and `manjuel/__init__.py`
+both say 0.1.13 as of 2026-09-18; `v0.1.13` does not exist and will not until it is cut on
+the main line, after the gate. This heading stays `Unreleased` until then, the way v0.1.11's
+and v0.1.12's did.
+
+**WHAT THE NUMBER HOLDS**, every entry below this one and above `## v0.1.12`:
+
+    the world        six git skills take an optional world, jailed to the ground, so the
+                     council can act on a repository that is not the ground -- and a
+                     folder that is not its OWN repository is refused, because git
+                     answers "inside a work tree" from every folder in this one
+    the message      a quoted commit message is handed over as the ARGUMENT at dispatch,
+                     so no seat has to read a sentence that is half instruction and half
+                     message -- the failure that left thirteen saved files uncommitted
+    the mark back    `git_tag remove` at the door and a Remove button on the panel, for a
+                     mark that never left this machine; one GitHub holds is never withdrawn
+    which GitHub     the Version control card names the repository each world sends to,
+                     host and path, never the raw URL (RULE 7)
+    the record       v0.1.12's mark corrected onto the commit that carries its work, and
+                     the wrong one -- cut at a terminal, before the save -- written down
+
+**PROVED ON HIS GROUND, 2026-09-18**: strokes **2483/2483**, smoke **65/65**, the nine-case
+standup **9/9 LIVE** (sitting 239) and **the court 1/1 LIVE** (sitting 240). atlas beside it:
+every Go package green in `line` and `webapp`.
+
 ### The message is handed over as the argument, so no seat has to read it as an instruction
 
 On his word, 2026-09-18: *"fix that, hand the message separately from the objective."*

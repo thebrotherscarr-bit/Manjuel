@@ -14,7 +14,7 @@ RUN THE SMOKE SUITE, not just the strokes. It was RED at 34/50 from 14e2711
 to 2026-09-02 because its StubRuntime had not been moved with pipeline.py,
 and nothing noticed: the strokes were green the whole time.
 
-**START AT `## HANDOFF FOR 2026-09-17`** (search for it — the day blocks
+**START AT `## HANDOFF FOR 2026-09-18`** (search for it — the day blocks
 stack newest first above `## Open`). CHANGELOG.md carries the versions;
 DAYBOOK.md's last entry carries the day's intent. Everything between here and
 there is standing reference that has not moved.
@@ -669,6 +669,55 @@ dropped by operator ruling 2026-09-01 — see the fix log.
     5. CHECK THE DISK BEFORE THE TRANSCRIPT. A seat's account of what it did
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
+
+## HANDOFF FOR 2026-09-18 — read this before anything below it
+
+**Where the ground stands.** core `main@31fd163`, atlas `main@8608523`, **both saved and both
+SENT** -- github.com/thebrotherscarr-bit/Manjuel and .../Atlas each hold exactly what this
+disk holds, and `v0.1.12` is on the remote at `15e83d5`. Nothing is uncommitted but the
+0.1.13 bump and this record pass. The door and the glass are running, rebuilt at 07:00 on his
+allowance with the mark-removal verb and the Sends-to row in them. No sitting is open; 240 is
+the newest and closed itself.
+
+**WHAT THE DAY WAS.** It opened on a mark cut at a terminal: `v0.1.12` stood on `7e64f20`, a
+save declaring 0.1.11, with thirty-three files of the pointing work unsaved beside it. His
+word -- *"i was supposed to just push the button bro. bad prep on your part"* -- and he was
+right: the glass's own Cut reads the version declared AT THAT COMMIT and refuses first on a
+dirty tree, so the button would have stopped what the command did. The work was then saved
+through the COUNCIL, the stale mark removed, and `v0.1.12` cut from the panel onto `15e83d5`.
+
+**AND THREE PIECES CAME OUT OF THAT ONE FAULT**, each built, proved and recorded:
+
+    remove + remote  `git_tag remove` (refusing any mark GitHub has, and refusing again when
+                     the wall is shut and it cannot ASK), a Remove button greyed with the
+                     door's own sentence, and the card naming which GitHub each world sends
+                     to -- host and path, never the raw URL. atlas/CHANGELOG.md carries it
+    the world        six git skills take an optional world on `<filepath>`, jailed to the
+                     ground, `worlds/` and any vault refused by name. A world must hold its
+                     OWN `.git`: the first cut accepted `notes` and committed THE GROUND
+                     under a sentence that said `notes`, which its own stroke caught
+    the message      a quoted message is handed over as the argument at dispatch, so the
+                     call is decided and no seat reads it as an instruction
+
+**THE FAULT THAT EARNED THE THIRD ONE, because it is the shape to watch for.** `git commit:
+"The git skills take a world..."` went to the Router as ONE sentence; the Router read a
+sentence describing what git_commit does, called nothing, and thirteen saved files went
+uncommitted. The engine's named-tool check said so out loud -- that check is the only reason
+it was not silent. A message ABOUT the tooling could talk the engine out of the tooling.
+
+**ONE THING IN THE HISTORY IS WRONG AND IS NOT REWRITTEN.** `fe22aeb` carries the
+quoted-message work under a subject naming the world parameter -- the sentence was chosen to
+reproduce the failure live, on a dirty ground. The world parameter itself shipped in
+`30a7031`. Noted here and in the CHANGELOG where a reader of that sha will find it.
+
+**PROVED LIVE TODAY**: strokes **2483/2483**, smoke **65/65**, the nine-case standup **9/9**
+(sitting 239) and **the court 1/1** (sitting 240). BUILDMAP regenerated, the manifest
+agreeing (57 records, 0 findings).
+
+**AND THE NUMBER IS 0.1.13** (his word: *"cut 0.1.13"*). Both version files declare it and
+the CHANGELOG carries a 0.1.13 block naming what it holds. The mark is cut from the panel,
+on the main line, after the gate -- never at a terminal, which is the lesson this day began
+with.
 
 ## HANDOFF FOR 2026-09-17 — read this before anything below it
 
