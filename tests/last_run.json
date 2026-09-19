@@ -1,6 +1,6 @@
 {
   "smoke": {
-    "at": 1789782463.3653884,
+    "at": 1789794942.6908987,
     "failures": [],
     "green": true,
     "passed": 65,
@@ -8,16 +8,10 @@
     "total": 65
   },
   "strokes": {
-    "at": 1789782611.2155216,
-    "failures": [
-      {
-        "detail": "in atlas: \"the doors own save",
-        "name": "   the named world got the commit",
-        "where": "test_a_quoted_message_is_handed_over_as_the_argument:10531"
-      }
-    ],
-    "green": false,
-    "passed": 2499,
+    "at": 1789794938.543427,
+    "failures": [],
+    "green": true,
+    "passed": 2500,
     "state": "finished",
     "total": 2500
   }
