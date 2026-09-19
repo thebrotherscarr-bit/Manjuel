@@ -382,3 +382,4 @@
 {"suite": "strokes", "at": 1789782611.2155216, "state": "finished", "passed": 2499, "total": 2500, "green": false, "failed": ["   the named world got the commit"]}
 {"suite": "strokes", "at": 1789794938.543427, "state": "finished", "passed": 2500, "total": 2500, "green": true, "failed": []}
 {"suite": "smoke", "at": 1789794942.6908987, "state": "finished", "passed": 65, "total": 65, "green": true, "failed": []}
+{"suite": "standup", "at": 1789801121.8862443, "state": "finished", "passed": 9, "total": 9, "green": true, "failed": [], "report": "logs/standup_2026-09-18_235841.md"}
