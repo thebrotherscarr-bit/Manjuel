@@ -14,7 +14,7 @@ RUN THE SMOKE SUITE, not just the strokes. It was RED at 34/50 from 14e2711
 to 2026-09-02 because its StubRuntime had not been moved with pipeline.py,
 and nothing noticed: the strokes were green the whole time.
 
-**START AT `## HANDOFF FOR 2026-09-18`** (search for it — the day blocks
+**START AT `## HANDOFF FOR 2026-09-19`** (search for it — the day blocks
 stack newest first above `## Open`). CHANGELOG.md carries the versions;
 DAYBOOK.md's last entry carries the day's intent. Everything between here and
 there is standing reference that has not moved.
@@ -669,6 +669,33 @@ dropped by operator ruling 2026-09-01 — see the fix log.
     5. CHECK THE DISK BEFORE THE TRANSCRIPT. A seat's account of what it did
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
+
+## HANDOFF FOR 2026-09-19 — read this before anything below it
+
+**Written at 00:05, minutes into the day, because the clock rolled mid-session and the boot
+gate said so by name** (`handoff HANDOFF FOR 2026-09-19 -- missing`). It carries the state at
+that moment and nothing else; 2026-09-18's block below is the day's own account.
+
+**Where the ground stands.** core `main@5595269`, atlas `main@186608f`, **both saved and both
+SENT** -- and every mark with them: `v0.1.13` on `453fa0f` (core), `v0.1.6` on `0c65afc`
+(atlas). Nothing is uncommitted in either repository. The door and the glass run on binaries
+rebuilt 2026-09-18 07:00. No sitting is open.
+
+**What the proofs say, all fresh.** strokes **2500/2500**, smoke **65/65**, the nine-case
+standup **9/9 LIVE** (2026-09-18 23:58), the court **1/1 LIVE** (sitting 240). BUILDMAP
+regenerated, the manifest agreeing (57 records, 0 findings), every Go package green in atlas
+`line` and `webapp`.
+
+**THE ONE THING A BOOT WILL STILL NAME.** `python tests/release.py --check` reads nine; the
+boot block reads the six it can read without a child process. Both are green as this is
+written -- but a proof goes STALE the moment anything under `manjuel/`, `agents/`, `skills/`
+or `tests/` changes, and the standup goes stale with it. That is the gate working, not a
+fault: re-run the suites and the standup after any edit, before any mark.
+
+**What is open, unchanged from yesterday's block:** `SITTING_LAWS_2.md` is still the one law
+file unsealed; the headless door's own open path does not reap an orphaned sitting, only
+`cli.main` does; and `/flows` on a cold load still does not know an open sitting, so the
+council's buttons there need the Dashboard first.
 
 ## HANDOFF FOR 2026-09-18 — read this before anything below it
 
