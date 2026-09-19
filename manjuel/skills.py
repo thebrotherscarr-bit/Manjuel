@@ -2215,10 +2215,25 @@ def _git_status(env: SkillExecutionEnv, args: dict) -> str:
 # Commit button emits (`git commit: "..."`). A BARE `git commit` still goes to
 # the Router, as it always did.
 _MESSAGE_RE = re.compile(
-    r"""^\s*(?:please\s+)?git[ _]c(?:ommit|ycle)\b\s*
-        (?:(?:-m|--message)\s*[=:]?\s*)?[:,\-]?\s*
+    r"""^\s*(?:please\s+)?git[ _]c(?:ommit|ycle)\b
+        (?P<between>[^"'`]*)
         (?P<q>["'`])(?P<said>.+)(?P=q)\s*$""",
     re.IGNORECASE | re.DOTALL | re.VERBOSE)
+
+# THE WORDS BETWEEN THE KEYWORD AND THE QUOTE NAME THE WORLD, OR NOTHING AT ALL
+# (2026-09-18, his word: "teach it to carry both").
+#
+# `git commit: "..."` decided the call and always meant THE GROUND, because the
+# fast path carried a message and no world -- so `git commit in atlas: "..."`
+# had to fall through to the Router rather than risk committing the wrong
+# repository. Now the words in between are read, and they answer one of three
+# ways: no world, exactly one world, or I CANNOT TELL -- and the third is not
+# decided here at all. Guessing a world is the one outcome that must never
+# happen, so anything this cannot reduce to a single name goes to the Router,
+# which is what the Router is for.
+_JOINERS = {"in", "on", "at", "to", "for", "the", "world", "repo", "repository",
+            "inside", "within", "of"}
+_FLAG_TAIL = re.compile(r"(?i)(?:-m|--message)\s*[=:]?\s*$")
 
 # A CURLY QUOTE IS THE SAME QUOTATION, DIFFERENTLY TYPESET, so it is flattened
 # before the one rule above judges it -- and the text still comes out of the
@@ -2229,13 +2244,18 @@ _FLATTEN = {ord("“"): '"', ord("”"): '"',
             ord("‘"): "'", ord("’"): "'"}
 
 
-def operator_message(objective: str) -> str:
-    """The message the OPERATOR quoted, or "" when he quoted none.
+def operator_message(objective: str) -> tuple[str, str]:
+    """(the message the OPERATOR quoted, the world he named beside it).
 
-    ONE RULE, TWO READERS, which is this estate's own doctrine and the reason
-    this is a function rather than a regex in two places: dispatch reads it to
-    decide the call, and `_commit_subject` reads it to write the subject. Three
-    copies of `source_files`' rule once disagreed here and only one was right.
+    ("", "") means there is nothing here to decide -- he quoted no message, or
+    he named something between the keyword and the quote that this cannot
+    reduce to ONE world. Both go to the Router, which is the difference between
+    a fast path and a guess.
+
+    ONE RULE, ONE READER NOW, and the pair is why: dispatch needs the message
+    and the world TOGETHER or not at all. Splitting them into two functions
+    would be two rules that can disagree about the same sentence -- which is
+    exactly how the curly-quote hazard below came to exist.
 
     AND ONE RULE FOR EVERY SPELLING OF A QUOTE, which the first cut did not
     have and which was a WRONG-REPOSITORY hazard, found the same day by asking
@@ -2249,11 +2269,22 @@ def operator_message(objective: str) -> str:
     """
     said = " ".join((objective or "").split())
     if not said:
-        return ""
+        return "", ""
     m = _MESSAGE_RE.match(said.translate(_FLATTEN))
     if not m:
-        return ""
-    return said[m.start("said"):m.end("said")].strip()
+        return "", ""
+
+    # WHAT STANDS BETWEEN. The message flag is not a world, and neither is the
+    # punctuation a person puts before a quotation.
+    between = _FLAG_TAIL.sub("", m.group("between").strip()).strip(" :,-")
+    named = [w for w in between.split() if w.lower() not in _JOINERS]
+    if len(named) > 1:
+        # Two or more names left standing: this is prose, not an address.
+        # `git commit the seam fix "..."` is not a world called "seam fix".
+        return "", ""
+    world = named[0].strip(" :,-") if named else ""
+
+    return said[m.start("said"):m.end("said")].strip(), world
 
 
 def _commit_subject(env: SkillExecutionEnv, args: dict, where=None) -> str:
@@ -2361,13 +2392,22 @@ def _commit_subject(env: SkillExecutionEnv, args: dict, where=None) -> str:
     # is no longer a candidate. It is testimony about work it did not do
     # (LAW 5), and the fallback below is FACT read from git -- a worse
     # sentence and a true one.
-    # A QUOTED MESSAGE IS NOT READ AGAIN HERE, AND THAT IS MEASURED RATHER
-    # THAN ASSUMED. `operator_message` decides the CALL at dispatch; a first
-    # cut also read it here, on the "one rule, two readers" argument -- and
-    # reversal showed the line was dead: removing it reddened nothing, because
-    # the invocation-stripping below already yields the same subject for every
-    # quoted form (its own strokes, sitting 81 and 85, cover them). An edit no
-    # stroke can defend does not stay in.
+    # A QUOTED MESSAGE IS READ BY THE SAME RULE DISPATCH USED, AND THE HISTORY
+    # OF THIS LINE IS WORTH KEEPING. It went in on the "one rule, two readers"
+    # argument, and reversal showed it DEAD -- the invocation-stripping below
+    # yielded the same subject for every quoted form then in existence -- so it
+    # came out, because an edit no stroke can defend does not stay in.
+    #
+    # It is alive now, and a stroke says so. The moment a WORLD may stand
+    # between the keyword and the quote (`git commit in atlas: "..."`), the
+    # stripping below leaves `in atlas: "the doors own save` as the subject
+    # while dispatch hands the handler the real message. Two readings of one
+    # sentence, disagreeing -- which is the fault this function's own history
+    # is made of. Measured, both ways, a day apart.
+    quoted, _world = operator_message(getattr(env, "objective", "") or "")
+    if quoted and not degenerate(quoted):
+        return quoted
+
     operator = " ".join((getattr(env, "objective", "") or "").split()).strip()
     # THE OPERATOR TYPES THE COMMAND AND THE SUBJECT IN ONE BREATH.
     # Sitting 81: `git commit " i ran a session, found a bug in the router.`

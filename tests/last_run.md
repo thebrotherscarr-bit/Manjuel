@@ -1,15 +1,15 @@
 # Last run
 
-- **smoke** — 65/65 GREEN, 2026-09-18 16:43
-- **strokes** — 2487/2488 RED, 2026-09-18 17:49
+- **smoke** — 65/65 GREEN, 2026-09-18 18:47
+- **strokes** — 2499/2500 RED, 2026-09-18 18:50
 
 ## strokes — 1 failed
 
-### and the strict form still is (curly quotes)
+###    the named world got the commit
 
-`tests/strokes` — **test_a_quoted_message_is_handed_over_as_the_argument:10435**
+`tests/strokes` — **test_a_quoted_message_is_handed_over_as_the_argument:10531**
 
 ```
-''
+in atlas: "the doors own save
 ```
 

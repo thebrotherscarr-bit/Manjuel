@@ -34,6 +34,52 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The quoted message carries its world, or it decides nothing at all
+
+On his word, 2026-09-18: *"teach it to carry both."* **RESTART REQUIRED** --
+`manjuel/skills.py` and `manjuel/pipeline.py` moved. No sitting was open.
+
+**WHAT IT CLOSES.** The fast path carried a message and always meant THE GROUND, so
+`git commit in atlas: "..."` had to fall through to the Router rather than risk committing
+the wrong repository -- which was the honest bound at the time and a gap all the same.
+`operator_message` now answers as a PAIR, the message and the world beside it, and dispatch
+hands over both or neither. The world rides on `<filepath>`, where `gate_paths` jails it to
+the ground before any handler runs and `_git_world` refuses `worlds/`, a vault, and anything
+that is not its own repository.
+
+**AND I-CANNOT-TELL IS A THIRD ANSWER, which is the whole safety of it.** The words between
+the keyword and the quote are read; joiners (`in`, `the`, `world`, `repo`) fall away; and if
+what is left is not exactly ONE name it decides NOTHING and the Router gets the sentence.
+`git commit the seam fix "..."` is not a world called "seam fix". Guessing a world is the one
+outcome that must never happen, so the arithmetic refuses to guess rather than guessing well.
+
+**THE PARSER READS AN ADDRESS; THE GUARD REFUSES IT.** `worlds/client` IS carried this far on
+purpose -- reading what he wrote is not obeying it -- and SITTING LAW 2 answers at the
+handler, where every other reach for client material is answered. A stroke drives that whole
+path live and asserts the client world's history is untouched.
+
+**AND A LINE CAME BACK IN, WHICH IS THE PART WORTH READING.** This morning I removed
+`_commit_subject`'s reading of the same rule because reversal proved it dead -- the
+invocation-stripping yielded the same subject for every quoted form that existed then. It is
+alive now: with a world standing between the keyword and the quote, the stripping leaves
+`in atlas: "the doors own save` as the subject while dispatch hands the handler the real
+message. The live stroke caught it, red, before the piece was called done. Dead by
+measurement, alive by measurement, a day apart -- and now a stroke defends it.
+
+**PROVED.** Strokes **2500/2500** (+12) and smoke **65/65**, BUILDMAP regenerated, the
+manifest agreeing. **By reversal, three ways**: the world never carried reddens the live
+pair (the named world got the commit, and THE GROUND WAS LEFT ALONE); two names accepted as
+a world reddens the fail-closed stroke; the subject not reading the same rule reddens the
+live one. **Fired on his ground**, sitting 243:
+
+    the call was decided by arithmetic (the words): `git_commit` runs first;
+    the Router reads the result, it does not choose
+    -> skill: git_commit {"content":"a message that names its world","filepath":"atlas"}
+    atlas -- Nothing to commit; the ground is clean.
+
+atlas was clean, so the live proof moved nothing: the world was carried, the handler acted on
+THAT repository, and it had nothing to do.
+
 ### A guard that depended on which quote key was pressed
 
 Found the same evening, before it could fire, by asking the new rule the question that

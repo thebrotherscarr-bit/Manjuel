@@ -10397,25 +10397,39 @@ def test_a_quoted_message_is_handed_over_as_the_argument(reg, lib, book):
     import subprocess
     from manjuel.skills import operator_message, MESSAGE_IS_THE_OPERATORS
 
-    # ---- THE RULE ITSELF, which two readers share ------------------------
+    # ---- THE RULE ITSELF: the message, and the world beside it -----------
+    #
+    # IT ANSWERS AS A PAIR (2026-09-18, his word: "teach it to carry both").
+    # Dispatch needs both together or neither: a decided call carrying the
+    # message and NO world would commit the ground under a sentence naming
+    # another repository, which is the fault this whole day kept circling.
     for said, want in (
             ('git commit: "Six git skills, 39 strokes, BUILDMAP"',
-             "Six git skills, 39 strokes, BUILDMAP"),
-            ('git commit -m "the seam fix"', "the seam fix"),
-            ('git commit "a plain quoted one"', "a plain quoted one"),
-            ('git_commit: "the underscore spelling"', "the underscore spelling"),
-            ('git cycle: "ship it"', "ship it"),
+             ("Six git skills, 39 strokes, BUILDMAP", "")),
+            ('git commit -m "the seam fix"', ("the seam fix", "")),
+            ('git commit "a plain quoted one"', ("a plain quoted one", "")),
+            ('git_commit: "the underscore spelling"', ("the underscore spelling", "")),
+            ('git cycle: "ship it"', ("ship it", "")),
+            ('git commit in atlas: "save the door"', ("save the door", "atlas")),
+            ('git commit in the atlas world: "save the door"',
+             ("save the door", "atlas")),
+            ('git_commit atlas "a bare world"', ("a bare world", "atlas")),
+            ('git cycle in atlas: "ship it"', ("ship it", "atlas")),
     ):
-        check(f"the quoted message is lifted whole: {want[:30]!r}",
+        check(f"the message and its world are read together: {said[:38]!r}",
               operator_message(said) == want, repr(operator_message(said)))
 
     # ...AND NOTHING ELSE IS. Loose words stay the Router's, which is the
-    # 2026-09-08 ruling this must not quietly repeal.
+    # 2026-09-08 ruling this must not quietly repeal -- and WORDS THIS CANNOT
+    # REDUCE TO ONE NAME are not a world, they are prose. Guessing a world is
+    # the one outcome that must never happen, so it does not decide at all.
     for said in ("git commit", "git commit save the work",
                  "commit the seam fix before the rack moves",
-                 "tell me about git commit messages", ""):
-        check(f"nothing is lifted from unquoted words: {said[:34]!r}",
-              operator_message(said) == "", repr(operator_message(said)))
+                 "tell me about git commit messages", "",
+                 'git commit the seam fix "prose, not an address"',
+                 'git commit before the rack moves "two names standing"'):
+        check(f"nothing is decided from unquoted or unclear words: {said[:34]!r}",
+              operator_message(said) == ("", ""), repr(operator_message(said)))
 
     # EVERY SPELLING OF A QUOTE IS JUDGED BY THE ONE RULE, and the first cut
     # was not -- which was a WRONG-REPOSITORY hazard, not a typography one.
@@ -10428,19 +10442,19 @@ def test_a_quoted_message_is_handed_over_as_the_argument(reg, lib, book):
     for spelling, opener, closer in (("straight", '"', '"'),
                                      ("curly", CURLY_L, CURLY_R)):
         naming_a_world = f"git commit in the atlas world: {opener}the message{closer}"
-        check(f"a world named mid-sentence is NOT decided ({spelling} quotes)",
-              operator_message(naming_a_world) == "",
+        check(f"a world named mid-sentence is CARRIED, not dropped ({spelling})",
+              operator_message(naming_a_world) == ("the message", "atlas"),
               repr(operator_message(naming_a_world)))
         plain = f"git commit: {opener}the strict form{closer}"
-        check(f"and the strict form still is ({spelling} quotes)",
-              operator_message(plain) == "the strict form",
+        check(f"and the strict form still means the ground ({spelling})",
+              operator_message(plain) == ("the strict form", ""),
               repr(operator_message(plain)))
 
     # AND THE MESSAGE KEEPS ITS OWN TYPOGRAPHY: the flattening is for judging,
     # never for what comes out.
     kept = f'git commit: "he said {CURLY_L}no{CURLY_R} twice"'
     check("a message carrying curly quotes keeps them",
-          operator_message(kept) == f"he said {CURLY_L}no{CURLY_R} twice",
+          operator_message(kept) == (f"he said {CURLY_L}no{CURLY_R} twice", ""),
           repr(operator_message(kept)))
 
     check("the roster is the two whose message only he can write",
@@ -10488,6 +10502,63 @@ def test_a_quoted_message_is_handed_over_as_the_argument(reg, lib, book):
           gitstate.read(g).subject == said, gitstate.read(g).subject)
     check("   with a clean tree behind it",
           not gitstate.read(g).dirty, gitstate.read(g).stamp())
+
+    # ---- AND A LIVE TURN THAT CARRIES BOTH --------------------------------
+    #
+    # The world rides on <filepath>, which gate_paths jails and `_git_world`
+    # judges -- so the decided call lands in the named repository and nowhere
+    # else. The half that matters is the GROUND being left alone: a call that
+    # quietly fell back to it would pass every "did it commit" check.
+    g3 = ground_with_work()
+    world = g3 / "atlas"
+    world.mkdir()
+    (world / "door.go").write_text("package door", encoding="utf-8")
+    git(world, "init", "-b", "main")
+    git(world, "config", "user.name", "prove")
+    git(world, "config", "user.email", "prove@localhost")
+    git(world, "add", "-A")
+    git(world, "commit", "-m", "the world's first save")
+    (world / "second.go").write_text("more", encoding="utf-8")
+
+    ctx3 = RunContext(objective='git commit in atlas: "the doors own save"')
+    run_pipeline(ctx3, reg, r, lib, env_for(g3, reg, r),
+                 steps=book.get("default"), report=lambda m: None)
+    notes3 = " | ".join(ctx3.notes)
+    check("a world named beside the message reaches the call",
+          "in `atlas`" in notes3, notes3[:220])
+    check("   and the decided call is still decided",
+          "decided by arithmetic" in notes3, notes3[:220])
+    check("   the named world got the commit",
+          gitstate.read(world).subject == "the doors own save",
+          gitstate.read(world).subject)
+    check("   AND THE GROUND WAS LEFT ALONE",
+          gitstate.read(g3).dirty and
+          gitstate.read(g3).subject == "the first save",
+          gitstate.read(g3).stamp() + " / " + gitstate.read(g3).subject)
+
+    # THE PARSER READS AN ADDRESS; THE GUARD REFUSES IT. `worlds/` is carried
+    # this far on purpose -- reading what he wrote is not the same as obeying
+    # it -- and SITTING LAW 2 answers at the handler, where every other reach
+    # for client material is answered.
+    check("the parser does carry worlds/client as an address",
+          operator_message('git commit in worlds/client: "never"') == ("never", "worlds/client"),
+          repr(operator_message('git commit in worlds/client: "never"')))
+    (g3 / "worlds").mkdir()
+    client = g3 / "worlds" / "client"
+    client.mkdir()
+    (client / "brief.md").write_text("material that may never leave", encoding="utf-8")
+    git(client, "init", "-b", "main")
+    git(client, "config", "user.name", "prove")
+    git(client, "config", "user.email", "prove@localhost")
+    git(client, "add", "-A")
+    git(client, "commit", "-m", "material that may never leave")
+
+    ctx4 = RunContext(objective='git commit in worlds/client: "never"')
+    run_pipeline(ctx4, reg, r, lib, env_for(g3, reg, r),
+                 steps=book.get("default"), report=lambda m: None)
+    check("and the handler refuses it, so nothing there is saved",
+          gitstate.read(client).subject == "material that may never leave",
+          gitstate.read(client).subject)
 
     # ---- THE OTHER HALF: a bare command still asks the Router -------------
     g2 = ground_with_work()

@@ -1489,14 +1489,26 @@ def run_pipeline(
         elif (spec and not getattr(ctx, "named_by", "")
               and named in MESSAGE_IS_THE_OPERATORS
               and "content" not in (ctx.tool_args or {})):
-            said = operator_message(ctx.objective)
+            said, world = operator_message(ctx.objective)
             if said:
-                ctx.tool_args = dict(ctx.tool_args or {}, content=said)
+                # BOTH, OR NEITHER (2026-09-18, his word: "teach it to carry
+                # both"). The first cut carried the message alone, so naming a
+                # world in the same breath had to fall through to the Router --
+                # a decided call with the message and no world would have
+                # committed THE GROUND under a sentence naming atlas. The world
+                # rides on <filepath>, where gate_paths jails it to the ground
+                # before any handler runs and `_git_world` refuses `worlds/`, a
+                # vault, and anything that is not its own repository.
+                args = dict(ctx.tool_args or {}, content=said)
+                if world:
+                    args["filepath"] = world
+                ctx.tool_args = args
                 ctx.named_by = "the words"
+                where = f" in `{world}`" if world else ""
                 ctx.notes.append(
-                    f"intent: `{named}` takes content={said!r} -- the message "
-                    f"the operator quoted, handed over as the argument so no "
-                    f"seat has to read it as an instruction")
+                    f"intent: `{named}` takes content={said!r}{where} -- the "
+                    f"message the operator quoted, handed over as the argument "
+                    f"so no seat has to read it as an instruction")
         # THE NAMED FILE, CHECKED FOR VIABILITY (sitting 88, the operator:
         # "a step that checks to see if it's even viable and a returned
         # argument"). `read pipelines.md` cost five hops because the Router
