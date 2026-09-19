@@ -8,11 +8,17 @@
     "total": 65
   },
   "strokes": {
-    "at": 1789775014.1160088,
-    "failures": [],
-    "green": true,
-    "passed": 2483,
+    "at": 1789778941.514861,
+    "failures": [
+      {
+        "detail": "''",
+        "name": "and the strict form still is (curly quotes)",
+        "where": "test_a_quoted_message_is_handed_over_as_the_argument:10435"
+      }
+    ],
+    "green": false,
+    "passed": 2487,
     "state": "finished",
-    "total": 2483
+    "total": 2488
   }
 }

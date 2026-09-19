@@ -34,6 +34,39 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### A guard that depended on which quote key was pressed
+
+Found the same evening, before it could fire, by asking the new rule the question that
+mattered rather than the one it was written for. **RESTART REQUIRED** -- `manjuel/skills.py`
+moved. No sitting was open.
+
+**THE HAZARD WAS A WRONG REPOSITORY, not typography.** `operator_message` had TWO paths: a
+strict one for straight quotes, and a fallback for the curly pair that only checked the
+sentence BEGAN with `git commit`. So `git commit in the atlas world: “the message”` in curly
+quotes was lifted whole -- the call decided with the message and **no world** -- and the
+commit would have landed in THE GROUND under a sentence naming atlas. The same sentence in
+straight quotes was correctly refused, which is the tell: a guard whose answer depends on
+which key was pressed is not a guard.
+
+**ONE RULE, EVERY SPELLING.** The curly pair is flattened to straight quotes for JUDGING and
+the text is taken from the ORIGINAL by span, so a message that itself carries curly quotes
+keeps them. Each replacement is one character for one, which is what makes the spans line up.
+The second path is gone.
+
+**PROVED.** Strokes **2488/2488** (+5): a world named mid-sentence is refused in BOTH
+spellings, the strict form is still taken in both, and a message carrying curly quotes keeps
+its own typography. By reversal, removing the flattening reddens its own stroke.
+
+### atlas has its own number: v0.1.6 on 0c65afc
+
+On his word, 2026-09-18: *"atlas needs its own number too, cut it."* atlas had been declaring
+0.1.5 with `v0.1.5` cut on 3dacdbc while eight saves and twenty CHANGELOG entries stood above
+it -- the RULE 6 gate, the retry ruling, the hold queue, the trace ledger and its optimization
+quarter, the mark guards, and today's remove verb and Sends-to row. Every Go package in `line`
+and `webapp` was run green first; `VERSION` moved to 0.1.6; the panel's Cut filled `v0.1.6`
+itself from what VERSION declares at that commit. Cut, and sent. `atlas/CHANGELOG.md` carries
+the entry; the numbers of the two repositories are independent and always were.
+
 ### The mark was cut from the panel, and the gate refused twice on the way
 
 On his word, 2026-09-18: *"run the standup and the court, then cut 0.1.13."* The standup

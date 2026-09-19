@@ -372,3 +372,5 @@
 {"suite": "strokes", "at": 1789775014.1160088, "state": "finished", "passed": 2483, "total": 2483, "green": true, "failed": []}
 {"suite": "smoke", "at": 1789775019.5470448, "state": "finished", "passed": 65, "total": 65, "green": true, "failed": []}
 {"suite": "standup", "at": 1789775497.1066425, "state": "finished", "passed": 9, "total": 9, "green": true, "failed": [], "report": "logs/standup_2026-09-18_165136.md"}
+{"suite": "strokes", "at": 1789778902.4539347, "state": "finished", "passed": 2488, "total": 2488, "green": true, "failed": []}
+{"suite": "strokes", "at": 1789778941.514861, "state": "finished", "passed": 2487, "total": 2488, "green": false, "failed": ["and the strict form still is (curly quotes)"]}

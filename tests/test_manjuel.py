@@ -10417,6 +10417,32 @@ def test_a_quoted_message_is_handed_over_as_the_argument(reg, lib, book):
         check(f"nothing is lifted from unquoted words: {said[:34]!r}",
               operator_message(said) == "", repr(operator_message(said)))
 
+    # EVERY SPELLING OF A QUOTE IS JUDGED BY THE ONE RULE, and the first cut
+    # was not -- which was a WRONG-REPOSITORY hazard, not a typography one.
+    # The curly pair had its own path, which only checked that the sentence
+    # BEGAN with `git commit`: so a world named in the middle was ignored, the
+    # call was decided with the message and NO WORLD, and the commit would have
+    # landed in the ground under a sentence naming atlas. Straight quotes
+    # refused the same sentence. Found by asking it, before it could fire.
+    CURLY_L, CURLY_R = "“", "”"
+    for spelling, opener, closer in (("straight", '"', '"'),
+                                     ("curly", CURLY_L, CURLY_R)):
+        naming_a_world = f"git commit in the atlas world: {opener}the message{closer}"
+        check(f"a world named mid-sentence is NOT decided ({spelling} quotes)",
+              operator_message(naming_a_world) == "",
+              repr(operator_message(naming_a_world)))
+        plain = f"git commit: {opener}the strict form{closer}"
+        check(f"and the strict form still is ({spelling} quotes)",
+              operator_message(plain) == "the strict form",
+              repr(operator_message(plain)))
+
+    # AND THE MESSAGE KEEPS ITS OWN TYPOGRAPHY: the flattening is for judging,
+    # never for what comes out.
+    kept = f'git commit: "he said {CURLY_L}no{CURLY_R} twice"'
+    check("a message carrying curly quotes keeps them",
+          operator_message(kept) == f"he said {CURLY_L}no{CURLY_R} twice",
+          repr(operator_message(kept)))
+
     check("the roster is the two whose message only he can write",
           MESSAGE_IS_THE_OPERATORS == {"git_commit", "git_cycle"},
           str(sorted(MESSAGE_IS_THE_OPERATORS)))

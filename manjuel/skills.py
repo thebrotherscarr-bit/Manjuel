@@ -2217,11 +2217,16 @@ def _git_status(env: SkillExecutionEnv, args: dict) -> str:
 _MESSAGE_RE = re.compile(
     r"""^\s*(?:please\s+)?git[ _]c(?:ommit|ycle)\b\s*
         (?:(?:-m|--message)\s*[=:]?\s*)?[:,\-]?\s*
-        (?P<q>["'“‘`])(?P<said>.+)(?P=q)\s*$""",
+        (?P<q>["'`])(?P<said>.+)(?P=q)\s*$""",
     re.IGNORECASE | re.DOTALL | re.VERBOSE)
-# The closing quote git's own `-m "..."` would take: a curly opener closes with
-# its curly partner, which a back-reference alone cannot express.
-_QUOTE_PAIRS = {"“": "”", "‘": "’"}
+
+# A CURLY QUOTE IS THE SAME QUOTATION, DIFFERENTLY TYPESET, so it is flattened
+# before the one rule above judges it -- and the text still comes out of the
+# ORIGINAL, by span, so a message that itself contains curly quotes keeps them.
+# Each replacement is one character for one, which is what makes the spans line
+# up; anything wider here would silently shift them.
+_FLATTEN = {ord("“"): '"', ord("”"): '"',
+            ord("‘"): "'", ord("’"): "'"}
 
 
 def operator_message(objective: str) -> str:
@@ -2231,20 +2236,24 @@ def operator_message(objective: str) -> str:
     this is a function rather than a regex in two places: dispatch reads it to
     decide the call, and `_commit_subject` reads it to write the subject. Three
     copies of `source_files`' rule once disagreed here and only one was right.
+
+    AND ONE RULE FOR EVERY SPELLING OF A QUOTE, which the first cut did not
+    have and which was a WRONG-REPOSITORY hazard, found the same day by asking
+    it the question that mattered. The curly pair was handled by a second path
+    that only checked the sentence BEGAN with `git commit` -- so `git commit in
+    the atlas world: "the message"` in curly quotes was lifted, the call was
+    decided with the message and NO WORLD, and the commit would have landed in
+    the ground under a sentence naming atlas. In straight quotes the same
+    sentence was correctly refused. A guard that depends on which quote key was
+    pressed is not a guard.
     """
     said = " ".join((objective or "").split())
     if not said:
         return ""
-    m = _MESSAGE_RE.match(said)
-    if m:
-        return m.group("said").strip()
-    # The curly pair, which a back-reference cannot match against itself.
-    for opener, closer in _QUOTE_PAIRS.items():
-        i, j = said.find(opener), said.rfind(closer)
-        if 0 <= i < j and re.match(r"(?i)^\s*(?:please\s+)?git[ _]c(?:ommit|ycle)\b",
-                                   said[:i]):
-            return said[i + 1:j].strip()
-    return ""
+    m = _MESSAGE_RE.match(said.translate(_FLATTEN))
+    if not m:
+        return ""
+    return said[m.start("said"):m.end("said")].strip()
 
 
 def _commit_subject(env: SkillExecutionEnv, args: dict, where=None) -> str:
