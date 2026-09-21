@@ -14,7 +14,7 @@ RUN THE SMOKE SUITE, not just the strokes. It was RED at 34/50 from 14e2711
 to 2026-09-02 because its StubRuntime had not been moved with pipeline.py,
 and nothing noticed: the strokes were green the whole time.
 
-**START AT `## HANDOFF FOR 2026-09-19`** (search for it — the day blocks
+**START AT `## HANDOFF FOR 2026-09-21`** (search for it — the day blocks
 stack newest first above `## Open`). CHANGELOG.md carries the versions;
 DAYBOOK.md's last entry carries the day's intent. Everything between here and
 there is standing reference that has not moved.
@@ -669,6 +669,58 @@ dropped by operator ruling 2026-09-01 — see the fix log.
     5. CHECK THE DISK BEFORE THE TRANSCRIPT. A seat's account of what it did
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
+
+## HANDOFF FOR 2026-09-21 — read this before anything below it
+
+**Where the ground stands, Monday morning.** core `main@8cffd98` and atlas `main@186608f`,
+both level with `origin/main` as this machine last saw it, with `v0.1.13` on `453fa0f` and
+`v0.1.6` on `0c65afc`. Neither repository has saved anything since 2026-09-19 00:03; the only
+unsaved work is this record pass. No sitting is open: 255, the newest, opened 2026-09-19 00:04
+and closed at 00:18 with no run, so it owed no toll.
+
+**What the proofs say, and they are still the newest.** strokes **2500/2500** and smoke
+**65/65** (2026-09-18 22:15), the nine-case standup **9/9 LIVE** (23:58, sitting 251, on
+`95153bc`). Still fresh: nothing under `manjuel/`, `agents/`, `skills/` or `tests/` has been
+edited since, and this pass touches four root documents, which `newest_edit` does not watch.
+
+**THIS PASS, on his word: "Catch the record up."** DAYBOOK Session 11 was written at 16:41 on
+2026-09-18 and the day went on to 00:18; the evening is appended under it, and the clause of
+its Next session that called atlas's number unasked carries a dated correction where the
+standing reads it. TASKS' last heading gets a dated note that the numbers came, with no box
+ticked. CHANGELOG gets one entry for the pass, which also corrects the quoted-message entry's
+sitting number -- its live fire was 246, not 243 -- by appending, not rewriting. And this
+block, with the START AT pointer moved to it.
+
+**What is open, unchanged since 2026-09-19:** `SITTING_LAWS_2.md` is still the one law file
+unsealed; the headless door's own open path does not reap an orphaned sitting, only
+`cli.main` does; `/flows` on a cold load does not know an open sitting. Not known from this
+machine: whether `release.yml` fired on `v0.1.6` and left a draft -- that answer is on GitHub,
+outside the ground, and was not asked for.
+
+**THE CLIENT TOKEN, later the same morning, on his word.** Out of the ledger (36 -> 0) and out
+of the working copy of CHANGELOG's one line (3 -> 0). Still in git: all 115 commits of `main`,
+the five marks, `push-main`, `remote-main` and `pre-strip-master`. The history rewrite was
+refused by the session's permission check before it ran, and waits on his word and his
+permission; the force-push after it is his; `pre-strip-master` is his call. CHANGELOG, "The
+client token leaves the ledger and the tree", has the numbers.
+
+**AND THEN DONE, on his "REMOVE THE CLIENT NAME."** The rewrite ran on his second word: `main`
+is `b314b9d` (was `8cffd98`), the five marks re-cut on their new commits, every commit checked
+clean. Owed: the force-push of `main` and the five marks (his), then the rewrite's backup
+removed and the old objects pruned; `pre-strip-master` is his call.
+
+**SENT, by his own hand, and checked:** GitHub's `main` is `b314b9d` and its five marks are this
+machine's, six refs of six. Owed: the local backup and prune (his word), `pre-strip-master` (his
+call).
+
+**PURGED, on his word:** the rewrite's backup and every old object are gone from this machine;
+only `pre-strip-master` still carries the name (his call).
+
+**HIS RULING: "keep it."** `pre-strip-master` stays, local and never pushed; a push names its
+branch, never `--all`.
+
+**The day is not planned in this block.** His next words were "let's talk about a plan for
+the day", and nothing is decided here.
 
 ## HANDOFF FOR 2026-09-19 — read this before anything below it
 

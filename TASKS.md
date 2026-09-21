@@ -1231,6 +1231,12 @@ Kept so nobody re-derives them and starts.
     is the story. The fifteen open lines are what the record names as still
     owed, each with the entry that named it. The next numbers are his.
 
+    2026-09-21, on his word ("Catch the record up"): the numbers came. What
+    landed here shipped in core `v0.1.12` (15e83d5) and atlas `v0.1.6`
+    (0c65afc), both cut 2026-09-18; core `v0.1.13` (453fa0f) followed the
+    same day. The heading above is kept as written. No box is ticked and no
+    line is added; the open lines were not re-checked against either number.
+
     [x]  2026-09-14, the diagnostics pass: the standup reads the ground's
          dials; every branch that picks a tool says so; RUNBOOK says what
          Close sitting pays; the boot no longer shows up as a run (atlas);

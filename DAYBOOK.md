@@ -1674,3 +1674,36 @@ declares 0.1.5 with `v0.1.5` cut, so its own next number is unasked; `SITTING_LA
 still the one law file that is not sealed; the headless door's own open path does not reap an
 orphaned sitting, only `cli.main` does; and `/flows` on a cold load still does not know an
 open sitting, so the council's buttons there need the Dashboard first.
+CORRECTED 2026-09-21, the words above kept as written: atlas's number was unasked at 16:41 and
+was asked for and cut by 17:52 -- `v0.1.6` on `0c65afc`. The other three clauses are as
+HANDOFF's 2026-09-19 block left them, and nothing has moved since.
+
+**After this entry was written** (appended 2026-09-21 on his word, "Catch the record up") —
+everything above was written at 16:41 and saved as `a8ec682` in sitting 241, before the day
+was done, and it stands as written: the header's sittings end at 240, and the ledger's run to
+255. What the rest of the day did, read off the ledger, SEAT_LOG, the commits and CHANGELOG:
+
+    16:43–16:54  the gate refused the first asking after the bump -- the version moved under
+                 `manjuel/`, so every stamp went STALE -- and strokes, smoke and the standup
+                 ran again, the standup in sitting 242, 9/9. The gate then read PASSED 9 of 9;
+                 243 saved the proofs as `453fa0f`; the mark was cut from the panel on
+                 `453fa0f` at 16:54
+    17:52        his "atlas needs its own number too, cut it": atlas `v0.1.6` on `0c65afc`,
+                 from the panel's Cut
+    17:55        a guard whose answer depended on which quote key was pressed, found by the
+                 hand before it could fire, and closed (`c7a016f`, sitting 245)
+    18:50–18:54  his "teach it to carry both": a quoted message carries its world (`06e5056`,
+                 sitting 247), fired live in sitting 246 on atlas, which was clean and had
+                 nothing to commit. CHANGELOG's entry for it says sitting 243; the ledger and
+                 SEAT_LOG say 246, and the correction is appended there
+    22:16        a reversal run had left the stamp red; the suites ran again for the true
+                 one, strokes 2500/2500 and smoke 65/65 (`95153bc`, sitting 249)
+    23:58        the nine-case standup, 9/9 live on `95153bc` (sitting 251), saved as
+                 `5595269` (sitting 252)
+    00:03        the clock rolled, the boot gate named `HANDOFF FOR 2026-09-19` missing, and
+                 that block was written and saved (`8cffd98`, sitting 254)
+
+**At close, the second time** — core `main@8cffd98` and atlas `main@186608f`, both level with
+`origin/main`, with `v0.1.13` on `453fa0f` and `v0.1.6` on `0c65afc`. Sitting 255, the last,
+opened at 00:04 on 2026-09-19 and closed at 00:18 with no run. Neither repository moved again
+until this pass.

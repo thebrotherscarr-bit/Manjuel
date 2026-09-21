@@ -34,6 +34,135 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### `pre-strip-master` stays (operator, 2026-09-21: "keep it")
+
+His ruling on the one place left holding the name: the branch is kept, untouched, as the record
+of the history before `worlds/` was stripped. It is local and has never been pushed; RULE 1's
+mechanics are the guard on it -- a push names its branch, never `--all` or `--mirror`, and the
+folder is never copied with its `.git`. Nothing else moved.
+
+### Purged: the old line is gone from this machine (operator, 2026-09-21: "purge it")
+
+The rewrite's three backup refs -- `refs/original/` for `main`, `push-main` and `remote-main` --
+and the leftover `ORIG_HEAD`, which still named the old `8cffd98`, were deleted; every reflog
+was expired and the object store pruned (`git gc --prune=now`). Checked after: the old `main`,
+the old commits under `0.1.7` and `v0.1.13` and the old tag objects no longer exist here; nothing
+unreachable is left, no garbage, one pack. Six half-written temp objects git reported before the
+prune went with it. Every branch and mark is clean of the name but `pre-strip-master`, which
+still holds it with all of `worlds/` -- his call.
+
+### Sent: GitHub holds the cleaned main and the five marks (operator, 2026-09-21: pushed by his own hand, then "done, check github")
+
+The session's permission check refused the force-push to a hand, so he ran it himself.
+Checked against GitHub the same minute: `main` is `b314b9d` there as here, and each of the five
+marks is the same tag object on both sides -- six refs of six, and GitHub holds no others. A sha
+names its whole history, so the name is in nothing GitHub serves on those refs. Still owed, as
+the entry below says: this machine's backup of the old line and its prune (his word),
+`pre-strip-master` (his call), and GitHub's own copies of the old commits, which stay reachable
+by sha until GitHub garbage-collects them or its Support purges them.
+
+### The client name is out of main's history: 115 commits and five marks, rewritten (operator, 2026-09-21: "ok then, REMOVE THE CLIENT NAME.")
+
+No code moved; no restart. No sitting was open. The entry below this one says the rewrite was
+refused and waits on his word. It was refused, and on his second word the permission check let
+it through.
+
+**WHAT WAS REWRITTEN.** One line of this file -- sitting 61's row in "Every sitting, 1–82", the
+name three times -- in every commit of `main`, `push-main` and `remote-main`, with
+`git filter-branch` touching CHANGELOG.md and nothing else. Every commit has a new sha: `main`
+is `b314b9d`, where it was `8cffd98`. The five marks moved with their commits, each still
+annotated with its own tagger, date and message:
+
+    0.1.7    a6f7851 -> 00d2e56      v0.1.12  15e83d5 -> 084fe33
+    0.1.9    6c82542 -> 6d3e6b1      v0.1.13  453fa0f -> 4e04378
+    v0.1.11  c766ce7 -> b4b6593
+
+**PROVED, COMMIT BY COMMIT.** The name is in 0 commits of `main` (115), `push-main` (3) and
+`remote-main` (2). Each of the 115 on `main` differs from its old self by exactly one line of
+CHANGELOG.md, with the same author, dates and message, and each mark sits at the same place in
+history. `main`'s history carries no `worlds/` path. Today's record work was held aside for the
+rewrite and put back on top unchanged, every file still CRLF.
+
+**STILL OWED.** GitHub shows the old history until `main` and the five marks are force-pushed,
+which is his act. The old line stays on this machine under `refs/original`, the rewrite's own
+backup, until that is removed and the old objects pruned, after the push. `pre-strip-master`
+still holds the name, with all of `worlds/`, and is his call. GitHub can keep old commits
+reachable by sha until GitHub Support purges them. Every `main` sha the record quotes above
+this entry names the old history.
+
+### The client token leaves the ledger and the tree; its history waits on a permission (operator, 2026-09-21: "remove the client tokens out of git and ledger history", then "Finish this client token cleaning process, I want it done")
+
+No code moved; no restart. No sitting was open.
+
+**MEASURED FIRST, AND NEVER PRINTED.** The token is the word SEAT_LOG has masked as
+`[redacted]` since 2026-09-02, read off sitting 61's first objective. It stood 36 times in
+`sessions/sessions.jsonl` -- SPEC 4.5 said 24 -- and three times on one line of this file,
+sitting 61's row in "Every sitting, 1–82". That line is in every one of `main`'s 115 commits:
+`main`'s first commit, `c026e4f` (2026-09-09, the strip), already carried it, and all five
+marks hold it. No other file, no commit message and no path on `main` carries it; atlas
+carries none. So SPEC 4.5's "0 indexed documents" was not true -- this file is an index root.
+
+**WHAT MOVED.** The ledger's 36 and this file's three became `[redacted]`, the convention
+SEAT_LOG was scrubbed to on his word 2026-09-02; the ledger is append-only by law, and this is
+the same kind of exception, on the same authority. Every ledger line was parsed before
+anything was written, and every file kept its bytes and its terminators but for the swap:
+`sessions.jsonl` 584 CRLF lines before and after, this file 6,308. The other ledgers in
+`sessions/` held none.
+
+**WHAT DID NOT, AND WHY.** Rewriting the history -- that line in all 115 commits of `main`, the
+five marks re-cut onto the new commits, and `push-main` and `remote-main` with them, because
+both grow from `main`'s first commit -- was refused by the session's own permission check as a
+destructive git action, before anything ran. The tree and every ref were untouched; the four
+record files edited this morning still carry their edits, which is how that was checked
+without asking git again. Until the rewrite lands: GitHub shows the token in `main`'s history
+and in the five marks, and the next save of this file takes it out of the tip only.
+`pre-strip-master` holds it too, with all of `worlds/`, and is his call. The index holds this
+file's old passage until its next refresh re-embeds it. The transcripts the record says
+carried it in their bodies were not in the ask and were not touched.
+
+### The record caught up with the evening (operator, 2026-09-21: "Catch the record up")
+
+Docs only; no code moved, so no restart is owed. No sitting was open: 255 had closed
+2026-09-19 00:18 with no run.
+
+**WHAT WAS BEHIND.** DAYBOOK's last entry, Session 11, was written at 16:41 on 2026-09-18 and
+saved as `a8ec682` in sitting 241. The day ran on to 00:18, through sittings 241 to 255, and
+the entry never followed it. Its Next session line still said atlas's own number was unasked
+-- it was cut at 17:52 -- and that line is part of the standing `standing_block` hands the
+door and the court at every sitting open. TASKS' last heading still read "no number yet"
+after three marks had been cut. And HANDOFF had no block for 2026-09-21, which the boot gate
+names by date.
+
+**WHAT MOVED, each file read whole first.**
+
+    DAYBOOK.md    the evening appended under Session 11, read off the ledger, SEAT_LOG, the
+                  commits and this file, with a second close of its own; and a dated
+                  correction set INSIDE the Next session paragraph, beside the clause it
+                  corrects, because `standing_block` takes a field until the next line that
+                  opens with `**` -- a correction on a bold line of its own would never have
+                  reached a seat. Every line written on 2026-09-18 kept as written, the
+                  header's "232–240" included
+    TASKS.md      a dated note under the last heading: what landed there shipped in core
+                  `v0.1.12` and atlas `v0.1.6`. No box ticked, no line added; the open lines
+                  were not re-checked
+    HANDOFF.md    `## HANDOFF FOR 2026-09-21`, and the START AT pointer moved to it
+
+**AND ONE LINE IN THIS FILE IS WRONG, AND IS NOT REWRITTEN.** "The quoted message carries its
+world, or it decides nothing at all", below, says the world was fired on his ground in sitting
+243. The ledger and SEAT_LOG put that run in sitting **246** -- 18:50 to 18:53, `git commit in
+atlas: "a message that names its world"`,
+`logs/2026-09-18_185105_git_commit_in_atlas_a_message_that_names.md`. Sitting 243 was the save
+of the 0.1.13 proofs, `453fa0f`. What that entry says the run did is what the transcript
+shows; only the number is wrong, and it is corrected here, where a reader of it will find this.
+
+**CHECKED.** All four files were CRLF throughout before the pass and are after it: no LF-only
+line, no doubled carriage return, no BOM. `standing_block`'s own rule, replayed over the new
+DAYBOOK, carries the correction and none of the evening, at 1,580 of its 1,800 characters.
+`release.py`'s daybook and handoff rules read green on the new text; the brief opens on the
+2026-09-21 block; TASKS still counts 34 open boxes, as at HEAD, and the stroke that reads its
+headings holds. The proofs did not move: `newest_edit` watches `manjuel/`, `agents/`,
+`skills/` and `tests/`, and nothing there was touched.
+
 ### The quoted message carries its world, or it decides nothing at all
 
 On his word, 2026-09-18: *"teach it to carry both."* **RESTART REQUIRED** --
