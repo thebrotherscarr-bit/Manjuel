@@ -12819,6 +12819,286 @@ def test_flags_are_not_speech(reg, lib, book):
           any("control markup and no words" in n for n in ctx.notes), str(ctx.notes))
 
 
+def test_the_maker(reg, lib, book):
+    """THE MAKER, PIECE 1 OF 3 (2026-09-21; the operator: "projects folder in
+    Research is fine, build it").
+
+    Sitting 257 put the operator's own test -- "Make me a simple snake game I
+    can play." -- through the estate three ways, and nothing was made: the
+    door role-played a game, the Router planned and did not act, and the one
+    seat that writes whole programs never woke. Now the ENGINE reads a make
+    request by arithmetic, seats the Expert Coder alone, checks the page it
+    answers, and saves it into `projects/<name>/` as a version in the
+    project's OWN history. A change is the next version; "go back" is a new
+    version restoring an old one, so nothing is ever thrown away.
+
+    STROKED BOTH WAYS. What must be made is made -- and a poem, a python
+    script, a question about making, a page that reaches the internet and a
+    page cut off mid-answer are not, and leave no project behind. The
+    ground's own history is never written to.
+
+    Hermetic: temp grounds, a stand-in Coder, and pages one line long.
+    """
+    from manjuel import intent, maker
+    from manjuel.pipeline import _maker_route
+
+    PAGE_ONE = "<!DOCTYPE html>\n<html><body><p>one</p></body></html>\n"
+    PAGE_TWO = "<!DOCTYPE html>\n<html><body><p>two</p></body></html>\n"
+
+    def answer(page, before=""):
+        return f"{before}<filepath>index.html</filepath>\n```html\n{page}```\n"
+
+    # ---- THE WORDS: a request to make, to change, to go back ----------------
+    for said, want in (("Make me a simple snake game I can play.", "simple snake game"),
+                       ("build a tip calculator", "tip calculator"),
+                       ("can you create a website for my bakery", "website")):
+        check(f"a request to MAKE is read by arithmetic: {said!r}",
+              intent.wants_making(said) == want, repr(intent.wants_making(said)))
+    for said in ("write a poem about the sea", "make a note of that", "make a commit",
+                 "create a file called notes.md", "write a python script that counts words",
+                 "how do I make a game?", "write a cosine helper for the toolkit please"):
+        check(f"and this is not one, so it falls through untouched: {said!r}",
+              intent.wants_making(said) == "", repr(intent.wants_making(said)))
+    check("a project's folder is named by the thing's own words, filler dropped",
+          maker.name_for("simple snake game") == "snake-game",
+          maker.name_for("simple snake game"))
+    check("   and a project's name can never be a path out of projects/",
+          maker.name_for("../../etc passwd game") == "etc-passwd-game"
+          and maker.name_for("!!!") == "project",
+          f"{maker.name_for('../../etc passwd game')} / {maker.name_for('!!!')}")
+
+    for said in ("make it faster", "ok, add a score", "let's add a score"):
+        check(f"a change to the page in hand OPENS with a change: {said!r}",
+              intent.wants_changing(said))
+    for said in ("the snake is too slow", "show me the code", "let me try it"):
+        check(f"and an observation is not a change to the page: {said!r}",
+              not intent.wants_changing(said))
+    for said, want in (("go back", 0), ("undo that", 0), ("go back to version 1", 1),
+                       ("put it back the way it was", 0), ("let's go back", 0)):
+        check(f"going back is read, with the version if one is named: {said!r}",
+              intent.wants_going_back(said) == want, repr(intent.wants_going_back(said)))
+    for said in ("add an undo button", "add a button that restores the board"):
+        check(f"an undo the page should HAVE is a change, never a go-back: {said!r}",
+              intent.wants_going_back(said) is None, repr(intent.wants_going_back(said)))
+    check("and a plain change is not a go-back either",
+          intent.wants_going_back("make it faster") is None)
+
+    # ---- THE PAGE: checked by arithmetic before anything is saved -----------
+    page, why = maker.page_from(answer(PAGE_ONE, before="Here it is.\n"))
+    check("a whole page is taken out of the Coder's answer",
+          page == PAGE_ONE and why == "", repr((page[:60], why)))
+    bare, _ = maker.page_from("Sure!\n" + PAGE_ONE + "Enjoy.")
+    check("   and out of an answer that forgot the fence", bare == PAGE_ONE, repr(bare[:60]))
+    _, why = maker.page_from("Here is your game! Have fun.")
+    check("an answer with no page in it saves nothing, and says so",
+          "held no web page" in why, why)
+    _, why = maker.page_from(answer("<!DOCTYPE html>\n<html><body><p>one</p>\n"))
+    check("a page cut off before </html> is refused -- half a page is worse than none",
+          "stops before its end" in why, why)
+    for reach, label in (('<script src="https://cdn.example.com/x.js"></script>', "a CDN script"),
+                         ('<link rel="stylesheet" href="//fonts.example.com/f.css">',
+                          "a stylesheet from the web"),
+                         ("<script>fetch('https://example.com/data')</script>", "a fetch"),
+                         ('<p style="background:url(http://example.com/b.png)">x</p>',
+                          "a CSS url()")):
+        _, why = maker.page_from(
+            answer(f"<!DOCTYPE html>\n<html><body>{reach}</body></html>\n"))
+        check(f"a page that reaches outside this machine is refused (RULE 4): {label}",
+              "RULE 4" in why, why)
+    linked, why = maker.page_from(answer(
+        '<!DOCTYPE html>\n<html><body><a href="https://example.com">a link</a></body></html>\n'))
+    check("   and a plain link is NOT a reach -- it loads nothing until clicked",
+          bool(linked) and why == "", why)
+
+    check("the core's own git never carries a project (each has its own)",
+          "projects/" in [l.strip() for l in
+                          (ROOT / ".gitignore").read_text(encoding="utf-8").splitlines()])
+
+    if not HAVE_GIT:
+        return                    # reported once, in main(); never a crash
+
+    # ---- A PROJECT IS A FOLDER WITH ITS OWN HISTORY -------------------------
+    # THE GROUND IS A REPOSITORY HERE ON PURPOSE. projects/ sits inside it, and
+    # git asked about a folder with no .git of its own walks UP and answers for
+    # the ground. A stroke on a bare temp dir could not tell the two apart.
+    g = Path(tempfile.mkdtemp())
+    for args in (["init", "-q"], ["config", "user.email", "t@t"],
+                 ["config", "user.name", "t"]):
+        subprocess.run(["git", *args], cwd=g, capture_output=True,
+                       stdin=subprocess.DEVNULL)
+    (g / "ground.txt").write_text("the ground's own file", encoding="utf-8")
+    gitstate.commit(g, "the ground's own save")
+    ground_head = gitstate.read(g).head
+
+    p = maker.new_project(g, "snake-game")
+    check("a new project is projects/<name>/ with a history of its own",
+          p == g / "projects" / "snake-game" and (p / ".git").is_dir(), str(p))
+    check("   which starts with no versions", maker.versions(p) == [], str(maker.versions(p)))
+    check("   and a second project of that name never lands on the first",
+          maker.new_project(g, "snake-game").name == "snake-game-2")
+
+    check("a project's first save is version 1",
+          maker.save_version(p, PAGE_ONE, "make me a page") == 1)
+    raw = (p / "index.html").read_bytes()
+    check("   the page written CRLF, as every writer in the ground is",
+          b"\r\n" in raw and b"\n" not in raw.replace(b"\r\n", b""), repr(raw[:50]))
+    check("   with a plain-English note in the project's own history",
+          maker.versions(p)[0][2] == "Version 1: make me a page", str(maker.versions(p)))
+    signer = subprocess.run(["git", "log", "-1", "--format=%an"], cwd=p,
+                            capture_output=True, text=True,
+                            stdin=subprocess.DEVNULL).stdout.strip()
+    check("   signed by the maker, so a version saves on a machine with no git identity",
+          signer == maker.AUTHOR_NAME, signer)
+    check("AND THE GROUND'S HISTORY IS UNTOUCHED -- the version went into the project",
+          gitstate.read(g).head == ground_head, gitstate.read(g).subject)
+
+    check("a change to the page is the project's next version",
+          maker.save_version(p, PAGE_TWO, "make it two") == 2)
+    check("a page that came back unchanged is not a version, and is refused by name",
+          refuses(lambda: maker.save_version(p, PAGE_TWO, "again"), maker.MakerRefused))
+    check("going back saves the old page AGAIN, as a new version",
+          maker.restore(p, 0) == (3, 1) and "<p>one</p>" in maker.page_of(p),
+          maker.page_of(p)[:60])
+    check("   so a project's history is only ever added to",
+          [n for n, _s, _t in maker.versions(p)] == [1, 2, 3]
+          and maker.versions(p)[-1][2] == "Version 3: back to version 1",
+          str(maker.versions(p)))
+    check("   and the version gone back from can itself be gone back to",
+          maker.restore(p, 2) == (4, 2) and "<p>two</p>" in maker.page_of(p))
+    check("a version that does not exist is refused, by number",
+          refuses(lambda: maker.restore(p, 9), maker.MakerRefused))
+    check("   and so is going 'back' to the version already in hand",
+          refuses(lambda: maker.restore(p, 4), maker.MakerRefused))
+
+    plain = g / "projects" / "plain"
+    plain.mkdir()
+    check("a folder with no history of its own is not a project -- the ground's is not its",
+          maker.versions(plain) == [], str(maker.versions(plain)))
+    check("   and nothing is ever saved into it, nor into the ground above it",
+          refuses(lambda: maker.save_version(plain, PAGE_ONE, "x"), maker.MakerRefused)
+          and gitstate.read(g).head == ground_head)
+
+    # ---- THE TURN: the engine routes and saves, the Coder only writes -------
+    g2 = Path(tempfile.mkdtemp())
+    coder = {"answer": answer(PAGE_ONE)}
+
+    def reply(a):
+        return coder["answer"] if a.key == "expert coder" else "A SEAT THAT SAT"
+
+    def turn(objective, ground=g2):
+        r = Stub(reply=reply)
+        ctx = RunContext(objective=objective)
+        run_pipeline(ctx, reg, r, lib, env_for(ground, reg, r),
+                     steps=book.get("default"), report=lambda m: None)
+        return ctx, [n for n, _ in r.seen], r
+
+    maker.forget()
+    try:
+        ctx, sat, r = turn("Make me a simple snake game I can play.")
+        project = g2 / "projects" / "snake-game"
+        check("a make request seats the Expert Coder ALONE: no door to role-play, no Router",
+              sat == ["Expert Coder"], str(sat))
+        asked = next((pr for n, pr in r.seen if n == "Expert Coder"), "")
+        check("   and hands it one job: a whole page, with the request in it",
+              "ONE complete, self-contained web page" in asked and "snake game" in asked,
+              asked[:160])
+        check("the Coder's page is saved as version 1 of a project with its own history",
+              (project / "index.html").is_file() and len(maker.versions(project)) == 1,
+              str(ctx.notes)[-300:])
+        out = ctx.last_output()
+        check("the delivery is the ENGINE's report: what was made, where, what to ask next",
+              out.startswith("Made snake-game -- version 1.")
+              and "projects\\snake-game\\index.html" in out and "What next?" in out,
+              out[:200])
+        check("   and the record says the maker had the turn",
+              any(n.startswith("maker: a request to MAKE") for n in ctx.notes)
+              and any("version 1 saved" in n for n in ctx.notes), str(ctx.notes)[-300:])
+        check("the sitting now has a project in hand", maker.current(g2) == project,
+              str(maker.current(g2)))
+
+        coder["answer"] = answer(PAGE_TWO)
+        ctx, sat, r = turn("make it faster")
+        asked = next((pr for n, pr in r.seen if n == "Expert Coder"), "")
+        check("a change to the project seats the Coder alone again", sat == ["Expert Coder"],
+              str(sat))
+        check("   handed the page as it stands, and the change asked for",
+              "<p>one</p>" in asked and "THE CHANGE ASKED FOR: make it faster" in asked,
+              asked[:200])
+        check("   saved as version 2, and the report says so",
+              len(maker.versions(project)) == 2
+              and ctx.last_output().startswith("Changed snake-game -- version 2: make it faster"),
+              ctx.last_output()[:120])
+
+        ctx, sat, r = turn("go back")
+        check("going back seats NO model -- the version is on disk, restoring it is git's job",
+              sat == [], str(sat))
+        check("   saved as version 3, holding version 1's page",
+              len(maker.versions(project)) == 3 and "<p>one</p>" in maker.page_of(project),
+              str(maker.versions(project)))
+        check("   and the report lists the versions and says nothing was lost",
+              ctx.last_output().startswith("snake-game is back to version 1 -- saved as version 3")
+              and "nothing was lost" in ctx.last_output(), ctx.last_output()[:200])
+
+        # A PAGE THAT READS LIKE A CLAIM IS STILL A PAGE. The write-claim check
+        # reads "saved to board.json" as a seat saying it wrote a file, and
+        # would swap the whole page for a refusal.
+        coder["answer"] = answer("<!DOCTYPE html>\n<html><body><p>Progress is saved "
+                                 "to board.json each round.</p></body></html>\n")
+        ctx, sat, r = turn("add a line about saving")
+        check("a page whose words read like a write-claim is saved, not refused as testimony",
+              len(maker.versions(project)) == 4
+              and not any("said it wrote" in n for n in ctx.notes), str(ctx.notes)[-300:])
+
+        coder["answer"] = answer('<!DOCTYPE html>\n<html><body><script '
+                                 'src="https://cdn.example.com/x.js"></script></body></html>\n')
+        ctx, sat, r = turn("make it blue")
+        check("a page that reaches the internet is NOT saved as a version",
+              len(maker.versions(project)) == 4, str(maker.versions(project)))
+        check("   and the person is told why, in words",
+              ctx.last_output().startswith("Nothing was saved:")
+              and "RULE 4" in ctx.last_output(), ctx.last_output()[:200])
+
+        ctx, sat, r = turn("write a python script that prints hello")
+        check("a python request with a project in hand is not the maker's; the page is left alone",
+              not any(n.startswith("maker:") for n in ctx.notes)
+              and len(maker.versions(project)) == 4, str(ctx.notes)[-300:])
+        e = env_for(g2, reg, Stub())
+        check("a request that names a tool is never the maker's: git's words go to git",
+              _maker_route(RunContext(objective="create a website, then git commit it"),
+                           reg, lib, e, lambda m: None) == "")
+        check("   and a scoped sub-task never starts a project -- a person's request does",
+              _maker_route(RunContext(objective="make me a quiz game", depth=1),
+                           reg, lib, e, lambda m: None) == "")
+
+        # A FIRST PAGE THAT IS REFUSED LEAVES NOTHING BEHIND.
+        g3 = Path(tempfile.mkdtemp())
+        coder["answer"] = answer("<!DOCTYPE html>\n<html><body><p>cut off")
+        ctx, sat, r = turn("build a tip calculator", ground=g3)
+        check("a refused first page leaves NO project behind",
+              not (g3 / "projects").exists(), str(sorted(x.name for x in g3.iterdir())))
+        check("   and the delivery says nothing was saved, and why",
+              ctx.last_output().startswith("Nothing was saved:")
+              and "stops before its end" in ctx.last_output(), ctx.last_output()[:160])
+        check("   and with no project in hand, change words are not the maker's",
+              _maker_route(RunContext(objective="make it faster"), reg, lib,
+                           env_for(g3, reg, Stub()), lambda m: None) == "")
+
+        # A PAGE TOO BIG TO REWRITE WHOLE IS SAID, NOT ATTEMPTED.
+        g4 = Path(tempfile.mkdtemp())
+        big = maker.new_project(g4, "big")
+        maker.save_version(big, "<!DOCTYPE html>\n<html><body>\n"
+                           + "<p>x</p>\n" * 2000 + "</body></html>\n", "a big page")
+        maker.set_current(g4, big)
+        ctx, sat, r = turn("make it faster", ground=g4)
+        check("a page past the Coder's window is not handed to it -- no seat sits",
+              sat == [] and len(maker.versions(big)) == 1, str(sat))
+        check("   and the person is told it is this version's limit, not their request",
+              ctx.last_output().startswith("Nothing was changed:")
+              and "not of your request" in ctx.last_output(), ctx.last_output()[:200])
+    finally:
+        maker.forget()
+
+
 def test_ink():
     """Colour and the spinner must vanish cleanly wherever they'd be wrong.
 
@@ -13732,6 +14012,7 @@ def main() -> int:
     test_write_read_and_speak_about_it(reg, lib, book)
     test_model_override(reg, lib, book)
     test_flags_are_not_speech(reg, lib, book)
+    test_the_maker(reg, lib, book)
     test_ink()
     test_math()
     test_a_commit_is_not_a_tag()

@@ -70,6 +70,16 @@ knows Ollama; nothing else knows either.**
     runtime.py    the only Ollama client: chat, embed, warm, resident.
                   Reads dict AND object response shapes; falls back to a
                   thinking model's reasoning when content is empty.
+    maker.py      THE MAKER (2026-09-21): "make me a snake game" as a
+                  project. The pipeline routes a make request to the Expert
+                  Coder alone (intent.wants_making); this module checks the
+                  page it answers by arithmetic (whole, and nothing loaded
+                  from the network) and saves it as a numbered version in
+                  `projects/<name>/`, which is its own git repository. A
+                  change is the next version; "go back" saves an old one
+                  again as a new version, with no model. Every git call asks
+                  the project's own `.git` first, so the ground's history is
+                  never written. The turn's job rides on RunContext.make.
 
 ## Layer 4 — measurement (advisory, never authoritative)
 
@@ -472,6 +482,42 @@ moved -> stop.
 Two things this order will not do, for reasons already written down: no piece
 starts while a sitting is open (RULE 9), and no version is named or tagged by
 a hand (RULE 6).
+
+## The maker (2026-09-21, his word: "projects folder in Research is fine, build it")
+
+THE VISION IT SERVES, in his words the same afternoon (the whole of them is in
+SPEC 8.1): "the modern equivalent of something like the 'for dummies'
+simplified version of making software", and its test -- "if my wife can sit
+down at the PC, ask the system to make a type of software, game, etc. and she
+can see the result, play the game, try the software". SPEC 4.8 is the
+checklist, DESIGN 14.15 the reasoning; this is the order. Each piece keeps the
+rhythm above, and none starts until he names it.
+
+    1  THE ROUTE, THE CHECK AND THE VERSIONS -- BUILT 2026-09-21 and proven
+       live from the dashboard the same day (sitting 258: a snake game made in
+       15.4s, made faster in 10.8s, put back in 0.6s). intent.wants_making,
+       wants_changing and wants_going_back; maker.py; the pipeline's maker
+       route; `test_the_maker`.
+    2  THE PAGE ON THE GLASS -- a preview pane beside the run, and a project
+       list to pick one from, which is also where a project is put DOWN (today
+       only closing the sitting does that). The glass's work, reading each
+       project's own history for the list; the engine's reach does not grow.
+       Not ordered.
+    3  THE CHECK THAT RUNS IT -- the page loaded in a browser with no window
+       before a version is kept, and any error it raises sent back to the
+       Coder for one more try. Until then a saved page is whole and local,
+       never proven to work. The browser must already be on this machine and
+       must not download itself at first use (RULE 4) -- a decision to make
+       before it is a build. Not ordered.
+    then  THE WIFE TEST (SPEC 8.2's DONE): someone who is not the operator,
+       at the glass, in her own words, with no terminal and no help.
+
+    WHAT IT WILL NOT DO, and why. It makes ONE PAGE: a change rewrites the
+    whole page in the Coder's 8192-token window, so a page past about 12,000
+    characters is refused with the reason (maker.CHANGE_LIMIT). It writes no
+    python and nothing outside `projects/` -- a script is the Coder's ordinary
+    path and lands in the workspace. It pushes nothing. And no seat ever holds
+    the reach: the engine saves, the Coder only answers.
 
 ## The marks, and how one is cut (2026-09-17)
 

@@ -30,6 +30,7 @@ from .skills import (GATE_MARK, MESSAGE_IS_THE_OPERATORS, REVIEW_ONLY_SKILLS,
 from .drift import DriftChecker
 from . import ink
 from . import lawgate
+from . import maker
 from . import gitstate as _gitstate
 
 # A seat can raise a flag with <flags>technical</flags>. Flags drive `When:`
@@ -866,10 +867,20 @@ def _steward_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
     )
 
 
+def _coder_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
+    """The Expert Coder's prompt. On a MAKER turn it is handed one job -- a
+    whole, self-contained page, new or changed (maker.coder_prompt); on every
+    other turn it is the generic builder it has always had."""
+    if getattr(ctx, "make", None):
+        return maker.coder_prompt(ctx.make, ctx.objective)
+    return _default_prompt(agent, ctx, skills)
+
+
 _BUILDERS = {
     "security guardian": _guard_prompt,
     "steward": _steward_prompt,
     "router": _router_prompt,
+    "expert coder": _coder_prompt,
     "quality evaluator": _evaluator_prompt,
     "delivery agent": _delivery_prompt,
     "manjuel": _advisory_prompt,
@@ -1170,6 +1181,131 @@ def unread_parts(ctx: RunContext) -> list[str]:
 
 
 # ---------------------------------------------------------------------
+# The maker (2026-09-21) -- see maker.py for the why, in full
+# ---------------------------------------------------------------------
+#
+# Sitting 257 asked the estate to "make me a simple snake game I can play" and
+# nothing was made: the door role-played, the Router planned and did not act,
+# and the one seat that writes whole programs sat off the path behind a flag
+# nobody raised. So a make request is ROUTED BY THE ENGINE: the spine becomes
+# the Expert Coder alone, the Coder is handed one job, and what it answers is
+# checked and saved by the engine (maker.py) -- a model only writes.
+
+MAKER_SEAT = "Expert Coder"
+
+
+def _maker_route(ctx: RunContext, registry: AgentRegistry, skills: SkillLibrary,
+                 env, report) -> str:
+    """Is this turn the maker's? "" (no), "made" (the Coder sits alone and the
+    engine saves what it writes) or "answered" (the engine answered and no seat
+    sits -- a go-back, or a change too big for the Coder's window).
+
+    A request that NAMES A TOOL is never the maker's: "commit it" is git's.
+    Neither is any turn in a ground with no Expert Coder seat, or no ground,
+    or a scoped sub-task (depth > 0): a project is started by a person's
+    request, never by a seat's."""
+    ground = getattr(env, "ground", None)
+    if (ground is None or getattr(ctx, "depth", 0) > 0
+            or intent.names_a_tool(ctx.objective, skills)):
+        return ""
+    if not any(a.key == MAKER_SEAT.lower() for a in registry.all()):
+        return ""
+    what = intent.wants_making(ctx.objective)
+    if what:
+        ctx.make = {"kind": "new", "name": maker.name_for(what), "what": what}
+        note = (f"maker: a request to MAKE something ({what!r}) -- the "
+                f"{MAKER_SEAT} writes it as one page, the engine saves it as "
+                f"a project with its own history")
+        ctx.notes.append(note)
+        report("  " + ink.dim(note))
+        return "made"
+    project = maker.current(ground)
+    if project is None:
+        return ""
+    back = intent.wants_going_back(ctx.objective)
+    if back is not None:
+        _maker_go_back(ctx, env, project, back, report)
+        return "answered"
+    if not intent.wants_changing(ctx.objective):
+        return ""
+    page = maker.page_of(project)
+    if len(page) > maker.CHANGE_LIMIT:
+        note = (f"maker: {project.name}'s page is {len(page)} characters -- too "
+                f"big to rewrite whole in the {MAKER_SEAT}'s window; nothing sat")
+        ctx.notes.append(note)
+        report("  " + ink.warn(note))
+        ctx.steps.append(StepResult(agent="Maker", model="(engine)",
+                                    output=maker.report_too_big(project, len(page))))
+        return "answered"
+    ctx.make = {"kind": "change", "project": project, "name": project.name,
+                "page": page, "version": len(maker.versions(project)),
+                "was": len(page.splitlines())}
+    note = (f"maker: a change to {project.name} (version "
+            f"{ctx.make['version']}) -- the {MAKER_SEAT} rewrites the page, the "
+            f"engine saves it as the next version")
+    ctx.notes.append(note)
+    report("  " + ink.dim(note))
+    return "made"
+
+
+def _maker_go_back(ctx: RunContext, env, project, target: int, report) -> None:
+    """A go-back is git's job, not a model's: the version is on disk. The
+    engine restores it as a NEW version and says so; no seat sits."""
+    try:
+        n, to = maker.restore(project, target, sitting=getattr(env, "session", ""))
+    except maker.MakerRefused as exc:
+        out = f"Nothing was changed: {exc}."
+        ctx.notes.append(f"maker: go back refused -- {exc}")
+    else:
+        out = maker.report_back(project, n, to)
+        ctx.artifacts.append(project / maker.PAGE)
+        ctx.notes.append(f"maker: {project.name} went back to version {to}, "
+                         f"saved as version {n}")
+    report("  " + ink.dim(ctx.notes[-1]))
+    ctx.steps.append(StepResult(agent="Maker", model="(engine)", output=out))
+
+
+def _maker_land(ctx: RunContext, env, output: str, report) -> None:
+    """Check what the Coder answered and save it as a version -- or say
+    plainly why nothing was saved. The report is held for the delivery."""
+    make = ctx.make
+    page, why = maker.page_from(output)
+    if not page:
+        make["report"] = maker.report_unsaved(why)
+        ctx.notes.append(f"maker: nothing saved -- {why}")
+        report("      " + ink.warn(ctx.notes[-1]))
+        return
+    lines = len(page.splitlines())
+    sitting = getattr(env, "session", "")
+    try:
+        project = make.get("project") or maker.new_project(env.ground, make["name"])
+        n = maker.save_version(project, page, ctx.objective, sitting=sitting)
+    except maker.MakerRefused as exc:
+        make["report"] = maker.report_unsaved(str(exc))
+        ctx.notes.append(f"maker: nothing saved -- {exc}")
+        report("      " + ink.warn(ctx.notes[-1]))
+        return
+    maker.set_current(env.ground, project)
+    ctx.artifacts.append(project / maker.PAGE)
+    if make.get("kind") == "change":
+        make["report"] = maker.report_changed(project, n, lines, make.get("was", 0),
+                                              ctx.objective)
+    else:
+        make["report"] = maker.report_made(project, lines)
+    ctx.notes.append(f"maker: {project.name} version {n} saved ({maker.PAGE}, "
+                     f"{lines} lines)")
+    report("      " + ink.dim(ctx.notes[-1]))
+
+
+def _maker_deliver(ctx: RunContext) -> None:
+    """The engine's report is the delivery of a maker turn: facts about what
+    was saved and where, read off the disk -- never a seat's account of it."""
+    said = ctx.make.get("report") or maker.report_unsaved(
+        f"the {MAKER_SEAT} gave no answer this turn")
+    ctx.steps.append(StepResult(agent="Maker", model="(engine)", output=said))
+
+
+# ---------------------------------------------------------------------
 # Execution
 # ---------------------------------------------------------------------
 
@@ -1223,6 +1359,17 @@ def run_pipeline(
     ctx.law_full = verdict.block(full=lawgate.laws_text(
         getattr(env, "ground", None) or "."))
 
+    # THE MAKER (2026-09-21), AFTER THE LAW AND BEFORE EVERY OTHER ROUTE. A
+    # request to make something -- or to change or go back on the project this
+    # sitting is working on -- is decided here by arithmetic. On a made turn the
+    # spine is the Coder alone; on an answered turn the engine has already said
+    # what happened and no seat sits. Every other turn is untouched.
+    make = _maker_route(ctx, registry, skills, env, report)
+    if make == "answered":
+        return ctx
+    if make:
+        steps = [MAKER_SEAT]
+
     # The LIBRARY, not just its keywords: that is what lets a skill's own
     # `**Says:**` phrases be seen alongside the table in intent.py.
     named = intent.names_a_tool(ctx.objective, skills)
@@ -1234,7 +1381,7 @@ def run_pipeline(
     # an empty flag scaffold in the delivery. Facts are read, not
     # generated: the engine answers, names the nearest real skills, and no
     # seat sits on a name that does not exist.
-    if not named:
+    if not named and not make:
         unknown = _unknown_skill_word(ctx.objective, skills)
         if unknown:
             near = _nearest_skills(unknown, skills)
@@ -1296,7 +1443,9 @@ def run_pipeline(
     # in the record, and the Router then works one act at a time with the
     # steps in front of it instead of holding the whole request in one
     # head. The gate is hard to trip on purpose -- see is_big_objective.
-    if not named and intent.is_big_objective(ctx.objective):
+    if make:
+        pass    # THE MAKER has this turn (above): no reader, no Router, no route
+    elif not named and intent.is_big_objective(ctx.objective):
         named = "decompose_task"        # the `if named:` block below arms it
         ctx.named_by = "is_big_objective"
         ctx.notes.append("intent: several acts in one objective -- routed "
@@ -2287,6 +2436,15 @@ def run_pipeline(
         # rather than delivered -- same shape as THIS TOOL FAILED and the
         # LAW 8 note: a fault named in the record, machine-emitted, so it is
         # a measured quantity and not something the operator must catch.
+        #
+        # A MAKER'S PAGE IS NOT TESTIMONY (2026-09-21). On a maker turn the
+        # Coder's answer is a web page that the engine checks (maker.page_from)
+        # and saves itself, and the delivery is the engine's report -- these
+        # words never reach a person as an account of anything. And a page's
+        # own text reads like a claim to both regexes: "Progress is saved to
+        # board.json", a comment saying "created" above `this.snake = ...`.
+        # Refused, the page would be swapped for the refusal and nothing saved.
+        maker_page = bool(getattr(ctx, "make", None)) and agent.key == MAKER_SEAT.lower()
         # THE WRITE-CLAIM CHECK (sitting 70), the claim-check's sibling.
         # Its closer said "Yesterday, I compiled a poem about autumn, saved
         # it as 'poem.txt' in the Research folder, and successfully read it
@@ -2295,7 +2453,7 @@ def run_pipeline(
         # claimed a SAVE, so nothing saw it. Same arithmetic, new place: a
         # seat says a file was written; the turn's tool calls say whether
         # any writer ran.
-        wrote = intent.claims_wrote_a_file(output)
+        wrote = "" if maker_page else intent.claims_wrote_a_file(output)
         if wrote:
             ran_this_turn = {k for s in ctx.steps for k in (s.tool_calls or ())}
             ran_this_turn |= set(tool_calls)
@@ -2313,7 +2471,7 @@ def run_pipeline(
                     f"(LAW 5: testimony is never fact). This proves it "
                     f"UNSUPPORTED, not false — ask again and let a write run."))
 
-        claimed = intent.claims_file_contents(output)
+        claimed = "" if maker_page else intent.claims_file_contents(output)
         if claimed:
             read_this_turn = {k for s in ctx.steps for k in (s.tool_calls or ())}
             read_this_turn |= set(tool_calls)
@@ -2337,10 +2495,17 @@ def run_pipeline(
         # Evaluator reads the code that was actually saved. Code that stayed
         # in a transcript was the operator's complaint: written, then lost.
         if agent.key == "expert coder" and output.strip():
-            saved = land_code(output, env, ctx)
-            if saved:
-                ctx.flags.add("review")
-                report("      " + ink.dim(f"code landed: {saved}"))
+            if getattr(ctx, "make", None):
+                # A MAKER TURN: the page goes into its project as a version,
+                # checked first (maker.page_from). No `review` is raised -- the
+                # Quality Evaluator edits prose, and a page is judged by the
+                # check that belongs to it (piece 3), not by a rewrite.
+                _maker_land(ctx, env, output, report)
+            else:
+                saved = land_code(output, env, ctx)
+                if saved:
+                    ctx.flags.add("review")
+                    report("      " + ink.dim(f"code landed: {saved}"))
 
         # Sitting 31: "heloo stewy" raised `technical` and woke the coder on
         # a greeting. The flag is testimony; the objective is fact -- when a
@@ -2433,6 +2598,8 @@ def run_pipeline(
             )
         )
 
+    if getattr(ctx, "make", None):
+        _maker_deliver(ctx)
     recompose(ctx, report)
     return ctx
 

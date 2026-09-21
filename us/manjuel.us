@@ -7,6 +7,18 @@ OBSERVED: no seat in this module reaches the filesystem directly. Every stage
 receives a prompt and returns text. Only the Router can cause a write, and only
 by emitting a skill call the harness executes inside `agent_workspace/`.
 
+OBSERVED 2026-09-21: THE MAKER is a second place the harness writes, and it
+reaches past the workspace. On a make request (`manjuel/maker.py`) the ENGINE --
+never a seat -- writes `projects/<name>/index.html` in this ground and runs git
+INSIDE that project's own repository: `init` and its own signer at birth, then
+`add -A` and `commit` for each version, and `checkout` of an old version on "go
+back". No seat holds that reach: the Expert Coder still holds no tools and only
+answers text, which the engine checks before it saves. Every git call first
+checks the project has a `.git` of its own, so nothing is ever committed into
+this ground's history, and `projects/` is gitignored here. Nothing is pushed and
+nothing leaves the machine; a page that loads anything from the network is
+refused before it is saved (RULE 4).
+
 RESOLVED 2026-09-03 (this paragraph was THIN and said so). Transcripts ARE
 written now, one per run plus a prompts companion. A hash-chained ledger also
 exists, but it is `law/state/law/chain.jsonl` walked by `law.py verify` -- NOT

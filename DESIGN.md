@@ -68,6 +68,7 @@ manjuel/
   skills.py      # skills/*.md -> SkillSpec, bound to @skill handlers
   seating.py     # the seat RACK: resting seats, summoned by flag  (§13.1)
   pipeline.py    # executes a running order against a RunContext
+  maker.py       # the maker: a make request's page, checked and saved as a project version (§14.15)
   context.py     # RunContext: objective, feed, steps, flags, notes
   intent.py      # deterministic pre-routing: does the objective name a tool?
 
@@ -1181,3 +1182,101 @@ sitting has done, handed back to the seats -- is not built; sitting 93
 measured its absence. Guidance lands memory ("remember that" at the
 door, a kind on every entry); no seat writes it. The learning loop is
 that, and it is the next thing, after the brief runs clean twice.
+
+### 14.15 THE MAKER — the engine routes, a model only writes (built 2026-09-21)
+
+*The operator, 2026-09-21, on what the estate is for: "an autonomous
+vibe-coding machine", whose true test is "if my wife can sit down at the PC,
+ask the system to make a type of software, game, etc. and she can see the
+result, play the game". The same afternoon: "projects folder in Research is
+fine, build it". SPEC 4.8 is the checklist; BUILDPATH "The maker" the order;
+SPEC 8.1 carries the whole vision in his words.*
+
+**What the record showed first.** Sitting 257 put that exact request through
+the estate three ways and nothing was made. The door role-played a text
+game; the Router reasoned "write the game file first, then test it", listed
+the workspace and stopped; a second phrasing got a `write_file` of ZERO
+bytes, because a game does not fit in the Router's 900 tokens; the `coder`
+flow died on step 4 of 8. Every guard held and every failure was named. The
+fault was the ROUTE: the one seat able to write a whole program sat behind a
+`technical` flag that two small models, twice, did not raise.
+
+**So the engine routes, and a model only writes.** §14.4's rule --
+arithmetic before generation -- one level up. `intent.wants_making` reads a
+make request (a MAKE verb, "a" or "an", then within five words a thing
+people use: a game, an app, a page, a tool) and the run's spine becomes the
+Expert Coder ALONE: no door to role-play, no Router to plan and not act. The
+Coder is handed one job -- one complete, self-contained web page -- and what
+it answers is checked and saved BY THE ENGINE. Its manifest still reads
+"holds no tools", and that stays true: the Coder answers text; `maker.py`
+saves.
+
+**Why a web page.** It plays in any browser with nothing installed; the
+browser is a real sandbox for code a model wrote, which this Windows machine
+does not give a script cheaply; and a 7B coder is at its best on one page.
+
+**The check is arithmetic, and says what it does not prove.**
+`maker.page_from` asks three questions. Is there a page (a fenced block that
+opens like HTML, or failing a fence the answer from `<!DOCTYPE html>` on)? Is
+it WHOLE -- does it reach `</html>`? A page the window cut off is the
+commonest way a long answer fails, and half a game is worse than none. Does
+it reach outside this machine -- a src, a stylesheet link, a CSS url() or
+@import, a script import, fetch, XMLHttpRequest, a socket? Refused by RULE 4,
+not requested in a prompt. A plain `<a href>` loads nothing and passes. The
+honest limits: a URL assembled at runtime is not seen, and NOTHING RUNS THE
+PAGE, so a saved page is whole and local and never proven to work. That is
+piece 3.
+
+**A project is a folder with its own history.** `projects/<name>/`, each its
+own git repository with its own signer, so a version saves on a machine with
+no git identity. Every change is a version: a commit INSIDE THE PROJECT with
+a plain-English note. "Go back" is git's job, not a model's -- the old page
+is on disk -- so it is restored and saved as a NEW version; no model sits,
+and nothing is rewritten or thrown away (LAW 1). That is his "does its own
+version control" in the form this estate already trusts: history that only
+grows.
+
+**The nested repository, and why `_is_project` is load-bearing.** `projects/`
+is inside the ground, and the ground is a repository. Git asked about a
+folder with no `.git` of its own walks UP and answers for the ground, so
+every read and write in `maker.py` first asks whether the project has its
+own `.git`. `gitstate.init` is not used: inside the ground it answers
+"Already a repository" -- the ground's. `projects/` is gitignored in the core.
+
+**Changes are read by arithmetic too.** With a project in hand -- sitting-
+scoped, since one process is one sitting, and a new sitting starts with
+none -- a request that OPENS with a change verb ("make it faster", "add a
+score") hands the Coder the page as it stands and saves the rewrite as the
+next version; "go back", "undo" or "back to version 2" restores. "Add an
+undo button" is a CHANGE -- a page can have an undo -- so the go-back reader
+refuses a back-word named as a thing. A change puts the whole page in the
+Coder's 8192-token window twice (in, and back out), so past about 12,000
+characters the engine says so instead of trying (`CHANGE_LIMIT`).
+
+**One exemption, and why it is not a hole.** The claim-check and the
+write-claim check (§14.3) do not read the Coder's answer on a maker turn. A
+page's own text reads like a claim to both ("Progress is saved to
+board.json"; a comment saying "created" above `this.snake = ...`), and a
+refusal would swap the page for the refusal text and save nothing. Those
+checks exist because a seat's words reach a person; here they do not -- the
+delivery is the engine's report, read off the disk -- and the page is judged
+by the check that belongs to it. Proved by reversal on the mirror: with the
+exemption removed, `test_the_maker` goes red.
+
+**What the first live run showed** (sitting 258, from the dashboard, no
+terminal). "Make me a simple snake game I can play." -- the maker note, the
+Coder alone, a 93-line page saved as version 1 in 15.4s. "make it faster" --
+version 2 in 10.8s, ONE line changed (the game's tick, 100ms to 50ms) and
+nothing else touched. "go back" -- version 3 in 0.6s, no model, identical
+to version 1. The ground's HEAD did not move. The page runs: a click
+starts it and the arrows steer, SEEN in the app's own pane; that food grows
+the snake and a wall ends the round with the score is READ from its code,
+because that pane opens a local file as a static snapshot where `alert()`
+and a reload do nothing. And it carries the first thing piece 3 would
+catch: `clearInterval(game)` with no `game` declared, harmless only because
+the Game Over alert reloads the page first.
+
+**What this section does not claim.** The page is not shown on the glass
+(piece 2); nothing runs it before it is kept (piece 3); and so far only a
+hand -- an agent driving the dashboard -- has tried it, not a person. The
+wife test is this section's DONE, and it has not been run.

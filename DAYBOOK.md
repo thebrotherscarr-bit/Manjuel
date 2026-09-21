@@ -1707,3 +1707,60 @@ was done, and it stands as written: the header's sittings end at 240, and the le
 `origin/main`, with `v0.1.13` on `453fa0f` and `v0.1.6` on `0c65afc`. Sitting 255, the last,
 opened at 00:04 on 2026-09-19 and closed at 00:18 with no run. Neither repository moved again
 until this pass.
+
+## Session 12 — 2026-09-21 (Monday), sittings 256–258, the ledger, the seal and the maker
+
+**Standing** — follows session 11, which cut 0.1.13 and atlas's v0.1.6 and left both
+repositories level with origin. This entry was written at the close, not before the first
+sitting, and covers the day from the law ledger on; the morning's record pass and the client
+token's removal are in HANDOFF's 2026-09-21 block, written as they happened.
+
+**Version** — at open: core `main@219415f` (sitting 256's own stamp), atlas `main@186608f`. At
+close: core `main@bf14ad1` with the maker's piece unsaved on top; atlas unchanged.
+
+**The plan** — his orders, as given: "build the appendable law ledger and reconcile the laws
+that are "unhoused""; "seal it, run the door and the glass, commit it through the dashboard.";
+"rebuild the door and the glass"; then the vision, over a long exchange (SPEC 8.1 holds it in
+his words), and "familiarize yourself with the codebase, how it all flows together and works,
+and then let's discuss again what I am looking for versus what I've built until now"; then
+"projects folder in Research is fine, build it" -- and, mid-build, "Make sure there are
+developmenbt and design docs, checklists, build plans, etc all in place. We need to make sure
+that the next agent will not get lost".
+
+**What ran**
+- sitting 256 (10:40–10:43, 2 runs): the ledger saved through the council as `bf14ad1`, and
+  sent.
+- sitting 257 (12:25–12:35, 4 runs): the estate as it stood, on his test. "Make me a simple
+  snake game I can play." made nothing: the door role-played, the Router listed the workspace;
+  a second phrasing wrote a 0-byte `snake.html`; the `coder` flow failed at step 4 of 8.
+- sitting 258 (13:09–13:14, 3 runs): the maker, live from the dashboard -- version 1 in 15.4s,
+  version 2 ("make it faster") in 10.8s, version 3 ("go back") in 0.6s with no model.
+
+**Found** (each fixed inside the piece, because each would have broken its own live test)
+- the write-claim check reads a page's own text as a claim ("saved to board.json") and would
+  have swapped a good page for a refusal. The maker's page is exempt, the reason is DESIGN
+  14.15, and the stroke was proved by reversal.
+- "add an undo button" read as "go back", and "let me try it" as a change. Both narrowed in
+  `intent.py` before the live run.
+- version 1 of the game calls `clearInterval(game)` with no `game` declared -- harmless there,
+  and the first thing piece 3 would catch (SPEC 4.8).
+- the app's preview pane opens a local file as a static snapshot where `alert()` and a reload
+  do nothing, so a game's Game Over never ends a round there. A real browser is the proof of
+  play.
+
+**Drift** — none outside the maker. The three fixes above are the piece's own; the docs pass
+was his order.
+
+**Rulings** — "projects folder in Research is fine": `projects/` in the ground, gitignored by
+the core, each project its own repository. Pieces 2 and 3 are named and not ordered.
+
+**At close** — core `main@bf14ad1` with the maker unsaved on top: `manjuel/maker.py` new;
+`intent.py`, `pipeline.py`, `context.py`, `tests/test_manjuel.py`, `.gitignore`,
+`us/manjuel.us`, BUILDMAP, SPEC, BUILDPATH, DESIGN, pipelines.md, README, CHANGELOG, HANDOFF
+and this file changed. On a mirror: strokes 2576/2576, smoke 65/65, standup dry 9/9,
+`law.py --prove` 17/17, buildmap clean; his terminal is still the proof. RESTART REQUIRED for
+any engine opened before 13:09 -- the next Boot runs the new code. `projects/snake-game/` holds
+three versions. The door and the glass still run (pids 22844 and 24656). No sitting is open.
+
+**Next session** — not decided by this hand. Waiting on his word: saving and sending this
+piece; the maker's piece 2 and piece 3 (BUILDPATH, "The maker"); and the wife test itself.

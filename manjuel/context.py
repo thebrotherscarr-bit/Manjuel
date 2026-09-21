@@ -361,6 +361,11 @@ class RunContext:
     # name per seat, recorded as it happens so the recompose can say OUT OF
     # TIME without any seat remembering to. Same arithmetic as failures.
     out_of_time: list = field(default_factory=list)
+    # THE MAKER (2026-09-21): set by pipeline._maker_route when this turn makes
+    # or changes a project -- what kind, which project, the page as it stood --
+    # and, once the engine has saved what the Coder wrote, the plain report
+    # that becomes the delivery. Empty on every other turn.
+    make: dict = field(default_factory=dict)
     review_only: bool = False  # counsel mode: the table reviews, never acts
     steps: list[StepResult] = field(default_factory=list)
     flags: set[str] = field(default_factory=set)

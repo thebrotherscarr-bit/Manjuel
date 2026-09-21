@@ -66,6 +66,15 @@ rather than wrong can send it back through the tools once, carrying the
 evidence. The conversation carries across turns, typed and voice sharing one
 thread.
 
+Ask it to MAKE something -- "make me a snake game", "build a tip calculator"
+-- and none of that spine sits. The engine seats the Expert Coder alone,
+checks the one web page it writes (whole, and loading nothing from the
+internet), and saves it as version 1 of a project in `projects/`, a folder
+with its own history. "Make it faster" is version 2; "go back" puts an
+earlier version back as a new one, so nothing is lost. Every time, the answer
+is the engine's plain report: what was made, where to open it, what to ask
+next. SPEC 4.8 is what it does and does not do yet.
+
 Each seat is told the date and hour, so "written 2h ago" means something. A
 file too big for any window arrives as part 1 of N with its own headings
 mapped, and the seat can ask for the part it needs — because chaining cannot
@@ -96,7 +105,7 @@ widen a window, only cover more ground with each one.
     agents/        one seat per file: model, clearances, wake condition, prompt
     skills/        one tool per file: keyword, description, params
     pipelines.md   the running orders
-    manjuel/      the engine (29 modules — see BUILDPATH.md)
+    manjuel/      the engine (every module is named in BUILDPATH.md)
     tests/         the strokes and the smoke suite — offline, seconds; both
                    print their own count, which is why none is written here.
                    They also write `tests/last_run.md`: the failures, with
@@ -109,6 +118,8 @@ widen a window, only cover more ground with each one.
     TASKS.md       what the record owes, by the sitting that found it
     BUILDMAP.md    where to look -- generated from the code (tests/buildmap.py)
     worlds/        the estate's worlds; client data never indexed, never read
+    projects/      what the maker made: one folder per project, each its own
+                   git repository -- never part of this one's
 
 Extending it is writing markdown: a new seat is one file in `agents/`, a new
 tool one file in `skills/`, a new pipeline a block in `pipelines.md`. The

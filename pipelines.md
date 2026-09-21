@@ -56,6 +56,9 @@ tax with no payer. So the guard runs when UNTRUSTED material is present:
 - an ordinary question: **Steward** alone
 - with pasted source: **Guardian → Steward → ...**
 - needing a tool: **Steward → Router → [skill] → Steward**
+- a request to MAKE something ("make me a snake game"): **Expert Coder** alone,
+  whatever the pipeline -- the engine routes it and saves the page (the maker,
+  in the worked examples below)
 
 ## Pipeline: brief
 
@@ -243,6 +246,54 @@ Quality Evaluator (qwen3.5:4b, wakes on `review`)  reads the file ON DISK.
 Steward    (closing) "cosine.py is in the workspace; it returns 0.0 when
            either list has no magnitude."
 ```
+
+### A make request — the maker: the engine routes, the Coder only writes
+
+Added 2026-09-21 (SPEC 4.8, DESIGN 14.15). No spine seat sits: the ENGINE
+reads the request by arithmetic, seats the Expert Coder alone, checks what it
+writes and saves it as a version of a project. Whatever pipeline is in use, a
+make request goes this way. Live, sitting 258, from the dashboard:
+
+```
+operator   Make me a simple snake game I can play.
+
+engine     law: chain whole ...
+           maker: a request to MAKE something ('simple snake game') -- the
+           Expert Coder writes it as one page, the engine saves it as a
+           project with its own history
+Expert Coder  (qwen2.5-coder:7b, the ONLY seat; 15.4s)
+           <filepath>index.html</filepath>
+           ```html
+           <!DOCTYPE html> ... the whole game ... </html>
+           ```
+           engine: a WHOLE page (it reaches </html>)? loads NOTHING from the
+                   network (RULE 4)? -> saved as projects/snake-game/
+                   index.html, VERSION 1: a commit in the project's OWN
+                   repository. The ground's history is not touched.
+Maker      (the engine, no model)  Made snake-game -- version 1. It is one
+           page, index.html (93 lines) ... To try it, open
+           projects\snake-game\index.html in your browser. What next? ...
+
+operator   make it faster
+Expert Coder  handed the page as it stands and "THE CHANGE ASKED FOR: make it
+           faster"; answers the whole page back (10.8s) -> VERSION 2
+Maker      Changed snake-game -- version 2: make it faster ...
+
+operator   go back
+Maker      NO SEAT SITS (0.6s): git brings version 1 back and saves it as
+           VERSION 3 -- snake-game is back to version 1, saved as version 3,
+           so nothing was lost. Its versions: 1, 2, 3 ...
+
+delivery   = the Maker's report, every time: facts read off the disk, never a
+           seat's account of them.
+```
+
+NOT the maker's, and run the ordinary way: "write a poem", "make a note",
+"write a python script" (the Coder's own path, into the workspace), a question
+about making ("how do I make a game?"), and anything that names a tool. A page
+the check refuses -- cut off before `</html>`, or loading from the internet --
+is not saved, and the report says why in words. A change is only read while
+the sitting has a project in hand; a new sitting starts with none.
 
 ### `court`, a judgement — four heads, then a ruling
 

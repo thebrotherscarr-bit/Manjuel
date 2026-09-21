@@ -1160,3 +1160,101 @@ def wants_out(objective: str) -> bool:
     if not any(w in _LEAVE_WORDS for w in words):
         return False
     return all(w in _LEAVE_WORDS or w in _VOCATIVES for w in words)
+
+
+# ---------------------------------------------------------------------
+# The maker: "make me a snake game" (2026-09-21)
+# ---------------------------------------------------------------------
+#
+# THE OPERATOR'S TEST, in his words the same day: "if my wife can sit down at
+# the PC, ask the system to make a type of software, game, etc. and she can see
+# the result, play the game". Sitting 257 put exactly that sentence through the
+# estate and nothing was made -- the door role-played a game, the Router planned
+# and did not act, the Coder never woke (maker.py has the three runs). These
+# three read the request by arithmetic, so no seat has to notice it.
+#
+# NARROW ON PURPOSE, like every shape in this module: a verb that means MAKE,
+# then "a" or "an", then within five words a noun naming a THING PEOPLE USE --
+# a game, an app, a page, a tool. "write a poem", "make a note", "create a
+# file" and "make a commit" name no such thing and fall through untouched. A
+# thing asked for in a language the maker does not write -- python, a script, a
+# function -- is the Expert Coder's ordinary path, not a project; and a question
+# ABOUT making ("how do I make a game?") is a question.
+_MAKE_RE = re.compile(
+    r"(?i)\b(?:make|build|create|write|code|program|design)\s+(?:me\s+|us\s+)?"
+    r"(?:a|an)\s+(?P<what>(?:[\w'-]+\s+){0,5}?"
+    r"(?:game|app|application|program|website|web\s*site|web\s*page|webpage|"
+    r"web\s*app|site|tool|calculator|timer|stopwatch|clock|quiz|planner|"
+    r"tracker|to-?do\s+list|todo\s+list|puzzle|animation))\b")
+_NOT_A_PAGE = re.compile(
+    r"(?i)\b(?:python|\w+\.py|java|rust|golang|bash|powershell|sql|regex|"
+    r"function|class|module|script|cli|command[- ]line|terminal)\b")
+_ASKS_ABOUT_MAKING = re.compile(
+    r"(?i)^\s*(?:how|why|what|when|where|who|which|is|are|was|were|does|do|"
+    r"did|should|shall)\b")
+
+
+def wants_making(objective: str) -> str:
+    """The thing an objective asks to have MADE -- "simple snake game" -- or ""."""
+    text = objective or ""
+    if _ASKS_ABOUT_MAKING.match(text) or _NOT_A_PAGE.search(text):
+        return ""
+    m = _MAKE_RE.search(text)
+    return " ".join(m.group("what").split()) if m else ""
+
+
+# A CHANGE TO THE THING IN HAND. The pipeline asks this only when the sitting
+# already has a project (maker.current); with none, these words mean nothing
+# here and fall through as they always have. The verb must OPEN the request:
+# "the snake is too slow" is an observation, and a person who wants it changed
+# says "make it faster". "let me try it" is not a change; "let's add a score"
+# and "let the snake wrap" are.
+_CHANGE_RE = re.compile(
+    r"(?i)^\s*(?:(?:ok|okay|now|please|and|alright|also|then|cool|nice|great)"
+    r"[,!.]?\s+)*(?:(?:can|could|would|will)\s+you\s+)?(?:please\s+)?"
+    r"(?:make\s+(?:it|the|them|everything|its|this)|change|add|remove|delete|"
+    r"fix|slow|speed|increase|decrease|replace|turn|give\s+(?:it|the)|use|put|"
+    r"rename|double|halve|swap|improve|tweak|update|set|let(?!\s+(?:me|us)\b)|"
+    r"hide|move|shrink|enlarge|center|centre|resize|recolou?r)\b")
+
+
+def wants_changing(objective: str) -> bool:
+    """Whether the words ask for a change to the project in hand."""
+    return bool(_CHANGE_RE.match(objective or ""))
+
+
+# GOING BACK. Asked before a change, so "change it back" is never handed to the
+# Coder to guess at: the earlier version is on disk, and restoring it is git's
+# job, not a model's.
+_BACK_RE = re.compile(
+    r"(?i)\b(?:go(?:ing)?\s+back|undo|revert|roll\s*back|restore|put\s+it\s+back|"
+    r"change\s+it\s+back|previous\s+version|the\s+way\s+it\s+was|how\s+it\s+was|"
+    r"back\s+to\s+(?:version|v)\s*#?\d)")
+_VERSION_NO = re.compile(r"(?i)\b(?:version|v)\s*#?\s*(\d{1,4})\b")
+# ...BUT "UNDO" IS ALSO A BUTTON. A page can HAVE an undo, a restore, a back:
+# "add an undo button" asks for a CHANGE, and read as a go-back it would throw
+# the person's page back a version instead. Named as a thing -- after a/an/the,
+# or before button, key, feature -- the word is the feature, not the request.
+_BACK_AS_A_THING = re.compile(
+    r"(?i)\b(?:a|an|the|its|with)\s+(?:undo|restore|revert|go[ -]?back|back)\b"
+    r"|\b(?:undo|restore|revert|back)[ -]?(?:buttons?|keys?|features?|options?|"
+    r"arrows?|links?|functions?)\b")
+# ...AND INSIDE A CHANGE, ONLY THE WORDS THAT CAN MEAN NOTHING ELSE. "add a
+# button that restores the board" opens with a change, and its "restores" is
+# the change's own word; "let's go back" and "make it how it was" still go back.
+_BACK_EVEN_IN_A_CHANGE = re.compile(
+    r"(?i)\b(?:go(?:ing)?\s+back|change\s+it\s+back|put\s+it\s+back|"
+    r"previous\s+version|the\s+way\s+it\s+was|how\s+it\s+was|"
+    r"back\s+to\s+(?:version|v)\s*#?\d)")
+
+
+def wants_going_back(objective: str) -> int | None:
+    """None when this is not a request to go back; otherwise the version asked
+    for, or 0 for "the one before this"."""
+    text = objective or ""
+    if not _BACK_RE.search(text) or _BACK_AS_A_THING.search(text):
+        return None
+    if wants_changing(text) and not _BACK_EVEN_IN_A_CHANGE.search(text):
+        return None
+    m = _VERSION_NO.search(text)
+    return int(m.group(1)) if m else 0

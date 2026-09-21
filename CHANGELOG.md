@@ -34,6 +34,57 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The maker, piece 1: "make me a snake game" is made, versioned and reported by the engine (operator, 2026-09-21: "projects folder in Research is fine, build it")
+
+Why: sitting 257 put his own test -- "Make me a simple snake game I can play." -- through the
+estate three ways, and nothing was made. The door role-played a game, the Router listed the
+workspace, a second phrasing wrote a 0-byte `snake.html` (a game does not fit the Router's 900
+tokens), and the `coder` flow failed at step 4 of 8. The Expert Coder never woke.
+
+- **`manjuel/maker.py`, new** (LF). A project is `projects/<name>/`, its own git repository
+  with its own signer. `page_from` checks the Coder's answer by arithmetic: a page at all, WHOLE
+  (it reaches `</html>`), and loading nothing from the network (RULE 4). `save_version`,
+  `restore` (going back saves the old page as a NEW version), `versions`, the Coder's prompt and
+  the plain reports. `_is_project` guards every git call, so nothing lands in the ground's
+  history -- `gitstate.init` is not used, because inside the ground it answers for the ground.
+- **`manjuel/intent.py`:** `wants_making`, `wants_changing`, `wants_going_back` -- narrow on
+  purpose. A poem, a note, a commit, a python script and a question about making fall through;
+  "add an undo button" is a change and not a go-back; "let me try it" is not a change.
+- **`manjuel/pipeline.py`:** the maker route, after the law gate and before every other route.
+  A make request seats the Expert Coder alone; a change, with a project in hand, hands it the
+  page as it stands; a go-back is answered by the engine with no seat; a page too big for the
+  Coder's window is said, not tried. The page lands through `_maker_land` and the delivery is
+  the engine's report. The claim-check and the write-claim check do not read the Coder's page
+  on a maker turn -- a page's own text reads like a claim ("saved to board.json") and would be
+  swapped for a refusal (DESIGN 14.15). `manjuel/context.py`: `RunContext.make`. **Restart
+  required:** `manjuel/` moved; an engine opened before 13:09 runs the old code, the next Boot
+  runs the new.
+- **`.gitignore`:** `projects/`, because each project is its own repository. **`us/manjuel.us`:**
+  an OBSERVED paragraph for the engine's new reach.
+- **`tests/test_manjuel.py`:** `test_the_maker`, 78 strokes, stroked both ways: the words, the
+  page check, the disk and git on a temp ground that IS a repository (the nested hazard), and
+  the turn end to end. Proved by reversal: with the claim-check exemption taken out on the
+  mirror, it goes red.
+- **Live, sitting 258, from the dashboard:** "Make me a simple snake game I can play." ->
+  version 1, 93 lines, 15.4s. "make it faster" -> version 2, one line changed (the game's tick,
+  100ms -> 50ms), 10.8s. "go back" -> version 3, identical to version 1, 0.6s, no model. The
+  ground's HEAD stayed `bf14ad1`. The page starts and steers (seen in the app's pane; its Game
+  Over is read from the code, because that pane's snapshot ignores `alert()`), and it carries
+  `clearInterval(game)` with no `game` declared -- the first thing piece 3 would catch.
+  `projects/snake-game/` stays.
+- **Docs, on his mid-build word** ("Make sure there are developmenbt and design docs,
+  checklists, build plans, etc all in place"): SPEC -- the words (the maker, a project, a
+  version), the parts table, invariant 7, **SPEC 4.8, new** (three MET, a NOTE, three OPEN:
+  piece 2, piece 3 and the wife test), 8.1 his vision of 2026-09-21 in his words, 8.2 THE
+  MAKER. BUILDPATH -- `maker.py` in Layer 3, and "The maker" (pieces 1 to 3 in order, and what
+  it will not do). DESIGN §2 and §14.15. pipelines.md's worked example. README -- the turn,
+  `projects/`, and a module count this file made stale, taken out. BUILDMAP regenerated;
+  today's HANDOFF block; DAYBOOK Session 12. TASKS.md untouched.
+- **Proven on a mirror:** strokes 2576/2576, smoke 65/65, standup dry 9/9, `law.py --prove`
+  17/17, `buildmap --check` clean. His terminal is still the proof.
+- **Not built, his to order:** piece 2 (the page and a project list on the glass) and piece 3
+  (the page run in a browser with no window, its errors sent back to the Coder).
+
 ### Sealed: the law ledger is law (operator, 2026-09-21: "seal it")
 
 - `python law\law.py seal LAW_LEDGER.md`, run on his word: link #6, a DIRECT link by the

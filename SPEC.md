@@ -91,6 +91,9 @@ A proposal that needs a word uses the nearest one below.
 | **the release gate** | one command before a tag that refuses by name until the record is whole; `tests/release.py --check`. | the operator, 2026-09-08 ("reviewed, updated, and logged, at all times"); built the same day |
 | **the story** | what THIS sitting has done so far, read off the ledger and handed to the door and the court; bounded like a window. | the operator, 2026-09-07 ("keep that in context for now") and 2026-09-08; built 2026-09-08 (0.1.6) |
 | **out of time** | a seat not seated because the turn's deadline had passed; named in the delivery. | the operator, 2026-09-08 ("never more than 10 minutes between a response") |
+| **the maker** | the engine's route for "make me a ...": the Expert Coder writes ONE web page, the engine checks it and saves it as a version of a project. No seat saves anything. | the operator, 2026-09-21 ("projects folder in Research is fine, build it"); `manjuel/maker.py` |
+| **a project** | one thing the maker made: a folder under `projects/` with its own git history, never part of the core's repository. | the operator, 2026-09-21 |
+| **a version** | one save of a project, numbered from 1, with a plain-English note. "Go back" saves an old one again as the next number, so nothing is thrown away. | 2026-09-21; LAW 1 |
 
 ---
 
@@ -116,6 +119,7 @@ A proposal that needs a word uses the nearest one below.
 | **The index** | chunked, incremental, bounded, embedder-stamped; client material and secrets never enter it; transcripts age out of retrieval at 45 days | `vectors.py`; REFUSALS §5, §6, §16 |
 | **The rack** | seven models seat fourteen seats; the everyday pipelines fit resident; the court evicts on purpose; `rack.md` is derived from Ollama, never edited | `vram.py`, `rack.py`; `test_vram` |
 | **The suites** | the engine proves offline with every model stubbed; the REPL proves the same way; the standup runs the seats live and writes a report; the map is generated from the code | `tests/test_manjuel.py`, `smoke_cli.py`, `standup.py`, `buildmap.py` |
+| **The maker** | "make me a snake game" seats the Expert Coder alone; what it answers is saved only if it is a WHOLE page that loads nothing from the network; each save is a numbered version in the project's OWN history; "go back" is git's job, not a model's; the ground's history is never written to | `maker.py`, `intent.wants_making`; §4.8; `test_the_maker` |
 | **The toll** | every sitting that ran something ends with what proved, what is thin, what is owed — the operator's words, or an honest "not stated". A sitting that ran nothing closes with no toll, from the Dashboard's Close or on its own when idle (RUNBOOK, 2026-09-14; D2, 2026-09-16; this row said "every sitting" until 2026-09-17) | `seatlog.render_toll`; LAW 10 |
 
 ---
@@ -131,7 +135,7 @@ is ever observed false, that is the bug, before anything else.
 4. No path resolves outside its jail; no absolute path is accepted from a model. (`gate_paths`)
 5. No secret is read, indexed, printed or committed. (`is_secret`; `dotenv.report`; the law gate)
 6. No client-tagged file is read, indexed, listed or cross-referenced. (`is_protected`; SITTING LAW 2)
-7. No commit, push, pull, pull-of-a-model or spend happens without the operator; local commit is the one ruled exception and it is additive. (`gitstate`, `rack_pull`; RULE 6)
+7. No commit, push, pull, pull-of-a-model or spend happens without the operator; local commit is the one ruled exception and it is additive. (`gitstate`, `rack_pull`; RULE 6) The maker's versions are local commits inside each project's own repository -- never the ground's, never pushed (2026-09-21, `maker._is_project`).
 8. No run proceeds on a law that does not verify. (the law gate)
 9. No failure is omitted from a delivery. (`recompose`)
 10. No count is written into a doc; every number is read from what a run produced. (`proved`, `suite_tally`)
@@ -182,6 +186,18 @@ are the whole remaining distance.
 ### 4.7 The rack
 - MET — seven models, tiered; everyday pipelines fit 15 GB resident; the court evicts on purpose; parity cases pit each head against the other in its tier.
 - OPEN — llama3.2 at the door: held on tool strings; parrots the question as its counsel at every court (88–92); recited its own closing instruction once (89); keyword bait five sightings. STAMPED 2026-09-10 (TASKS said "stamp or reseat"): recompose now compares the delivery's numbers with the run's tool results and travels the difference with the answer, by the same arithmetic it already uses for what was omitted. The check existed and ran in ONE place, `/brief`; it now runs on every turn where a tool ran. THE SEAT STILL INVENTS — a stamp catches it, it does not cure it, and reseating remains open. NEW SIGHTING 2026-09-09, and it is INTERMITTENT: the standup's `a folder` case had Steward (llama3.2) report the skills dir holds "37 markdown files, ranging from 300 to 1200 bytes in size" with 300 and 1200 in NO tool result that run (16:53); the same objective through the same seat passed seventeen minutes later (17:10). The count was right and the range invented. Same class as TASKS' "the door invents numbers", and a coin-flip rather than a fixed fault — which is why a green gate is not evidence it is gone. MET — gemma4:12b at Manjuel ruled on turn 1 in five courts at 16384 (88–92); the window, not the model, was the fault. The Quartermaster on llama3.2 invented in three of three readings.
+
+### 4.8 The maker (his word 2026-09-21: "projects folder in Research is fine, build it")
+
+Why it exists: sitting 257 put his own test through the estate -- "Make me a simple snake game I can play." -- and nothing was made. The door role-played a game, the Router planned and did not act (and a 900-token cap left one try a 0-byte file), and the Expert Coder never woke. The pieces and their order are BUILDPATH's, "The maker"; the reasoning is DESIGN 14.15.
+
+- MET (2026-09-21, piece 1) — a request to MAKE a thing people use (a game, an app, a page, a tool, a calculator, a timer...) is read by arithmetic (`intent.wants_making`), seats the Expert Coder ALONE, and what it answers is saved as version 1 of `projects/<name>/`, a folder with its own git history. The delivery is the engine's plain report: what was made, where it is, and what to ask next. A poem, a note, a commit, a python script and a question about making are not the maker's and fall through untouched. `test_the_maker`. Proven live from the dashboard, sitting 258: a 93-line snake game in 15.4s that starts on a click and steers with the arrows (seen); its scoring and Game Over are read from its code, not yet seen.
+- MET (2026-09-21, piece 1) — a CHANGE ("make it faster", "add a score": the request opens with a change verb, and the sitting has a project in hand) hands the Coder the page as it stands and saves the rewrite as the next version; "go back" (or "undo", or "go back to version 2") saves the older page AGAIN as a new version, and no model sits for it. "Add an undo button" is a change, not a go-back. History only grows (LAW 1). `test_the_maker`. Live, sitting 258: version 2 in 10.8s changed one line (the game's tick, 100ms to 50ms); version 3, back to version 1, in 0.6s.
+- MET (2026-09-21, piece 1) — nothing the check refuses is saved: a page is kept only if it is WHOLE (it reaches `</html>`) and loads NOTHING from the network (`maker.page_from`, RULE 4); a refused first answer leaves no project behind; the ground's own history is never written to (every git call first checks the project's own `.git`); `projects/` is gitignored. `test_the_maker`, stroked both ways and proved by reversal.
+- NOTE, not OPEN — while a sitting has a project in hand, ANY request that opens with a change verb goes to that project ("fix the router config" included). There is no word yet to put a project down except closing the sitting, and a new sitting starts with none. Choosing a project, and leaving one, belong to piece 2's project list.
+- OPEN (piece 2) — the page is not yet shown ON THE GLASS: today the report names the file to open (`projects\<name>\index.html`), and there is no project list to pick one from. His call to order it.
+- OPEN (piece 3) — the check proves a page is whole and local, NEVER that it works: nothing runs it before it is kept. Piece 3 loads it in a browser with no window and sends any error back to the Coder before a version is saved. Seen live 2026-09-21: version 1 calls `clearInterval(game)` with no `game` declared -- harmless where the Game Over alert reloads the page, and exactly what this piece would catch. His call to order it.
+- OPEN — THE WIFE TEST, his words and this section's DONE: "if my wife can sit down at the PC, ask the system to make a type of software, game, etc. and she can see the result, play the game, try the software". A person who is not the operator asks the glass in her own words and plays or uses the result -- no terminal, no path typed, no help -- and every step is in the record. Pieces 2 and 3 are what stand between today and that.
 
 ---
 
@@ -352,6 +368,41 @@ that a version will be called any of these.
     the boundary    local only, no listening socket in the engine, the gate
                     is his: RULE 4, RULE 6, and BUILDPATH's position
 
+  AND ON 2026-09-21, the whole of it in one afternoon (quoted as he wrote it):
+
+    the machine     "an autonomous vibe-coding machine with all of the
+                    transparency we need set on a local rack of models that I
+                    can swap in and out as new variants come out, to review
+                    parity and update the system as needed"
+    the long view   "like a second brain, a wholly agentic system that
+                    essentially runs all of my digital life, as a personal
+                    digital assistant"
+    the shape       "the terminal was made into a webapp, that's why atlas is
+                    the way that it is, with the insertable engine, the whole
+                    idea is modularity"; "I'd rather run the whole thing in
+                    powershell, or windows native"
+    the laws        "the laws are to firewall the agents from wrecking things
+                    before they are ready"
+    the pipeline    "a simple ass CI/CD pipeline that I can direct and watch
+                    as it makes progress. It can also ask and review on where
+                    the vision is ... present testing and iteration, discuss
+                    features"
+    the safety      "all the recent and common software dev 'safety' stuff
+                    like versioning, build paths" -- "the 'for dummies'
+                    simplified version of making software"
+    the test        "The true test is if my wife can sit down at the PC, ask
+                    the system to make a type of software, game, etc. and she
+                    can see the result, play the game, try the software, etc.
+                    kind of like googles AI studio."
+    the record      "I want the system to record it all being done while it's
+                    being done"
+    the glass       "The whole thing running in the webapp, and able to see
+                    what the system is doing live, while it kind of hand-holds
+                    for you and does it's own version control project
+                    management and all that 'stuff' that no one thinks about."
+
+  The first piece of that built the same day is THE MAKER (4.8, 8.2 below).
+
 DONE for the engine is still section 4: every line MET or RULED OUT, and the
 operator has run the standup on his own terminal and read the report. This
 plan is the order those OPEN lines close in.
@@ -420,6 +471,18 @@ BUILDPATH, "The order it goes next".
       DONE when    nothing on the network can call a writing tool through the
                    glass, and the holds are armed or he has ruled they stay
                    off
+
+    THE MAKER -- his vision of 2026-09-21; piece 1 built the same day
+      what it is   "make me a snake game" made, versioned and reported by the
+                   engine (4.8). Piece 1: the route, the check and the
+                   versions (MET). Piece 2: the page and a project list on
+                   the glass. Piece 3: the page loaded in a browser with no
+                   window, and its errors sent back to the Coder before a
+                   version is kept. The order is BUILDPATH's, "The maker".
+      DONE when    THE WIFE TEST: someone who is not the operator asks the
+                   glass for a game or a tool in her own words, and plays or
+                   uses it -- no terminal, no path typed, no help -- with
+                   every step of it in the record
 
     NOT IN THIS PLAN, and named so it is not mistaken for forgotten: the
     appliance and the business (`SYSTEM_DESIGN.md`, `atlas/LAUNCH_PLAN.md`

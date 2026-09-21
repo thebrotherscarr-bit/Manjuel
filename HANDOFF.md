@@ -738,6 +738,42 @@ still the proof.
 all five entries of the ledger are law. The chain proves whole at 6 links, head
 `07491469cd7d6d6c`. SPEC 4.4's SITTING LAW 5 line is MET. `SITTING_LAWS_2.md` stays unsealed
 and untouched; its two laws are sealed in the ledger, and the file's fate is his call.
+Saved through the council as `bf14ad1` (sitting 256, closed with its toll) and sent; GitHub's
+`main` matches.
+
+**THE DOOR AND THE GLASS, REBUILT on his word ("rebuild the door and the glass").** They had
+been running the 09-18 07:00 builds, stamped `ec46154` with uncommitted work on top. Both are
+now built from `186608f` (v0.1.6, a clean tree) out of the local module cache only
+(`GOPROXY=off`), and were proved in scratch first: the door's own `--prove` 125/125, run from
+`atlas\line` where its fixtures resolve, and the glass serving its page on a scratch port.
+Then they were placed, their hashes matching the builds, and restarted: the door pid 22844
+on 127.0.0.1:8090, the glass pid 24656 on :8091. Both still print 0.1.5: v0.1.6 bumped only
+`atlas/VERSION`, and the seven VERSION files the binaries embed still read 0.1.5.
+
+**THE VISION, then THE MAKER, piece 1, on his word ("projects folder in Research is fine,
+build it").** He set out what the whole thing is for -- SPEC 8.1 now carries it in his words,
+ending in the wife test -- and sitting 257 showed the estate failing it: "Make me a simple
+snake game I can play." made nothing, three ways (the door role-played, the Router listed the
+workspace, a 0-byte `snake.html`, the `coder` flow failed at 4 of 8). Now the ENGINE reads a
+make request, seats the Expert Coder alone, checks the page (whole; nothing from the network)
+and saves it as a version in `projects/<name>/`, its own git repository; a change is the next
+version; "go back" is a new version restoring an old one, with no model. New `manjuel/maker.py`;
+`intent.py`, `pipeline.py`, `context.py` changed; `test_the_maker` (78 strokes); `projects/`
+gitignored; `us/manjuel.us` says the new reach. **RESTART REQUIRED:** `manjuel/` moved -- the
+door starts a fresh engine per Boot, so the next Boot runs the new code, and the door and the
+glass themselves did not change. Proven on a mirror: strokes 2576/2576, smoke 65/65, standup
+dry 9/9, `law.py --prove` 17/17. **Live from the dashboard, sitting 258** (13:09-13:14, closed
+with its toll): version 1 in 15.4s (93 lines), "make it faster" version 2 in 10.8s (one line:
+the tick 100ms -> 50ms), "go back" version 3 in 0.6s with no model; the ground's HEAD stayed
+`bf14ad1`. The game starts and steers (seen); that it scores and ends a round is read from
+its code. ONE TRAP for whoever checks it next: the app's own preview pane opens a local file
+as a static snapshot where `alert()` and a reload do nothing, so the game's Game Over never
+ends a round THERE -- open it in a real browser. **Where to look:**
+SPEC 4.8 (the checklist: MET, a NOTE, OPEN), BUILDPATH "The maker" (pieces 1-3 in order),
+DESIGN 14.15 (the why), pipelines.md's worked example. **Open, his to order:** piece 2 (the
+page and a project list on the glass) and piece 3 (the page run in a windowless browser, its
+errors back to the Coder); then the wife test. **Unsaved:** all of this piece sits on top of
+`bf14ad1`; saving and sending it is his word. No sitting is open.
 
 ## HANDOFF FOR 2026-09-19 — read this before anything below it
 

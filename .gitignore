@@ -122,3 +122,10 @@ flows/
 # workflow builder fired its first flow and the ask node left a rack_ledger
 # behind. Same class as flows/ above: runtime state, not the record.
 state/
+#
+# projects/ is THE MAKER's (manjuel/maker.py; his ruling 2026-09-21: "projects
+# folder in Research is fine"). Every project in it is ITS OWN REPOSITORY, with
+# its own history of versions, so the core must never carry one: a nested repo
+# added here would land as a bare gitlink, and a person's game is not the
+# estate's code. Same shape as atlas/ above -- in the ground, not in this repo.
+projects/
