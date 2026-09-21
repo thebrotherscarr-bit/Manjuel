@@ -13,11 +13,14 @@ a model whether the law applies.
 Four things, in order, on every run:
 
   1. THE CHAIN VERIFIES. law/chain.jsonl is walked with the pen; every
-     sealed law's fingerprint is checked against the file on disk. A law
-     that does not verify is a law that cannot be trusted, and the run is
-     REFUSED -- the same rule ESTATE LAW 4 states for a red suite. No law/
-     in the ground (a bare clone, a test workspace) is NOT a broken chain:
-     the gate says so in the record and runs on the rules alone.
+     sealed law's fingerprint is checked against the file on disk -- the
+     whole file, or for an appendable law (law/LAW_LEDGER.md, sealed with
+     `law.py seal`) its first N bytes, so it grows at the bottom and no
+     sealed byte can change. A law that does not verify is a law that
+     cannot be trusted, and the run is REFUSED -- the same rule ESTATE
+     LAW 4 states for a red suite. No law/ in the ground (a bare clone, a
+     test workspace) is NOT a broken chain: the gate says so in the record
+     and runs on the rules alone.
   2. THE OBJECTIVE IS CHECKED against the laws that are decidable by
      reading it -- a reach outside the ground (RULE 1 / LAW 8), a reach
      for a secret (LAW 9), a reach across the wall (LAW 6 / RULE 4) while
@@ -163,11 +166,11 @@ def verify_chain(ground: Path) -> tuple[bool | None, str, list[str]]:
             if not m:
                 problems.append(f"link #{n} has no canonical anchor line")
                 continue
-            name, token = m.group(3), m.group(4)
+            name, token, extent = m.group(3), m.group(4), m.group(5)
             p = os.path.join(mod.LIBRARY, name)
             if not os.path.isfile(p):
                 problems.append(f"link #{n} points at a missing law: {name}")
-            elif mod._fingerprint(p) != token:
+            elif not mod.link_matches(p, token, extent):
                 problems.append(f"link #{n} fingerprint MISMATCH: {name}")
             else:
                 names.append(name)

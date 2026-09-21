@@ -34,6 +34,59 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### Sealed: the law ledger is law (operator, 2026-09-21: "seal it")
+
+- `python law\law.py seal LAW_LEDGER.md`, run on his word: link #6, a DIRECT link by the
+  operator whose anchor carries `bytes:15509` -- the whole ledger as it stood, all five
+  entries. The chain proves whole at 6 links, head `07491469cd7d6d6c`; `status` reads "sealed
+  to byte 15509 of 15509".
+- Law now: SITTING LAWS 5 and 6 (6 without the hands-ledger half), the docs move with the
+  change, no edit without an entry, and the copy of CLAUDE.md's rules. Anything appended below
+  byte 15509 is draft until the next seal.
+- SPEC 4.4: SITTING LAW 5 OPEN -> MET, and the MET line's link count 4 -> 6 (it had read 4 since
+  LAW_003 made 5 on 2026-09-17). RUNBOOK's struck-half note and today's HANDOFF block say sealed.
+- `SITTING_LAWS_2.md` stays unsealed and untouched; its two laws are sealed in the ledger now,
+  and what becomes of the file is his call.
+
+### The law ledger: one law that grows, sealed by prefix, with the unhoused laws in it as drafts (operator, 2026-09-21: "build the appendable law ledger and reconcile the laws that are "unhoused"")
+
+His ask, earlier the same morning: "an appendable ledger that the hand can continue to iterate
+on as directed, that we can chain or seal when we would like".
+
+- **`law/LAW_LEDGER.md`, new** (LF, like every law file). It grows at the bottom only; its
+  header says how, and points at the five laws sealed in their own files.
+- **`law.py seal <law.md>`, new.** A DIRECT link by the operator whose anchor ends ` bytes:N`:
+  it binds the file's first N bytes, so the file can grow below them while a changed or cut
+  sealed byte is a MISMATCH. A later seal binds the longer prefix, and every earlier one still
+  holds its part. A link without `bytes:` -- all five on the chain -- binds its whole file, as
+  before. `status` prints "sealed to byte N of M". `--prove` goes from 9 strokes to 17; the
+  last shows a whole-file `direct` link refusing the first append, which is why the ledger
+  says never to `direct` it.
+- **The engine reads a seal the same way.** `lawgate.verify_chain` calls `law.py`'s own
+  `link_matches`, so the gate and `verify` cannot disagree about what a seal means.
+  `doctrine --check` lists a partly sealed ledger with how far its seal reaches. **Restart
+  required:** `manjuel/` moved.
+- **The unhoused laws, entered as drafts:** SITTING LAWS 5 and 6 from the unsealed
+  `SITTING_LAWS_2.md` (6 with its hands-ledger half struck, his ruling; the struck words are
+  quoted in the entry); the docs-move-with-the-change law (his "LAW 6" of 2026-09-10 -- the
+  number collides with ESTATE LAW 6, and the name is his to settle); "no edit without an
+  entry" from this file's head; and CLAUDE.md's RULE sections, copied. Each quoted law was
+  lifted from its source file by a script, not retyped. Nothing is sealed: that is his act,
+  `python law\law.py seal LAW_LEDGER.md`.
+- **Untouched:** `SITTING_LAWS_2.md` (what becomes of it is his call), CLAUDE.md, and every
+  sealed file. The real chain still proves whole: 5 links, head `1080f7a4d76b3745`.
+- **Index roots:** `law/LAW_003_THE_LOOP.md` (sealed 2026-09-17, never listed) and
+  `law/LAW_LEDGER.md`. They enter the index at its next build.
+- **Docs:** SPEC 4.4 (SITTING LAW 5's place is given; the line stays OPEN until he seals) and
+  4.6 (`--prove` 17/17); RUNBOOK (the struck half, and the doctrine check's reach); DESIGN
+  14.5; BUILDMAP regenerated; today's HANDOFF block.
+- **Proven on a mirror** (the tracked files, with no `.git`, `logs/`, `index/`, `worlds/` or
+  `.env`): strokes 2498/2498, smoke 65/65, standup dry 9/9, `law.py --prove` 17/17,
+  `buildmap --check` clean. The committed code gives the same 2498 on that mirror, stroke for
+  stroke, so the gap to the 2500 stamp is the mirror, not this change. And a one-off check on
+  a sealed copy of the real ledger, 8 of 8: sealed, appended, reported "sealed to byte 15509
+  of 15550", then an edit above the seal refused every run. His terminal is still the proof.
+
 ### `pre-strip-master` stays (operator, 2026-09-21: "keep it")
 
 His ruling on the one place left holding the name: the branch is kept, untouched, as the record

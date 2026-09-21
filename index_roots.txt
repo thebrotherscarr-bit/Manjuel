@@ -117,12 +117,16 @@ TESTING.md
 commands.md
 
 # THE LAW. The note above left listing it as the operator's call; he made it
-# the same day. Five FILES, not the folder: TEXT_SUFFIXES takes .jsonl and
+# the same day. FILES, not the folder: TEXT_SUFFIXES takes .jsonl and
 # .py, so declaring `law` would index chain.jsonl -- hundreds of hash lines --
 # and law.py as retrievable prose. The laws are documents; the chain is a
 # ledger, and it is proved by law.py --prove, not retrieved.
+# LAW_003 (sealed 2026-09-17) was missing from this list until 2026-09-21,
+# when LAW_LEDGER was opened beside it.
 law/ESTATE_LAWS.md
 law/LAW_001_FOUNDING.md
 law/LAW_002_THE_TWELVE.md
+law/LAW_003_THE_LOOP.md
+law/LAW_LEDGER.md
 law/SITTING_LAWS.md
 law/SITTING_LAWS_2.md

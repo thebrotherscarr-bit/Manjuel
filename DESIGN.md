@@ -830,6 +830,13 @@ mechanism today are fold-never-delete (1), originals read-only (2), testimony
 is never fact (5), the gate is final (6), bounded everything (7), one
 write-path (8), keys are silent (9), honest logs (10).
 
+**An appendable law (2026-09-21).** The operator asked for one place the law
+can grow: `law/LAW_LEDGER.md`. A link may bind a file's first N bytes rather
+than all of it (`law.py seal` writes `bytes:N` into the anchor), so the ledger
+takes new entries at the bottom while every sealed byte stays checked, by
+`verify` and by the law gate (§14.13) alike. What stands past the last seal is
+draft, and the doctrine check reports it as such.
+
 **The client shield** (`vectors.py`, `watch.py`, the readers) enforces the
 operator's ruling that client data is never indexed, never cross-referenced,
 never listed. Three tags, any one of which seals a file: a `vault/` path

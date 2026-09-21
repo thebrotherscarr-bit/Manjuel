@@ -221,7 +221,8 @@ are green. It reads TASKS.md and NEVER writes it — a hand does not add work to
 your list.
 
 `doctrine_check` — whether the docs still describe what the system performs
-(LAW 6): the law chain and any law drafted but unsealed; whether the skill
+(LAW 6): the law chain and any law drafted but unsealed (the appendable
+`law/LAW_LEDGER.md` with how far its seal reaches); whether the skill
 library agrees with the handlers behind it; whether every file holding the
 version says the same number; any suite tally left standing in a living doc;
 any backticked path that resolves to nothing. Every finding names its file and
@@ -550,7 +551,9 @@ and bought a line nobody read.
 The file itself STAYS on disk, unwritten -- LAW 1, nothing in the record is
 deleted. `law/SITTING_LAWS_2.md` still carries SITTING LAW 6, whose second
 half tells a hand to open a line that no longer exists; striking it is the
-operator's act, not a hand's.
+operator's act, not a hand's. He struck it 2026-09-21: SITTING LAW 6 stands
+in `law/LAW_LEDGER.md` without that half, sealed the same morning, and
+`SITTING_LAWS_2.md` is left as it stands.
 
 ---
 

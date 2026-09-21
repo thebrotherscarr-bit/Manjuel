@@ -722,6 +722,23 @@ branch, never `--all`.
 **The day is not planned in this block.** His next words were "let's talk about a plan for
 the day", and nothing is decided here.
 
+**THE LAW LEDGER, on his word: "build the appendable law ledger and reconcile the laws that
+are "unhoused"".** `law/LAW_LEDGER.md` is new: one law file that grows at the bottom.
+`python law\law.py seal LAW_LEDGER.md` binds its first N bytes (`bytes:N` in the link's
+anchor); an append below the seal still verifies, and a changed sealed byte refuses every
+run. Its five entries are drafts until he seals it: SITTING LAWS 5 and 6 (6's hands-ledger
+half struck, his ruling), the docs-move-with-the-change law, no-edit-without-an-entry, and
+CLAUDE.md's rules, copied. `SITTING_LAWS_2.md` is left as it stands. **RESTART REQUIRED**
+before the next sitting: `manjuel/lawgate.py` and `manjuel/doctrine.py` moved. The proofs on
+record are now older than that code; on a mirror, strokes 2498/2498 (the committed code gives
+the same 2498 there), smoke 65/65, standup dry 9/9, `law.py --prove` 17/17. His terminal is
+still the proof.
+
+**SEALED, on his word: "seal it".** Link #6, a DIRECT link whose anchor carries `bytes:15509`:
+all five entries of the ledger are law. The chain proves whole at 6 links, head
+`07491469cd7d6d6c`. SPEC 4.4's SITTING LAW 5 line is MET. `SITTING_LAWS_2.md` stays unsealed
+and untouched; its two laws are sealed in the ledger, and the file's fate is his call.
+
 ## HANDOFF FOR 2026-09-19 — read this before anything below it
 
 **Written at 00:05, minutes into the day, because the clock rolled mid-session and the boot

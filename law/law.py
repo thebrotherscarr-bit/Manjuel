@@ -4,6 +4,8 @@
 THE LAW COURT TOOL - the chained ledger of the amendable constitution.
 
     python law.py direct  <law.md> --note "..."     sovereign law (operator)
+    python law.py seal    <law.md> --note "..."     seal an appendable law as far
+                                                    as it is written (operator)
     python law.py counsel <writer> <law.md> --note  counsel (steward|neiro|jesster)
     python law.py rule    <law.md> [--cites HASH] --note   the court rules
     python law.py refuse  <law.md> [--cites HASH] --why  record a refusal
@@ -22,6 +24,14 @@ edited). Every link points at a standard .md law file in law/ and
 carries its sha256 fingerprint. Laws are files; the ledger binds them;
 nothing else may touch either. Standard library only. Nothing leaves this
 machine.
+
+AN APPENDABLE LAW (2026-09-21, the operator's word: "an appendable ledger
+that the hand can continue to iterate on as directed, that we can chain or
+seal when we would like"). `seal` binds a file's FIRST N BYTES, not the
+whole file: the anchor carries `bytes:N`. The file may grow below byte N;
+a changed byte above it, or a cut into it, is a MISMATCH like any other.
+law/LAW_LEDGER.md is sealed this way. `direct` on it would bind the whole
+file, and the first entry appended after would break the chain.
 """
 import hashlib
 import importlib.util
@@ -45,17 +55,21 @@ COUNSEL = ("steward", "neiro", "jesster")
 # A law name is a BARE basename ending in .md. No separators, no drives,
 # no whitespace - a link binds one file inside the library, nothing else.
 LAW_NAME_RE = re.compile(r"^[A-Za-z0-9._-]+\.md$")
-# The canonical pointer line every link's doc MUST open with:
+# The canonical pointer line every link's doc MUST open with. The optional
+# ` bytes:N` (group 5) is a seal over the first N bytes; without it the link
+# binds the whole file, which is every link laid before 2026-09-21.
 ANCHOR_RE = re.compile(
     r"^(COUNSEL|RULING|DIRECT|REFUSED) by ([A-Za-z0-9_-]+) -> "
-    r"(?:Archive/law/|law/)([A-Za-z0-9._-]+\.md) sha256:([0-9a-f]{64})$")
+    r"(?:Archive/law/|law/)([A-Za-z0-9._-]+\.md) sha256:([0-9a-f]{64})"
+    r"(?: bytes:([1-9][0-9]*))?$")
 # The pointer token a link doc must carry exactly once (either form).
 POINTER_RE = re.compile(r"-> (?:Archive/law/|law/)")
 
 DESCRIBE = ("THE LAW COURT TOOL - the amendable constitution as a link "
             "chain: counsel (steward/neiro/jesster) -> rulings (manjuel) -> "
             "direct law (operator). Links only, pointing at fingerprinted "
-            ".md laws in law/, on the proven Jesster pen.")
+            ".md laws in law/, on the proven Jesster pen. An appendable law "
+            "is sealed as far as it is written (seal), and grows below it.")
 
 
 def _pen():
@@ -74,6 +88,31 @@ def _fingerprint(path):
     return h.hexdigest()
 
 
+def _prefix_fingerprint(path, nbytes):
+    """The fingerprint of a file's first `nbytes`, or None when the file is
+    shorter than that -- a seal over bytes that are gone cannot hold."""
+    h = hashlib.sha256()
+    left = nbytes
+    with open(path, "rb") as f:
+        while left:
+            chunk = f.read(min(65536, left))
+            if not chunk:
+                return None
+            h.update(chunk)
+            left -= len(chunk)
+    return h.hexdigest()
+
+
+def link_matches(path, token, nbytes=None):
+    """Does the file still hold what its link bound? No bytes: -- every
+    byte of it. bytes:N -- its first N bytes; it may have grown below them.
+    Read by cmd_verify and by the engine's law gate, so the two walks
+    cannot disagree about what a seal means."""
+    if nbytes is None:
+        return _fingerprint(path) == token
+    return _prefix_fingerprint(path, int(nbytes)) == token
+
+
 def _law_path(name):
     if not LAW_NAME_RE.match(name or ""):
         raise SystemExit("refused: a law name is a bare basename ending in "
@@ -84,13 +123,28 @@ def _law_path(name):
     return p
 
 
-def _append(kind, writer, law_name, note, cites):
+def _append(kind, writer, law_name, note, cites, prefix=False):
     mod = _pen()
     os.makedirs(CHAIN_DIR, exist_ok=True)
     chain = mod.Chain(os.path.join(CHAIN_DIR, mod.CHAIN_NAME))
-    fp = _fingerprint(_law_path(law_name))
-    text = ("%s by %s -> law/%s sha256:%s\n%s"
-            % (kind, writer, law_name, fp, note))
+    p = _law_path(law_name)
+    extent = ""
+    if prefix:
+        # The length now, and the fingerprint of exactly that many bytes:
+        # a write racing the seal lands below it, never inside it.
+        size = os.path.getsize(p)
+        if not size:
+            raise SystemExit("law/%s is empty; there is nothing to seal"
+                             % law_name)
+        fp = _prefix_fingerprint(p, size)
+        if fp is None:
+            raise SystemExit("law/%s shrank while it was being sealed"
+                             % law_name)
+        extent = " bytes:%d" % size
+    else:
+        fp = _fingerprint(p)
+    text = ("%s by %s -> law/%s sha256:%s%s\n%s"
+            % (kind, writer, law_name, fp, extent, note))
     entry = chain.deposit(text, mod.OPEN, "%s:%s" % (kind, writer), writer,
                           cites=cites)
     return entry
@@ -159,6 +213,18 @@ def cmd_direct(argv):
     _print(e, "sovereign law laid")
 
 
+def cmd_seal(argv):
+    """Seal an APPENDABLE law as far as it is written: a DIRECT link by the
+    operator whose anchor carries bytes:N. Below byte N the file may grow;
+    above it nothing may change. Sealing again later lays a new link over
+    the longer prefix, and every earlier seal still holds its part."""
+    name = argv[0]
+    note = _flag(argv, "--note") or ""
+    e = _append("DIRECT", "operator", name, note, [COVENANT], prefix=True)
+    m = ANCHOR_RE.match(e["payload"]["doc"].splitlines()[0])
+    _print(e, "law/%s sealed to byte %s" % (name, m.group(5)))
+
+
 def cmd_refuse(argv):
     name = argv[0]
     cites = _cite_hash(argv) or (
@@ -177,7 +243,8 @@ def cmd_verify(argv):
     """Three walks: malformed lines, the pen's own integrity walk (prev
     continuity + hash recomputation, wraps included), then the law walk
     (genesis cites the covenant; every link opens with the canonical anchor
-    and its fingerprint matches the file on disk). Note text cannot forge
+    and its fingerprint matches the file on disk -- the whole file, or its
+    first N bytes when the anchor carries bytes:N). Note text cannot forge
     an audit: only the ANCHOR LINE names the law, and extra citation tokens
     anywhere in the doc are refused outright."""
     mod = _pen()
@@ -210,12 +277,12 @@ def cmd_verify(argv):
             problems.append("link #%d does not open with the canonical "
                             "anchor line" % n)
             continue
-        name, token = m.group(3), m.group(4)
+        name, token, extent = m.group(3), m.group(4), m.group(5)
         p = os.path.join(LIBRARY, name)
         if not os.path.isfile(p):
             problems.append("link #%d points at a missing law: %s"
                             % (n, name))
-        elif _fingerprint(p) != token:
+        elif not link_matches(p, token, extent):
             problems.append("link #%d fingerprint MISMATCH: %s"
                             % (n, name))
     if problems:
@@ -228,6 +295,20 @@ def cmd_verify(argv):
     return 0
 
 
+def seals():
+    """{law name: the furthest byte any link seals it to}, for the laws
+    sealed by prefix. A law bound whole is not listed; it has no extent."""
+    out = {}
+    for e in _load_chain()[0]:
+        if e.get("kind") != "link":
+            continue
+        doc = e["payload"].get("doc", "")
+        m = ANCHOR_RE.match(doc.splitlines()[0].strip() if doc else "")
+        if m and m.group(5):
+            out[m.group(3)] = max(out.get(m.group(3), 0), int(m.group(5)))
+    return out
+
+
 def cmd_status(argv):
     entries, bad = _load_chain()
     links = [e for e in entries if e.get("kind") == "link"]
@@ -237,10 +318,15 @@ def cmd_status(argv):
     if entries:
         print("head: %s" % entries[-1]["hash"])
     if os.path.isdir(LIBRARY):
+        extent = seals()
         for n in sorted(os.listdir(LIBRARY)):
             if n.endswith(".md"):
-                print("  %-28s %s" % (n, _fingerprint(
-                    os.path.join(LIBRARY, n))[:16]))
+                p = os.path.join(LIBRARY, n)
+                line = "  %-28s %s" % (n, _fingerprint(p)[:16])
+                if n in extent:
+                    line += "  sealed to byte %d of %d" % (
+                        extent[n], os.path.getsize(p))
+                print(line)
 
 
 def _arg_unused():  # kept off the hot path; CLI reads flags directly
@@ -258,7 +344,8 @@ def _flag(argv, name):
 
 def prove():
     """Hermetic: temp library, temp chain, the real pen read-only.
-    Ten strokes, including the reviewer's three attacks."""
+    Seventeen strokes: the reviewer's three attacks, and the appendable
+    law's seal (2026-09-21)."""
     tmp = tempfile.mkdtemp(prefix="law_prove_")
     lib = os.path.join(tmp, "law")
     os.makedirs(lib)
@@ -338,6 +425,38 @@ def prove():
             f.write("# LAW T-A\ntrial law a\n")
         ok("restored law walks again", cmd_verify([]) == 0)
 
+        # THE APPENDABLE LAW - a seal holds the first N bytes; the file
+        # grows below them, and nothing above them may change.
+        lg = os.path.join(lib, "LAW_T_LEDGER.md")
+        with open(lg, "wb") as f:
+            f.write(b"# LEDGER T\n1. the first entry\n")
+        cmd_seal(["LAW_T_LEDGER.md", "--note", "sealed as far as written"])
+        ok("a prefix seal verifies", cmd_verify([]) == 0)
+        with open(lg, "ab") as f:
+            f.write(b"2. a draft below the seal\n")
+        ok("an entry appended below the seal still verifies",
+           cmd_verify([]) == 0)
+        cmd_seal(["LAW_T_LEDGER.md", "--note", "sealed again, further"])
+        ok("a second, longer seal verifies", cmd_verify([]) == 0)
+        with open(lg, "rb") as f:
+            kept = f.read()
+        ok("status reads the furthest seal",
+           seals().get("LAW_T_LEDGER.md") == len(kept))
+        with open(lg, "wb") as f:
+            f.write(kept.replace(b"first", b"FIRST"))
+        ok("an edit above the seal refuses", cmd_verify([]) == 1)
+        with open(lg, "wb") as f:
+            f.write(kept[:12])
+        ok("a cut into the sealed bytes refuses", cmd_verify([]) == 1)
+        with open(lg, "wb") as f:
+            f.write(kept)
+        ok("the ledger put back walks again", cmd_verify([]) == 0)
+        cmd_direct(["LAW_T_LEDGER.md", "--note", "bound whole, wrongly"])
+        with open(lg, "ab") as f:
+            f.write(b"3. one more draft\n")
+        ok("a whole-file link cannot take an append (seal it, not direct)",
+           cmd_verify([]) == 1)
+
         failed = [n for n, c in strokes if not c]
         for n, c in strokes:
             print("  [%s]  %s" % ("PASS" if c else "FAIL", n))
@@ -372,6 +491,8 @@ def main():
         cmd_rule(rest)
     elif cmd == "direct":
         cmd_direct(rest)
+    elif cmd == "seal":
+        cmd_seal(rest)
     elif cmd == "refuse":
         cmd_refuse(rest)
     elif cmd == "verify":

@@ -118,7 +118,7 @@ this file (where each thing is) -> REFUSALS.md (what each guard refuses)
 | def | `RunContext.history_block` | 434-443 | Prior stage outputs, oldest first. |
 | def | `RunContext.slug` | 445-448 |  |
 
-### manjuel/doctrine.py — 636 lines
+### manjuel/doctrine.py — 651 lines
 
 *THE RECORD, AND WHETHER IT STILL AGREES WITH THE GROUND. Reads; never writes.*
 
@@ -130,16 +130,16 @@ this file (where each thing is) -> REFUSALS.md (what each guard refuses)
 | def | `dead_paths` | 114-135 | A living doc pointing at a file that is not there. |
 | def | `skills_axis` | 138-158 | Does the skill library agree with the code behind it? |
 | def | `versions` | 161-182 | pyproject and the package must say the same number. |
-| def | `laws` | 185-204 | The chain, and any law sitting in law/ that it does not seal. |
-| def | `daybook_last` | 209-222 | The DAYBOOK's newest entry heading, and whether it was closed. |
-| def | `handoff_today` | 225-231 | Is there a HANDOFF block for today, and what is the newest one? |
-| def | `unreleased` | 234-241 | The CHANGELOG entry headings that have landed since the last tag. |
-| def | `sittings` | 244-316 | The open sitting if there is one, and what idle engines have cost. |
-| def | `proofs` | 319-341 | The file-readable half of the release gate, and why the rest is absent. |
-| def | `open_tasks` | 344-367 | The lines of TASKS.md that are still on the table, as (mark, text). |
-| def | `doc_pass_report` | 406-520 | WHERE THIS ESTATE STANDS, AND WHAT IS ON THE TABLE. |
-| def | `doctrine_report` | 523-621 | DOES THE RECORD STILL DESCRIBE WHAT THE SYSTEM PERFORMS? |
-| def | `main` | 623-632 | Both reports, from the command line and from atlas. Reads; never writes. |
+| def | `laws` | 185-219 | The chain, and any law sitting in law/ that it does not seal. |
+| def | `daybook_last` | 224-237 | The DAYBOOK's newest entry heading, and whether it was closed. |
+| def | `handoff_today` | 240-246 | Is there a HANDOFF block for today, and what is the newest one? |
+| def | `unreleased` | 249-256 | The CHANGELOG entry headings that have landed since the last tag. |
+| def | `sittings` | 259-331 | The open sitting if there is one, and what idle engines have cost. |
+| def | `proofs` | 334-356 | The file-readable half of the release gate, and why the rest is absent. |
+| def | `open_tasks` | 359-382 | The lines of TASKS.md that are still on the table, as (mark, text). |
+| def | `doc_pass_report` | 421-535 | WHERE THIS ESTATE STANDS, AND WHAT IS ON THE TABLE. |
+| def | `doctrine_report` | 538-636 | DOES THE RECORD STILL DESCRIBE WHAT THE SYSTEM PERFORMS? |
+| def | `main` | 638-647 | Both reports, from the command line and from atlas. Reads; never writes. |
 
 ### manjuel/dotenv.py — 110 lines
 
@@ -258,20 +258,20 @@ this file (where each thing is) -> REFUSALS.md (what each guard refuses)
 | def | `decomposes_to_search` | 1114-1139 | The remainder-as-payload when the words are an ORDER to search the |
 | def | `wants_out` | 1149-1162 | An exit command wearing casual clothes. "exit bro" means exit. |
 
-### manjuel/lawgate.py — 326 lines
+### manjuel/lawgate.py — 329 lines
 
 *THE LAW GATE -- every run passes through the law before any seat sits.*
 
 | kind | name | lines | says |
 |---|---|---|---|
-| class | `Verdict` | 60-105 | What the gate found. `ok` False means the run must not proceed. |
-| def | `Verdict.note` | 69-75 |  |
-| def | `Verdict.block` | 77-105 | The block every seat is handed. Short on purpose: it rides on |
-| def | `_law_module` | 113-122 | law/law.py, loaded read-only from the ground. It is the operator's |
-| def | `verify_chain` | 125-179 | (ok, detail, law_names). ok=None means there is no ledger here. |
-| def | `check_objective` | 208-253 | (checks that ran, refusals). Every check runs; every hit is named. |
-| def | `laws_text` | 264-287 | The ten estate laws as sealed -- the numbered list under the LAST |
-| def | `run` | 297-326 | The whole gate for one run. Cheap: the chain walk is four files and a |
+| class | `Verdict` | 63-108 | What the gate found. `ok` False means the run must not proceed. |
+| def | `Verdict.note` | 72-78 |  |
+| def | `Verdict.block` | 80-108 | The block every seat is handed. Short on purpose: it rides on |
+| def | `_law_module` | 116-125 | law/law.py, loaded read-only from the ground. It is the operator's |
+| def | `verify_chain` | 128-182 | (ok, detail, law_names). ok=None means there is no ledger here. |
+| def | `check_objective` | 211-256 | (checks that ran, refusals). Every check runs; every hit is named. |
+| def | `laws_text` | 267-290 | The ten estate laws as sealed -- the numbered list under the LAST |
+| def | `run` | 300-329 | The whole gate for one run. Cheap: the chain walk is four files and a |
 
 ### manjuel/mathkit.py — 236 lines
 
@@ -822,7 +822,7 @@ this file (where each thing is) -> REFUSALS.md (what each guard refuses)
 | def | `GroundWatch.start` | 162-187 |  |
 | def | `GroundWatch.stop` | 189-195 |  |
 
-manjuel/: 29 files, 19875 lines.
+manjuel/: 29 files, 19893 lines.
 
 ## GUARDS — by the failure that earned them
 
@@ -896,10 +896,10 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 | line | in | marker |
 |---|---|---|
 | 88 | `stale_tallies` | HIS RULING, sitting 79, after he swept six of these by hand: "No doc now |
-| 255 | `sittings` | and then not using it. Sitting 74 held one thirty minutes for 2 runs, 82 |
-| 289 | `sittings` | row" and reported sitting 99 -- ABANDONED the previous day -- as open for |
-| 375 | `(module)` | They were skills for about an hour on 2026-09-10 and the cost landed |
-| 595 | `doctrine_report` | out.append("  His ruling, sitting 79: no doc names a suite tally, because " |
+| 270 | `sittings` | and then not using it. Sitting 74 held one thirty minutes for 2 runs, 82 |
+| 304 | `sittings` | row" and reported sitting 99 -- ABANDONED the previous day -- as open for |
+| 390 | `(module)` | They were skills for about an hour on 2026-09-10 and the cost landed |
+| 610 | `doctrine_report` | out.append("  His ruling, sitting 79: no doc names a suite tally, because " |
 
 ### manjuel/gitstate.py
 

@@ -189,12 +189,27 @@ def laws(ground: Path) -> tuple[str, list[str]]:
     inside the engine is measured unsafe here (2026-09-10, the boot gate that
     never returned). An unsealed law is not automatically a fault -- a law may
     be drafted before it is ruled -- so it is REPORTED, never failed.
+
+    AN APPENDABLE LAW IS SEALED BY PREFIX (`law.py seal`, 2026-09-21): its
+    link holds the first N bytes and the file may grow below them. What
+    stands past the furthest seal is draft, so the file is reported here
+    too, with how far the seal reaches.
     """
     from manjuel import lawgate
 
     ok, detail, sealed = lawgate.verify_chain(Path(ground))
-    unsealed = sorted(p.name for p in (Path(ground) / "law").glob("*.md")
-                      if p.name not in set(sealed))
+    try:
+        tool = lawgate._law_module(Path(ground))
+        reach = tool.seals() if tool else {}
+    except Exception:
+        reach = {}
+    unsealed = []
+    for p in sorted((Path(ground) / "law").glob("*.md"), key=lambda p: p.name):
+        size = p.stat().st_size
+        if p.name not in set(sealed):
+            unsealed.append(p.name)
+        elif reach.get(p.name, size) < size:
+            unsealed.append(f"{p.name} (sealed to byte {reach[p.name]} of {size})")
     if ok is None:
         state = f"the chain could not be read: {detail}"
     elif ok:
