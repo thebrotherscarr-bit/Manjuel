@@ -1764,3 +1764,30 @@ three versions. The door and the glass still run (pids 22844 and 24656). No sitt
 
 **Next session** — not decided by this hand. Waiting on his word: saving and sending this
 piece; the maker's piece 2 and piece 3 (BUILDPATH, "The maker"); and the wife test itself.
+UPDATED later the same day, the words above kept: the piece was saved and sent (`022989c`);
+then the glass got its lock, placed and restarted on his word the same afternoon; and his next
+words were "continue on to setting it up for the vibe-coding loop".
+
+**At close, the second time** — saved through the council as `022989c` (sitting 259, closed
+with its toll) and sent, on his word ("save it and send it through the dashboard"); core
+`main` and GitHub's `main` are both `022989c`. Written after the save; it rides with the next.
+
+**Then, talk and one piece** — the settings page reviewed and the system around it talked
+through, in words only. His words for three of its parts, quoted so they are not lost, and not
+yet in SPEC's words table (that waits on his go): hooks are "reminders, or keepers from one step
+to the next"; plugins are "for being able to call external tools"; connectors are "for being
+able to execute external apps or code or function. like browsing a page, reviewing the output of
+an app, watching a REPL run" -- all of it "friendly to someone that does not know how to code".
+Then the piece, in his words in order: "Simple login system for now, user/pin to start"; asked
+who may open the glass, "This PC only"; "I like this idea of multi-roles, all working under a
+single user"; and "Let's make the thing at least semi-secure and the continue on to setting it
+up for the vibe-coding loop." THE LOCK: the glass asks for a name and a PIN the first time and
+opens on a lock screen after; it answers 127.0.0.1 alone, its gate closed at every start.
+atlas's CHANGELOG ("The lock") has it whole; proved in scratch only -- `handlers` 23, `server`
+6, sixteen undos each reddening its own stroke, the real binary 14 of 14 over HTTP. Found on the
+way, named and not fixed: the key login beside the PIN opens a session for any key the door
+verifies, and the door, open to every program on this computer, will mint the first one. **Not
+live:** the build waits on his allowance to be placed; the glass running now is the old one.
+**Unsaved:** atlas's code and both repositories' record lines. No sitting is open. **Placed**,
+on his word ("place it and restart the glass"): the glass runs the new build on 127.0.0.1
+alone, gate on, and its Welcome screen waits for his name and PIN.

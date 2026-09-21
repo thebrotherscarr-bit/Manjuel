@@ -468,6 +468,13 @@ BUILDPATH, "The order it goes next".
                    uncalled (`ConfigureAuth` has no caller); the door's holds
                    are off without `--auth`; Ollama listens on every address
                    too
+      2026-09-21   THE GLASS'S HALF IS BUILT, on his word ("Simple login
+                   system for now, user/pin to start"; "This PC only"): one
+                   user, one PIN, the gate closed at every start, and the
+                   glass on 127.0.0.1 alone (atlas CHANGELOG, "The lock"),
+                   placed and running the same day on his word. The door's
+                   holds and its own gate, and Ollama, stand as written
+                   above
       DONE when    nothing on the network can call a writing tool through the
                    glass, and the holds are armed or he has ruled they stay
                    off

@@ -470,7 +470,10 @@ moved -> stop.
        because both 2026-09-14 courts cut Manjuel at the seconds the turn had
        left; then the prose faults SPEC 4.7 still holds open.
     5  THE REACH (atlas): the glass's address and its auth gate, the door's
-       holds. His decision, then a piece.
+       holds. His decision, then a piece. THE GLASS'S HALF WAS BUILT
+       2026-09-21 on his word -- one user, one PIN, this PC only (atlas
+       CHANGELOG, "The lock"), placed and running the same day. The door's
+       holds and its own gate are still his decision.
     6  THE LOOP: the standup and the court as flows, fired from the glass,
        one run measured against the last.
     7  THE GLASS AS THE FRONT DOOR: atlas's H3 -> H7, governed by

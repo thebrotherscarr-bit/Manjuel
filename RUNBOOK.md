@@ -118,6 +118,12 @@ to the door at `127.0.0.1:8090`.
 
 **Open it.** `http://127.0.0.1:8091`
 
+The first time, it asks for your name and a PIN of 4 to 8 numbers; after that
+it opens on a lock screen, and the sidebar's Lock button locks it again. It
+answers this computer only (127.0.0.1) and keeps its door shut at every start
+-- since 2026-09-21; before that it listened on every address with no gate at
+all. The PIN is never stored, only a hash of it in `atlas\webapp\data\user.json`.
+
 **Stop them.** They are servers; they run until stopped. Nothing is lost --
 the engine already exits with every sitting, and both processes keep no state
 of their own.
@@ -316,6 +322,12 @@ downloaded), `MANJUEL_VRAM_GB`, `MANJUEL_KEEP_ALIVE`, `MANJUEL_SEAT_TIMEOUT`,
 
     "mcp unreachable"
         The door is not running, or not on 8090. Check `atlas\line\mcp.log`.
+
+    the glass is locked and the PIN is forgotten
+        Delete `atlas\webapp\data\user.json` and reload the page: it asks for
+        a name and a new PIN. Nothing else is lost -- the record lives
+        elsewhere. "Too many tries" is five wrong PINs in a row; the lock
+        opens again after a minute, and the screen counts it down.
 
     the rack is unreachable
         `ollama serve`. The boot report's RACK block says so and the rest of

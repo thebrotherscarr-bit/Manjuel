@@ -775,6 +775,35 @@ page and a project list on the glass) and piece 3 (the page run in a windowless 
 errors back to the Coder); then the wife test. **Unsaved:** all of this piece sits on top of
 `bf14ad1`; saving and sending it is his word. No sitting is open.
 
+**SAVED AND SENT, on his word ("save it and send it through the dashboard"):** through the
+council as `022989c` (sitting 259, 13:52-13:57, closed with its toll); the commit's turn and
+the push's turn are both in `logs/`, and GitHub's `main` is `022989c`. The push was the
+council's bare `git push`, which sends `main` alone -- no push setting or refspec is configured,
+checked before it ran. This line is written after the save and rides with the next one.
+
+**THEN THE LOCK, on his word ("Simple login system for now, user/pin to start"; asked who may
+open the glass, "This PC only"; then "make the thing at least semi-secure").** The glass asks
+the person at this computer for a name and a PIN the first time, and opens on a lock screen
+after that; it listens on 127.0.0.1 alone, and its gate is closed at every start -- until
+today it listened on every address and its gate had never once been switched on. A PIN session
+is the operator's: it sees and names every world. atlas's CHANGELOG ("The lock") has the whole
+piece; this ground's CHANGELOG, RUNBOOK, SPEC 8.2, BUILDPATH and README carry their lines.
+Proved in the hand's scratch only: `handlers` 23 and `server` 6 green, sixteen undos each
+reddening its own stroke, the real binary 14 of 14 over HTTP on a port of its own. **NOT LIVE
+YET:** the new build waits in the hand's scratch (sha256 62b7dbb1a5a7b9a0), and placing it over
+`atlas\webapp\atlas-webapp.exe` and restarting the glass is his allowance; the glass running
+now (pid 24656) is the old build, gate open. After the swap his Dashboard tab asks for a name
+and a PIN, which he types himself. Forgot the PIN: delete `atlas\webapp\data\user.json` and
+reload. **Unsaved:** atlas's code and both repositories' record lines; saving and sending them
+is his word. **Open, his:** the door's own gate and its holds (THE REACH's other half); the key
+login beside the PIN; the roles under the one user; and the vibe-coding loop, which he named
+next. No sitting is open.
+
+**PLACED, on his word ("place it and restart the glass"):** the old glass (pid 24656) stopped by
+pid, the build copied in and hashing as built, the glass restarted as pid 7160 on 127.0.0.1:8091
+alone, gate on, nobody set up yet. His Dashboard tab opens on the Welcome screen; the name and
+the PIN are his to type. The door (pid 22844) was not touched.
+
 ## HANDOFF FOR 2026-09-19 — read this before anything below it
 
 **Written at 00:05, minutes into the day, because the clock rolled mid-session and the boot

@@ -34,6 +34,42 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The glass takes a PIN: one user, this computer only (operator, 2026-09-21: "Simple login system for now, user/pin to start")
+
+His words after it, in order: asked who may open the glass, *"This PC only"*; *"I like this
+idea of multi-roles, all working under a single user"*; and *"Let's make the thing at least
+semi-secure and the continue on to setting it up for the vibe-coding loop."* The code is
+atlas's, and `atlas/CHANGELOG.md` carries the whole entry ("The lock"). Nothing under
+`manjuel/` moved, so the engine owes no restart. **The glass does:** its new build waits in
+the hand's scratch, and placing it and restarting the glass is his allowance. No sitting was
+open.
+
+- **What a person meets.** The first time the glass opens it asks for a name and a PIN of 4
+  to 8 digits; after that it opens on a lock screen, and the sidebar's Lock button locks it
+  again. The PIN is never stored (PBKDF2-SHA256, 600,000 rounds, in
+  `atlas\webapp\data\user.json`); five wrong PINs close it for a minute; setup is taken only
+  from this computer, and only once. The session a PIN opens is the operator's: it sees and
+  names every world, as the glass always has. Forgot the PIN: delete that file and reload.
+- **And the glass answers this computer only.** It listened on every address the machine
+  has, with its gate never once switched on (`ConfigureAuth` had no caller). It listens on
+  127.0.0.1 now, and the gate is closed at every start.
+- **Proved in the hand's scratch, never on his glass:** atlas's Go strokes `db` 13,
+  `handlers` 15 -> 23, `server` 4 -> 6, `gofmt` and `go vet` clean; sixteen undos, each
+  reddening its own stroke; the real binary on a port of its own, 14 of 14 over HTTP; and
+  the e2e prover's S9 now proves that a locked glass refuses.
+- **Docs here:** RUNBOOK ("Open it.", and a forgotten PIN under "When starting goes
+  wrong"), SPEC 8.2 THE REACH and BUILDPATH's order (each a dated line: the glass's half is
+  built), README's dashboard paragraph, today's HANDOFF block and DAYBOOK Session 12 --
+  which also carry the two record lines written after `022989c` was sent. TASKS.md
+  untouched.
+- **Named, not fixed** (atlas's entry has each): the door still answers any program on this
+  computer with no key; the key login still stands beside the PIN; the roles under the one
+  user are the next piece.
+- **Placed and restarted the same day, on his word ("place it and restart the glass"):** the
+  build hashes in place as built, the glass answers 127.0.0.1:8091 alone with its gate on, and
+  his Dashboard tab opens on the Welcome screen; the name and the PIN are his. The door was not
+  touched.
+
 ### The maker, piece 1: "make me a snake game" is made, versioned and reported by the engine (operator, 2026-09-21: "projects folder in Research is fine, build it")
 
 Why: sitting 257 put his own test -- "Make me a simple snake game I can play." -- through the

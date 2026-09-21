@@ -37,8 +37,10 @@ tools on `:8090`, and a web app on `:8091` -- and the browser is where the
 whole loop lives: boot an engine, type an objective, watch the seats run,
 commit and push through the council, close the sitting. Nothing opens a
 sitting behind you, and every act goes through the law gate rather than
-around it. **RUNBOOK.md, "Starting the system", is how to build and start
-both** -- every command in it was run before it was written.
+around it. The web app answers this computer only and opens with a PIN: the
+first time, it asks for your name and one. **RUNBOOK.md, "Starting the
+system", is how to build and start both** -- every command in it was run
+before it was written.
 
 atlas is a SEPARATE repository and must be cloned into this ground as
 `atlas`; cloning this repo alone gives you the engine and no dashboard.
