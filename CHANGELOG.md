@@ -34,7 +34,26 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
-### The engine survives death: a hang-up heard at once, every exit closing the sitting, and a dead sitting that no longer holds its world (operator, 2026-09-22: "1. Survives crashes")
+### The handoff: running this without a hand at the front (operator, 2026-09-22: "a full handoff from claude-steward as the front end agent within 24 hours", and "5. The handoff document")
+
+Why: the day's ask. The system has been driven by an agent, and he wants it his -- so what a hand
+knows has to be on the disk instead. Documents only; no code moved, nothing to restart.
+
+- **`HANDOFF.md`:** a new section under today's block, **THE HANDOFF -- running this without a
+  hand at the front**. What is running right now and by which pid (including the `atlas-mcp.exe`
+  from `Desktop\Archive` that is NOT ours); the day in four acts from the Dashboard; **what only
+  he can do** -- the proofs on his own terminal, a version bump and its mark, placing a binary,
+  the wall and the PIN; what a hand owes him, in the shape CLAUDE.md makes; where the record is;
+  what the review of the same day leaves open, named there and NOT added to TASKS.md, which is
+  his; and the traps that have actually bitten.
+- **`RUNBOOK.md`:** "Stop them" no longer says `Get-Process atlas-mcp,atlas-webapp |
+  Stop-Process`. That line would also stop the Archive's door, which has run beside ours since
+  2026-09-21 and is outside this ground: it asks which pid is which, by path, and stops the one
+  he means. It also says what a restart costs -- the glass keeps its sessions, the door holds
+  none.
+
+Nothing else changed. The open items above are the pieces he has not ordered yet: the wire
+(piece 3) and code safety (piece 4), the glass's authorisation, and a backup of the record.
 
 Why: the handoff's first piece, from the review of 2026-09-22, checked in the code. Three ways a
 sitting stood open with nothing behind it, and one way its world stayed locked after:

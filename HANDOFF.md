@@ -762,6 +762,72 @@ whole. Strokes +6 in `internal/flow`, +2 in `internal/tools`; seven reversals, e
 `line` package green but the six scratch-path `git_tag` strokes. **RESTART REQUIRED, THE DOOR:**
 the new build waits in the hand's scratch (sha256 4430227a4544eb3e). The core was not touched.
 
+**PLACED, SAVED AND SENT** ("Place the door"; "Both repositories"). The door runs as **pid 26620**
+with piece 2 in it. Saved through the council in sitting 264 (12:47-12:51, four runs, tolled):
+core `1c8abc4` and atlas `9306a35`, `main` alone in each, both level with GitHub.
+
+---
+
+## THE HANDOFF — running this without a hand at the front
+
+His word, 2026-09-22: *"I am wanting a full handoff from claude-steward as the front end agent
+within 24 hours."* This is that handoff. It is written for HIM, and for any hand that comes after.
+
+**WHAT IS RUNNING RIGHT NOW.** Two servers, both on 127.0.0.1 alone, both started from `atlas\`:
+
+    the door    atlas-mcp.exe, pid 26620, :8090 -- 82 tools, the only thing that raises an
+                engine, and the only thing that reaches this ground's git
+    the glass   atlas-webapp.exe, pid 24548, :8091 -- the Dashboard, behind your PIN
+    NOT YOURS   atlas-mcp.exe, pid 23164, from Desktop\Archive. Outside this ground. Leave it
+                alone, and never stop a door by NAME (RUNBOOK, "Stop them")
+
+An engine is not a server: the Dashboard's Boot raises one, Close the sitting ends it, and
+thirty idle minutes ends it unasked.
+
+**THE DAY, FOUR ACTS, ALL FROM THE DASHBOARD.** Boot an engine (the button on the card, not the
+sidebar) · type what you want and Run · save with `git commit: "what this is"` then `git push`
+(add `in atlas` for the other repository) · Close the sitting, which pays the toll. Everything
+you type is a turn in the record; the commit and the push go THROUGH the council, so the law
+gate stamps them.
+
+**WHAT ONLY YOU CAN DO.** These are yours by law, not by habit:
+
+    the proofs        `python tests/test_manjuel.py` and `tests/smoke_cli.py` on YOUR terminal.
+                      A hand proves on a mirror copy, and a mirror is not the proof. Yours last
+                      ran 2026-09-18 (2500/65, standup 9/9): the release gate refuses a tag
+                      until you run them again
+    a version         `.\version.ps1 set <n>` in atlas moves every stamp (it moves Cargo.lock
+                      too since today). Then the Version control panel cuts the mark and sends
+                      it; the release workflow proves and builds it and leaves a DRAFT for you
+    a new binary      a hand builds and proves it in scratch and asks; placing it and
+                      restarting is your allowance
+    the wall          `MANJUEL_GIT_REMOTE` in `.env`, and the PIN. Neither is ever a hand's
+
+**WHAT A HAND OWES YOU** (CLAUDE.md is the law; this is the shape it makes): read the rules and
+every law before acting · read what it touches in full · build only the piece you named · prove
+it on a mirror and by reversal (switch the fix off; the stroke must go red) · one CHANGELOG
+entry and the doc lines that piece changed · say "restart required" when `manjuel/` or the
+door moved · then stop and ask.
+
+**WHERE THE RECORD IS.** CHANGELOG.md (this ground) and atlas/CHANGELOG.md carry every change
+with its proof; HANDOFF.md carries the day; DAYBOOK.md carries what a session was FOR;
+SEAT_LOG.md carries the tolls; `logs/` carries every turn's transcript; `sessions/sessions.jsonl`
+carries every sitting. Nothing here is written from memory.
+
+**WHAT IS OPEN, from the review of 2026-09-22** (named here, not added to TASKS.md, which is
+yours): piece 3, answers staying in step on the wire -- a cancel landing as a turn ends can still
+end the engine, which now closes its sitting on the way out; piece 4, code safety -- `write_file`
+skips the check the Coder's files get, `run_python` is not a jail, and `read_plan`, `git_diff`
+and the engine's own `/git diff` can still print a file git never saw, `.env` included; the
+glass and the door's authorisation, which you set aside for now; and the record having no
+backup -- it exists once, on one disk, and the trace ledger is 301 MB with no rotation.
+
+**TRAPS THAT HAVE ACTUALLY BITTEN.** The door's own notes go to `atlas\line\mcp.err.log`, not
+`mcp.log` (which is its empty stdout) · the glass keeps your session across its own restart, and
+the door holds none · a flow's gate needs an engine open when you answer it (it now refuses
+rather than burning the run) · `git_cycle` refuses to commit over a STALE proof, and the boot
+report says STALE by design when the code is newer than the last suite run.
+
 ## HANDOFF FOR 2026-09-21 — read this before anything below it
 
 **Where the ground stands, Monday morning.** core `main@8cffd98` and atlas `main@186608f`,

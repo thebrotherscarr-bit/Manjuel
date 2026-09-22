@@ -128,7 +128,19 @@ all. The PIN is never stored, only a hash of it in `atlas\webapp\data\user.json`
 the engine already exits with every sitting, and both processes keep no state
 of their own.
 
-    Get-Process atlas-mcp,atlas-webapp | Stop-Process
+**BY PID AND PATH, NEVER BY NAME (2026-09-22).** A second `atlas-mcp.exe` has
+been running on this machine since 2026-09-21 from `Desktop\Archive` -- outside
+this ground and nothing to do with it -- and `Get-Process atlas-mcp` names it
+too, so the line this page used to carry would have stopped somebody else's
+door along with yours. Ask which is which, then stop the one you mean:
+
+    Get-CimInstance Win32_Process -Filter "Name='atlas-mcp.exe' OR Name='atlas-webapp.exe'" |
+        Select-Object ProcessId, ExecutablePath
+    Stop-Process -Id <the pid whose path is under Desktop\Research>
+
+The glass keeps its sessions across a restart, so stopping and starting it does
+not sign you out; the door holds none, and a restart of it ends nothing but
+itself -- close the sitting first if one is open.
 
 ## Running it from the dashboard
 
