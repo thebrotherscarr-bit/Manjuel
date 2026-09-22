@@ -2046,11 +2046,25 @@ def _write_file(env: SkillExecutionEnv, args: dict) -> str:
     `edit_file` would have refused the same bytes; the two doors into the same
     workspace now hold the same line.
 
-    ONLY `.py`, and only PARSING -- the same bound edit_file draws. This is not
-    the structural gate the coder's own landing runs, and prose files are
-    nobody's syntax to judge.
+    AND THE SAME STRUCTURAL GATE THE CODER'S LANDING RUNS (2026-09-22). This
+    used to say "ONLY .py, and only PARSING ... this is not the structural
+    gate the coder's own landing runs", and that sentence was the hole: TWO
+    doors write model-written Python into this workspace, and they did not
+    hold the same line. `land_code` puts the coder's file through
+    `inspect_code` -- which refuses a network import (RULE 4), `eval`/`exec`/
+    `__import__`, a dynamic `importlib`, and `shell=True` -- while a seat that
+    called `write_file` directly, which every seat may, skipped all of it and
+    landed the same bytes. A gate one door enforces and the other does not is
+    not a gate; it is a preference.
+
+    ONE RULE, TWO DOORS, and the parse check stays where it is because its
+    message is the earned one: `inspect_code` names the line NUMBER, and the
+    leaked-markup fault above is recognised by the line's TEXT. Prose files are
+    still nobody's syntax to judge -- `inspect_code` fails open by name on
+    anything that is not `.py`, which is the same bound this door already drew.
     """
     import ast as _ast
+    from .pipeline import inspect_code as _inspect_code
 
     filename = args.get("filepath", "").strip()
     if not filename:
@@ -2068,6 +2082,11 @@ def _write_file(env: SkillExecutionEnv, args: dict) -> str:
                     f"WRITTEN. Send the code alone: a stray closing tag or a "
                     f"flag block from your own answer counts as source here, "
                     f"and it is the usual cause.")
+    ok, why = _inspect_code(path.name, body)
+    if not ok:
+        return (f"Refused: {path.name} {why}. NOTHING WAS WRITTEN. This is the "
+                f"same check the coder's own landing makes, and it reads what "
+                f"the SOURCE says -- not what the code would do if it ran.")
     try:
         path.write_text(body, encoding="utf-8", newline="\r\n")
     except Exception as exc:
@@ -3887,6 +3906,146 @@ def _edit_file(env: SkillExecutionEnv, args: dict) -> str:
 _RUN_ENV_KEEP = ("PATH", "SYSTEMROOT", "WINDIR", "COMSPEC", "TEMP", "TMP",
                  "HOME", "USERPROFILE", "LANG", "LC_ALL", "PYTHONIOENCODING")
 
+# THE CHILD'S WALL (2026-09-22, on his word: "sandbox the python").
+#
+# WHAT WAS TRUE BEFORE TODAY, in this skill's own docstring: "THE JAIL IS THE
+# FILESYSTEM, NOT THE NETWORK. A child can open a socket; nothing here stops
+# it." Half of that was optimistic. The jail was the filesystem only for the
+# path the SKILL resolves -- once the child was running it was an ordinary
+# Python process with the ordinary reach of one: it could read `.env` and every
+# other file in this ground, write anywhere the operator can write, open a
+# socket, and start a shell. A model writes the file this runs.
+#
+# SO THE WALL GOES WHERE THE CHILD IS, and it is the same wall the skill
+# already draws: THE WORKSPACE IS THE WHOLE WORLD. Reads and writes stay inside
+# it, the interpreter may still read its own library because otherwise it is
+# not a Python, and four reaches are refused by name -- the network (RULE 4),
+# starting another process, loading native code, and touching a path outside
+# the wall by any of the os/shutil verbs that take one.
+#
+# WHY A PEP 578 AUDIT HOOK. It is stdlib (RULE 4: nothing is downloaded), it
+# sits BELOW the names a script can rebind -- `os.remove = None` does not move
+# it -- and it is installed by THIS source, passed on the command line, which
+# nothing in the workspace can edit. The alternative shapes were all worse
+# here: a container is not local-only and not installed, and a second user
+# account is the operator's machine to administer, not ours.
+#
+# HONEST LIMITS, written down rather than discovered later:
+#
+#   AN AUDIT HOOK IS NOT A KERNEL SANDBOX. CPython's own documentation says
+#   so. This shuts every route named above; it does not prove no route exists.
+#   A C extension already on this machine, or a CPython bug, is outside what
+#   any Python-level check can see. Narrowed, not sealed -- the same words
+#   `inspect_code` uses about its own import walk, and for the same reason.
+#
+#   A SYMLINK IS NOT FOLLOWED. Paths are judged with abspath, not realpath, so
+#   a link INSIDE the workspace pointing out of it would be read. The child
+#   cannot make one (`os.symlink` is refused), so this is about a link the
+#   operator put there himself. realpath was measured too risky to call from
+#   inside the hook: on Windows it opens a handle, and a hook that opens files
+#   while judging an open is a hook that can recurse.
+#
+#   EXISTENCE IS NOT SECRECY. `os.stat` is not refused -- a script may still
+#   learn that a path outside the wall exists. Reading its BYTES is what is
+#   shut, and that is the line RULE 7 draws.
+#
+#   IT IS THE CHILD'S OWN WALL, not a second copy of the skill's. The path
+#   this runs is still reduced to the workspace by `safe_path` before anything
+#   starts; this is what holds once it IS running.
+_PY_JAIL = r'''
+import os
+import runpy
+import sys
+
+_WALL = os.path.normcase(os.path.abspath(sys.argv[1]))
+_TARGET = os.path.abspath(sys.argv[2])
+# Where the INTERPRETER lives. It has to read its own library to be a Python
+# at all, so these are READABLE and none of them is writable.
+_LIB = tuple({os.path.normcase(os.path.abspath(p)) for p in
+              (sys.base_prefix, sys.prefix, sys.base_exec_prefix,
+               sys.exec_prefix) + tuple(sys.path) if p})
+
+_NET = ('socket.', 'urllib.', 'ftplib.', 'smtplib.', 'imaplib.', 'poplib.',
+        'nntplib.', 'telnetlib.')
+_SPAWN = ('os.system', 'os.exec', 'os.spawn', 'os.posix_spawn', 'os.fork',
+          'os.startfile', 'subprocess.Popen', 'pty.spawn')
+_PATHY = ('os.remove', 'os.rmdir', 'os.mkdir', 'os.rename', 'os.replace',
+          'os.link', 'os.symlink', 'os.chmod', 'os.chown', 'os.truncate',
+          'os.utime', 'shutil.copyfile', 'shutil.copymode', 'shutil.copystat',
+          'shutil.move', 'shutil.rmtree', 'shutil.unpack_archive')
+_LISTY = ('os.listdir', 'os.scandir', 'glob.glob')
+
+
+def _under(path, root):
+    if isinstance(path, bytes):
+        try:
+            path = path.decode('utf-8')
+        except UnicodeDecodeError:
+            return False
+    try:
+        here = os.path.normcase(os.path.abspath(path))
+    except (TypeError, ValueError):
+        return False
+    return here == root or here.startswith(root + os.sep)
+
+
+def _readable(path):
+    return _under(path, _WALL) or any(_under(path, r) for r in _LIB)
+
+
+def _no(what, why):
+    raise PermissionError(
+        'run_python jail: ' + what + ' -- ' + why + '. The workspace is the '
+        'whole world a run_python child may touch.')
+
+
+def _hook(event, args):
+    if event == 'open':
+        path, mode = args[0], args[1]
+        if not isinstance(path, (str, bytes, os.PathLike)):
+            return          # a live descriptor; the open that made it was judged
+        if _under(path, _WALL):
+            return
+        writing = any(c in (mode or '') for c in 'wax+')
+        if not writing and _readable(path):
+            return
+        _no(('writing ' if writing else 'reading ') + str(path),
+            'that is outside the workspace')
+    elif event in _LISTY:
+        p = args[0] if args else None
+        if isinstance(p, (str, bytes, os.PathLike)) and not _readable(p):
+            _no('listing ' + str(p), 'that is outside the workspace')
+    elif event in _PATHY:
+        for a in args:
+            if isinstance(a, (str, bytes, os.PathLike)) and not _under(a, _WALL):
+                _no(event + ' on ' + str(a), 'that is outside the workspace')
+    elif event.startswith(_NET):
+        _no(event, 'the estate is local (RULE 4) and a child opens no connection')
+    elif event.startswith(_SPAWN):
+        _no(event, 'run_python runs ONE file and starts no other process')
+    elif event == 'import':
+        # AT THE IMPORT, NOT AT THE CALL, and that is measured rather than
+        # chosen: on Windows `import ctypes` itself dlopens kernel32 to reach
+        # GetLastError, so refusing the ctypes.* events made the IMPORT die --
+        # and die as `AttributeError: kernel32`, because LibraryLoader turns
+        # the failure into one. A refusal nobody can read is not a refusal.
+        # Refusing the module by name is the same wall with a legible door.
+        if str(args[0] if args else '').split('.')[0] in ('ctypes', '_ctypes'):
+            _no('import ' + str(args[0]),
+                'native code steps around every check above it')
+    elif event.startswith('ctypes.'):
+        _no(event, 'native code steps around every check above it')
+
+
+sys.addaudithook(_hook)
+sys.argv = [_TARGET]
+runpy.run_path(_TARGET, run_name='__main__')
+'''
+
+# The mark the child's wall leaves in stderr, so the skill can lead with the
+# refusal instead of burying it under the traceback that carries it.
+JAIL_MARK = "run_python jail:"
+
 
 @skill("run_python")
 def _run_python(env: SkillExecutionEnv, args: dict) -> str:
@@ -3899,11 +4058,11 @@ def _run_python(env: SkillExecutionEnv, args: dict) -> str:
     LANDS, and a skill that offered a shell would be the engine doing what it
     forbids its own seats.
 
-    HONEST LIMITS, named here rather than found later:
-
-      THE JAIL IS THE FILESYSTEM, NOT THE NETWORK. A child can open a socket;
-      nothing here stops it. RULE 4 keeps the ESTATE local by refusing remote
-      dependencies, and it is not a sandbox.
+    AND THE CHILD RUNS INSIDE ITS OWN WALL (2026-09-22). The workspace is the
+    whole world it may touch: reads and writes stay inside it, the network is
+    refused by name (RULE 4), it starts no other process and loads no native
+    code. `_PY_JAIL` above carries that wall and the honest limits on it --
+    read them before trusting this with anything.
 
       PYTHON CANNOT KILL A THREAD BUT IT CAN KILL A CHILD. Unlike a hung
       handler, this bound is real: the process is terminated at the deadline
@@ -3930,7 +4089,13 @@ def _run_python(env: SkillExecutionEnv, args: dict) -> str:
                  if k.upper() in _RUN_ENV_KEEP}
     child_env["PYTHONIOENCODING"] = "utf-8"
     try:
-        p = _sp.run([sys.executable, str(path)],
+        # -B: no .pyc is written, so the jail never has to reason about the
+        # interpreter caching bytecode for its OWN library outside the wall.
+        # The wall and the file are ARGUMENTS to the jail, not part of it:
+        # the source below is this module's, and nothing in the workspace can
+        # reach it.
+        p = _sp.run([sys.executable, "-B", "-c", _PY_JAIL,
+                     str(Path(env.workspace).resolve()), str(path)],
                     cwd=str(path.parent),
                     stdin=_sp.DEVNULL,
                     stdout=_sp.PIPE, stderr=_sp.PIPE,
@@ -3947,7 +4112,16 @@ def _run_python(env: SkillExecutionEnv, args: dict) -> str:
 
     out = p.stdout.decode("utf-8", "replace")
     err = p.stderr.decode("utf-8", "replace")
-    verdict = "RAN" if p.returncode == 0 else f"FAILED (exit {p.returncode})"
+    # A REFUSAL NAMES THE AUTHORITY THAT MADE IT. The wall kills the child by
+    # raising, so without this the verdict is a bare `FAILED (exit 1)` and the
+    # reason sits at the bottom of a traceback -- which is where a seat stops
+    # reading, and then invents why.
+    if p.returncode != 0 and JAIL_MARK in err:
+        verdict = "STOPPED BY THE JAIL"
+    elif p.returncode == 0:
+        verdict = "RAN"
+    else:
+        verdict = f"FAILED (exit {p.returncode})"
     parts = [f"{verdict}: {path.name}"]
     if out.strip():
         parts.append("--- stdout ---\n" + out[:4000].rstrip())

@@ -12131,6 +12131,141 @@ def test_a_run_is_bounded_jailed_and_blind_to_the_keys(reg, lib, book):
     check("and what it HAD said is still reported", "starting" in out, out[:160])
 
 
+def test_both_doors_into_the_workspace_hold_the_same_line(reg, lib, book):
+    """`write_file` now makes the same structural check `land_code` does.
+
+    TWO DOORS WRITE MODEL-WRITTEN PYTHON INTO THIS WORKSPACE and until
+    2026-09-22 they did not hold the same line. `land_code` puts the coder's
+    emission through `inspect_code` -- which refuses a network import (RULE 4),
+    `eval`/`exec`/`__import__`, a dynamic `importlib`, and `shell=True` -- and
+    `write_file`, which EVERY seat may call by name, checked only that the
+    bytes parsed. The same file refused at one door landed at the other. A
+    gate one door enforces and the other does not is a preference, not a gate.
+    """
+    g = Path(tempfile.mkdtemp())
+    env = env_for(g, reg, Stub())
+    ws = g / "agent_workspace"
+
+    def write(name, src):
+        return lib.execute("write_file", {"filepath": name, "content": src}, env)
+
+    for name, src, why in (
+            ("net.py", "import socket\nprint(socket)\n", "RULE 4"),
+            ("net2.py", "from urllib import request\n", "RULE 4"),
+            ("dyn.py", "eval('1+1')\n", "executes a string as code"),
+            ("dyn2.py", "exec('x=1')\n", "executes a string as code"),
+            ("imp.py", "import importlib\n", "runtime"),
+            ("sh.py", "import subprocess\n"
+                      "subprocess.run('dir', shell=True)\n", "shell")):
+        out = write(name, src)
+        check(f"write_file refuses {name}: {why}",
+              out.startswith("Refused"), out[:120])
+        check(f"and NOTHING was written for {name}",
+              not (ws / name).exists(), out[:80])
+
+    # AND THE WAYS THAT MUST NOT FIRE. A gate that takes the door with it is
+    # not a fix: prose is nobody's syntax to judge, and ordinary code lands.
+    out = write("notes.md", "import socket is a phrase in this sentence.\n")
+    check("prose is not Python and is still written",
+          out.startswith("Saved") and (ws / "notes.md").exists(), out[:80])
+    out = write("calc.py", "import json\nprint(json.dumps(sum(range(10))))\n")
+    check("ordinary Python still lands",
+          out.startswith("Saved") and (ws / "calc.py").exists(), out[:80])
+    # The earned message survives: the leaked-markup fault is recognised by
+    # the LINE, which inspect_code's line NUMBER cannot say.
+    out = write("leak.py", "x = 1\n</parameter>\n<flags>technical</flags>\n")
+    check("and a leaked markup block is still named by its own line",
+          out.startswith("Refused") and "The line:" in out, out[:140])
+
+
+def test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book):
+    """"sandbox the python" (the operator, 2026-09-22).
+
+    WHAT WAS TRUE BEFORE. The skill jailed the PATH it resolves and nothing
+    else: once the child was running it was an ordinary Python process with
+    the ordinary reach of one -- it could read `.env` and every other file in
+    this ground, write anywhere the operator can write, open a socket, and
+    start a shell. Its own docstring said so: "A child can open a socket;
+    nothing here stops it." A MODEL WRITES THE FILE THIS RUNS.
+
+    THE PROBES ARE WRITTEN STRAIGHT TO DISK, not through `write_file`, and
+    that is deliberate: `write_file` now refuses most of them at the door
+    (the stroke above), so going through it would prove the first wall twice
+    and the second one not at all. This is the wall that holds when something
+    is already on disk.
+    """
+    from manjuel import skills as _sk
+    g = Path(tempfile.mkdtemp())
+    env = env_for(g, reg, Stub())
+    ws = g / "agent_workspace"
+    (g / ".env").write_text("MANJUEL_API_KEY=sk-the-estates-own\n", encoding="utf-8")
+    (g / "SECRET.md").write_text("the operator's own notes\n", encoding="utf-8")
+
+    def run(name, src):
+        (ws / name).write_text(src, encoding="utf-8")
+        return lib.execute("run_python", {"filepath": name}, env)
+
+    # ---- the wall, route by route
+    walled = {
+        "read_up.py": ("print(open('../.env').read())", "sk-the-estates-own"),
+        "read_abs.py": (f"print(open(r'{g / 'SECRET.md'}').read())",
+                        "operator's own notes"),
+        "write_out.py": (f"open(r'{g / 'planted.txt'}', 'w').write('x')", ""),
+        "listing.py": (f"import os\nprint(os.listdir(r'{g}'))", ".env"),
+        "unlink.py": (f"import os\nos.remove(r'{g / 'SECRET.md'}')", ""),
+        "net.py": ("import socket\nprint(socket.socket())", ""),
+        "lookup.py": ("import socket\nprint(socket.gethostbyname('example.com'))", ""),
+        "fetch.py": ("import urllib.request\n"
+                     "urllib.request.urlopen('http://127.0.0.1:1/')", ""),
+        "shell.py": ("import os\nos.system('echo pwned')", ""),
+        "spawn.py": ("import subprocess\n"
+                     "print(subprocess.run(['echo', 'pwned'], capture_output=True))",
+                     ""),
+        "native.py": ("import ctypes\nprint(ctypes.sizeof(ctypes.c_int))", ""),
+    }
+    for name, (src, leak) in walled.items():
+        out = run(name, src)
+        check(f"the jail stops {name}",
+              out.startswith("STOPPED BY THE JAIL"), out[:110])
+        check(f"and {name} names the wall that stopped it",
+              _sk.JAIL_MARK in out, out[:140])
+        # A STOPPED CHILD SAID NOTHING. The `leak` marker below can only be
+        # asked where the thing reached for is not IN the source -- a refused
+        # `os.system('echo pwned')` echoes its own line in the traceback, and
+        # a stroke that read that as a leak would be reading the refusal as
+        # the breach. The stdout section is the honest question for all of
+        # them: the child was stopped before it printed anything.
+        check(f"and {name} printed nothing", "--- stdout ---" not in out, out[:160])
+        if leak:
+            check(f"and {name} never got what it reached for",
+                  leak not in out, out[:160])
+    check("nothing the children reached for was created",
+          not (g / "planted.txt").exists())
+    check("nor removed", (g / "SECRET.md").exists())
+
+    # ---- AND THE WAYS THAT MUST NOT FIRE. A wall that bricks the interpreter
+    # is not a wall, it is a brick: the stdlib must still import, the workspace
+    # must still be writable, and a real failure must still read as a failure.
+    out = run("lib.py", "import json, re, sqlite3, hashlib, datetime, pathlib\n"
+                        "print('IMPORTS FINE', json.dumps([1, 2]))\n")
+    check("the interpreter can still read its own library",
+          out.startswith("RAN") and "IMPORTS FINE" in out, out[:120])
+    out = run("work.py", "open('made.txt', 'w').write('fine')\n"
+                         "print('WROTE', open('made.txt').read())\n")
+    check("the workspace is still the child's to write in",
+          out.startswith("RAN") and "WROTE fine" in out, out[:120])
+    check("and the file is really there", (ws / "made.txt").exists())
+    out = run("sib.py", "import made_module\nprint('SIBLING', made_module.N)\n")
+    (ws / "made_module.py").write_text("N = 7\n", encoding="utf-8")
+    out = run("sib.py", "import made_module\nprint('SIBLING', made_module.N)\n")
+    check("a sibling module in the workspace still imports",
+          out.startswith("RAN") and "SIBLING 7" in out, out[:120])
+    out = run("boom.py", "raise ValueError('the real reason')\n")
+    check("an ordinary failure is still FAILED, not the jail",
+          out.startswith("FAILED") and "the real reason" in out
+          and _sk.JAIL_MARK not in out, out[:140])
+
+
 def test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book):
     """A hook is a skill that declares WHEN it fires. Built 2026-09-11.
 
@@ -13992,6 +14127,35 @@ def test_the_core_sees_its_own_repository():
     check("an absent file is named, not invented",
           "No such file" in gitstate.diff(g, "nope.txt"))
 
+    # WHAT A GROUND KEEPS OUT OF ITS HISTORY IS NOT A CHANGE (2026-09-22).
+    # The clause above -- untracked comes back as its own contents -- was
+    # serving EVERY untracked file, and `.env` is untracked and inside the
+    # ground, so `/git diff .env` printed the estate's keys into a transcript
+    # that is written to logs/ and embedded into the index. The jail was never
+    # the hole; the jail works, and the file is inside it.
+    (g / ".gitignore").write_text("worlds/\nvault/\n*.key\n", encoding="utf-8")
+    (g / ".env").write_text("MANJUEL_API_KEY=sk-the-estates-own\n", encoding="utf-8")
+    (g / ".env.local").write_text("TOKEN=another-secret\n", encoding="utf-8")
+    (g / "worlds" / "other").mkdir(parents=True, exist_ok=True)
+    (g / "worlds" / "other" / "notes.md").write_text("a client's own notes\n",
+                                                     encoding="utf-8")
+    (g / "signing.key").write_text("-----BEGIN PRIVATE KEY-----\n", encoding="utf-8")
+    for rel, secret in ((".env", "sk-the-estates-own"),
+                        (".env.local", "another-secret"),
+                        ("worlds/other/notes.md", "client's own notes"),
+                        ("signing.key", "BEGIN PRIVATE KEY")):
+        d = gitstate.diff(g, rel)
+        check(f"a diff of {rel} is refused rather than served",
+              d.startswith("Refused"), d[:70])
+        check(f"and {rel} does not hand out its contents",
+              secret not in d, d[:70])
+    check("the keys are refused BY NAME, so a ground with no ignore rule is covered",
+          "RULE 7" in gitstate.diff(g, ".env"), gitstate.diff(g, ".env")[:70])
+    # AND THE WAY THAT MUST NOT FIRE: an ordinary new file is still served.
+    check("an ordinary untracked file is still served whole",
+          "never seen" in gitstate.diff(g, "new.txt"),
+          gitstate.diff(g, "new.txt")[:70])
+
     # BOUNDED, WITH THE BOUND NAMED. A stump that does not admit it is a
     # stump lies about the size of a change.
     (g / "big.txt").write_text("y" * 5000, encoding="utf-8")
@@ -14347,6 +14511,8 @@ def main() -> int:
     test_a_write_refuses_python_that_will_not_parse(reg, lib, book)
     test_an_edit_refuses_an_anchor_that_does_not_say_which(reg, lib, book)
     test_a_run_is_bounded_jailed_and_blind_to_the_keys(reg, lib, book)
+    test_both_doors_into_the_workspace_hold_the_same_line(reg, lib, book)
+    test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)
     test_the_mcp_skill_never_leaves_this_machine(reg, lib, book)

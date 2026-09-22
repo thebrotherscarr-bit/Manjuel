@@ -34,6 +34,69 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### Code safety: the doors that hand out files, and a child that runs inside a wall (operator, 2026-09-22: "4. Code safety", and "sandbox the python")
+
+Why: the handoff's fourth piece, from the review of 2026-09-22. Four holes, one shape -- a check
+that was made at ONE door and not at the door beside it, or not made at all once the work left
+this process. In every case the path jail was working: the file asked for is INSIDE the ground,
+so a jail about where a path LANDS could never have been the answer.
+
+No sitting was open. **RESTART REQUIRED:** `manjuel/gitstate.py` and `manjuel/skills.py` moved.
+No engine is running, so the next Boot runs the new code; the door's half is in atlas and waits to
+be placed.
+
+- **`manjuel/gitstate.py`, `diff()`:** the untracked fallback served ANY file git has never seen,
+  whole -- so `/git diff .env` printed the estate's keys into a transcript, which is then written
+  to `logs/` and embedded into the index. `.env` and `.env.*` are now refused by name whether or
+  not a ground remembered to ignore them (RULE 7: keys are never printed, never indexed), and
+  anything `git check-ignore` reports as ignored is refused with them. git's ignore rules are this
+  ground's own statement of what is not part of the work, which is exactly the question `diff` is
+  asking -- so `worlds/`, any `vault/`, the logs and the index come with it, and no second list has
+  to be kept in step. Reachable only from the REPL's `/git`; no skill exposes it.
+- **`manjuel/skills.py`, `write_file`:** TWO DOORS write model-written Python into this workspace
+  and they did not hold the same line. `land_code` puts the coder's emission through
+  `inspect_code` -- a network import (RULE 4), `eval`/`exec`/`__import__`, a dynamic `importlib`,
+  `shell=True` -- and `write_file`, which every seat may call by name, checked only that the bytes
+  parsed. The same file refused at one door landed at the other. It now makes the same call. The
+  parse check stays where it is because its message is the earned one: `inspect_code` names the
+  line NUMBER and the leaked-markup fault is recognised by the line's TEXT.
+- **`manjuel/skills.py`, `run_python`:** the skill's own docstring said "A child can open a socket;
+  nothing here stops it." Half of that was optimistic. The jail was the PATH the skill resolves and
+  nothing more, so once the child was running it was an ordinary Python process with the ordinary
+  reach of one -- it could read `.env` and every other file in this ground, write anywhere the
+  operator can write, open a socket, and start a shell. A model writes the file this runs. The wall
+  now goes where the child is and is the same wall the skill already draws: the workspace is the
+  whole world it may touch. A PEP 578 audit hook, installed from this module's own source passed on
+  the command line (nothing in the workspace can edit it), refuses reads and writes outside the
+  wall, the network, starting another process, and `import ctypes`; the interpreter may still read
+  its own library. A child stopped this way comes back **STOPPED BY THE JAIL**, with the reason,
+  rather than a bare `FAILED (exit 1)` with the cause at the bottom of a traceback.
+- **`REFUSALS.md`:** §23 and §24 both stated the old limits as facts and had to move with the code.
+  §23 carries the wall and four honest limits on it -- an audit hook is not a kernel sandbox, a
+  symlink is not followed, existence is not secrecy, and why `ctypes` is refused at the import
+  rather than at the call. §24 carries the structural gate.
+- **`skills/run_python.md`, `skills/write_file.md`:** the descriptions a model actually reads now
+  say what each door refuses.
+- **`BUILDMAP.md`:** regenerated.
+- **atlas, in its own CHANGELOG:** the same two reads at the door -- `git_diff`'s untracked
+  fallback and `read_plan`'s path resolution -- both of which served `.env` to anything that can
+  reach :8090.
+
+Strokes: `test_both_doors_into_the_workspace_hold_the_same_line` (six refusals, nothing written for
+any, and prose / ordinary Python / the earned leaked-markup message all unchanged);
+`test_a_run_python_child_is_walled_into_the_workspace` (eleven routes refused and named, nothing
+created or removed outside the wall, and five ways that must not fire -- the stdlib still imports,
+the workspace is still writable, a sibling module still imports, and an ordinary exception is still
+`FAILED`); and nine more in `test_the_core_sees_its_own_repository` for the diff.
+
+Proven on a mirror: strokes 2703/2703 (2694 before), smoke 72/72. By reversal, each of the three
+put back green in turn: the diff's refusal removed turns nine strokes red, `write_file`'s
+structural check removed turns twelve red, and the child's wall removed turns thirty-five red --
+`read_up.py` coming back `RAN`, with `MANJUEL_API_KEY=...` on its stdout, which is the hole as it
+actually stood. His terminal is still the proof.
+
+Named, not fixed: an audit hook is not a kernel sandbox and this does not claim to be one (§23).
+
 ### The handoff: running this without a hand at the front (operator, 2026-09-22: "a full handoff from claude-steward as the front end agent within 24 hours", and "5. The handoff document")
 
 Why: the day's ask. The system has been driven by an agent, and he wants it his -- so what a hand

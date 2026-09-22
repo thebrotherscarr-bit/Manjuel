@@ -437,6 +437,30 @@ def diff(ground: Path, path: str = "", cap: int = DIFF_CAP) -> str:
         if rc == 0 and out.strip():
             return clip(out, what)
 
+    # WHAT A GROUND KEEPS OUT OF ITS HISTORY IS NOT A CHANGE (2026-09-22).
+    # Serving an untracked file whole is right for a new file on its way to a
+    # commit, and wrong for everything this ground deliberately ignores: `.env`
+    # and its keys, `worlds/`, any `vault/`, the logs, the index. The jail
+    # above was never the hole -- it works, and `.env` is INSIDE the ground, so
+    # `/git diff .env` printed the estate's keys into a transcript that is then
+    # written to logs/ and embedded into the index. RULE 7: keys are never
+    # printed, never indexed.
+    #
+    # THE NAME FIRST, THEN git's OWN ANSWER. `.env` is refused whether or not a
+    # ground remembered to ignore it; for everything else the ignore rules are
+    # this ground's own statement of what is not part of the work, which is
+    # exactly the question being asked.
+    base = os.path.basename(rel).lower()
+    if base == ".env" or base.startswith(".env."):
+        return ("Refused: that file holds this estate's keys, and they are "
+                "never printed (RULE 7). Nothing was read.")
+    rc, _ = _run(["check-ignore", "-q", "--", rel], ground)
+    if rc == 0:
+        return (f"Refused: this ground's git ignores {rel}, so it is not part "
+                f"of what changed -- and what a ground keeps out of its "
+                f"history (keys, client worlds, data, logs) is not served "
+                f"here. Nothing was read.")
+
     full = ground / rel
     if not full.exists():
         return f"No such file in this ground: {rel}"

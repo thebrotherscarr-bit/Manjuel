@@ -663,16 +663,63 @@ are never passed where something else can read them, and a subprocess is
 something else. A stroke plants secrets and asks the child to find them; it
 comes back `LEAKED []`.
 
-**The honest limit:** the jail is the FILESYSTEM, not the network. A child can
-open a socket and nothing here stops it. RULE 4 keeps the estate local by
-refusing remote dependencies — it is not a sandbox, and this says so rather
-than letting someone assume otherwise.
+**AND THE CHILD RUNS INSIDE A WALL** (2026-09-22, his word: "sandbox the
+python"). The paragraph that stood here said the jail was the filesystem and
+not the network. Half of that was optimistic: the jail was the PATH the skill
+resolves and nothing more, so once the child was running it was an ordinary
+Python process with the ordinary reach of one — it could read `.env` and every
+other file in this ground, write anywhere the operator can write, open a
+socket, and start a shell. **A model writes the file this runs.**
+
+The wall now goes where the child is, and it is the same wall the skill
+already draws: THE WORKSPACE IS THE WHOLE WORLD. Reads and writes stay inside
+it; the interpreter may still read its own library, because otherwise it is not
+a Python. Refused by name: the network (`socket`, `urllib`, and the protocol
+modules — RULE 4), starting another process (`os.system`, `subprocess.Popen`,
+`os.exec`/`spawn`/`fork`, `os.startfile`), importing `ctypes`, and any of the
+`os`/`shutil` verbs aimed at a path outside the wall. A child stopped this way
+comes back as **STOPPED BY THE JAIL**, with the reason, rather than a bare
+`FAILED (exit 1)` with the cause at the bottom of a traceback.
+
+It is a PEP 578 audit hook: stdlib (RULE 4 — nothing is downloaded), below the
+names a script can rebind, and installed from `skills.py`'s own source passed on
+the command line, which nothing in the workspace can edit.
+
+**The honest limits,** written down rather than discovered later:
+
+- **an audit hook is not a kernel sandbox.** CPython's own documentation says
+  so. This shuts every route named above; it does not prove no route exists. A
+  C extension already on this machine, or a CPython bug, is outside what any
+  Python-level check can see. Narrowed, not sealed — the same words §15 uses
+  about its own import walk, and for the same reason.
+- **a symlink is not followed.** Paths are judged with `abspath`, not
+  `realpath`, so a link INSIDE the workspace pointing out of it would be read.
+  The child cannot make one (`os.symlink` is refused), so this is about a link
+  the operator put there himself. `realpath` opens a handle on Windows, and a
+  hook that opens files while judging an open is a hook that can recurse.
+- **existence is not secrecy.** `os.stat` is not refused: a script may still
+  learn that a path outside the wall exists. Reading its BYTES is what is shut,
+  and that is the line RULE 7 draws.
+- **`import ctypes` is refused at the IMPORT, not at the call,** and that was
+  measured rather than chosen: on Windows `import ctypes` itself dlopens
+  kernel32 to reach `GetLastError`, so refusing the `ctypes.*` events killed
+  the import — and killed it as `AttributeError: kernel32`, because
+  `LibraryLoader` turns the failure into one. A refusal nobody can read is not
+  a refusal.
+
+Stroked: `test_a_run_python_child_is_walled_into_the_workspace`, eleven routes
+refused and five ways that must not fire (the stdlib still imports, the
+workspace is still writable, a sibling module still imports, and an ordinary
+exception is still `FAILED` and not the jail). By reversal — the wall switched
+off — `read_up.py` came back `RAN`, with `MANJUEL_API_KEY=...` on its stdout.
 
 ---
 
 ## 24. The write door checks before it writes
 
-**Trigger.** `write_file` is given `.py` content that will not parse.
+**Trigger.** `write_file` is given `.py` content that will not parse, or that
+imports the network, calls `eval`/`exec`/`__import__`, reaches `importlib`, or
+passes `shell=True`.
 
 **Action.** Refused, and NOTHING IS WRITTEN. The refusal names the line and the
 syntax error, and says outright that a stray closing tag or a flag block from
@@ -685,14 +732,30 @@ written happily; `run_python` then died of a SyntaxError, and the flow spent a
 repair and a recheck on a fault that was already on disk before anything ran.
 
 `edit_file` had refused exactly those bytes since the day it landed (§23) --
-**two doors onto the same workspace and only one of them looked.** Only `.py`,
-and only PARSING, which is the same bound `edit_file` draws: this is not the
-structural gate the coder's own landing runs (§15), and prose files are
-nobody's syntax to judge.
+**two doors onto the same workspace and only one of them looked.**
+
+**AND THE SAME STRUCTURAL GATE THE CODER'S LANDING RUNS** (2026-09-22). The
+paragraph that stood here said "only `.py`, and only PARSING ... this is not
+the structural gate the coder's own landing runs", and that sentence was the
+hole restated. TWO DOORS write model-written Python into this workspace:
+`land_code` puts the coder's emission through `inspect_code` (§15) — which
+refuses a network import (RULE 4), `eval`/`exec`/`__import__`, a dynamic
+`importlib`, and `shell=True` — while a seat calling `write_file` by name,
+which every seat may, skipped all of it and landed the same bytes. **A gate one
+door enforces and the other does not is a preference, not a gate.**
+
+The parse check stays where it is, because its message is the earned one:
+`inspect_code` names the line NUMBER, and the leaked-markup fault above is
+recognised by the line's TEXT. Prose is still nobody's syntax to judge —
+`inspect_code` fails open by name on anything that is not `.py`, which is the
+same bound this door already drew.
 
 Stroked: `test_a_write_refuses_python_that_will_not_parse`, with the exact
 bytes that leaked, and both ways -- a real `.py`, a `.md` carrying the same
-markup, and an empty `.py` all still land.
+markup, and an empty `.py` all still land. And
+`test_both_doors_into_the_workspace_hold_the_same_line`: six refusals, nothing
+written for any of them, and prose, ordinary Python and the earned
+leaked-markup message all unchanged.
 
 ---
 
