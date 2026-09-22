@@ -744,6 +744,24 @@ and one door reversal, each red. **RESTART REQUIRED:** `manjuel/serve.py` moved 
 the next Boot has it), and the new door waits in the hand's scratch (sha256 025ed38d99fdda4f) for
 his word to place it. Unsaved in both repositories.
 
+**PLACED, SAVED AND SENT, on his word** ("Place the door"; "Both repositories"). **The door now
+runs as pid 5712** (the glass is untouched at pid 24548, so his session held); stop them by those
+pids, never by name. The engine's half went live with sitting 263, which the new `serve.py` opened
+from the Dashboard. Saved through the council in that sitting (four runs, tolled): core `afbd70f`
+and atlas `12c8574`, `main` alone in each, both level with GitHub. **Open, his:** the next piece
+(he has named piece 2, flows that report truthfully), and a terminal run of the core suites -- the
+mirror's 2635/72 is the hand's check, not the proof.
+
+**PIECE 2, FLOWS REPORT TRUTHFULLY -- built and proven; not placed, not saved.** A turn that did
+not deliver now fails its node instead of being recorded as its answer; a check that failed stays
+failed through a gate; a flow with two gates can pass the second (and an answered gate is no
+longer walked back to); a cancelled run is STOPPED, not OUT_OF_TIME, and the cancel reaches the
+turn in flight; a resume with no engine is refused and leaves the run at its gate; and a flow
+locks its own world instead of freezing every world for its whole run. atlas's CHANGELOG has it
+whole. Strokes +6 in `internal/flow`, +2 in `internal/tools`; seven reversals, each red; every
+`line` package green but the six scratch-path `git_tag` strokes. **RESTART REQUIRED, THE DOOR:**
+the new build waits in the hand's scratch (sha256 4430227a4544eb3e). The core was not touched.
+
 ## HANDOFF FOR 2026-09-21 — read this before anything below it
 
 **Where the ground stands, Monday morning.** core `main@8cffd98` and atlas `main@186608f`,

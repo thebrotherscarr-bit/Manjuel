@@ -85,6 +85,12 @@ Named, not fixed: a cancel that lands as a turn ends still ends the engine -- cl
 the way now -- rather than being ignored; that is the wire's piece. The REPL's own Ctrl-C paths are
 unchanged: any line it leaves is closed by the next open's reaper, and the door no longer refuses it.
 
+**LIVE, AND SAVED AND SENT, 2026-09-22, on his word** ("Both repositories"). The engine's half
+needed no placing: sitting 263 was opened by the new `serve.py` from the Dashboard, and the door's
+half was placed beside it (atlas's CHANGELOG, pid 5712). Saved through the council in that sitting
+(12:28-12:31, four runs, closed with its toll): core `afbd70f` (`268b3ff..afbd70f`), these eight
+files, `main` alone, and GitHub's `main` matches. Written after the save; it rides with the next.
+
 ### The maker, piece 2: the projects on the glass, and words to pick one up and put it down (operator, 2026-09-21: "go on piece 2")
 
 Why: SPEC 4.8 held piece 2 OPEN. The page was not shown on the glass, there was no project list to

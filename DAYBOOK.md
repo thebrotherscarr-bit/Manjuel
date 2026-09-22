@@ -1833,5 +1833,8 @@ in the code, found atlas's version control out of step and the durable parts lea
 seams (HANDOFF, 2026-09-22). **atlas's version control**, on "let's get that knocked out": every
 stamp at 0.1.6, the bump tool moving Cargo.lock, the door refusing a mark over a stale stamp, the
 push check running the whole battery -- saved and sent as atlas `3a07dfd` (sitting 262), and the
-door and glass placed (pids 8116 and 24548). **Piece 1, "Survives crashes"**: built and proven on
-a mirror, not placed, not saved; RESTART REQUIRED. Pieces 2 to 5 of the plan wait on his word.
+door and glass placed (pids 8116 and 24548). **Piece 1, "Survives crashes"**: built, proven, placed
+(door pid 5712) and sent -- core `afbd70f`, atlas `12c8574`, sitting 263. **Piece 2, "Flows report
+truthfully"**: built and proven, not placed, not saved -- honest node outcomes, a check that stays
+failed through a gate, every gate resumable, a cancel that reaches the turn, a resume that refuses
+rather than burning the run, and a lock per world. Pieces 3 to 5 of the plan wait on his word.
