@@ -706,12 +706,24 @@ class Door:
         # collected and thrown away at this boundary.
         from .context import tool_verdicts as _verdicts
 
+        # THE PROJECT IN HAND after this turn (the maker, piece 2), by folder
+        # name, or "" for none. It lives in this process's memory and nowhere
+        # else, so the glass's project list learns which one is picked up from
+        # here -- read off the maker, never off a seat's words.
+        from . import maker as _maker
+        try:
+            _g = getattr(sess.env, "ground", None)
+            _held = _maker.current(_g) if _g is not None else None
+        except Exception:
+            _held = None
+
         self.wire.emit(
             "delivery", text=body, elapsed=round(ctx.elapsed, 1), transcript=logged,
             pipeline=name, flags=sorted(ctx.flags), notes=list(ctx.notes),
             failures=[list(f) for f in ctx.failures],
             verdicts=_verdicts(ctx.steps),
             out_of_time=list(ctx.out_of_time),
+            project=_held.name if _held is not None else "",
             steps=[{"seat": s.agent, "model": s.model, "elapsed": round(s.elapsed, 1),
                     "tools": list(s.tool_calls or []), "error": s.error or "",
                     "skipped": bool(s.skipped), "chars": len(s.output or ""),

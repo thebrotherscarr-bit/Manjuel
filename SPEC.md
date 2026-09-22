@@ -94,6 +94,7 @@ A proposal that needs a word uses the nearest one below.
 | **the maker** | the engine's route for "make me a ...": the Expert Coder writes ONE web page, the engine checks it and saves it as a version of a project. No seat saves anything. | the operator, 2026-09-21 ("projects folder in Research is fine, build it"); `manjuel/maker.py` |
 | **a project** | one thing the maker made: a folder under `projects/` with its own git history, never part of the core's repository. | the operator, 2026-09-21 |
 | **a version** | one save of a project, numbered from 1, with a plain-English note. "Go back" saves an old one again as the next number, so nothing is thrown away. | 2026-09-21; LAW 1 |
+| **in hand** | the one project a sitting is working on -- made, changed or picked up in it ("work on the snake game"); "put it down" leaves none, and a new sitting starts with none. The engine's delivery names it, which is how the glass knows. | 2026-09-21, the maker's pieces 1 and 2 |
 
 ---
 
@@ -119,7 +120,7 @@ A proposal that needs a word uses the nearest one below.
 | **The index** | chunked, incremental, bounded, embedder-stamped; client material and secrets never enter it; transcripts age out of retrieval at 45 days | `vectors.py`; REFUSALS §5, §6, §16 |
 | **The rack** | seven models seat fourteen seats; the everyday pipelines fit resident; the court evicts on purpose; `rack.md` is derived from Ollama, never edited | `vram.py`, `rack.py`; `test_vram` |
 | **The suites** | the engine proves offline with every model stubbed; the REPL proves the same way; the standup runs the seats live and writes a report; the map is generated from the code | `tests/test_manjuel.py`, `smoke_cli.py`, `standup.py`, `buildmap.py` |
-| **The maker** | "make me a snake game" seats the Expert Coder alone; what it answers is saved only if it is a WHOLE page that loads nothing from the network; each save is a numbered version in the project's OWN history; "go back" is git's job, not a model's; the ground's history is never written to | `maker.py`, `intent.wants_making`; §4.8; `test_the_maker` |
+| **The maker** | "make me a snake game" seats the Expert Coder alone; what it answers is saved only if it is a WHOLE page that loads nothing from the network; each save is a numbered version in the project's OWN history; "go back" is git's job, not a model's; the ground's history is never written to; a project is picked up and put down by words the engine answers with no seat; the glass lists each project from its own history and shows its page sandboxed | `maker.py`, `intent.wants_making`, `intent.wants_picking_up`; §4.8; `test_the_maker`, `test_the_maker_picks_up_and_puts_down`; atlas `projects_test.go` (door and glass) |
 | **The toll** | every sitting that ran something ends with what proved, what is thin, what is owed — the operator's words, or an honest "not stated". A sitting that ran nothing closes with no toll, from the Dashboard's Close or on its own when idle (RUNBOOK, 2026-09-14; D2, 2026-09-16; this row said "every sitting" until 2026-09-17) | `seatlog.render_toll`; LAW 10 |
 
 ---
@@ -194,10 +195,10 @@ Why it exists: sitting 257 put his own test through the estate -- "Make me a sim
 - MET (2026-09-21, piece 1) — a request to MAKE a thing people use (a game, an app, a page, a tool, a calculator, a timer...) is read by arithmetic (`intent.wants_making`), seats the Expert Coder ALONE, and what it answers is saved as version 1 of `projects/<name>/`, a folder with its own git history. The delivery is the engine's plain report: what was made, where it is, and what to ask next. A poem, a note, a commit, a python script and a question about making are not the maker's and fall through untouched. `test_the_maker`. Proven live from the dashboard, sitting 258: a 93-line snake game in 15.4s that starts on a click and steers with the arrows (seen); its scoring and Game Over are read from its code, not yet seen.
 - MET (2026-09-21, piece 1) — a CHANGE ("make it faster", "add a score": the request opens with a change verb, and the sitting has a project in hand) hands the Coder the page as it stands and saves the rewrite as the next version; "go back" (or "undo", or "go back to version 2") saves the older page AGAIN as a new version, and no model sits for it. "Add an undo button" is a change, not a go-back. History only grows (LAW 1). `test_the_maker`. Live, sitting 258: version 2 in 10.8s changed one line (the game's tick, 100ms to 50ms); version 3, back to version 1, in 0.6s.
 - MET (2026-09-21, piece 1) — nothing the check refuses is saved: a page is kept only if it is WHOLE (it reaches `</html>`) and loads NOTHING from the network (`maker.page_from`, RULE 4); a refused first answer leaves no project behind; the ground's own history is never written to (every git call first checks the project's own `.git`); `projects/` is gitignored. `test_the_maker`, stroked both ways and proved by reversal.
-- NOTE, not OPEN — while a sitting has a project in hand, ANY request that opens with a change verb goes to that project ("fix the router config" included). There is no word yet to put a project down except closing the sitting, and a new sitting starts with none. Choosing a project, and leaving one, belong to piece 2's project list.
-- OPEN (piece 2) — the page is not yet shown ON THE GLASS: today the report names the file to open (`projects\<name>\index.html`), and there is no project list to pick one from. His call to order it.
+- NOTE, not OPEN — while a sitting has a project in hand, ANY request that opens with a change verb goes to that project ("fix the router config" included). Until piece 2 the only way to put a project down was to close the sitting; now "put it down" does it, and a new sitting still starts with none (below).
+- MET (2026-09-21, piece 2; his word "go on piece 2") — THE PAGE ON THE GLASS AND A PROJECT LIST. The Dashboard's Projects card, under the run, lists every project with its versions, read off each project's OWN history by the door's `projects` tool (read-only; a name is a name, never a path; only plain folders -- a junction, which Go's `EvalSymlinks` does not follow, let the first cut serve a folder from outside the ground, and a stroke now holds it); and it shows a page, as it stands or as any version was, in a frame served under a `Content-Security-Policy: sandbox` header -- its own origin, never the glass's, and no network. Measured in the app's browser pane: script and canvas run; parent, cookies, storage and fetch are refused. A page there keeps no storage (a game forgets its high score); opened from `projects\<name>\` it does. "Work on this" and "Put it down" say words the engine answers itself -- "work on the snake game" picks a project up and "put it down" sets it aside, no seat sitting, nothing written -- and the delivery names the project in hand, which is how the card knows. Words that name no project fall through as before; two projects answering to one word are both named and neither is picked. `test_the_maker_picks_up_and_puts_down`, atlas `internal/tools/projects_test.go` and `webapp/handlers/projects_test.go`, all proved by reversal; end to end on scratch servers 20 of 20 (atlas CHANGELOG). Built and proven; placed on his glass 2026-09-22, on his word ("place them and restart the door and the glass").
 - OPEN (piece 3) — the check proves a page is whole and local, NEVER that it works: nothing runs it before it is kept. Piece 3 loads it in a browser with no window and sends any error back to the Coder before a version is saved. Seen live 2026-09-21: version 1 calls `clearInterval(game)` with no `game` declared -- harmless where the Game Over alert reloads the page, and exactly what this piece would catch. His call to order it.
-- OPEN — THE WIFE TEST, his words and this section's DONE: "if my wife can sit down at the PC, ask the system to make a type of software, game, etc. and she can see the result, play the game, try the software". A person who is not the operator asks the glass in her own words and plays or uses the result -- no terminal, no path typed, no help -- and every step is in the record. Pieces 2 and 3 are what stand between today and that.
+- OPEN — THE WIFE TEST, his words and this section's DONE: "if my wife can sit down at the PC, ask the system to make a type of software, game, etc. and she can see the result, play the game, try the software". A person who is not the operator asks the glass in her own words and plays or uses the result -- no terminal, no path typed, no help -- and every step is in the record. Piece 3 is what stands between today and that (piece 2 built 2026-09-21 and placed on the glass 2026-09-22).
 
 ---
 
@@ -479,13 +480,15 @@ BUILDPATH, "The order it goes next".
                    glass, and the holds are armed or he has ruled they stay
                    off
 
-    THE MAKER -- his vision of 2026-09-21; piece 1 built the same day
+    THE MAKER -- his vision of 2026-09-21; pieces 1 and 2 built the same day
       what it is   "make me a snake game" made, versioned and reported by the
                    engine (4.8). Piece 1: the route, the check and the
                    versions (MET). Piece 2: the page and a project list on
-                   the glass. Piece 3: the page loaded in a browser with no
-                   window, and its errors sent back to the Coder before a
-                   version is kept. The order is BUILDPATH's, "The maker".
+                   the glass, and the words that pick a project up and put
+                   it down (MET; built 2026-09-21, placed 2026-09-22). Piece 3:
+                   the page loaded in a browser with no window, and its
+                   errors sent back to the Coder before a version is kept.
+                   The order is BUILDPATH's, "The maker".
       DONE when    THE WIFE TEST: someone who is not the operator asks the
                    glass for a game or a tool in her own words, and plays or
                    uses it -- no terminal, no path typed, no help -- with

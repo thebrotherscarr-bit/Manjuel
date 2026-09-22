@@ -13099,6 +13099,242 @@ def test_the_maker(reg, lib, book):
         maker.forget()
 
 
+def test_the_maker_picks_up_and_puts_down(reg, lib, book):
+    """THE MAKER, PIECE 2 OF 3 (2026-09-21; the operator: "go on piece 2").
+
+    A sitting starts with nothing in hand, and until this the only way to put a
+    project down was to close the sitting -- so an older project on disk could
+    not be reached by words at all. The glass's project list sends "work on
+    the <name> project" and "put the project down"; a person can say them too.
+    Both are ANSWERED BY THE ENGINE: no seat sits, nothing is written, and a
+    project is only ever read by being picked up. The delivery then names the
+    project in hand, which is how the glass knows.
+
+    STROKED BOTH WAYS. The words that pick up and put down do so -- and words
+    that name no project fall through as before, "go back to version 1" still
+    goes back, "put it down lower" is still a change, and two projects that
+    answer to one word are the person's to choose between, never the engine's.
+
+    Hermetic: temp grounds, a stand-in Coder, pages one line long.
+    """
+    import builtins as _b
+    import io
+    import json as _json
+    import shutil
+    from manjuel import intent, maker
+    from manjuel import seatlog as _sl
+    from manjuel import serve as _sv
+    from manjuel.pipeline import _maker_route
+
+    PAGE_ONE = "<!DOCTYPE html>\n<html><body><p>one</p></body></html>\n"
+    PAGE_TWO = "<!DOCTYPE html>\n<html><body><p>two</p></body></html>\n"
+    PAGE_THREE = "<!DOCTYPE html>\n<html><body><p>three</p></body></html>\n"
+
+    # ---- THE WORDS -----------------------------------------------------------
+    for said, want in (("work on the snake game", "snake game"),
+                       ("let's work on the snake-game project", "snake-game"),
+                       ("switch to the calculator", "calculator"),
+                       ("open the snake game project", "snake game"),
+                       ("go back to the snake game", "snake game"),
+                       ("ok, pick up the tip calculator again", "tip calculator")):
+        check(f"picking a project up is read by arithmetic: {said!r}",
+              intent.wants_picking_up(said) == want, repr(intent.wants_picking_up(said)))
+    for said in ("work on it", "make it faster", "the snake is too slow",
+                 "what should I work on?", "open"):
+        check(f"and these name no project to pick up: {said!r}",
+              intent.wants_picking_up(said) == "", repr(intent.wants_picking_up(said)))
+    for said in ("put it down", "put the project down",
+                 "ok, put this project down for now", "I'm done with it",
+                 "set it aside", "close the project", "stop working on this"):
+        check(f"putting the project in hand down is read: {said!r}",
+              intent.wants_putting_down(said))
+    for said in ("put it back", "put it down lower", "put a border round it",
+                 "put the ball down there", "close the sitting"):
+        check(f"and this is not a put-down: {said!r}",
+              not intent.wants_putting_down(said))
+    check("'put it back' is still a go-back, as it was before piece 2",
+          intent.wants_going_back("put it back") == 0)
+
+    if not HAVE_GIT:
+        return                    # reported once, in main(); never a crash
+
+    # ---- THE LIST: only folders with a history of their own ----------------
+    g = Path(tempfile.mkdtemp())
+    snake = maker.new_project(g, "snake-game")
+    maker.save_version(snake, PAGE_ONE, "make me a snake game")
+    maker.save_version(snake, PAGE_TWO, "make it faster")
+    calc = maker.new_project(g, "tip-calculator")
+    maker.save_version(calc, PAGE_ONE, "build a tip calculator")
+    (g / "projects" / "not-a-project").mkdir()
+    check("the projects are the folders with a history of their own, by name",
+          [p.name for p in maker.projects(g)] == ["snake-game", "tip-calculator"],
+          str([p.name for p in maker.projects(g)]))
+    check("a ground with no projects/ lists none, and does not raise",
+          maker.projects(Path(tempfile.mkdtemp())) == [])
+    check("a project is found by the rule that named it: 'the snake game' is snake-game",
+          maker.find(g, "the snake game") == [snake], str(maker.find(g, "the snake game")))
+    check("   and by its folder name, spelled as the list shows it",
+          maker.find(g, "snake-game") == [snake], str(maker.find(g, "snake-game")))
+    check("   and by one of its words, when only one project holds that word",
+          maker.find(g, "calculator") == [calc], str(maker.find(g, "calculator")))
+    check("words that name no project find none, and 'the project' names nothing",
+          maker.find(g, "pod bay doors") == [] and maker.find(g, "the project") == [],
+          f"{maker.find(g, 'pod bay doors')} {maker.find(g, 'the project')}")
+    check("   and a folder with no history of its own is never found",
+          maker.find(g, "not a project") == [], str(maker.find(g, "not a project")))
+
+    # ---- THE TURN: answered by the engine, no seat sits ---------------------
+    coder = {"answer": f"<filepath>index.html</filepath>\n```html\n{PAGE_THREE}```\n"}
+
+    def reply(a):
+        return coder["answer"] if a.key == "expert coder" else "A SEAT THAT SAT"
+
+    def turn(objective, ground=g):
+        r = Stub(reply=reply)
+        ctx = RunContext(objective=objective)
+        run_pipeline(ctx, reg, r, lib, env_for(ground, reg, r),
+                     steps=book.get("default"), report=lambda m: None)
+        return ctx, [n for n, _ in r.seen]
+
+    e = env_for(g, reg, Stub())
+    maker.forget()
+    try:
+        check("a new sitting has no project in hand", maker.current(g) is None)
+        ctx, sat = turn("work on the snake game")
+        check("picking a project up seats no model -- the engine answers",
+              sat == [], str(sat))
+        check("   and puts that project in hand for the sitting",
+              maker.current(g) == snake, str(maker.current(g)))
+        out = ctx.last_output()
+        check("   and says which, at which version, and how to put it down",
+              out.startswith("Working on snake-game now -- it is at version 2.")
+              and "put it down" in out, out[:200])
+        check("   and nothing on disk moved: a project is only read by being picked up",
+              len(maker.versions(snake)) == 2, str(maker.versions(snake)))
+        check("   and the record says the maker picked it up",
+              any("snake-game picked up" in n for n in ctx.notes), str(ctx.notes)[-300:])
+
+        ctx, sat = turn("make it faster")
+        check("a change after a pick-up is a change to THAT project, by the Coder alone",
+              sat == ["Expert Coder"] and len(maker.versions(snake)) == 3
+              and "<p>three</p>" in maker.page_of(snake), f"{sat} {maker.versions(snake)}")
+
+        ctx, sat = turn("go back to version 1")
+        check("'go back to version 1' still goes back -- 'version 1' names no project",
+              sat == [] and len(maker.versions(snake)) == 4
+              and "<p>one</p>" in maker.page_of(snake), str(maker.versions(snake)))
+
+        ctx, sat = turn("switch to the calculator")
+        check("switching by one of a project's words puts THAT one in hand",
+              sat == [] and maker.current(g) == calc, str(maker.current(g)))
+        ctx, sat = turn("switch to the calculator")
+        check("   and asking for the one already in hand says so",
+              ctx.last_output().startswith("You are already working on tip-calculator"),
+              ctx.last_output()[:120])
+
+        # TWO THAT ANSWER TO ONE WORD ARE THE PERSON'S TO CHOOSE BETWEEN.
+        twin = maker.new_project(g, "snake-game")          # snake-game-2
+        maker.save_version(twin, PAGE_ONE, "another snake game")
+        ctx, sat = turn("work on the snake")
+        check("two projects answering to one word are both named, and neither is picked",
+              sat == [] and maker.current(g) == calc
+              and "snake-game, snake-game-2" in ctx.last_output(), ctx.last_output()[:160])
+        ctx, sat = turn("work on the chess project")
+        check("a project named outright that does not exist is said, with what does",
+              sat == [] and ctx.last_output().startswith('There is no project called "chess"')
+              and "tip-calculator" in ctx.last_output(), ctx.last_output()[:200])
+        check("words that name no project, and never say 'project', fall through untouched",
+              _maker_route(RunContext(objective="open the pod bay doors"), reg, lib, e,
+                           lambda m: None) == "")
+        check("'put it down lower' is still a change to the page, not a put-down",
+              _maker_route(RunContext(objective="put it down lower"), reg, lib, e,
+                           lambda m: None) == "made" and maker.current(g) == calc)
+
+        ctx, sat = turn("put it down")
+        check("putting a project down seats no model", sat == [], str(sat))
+        check("   and leaves nothing in hand", maker.current(g) is None, str(maker.current(g)))
+        check("   and says the project is kept, where, and at which version",
+              ctx.last_output().startswith("Put tip-calculator down.")
+              and "version 1" in ctx.last_output()
+              and "projects\\tip-calculator\\" in ctx.last_output(), ctx.last_output()[:200])
+        check("   and the project put down is on disk exactly as it was",
+              len(maker.versions(calc)) == 1 and (calc / "index.html").is_file(),
+              str(maker.versions(calc)))
+        check("with nothing in hand again, change words are not the maker's",
+              _maker_route(RunContext(objective="make it faster"), reg, lib, e,
+                           lambda m: None) == "")
+        ctx, sat = turn("put the project down")
+        check("a put-down with nothing in hand says so, and names the projects there are",
+              sat == [] and ctx.last_output().startswith("No project is in hand")
+              and "snake-game" in ctx.last_output(), ctx.last_output()[:200])
+    finally:
+        maker.forget()
+
+    # ---- THE WIRE: the delivery names the project in hand --------------------
+    # The project in hand lives in the engine's memory and nowhere else, so the
+    # glass learns it from here. Driven through the headless door itself, the
+    # way test_the_headless_door drives it, on a temp ground of its own.
+    gw = Path(tempfile.mkdtemp())
+    shutil.copytree(ROOT / "law", gw / "law", ignore=shutil.ignore_patterns("__pycache__"))
+    shutil.copytree(ROOT / "skills", gw / "skills")
+    for d in ("agent_workspace", "logs", "sessions"):
+        (gw / d).mkdir()
+
+    class Sess:
+        """cli.Session's shape, as test_the_headless_door stands it in."""
+        def __init__(self, runtime):
+            self.runtime, self.registry, self.skills, self.book = runtime, reg, lib, book
+            self.last = None
+            self.pipeline_name = "default"
+            self.pipeline = book.get("default")
+            self.session = "S-maker"
+            self.last_run_ref = ""
+            self.sitting = _sl.Sitting(n=99, id="S-maker", started="2026-09-21T10:00:00")
+            self.standing = ""
+            self.speaking = False
+            self.dialogue: list = []
+            self._dvecs: dict = {}
+            self.topic_start = 0
+            self.watcher = None
+            self.pending_feed = self.pending_spoken = self.pending_method = ""
+            self.model_override = ""
+            self.rack_ok = True
+        def rack_check(self): return True
+        def load(self): return True
+        def pipeline_names(self): return book.names()
+        def pipeline_steps(self, name): return book.get(name)
+        @property
+        def env(self):
+            env = env_for(gw, reg, self.runtime, session=self.session, skills=self.skills)
+            env.ground = gw
+            return env
+
+    out = io.StringIO()
+    src = io.StringIO("".join(_json.dumps(l) + "\n" for l in (
+        {"cmd": "objective", "text": "Make me a simple snake game I can play."},
+        {"cmd": "objective", "text": "put it down"},
+        {"cmd": "close"})))
+    keep_out, keep_in = sys.stdout, _b.input
+    maker.forget()
+    try:
+        wire, inbox = _sv.open_wire(out=out, source=src)
+        door = _sv.Door(Sess(Stub(reply=reply)), wire, inbox, ground=gw,
+                        closer=lambda s: None)
+        inbox.start()
+        door.serve()
+    finally:
+        sys.stdout, _b.input = keep_out, keep_in
+        maker.forget()
+    rows = [_json.loads(l) for l in out.getvalue().splitlines() if l.strip()]
+    ds = [r for r in rows if r["event"] == "delivery"]
+    check("the wire's delivery names the project in hand after a make",
+          len(ds) == 2 and ds[0].get("project") == "snake-game",
+          repr([d.get("project") for d in ds]))
+    check("   and names none once it is put down, so the glass can say so",
+          len(ds) == 2 and ds[1].get("project") == "",
+          repr([d.get("project") for d in ds]))
+
+
 def test_ink():
     """Colour and the spinner must vanish cleanly wherever they'd be wrong.
 
@@ -14013,6 +14249,7 @@ def main() -> int:
     test_model_override(reg, lib, book)
     test_flags_are_not_speech(reg, lib, book)
     test_the_maker(reg, lib, book)
+    test_the_maker_picks_up_and_puts_down(reg, lib, book)
     test_ink()
     test_math()
     test_a_commit_is_not_a_tag()

@@ -91,7 +91,7 @@ Rebuild after any Go change. The webapp EMBEDS its own HTML, CSS and
 JavaScript (`go:embed`), so a change to a page is not live until you rebuild
 and restart it -- editing the file on disk does nothing to a running server.
 
-**Start the door.** `atlas-mcp` is the MCP door: it serves the 81 tools and it
+**Start the door.** `atlas-mcp` is the MCP door: it serves the 82 tools and it
 is the only thing that spawns a Manjuel engine. It holds `127.0.0.1:8090`.
 
     cd atlas\line
@@ -139,6 +139,11 @@ The pages, in the order the panel lists them:
                 brief (silent when there is nothing to say), and THE
                 REPOSITORY with its Commit and Push buttons. It repaints
                 itself every 15s and says so when what it shows is stale.
+                PROJECTS, under the run (2026-09-21): what the maker made,
+                each with its versions and its page running in a sandboxed
+                frame; "Work on this" and "Put it down" say the words for you.
+                A page there has no storage of its own -- a game forgets its
+                high score -- and opened from projects\<name>\ it keeps it.
     Chat        the same conversation, kept. The composer is disabled with
                 the reason written under it when no engine is open.
     Agents      the fourteen seats as they declare themselves in agents/.
@@ -283,7 +288,7 @@ for one by keyword and the engine runs it; the law gate can refuse it, and a
 refusal names the law. Read them on Records -> skills, or `commands.md` for
 what can be asked for in words.
 
-**Tools** are what ATLAS serves over MCP -- 81 of them, listed at
+**Tools** are what ATLAS serves over MCP -- 82 of them, listed at
 `http://127.0.0.1:8090/tools` and reachable from the glass through
 `POST /api/tools/call`. They are read-only unless their declaration says
 `Writes: true`. The ones the dashboard itself leans on:
@@ -294,8 +299,10 @@ what can be asked for in words.
     records   the estate's documents by kind, one served whole with a receipt
     muster    the declared worlds
     rack_list what the rack holds
+    projects  what the maker made: each project's versions, one page served whole
 
-Thirty-one of the eighty-one have no page yet (counted 2026-09-17) -- the record and law readers,
+Thirty-one of the eighty-two have no page yet (counted 2026-09-17; `projects`, added
+2026-09-21, has one -- the Dashboard's Projects card) -- the record and law readers,
 the rack commands, the mesh, keys and tenants. They answer over MCP today; they
 have no button.
 

@@ -43,15 +43,17 @@ a script cheaply; and a small local coder is at its best on one page. Nothing
 it loads may come from the internet (RULE 4) -- REFUSED here by arithmetic, not
 requested in a prompt and hoped for.
 
-PIECE 1 OF 3 (BUILDPATH, "The maker"). Not here yet, and named so nobody
-mistakes it for forgotten:
-    2  the preview on the glass, and a project list to pick one from
+PIECES 1 AND 2 OF 3 (BUILDPATH, "The maker"). Piece 2 is the page on the
+glass: the door's `projects` tool reads each project's own history for the
+Dashboard's list and serves a page into a sandboxed preview, and the words
+below (`find`, the pick-up and put-down reports) are how a project is picked up
+from that list -- or put down -- in a sitting. Not here yet, and named so
+nobody mistakes it for forgotten:
     3  the check: the page loaded in a browser with no window, and any error
        sent back to the Coder before a version is kept
-Until then a report says where the page is, and `page_from` checks only what
-arithmetic can: that it IS a whole page, and that it reaches for nothing
-outside this machine. It proves a page is well-formed and local, never that it
-works -- nothing here runs it.
+Until then `page_from` checks only what arithmetic can: that it IS a whole
+page, and that it reaches for nothing outside this machine. It proves a page is
+well-formed and local, never that it works -- nothing here runs it.
 """
 
 from __future__ import annotations
@@ -81,7 +83,9 @@ CHANGE_LIMIT = 12_000
 # THE SITTING'S PROJECT, by ground. One process is one sitting (serve.py and
 # cli.py both), so this lives exactly as long as the sitting it belongs to, and
 # a new sitting starts with none: "make it faster" in a fresh sitting is not
-# guessed at. Choosing an older project is piece 2's project list.
+# guessed at. An older project is picked up by name ("work on the snake game",
+# which the glass's project list sends) and put down the same way ("put it
+# down") -- piece 2.
 _CURRENT: dict[str, Path] = {}
 
 
@@ -331,6 +335,41 @@ def restore(project, target: int = 0, sitting: str = "") -> tuple[int, int]:
 
 
 # ---------------------------------------------------------------------
+# the list: picking a project up by name (piece 2)
+# ---------------------------------------------------------------------
+
+def projects(ground) -> list[Path]:
+    """Every project in the ground, by name: a folder under projects/ with a
+    history of its own. A folder without one is not a project and is not
+    listed -- the same test every read above makes first."""
+    root = Path(ground) / PROJECTS
+    try:
+        return sorted((p for p in root.iterdir() if p.is_dir() and _is_project(p)),
+                      key=lambda p: p.name)
+    except OSError:
+        return []
+
+
+def find(ground, words: str) -> list[Path]:
+    """The projects these words name. The one whose folder name they make
+    ("the snake game" -> snake-game, the rule that named it), or failing that
+    every project whose name holds all of the words ("snake" finds
+    snake-game). Empty when they name none. Two or more is for the person to
+    choose between; nothing here picks one of them on a guess."""
+    said = [w for w in re.findall(r"[a-z0-9]+", (words or "").lower())
+            if w not in _FILLER and w not in ("project", "projects")]
+    if not said:
+        return []
+    have = projects(ground)
+    key = name_for(" ".join(said))
+    exact = [p for p in have if p.name == key]
+    if exact:
+        return exact
+    want = set(key.split("-"))
+    return [p for p in have if want <= set(p.name.split("-"))]
+
+
+# ---------------------------------------------------------------------
 # what the Coder is asked, and what the person is told
 # ---------------------------------------------------------------------
 
@@ -407,3 +446,51 @@ def report_too_big(project, size: int) -> str:
             f"which the Coder's window cannot hold past about "
             f"{CHANGE_LIMIT:,}. That is a limit of this first version of the "
             f"maker, not of your request.")
+
+
+def report_picked(project, already: bool = False) -> str:
+    name = Path(project).name
+    vs = versions(project)
+    head = (f"You are already working on {name}" if already
+            else f"Working on {name} now")
+    if not vs:
+        return (f"{head}. It has no versions yet -- nothing was ever saved "
+                f"into it.\n\nSay \"put it down\" to set it aside.")
+    listing = "\n".join(f"  {i}  {note.split(': ', 1)[-1]}"
+                        for i, _sha, note in vs[-6:])
+    return (f"{head} -- it is at version {len(vs)}.\n\nIts versions:\n"
+            f"{listing}\n\nOpen {_where(project)} to see it. Ask for a change "
+            f"in plain words and it becomes version {len(vs) + 1}; say \"put it "
+            f"down\" when you are done with it.")
+
+
+def report_put_down(project) -> str:
+    name = Path(project).name
+    return (f"Put {name} down. It is kept exactly as it is -- version "
+            f"{len(versions(project))}, in {PROJECTS}\\{name}\\ -- and nothing "
+            f"is in hand now.\n\nAsk for something new to be made, or say "
+            f"\"work on {name}\" to pick it up again.")
+
+
+def _named(have) -> str:
+    return ", ".join(p.name for p in have)
+
+
+def report_nothing_in_hand(have) -> str:
+    listing = (f" The projects here: {_named(have)}." if have
+               else " There are no projects here yet.")
+    return (f"No project is in hand, so there is nothing to put down.{listing}")
+
+
+def report_which(found) -> str:
+    return (f"More than one project answers to that: {_named(found)}. Say "
+            f"which one -- \"work on {found[0].name}\".")
+
+
+def report_no_such(words: str, have) -> str:
+    if not have:
+        return (f"There is no project called \"{words}\" -- there are no "
+                f"projects here yet. Ask for something to be made: \"make me a "
+                f"snake game\".")
+    return (f"There is no project called \"{words}\". The projects here: "
+            f"{_named(have)}.")

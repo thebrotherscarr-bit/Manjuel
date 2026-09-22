@@ -1258,3 +1258,67 @@ def wants_going_back(objective: str) -> int | None:
         return None
     m = _VERSION_NO.search(text)
     return int(m.group(1)) if m else 0
+
+
+# PICKING A PROJECT UP, AND PUTTING IT DOWN (piece 2, 2026-09-21). A sitting
+# starts with nothing in hand, and until this the only way to put a project down
+# was to close the sitting. The glass's project list sends these words; a
+# person can say them too.
+#
+# PICKING UP: a verb that OPENS the request, then a name. The pipeline looks the
+# name up among the projects on disk (maker.find), so words that name none fall
+# through exactly as they did before this existed -- "open the pod bay doors" is
+# not a project, and neither is "go back to version 2" -- unless they said
+# "project" outright, and then the person is told what there is. "go back to"
+# is here on purpose: "go back to the snake game", with another project in hand,
+# is a request for the snake game, not for this project's last version.
+_PICK_RE = re.compile(
+    r"(?i)^\s*(?:(?:ok|okay|now|please|and|alright|so|then|cool|great)[,!.]?\s+)*"
+    r"(?:(?:let['’]?s|can\s+we|could\s+we|i\s+want\s+to|i['’]?d\s+like\s+to)\s+)?"
+    r"(?:please\s+)?"
+    r"(?:work\s+on|switch\s+(?:over\s+)?to|pick\s+up|open(?:\s+up)?|"
+    r"go\s+back\s+to|continue(?:\s+(?:with|on))?|resume)\s+"
+    r"(?P<what>.+?)"
+    r"(?:\s+(?:again|now|please|for\s+a\s+(?:bit|while)))*[\s.!?]*$")
+# Words that point at a thing without naming one, and the articles in front of
+# a name. "work on it" names nothing; "work on the snake game" names snake game.
+_NOT_A_NAME = frozenset({"it", "this", "that", "them", "there", "here", "one"})
+_ARTICLES = re.compile(r"(?i)^(?:(?:the|a|an|my|our|that|this)\s+)+")
+
+
+def wants_picking_up(objective: str) -> str:
+    """The words naming a project to pick up -- "work on the snake game
+    project" -> "snake game" -- or ""."""
+    m = _PICK_RE.match(objective or "")
+    if not m:
+        return ""
+    what = re.sub(r"(?i)\s+projects?$", "", m.group("what").strip())
+    what = _ARTICLES.sub("", what).strip(" .,!?\"'")
+    words = re.findall(r"[a-z0-9]+", what.lower())
+    if not words or all(w in _NOT_A_NAME for w in words):
+        return ""
+    return what
+
+
+# PUTTING DOWN names no project -- it is the one in hand -- and it must be the
+# WHOLE request, because two of its words are a change's: `put` opens a change
+# ("put a border round it"), and "put it down lower" asks for one. Anchored at
+# both ends, "put it down" can mean only this. It is asked before a change for
+# the same reason a go-back is.
+_PUT_DOWN_RE = re.compile(
+    r"(?i)^\s*(?:(?:ok|okay|now|please|and|alright|right|so|then|cool|great|"
+    r"thanks|thank\s+you)[,!.]?\s+)*"
+    r"(?:(?:let['’]?s|you\s+can|can\s+you|could\s+you)\s+)?(?:please\s+)?"
+    r"(?:put\s+(?:it|this|that|(?:the|this|that)\s+project)\s+(?:down|away|aside)"
+    r"|put\s+(?:down|away)\s+(?:the|this|that)\s+project"
+    r"|set\s+(?:it|this|that|(?:the|this|that)\s+project)\s+aside"
+    r"|(?:close|shelve)\s+(?:the|this|that)\s+project"
+    r"|stop\s+working\s+on\s+(?:it|this|that|(?:the|this|that)\s+project)"
+    r"|(?:(?:i['’]?m|i\s+am|we['’]?re|we\s+are)\s+)?(?:all\s+)?(?:done|finished)"
+    r"\s+with\s+(?:it|this|that|(?:the|this|that)\s+project))"
+    r"(?:\s+(?:for\s+now|for\s+today|now))?[\s.!,]*(?:thanks|thank\s+you)?[\s.!]*$")
+
+
+def wants_putting_down(objective: str) -> bool:
+    """Whether the words ask to put the project in hand down."""
+    return bool(_PUT_DOWN_RE.match(objective or ""))

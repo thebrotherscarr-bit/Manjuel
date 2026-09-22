@@ -1765,8 +1765,10 @@ three versions. The door and the glass still run (pids 22844 and 24656). No sitt
 **Next session** — not decided by this hand. Waiting on his word: saving and sending this
 piece; the maker's piece 2 and piece 3 (BUILDPATH, "The maker"); and the wife test itself.
 UPDATED later the same day, the words above kept: the piece was saved and sent (`022989c`);
-then the glass got its lock, placed and restarted on his word the same afternoon; and his next
-words were "continue on to setting it up for the vibe-coding loop".
+then the glass got its lock, placed, saved and sent on his word the same afternoon (core
+`7725b99`, atlas `462ace0`); and his next words were "continue on to setting it up for the
+vibe-coding loop". Then piece 2, on "go on piece 2": built and proven, and placed on
+his word on 2026-09-22.
 
 **At close, the second time** — saved through the council as `022989c` (sitting 259, closed
 with its toll) and sent, on his word ("save it and send it through the dashboard"); core
@@ -1790,4 +1792,33 @@ verifies, and the door, open to every program on this computer, will mint the fi
 live:** the build waits on his allowance to be placed; the glass running now is the old one.
 **Unsaved:** atlas's code and both repositories' record lines. No sitting is open. **Placed**,
 on his word ("place it and restart the glass"): the glass runs the new build on 127.0.0.1
-alone, gate on, and its Welcome screen waits for his name and PIN.
+alone, gate on, and its Welcome screen waits for his name and PIN. **Saved and sent**, on his
+word, once he had set them: through the council in sitting 260 (closed with its toll), core
+`7725b99` and atlas `462ace0`, both level with GitHub. Written after the save; it rides with the
+next.
+
+**Then the maker's piece 2**, on his word: "go on piece 2".
+
+- **What it does.** The Dashboard's Projects card shows every project with its versions, and its
+  page running in a sandboxed frame. "work on the snake game" and "put it down" are answered by
+  the engine itself, with no seat, and the delivery names the project in hand.
+- **How.** The door's 82nd tool, `projects`, reads each project's own history. The glass serves
+  a page under a CSP sandbox header.
+- **Found on the way, and built around.** The app's own browser pane refuses any frame that
+  carries a `sandbox` attribute, so the header is the only wall, and it was measured holding.
+  And Go's `EvalSymlinks` does not follow a Windows junction, so the door asks every step whether
+  it is a plain folder.
+- **Proven.** On a mirror: strokes 2629/2629, smoke 65/65, standup dry 9/9, law 17/17, BUILDMAP
+  regenerated. Eleven engine undos, seven door and five glass, each red. The real door and glass
+  on scratch ports, 20 of 20.
+
+**Restart required:** `manjuel/` moved. **Not live:** the new door and glass wait in the hand's
+scratch, and placing them is his word. **Unsaved:** this piece, in both repositories. No sitting
+is open.
+
+**Placed**, on his word, 2026-09-22 ("place them and restart the door and the glass"). With no
+sitting open, the door and the glass were stopped by pid, the builds copied in and hashing as
+built, and both restarted on their own command lines. The door serves 82 tools; the glass listens
+on 127.0.0.1 alone with his lock. His Dashboard opens on the lock screen with the Projects card
+behind it. An Archive `atlas-mcp.exe` running beside the door was left alone. **Unsaved:** this
+piece, in both repositories. No sitting is open.

@@ -34,6 +34,87 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The maker, piece 2: the projects on the glass, and words to pick one up and put it down (operator, 2026-09-21: "go on piece 2")
+
+Why: SPEC 4.8 held piece 2 OPEN. The page was not shown on the glass, there was no project list to
+pick one from, and the only way to put a project down was to close the sitting. BUILDPATH named it:
+"a preview pane beside the run, and a project list to pick one from, which is also where a project
+is put DOWN". No sitting was open.
+
+- **`manjuel/intent.py`:** two new readers.
+  - `wants_picking_up`: "work on the snake game", "switch to the calculator", and "pick up",
+    "open", "go back to", "continue with" or "resume" something. It allows the filler a person says
+    around it ("ok", "let's", "please", "again", "for a bit") and drops a trailing "project". Words
+    that only point ("it", "this", "that") name nothing.
+  - `wants_putting_down`: the WHOLE request must be a put-down ("put it down", "put the project
+    away", "set it aside", "shelve the project", "stop working on it", "I'm done with it", with "for
+    now" or "thanks"). `put` is also a change's verb, so "put it down lower" and "put a border round
+    it" stay changes.
+- **`manjuel/maker.py`:**
+  - `projects`: the folders under `projects/` with a `.git` of their own, by name.
+  - `find`: an exact name first, else the one project holding every word named. When two match,
+    both are named and neither is picked.
+  - The plain reports: picked up (its versions, where to open it, what to say next), already in
+    hand, put down (kept exactly as it is), nothing in hand, which one, and no such project.
+- **`manjuel/pipeline.py`:** the maker route answers both with no seat. A pick-up by name puts that
+  project in hand for the sitting. A put-down forgets it, and is asked BEFORE a change. Words that
+  name no project are left to the rest of the turn ("open the pod bay doors" is not the maker's).
+  If the request says "project", the engine answers instead: no such project, and the ones there
+  are. Nothing on disk moves either way.
+- **`manjuel/serve.py`:** the delivery event carries `project`, the one in hand after the turn (or
+  ""), so a front end knows it without asking.
+- **atlas** (its CHANGELOG has the whole entry, "The maker's projects on the glass"):
+  - the door's 82nd tool, `projects`, read-only: the list off each project's own history, and a
+    page as it stands or as a version was. A name that is a path is refused, and so is a project
+    that is a link; a junction got past the first cut, measured;
+  - the glass's page route, serving the page under a `Content-Security-Policy: sandbox` header,
+    measured in the app's own pane: the page runs and reaches nothing of the glass's;
+  - the Dashboard's Projects card, whose "Work on this" and "Put it down" run the words above.
+- **`tests/test_manjuel.py`:** `test_the_maker_picks_up_and_puts_down`, 53 strokes. They cover the
+  words both ways; the list and `find` on a temp ground holding a folder with no history of its own;
+  and turns end to end: a pick-up seats no model, then a change on it and a go-back each land as the
+  next version. They also cover a twin name that makes the person choose, a project that does not
+  exist, a put-down with nothing in hand, and the headless door's delivery naming the project and
+  then none.
+- **Proven on a mirror:** strokes 2576 -> 2629, smoke 65/65, standup dry 9/9, `law.py --prove`
+  17/17, `buildmap --check` clean. By reversal, eleven undos on the mirror, each turning red:
+  - no pick-up branch; no put-down branch; the put-down asked after a change;
+  - a delivery with no project;
+  - `find` taking exact names only, or picking the first of several;
+  - a folder with no history listed as a project;
+  - a put-down that leaves the project in hand; a pick-up that does not put it there;
+  - words naming no project answered instead of left to the turn;
+  - a trailing "project" kept in the name.
+  His terminal is still the proof.
+- **And atlas in scratch:** the Go packages green, 12 undos each red, and the real binaries on
+  scratch ports 20 of 20: the list, the pages under the header, and the two words through an engine
+  on a mirror world. His door and glass were not touched.
+- **Docs:** SPEC (the words gain "in hand"; the maker row; 4.8's piece 2 MET and its NOTE; the wife
+  test's line; 8.2), BUILDPATH (Layer 3's `maker.py`; piece 2 BUILT), DESIGN 14.15 (piece 2's three
+  decisions), pipelines.md (picking one up and putting it down), README (the Dashboard's projects;
+  the door's 82 tools), RUNBOOK (82 tools, the Projects card, `projects` in the tools list).
+  BUILDMAP regenerated (1,505 -> 1,519 lines); today's HANDOFF block; DAYBOOK Session 12. TASKS.md
+  untouched.
+- **Restart required:** `manjuel/` moved, and the next Boot runs the new engine. The new door and
+  glass are built in the hand's scratch and NOT placed. Placing both and restarting them is his word;
+  until then the door serves 81 tools and the Dashboard has no Projects card.
+- **Named, not fixed:**
+  - A page in the frame has no storage, so a game there forgets its high score. Opened from its
+    folder, it keeps it.
+  - RUNBOOK's Dashboard paragraph still puts THE REPOSITORY and its Commit and Push buttons on the
+    Dashboard, but that card moved to Version control on 2026-09-10 (home.js says so).
+- **Placed and restarted 2026-09-22, on his word ("place them and restart the door and the
+  glass"):**
+  - No sitting was open and no engine stood. The door and the glass were stopped by pid, each
+    checked by path first. The builds were copied in, hashing as built, and both started on the
+    command lines they had.
+  - The door serves 82 tools and answers `projects` on the ground (snake-game, three versions).
+  - The glass listens on 127.0.0.1 alone with its gate on, and his Dashboard opens on the lock
+    screen with the Projects card behind it.
+  - An `atlas-mcp.exe` running from `Desktop\Archive` was left alone.
+  - SPEC 4.8 and 8.2, BUILDPATH's piece 2 and DESIGN 14.15 now say placed; HANDOFF has a
+    2026-09-22 block. atlas's CHANGELOG has the detail.
+
 ### The glass takes a PIN: one user, this computer only (operator, 2026-09-21: "Simple login system for now, user/pin to start")
 
 His words after it, in order: asked who may open the glass, *"This PC only"*; *"I like this
@@ -69,6 +150,10 @@ open.
   build hashes in place as built, the glass answers 127.0.0.1:8091 alone with its gate on, and
   his Dashboard tab opens on the Welcome screen; the name and the PIN are his. The door was not
   touched.
+- **Saved and sent the same day, on his word ("save it and send it through the dashboard"):**
+  through the council in sitting 260 -- core `7725b99`, atlas `462ace0` (by the world
+  parameter) -- and both GitHub `main`s match. This line, and HANDOFF's and DAYBOOK's, are
+  written after the save and ride with the next one.
 
 ### The maker, piece 1: "make me a snake game" is made, versioned and reported by the engine (operator, 2026-09-21: "projects folder in Research is fine, build it")
 

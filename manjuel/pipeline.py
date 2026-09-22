@@ -1198,7 +1198,8 @@ def _maker_route(ctx: RunContext, registry: AgentRegistry, skills: SkillLibrary,
                  env, report) -> str:
     """Is this turn the maker's? "" (no), "made" (the Coder sits alone and the
     engine saves what it writes) or "answered" (the engine answered and no seat
-    sits -- a go-back, or a change too big for the Coder's window).
+    sits -- a go-back, a change too big for the Coder's window, or a project
+    picked up or put down).
 
     A request that NAMES A TOOL is never the maker's: "commit it" is git's.
     Neither is any turn in a ground with no Expert Coder seat, or no ground,
@@ -1219,7 +1220,29 @@ def _maker_route(ctx: RunContext, registry: AgentRegistry, skills: SkillLibrary,
         ctx.notes.append(note)
         report("  " + ink.dim(note))
         return "made"
+    # PICKING ONE UP (piece 2) -- before anything asks what is in hand, because
+    # picking a project up is how a new sitting comes to have one. Words that
+    # name no project fall through untouched, unless they said "project".
+    words = intent.wants_picking_up(ctx.objective)
+    if words:
+        found = maker.find(ground, words)
+        if len(found) == 1:
+            _maker_pick_up(ctx, ground, found[0], report)
+            return "answered"
+        if found or re.search(r"(?i)\bprojects?\b", ctx.objective):
+            out = (maker.report_which(found) if found
+                   else maker.report_no_such(words, maker.projects(ground)))
+            ctx.notes.append(f"maker: {words!r} names "
+                             + (f"{len(found)} projects -- the person chooses"
+                                if found else "no project"))
+            report("  " + ink.dim(ctx.notes[-1]))
+            ctx.steps.append(StepResult(agent="Maker", model="(engine)", output=out))
+            return "answered"
     project = maker.current(ground)
+    # PUTTING IT DOWN, before a change: `put` is a change's verb too.
+    if intent.wants_putting_down(ctx.objective):
+        _maker_put_down(ctx, ground, project, report)
+        return "answered"
     if project is None:
         return ""
     back = intent.wants_going_back(ctx.objective)
@@ -1261,6 +1284,34 @@ def _maker_go_back(ctx: RunContext, env, project, target: int, report) -> None:
         ctx.artifacts.append(project / maker.PAGE)
         ctx.notes.append(f"maker: {project.name} went back to version {to}, "
                          f"saved as version {n}")
+    report("  " + ink.dim(ctx.notes[-1]))
+    ctx.steps.append(StepResult(agent="Maker", model="(engine)", output=out))
+
+
+def _maker_pick_up(ctx: RunContext, ground, project, report) -> None:
+    """Put a project in hand for this sitting. Nothing on disk moves: the
+    project is read, never changed, by being picked up."""
+    held = maker.current(ground)
+    already = held is not None and held.resolve() == project.resolve()
+    maker.set_current(ground, project)
+    ctx.notes.append(f"maker: {project.name} picked up (version "
+                     f"{len(maker.versions(project))})"
+                     + (" -- it was already in hand" if already else ""))
+    report("  " + ink.dim(ctx.notes[-1]))
+    ctx.steps.append(StepResult(agent="Maker", model="(engine)",
+                                output=maker.report_picked(project, already)))
+
+
+def _maker_put_down(ctx: RunContext, ground, project, report) -> None:
+    """Put the project in hand down. It stays on disk exactly as it is; the
+    sitting simply has none in hand, as a new sitting has none."""
+    if project is None:
+        out = maker.report_nothing_in_hand(maker.projects(ground))
+        ctx.notes.append("maker: asked to put a project down with none in hand")
+    else:
+        maker.forget(ground)
+        out = maker.report_put_down(project)
+        ctx.notes.append(f"maker: {project.name} put down -- none in hand now")
     report("  " + ink.dim(ctx.notes[-1]))
     ctx.steps.append(StepResult(agent="Maker", model="(engine)", output=out))
 
@@ -1361,9 +1412,10 @@ def run_pipeline(
 
     # THE MAKER (2026-09-21), AFTER THE LAW AND BEFORE EVERY OTHER ROUTE. A
     # request to make something -- or to change or go back on the project this
-    # sitting is working on -- is decided here by arithmetic. On a made turn the
-    # spine is the Coder alone; on an answered turn the engine has already said
-    # what happened and no seat sits. Every other turn is untouched.
+    # sitting is working on, or to pick a project up or put it down -- is
+    # decided here by arithmetic. On a made turn the spine is the Coder alone;
+    # on an answered turn the engine has already said what happened and no seat
+    # sits. Every other turn is untouched.
     make = _maker_route(ctx, registry, skills, env, report)
     if make == "answered":
         return ctx

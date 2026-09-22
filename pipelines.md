@@ -295,6 +295,33 @@ the check refuses -- cut off before `</html>`, or loading from the internet --
 is not saved, and the report says why in words. A change is only read while
 the sitting has a project in hand; a new sitting starts with none.
 
+PICKING ONE UP, AND PUTTING IT DOWN (piece 2, 2026-09-21). Both are the
+engine's answer too, and no seat sits for either. The Dashboard's project list
+sends the first words; a person can type either:
+
+```
+operator   work on the snake-game project     (or "work on the snake game",
+                                               "switch to the calculator",
+                                               "open ...", "go back to ...")
+Maker      Working on snake-game now -- it is at version 2. Its versions: ...
+           Ask for a change in plain words and it becomes version 3; say
+           "put it down" when you are done with it.
+           delivery.project = "snake-game"   (how the glass knows)
+
+operator   put it down                        (or "put the project down",
+                                               "I'm done with it", "close
+                                               the project" -- the WHOLE request)
+Maker      Put snake-game down. It is kept exactly as it is -- version 2, in
+           projects\snake-game\ -- and nothing is in hand now.
+           delivery.project = ""
+```
+
+Words that name no project fall through as they always did ("open the pod bay
+doors", "go back to version 1" still goes back); words that say "project" and
+name none are told what there is; two projects answering to one word are both
+named and neither is picked. "put it down lower" is still a change, and "put
+it back" still goes back.
+
 ### `court`, a judgement — four heads, then a ruling
 
 ```

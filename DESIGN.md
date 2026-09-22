@@ -1276,7 +1276,52 @@ and a reload do nothing. And it carries the first thing piece 3 would
 catch: `clearInterval(game)` with no `game` declared, harmless only because
 the Game Over alert reloads the page first.
 
-**What this section does not claim.** The page is not shown on the glass
-(piece 2); nothing runs it before it is kept (piece 3); and so far only a
-hand -- an agent driving the dashboard -- has tried it, not a person. The
-wife test is this section's DONE, and it has not been run.
+**Piece 2: the page on the glass** (built 2026-09-21 on his word, "go on
+piece 2"). The Dashboard's Projects card lists every project with its
+versions and shows the page running under the run. Three of its decisions
+are architecture, and each was measured before it was kept.
+
+*The list is read by the door, off each project's own history.* The glass
+asks the door, and the door grew one read-only tool, `projects`: the folders
+under `projects/` that hold a `.git` of their own, each one's versions from
+its own log, and one version's page, served whole and refused past a
+megabyte. A name is a name, never a path. A project that is a LINK is
+refused, and that took a measurement: Go's `EvalSymlinks` does not follow a
+Windows junction, so the first cut's inside-check let a junction's `.git`
+through. Now every step is asked, with `Lstat`, whether it is a plain
+folder.
+
+*The page is walled by a header, and only by a header.* The glass serves it
+under `Content-Security-Policy: sandbox allow-scripts allow-modals` --
+never `allow-same-origin` -- so the page runs in an origin of its own. It
+cannot read the glass's cookie, its DOM or its storage, and it cannot fetch
+anything. The frame carries NO `sandbox` attribute, because the app's own
+browser pane refuses any frame that does (`ERR_BLOCKED_BY_CLIENT`,
+measured). With the header alone, measured in that pane: the page's script
+ran and its canvas drew, its origin was `null`, and the parent, the cookie,
+localStorage and fetch were all refused. The price is named: a page in the
+frame has no storage, so a game forgets its high score there. Opened from
+its folder, it keeps it.
+
+*Picking up and putting down are words, not buttons.* The project in hand
+lives in the engine's process. A button that set it from the glass would be
+a second way in beside the turn. So the card's "Work on this" and "Put it
+down" type words into the run ("work on the snake-game project", "put the
+project down"), and the engine answers them itself with no seat
+(`intent.wants_picking_up`, `wants_putting_down`, `maker.find`). The turn
+is in the record like any other. The delivery names the project in hand,
+and that is how the card learns it.
+
+`put` is a change's verb too ("put a border round it"). So the put-down
+reader must match the WHOLE request, and it is asked before a change: "put
+it down lower" is still a change. A name that matches no project is left to
+the rest of the turn ("open the pod bay doors" is not the maker's) unless
+the request says "project". When two projects match, both are named and the
+person chooses. Nothing is guessed.
+
+**What this section does not claim.** Nothing runs the page before it is
+kept (piece 3). Piece 2 was proven on scratch servers and placed on his glass
+on 2026-09-22, on his word; nobody has yet used the Projects card in a
+sitting. And so far only a hand -- an agent driving the dashboard -- has
+tried the maker, not a person. The wife test is this section's DONE, and it
+has not been run.

@@ -80,6 +80,11 @@ knows Ollama; nothing else knows either.**
                   again as a new version, with no model. Every git call asks
                   the project's own `.git` first, so the ground's history is
                   never written. The turn's job rides on RunContext.make.
+                  Since piece 2 (2026-09-21) a project is also picked up by
+                  name and put down by words the engine answers with no
+                  seat (`projects`, `find`, intent.wants_picking_up and
+                  wants_putting_down), and the delivery names the one in
+                  hand.
 
 ## Layer 4 — measurement (advisory, never authoritative)
 
@@ -501,11 +506,20 @@ rhythm above, and none starts until he names it.
        15.4s, made faster in 10.8s, put back in 0.6s). intent.wants_making,
        wants_changing and wants_going_back; maker.py; the pipeline's maker
        route; `test_the_maker`.
-    2  THE PAGE ON THE GLASS -- a preview pane beside the run, and a project
-       list to pick one from, which is also where a project is put DOWN (today
-       only closing the sitting does that). The glass's work, reading each
-       project's own history for the list; the engine's reach does not grow.
-       Not ordered.
+    2  THE PAGE ON THE GLASS -- BUILT 2026-09-21 on his word ("go on piece
+       2"), proven on scratch servers, and PLACED 2026-09-22 on his word
+       ("place them and restart the door and the glass"). The Dashboard's
+       Projects card, under the run: each project's versions read off its own
+       history by the door's new read-only `projects` tool, and its page in a
+       frame served under a `Content-Security-Policy: sandbox` header (its own
+       origin, no network). "Work on this" and "Put it down" say the words
+       the engine answers itself -- "work on the snake game", "put it down"
+       -- so picking up and putting down are in the record like any turn, and
+       the delivery's `project` is how the card knows. The engine's reach did
+       not grow: its new words read and hold, and write nothing.
+       `test_the_maker_picks_up_and_puts_down`; atlas `projects_test.go`
+       (door and glass). The door and the glass run these builds since
+       2026-09-22; an engine booted after that knows the words.
     3  THE CHECK THAT RUNS IT -- the page loaded in a browser with no window
        before a version is kept, and any error it raises sent back to the
        Coder for one more try. Until then a saved page is whole and local,

@@ -14,7 +14,7 @@ RUN THE SMOKE SUITE, not just the strokes. It was RED at 34/50 from 14e2711
 to 2026-09-02 because its StubRuntime had not been moved with pipeline.py,
 and nothing noticed: the strokes were green the whole time.
 
-**START AT `## HANDOFF FOR 2026-09-21`** (search for it — the day blocks
+**START AT `## HANDOFF FOR 2026-09-22`** (search for it — the day blocks
 stack newest first above `## Open`). CHANGELOG.md carries the versions;
 DAYBOOK.md's last entry carries the day's intent. Everything between here and
 there is standing reference that has not moved.
@@ -670,6 +670,37 @@ dropped by operator ruling 2026-09-01 — see the fix log.
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
 
+## HANDOFF FOR 2026-09-22 — read this before anything below it
+
+**Where the ground stands.** core `main@7725b99` and atlas `main@462ace0`, both level with GitHub
+since 2026-09-21 15:36. The maker's piece 2 sits unsaved on top of both, and on the core so do the
+lock's record lines written after that save. No sitting is open: 260, the newest, closed
+2026-09-21 15:36. Piece 2's proofs are a mirror's (strokes 2629/2629, smoke 65/65, standup dry
+9/9). His terminal is still the proof, and no live standup has run on this code.
+
+**PLACED, on his word ("place them and restart the door and the glass").** With no sitting open
+and no engine standing, the door (pid 22844) and the glass (pid 7160) were each checked by pid and
+path, stopped by pid, and replaced with the piece-2 builds, which hash as built. The builds they
+replaced are kept in the hand's scratch. They run now as:
+
+- **the door**, pid 26876 on 127.0.0.1:8090: 82 tools, carrying research and atlas, with
+  `projects` answering on the ground (snake-game, three versions);
+- **the glass**, pid 27600 on 127.0.0.1:8091: gate on, his lock found, `projects.js` served
+  byte-identical to disk.
+
+His Dashboard opens on the lock screen with the Projects card behind it; the PIN is his. Once he
+signed in, the card listed snake-game's three versions and the frame drew the game's board. The
+next Boot runs an engine on the new code, which knows "work on ..." and "put it down".
+
+**Two things to know.**
+- The door's own notes are in `atlas\line\mcp.err.log` this start (the two streams kept apart, as
+  atlas's `.gitignore` names). `mcp.log`, which RUNBOOK says to check, is its empty stdout.
+- An `atlas-mcp.exe` from `Desktop\Archive` (pid 23164, started 2026-09-21 09:33) runs beside the
+  door. It is outside the ground and not this hand's, and it was left alone. Stop the door by its
+  pid, never by its name.
+
+**Open, his:** saving and sending both repositories; piece 3; the wife test.
+
 ## HANDOFF FOR 2026-09-21 — read this before anything below it
 
 **Where the ground stands, Monday morning.** core `main@8cffd98` and atlas `main@186608f`,
@@ -803,6 +834,47 @@ next. No sitting is open.
 pid, the build copied in and hashing as built, the glass restarted as pid 7160 on 127.0.0.1:8091
 alone, gate on, nobody set up yet. His Dashboard tab opens on the Welcome screen; the name and
 the PIN are his to type. The door (pid 22844) was not touched.
+
+**SAVED AND SENT, on his word ("save it and send it through the dashboard"), after he set his
+name and PIN:** through the council in sitting 260 (15:32-15:36, four runs, closed with its
+toll) -- core `7725b99` (`022989c..7725b99`) and atlas `462ace0` (`186608f..462ace0`), atlas by
+the world parameter (`git commit in atlas: "..."` decided by arithmetic, and `git push in atlas`,
+where the Router named the world itself). Both GitHub `main`s match. Checked before each send:
+one commit each, this piece's files only, nothing under `worlds/`, no `.env`, no `data/`. This
+line is written after the save and rides with the next one.
+
+**THEN THE MAKER, piece 2, on his word ("go on piece 2").** The glass shows what the maker made,
+and a project is picked up and put down by name.
+
+- **The engine** reads "work on the snake game" and "put it down" and answers both itself: no seat
+  sits and nothing on disk moves. The delivery names the project in hand (`project`).
+- **The door** has an 82nd tool, `projects`, read-only: every project's versions off its own
+  history, and one version's page.
+- **The glass** serves that page under a `Content-Security-Policy: sandbox` header (its own origin,
+  no network) to the Dashboard's new Projects card. The card's "Work on this" and "Put it down"
+  type the engine's words into the run.
+
+Two things measured on the way are worth knowing. The app's own browser pane refuses any frame that
+carries a `sandbox` attribute, so the header is the only wall, and it was measured holding. And
+Go's `EvalSymlinks` does not follow a Windows junction, so the door asks every step whether it is a
+plain folder.
+
+**Proven:**
+- on a mirror: strokes 2629/2629, smoke 65/65, standup dry 9/9, `law.py --prove` 17/17, BUILDMAP
+  regenerated;
+- by reversal: eleven engine undos, seven door and five glass, each red;
+- the real door and glass on scratch ports, 20 of 20, with an engine on a mirror world.
+
+**RESTART REQUIRED:** `manjuel/` moved, and the next Boot runs it. **NOT LIVE YET:** the new door
+(sha256 3c0ce9c774622738) and glass (91a6875d9acb8ed0) wait in the hand's scratch. Placing both
+and restarting them is his word; until then the door serves 81 tools and the Dashboard has no
+Projects card.
+
+**Known:** a page in the frame has no storage, so a game there forgets its high score (opened from
+its folder, it keeps it). **Where to look:** SPEC 4.8, DESIGN 14.15's piece 2, pipelines.md,
+atlas's CHANGELOG ("The maker's projects on the glass"). **Unsaved:** this piece in both
+repositories, with the lock's record lines above. **Open, his:** placing the door and the glass,
+saving and sending both repositories, piece 3, and the wife test. No sitting is open.
 
 ## HANDOFF FOR 2026-09-19 — read this before anything below it
 

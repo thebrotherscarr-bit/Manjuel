@@ -32,7 +32,7 @@ court -- six seats, the big models, minutes -- is `--court`, on its own.
 
 ## The dashboard
 
-There is a control plane: `atlas`. Two processes -- an MCP door serving 81
+There is a control plane: `atlas`. Two processes -- an MCP door serving 82
 tools on `:8090`, and a web app on `:8091` -- and the browser is where the
 whole loop lives: boot an engine, type an objective, watch the seats run,
 commit and push through the council, close the sitting. Nothing opens a
@@ -75,7 +75,10 @@ internet), and saves it as version 1 of a project in `projects/`, a folder
 with its own history. "Make it faster" is version 2; "go back" puts an
 earlier version back as a new one, so nothing is lost. Every time, the answer
 is the engine's plain report: what was made, where to open it, what to ask
-next. SPEC 4.8 is what it does and does not do yet.
+next. The Dashboard lists every project with its versions and shows its page
+running in a sandboxed frame; "work on the snake game" picks one up and "put
+it down" sets it aside -- words the engine answers itself, no seat sitting.
+SPEC 4.8 is what it does and does not do yet.
 
 Each seat is told the date and hour, so "written 2h ago" means something. A
 file too big for any window arrives as part 1 of N with its own headings
