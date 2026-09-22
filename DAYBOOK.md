@@ -1767,8 +1767,8 @@ piece; the maker's piece 2 and piece 3 (BUILDPATH, "The maker"); and the wife te
 UPDATED later the same day, the words above kept: the piece was saved and sent (`022989c`);
 then the glass got its lock, placed, saved and sent on his word the same afternoon (core
 `7725b99`, atlas `462ace0`); and his next words were "continue on to setting it up for the
-vibe-coding loop". Then piece 2, on "go on piece 2": built and proven, and placed on
-his word on 2026-09-22.
+vibe-coding loop". Then piece 2 ("go on piece 2"): built, proven, placed, saved and
+sent (`268b3ff`) on 2026-09-22.
 
 **At close, the second time** — saved through the council as `022989c` (sitting 259, closed
 with its toll) and sent, on his word ("save it and send it through the dashboard"); core
@@ -1821,4 +1821,17 @@ sitting open, the door and the glass were stopped by pid, the builds copied in a
 built, and both restarted on their own command lines. The door serves 82 tools; the glass listens
 on 127.0.0.1 alone with his lock. His Dashboard opens on the lock screen with the Projects card
 behind it. An Archive `atlas-mcp.exe` running beside the door was left alone. **Unsaved:** this
-piece, in both repositories. No sitting is open.
+piece, in both repositories. No sitting is open. **Saved and sent**, on his word ("save it and
+send it through the dashboard"): through the council in sitting 261 (closed with its toll), core
+`268b3ff` and atlas `d94c1e9`, both level with GitHub. Written after the save; it rides with the
+next.
+
+**Then the review, and two pieces** (2026-09-22). His ask: the backend solid enough to run
+without an agent at the front -- "a full handoff from claude-steward as the front end agent
+within 24 hours", core and workflows first, the glass and authorisation after. The review, read
+in the code, found atlas's version control out of step and the durable parts leaking at their
+seams (HANDOFF, 2026-09-22). **atlas's version control**, on "let's get that knocked out": every
+stamp at 0.1.6, the bump tool moving Cargo.lock, the door refusing a mark over a stale stamp, the
+push check running the whole battery -- saved and sent as atlas `3a07dfd` (sitting 262), and the
+door and glass placed (pids 8116 and 24548). **Piece 1, "Survives crashes"**: built and proven on
+a mirror, not placed, not saved; RESTART REQUIRED. Pieces 2 to 5 of the plan wait on his word.

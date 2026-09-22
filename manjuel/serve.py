@@ -72,6 +72,13 @@ IDLE_CLOSE seconds -- thirty minutes -- between turns, the door closes the
 sitting exactly as `close` does and emits `closed` unasked, the reason in
 its `why`. Never mid-turn, and never while a needs_answer is waiting.
 
+AND AN ENGINE THAT DIES HOLDS NOTHING (2026-09-22). A hang-up is heard at
+once, by the loop and by every question after it -- never waited out. Every
+exit after the sitting line closes the sitting: a fault or a Ctrl-C in the
+boot, and an interrupt anywhere after it. And this door reaps as the REPL
+does: a sitting left open by a process that is gone is closed before its
+own opens, so THE LINE no longer finds a dead engine's world locked.
+
 An `objective` is anything the REPL would take at its prompt: a plain
 turn, a `/command`, `@seat words`, "pay the toll", "remember that". One
 turn at a time, in order; an objective sent mid-run waits its turn. The
@@ -293,7 +300,18 @@ class Inbox:
             self._q.put(None)                  # EOF: the client hung up
 
     def take(self, timeout: float | None = None) -> dict | None:
-        """The next command, or None at EOF."""
+        """The next command, or None at EOF -- and None at every call after it.
+
+        A HANG-UP IS REMEMBERED (2026-09-22). EOF used to be one None in the
+        queue, and the first taker spent it. When a question was pending, that
+        was ask(): it raised EOFError and the turn moved on, and the loop then
+        waited the whole IDLE_CLOSE for a client that had already gone -- or,
+        if the same turn asked again, waited on the queue forever, with its
+        sitting open and nothing able to reap a process that was still alive.
+        Once the pump has ended and nothing is queued, every take answers None
+        at once: the second question and the loop both hear the hang-up."""
+        if self.closed and self._q.empty():
+            return None
         try:
             return self._q.get(timeout=timeout)
         except queue.Empty:
@@ -766,10 +784,9 @@ def open_wire(out=None, source=None) -> tuple[Wire, Inbox]:
 
 def main(argv: list[str] | None = None) -> int:
     from . import cli as _cli
-    from . import boot, dotenv, gitstate, ink
+    from . import dotenv
     from . import seatlog as _log
-    from . import watch as _watch
-    from .skills import EMBED_MODEL, index_roots
+    from .skills import EMBED_MODEL
 
     wire, inbox = open_wire()
     inbox.start()
@@ -821,8 +838,53 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     _mark("rack checked")
+    # A LOCK HELD BY NOBODY IS RELEASED HERE TOO (2026-09-22). cli.main has
+    # reaped since 2026-09-17; this door never did, and it is the one THE LINE
+    # spawns -- so a crashed engine's line stood open until someone opened a
+    # REPL on that world, and the door refused the world until then. Closes
+    # ONLY what it can prove is dead: a recorded pid that no longer exists.
+    try:
+        _log.reap_orphans(ROOT, report=print)
+    except Exception as exc:
+        print(f"  (the orphan check could not run: {exc})")
     _log.record(ROOT, sess.sitting)
     _mark("sitting line written")
+    # EVERY EXIT FROM HERE ON CLOSES THE SITTING (2026-09-22). The line above
+    # is written before anything below can fail, and until today only
+    # door.serve() was guarded: a fault in the git read, the warm, the
+    # watcher, the boot report or the thread read left the sitting open with
+    # no process behind it, and a Ctrl-C anywhere here -- or a cancel that
+    # landed as a turn ended, which interrupt_main delivers the same way --
+    # left manjuel.py's `sys.exit(130)` as the only close there was.
+    try:
+        return _open_and_serve(sess, door, wire, ROOT, EMBED_MODEL)
+    except KeyboardInterrupt:
+        print("\n  interrupted -- closing the sitting so the ledger does not hold it open.")
+        if not sess.sitting.ended:
+            door._close("interrupted")
+        return 130
+    except Exception as exc:
+        # cli.main's shape: close the sitting so the ledger does not hold it
+        # open, THEN show the fault whole.
+        print(f"\n  !! unhandled: {type(exc).__name__}: {exc}")
+        print("  closing the sitting so the ledger does not hold it open.")
+        wire.emit("error", text=f"unhandled: {type(exc).__name__}: {exc}")
+        try:
+            if not sess.sitting.ended:
+                door._close("unhandled fault")
+        finally:
+            raise
+
+
+def _open_and_serve(sess, door: Door, wire: Wire, ROOT: Path, EMBED_MODEL: str) -> int:
+    """Everything after the sitting line: the boot the REPL does, `opened`,
+    then the door. main() guards all of it, so nothing here can leave the
+    sitting open behind a dead process."""
+    from . import cli as _cli
+    from . import boot, gitstate, ink
+    from . import watch as _watch
+    from .skills import index_roots
+
     g0 = gitstate.read(ROOT)
     _mark("git read")
     print(f"  sitting {sess.sitting.n} · session {sess.session} · {g0.stamp()}")
@@ -864,18 +926,7 @@ def main(argv: list[str] | None = None) -> int:
               commands=list(COMMANDS), events=list(EVENTS))
 
     _mark("OPENED emitted")
-    try:
-        return door.serve()
-    except Exception as exc:
-        # cli.main's shape: close the sitting so the ledger does not hold
-        # it open, THEN show the fault whole.
-        print(f"\n  !! unhandled: {type(exc).__name__}: {exc}")
-        print("  closing the sitting so the ledger does not hold it open.")
-        wire.emit("error", text=f"unhandled: {type(exc).__name__}: {exc}")
-        try:
-            door._close("unhandled fault")
-        finally:
-            raise
+    return door.serve()
 
 
 if __name__ == "__main__":

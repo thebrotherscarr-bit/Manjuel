@@ -182,6 +182,14 @@ The pages, in the order the panel lists them:
                        IDLE_CLOSE, 2026-09-16), and the next Boot opens a new
                        one. Never mid-turn, and never while the council is
                        waiting on your answer.
+                       AND IF IT DIES, its sitting does not hold the world
+                       (2026-09-22): the door reads the process the open
+                       line names, and when that process is gone the next
+                       Boot opens anyway and the new engine closes the old
+                       line as it starts ("left open by a process that is
+                       gone"). A hang-up is heard at once, and a fault or a
+                       Ctrl-C in the engine's boot closes its sitting on the
+                       way out.
 
 **Or the whole turn in one act.** `git_cycle` is step 3's commit and push as a
 single skill, with the proofs read first and the push verified after. Type it
@@ -317,9 +325,13 @@ downloaded), `MANJUEL_VRAM_GB`, `MANJUEL_KEEP_ALIVE`, `MANJUEL_SEAT_TIMEOUT`,
 ## When starting goes wrong
 
     "research has an open sitting (N, opened ...)"
-        A sitting is open, or one was left open by a killed process. Close it
-        from the dashboard's Close sitting; if no engine is running, the last
-        line of `sessions\sessions.jsonl` has no `ended` and it is closed by
+        A sitting is open and the process that opened it is STILL RUNNING --
+        a REPL on that world, or an engine this door did not start. Close it
+        there. Since 2026-09-22 this is never a dead process's line: the door
+        reads the pid the line names, and when that process is gone it opens
+        the world and the new engine closes the old line as it starts. A line
+        with no pid (only lines written before 2026-09-17 lack one) is never
+        judged; if one is open with nothing behind it, it is closed by
         APPENDING a closing line, never by editing the one already written.
 
     the dashboard shows something that is not true

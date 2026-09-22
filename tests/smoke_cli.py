@@ -318,6 +318,96 @@ def main() -> int:
           not rows.get(98, {}).get("ended"), str(rows.get(98, {}))[:200])
     check("the REPL's own sitting carries the process holding it",
           (rows.get(1, {}).get("pid") or 0) > 0, str(rows.get(1, {}))[:160])
+
+    # --- THE HEADLESS DOOR, AND THE SAME LOCK (2026-09-22) ----------------
+    #
+    # The REPL has reaped since 2026-09-17. The door THE LINE spawns never did,
+    # so a crashed engine's line stood open until someone opened a REPL on that
+    # world, and the door refused the world until then. And a fault or a
+    # Ctrl-C in its boot, after its sitting line was written, left that line
+    # open with no process behind it. DRIVEN THROUGH serve.main(), for the
+    # reason the REPL's strokes above are driven through main().
+    import json as _json
+    from manjuel import boot as _boot
+    from manjuel import serve as _sv
+
+    def run_door(lines, ground, runtime):
+        """serve.main() end to end: the wire in from `lines`, out to a buffer."""
+        cli.ROOT = ground
+        cli.AGENTS_DIR = ground / "agents"
+        cli.AGENTS_FILE = ground / "agents.md"
+        cli.PIPELINES_FILE = ground / "pipelines.md"
+        cli.SKILLS_DIR = ground / "skills"
+        cli.WORKSPACE_DIR = ground / "agent_workspace"
+        cli.LOGS_DIR = ground / "logs"
+        cli.OllamaRuntime = lambda *a, **k: runtime
+        old_in, old_out, old_mark = sys.stdin, sys.stdout, _sv._mark
+        sys.stdin = io.StringIO("".join(_json.dumps(l) + "\n" for l in lines))
+        wire_out = io.StringIO()
+        sys.stdout = wire_out           # open_wire takes this as the wire
+        _sv._mark = lambda stage: None  # the boot's stderr progress, not wanted here
+        try:
+            code = _sv.main([])
+        except SystemExit as exc:
+            code = exc.code or 0
+        except BaseException:
+            wire_out.write("\n!! UNCAUGHT !!\n" + traceback.format_exc())
+            code = 99
+        finally:
+            sys.stdin, sys.stdout, _sv._mark = old_in, old_out, old_mark
+        return code, wire_out.getvalue()
+
+    def newest(ground):
+        rows = {r["n"]: r for r in _sl.all_sittings(ground)}
+        return rows, rows[max(rows)]
+
+    gone = _sp.Popen([sys.executable, "-c", "pass"])
+    gone.wait(timeout=30)
+    _sl.record(ground, _sl.Sitting(n=198, id="S-door-live", started="2026-09-22T00:00:00",
+                                   ground=str(ground), pid=_os.getpid()))
+    _sl.record(ground, _sl.Sitting(n=199, id="S-door-orphan", started="2026-09-22T00:00:00",
+                                   ground=str(ground), pid=gone.pid))
+    code_d, out_d = run_door([{"cmd": "close"}], ground, StubRuntime())
+    rows, mine = newest(ground)
+    check("the headless door opens and closes cleanly", code_d == 0 and "UNCAUGHT" not in out_d,
+          f"exit={code_d} " + out_d[out_d.find("UNCAUGHT"):][:300])
+    check("the headless door closes a sitting left open by a process that is gone, as it opens",
+          rows.get(199, {}).get("closed_by") == "reaped", str(rows.get(199, {}))[:200])
+    check("   and leaves one whose process is alive exactly as it is",
+          not rows.get(198, {}).get("ended"), str(rows.get(198, {}))[:200])
+    check("   and says so on the wire, as the REPL says it at the terminal",
+          "left open by a process that is gone" in out_d,
+          [l for l in out_d.splitlines() if "left open" in l][:1])
+    check("   and its own sitting is written after the reaping, and closed by the close",
+          mine.get("n", 0) > 199 and bool(mine.get("ended")), str(mine)[:200])
+
+    keep_report = _boot.report
+
+    def broken_report(*a, **k):
+        raise RuntimeError("a boot report that breaks")
+
+    _boot.report = broken_report
+    try:
+        code_f, out_f = run_door([], ground, StubRuntime())
+    finally:
+        _boot.report = keep_report
+    rows, mine = newest(ground)
+    check("a fault in the door's boot, after its sitting line, still closes that sitting",
+          code_f == 99 and "a boot report that breaks" in out_f and bool(mine.get("ended")),
+          f"exit={code_f} {str(mine)[:160]}")
+
+    def interrupted_report(*a, **k):
+        raise KeyboardInterrupt
+
+    _boot.report = interrupted_report
+    try:
+        code_k, out_k = run_door([], ground, StubRuntime())
+    finally:
+        _boot.report = keep_report
+    rows, mine = newest(ground)
+    check("a Ctrl-C in the door's boot closes its sitting and exits 130",
+          code_k == 130 and bool(mine.get("ended")) and "UNCAUGHT" not in out_k,
+          f"exit={code_k} {str(mine)[:160]}")
     check("the model was actually called", len(rt.calls) >= 5, str(rt.calls))
     check("models are warmed at launch, AT RUN CONTEXT, not inside the first question",
           any(c.startswith("warm:") for c in rt.calls), str(rt.calls[:3]))

@@ -701,6 +701,49 @@ next Boot runs an engine on the new code, which knows "work on ..." and "put it 
 
 **Open, his:** saving and sending both repositories; piece 3; the wife test.
 
+**SAVED AND SENT, on his word ("save it and send it through the dashboard").** Done through the
+council in sitting 261 (07:03-07:07, four runs, closed with its toll):
+
+- core `268b3ff` (`7725b99..268b3ff`);
+- atlas `d94c1e9` (`462ace0..d94c1e9`), by the world parameter.
+
+Checked before each send: one commit each, this piece's files only, nothing under `worlds/`, no
+`.env`, no `data/`, and each push sent `main` alone. Both trees are clean and both GitHub `main`s
+match. What stays open is his: piece 3, and the wife test. This line is written after the save and
+rides with the next one.
+
+**THEN ATLAS'S VERSION CONTROL, on his word ("let's get that knocked out").** Built in atlas and
+proven on scratch copies; not placed, not saved. `v0.1.6` had been cut from the Cut button with
+only its root VERSION bumped, so its binaries answer 0.1.5, the spine's version strokes have been
+red since (unseen: the push check skipped cargo), and its release never built. Now every stamp
+says 0.1.6 (`version.ps1 sync`: "All 11 pins in sync"), the bump tool moves Cargo.lock too, the
+door refuses a mark while any stamp disagrees, and prove.yml checks the pins and runs the whole
+battery on every push. The whole of it is in atlas's CHANGELOG, [Unreleased]. **RESTART
+REQUIRED, THE DOOR:** its new build waits in the hand's scratch (sha256 993170cb8efd0d4e); the
+glass's (7616272baea14ee2) changes only the number it reports. Open, his: placing them, and
+saving and sending atlas -- the two workflow changes do nothing until they reach GitHub. The core
+was not touched by this piece, and one core fact stands beside it: his terminal last stamped the
+core's suites on 2026-09-18 (2500/65, standup 9/9), so its release gate refuses a tag until he
+runs them again.
+
+**SAVED, SENT AND PLACED, on his word** ("Save and send"; "Door and glass"). atlas `3a07dfd`
+(`d94c1e9..3a07dfd`) through the council in sitting 262 (09:41-09:43, two runs, tolled), 29 files,
+`main` alone, GitHub level. Then the glass (27600) and the door (26876) were stopped by pid and
+replaced: **the door now runs as pid 8116, the glass as pid 24548**, both on 127.0.0.1 alone and
+both answering 0.1.6; the door carries 82 tools and the new mark check. Stop them by these pids,
+never by name -- the Archive's `atlas-mcp.exe` (pid 23164) still runs beside them, untouched. The
+next piece, on his word: **piece 1, the engine survives death.**
+
+**PIECE 1, THE ENGINE SURVIVES DEATH -- built and proven; not placed, not saved.** A hang-up is
+heard at once (a pending question can no longer swallow it); the headless engine reaps a dead
+sitting before recording its own, as the REPL does; every fault or Ctrl-C after its sitting line
+closes the sitting; and the door opens a world whose open line names a process that is provably
+gone, instead of refusing it until a REPL reaps it. Both CHANGELOGs have it whole. On a mirror:
+strokes 2635/2635, smoke 72/72, standup dry 9/9, law 17/17, buildmap clean; three core reversals
+and one door reversal, each red. **RESTART REQUIRED:** `manjuel/serve.py` moved (no engine runs;
+the next Boot has it), and the new door waits in the hand's scratch (sha256 025ed38d99fdda4f) for
+his word to place it. Unsaved in both repositories.
+
 ## HANDOFF FOR 2026-09-21 — read this before anything below it
 
 **Where the ground stands, Monday morning.** core `main@8cffd98` and atlas `main@186608f`,

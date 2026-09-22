@@ -10125,6 +10125,114 @@ def test_an_idle_engine_closes_its_own_sitting(reg, lib, book):
           (_sv.__doc__ or "")[:80])
 
 
+def test_a_hang_up_is_heard_at_once(reg, lib, book):
+    """A HANG-UP IS REMEMBERED (2026-09-22, the handoff's first piece, his
+    word: "1. Survives crashes"). EOF used to be ONE None on the inbox's
+    queue, and the first taker spent it. When a question was pending that was
+    ask(): the turn moved on, and the loop then waited the whole IDLE_CLOSE
+    for a client that had already gone -- or, if the same turn asked again,
+    waited on the queue forever, its sitting open behind a live process that
+    nothing could reap.
+
+    STROKED BOTH WAYS. Every take after the pump has ended answers None at
+    once, and a command sent before the hang-up is still taken first; a
+    second question hears the hang-up too; and a door whose client hung up
+    mid-question closes its sitting straight away, saying why, instead of
+    waiting out the idle bound.
+
+    Hermetic: a stand-in session and a stand-in closer, as the idle strokes.
+    """
+    import builtins as _b
+    import io
+    import json as _json
+    import threading
+    import types
+    from manjuel import seatlog as _sl
+    from manjuel import serve as _sv
+
+    def bounded(fn, seconds=3.0):
+        """What fn returned or raised -- or 'BLOCKED' if it had not answered."""
+        box: dict = {}
+
+        def work():
+            try:
+                box["v"] = fn()
+            except BaseException as exc:          # EOFError is the answer here
+                box["v"] = exc
+        t = threading.Thread(target=work, daemon=True)
+        t.start()
+        t.join(seconds)
+        return "BLOCKED" if t.is_alive() else box.get("v")
+
+    def hung_up(lines=()):
+        """An inbox whose client said `lines` and then hung up."""
+        out = io.StringIO()
+        box = _sv.Inbox(iter(list(lines)), _sv.Wire(out))
+        box._pump()
+        return box, out
+
+    def door(inbox, wire, **kw):
+        sess = types.SimpleNamespace(
+            runtime=Stub(),
+            sitting=_sl.Sitting(n=99, id="S-eof", started="2026-09-22T10:00:00"))
+        return _sv.Door(sess, wire, inbox, ground=Path(tempfile.mkdtemp()), **kw)
+
+    # ---- THE INBOX: every take after the end hears it -----------------------
+    box, _ = hung_up()
+    first = box.take()
+    second = bounded(box.take)
+    check("a hang-up is answered as it always was", first is None, repr(first))
+    check("   and at every take after it, at once -- whoever hears it first does not spend it",
+          second is None, repr(second))
+
+    box, _ = hung_up(['{"cmd": "answer", "text": "skip"}'])
+    got = [box.take(), bounded(box.take)]
+    check("a command sent before the hang-up is still taken first, then the hang-up",
+          got[0] == {"cmd": "answer", "text": "skip"} and got[1] is None, repr(got))
+
+    # ---- TWO QUESTIONS: the second hears it too ------------------------------
+    box, out = hung_up()
+    d = door(box, _sv.Wire(out), closer=lambda s: None)
+    a1 = bounded(lambda: d.ask("retry / skip / abort?"))
+    a2 = bounded(lambda: d.ask("and again?"))
+    check("a question asked after the client hung up hears it (EOFError)",
+          isinstance(a1, EOFError), repr(a1))
+    check("   and so does the next one, instead of waiting forever on a queue nobody feeds",
+          isinstance(a2, EOFError), repr(a2))
+
+    # ---- END TO END: a hang-up mid-question closes the sitting at once -------
+    closes: list = []
+    heard: list = []
+    out = io.StringIO()
+    wire = _sv.Wire(out)
+    box = _sv.Inbox(iter(['{"cmd": "objective", "text": "a turn that asks"}']), wire)
+    d = door(box, wire, closer=lambda s: closes.append(1), idle_close=5)
+
+    def asking_turn(objective):
+        try:
+            d.ask("retry / skip / abort?")
+        except EOFError:
+            heard.append("eof")
+        return True
+    d.turn = asking_turn
+    box.start()
+    keep_out, keep_in = sys.stdout, _b.input
+    t0 = time.time()
+    try:
+        sys.stdout = _sv.TextChannel(wire)
+        rc = d.serve()
+    finally:
+        sys.stdout, _b.input = keep_out, keep_in
+    took = time.time() - t0
+    rows = [_json.loads(l) for l in out.getvalue().splitlines() if l.strip()]
+    last = rows[-1] if rows else {}
+    check("a client that hangs up mid-question: the sitting closes at once, not at the idle bound",
+          rc == 0 and heard == ["eof"] and len(closes) == 1 and took < 3
+          and last.get("event") == "closed" and "hung up" in str(last.get("why"))
+          and "idle" not in str(last.get("why")),
+          f"rc={rc!r} heard={heard} closes={len(closes)} took={took:.2f}s last={last}")
+
+
 def test_a_commit_subject_is_the_operators_or_gits_never_the_models(reg, lib, book):
     """SITTING 80. Two commits carried invented subjects, and the operator
     found them by reading the transcripts:
@@ -14215,6 +14323,7 @@ def main() -> int:
     test_what_feeds_the_index_keeps_to_its_roots(reg, lib, book)
     test_a_dial_in_env_is_read_and_the_transports_stay_few(reg, lib, book)
     test_an_idle_engine_closes_its_own_sitting(reg, lib, book)
+    test_a_hang_up_is_heard_at_once(reg, lib, book)
     test_a_commit_subject_is_the_operators_or_gits_never_the_models(reg, lib, book)
     test_a_git_skill_acts_in_the_world_it_is_given(reg, lib, book)
     test_a_quoted_message_is_handed_over_as_the_argument(reg, lib, book)

@@ -34,6 +34,57 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The engine survives death: a hang-up heard at once, every exit closing the sitting, and a dead sitting that no longer holds its world (operator, 2026-09-22: "1. Survives crashes")
+
+Why: the handoff's first piece, from the review of 2026-09-22, checked in the code. Three ways a
+sitting stood open with nothing behind it, and one way its world stayed locked after:
+- the headless door never reaped -- only `cli.main` did -- and THE LINE, which spawns nothing but
+  headless doors, refused any world whose last line was open. A crashed engine locked its world
+  until someone opened a REPL there;
+- `serve.main` wrote the sitting line and then guarded only `door.serve()`. A fault in the git
+  read, the warm, the watcher, the boot report or the thread read -- or a Ctrl-C anywhere, which is
+  also how a cancel landing as a turn ends is delivered -- left the line open, with `manjuel.py`'s
+  `sys.exit(130)` as the only close there was;
+- a hang-up was ONE `None` on the inbox's queue, spent by whoever took it first. With a question
+  pending, the engine then waited out IDLE_CLOSE (thirty minutes) for a client already gone, and
+  a second question in the same turn waited forever.
+
+No sitting was open. **RESTART REQUIRED:** `manjuel/serve.py` moved. No engine is running, so the
+next Boot runs the new code; the door's half is in atlas and waits to be placed.
+
+- **`manjuel/serve.py`:**
+  - `Inbox.take`: once the pump has ended and nothing is queued, every take answers `None` at once.
+    A command sent before the hang-up is still taken first.
+  - `main` reaps before it records its own sitting: `seatlog.reap_orphans`, the REPL's own call,
+    which closes ONLY a line whose recorded pid is provably gone.
+  - Everything after the sitting line now runs in `_open_and_serve`, under one guard in `main`: a
+    KeyboardInterrupt closes the sitting and returns 130; any other fault closes it, says so on the
+    wire and re-raises. A sitting already closed is not closed twice.
+  - The module's own account says all three.
+- **`RUNBOOK.md`:** "Close sitting" says what a dead engine's sitting now does, and "When starting
+  goes wrong" says what the refusal now means: a LIVE process holds the world.
+- **`BUILDMAP.md`:** regenerated.
+- **atlas, in its own CHANGELOG:** the door reads the pid on the open line, and opens a world whose
+  sitting's process is provably gone; the engine it spawns reaps the line.
+
+Strokes: `test_a_hang_up_is_heard_at_once` (6) in `tests/test_manjuel.py`. Every take after the end
+answers at once; a command sent before the hang-up comes first; a second question hears it too;
+and a client that hangs up mid-question has its sitting closed at once, saying why, not at the idle
+bound. `tests/smoke_cli.py` (+7), driven through `serve.main()` the way the REPL's reap strokes are
+driven through `main()`: the door opens and closes cleanly; it closes a sitting left open by a dead
+process as it opens, leaves one whose process is alive exactly as it is, says so on the wire, and
+writes its own line after; a fault in its boot after the sitting line still closes that sitting;
+and a Ctrl-C there closes it and exits 130.
+
+Proven on a mirror: strokes 2635/2635 (2629 before), smoke 72/72 (65), standup dry 9/9, law 17/17,
+buildmap clean. By reversal, each put back green: the hang-up memory removed turns three strokes red
+(two block, one waits out the bound); the headless reap removed turns two smoke checks red; the boot
+guard removed turns two red (exit 99, the sitting left open). His terminal is still the proof.
+
+Named, not fixed: a cancel that lands as a turn ends still ends the engine -- closing its sitting on
+the way now -- rather than being ignored; that is the wire's piece. The REPL's own Ctrl-C paths are
+unchanged: any line it leaves is closed by the next open's reaper, and the door no longer refuses it.
+
 ### The maker, piece 2: the projects on the glass, and words to pick one up and put it down (operator, 2026-09-21: "go on piece 2")
 
 Why: SPEC 4.8 held piece 2 OPEN. The page was not shown on the glass, there was no project list to
@@ -114,6 +165,16 @@ is put DOWN". No sitting was open.
   - An `atlas-mcp.exe` running from `Desktop\Archive` was left alone.
   - SPEC 4.8 and 8.2, BUILDPATH's piece 2 and DESIGN 14.15 now say placed; HANDOFF has a
     2026-09-22 block. atlas's CHANGELOG has the detail.
+- **Saved and sent 2026-09-22, on his word ("save it and send it through the dashboard"):**
+  - Done through the council in sitting 261 (07:03-07:07, four runs, closed with its toll): core
+    `268b3ff` (`7725b99..268b3ff`) and atlas `d94c1e9` (`462ace0..d94c1e9`).
+  - atlas went by the world parameter. `git commit in atlas: "..."` was decided by arithmetic, and
+    `git push in atlas` carried the world.
+  - Checked before each send: one commit each, this piece's files only (15 in each), nothing
+    under `worlds/`, no `.env`, no `data/`. Each push sent `main` alone.
+  - Both trees are clean and both GitHub `main`s match.
+  - This line, and HANDOFF's and DAYBOOK's, are written after the save and ride with the next
+    one.
 
 ### The glass takes a PIN: one user, this computer only (operator, 2026-09-21: "Simple login system for now, user/pin to start")
 
