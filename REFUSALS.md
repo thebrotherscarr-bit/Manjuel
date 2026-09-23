@@ -854,6 +854,18 @@ Stated plainly, because a security page that only lists wins is marketing.
   partial-read stamp (§20): the delivery now SAYS the read was partial.
   What is still not caught is the harder half -- a claim about what a read
   SAID with nothing tying it to the read (TASKS, Layer 7).
+- **A page that only breaks once somebody plays it** (2026-09-22, the maker's
+  piece 3). Before a version is kept the page is loaded in a browser with no
+  window and given a moment, so an uncaught error, a rejected promise, a failed
+  load or a `console.error` in its SETUP is caught and sent back to the Coder
+  for one bounded try. Nothing clicks, types or presses an arrow: a fault that
+  needs the game to be played is not seen. This proves a page LOADS and runs its
+  own setup without throwing — never that the game is any good. And the check
+  FAILS OPEN by name: no browser, a launch that fails, or a page that never
+  signals it loaded all save the version anyway and say the check did not run,
+  because a gate that silently passes what it could not read is worse than no
+  gate (§24's own rule). By his ruling the same day, a page that still errors
+  after its one repair is saved too, with the error named in the report.
 - **The operator.** Nothing here binds him, and it is not trying to. He is the
   one who lands, and the estate's honesty exists so that what he lands is
   informed.

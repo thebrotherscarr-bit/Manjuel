@@ -34,6 +34,116 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The maker's piece 3: the page is RUN before it is kept -- and it is the estate's first lawful loop (operator, 2026-09-22: "let's build piece 3")
+
+Why: `page_from` proves a page is WHOLE and LOCAL, which is all arithmetic over bytes can prove. It
+never proved the page WORKS, because nothing ran it -- and version 1 of the snake game, made live
+on 2026-09-21, called `clearInterval(game)` with no `game` declared. Whole, local, saved, broken.
+It was harmless only because the Game Over alert reloaded the page.
+
+No sitting was open. **RESTART REQUIRED:** `manjuel/maker.py` and `manjuel/pipeline.py` moved. No
+engine is running, so the next Boot runs the new code; the door and the glass are untouched by
+this piece.
+
+**THE DECISION BUILDPATH ASKED FOR, MADE FIRST AND MEASURED.** Its piece-3 entry said the browser
+"must already be on this machine and must not download itself at first use (RULE 4) -- a decision
+to make before it is a build." Both Edge 153 and Chrome 152 were found installed; both drive
+headless in ~2.2s. **His ruling: Edge first, Chrome as fallback** -- Edge ships with Windows and
+cannot really be removed, so the check survives a machine where Chrome was uninstalled. Nothing is
+downloaded and no browser is ever installed by this estate.
+
+- **`manjuel/maker.py`:** the check, beside the `page_from` it extends. `browser()` reads the disk
+  every call (a browser uninstalled between two turns must not be remembered as present);
+  `run_page()` serves the page from `http.server` on 127.0.0.1 with a port the OS picks, injects a
+  catcher, launches the browser with no window, waits for the page's own load beacon, then kills
+  the child and removes its profile. The catcher goes **behind the doctype** -- content before
+  `<!DOCTYPE html>` puts the browser in quirks mode, and this check must not test a page the person
+  will never see -- and **ahead of the page's own scripts**, or it would catch nothing. Every
+  reported line number is corrected back to the Coder's OWN page by the lines the catcher added.
+  Why a served page and not a debugging protocol: a browser cannot write a file, and driving CDP
+  wants a websocket client the standard library does not have -- a dependency the whole estate
+  would then carry. stdlib only.
+- **`manjuel/pipeline.py`, `_maker_prove`:** the loop. The page is checked; an uncaught error, a
+  rejected promise or a failed load sends it back to the Coder with **the browser's own words**,
+  not a description -- a seat told "it didn't work" guesses, a seat given `game is not defined` at
+  line 4 fixes a line. A `console.error` is reported and does not spend the try. The repaired page
+  is kept **only if it is not worse**, counted by the same machine that counted the first.
+- **IT NEVER BLOCKS A SAVE**, which is his ruling of the same day. A page that still errors after
+  its one try is saved and the report says so plainly -- `page_from` already refuses what is fatal,
+  the fault that started this piece was a real error in a perfectly playable game, and a snake game
+  refused over a console error is the sitting-257 failure the maker was built to end. A check that
+  could not run -- no browser, a launch that failed, a page that never loaded -- saves anyway and
+  says that instead, the rule `inspect_code` already states about itself.
+
+**AND THE LEAK IT LEFT, FOUND AND CLOSED IN THE SAME PIECE.** The first cut launched the browser and
+called `child.terminate()` at the end. A terminated browser is not a gone browser: Chromium's
+browser, renderers, GPU and crash handler are a process TREE that outlives the launcher. Measured
+on one page -- 16 processes still alive 5.5 seconds later, with the profile directory still locked.
+Measured across the afternoon's strokes -- **138 leaked browser processes holding 17 profile
+directories, about 7 MB each**, and `shutil.rmtree(..., ignore_errors=True)` swallowing every
+failure in silence. A check that leaks a process tree per run is worse than no check.
+
+Two things were wrong and both are fixed:
+
+- **THE PAGE CLOSES ITSELF.** The catcher calls `window.close()` after its beacon, and a headless
+  Chromium whose last tab closes exits its whole tree. Measured both ways on the same page:
+  terminate alone left 16 processes and a locked profile; `window.close()` left zero and the
+  profile gone at once. The beacon goes by `navigator.sendBeacon` (which survives the unload that
+  follows it) and falls back to a synchronous request. `terminate()`/`kill()` stay as the backstop
+  for a page that never loaded, where there is no script left to close anything.
+- **A DIRECTORY'S MTIME IS NOT A CLOCK A SWEEP CAN TRUST.** The stale-profile sweep judged age by
+  mtime -- and a sweep that partially removes a locked directory UPDATES that mtime, so a locked
+  profile looked younger after every attempt and could never become stale enough to remove. 154 of
+  them, none ever older than ten minutes by their own clock. The creation time now goes in the
+  NAME, which nothing here can move; a name from before carries the old fallback.
+
+The 108 MB of profiles this left in `%TEMP%` were removed by hand, with nothing holding them.
+
+**AND IT IS THE ESTATE'S FIRST LAWFUL LOOP (LAW_003).** That law was sealed 2026-09-17 and nothing
+had used it. Its own diagnosis was that while every cycle was refused by name, the lawful provable
+thing to build each sitting was one more thing AROUND the loop. This is a node returned to, with
+all three bounds and each one stroked:
+
+- **a declared ceiling** -- `maker.REPAIRS`, and the loop in `_maker_prove` READS it. The first
+  draft did one pass by shape and left the constant decorative; a reader could have changed the
+  number and changed nothing, which is the drift this ground refuses everywhere else. A stroke now
+  moves the number to 2 and holds that the Coder sits three times;
+- **a stop condition a machine checks** -- the browser's own error events, machine-emitted, never a
+  seat's account of its own work;
+- **every pass in the record** -- each check is a note, each repair a step carrying the seat's
+  answer, like any other turn.
+
+LAW_003 §4 holds too: the work is RE-DONE after a fail, never re-scored until the score agrees.
+
+- **`SPEC.md`:** 4.8's piece-3 line moves OPEN -> MET with the whole of it, and a second MET line
+  for the loop; §2 gains the check in the maker's row and a new **The loop (LAW_003)** row; 8.2's
+  maker entry says all three pieces are built, and its LOOP entry records that the first lawful one
+  now exists and is one small case, not the workflow direction. The WIFE TEST stays OPEN, and what
+  stands between today and it is now running it -- a person who is not him, at the glass, unhelped.
+- **`BUILDPATH.md`:** piece 3 BUILT, with the browser decision and its reasons.
+- **`REFUSALS.md`:** a new honest limit -- the check sees a page LOAD, not a game PLAYED. Nothing
+  clicks, types or presses an arrow, so a fault that needs the game to be played is not seen.
+- **`BUILDMAP.md`:** regenerated.
+
+Strokes: `test_the_maker_runs_the_page_before_it_keeps_it` (41). The injection lands behind the
+doctype and ahead of the scripts; the three kinds that mean BROKEN are told from the `console.error`
+that does not; the same error on a timer is one fault; the repair carries the browser's words, the
+page and the original request; a broken page is repaired and the repaired one saved; the Coder sits
+exactly twice; the repair is a step and both checks are notes; a page broken twice is SAVED with the
+error named; a repair that breaks in more places is refused; the ceiling moved to 2 makes three
+sittings; a profile's age is read from its name and survives an mtime touch; a stale one is swept
+and a live one left alone; and after two real runs no profile AND NO BROWSER PROCESS of ours is
+left on this machine. **The fail-open half is stroked with no browser at all**, which is also how
+this file passes on a CI runner that has none.
+
+Proven on a mirror: strokes 2744/2744 (2703 before), smoke 72/72. By reversal, four, each red for
+its own reason: the check removed from the save path turns eight red; the line-offset correction
+removed turns the own-line stroke red; the ceiling hardcoded turns the ceiling stroke red; the
+not-worse guard removed turns its two red. His terminal is still the proof.
+
+Named, not fixed: `REFUSALS.md` carries its "What this does NOT protect against" section TWICE,
+byte-identical, at two places in the file. The new limit was appended to the last one only.
+
 ### Code safety: the doors that hand out files, and a child that runs inside a wall (operator, 2026-09-22: "4. Code safety", and "sandbox the python")
 
 Why: the handoff's fourth piece, from the review of 2026-09-22. Four holes, one shape -- a check

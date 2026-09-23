@@ -520,12 +520,24 @@ rhythm above, and none starts until he names it.
        `test_the_maker_picks_up_and_puts_down`; atlas `projects_test.go`
        (door and glass). The door and the glass run these builds since
        2026-09-22; an engine booted after that knows the words.
-    3  THE CHECK THAT RUNS IT -- the page loaded in a browser with no window
-       before a version is kept, and any error it raises sent back to the
-       Coder for one more try. Until then a saved page is whole and local,
-       never proven to work. The browser must already be on this machine and
-       must not download itself at first use (RULE 4) -- a decision to make
-       before it is a build. Not ordered.
+    3  THE CHECK THAT RUNS IT -- BUILT 2026-09-22 on his word ("let's build
+       piece 3"). The page is loaded in a browser with no window before a
+       version is kept, and every uncaught error, rejected promise, failed
+       load and `console.error` goes back to the Coder for ONE more try.
+       THE DECISION THIS ENTRY ASKED FOR, made the same day and measured
+       first: the browser is EDGE, with Chrome as fallback -- both were
+       already on this machine, nothing is downloaded, and Edge ships with
+       Windows so the check survives a machine where Chrome was removed. The
+       page is SERVED from `http.server` on 127.0.0.1 with a catcher injected
+       behind the doctype, because a browser cannot write a file and driving
+       CDP would want a websocket client the standard library does not have.
+       IT NEVER BLOCKS A SAVE (his ruling): a page that still errors is kept
+       and said so, and a check that could not run says that instead.
+       `maker.run_page`, `pipeline._maker_prove`,
+       `test_the_maker_runs_the_page_before_it_keeps_it`.
+       AND IT IS THE ESTATE'S FIRST LAWFUL LOOP under LAW_003, with all three
+       of its bounds stroked -- the ceiling `maker.REPAIRS` is READ BY the
+       loop, so moving the number moves the behaviour.
     then  THE WIFE TEST (SPEC 8.2's DONE): someone who is not the operator,
        at the glass, in her own words, with no terminal and no help.
 

@@ -43,22 +43,40 @@ a script cheaply; and a small local coder is at its best on one page. Nothing
 it loads may come from the internet (RULE 4) -- REFUSED here by arithmetic, not
 requested in a prompt and hoped for.
 
-PIECES 1 AND 2 OF 3 (BUILDPATH, "The maker"). Piece 2 is the page on the
-glass: the door's `projects` tool reads each project's own history for the
-Dashboard's list and serves a page into a sandboxed preview, and the words
-below (`find`, the pick-up and put-down reports) are how a project is picked up
-from that list -- or put down -- in a sitting. Not here yet, and named so
-nobody mistakes it for forgotten:
-    3  the check: the page loaded in a browser with no window, and any error
-       sent back to the Coder before a version is kept
-Until then `page_from` checks only what arithmetic can: that it IS a whole
-page, and that it reaches for nothing outside this machine. It proves a page is
-well-formed and local, never that it works -- nothing here runs it.
+ALL THREE PIECES (BUILDPATH, "The maker"). Piece 2 is the page on the glass:
+the door's `projects` tool reads each project's own history for the Dashboard's
+list and serves a page into a sandboxed preview, and the words below (`find`,
+the pick-up and put-down reports) are how a project is picked up from that list
+-- or put down -- in a sitting.
+
+PIECE 3 IS THE CHECK THAT RUNS IT (2026-09-22). `page_from` proves a page is
+WHOLE and LOCAL -- arithmetic over the bytes, and all arithmetic can prove. It
+cannot prove the page WORKS, because nothing had run it: version 1 of the snake
+game called `clearInterval(game)` with no `game` declared, and was saved. So
+the page is now loaded in a browser with no window before a version is kept,
+and what it throws goes back to the Coder for one more try. `run_page` and the
+section it heads carry the how and the honest limits.
+
+AND IT IS THE ESTATE'S FIRST LAWFUL LOOP (LAW_003, 2026-09-17, which made one
+lawful and which nothing had yet used). Its three bounds, all three: a declared
+ceiling (`REPAIRS`, and the loop that reads it is `pipeline._maker_prove`), a
+stop condition a MACHINE checks (the browser's own error events -- never a
+seat's account of its own work), and every pass in the record (each check is a
+note; each repair is a step with the seat's answer in it).
 """
 
 from __future__ import annotations
 
+import http.server
+import json
+import os
 import re
+import shutil
+import socketserver
+import subprocess
+import tempfile
+import threading
+import time
 from pathlib import Path
 
 from . import gitstate
@@ -205,6 +223,344 @@ def page_from(answer: str) -> tuple[str, str]:
         return "", (f"the page reaches outside this machine ({shown}), and a page "
                     f"made here must work with nothing but this computer (RULE 4)")
     return body.replace("\r\n", "\n").strip("\n") + "\n", ""
+
+
+# ---------------------------------------------------------------------
+# the check that RUNS it (piece 3, 2026-09-22, his word: "let's build piece 3")
+# ---------------------------------------------------------------------
+#
+# WHAT page_from PROVES, AND WHAT IT DOES NOT. It proves a page is WHOLE and
+# LOCAL -- arithmetic over the bytes. It cannot prove the page WORKS, because
+# nothing here ran it. Seen live 2026-09-21: version 1 of the snake game called
+# `clearInterval(game)` with no `game` declared. Whole, local, saved, and
+# broken -- harmless only because the Game Over alert reloaded the page.
+#
+# SO THE PAGE IS LOADED IN A BROWSER WITH NO WINDOW, and what it throws is sent
+# back to the Coder for ONE more try (BUILDPATH, "The maker", piece 3). That
+# makes this the estate's first lawful loop under LAW_003: a DECLARED CEILING
+# (one repair, `REPAIRS`), a STOP CONDITION A MACHINE CHECKS (the browser's own
+# error events, not a seat's account of its work), and EVERY PASS IN THE RECORD
+# (the pipeline appends a step for the repair, and the notes carry both checks).
+#
+# THE BROWSER IS ALREADY ON THIS MACHINE (RULE 4, and his ruling 2026-09-22:
+# Edge first, Chrome as fallback). Edge ships with Windows and cannot really be
+# removed, so the check survives a machine where Chrome was uninstalled.
+# NOTHING IS DOWNLOADED, and no browser is installed by this estate ever.
+#
+# HOW THE ERRORS COME BACK, and why it is not a debugging protocol. A browser
+# cannot write a file, so the page is SERVED -- from `http.server` on 127.0.0.1
+# with a port the OS picks -- and a small catcher is injected ahead of the
+# page's own scripts, which POSTs every uncaught error, rejected promise,
+# failed load and `console.error` back to that server. stdlib only: driving
+# CDP would want a websocket client the standard library does not have, and a
+# package for it is a dependency the whole estate would then carry.
+#
+# HONEST LIMITS, written down rather than discovered later:
+#
+#   IT SEES A MOMENT, NOT A GAME. The page is loaded, given `SETTLE` seconds
+#   and closed. Nothing clicks, types or presses an arrow, so a fault that only
+#   appears once someone plays is not caught. This proves a page LOADS and runs
+#   its own setup without throwing; it does not prove the game is any good.
+#
+#   IT FAILS OPEN, by name. No browser found, a launch that fails, a page that
+#   never signals it loaded -- each returns a REASON, and the caller saves the
+#   version anyway and says the check did not run. A gate that silently passes
+#   what it could not read is worse than no gate (`inspect_code`'s own ruling).
+#
+#   THE PAGE IS SERVED, NOT OPENED FROM DISK. `file://` and `http://` differ on
+#   storage and module loading, so a page that works here could behave a little
+#   differently opened from `projects\`. Serving is what lets the errors come
+#   back at all, and it is the same way the glass shows a page (piece 2).
+#
+#   THE BROWSER IS THE BROWSER'S. Its own background chatter is suppressed by
+#   the flags below as far as flags can; this estate does not audit Edge.
+
+# The ceiling, and it is the whole of LAW_003's first bound: ONE repair pass.
+REPAIRS = 1
+# Seconds the page is given AFTER its load event, for setup that runs on a
+# timer. Measured 2026-09-22: a clean page answers in ~2.2s end to end.
+SETTLE = 1.2
+# LAW 7, bounded everything: the whole check, browser launch included.
+CHECK_BUDGET = 25.0
+# What counts as BROKEN and buys the repair pass. A `console.error` is reported
+# when it happens and does not spend the try: a page may print one on purpose,
+# and these three are the ones that mean the page did not do what it meant to.
+BREAKING = ("error", "promise", "resource")
+
+# Edge first, Chrome second -- his ruling, 2026-09-22.
+_BROWSERS = (
+    (r"%ProgramFiles(x86)%\Microsoft\Edge\Application\msedge.exe", "Edge"),
+    (r"%ProgramFiles%\Microsoft\Edge\Application\msedge.exe", "Edge"),
+    (r"%ProgramFiles%\Google\Chrome\Application\chrome.exe", "Chrome"),
+    (r"%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe", "Chrome"),
+    (r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe", "Chrome"),
+)
+
+
+PROFILE_PREFIX = "maker-check-"
+# Well past CHECK_BUDGET, so a check running RIGHT NOW is never swept out from
+# under itself -- the sweep below judges by age and nothing else.
+PROFILE_STALE = 600.0
+
+
+def _drop_profile(path, tries: int = 6, gap: float = 0.4) -> bool:
+    """Remove the browser's profile, waiting for the browser to let go of it.
+
+    THE BACKSTOP, not the cure. The cure is that THE PAGE CLOSES ITSELF: the
+    catcher calls `window.close()` after its beacon, and a headless Chromium
+    whose last tab closes exits its whole tree on its own.
+
+    EARNED THE DAY THIS WAS BUILT (2026-09-22), and the measurement is the
+    reason the cure is where it is. `child.terminate()` kills the LAUNCHER
+    only; Chromium's browser, renderers, GPU and crash handler are a process
+    TREE that outlives it. Measured both ways on one page: with terminate
+    alone, 16 processes still alive 5.5s later and the profile still locked --
+    and across an afternoon of strokes, 138 leaked browser processes holding 17
+    profiles, about 7 MB each. With `window.close()`, zero processes and the
+    profile gone at once. This retry covers the page that never loaded, where
+    there is no script left to close anything.
+    """
+    for _ in range(max(1, tries)):
+        shutil.rmtree(path, ignore_errors=True)
+        if not Path(path).exists():
+            return True
+        time.sleep(gap)
+    return not Path(path).exists()
+
+
+def _made_at(d: Path) -> float:
+    """When a profile was made, read from ITS OWN NAME.
+
+    NOT from its mtime, and that is the whole point. A profile still held by a
+    browser is only PARTLY removed by a sweep, which updates the directory's
+    mtime -- so a locked profile looked younger after every attempt and could
+    never become stale enough to sweep. Measured 2026-09-22: 154 of them, none
+    ever older than ten minutes by their own clock, because the sweep kept
+    resetting it. A time in the name is a clock nothing here can touch.
+    """
+    try:
+        return float(d.name[len(PROFILE_PREFIX):].split("-", 1)[0])
+    except (ValueError, IndexError):
+        try:                            # a name from before the time was in it
+            return d.stat().st_mtime
+        except OSError:
+            return 0.0
+
+
+def _sweep_profiles(older_than: float = PROFILE_STALE) -> int:
+    """Remove profiles an earlier run could not, and say how many went.
+
+    The page closing itself is the cure; this is the backstop, because a delete
+    that fails anyway must never accumulate. Judged by AGE alone, so it cannot
+    take a live check's profile, and bounded by the disk: one folder, one
+    prefix.
+    """
+    gone, now = 0, time.time()
+    try:
+        entries = list(Path(tempfile.gettempdir()).glob(PROFILE_PREFIX + "*"))
+    except OSError:
+        return 0
+    for d in entries:
+        try:
+            if not d.is_dir() or now - _made_at(d) < older_than:
+                continue
+        except OSError:
+            continue
+        shutil.rmtree(d, ignore_errors=True)
+        gone += 0 if d.exists() else 1
+    return gone
+
+
+def browser() -> tuple[str, str]:
+    """(the path to a headless-capable browser, its name), or ("", "").
+
+    Read off the disk every call: a browser uninstalled between two turns must
+    not be remembered as present. Nothing is installed and nothing downloaded.
+    """
+    for raw, name in _BROWSERS:
+        p = os.path.expandvars(raw)
+        if "%" not in p and Path(p).is_file():
+            return p, name
+    return "", ""
+
+
+# The catcher. It is injected AHEAD of the page's own scripts and BEHIND the
+# doctype -- content before `<!DOCTYPE html>` puts the browser in quirks mode,
+# which would have this check testing a page the person will never see.
+_CATCH = """<script>
+(function(){
+ function post(to,p){try{
+  if(navigator.sendBeacon&&navigator.sendBeacon(to,p||''))return;
+  var x=new XMLHttpRequest();x.open('POST',to,false);
+  x.setRequestHeader('Content-Type','text/plain');x.send(p||'');}catch(e){}}
+ function err(p){post('/__err',JSON.stringify(p));}
+ window.addEventListener('error',function(e){
+  err({kind:e.message?'error':'resource',line:e.lineno||0,
+       text:String(e.message||('could not load '+((e.target&&(e.target.src||e.target.href))||'a file')))});},true);
+ window.addEventListener('unhandledrejection',function(e){
+  err({kind:'promise',line:0,text:String((e.reason&&e.reason.message)||e.reason)});});
+ var ce=console.error;console.error=function(){
+  err({kind:'console',line:0,text:Array.prototype.join.call(arguments,' ')});
+  return ce.apply(console,arguments);};
+ window.addEventListener('load',function(){setTimeout(function(){
+  post('/__done');window.close();},SETTLE_MS);});
+})();
+</script>"""
+_CATCH_LINES = _CATCH.count("\n")
+
+_HEAD_OPEN = re.compile(r"(?i)<head\b[^>]*>")
+_HTML_OPEN = re.compile(r"(?i)<html\b[^>]*>")
+_DOCTYPE = re.compile(r"(?i)<!doctype\s+html[^>]*>")
+
+
+def _inject(page: str, settle: float) -> tuple[str, int]:
+    """(the page with the catcher in it, how many lines it pushed things down).
+
+    The offset is subtracted from every reported line number, so the Coder is
+    told where the fault is in ITS OWN page and not in the served copy.
+    """
+    catch = _CATCH.replace("SETTLE_MS", str(int(max(0.0, settle) * 1000)))
+    for rx in (_HEAD_OPEN, _HTML_OPEN, _DOCTYPE):
+        m = rx.search(page)
+        if m:
+            return page[:m.end()] + catch + page[m.end():], _CATCH_LINES
+    return catch + page, _CATCH_LINES
+
+
+def run_page(page: str, settle: float = SETTLE,
+             budget: float = CHECK_BUDGET) -> tuple[bool, list[dict], str]:
+    """Load `page` in a browser with no window. (loaded, faults, why-not).
+
+    `why-not` is "" when the check really ran. Anything else is a reason it
+    could not, and the caller saves anyway and says so -- this never blocks a
+    version on its own inability to look.
+    """
+    exe, _name = browser()
+    if not exe:
+        return False, [], ("no browser was found on this machine to run it in "
+                           "(Edge or Chrome); nothing was downloaded to get one")
+
+    served, offset = _inject(page, settle)
+    body = served.encode("utf-8")
+    faults: list[dict] = []
+    done = threading.Event()
+
+    class Handler(http.server.BaseHTTPRequestHandler):
+        protocol_version = "HTTP/1.1"
+
+        def log_message(self, *a):        # a check is not a web server's log
+            pass
+
+        def do_POST(self):
+            n = int(self.headers.get("Content-Length") or 0)
+            raw = self.rfile.read(n).decode("utf-8", "replace") if n else ""
+            if self.path == "/__done":
+                done.set()
+            else:
+                try:
+                    row = json.loads(raw)
+                except ValueError:
+                    row = {"kind": "error", "line": 0, "text": raw[:400]}
+                if isinstance(row, dict):
+                    faults.append(row)
+            self.send_response(204)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+
+        def do_GET(self):
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+    try:
+        srv = socketserver.ThreadingTCPServer(("127.0.0.1", 0), Handler)
+    except OSError as exc:
+        return False, [], f"the page could not be served to a browser ({exc})"
+    srv.daemon_threads = True
+    port = srv.server_address[1]
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+
+    _sweep_profiles()            # whatever an earlier run could not let go of
+    # THE TIME GOES IN THE NAME. See `_made_at`: a directory's mtime is not a
+    # clock a sweep can trust, because the sweep itself moves it.
+    profile = tempfile.mkdtemp(prefix=f"{PROFILE_PREFIX}{int(time.time())}-")
+    child = None
+    why = ""
+    try:
+        try:
+            child = subprocess.Popen(
+                [exe, "--headless=new", "--disable-gpu", "--no-first-run",
+                 "--no-default-browser-check", "--disable-extensions",
+                 "--disable-background-networking", "--disable-sync",
+                 "--disable-component-update", "--no-service-autorun",
+                 "--user-data-dir=" + profile, f"http://127.0.0.1:{port}/"],
+                stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL)
+        except OSError as exc:
+            return False, [], f"the browser would not start ({exc})"
+        loaded = done.wait(max(1.0, budget))
+        if not loaded:
+            why = (f"the page never finished loading inside {budget:.0f}s, so "
+                   f"what it does is still unknown")
+    finally:
+        if child is not None:
+            child.terminate()
+            try:
+                child.wait(5)
+            except subprocess.TimeoutExpired:
+                child.kill()
+        srv.shutdown()
+        srv.server_close()
+        _drop_profile(profile)
+
+    for f in faults:                       # the Coder's own line numbers
+        try:
+            f["line"] = max(0, int(f.get("line") or 0) - offset)
+        except (TypeError, ValueError):
+            f["line"] = 0
+    return (not why), faults, why
+
+
+def breaking(faults) -> list[dict]:
+    """The faults that mean the page did not do what it meant to."""
+    return [f for f in (faults or []) if f.get("kind") in BREAKING]
+
+
+def said_faults(faults, cap: int = 4) -> str:
+    """The faults in one line a person can read. Deduped: a page that throws
+    the same error on a timer throws it many times, and that is one fault."""
+    seen, out = set(), []
+    for f in faults or []:
+        text = " ".join(str(f.get("text") or "").split())[:160]
+        if not text or text in seen:
+            continue
+        seen.add(text)
+        where = f" (line {f['line']})" if f.get("line") else ""
+        out.append(text + where)
+    more = f" and {len(out) - cap} more" if len(out) > cap else ""
+    return "; ".join(out[:cap]) + more
+
+
+def repair_prompt(page: str, faults, objective: str) -> str:
+    """The Coder's ONE more try: its own page back, with what the browser said.
+
+    The faults are quoted as the BROWSER's words, not described -- a seat told
+    "it didn't work" guesses, and a seat given `game is not defined` at line 42
+    fixes a line.
+    """
+    listing = "\n".join(
+        f"  - {' '.join(str(f.get('text') or '').split())[:200]}"
+        + (f"  (line {f['line']})" if f.get("line") else "")
+        for f in (faults or [])[:8])
+    return (f"This page was loaded in a browser and it reported errors. Here "
+            f"is the page:\n\n```html\n{(page or '').rstrip()}\n```\n\n"
+            f"WHAT THE BROWSER REPORTED:\n{listing}\n\n"
+            f"Fix ONLY what those errors name. Change nothing else -- not the "
+            f"look, not the rules of the game, not anything that was already "
+            f"working. It was asked for: {(objective or '').strip()}\n\n"
+            f"Rewrite the WHOLE page with the fix in it.\n{RULES}\n{_SHAPE}")
 
 
 # ---------------------------------------------------------------------
@@ -405,24 +761,57 @@ def _where(project) -> str:
     return f"{PROJECTS}\\{Path(project).name}\\{PAGE}"
 
 
-def report_made(project, lines: int) -> str:
+def _trouble(said: str) -> str:
+    """The check's word, as a paragraph, or nothing at all.
+
+    HIS RULING, 2026-09-22: a page that still errors after its one repair is
+    SAVED and the report SAYS SO. She asked for a game and gets one she can
+    open; `page_from` already refuses what is genuinely fatal, and the fault
+    that started this piece was a real error in a perfectly playable game.
+    """
+    return f"\n\n{said}" if said else ""
+
+
+def report_made(project, lines: int, trouble: str = "") -> str:
     name = Path(project).name
     return (f"Made {name} -- version 1.\n\n"
             f"It is one page, {PAGE} ({lines} lines), in {PROJECTS}\\{name}\\ "
             f"with its own history. To try it, open {_where(project)} in your "
-            f"browser.\n\n"
+            f"browser."
+            + _trouble(trouble) + "\n\n"
             f"What next? Ask for a change in plain words -- \"make it faster\", "
             f"\"add a score\" -- and it becomes version 2. \"Go back\" returns to "
             f"an earlier version, and nothing is ever thrown away.")
 
 
-def report_changed(project, n: int, lines: int, was: int, note: str) -> str:
+def report_changed(project, n: int, lines: int, was: int, note: str,
+                   trouble: str = "") -> str:
     name = Path(project).name
     return (f"Changed {name} -- version {n}: {_note(note)}\n\n"
             f"{PAGE} is now {lines} lines (it was {was}). Open {_where(project)} "
-            f"again to see it.\n\n"
+            f"again to see it."
+            + _trouble(trouble) + "\n\n"
             f"Say \"go back\" to return to version {n - 1}, or ask for the next "
             f"change.")
+
+
+def said_checked(ran: bool, why: str, faults, repaired: bool) -> str:
+    """What the check found, for the person, in one paragraph -- or "" when it
+    ran and the page was clean, which needs no words at all."""
+    if not ran:
+        return (f"One thing to know: it was not opened in a browser first -- "
+                f"{why}. It is saved as it was written.")
+    bad = breaking(faults)
+    if not bad and not faults:
+        return ""
+    if not bad:
+        return (f"It opened cleanly. One note from the browser: "
+                f"{said_faults(faults)}.")
+    head = ("It still reports an error after one repair"
+            if repaired else "It reports an error")
+    return (f"One thing to know: {head} -- {said_faults(bad)}. It is saved "
+            f"anyway so you can see it; a page can report an error and still "
+            f"play. Ask for a change in plain words and it can be fixed.")
 
 
 def report_back(project, n: int, target: int) -> str:

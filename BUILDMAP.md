@@ -278,43 +278,54 @@ this file (where each thing is) -> REFUSALS.md (what each guard refuses)
 | def | `laws_text` | 267-290 | The ten estate laws as sealed -- the numbered list under the LAST |
 | def | `run` | 300-329 | The whole gate for one run. Cheap: the chain walk is four files and a |
 
-### manjuel/maker.py — 496 lines
+### manjuel/maker.py — 885 lines
 
 *THE MAKER -- "make me a snake game", and the bookkeeping nobody thinks about.*
 
 | kind | name | lines | says |
 |---|---|---|---|
-| class | `MakerRefused` | 92-93 | Why nothing was saved, in a sentence a person can read. |
-| def | `_key` | 96-97 |  |
-| def | `current` | 100-103 | The project this sitting is working on, or None. |
-| def | `set_current` | 106-107 |  |
-| def | `forget` | 110-115 | Drop the sitting's project (all of them with no ground). The suites. |
-| def | `name_for` | 128-135 | A folder name from the words that named the thing: "simple snake game" |
-| def | `_free` | 138-146 | `name`, or `name-2`, `name-3`... -- a project is never made on top of |
-| def | `page_from` | 176-207 | (the page, "") -- or ("", why it is not one). |
-| def | `_is_project` | 214-223 | The project's OWN repository, and nothing else, answers for it. |
-| def | `new_project` | 226-243 | Make `projects/<name>/` with its own empty history and its own signer. |
-| def | `versions` | 246-261 | [(version number, short sha, its note)], oldest first. |
-| def | `page_of` | 264-268 |  |
-| def | `_note` | 271-273 |  |
-| def | `_commit` | 276-284 |  |
-| def | `save_version` | 287-298 | Write the page and save it as the project's next version. Returns its |
-| def | `restore` | 301-334 | Go back to version `target` (0 = the one before this) by saving it |
-| def | `projects` | 341-350 | Every project in the ground, by name: a folder under projects/ with a |
-| def | `find` | 353-369 | The projects these words name. The one whose folder name they make |
-| def | `coder_prompt` | 390-401 | The Coder's one job for this turn: a whole page, new or changed. |
-| def | `_where` | 404-405 |  |
-| def | `report_made` | 408-416 |  |
-| def | `report_changed` | 419-425 |  |
-| def | `report_back` | 428-434 |  |
-| def | `report_unsaved` | 437-440 |  |
-| def | `report_too_big` | 443-448 |  |
-| def | `report_picked` | 451-464 |  |
-| def | `report_put_down` | 467-472 |  |
-| def | `_named` | 475-476 |  |
-| def | `report_nothing_in_hand` | 479-482 |  |
-| def | `report_which` | 485-487 |  |
-| def | `report_no_such` | 490-496 |  |
+| class | `MakerRefused` | 110-111 | Why nothing was saved, in a sentence a person can read. |
+| def | `_key` | 114-115 |  |
+| def | `current` | 118-121 | The project this sitting is working on, or None. |
+| def | `set_current` | 124-125 |  |
+| def | `forget` | 128-133 | Drop the sitting's project (all of them with no ground). The suites. |
+| def | `name_for` | 146-153 | A folder name from the words that named the thing: "simple snake game" |
+| def | `_free` | 156-164 | `name`, or `name-2`, `name-3`... -- a project is never made on top of |
+| def | `page_from` | 194-225 | (the page, "") -- or ("", why it is not one). |
+| def | `_drop_profile` | 306-328 | Remove the browser's profile, waiting for the browser to let go of it. |
+| def | `_made_at` | 331-347 | When a profile was made, read from ITS OWN NAME. |
+| def | `_sweep_profiles` | 350-371 | Remove profiles an earlier run could not, and say how many went. |
+| def | `browser` | 374-384 | (the path to a headless-capable browser, its name), or ("", ""). |
+| def | `_inject` | 416-427 | (the page with the catcher in it, how many lines it pushed things down). |
+| def | `run_page` | 430-523 | Load `page` in a browser with no window. (loaded, faults, why-not). |
+| def | `breaking` | 526-528 | The faults that mean the page did not do what it meant to. |
+| def | `said_faults` | 531-543 | The faults in one line a person can read. Deduped: a page that throws |
+| def | `repair_prompt` | 546-563 | The Coder's ONE more try: its own page back, with what the browser said. |
+| def | `_is_project` | 570-579 | The project's OWN repository, and nothing else, answers for it. |
+| def | `new_project` | 582-599 | Make `projects/<name>/` with its own empty history and its own signer. |
+| def | `versions` | 602-617 | [(version number, short sha, its note)], oldest first. |
+| def | `page_of` | 620-624 |  |
+| def | `_note` | 627-629 |  |
+| def | `_commit` | 632-640 |  |
+| def | `save_version` | 643-654 | Write the page and save it as the project's next version. Returns its |
+| def | `restore` | 657-690 | Go back to version `target` (0 = the one before this) by saving it |
+| def | `projects` | 697-706 | Every project in the ground, by name: a folder under projects/ with a |
+| def | `find` | 709-725 | The projects these words name. The one whose folder name they make |
+| def | `coder_prompt` | 746-757 | The Coder's one job for this turn: a whole page, new or changed. |
+| def | `_where` | 760-761 |  |
+| def | `_trouble` | 764-772 | The check's word, as a paragraph, or nothing at all. |
+| def | `report_made` | 775-784 |  |
+| def | `report_changed` | 787-795 |  |
+| def | `said_checked` | 798-814 | What the check found, for the person, in one paragraph -- or "" when it |
+| def | `report_back` | 817-823 |  |
+| def | `report_unsaved` | 826-829 |  |
+| def | `report_too_big` | 832-837 |  |
+| def | `report_picked` | 840-853 |  |
+| def | `report_put_down` | 856-861 |  |
+| def | `_named` | 864-865 |  |
+| def | `report_nothing_in_hand` | 868-871 |  |
+| def | `report_which` | 874-876 |  |
+| def | `report_no_such` | 879-885 |  |
 
 ### manjuel/mathkit.py — 236 lines
 
@@ -387,7 +398,7 @@ this file (where each thing is) -> REFUSALS.md (what each guard refuses)
 | def | `_prompt` | 319-322 |  |
 | def | `models_needed` | 325-327 | Reference tags these cases will pull onto the rack. |
 
-### manjuel/pipeline.py — 3035 lines
+### manjuel/pipeline.py — 3122 lines
 
 *Pipeline execution against a RunContext.*
 
@@ -429,14 +440,15 @@ this file (where each thing is) -> REFUSALS.md (what each guard refuses)
 | def | `_maker_go_back` | 1274-1288 | A go-back is git's job, not a model's: the version is on disk. The |
 | def | `_maker_pick_up` | 1291-1302 | Put a project in hand for this sitting. Nothing on disk moves: the |
 | def | `_maker_put_down` | 1305-1316 | Put the project in hand down. It stays on disk exactly as it is; the |
-| def | `_maker_land` | 1319-1348 | Check what the Coder answered and save it as a version -- or say |
-| def | `_maker_deliver` | 1351-1356 | The engine's report is the delivery of a maker turn: facts about what |
-| def | `run_pipeline` | 1364-2656 |  |
-| def | `_sub_runner` | 2668-2736 | Build the `sub_run` capability for one context's depth. |
-| def | `reopen_reads` | 2739-2756 | A write reopens the reads. Returns how many were dropped. |
-| def | `carry_unblocked` | 2759-2805 | Tell a turn that the file its earlier call was refused for now exists. |
-| def | `recompose` | 2808-3015 | Put what actually happened back into what is delivered. |
-| def | `_handle_failure` | 3018-3034 |  |
+| def | `_maker_prove` | 1319-1401 | Load the page in a browser with no window; on an error, ONE more try. |
+| def | `_maker_land` | 1404-1435 | Check what the Coder answered and save it as a version -- or say |
+| def | `_maker_deliver` | 1438-1443 | The engine's report is the delivery of a maker turn: facts about what |
+| def | `run_pipeline` | 1451-2743 |  |
+| def | `_sub_runner` | 2755-2823 | Build the `sub_run` capability for one context's depth. |
+| def | `reopen_reads` | 2826-2843 | A write reopens the reads. Returns how many were dropped. |
+| def | `carry_unblocked` | 2846-2892 | Tell a turn that the file its earlier call was refused for now exists. |
+| def | `recompose` | 2895-3102 | Put what actually happened back into what is delivered. |
+| def | `_handle_failure` | 3105-3121 |  |
 
 ### manjuel/rack.py — 149 lines
 
@@ -873,7 +885,7 @@ this file (where each thing is) -> REFUSALS.md (what each guard refuses)
 | def | `GroundWatch.start` | 162-187 |  |
 | def | `GroundWatch.stop` | 189-195 |  |
 
-manjuel/: 30 files, 21036 lines.
+manjuel/: 30 files, 21512 lines.
 
 ## GUARDS — by the failure that earned them
 
@@ -1011,6 +1023,11 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 | line | in | marker |
 |---|---|---|
 | 10 | `(module)` | WHAT THE ESTATE DID WITH THAT REQUEST BEFORE THIS EXISTED -- sitting 257, the |
+| 229 | `(module)` | the check that RUNS it (piece 3, 2026-09-22, his word: "let's build piece 3") |
+| 234 | `(module)` | nothing here ran it. Seen live 2026-09-21: version 1 of the snake game called |
+| 245 | `(module)` | THE BROWSER IS ALREADY ON THIS MACHINE (RULE 4, and his ruling 2026-09-22: |
+| 281 | `(module)` | timer. Measured 2026-09-22: a clean page answers in ~2.2s end to end. |
+| 290 | `(module)` | Edge first, Chrome second -- his ruling, 2026-09-22. |
 
 ### manjuel/memory.py
 
@@ -1067,77 +1084,77 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 | 1148 | `_refuse_testimony` | Sitting 88, the court: semantic_search returned five real passages -- |
 | 1184 | `(module)` | The maker (2026-09-21) -- see maker.py for the why, in full |
 | 1187 | `(module)` | Sitting 257 asked the estate to "make me a simple snake game I can play" and |
-| 1394 | `run_pipeline` | THE LAW GATE (the operator's ruling, 2026-09-04): every run passes |
-| 1413 | `run_pipeline` | THE MAKER (2026-09-21), AFTER THE LAW AND BEFORE EVERY OTHER ROUTE. A |
-| 1429 | `run_pipeline` | AN UNKNOWN SKILL NAME IS SAID SO (the review of 2026-09-08). Sitting |
-| 1449 | `run_pipeline` | 2026-09-01: "write a note about the rack, then read it back" matched the |
-| 1453 | `run_pipeline` | "write down what models we have". Since sitting 24 named_tool is a |
-| 1462 | `run_pipeline` | SITTING 69: asking ABOUT a tool ran the tool. "what does deep |
-| 1469 | `run_pipeline` | SAY WHICH THING DID NOT RUN. Sitting 81: this note read |
-| 1487 | `run_pipeline` | THE DECOMPOSER (the operator's chain, sitting 64). Chaining cannot |
-| 1507 | `run_pipeline` | (2026-09-12, from the coder flow). `verify` said "Run the .py file |
-| 1590 | `run_pipeline` | THE DECOMPOSER (sitting 62): verb class + object class beats |
-| 1592 | `run_pipeline` | dispatched NOTHING twice in sitting 61 because no alias was |
-| 1602 | `run_pipeline` | Sitting 60: substantive questions skipped every tool and a seat |
-| 1617 | `run_pipeline` | FOUR BRANCHES STILL SAID NOTHING, until 2026-09-14. |
-| 1632 | `run_pipeline` | THE PAYLOAD SURVIVES RECOGNITION (operator's ruling, sitting 66). |
-| 1649 | `run_pipeline` | 2026-09-08). "time_align the logs", "semantic_search covenant", |
-| 1671 | `run_pipeline` | (2026-09-18, his word: "hand the message separately from the |
-| 1684 | `run_pipeline` | THE 2026-09-08 RULING IS NOT TOUCHED. A writer's argument is still |
-| 1695 | `run_pipeline` | BOTH, OR NEITHER (2026-09-18, his word: "teach it to carry |
-| 1713 | `run_pipeline` | THE NAMED FILE, CHECKED FOR VIABILITY (sitting 88, the operator: |
-| 1741 | `run_pipeline` | A FOLLOW-UP KEEPS THE DOOR (sitting 87). If the turn points back at |
-| 1752 | `run_pipeline` | ("what happened?" -> semantic_search, sitting 93) is withdrawn. A |
-| 1765 | `run_pipeline` | THE GUESSES A FOLLOW-UP WITHDRAWS, by name. Until 2026-09-14 four of |
-| 1821 | `run_pipeline` | Reviewer compresses a noisy feed; with no feed it spent 40s in session 3 |
-| 1836 | `run_pipeline` | none, sitting 27 scored a reply against the words "good job stew", |
-| 1907 | `run_pipeline` | SITTING 70: the operator watched `<action>ground_list</action> |
-| 1910 | `run_pipeline` | seat's channel to the ENGINE (strip_control, sitting 42's |
-| 1944 | `run_pipeline` | AND ONLY THE EXECUTOR SEES SCHEMAS AT ALL. Sitting 84 (the |
-| 1962 | `run_pipeline` | THE DELIBERATION, KEPT (sitting 79, the operator's ruling). |
-| 1968 | `run_pipeline` | sitting 47's ruling that thinking is never displayed and never |
-| 1975 | `run_pipeline` | THE DECIDED CALL (sitting 91, 2026-09-07; SPEC 4.2's open line |
-| 1998 | `run_pipeline` | THE RULING LOOP (2026-09-07). A seat that thought and did not |
-| 2010 | `run_pipeline` | Session 5c: a seat returned "" and the chain delivered silence |
-| 2062 | `run_pipeline` | and leave the evidence (sitting 88: the write-claim check threw |
-| 2071 | `run_pipeline` | THE DEDUP (sitting 63). "remember the operator rules" staged the |
-| 2080 | `run_pipeline` | PER RUN, NOT PER SEATING (TASKS, built 2026-09-10). This was |
-| 2098 | `run_pipeline` | another tool. Sitting 91's Router would have called |
-| 2121 | `run_pipeline` | NOT RESOLVE (sitting 88). The seat's spelling is |
-| 2144 | `run_pipeline` | Sitting 77: the Router called `list_directory` twice in one |
-| 2219 | `run_pipeline` | Sitting 40: an errored read was narrated as "successfully |
-| 2296 | `run_pipeline` | THE CITATION-CHECK (named sitting 61, built 2026-09-02). |
-| 2326 | `run_pipeline` | THE SEAM (sitting 63). A `memory.md` read came back with the |
-| 2343 | `run_pipeline` | TRIED AND REVERTED, 2026-09-02. Sitting 69 showed the closing |
-| 2358 | `run_pipeline` | THE DOOR'S HANDOFF (sitting 84). A seat that is NOT the executor |
-| 2370 | `run_pipeline` | THE CLOSING SEAT (sitting 84, 09:19). The work is DONE and |
-| 2407 | `run_pipeline` | THE SCAFFOLD PARROT (sitting 85, 2026-09-04, run 8). The closing |
-| 2410 | `run_pipeline` | the whole thread, verbatim, delivered as the answer. Sitting 46 |
-| 2419 | `run_pipeline` | wrong discard (sitting 87 had two) can be seen for what it was. |
-| 2447 | `run_pipeline` | THE REVIEW -> REPEAT EDGE (the operator's chain, sitting 64). |
-| 2476 | `run_pipeline` | THE CLAIM-CHECK (agreed 2026-09-01, built 2026-09-02). |
-| 2492 | `run_pipeline` | A MAKER'S PAGE IS NOT TESTIMONY (2026-09-21). On a maker turn the |
-| 2500 | `run_pipeline` | THE WRITE-CLAIM CHECK (sitting 70), the claim-check's sibling. |
-| 2562 | `run_pipeline` | Sitting 31: "heloo stewy" raised `technical` and woke the coder on |
-| 2574 | `run_pipeline` | The needs_tool set-aside gate stood here from sitting 48 until |
-| 2575 | `run_pipeline` | 2026-09-01, when the operator ruled it out. Kept as the record of |
-| 2589 | `run_pipeline` | OPERATOR RULING, 2026-09-01: a raised needs_tool always reaches the |
-| 2638 | `run_pipeline` | JOINED WITHOUT SEPARATORS. Sitting 80: this was |
-| 2671 | `_sub_runner` | THE OPERATOR, sitting 68: "scoped subagents ... run, deliver output, |
-| 2811 | `recompose` | THE OPERATOR'S RULING, sitting 68: "that's the second time in a row |
-| 2838 | `recompose` | A NUMBER NO TOOL RETURNED (SPEC 4.7, built 2026-09-10). The same |
-| 2840 | `recompose` | catch what was OMITTED, this catches what was INVENTED. Sitting 94's |
-| 2842 | `recompose` | DIRTY; 2026-09-09's standup had the door report "37 markdown files, |
-| 2853 | `recompose` | 2026-09-10: `push the committed work to the remote` named `git_push`, |
-| 2871 | `recompose` | THE CASE `missed` CANNOT SEE (2026-09-12, the coder flow's `verify`). |
-| 2885 | `recompose` | certainly right beats broad and crying wolf (HANDOFF, 2026-09-01), and |
-| 2897 | `recompose` | 2026-09-10 when the standup caught an invented "196 to 1,200 bytes" |
-| 2908 | `recompose` | A SEAT THAT FAILED (the review of 2026-09-08). ctx.failures held |
-| 2910 | `recompose` | nowhere in the delivery -- sitting 96's court said OUT OF TIME for |
-| 2930 | `recompose` | WHO CHOSE IT, SAID TRULY (2026-09-14). This read "This objective |
-| 2969 | `recompose` | THE PARTIAL-READ STAMP (2026-09-07; SITTING LAW 1 for the seats). |
-| 2970 | `recompose` | Sitting 87 run 7 answered from part 1 of 6 of DESIGN.md and did |
-| 2988 | `recompose` | OUT OF TIME (2026-09-08, the operator's ten minutes). The seats |
+| 1481 | `run_pipeline` | THE LAW GATE (the operator's ruling, 2026-09-04): every run passes |
+| 1500 | `run_pipeline` | THE MAKER (2026-09-21), AFTER THE LAW AND BEFORE EVERY OTHER ROUTE. A |
+| 1516 | `run_pipeline` | AN UNKNOWN SKILL NAME IS SAID SO (the review of 2026-09-08). Sitting |
+| 1536 | `run_pipeline` | 2026-09-01: "write a note about the rack, then read it back" matched the |
+| 1540 | `run_pipeline` | "write down what models we have". Since sitting 24 named_tool is a |
+| 1549 | `run_pipeline` | SITTING 69: asking ABOUT a tool ran the tool. "what does deep |
+| 1556 | `run_pipeline` | SAY WHICH THING DID NOT RUN. Sitting 81: this note read |
+| 1574 | `run_pipeline` | THE DECOMPOSER (the operator's chain, sitting 64). Chaining cannot |
+| 1594 | `run_pipeline` | (2026-09-12, from the coder flow). `verify` said "Run the .py file |
+| 1677 | `run_pipeline` | THE DECOMPOSER (sitting 62): verb class + object class beats |
+| 1679 | `run_pipeline` | dispatched NOTHING twice in sitting 61 because no alias was |
+| 1689 | `run_pipeline` | Sitting 60: substantive questions skipped every tool and a seat |
+| 1704 | `run_pipeline` | FOUR BRANCHES STILL SAID NOTHING, until 2026-09-14. |
+| 1719 | `run_pipeline` | THE PAYLOAD SURVIVES RECOGNITION (operator's ruling, sitting 66). |
+| 1736 | `run_pipeline` | 2026-09-08). "time_align the logs", "semantic_search covenant", |
+| 1758 | `run_pipeline` | (2026-09-18, his word: "hand the message separately from the |
+| 1771 | `run_pipeline` | THE 2026-09-08 RULING IS NOT TOUCHED. A writer's argument is still |
+| 1782 | `run_pipeline` | BOTH, OR NEITHER (2026-09-18, his word: "teach it to carry |
+| 1800 | `run_pipeline` | THE NAMED FILE, CHECKED FOR VIABILITY (sitting 88, the operator: |
+| 1828 | `run_pipeline` | A FOLLOW-UP KEEPS THE DOOR (sitting 87). If the turn points back at |
+| 1839 | `run_pipeline` | ("what happened?" -> semantic_search, sitting 93) is withdrawn. A |
+| 1852 | `run_pipeline` | THE GUESSES A FOLLOW-UP WITHDRAWS, by name. Until 2026-09-14 four of |
+| 1908 | `run_pipeline` | Reviewer compresses a noisy feed; with no feed it spent 40s in session 3 |
+| 1923 | `run_pipeline` | none, sitting 27 scored a reply against the words "good job stew", |
+| 1994 | `run_pipeline` | SITTING 70: the operator watched `<action>ground_list</action> |
+| 1997 | `run_pipeline` | seat's channel to the ENGINE (strip_control, sitting 42's |
+| 2031 | `run_pipeline` | AND ONLY THE EXECUTOR SEES SCHEMAS AT ALL. Sitting 84 (the |
+| 2049 | `run_pipeline` | THE DELIBERATION, KEPT (sitting 79, the operator's ruling). |
+| 2055 | `run_pipeline` | sitting 47's ruling that thinking is never displayed and never |
+| 2062 | `run_pipeline` | THE DECIDED CALL (sitting 91, 2026-09-07; SPEC 4.2's open line |
+| 2085 | `run_pipeline` | THE RULING LOOP (2026-09-07). A seat that thought and did not |
+| 2097 | `run_pipeline` | Session 5c: a seat returned "" and the chain delivered silence |
+| 2149 | `run_pipeline` | and leave the evidence (sitting 88: the write-claim check threw |
+| 2158 | `run_pipeline` | THE DEDUP (sitting 63). "remember the operator rules" staged the |
+| 2167 | `run_pipeline` | PER RUN, NOT PER SEATING (TASKS, built 2026-09-10). This was |
+| 2185 | `run_pipeline` | another tool. Sitting 91's Router would have called |
+| 2208 | `run_pipeline` | NOT RESOLVE (sitting 88). The seat's spelling is |
+| 2231 | `run_pipeline` | Sitting 77: the Router called `list_directory` twice in one |
+| 2306 | `run_pipeline` | Sitting 40: an errored read was narrated as "successfully |
+| 2383 | `run_pipeline` | THE CITATION-CHECK (named sitting 61, built 2026-09-02). |
+| 2413 | `run_pipeline` | THE SEAM (sitting 63). A `memory.md` read came back with the |
+| 2430 | `run_pipeline` | TRIED AND REVERTED, 2026-09-02. Sitting 69 showed the closing |
+| 2445 | `run_pipeline` | THE DOOR'S HANDOFF (sitting 84). A seat that is NOT the executor |
+| 2457 | `run_pipeline` | THE CLOSING SEAT (sitting 84, 09:19). The work is DONE and |
+| 2494 | `run_pipeline` | THE SCAFFOLD PARROT (sitting 85, 2026-09-04, run 8). The closing |
+| 2497 | `run_pipeline` | the whole thread, verbatim, delivered as the answer. Sitting 46 |
+| 2506 | `run_pipeline` | wrong discard (sitting 87 had two) can be seen for what it was. |
+| 2534 | `run_pipeline` | THE REVIEW -> REPEAT EDGE (the operator's chain, sitting 64). |
+| 2563 | `run_pipeline` | THE CLAIM-CHECK (agreed 2026-09-01, built 2026-09-02). |
+| 2579 | `run_pipeline` | A MAKER'S PAGE IS NOT TESTIMONY (2026-09-21). On a maker turn the |
+| 2587 | `run_pipeline` | THE WRITE-CLAIM CHECK (sitting 70), the claim-check's sibling. |
+| 2649 | `run_pipeline` | Sitting 31: "heloo stewy" raised `technical` and woke the coder on |
+| 2661 | `run_pipeline` | The needs_tool set-aside gate stood here from sitting 48 until |
+| 2662 | `run_pipeline` | 2026-09-01, when the operator ruled it out. Kept as the record of |
+| 2676 | `run_pipeline` | OPERATOR RULING, 2026-09-01: a raised needs_tool always reaches the |
+| 2725 | `run_pipeline` | JOINED WITHOUT SEPARATORS. Sitting 80: this was |
+| 2758 | `_sub_runner` | THE OPERATOR, sitting 68: "scoped subagents ... run, deliver output, |
+| 2898 | `recompose` | THE OPERATOR'S RULING, sitting 68: "that's the second time in a row |
+| 2925 | `recompose` | A NUMBER NO TOOL RETURNED (SPEC 4.7, built 2026-09-10). The same |
+| 2927 | `recompose` | catch what was OMITTED, this catches what was INVENTED. Sitting 94's |
+| 2929 | `recompose` | DIRTY; 2026-09-09's standup had the door report "37 markdown files, |
+| 2940 | `recompose` | 2026-09-10: `push the committed work to the remote` named `git_push`, |
+| 2958 | `recompose` | THE CASE `missed` CANNOT SEE (2026-09-12, the coder flow's `verify`). |
+| 2972 | `recompose` | certainly right beats broad and crying wolf (HANDOFF, 2026-09-01), and |
+| 2984 | `recompose` | 2026-09-10 when the standup caught an invented "196 to 1,200 bytes" |
+| 2995 | `recompose` | A SEAT THAT FAILED (the review of 2026-09-08). ctx.failures held |
+| 2997 | `recompose` | nowhere in the delivery -- sitting 96's court said OUT OF TIME for |
+| 3017 | `recompose` | WHO CHOSE IT, SAID TRULY (2026-09-14). This read "This objective |
+| 3056 | `recompose` | THE PARTIAL-READ STAMP (2026-09-07; SITTING LAW 1 for the seats). |
+| 3057 | `recompose` | Sitting 87 run 7 answered from part 1 of 6 of DESIGN.md and did |
+| 3075 | `recompose` | OUT OF TIME (2026-09-08, the operator's ten minutes). The seats |
 
 ### manjuel/rack.py
 
@@ -1333,7 +1350,7 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 Every `test_*` function in tests/, the manjuel names it touches, and
 its line range. The suites are the memory (HANDOFF: test discipline).
 
-### tests/test_manjuel.py — 188 test functions
+### tests/test_manjuel.py — 189 test functions
 
 | test | lines | touches |
 |---|---|---|
@@ -1516,13 +1533,14 @@ its line range. The suites are the memory (HANDOFF: test discipline).
 | `test_path_gate` | 12893-13019 | `RunContext`, `SkillSpec`, `gate_paths`, `parse_path_args`, `run_pipeline` |
 | `test_flags_are_not_speech` | 13022-13062 | `RunContext`, `build_prompt`, `read_flags`, `run_pipeline`, `strip_control` |
 | `test_the_maker` | 13065-13342 | `RunContext`, `_maker_route`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.wants_changing`, `intent.wants_going_back`, `intent.wants_making`, `maker`, `maker.AUTHOR_NAME`, `maker.MakerRefused` |
-| `test_the_maker_picks_up_and_puts_down` | 13345-13578 | `RunContext`, `_maker_route`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `intent`, `intent.wants_going_back`, `intent.wants_picking_up`, `intent.wants_putting_down`, `maker` |
-| `test_ink` | 13581-13629 | `ink`, `ink.RESET`, `ink.Spinner`, `ink._STATE`, `ink.bad`, `ink.body`, `ink.dim`, `ink.enabled`, `ink.good`, `ink.seat`, `ink.seat_color`, `ink.warn` |
-| `test_math` | 13632-13655 | `M`, `M.MathError`, `M.cosine`, `M.linear_regression`, `M.matmul`, `M.parse_numbers`, `M.stdev`, `M.transpose`, `M.variance` |
-| `test_a_commit_is_not_a_tag` | 13658-13699 | `_HANDLERS` |
-| `test_says_is_a_phrase_list_not_a_paragraph` | 13702-13767 | `SkillLibrary`, `SkillLibrary.load`, `parse_says` |
-| `test_the_stamp_is_not_an_edit` | 13770-13878 | `_BOOT_STAMPS`, `_H`, `_sf`, `suite_tally` |
-| `test_doctrine` | 13881-14055 | `D`, `D.dead_paths`, `D.doc_pass_report`, `D.doctrine_report`, `D.living`, `D.open_tasks`, `D.sittings`, `D.skills_axis`, `D.stale_tallies`, `D.versions`, `_H`, `_SL` |
-| `test_the_core_sees_its_own_repository` | 14058-14205 | `gitstate`, `gitstate.GitRefused`, `gitstate._bad_branch_name`, `gitstate._host_of`, `gitstate._jailed`, `gitstate.branches`, `gitstate.close_branch`, `gitstate.commit`, `gitstate.diff`, `gitstate.read`, `gitstate.remotes`, `gitstate.switch` |
-| `test_record_and_git` | 14208-14312 | `RunContext`, `_cli`, `_cli._toll_answer`, `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.pull`, `gitstate.push`, `gitstate.read`, `seatlog`, `seatlog.RunNote` |
+| `test_the_maker_runs_the_page_before_it_keeps_it` | 13345-13609 | `RunContext`, `maker`, `maker.CHECK_BUDGET`, `maker.PROFILE_PREFIX`, `maker.PROFILE_STALE`, `maker.REPAIRS`, `maker.SETTLE`, `maker._BROWSERS`, `maker._CATCH`, `maker._inject`, `maker._made_at`, `maker._sweep_profiles` |
+| `test_the_maker_picks_up_and_puts_down` | 13612-13845 | `RunContext`, `_maker_route`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `intent`, `intent.wants_going_back`, `intent.wants_picking_up`, `intent.wants_putting_down`, `maker` |
+| `test_ink` | 13848-13896 | `ink`, `ink.RESET`, `ink.Spinner`, `ink._STATE`, `ink.bad`, `ink.body`, `ink.dim`, `ink.enabled`, `ink.good`, `ink.seat`, `ink.seat_color`, `ink.warn` |
+| `test_math` | 13899-13922 | `M`, `M.MathError`, `M.cosine`, `M.linear_regression`, `M.matmul`, `M.parse_numbers`, `M.stdev`, `M.transpose`, `M.variance` |
+| `test_a_commit_is_not_a_tag` | 13925-13966 | `_HANDLERS` |
+| `test_says_is_a_phrase_list_not_a_paragraph` | 13969-14034 | `SkillLibrary`, `SkillLibrary.load`, `parse_says` |
+| `test_the_stamp_is_not_an_edit` | 14037-14145 | `_BOOT_STAMPS`, `_H`, `_sf`, `suite_tally` |
+| `test_doctrine` | 14148-14322 | `D`, `D.dead_paths`, `D.doc_pass_report`, `D.doctrine_report`, `D.living`, `D.open_tasks`, `D.sittings`, `D.skills_axis`, `D.stale_tallies`, `D.versions`, `_H`, `_SL` |
+| `test_the_core_sees_its_own_repository` | 14325-14472 | `gitstate`, `gitstate.GitRefused`, `gitstate._bad_branch_name`, `gitstate._host_of`, `gitstate._jailed`, `gitstate.branches`, `gitstate.close_branch`, `gitstate.commit`, `gitstate.diff`, `gitstate.read`, `gitstate.remotes`, `gitstate.switch` |
+| `test_record_and_git` | 14475-14579 | `RunContext`, `_cli`, `_cli._toll_answer`, `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.pull`, `gitstate.push`, `gitstate.read`, `seatlog`, `seatlog.RunNote` |
 

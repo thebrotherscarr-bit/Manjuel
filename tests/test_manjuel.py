@@ -13342,6 +13342,273 @@ def test_the_maker(reg, lib, book):
         maker.forget()
 
 
+def test_the_maker_runs_the_page_before_it_keeps_it(reg, lib, book):
+    """THE MAKER, PIECE 3 (2026-09-22, his word: "let's build piece 3").
+
+    `page_from` proves a page is WHOLE and LOCAL. It cannot prove it WORKS,
+    because nothing ran it -- and on 2026-09-21 version 1 of the snake game
+    called `clearInterval(game)` with no `game` declared. Whole, local, saved,
+    broken. So the page is now loaded in a browser with no window, and what it
+    throws goes back to the Coder for ONE more try.
+
+    THE ESTATE'S FIRST LAWFUL LOOP (LAW_003), and this stroke holds its three
+    bounds: a DECLARED CEILING (`maker.REPAIRS`, and the Coder sits at most
+    twice), a STOP CONDITION A MACHINE CHECKS (the browser's own error events,
+    never a seat's account of its work), and EVERY PASS IN THE RECORD (the
+    repair is a step, and both checks are notes).
+
+    AND IT NEVER BLOCKS A SAVE. A page that still errors is kept and said so
+    (his ruling); a check that could not run says that instead. The fail-open
+    half is stroked with no browser at all, which is also how this file passes
+    on a CI runner that has none.
+
+    Hermetic: temp grounds, a stand-in Coder, pages a few lines long, and a
+    web server on 127.0.0.1 with a port the OS picks.
+    """
+    from manjuel import maker
+
+    CLEAN = ("<!DOCTYPE html>\n<html><head><title>t</title></head><body>\n"
+             "<h1>fine</h1>\n<script>var n = 1;</script>\n</body></html>\n")
+    BROKEN = ("<!DOCTYPE html>\n<html><head><title>t</title></head><body>\n"
+              "<h1>bad</h1>\n<script>clearInterval(game);</script>\n</body></html>\n")
+
+    # ---- the injection: ahead of the page's scripts, BEHIND the doctype -----
+    served, offset = maker._inject(CLEAN, 0.1)
+    check("the catcher goes in AFTER the doctype, so the page is not in quirks mode",
+          served.lower().startswith("<!doctype html>"), served[:40])
+    check("   and ahead of the page's own scripts, or it would catch nothing",
+          served.index("XMLHttpRequest") < served.index("var n = 1"))
+    check("   and it says how many lines it pushed the page down",
+          offset == maker._CATCH.count("\n") and offset > 0, str(offset))
+    for page, why in ((("<html><body><script>var a=1;</script></body></html>"),
+                       "a page with no doctype and no head"),
+                      ("<!DOCTYPE html>\n<p>bare</p>\n", "a page with neither")):
+        got, _o = maker._inject(page, 0.1)
+        check(f"the catcher still lands ahead of the page: {why}",
+              got.index("XMLHttpRequest") < (got.index("var a=1")
+                                             if "var a=1" in got else len(got)),
+              got[:60])
+
+    # ---- what counts as BROKEN, and what is only a note ---------------------
+    faults = [{"kind": "error", "line": 4, "text": "game is not defined"},
+              {"kind": "console", "line": 0, "text": "just saying"},
+              {"kind": "promise", "line": 0, "text": "nope"},
+              {"kind": "resource", "line": 0, "text": "could not load bell.mp3"}]
+    kinds = [f["kind"] for f in maker.breaking(faults)]
+    check("an uncaught error, a rejected promise and a failed load mean BROKEN",
+          kinds == ["error", "promise", "resource"], str(kinds))
+    check("   and a console.error is reported without spending the repair",
+          "console" not in kinds)
+    same = [{"kind": "error", "line": 4, "text": "x"}] * 3
+    check("the same error on a timer is ONE fault, not thirty",
+          maker.said_faults(same) == "x (line 4)", maker.said_faults(same))
+
+    # ---- what the Coder is handed on its one more try ----------------------
+    asked = maker.repair_prompt(BROKEN, maker.breaking(faults), "make me a game")
+    check("the repair hands the Coder the BROWSER's words, not a description",
+          "game is not defined" in asked and "(line 4)" in asked, asked[-400:])
+    check("   with the page itself, and the rule that nothing else may change",
+          "clearInterval(game)" in asked and "Change nothing else" in asked)
+    check("   and what was asked for in the first place, so a fix is not a rewrite",
+          "make me a game" in asked)
+
+    # ---- FAIL OPEN: no browser on this machine at all -----------------------
+    real = maker._BROWSERS
+    try:
+        maker._BROWSERS = ()
+        check("with no browser installed, the check names itself absent",
+              maker.browser() == ("", ""), str(maker.browser()))
+        ran, got, why = maker.run_page(CLEAN)
+        check("   the check does not run, and says why in plain words",
+              ran is False and got == [] and "no browser was found" in why, why)
+        said = maker.said_checked(ran, why, got, repaired=False)
+        check("   and the person is told it was saved without being opened",
+              "not opened in a browser" in said and "saved as it was written" in said,
+              said)
+    finally:
+        maker._BROWSERS = real
+
+    # ---- THE PROFILE IT LEAVES BEHIND, which is nothing -------------------
+    # A terminated browser is not a gone browser: Chromium's children outlive
+    # the launcher and hold the profile, so the first cut of this check left
+    # EVERY profile on disk -- 138 of them, ~7 MB each, in one afternoon.
+    import shutil as _sh
+    import tempfile as _tf
+    stamp = int(time.time() - maker.PROFILE_STALE - 60)
+    old = Path(_tf.mkdtemp(prefix=f"{maker.PROFILE_PREFIX}{stamp}-"))
+    (old / "junk").write_text("x", encoding="utf-8")
+    fresh = Path(_tf.mkdtemp(prefix=f"{maker.PROFILE_PREFIX}{int(time.time())}-"))
+    # A NAME IS A CLOCK A SWEEP CANNOT MOVE. Touching the old one the way a
+    # failed rmtree would must NOT make it look young again -- that is the
+    # fault this reads its age from the name to avoid.
+    os.utime(old, None)
+    try:
+        check("a profile's age is read from its NAME, not the mtime a sweep moves",
+              time.time() - maker._made_at(old) > maker.PROFILE_STALE,
+              f"{(time.time() - maker._made_at(old)):.0f}s by name")
+        maker._sweep_profiles()
+        check("   so one an earlier run could not remove is swept later",
+              not old.exists(), str(old))
+        check("   and one young enough to be IN USE is left exactly alone",
+              fresh.is_dir(), str(fresh))
+    finally:
+        _sh.rmtree(old, ignore_errors=True)
+        _sh.rmtree(fresh, ignore_errors=True)
+    legacy = Path(_tf.mkdtemp(prefix=maker.PROFILE_PREFIX))
+    try:
+        check("   and a name from before the time was in it falls back to mtime",
+              abs(maker._made_at(legacy) - legacy.stat().st_mtime) < 2,
+              str(maker._made_at(legacy)))
+    finally:
+        _sh.rmtree(legacy, ignore_errors=True)
+    check("the sweep judges by age alone, well past the check's own bound",
+          maker.PROFILE_STALE > maker.CHECK_BUDGET * 4,
+          f"{maker.PROFILE_STALE} vs {maker.CHECK_BUDGET}")
+
+    exe, kind = maker.browser()
+    if not exe:
+        check("this machine has no browser, so the running half is not asked", True)
+        return
+
+    before = len(list(Path(_tf.gettempdir()).glob(maker.PROFILE_PREFIX + "*")))
+
+    # ---- the check, for real ------------------------------------------------
+    ran, got, why = maker.run_page(CLEAN)
+    check(f"a clean page loads in {kind} and reports nothing",
+          ran and maker.breaking(got) == [], f"{why} {got}")
+    check("   so the person is told nothing at all about it",
+          maker.said_checked(ran, why, got, repaired=False) == "")
+    ran, got, why = maker.run_page(BROKEN)
+    bad = maker.breaking(got)
+    check("the fault that started this piece is caught",
+          ran and len(bad) == 1 and "game is not defined" in bad[0]["text"],
+          f"{why} {got}")
+    check("   at ITS OWN line in the Coder's page, not the served copy's",
+          bad[0]["line"] == 4, str(bad[0]))
+    after = len(list(Path(_tf.gettempdir()).glob(maker.PROFILE_PREFIX + "*")))
+    check("and two real runs left no browser profile behind at all",
+          after <= before, f"{before} before, {after} after")
+    # THE PROFILE WAS THE SYMPTOM; THE PROCESS TREE WAS THE FAULT. `terminate()`
+    # kills the launcher only -- measured the day this was built: 16 browser
+    # processes still alive 5.5s after a check, and 138 leaked across one
+    # afternoon. The page closes itself, so the tree goes with it.
+    check("   because the page closes itself: no browser of ours is left running",
+          maker.SETTLE >= 0 and "window.close()" in maker._CATCH, maker._CATCH[-200:])
+    alive = subprocess.run(
+        ["powershell", "-NoProfile", "-Command",
+         "(Get-CimInstance Win32_Process -Filter \"Name='msedge.exe' OR "
+         "Name='chrome.exe'\" | Where-Object { $_.CommandLine -like "
+         f"'*{maker.PROFILE_PREFIX}*' " + "} | Measure-Object).Count"],
+        capture_output=True, text=True, stdin=subprocess.DEVNULL).stdout.strip()
+    if alive.isdigit():
+        check("   and none is: the check leaves no process behind on this machine",
+              int(alive) == 0, f"{alive} still running")
+
+    # ---- THE LOOP: one repair, in the record --------------------------------
+    def coder_says(*answers):
+        """A stand-in Coder with an answer per turn, and a count of its turns."""
+        seq = {"n": 0}
+
+        def reply(a):
+            if a.key != "expert coder":
+                return "A SEAT THAT SAT"
+            i = min(seq["n"], len(answers) - 1)
+            seq["n"] += 1
+            return (f"<filepath>index.html</filepath>\n```html\n{answers[i]}```\n")
+        return reply, seq
+
+    def make_in(ground, reply):
+        r = Stub(reply=reply)
+        ctx = RunContext(objective="Make me a simple snake game I can play.")
+        run_pipeline(ctx, reg, r, lib, env_for(ground, reg, r),
+                     steps=book.get("default"), report=lambda m: None)
+        return ctx, r
+
+    maker.forget()
+    try:
+        # a broken page, then a clean one: the clean one is what is kept
+        g = Path(tempfile.mkdtemp())
+        reply, seq = coder_says(BROKEN, CLEAN)
+        ctx, r = make_in(g, reply)
+        saved = maker.page_of(g / "projects" / "snake-game")
+        check("a broken page is sent back and the REPAIRED page is what is saved",
+              "var n = 1" in saved and "clearInterval" not in saved, saved[:90])
+        check("   the Coder sat exactly twice: the ceiling is one repair",
+              seq["n"] == 2 and maker.REPAIRS == 1, str(seq))
+        prompts = [p for n, p in r.seen if n == "Expert Coder"]
+        check("   and the second time it was handed what the browser said",
+              len(prompts) == 2 and "WHAT THE BROWSER REPORTED" in prompts[1]
+              and "game is not defined" in prompts[1], str(prompts[-1])[:120])
+        coder_steps = [s for s in ctx.steps if s.agent == "Expert Coder"]
+        check("EVERY PASS IS IN THE RECORD -- the repair is a step of its own",
+              len(coder_steps) == 2, str([s.agent for s in ctx.steps]))
+        looks = [n for n in ctx.notes if "the page loaded and reported" in n]
+        check("   and BOTH checks are notes a reader can count, in one wording",
+              len(looks) == 2 and "1 error(s)" in looks[0]
+              and looks[1].endswith("no errors"), str(looks))
+        out = ctx.last_output()
+        check("   and a page that was fixed says nothing about it to the person",
+              out.startswith("Made snake-game -- version 1.")
+              and "error" not in out.lower(), out[:200])
+        check("   one version is saved, not one per try",
+              len(maker.versions(g / "projects" / "snake-game")) == 1)
+
+        # broken twice: HIS RULING -- it is saved anyway, and the report says so
+        maker.forget()
+        g2 = Path(tempfile.mkdtemp())
+        reply, seq = coder_says(BROKEN, BROKEN)
+        ctx, _r = make_in(g2, reply)
+        project = g2 / "projects" / "snake-game"
+        check("a page that still errors after its one try is SAVED, not refused",
+              (project / "index.html").is_file()
+              and len(maker.versions(project)) == 1, str(ctx.notes)[-300:])
+        out = ctx.last_output()
+        check("   and the person is told plainly that it errors",
+              "still reports an error" in out and "game is not defined" in out,
+              out[:400])
+        check("   and told it is saved anyway, so she can still open it",
+              "saved anyway so you can see it" in out, out[:400])
+        check("   and the Coder still sat only twice -- the ceiling held",
+              seq["n"] == 2, str(seq))
+
+        # A REPAIR THAT BREAKS MORE IS NOT A REPAIR. The page it would replace
+        # was already proven whole and local, and the count comes from the same
+        # machine that counted the first -- not from the seat's opinion of its
+        # own work.
+        maker.forget()
+        gw = Path(tempfile.mkdtemp())
+        WORSE = ("<!DOCTYPE html>\n<html><head><title>t</title></head><body>\n"
+                 "<script>clearInterval(game);</script>\n"
+                 "<script>alsoMissing();</script>\n</body></html>\n")
+        reply, seq = coder_says(BROKEN, WORSE)
+        ctx, _r = make_in(gw, reply)
+        kept = maker.page_of(gw / "projects" / "snake-game")
+        check("a repair that breaks in MORE places is refused; the first page is kept",
+              "alsoMissing" not in kept and "clearInterval(game)" in kept, kept[:120])
+        check("   and the record says why, counting both",
+              any("keeping the better page" in n for n in ctx.notes),
+              str(ctx.notes)[-300:])
+
+        # THE CEILING IS A NUMBER, NOT A COMMENT. LAW_003 wants a ceiling
+        # declared where a reader meets it and never inferred at run time --
+        # so moving the number must move the behaviour, or the two have
+        # drifted and the declaration is decoration.
+        maker.forget()
+        g3 = Path(tempfile.mkdtemp())
+        reply, seq = coder_says(BROKEN, BROKEN, BROKEN)
+        was, maker.REPAIRS = maker.REPAIRS, 2
+        try:
+            ctx, _r = make_in(g3, reply)
+        finally:
+            maker.REPAIRS = was
+        check("the declared ceiling IS the loop's bound: two repairs, three sittings",
+              seq["n"] == 3, str(seq))
+        check("   and it is still one version, however many tries it took",
+              len(maker.versions(g3 / "projects" / "snake-game")) == 1)
+    finally:
+        maker.forget()
+
+
 def test_the_maker_picks_up_and_puts_down(reg, lib, book):
     """THE MAKER, PIECE 2 OF 3 (2026-09-21; the operator: "go on piece 2").
 
@@ -14524,6 +14791,7 @@ def main() -> int:
     test_model_override(reg, lib, book)
     test_flags_are_not_speech(reg, lib, book)
     test_the_maker(reg, lib, book)
+    test_the_maker_runs_the_page_before_it_keeps_it(reg, lib, book)
     test_the_maker_picks_up_and_puts_down(reg, lib, book)
     test_ink()
     test_math()

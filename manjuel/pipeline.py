@@ -1316,6 +1316,91 @@ def _maker_put_down(ctx: RunContext, ground, project, report) -> None:
     ctx.steps.append(StepResult(agent="Maker", model="(engine)", output=out))
 
 
+def _maker_prove(ctx: RunContext, env, page: str, report) -> tuple[str, str]:
+    """Load the page in a browser with no window; on an error, ONE more try.
+
+    Returns (the page to save, what to tell the person about it). It never
+    refuses a save: a page that still errors is kept and said so (his ruling,
+    2026-09-22), and a check that could not run says that instead.
+
+    THE ESTATE'S FIRST LAWFUL LOOP (LAW_003). Its three bounds, all three:
+    the ceiling is `maker.REPAIRS`, declared in maker.py where a reader meets
+    it; the stop condition is the BROWSER'S OWN error events, machine-emitted
+    evidence and never a seat's account of its own work; and every pass is in
+    the record -- each check is a note, and the repair is a step of its own
+    with the Coder's answer in it, exactly like any other seat's turn.
+    """
+    def look(at: str) -> tuple[bool, list, list, str]:
+        ran, faults, why = maker.run_page(at)
+        bad = maker.breaking(faults)
+        note = ("maker: the check could not run -- " + why if not ran else
+                "maker: the page loaded and reported "
+                + (f"{len(bad)} error(s): {maker.said_faults(bad)}" if bad
+                   else ("no errors" if not faults
+                         else f"no errors ({len(faults)} note(s))")))
+        ctx.notes.append(note)
+        report("      " + (ink.warn(note) if (bad or not ran) else ink.dim(note)))
+        return ran, faults, bad, why
+
+    ran, faults, bad, why = look(page)
+    if not ran or not bad:
+        return page, maker.said_checked(ran, why, faults, repaired=False)
+
+    seat = env.registry.get(MAKER_SEAT) if env.registry.has(MAKER_SEAT) else None
+    best, best_faults, best_bad, best_why = page, faults, bad, why
+    # THE CEILING, COUNTED. `maker.REPAIRS` is not a comment: this is the loop
+    # it bounds, so a reader who changes the number changes the behaviour and
+    # the two can never drift apart (LAW_003: declared in the spec, never
+    # inferred at run time).
+    for attempt in range(1, maker.REPAIRS + 1):
+        # A repair is a model call, so a turn with no room for one does not
+        # start it -- it says the page errors and saves it.
+        left = _budget(ctx)
+        if seat is None or (left is not None and left <= 15):
+            ctx.notes.append("maker: no repair attempted -- "
+                             + ("no time left in this turn" if seat is not None
+                                else f"no {MAKER_SEAT} seat"))
+            report("      " + ink.warn(ctx.notes[-1]))
+            break
+        report("      " + ink.dim(f"maker: asking the {MAKER_SEAT} to fix it "
+                                  f"(try {attempt} of {maker.REPAIRS})"))
+        prompt = maker.repair_prompt(best, best_bad, ctx.objective)
+        t0 = time.time()
+        try:
+            answer = env.runtime.chat(_within_deadline(seat, ctx), prompt)
+        except Exception as exc:               # a repair never takes a turn down
+            ctx.notes.append(f"maker: the repair could not run "
+                             f"({type(exc).__name__}: {exc})")
+            report("      " + ink.warn(ctx.notes[-1]))
+            break
+        # EVERY PASS IN THE RECORD (LAW_003, the third bound): the repair is a
+        # step of its own, with what the seat answered, like any other turn.
+        ctx.steps.append(StepResult(agent=seat.name, model=seat.model,
+                                    output=answer or "", prompt=prompt,
+                                    elapsed=time.time() - t0))
+        fixed, why_not = maker.page_from(answer or "")
+        if not fixed:
+            ctx.notes.append(f"maker: try {attempt} was not a page ({why_not}) "
+                             f"-- keeping the one that was")
+            report("      " + ink.warn(ctx.notes[-1]))
+            break
+        ran2, faults2, bad2, why2 = look(fixed)
+        if ran2 and not bad2:                  # the stop condition, machine-checked
+            return fixed, maker.said_checked(True, "", faults2, repaired=True)
+        # KEPT ONLY IF IT IS NOT WORSE, counted by the same machine that
+        # counted the first: an answer that breaks in more places than the one
+        # it was asked to fix is not a repair, and the page it replaces was
+        # already proven whole and local.
+        if ran2 and len(bad2) > len(best_bad):
+            ctx.notes.append(f"maker: try {attempt} reported {len(bad2)} error(s) "
+                             f"against {len(best_bad)} -- keeping the better page")
+            report("      " + ink.warn(ctx.notes[-1]))
+            break
+        best, best_faults, best_bad, best_why = fixed, faults2, bad2, why2
+    return best, maker.said_checked(not best_why, best_why, best_faults,
+                                    repaired=True)
+
+
 def _maker_land(ctx: RunContext, env, output: str, report) -> None:
     """Check what the Coder answered and save it as a version -- or say
     plainly why nothing was saved. The report is held for the delivery."""
@@ -1326,6 +1411,8 @@ def _maker_land(ctx: RunContext, env, output: str, report) -> None:
         ctx.notes.append(f"maker: nothing saved -- {why}")
         report("      " + ink.warn(ctx.notes[-1]))
         return
+    # PIECE 3: it is whole and local; now find out whether it WORKS.
+    page, trouble = _maker_prove(ctx, env, page, report)
     lines = len(page.splitlines())
     sitting = getattr(env, "session", "")
     try:
@@ -1340,9 +1427,9 @@ def _maker_land(ctx: RunContext, env, output: str, report) -> None:
     ctx.artifacts.append(project / maker.PAGE)
     if make.get("kind") == "change":
         make["report"] = maker.report_changed(project, n, lines, make.get("was", 0),
-                                              ctx.objective)
+                                              ctx.objective, trouble)
     else:
-        make["report"] = maker.report_made(project, lines)
+        make["report"] = maker.report_made(project, lines, trouble)
     ctx.notes.append(f"maker: {project.name} version {n} saved ({maker.PAGE}, "
                      f"{lines} lines)")
     report("      " + ink.dim(ctx.notes[-1]))
