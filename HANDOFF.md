@@ -696,10 +696,28 @@ leaked across one afternoon before the page was made to close itself.
 
 **What is running.**
 
-    the door    atlas-mcp.exe, pid 96104, :8090
+    the door    atlas-mcp.exe, pid 101868, :8090, carrying BOTH research and atlas
     the glass   atlas-webapp.exe, pid 78420, :8091, behind his PIN
     NOT OURS    atlas-mcp.exe, pid 23164, from Desktop\Archive. Leave it alone; never stop a
                 door by NAME
+
+**A CORRECTION, AND THE FAULT IS THE HAND'S** (2026-09-23). The 2026-09-22 block above says the
+door carried "research and atlas". **It did not.** It was launched with `--tenant research=...`
+alone, and `muster` said `1 carried projects: research` all day; that line was copied forward from
+an older block instead of being checked, which is SITTING LAW 1 exactly. It cost nothing until the
+atlas mark, which `git_tag` could not reach -- `unknown project "atlas": not a carried tenant`.
+The door was restarted with both tenants named and `muster` now answers `2 carried projects`. A
+door that is restarted must be given BOTH:
+
+    --tenant research=C:/Users/novad/Desktop/Research
+    --tenant atlas=C:/Users/novad/Desktop/Research/atlas
+
+**AND THE MARKS ARE CUT AND SENT.** core `v0.1.14` (*THE HANDOFF AND THE FIRST LOOP*) on
+`de2420e`, atlas `v0.1.7` (*EVERY PIN IN STEP*) on `063a152`, both on GitHub and both verified by
+`git ls-remote`, not by what the tool said about itself. Each was checked by the door against the
+version file AT THAT COMMIT -- the guard built 2026-09-22, passing its first real mark. Both
+CHANGELOGs are folded under their numbers with a bare `Unreleased` left on top, which is what
+`tests/release.py` reads.
 
 Both of ours were restarted by the hand on 2026-09-22 evening, because **the desktop app quitting
 took them with it** -- the first time that has been seen. They are started again from their own

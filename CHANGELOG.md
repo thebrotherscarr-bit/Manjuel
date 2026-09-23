@@ -34,6 +34,38 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+Nothing since v0.1.14.
+
+---
+
+## v0.1.14 — 2026-09-23 07:24 (tag on de2420e)
+
+### 0.1.14 — THE HANDOFF AND THE FIRST LOOP, and the number is his: "bump the versions by 1"
+
+**THE MARK IS CUT**, 2026-09-23 07:24, annotated `THE HANDOFF AND THE FIRST LOOP`, on `de2420e`,
+through the door's `git_tag` after the gate read 9 of 9 on HIS terminal. The heading read
+`Unreleased` until the mark existed, the way v0.1.11's, v0.1.12's and v0.1.13's did; the words
+under it are as they were written, when they were written.
+
+**WHAT THE GATE SAID, AND WHOSE HAND RAN IT** (2026-09-23, his terminal, in order): strokes
+2746/2746 green · smoke 72/72 green · buildmap clean · **standup 9/9 LIVE**, sitting 268,
+`logs/standup_2026-09-23_071506.md` · law 17/17 · manifest agrees · SPEC 4.4 and 4.8 each named in
+an Unreleased entry · DAYBOOK Session 13 · HANDOFF for the day. **PASSED: 9 of 9.** It refused
+once first, on three counts, and every one of them was true: the two suites were green but STALE
+because the version bump had touched `manjuel/__init__.py` four minutes after his run, and the
+standup had never run on this code at all.
+
+**AND THE MARK WAS CHECKED AGAINST THE COMMIT, NOT THE DISK.** The door read `pyproject.toml` AT
+`de2420e` and found 0.1.14. That guard is eight days old and this is the first mark to pass it: it
+was built 2026-09-22 because `v0.1.6` had been cut from the Cut button with only its root VERSION
+bumped, so its binaries answered 0.1.5 and its release never built.
+
+**WHAT IS IN IT.** Five pieces, in the order he named them, all on 2026-09-22 and 2026-09-23:
+atlas's version control; piece 1, the engine that survives death; piece 2, flows that report
+truthfully; piece 5, the handoff document; piece 4, code safety with a sandboxed `run_python`; and
+piece 3, the maker's check -- the page RUN before it is kept, and the estate's first lawful loop
+under LAW_003, which had been sealed since 2026-09-17 with nothing built on it.
+
 ### The proof comes back to his hand, and the pins move for the next mark (operator, 2026-09-23: "write the handoff block and bring the daybook current, also cut the tag and bump the versions by 1 on both core and atlas")
 
 **HIS OWN TERMINAL PROVED IT.** 2026-09-23 06:54–06:55: **strokes 2746/2746 GREEN, smoke 72/72
