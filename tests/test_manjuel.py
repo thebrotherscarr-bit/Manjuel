@@ -1757,6 +1757,25 @@ def test_steward_hands_off(reg, lib, book):
           "is a failure" in steward_soul())
     check("naming the reach stays cheap", len(p) / 4 < 400, f"~{len(p)//4} tokens")
 
+    # RAISING IS NOT ANNOUNCING (2026-09-23). The line above tells the door to
+    # raise AND to say what it is passing along, and a door read that as
+    # licence to describe the raising: "I'll raise `<flags>needs_tool</flags>`
+    # ... please let me know if this is acceptable." Backticks make a flag a
+    # MENTION (sitting 87's guard, working exactly as built), so both correct
+    # flags moved nothing and the person got a paragraph instead of a game.
+    # Two heads of the front-door tier did the same on the same sentence, so
+    # the instruction was the fault and the instruction is what moved.
+    soul = steward_soul()
+    for where, text in (("the seat's own prompt", soul), ("the turn's prompt", p)):
+        check(f"{where} says a flag is raised bare, not in backticks",
+              "backtick" in text.lower(), text[-400:])
+        check(f"   and that describing a raise raises nothing, in {where}",
+              "raises NOTHING" in text or "does nothing" in text, text[-400:])
+        check(f"   and that leave is never asked to raise one, in {where}",
+              "ask leave" in text or "never ask" in text.lower(), text[-400:])
+    check("the shape it must write is shown, not just described",
+          "<flags>needs_tool</flags>" in soul and "<flags>needs_tool</flags>" in p)
+
     g = Path(tempfile.mkdtemp())
     calls = []
 
@@ -10779,10 +10798,21 @@ def test_the_manifest_reconciles_to_the_disk(reg, lib, book):
         return out
 
     # ---- NOT FIRING: an honest manifest reports only the unchecked rack
+    #
+    # THE FLAG FINDINGS ARE NOT MANIFEST DRIFT, and are excluded here the way
+    # the rack already is (2026-09-23). This stroke writes a manifest that
+    # AGREES with the disk and asserts the reconciler then says nothing; the
+    # flag checks added the same day compare `agents/*.md` against the engine's
+    # own closed set and never read `us/` at all, so a standing flag fault --
+    # the Proofreader waits on `prose`, which nothing raises -- would redden a
+    # stroke about a manifest that is, in fact, honest. Their own firing is
+    # held by `test_the_flags_are_a_closed_set`, both ways.
     write(honest())
     clean = us.reconcile(g, reg, lib)
+    _NOT_MANIFEST = ("wakes on", "prompt flag")
     check("an honest manifest yields no GAP or DRIFT",
-          [f for f in clean if f.where != "the rack"] == [],
+          [f for f in clean
+           if f.where != "the rack" and f.field not in _NOT_MANIFEST] == [],
           str([f.line() for f in clean][:3]))
     check("   and the unchecked rack is REPORTED, not skipped silently",
           any(f.where == "the rack" for f in clean),
@@ -10897,6 +10927,103 @@ def test_the_manifest_reconciles_to_the_disk(reg, lib, book):
     check("   and every finding names a file and a field",
           all(f.where and f.field for f in live),
           str([f.line() for f in live if not (f.where and f.field)]))
+
+
+def test_the_flags_are_a_closed_set(reg, lib, book):
+    """The seats' channel to the engine, held to the discipline every other
+    vocabulary already had (2026-09-23, his word: "build the flags closed set
+    and the reconcile checks").
+
+    `TAKES_ARGS` is three tags and no fourth. `HOOK_POINTS` refuses an unknown
+    point BY NAME, because a point the engine does not fire is a promise it
+    cannot keep. `JAILS` fails closed. The FLAGS had none of it: `_FLAGS_RE`
+    takes eighty characters of anything, so `<flags>banana</flags>` raised a
+    word nobody listens for and nothing anywhere said so.
+
+    AND IT WAS NOT HYPOTHETICAL. `agents/proofreader.md` declares
+    `Wakes On: prose`; nothing sets `prose` and no prompt names it, so that
+    seat has never woken -- while the stroke "the Proofreader wakes on prose
+    and nothing else" passed the whole time, because it read the declaration
+    and never asked whether anything could satisfy it.
+
+    BOTH DIRECTIONS, because they fail differently: a flag outside the set is
+    an invention, and a flag INSIDE it that nothing raises is a dead wire with
+    an agreeing vocabulary.
+    """
+    from manjuel import us
+    from manjuel.pipeline import FLAGS, FLAGS_RAISED, FLAGS_ENGINE
+    from manjuel.seating import wake_flags
+
+    # ---- the set itself ------------------------------------------------
+    check("the set is closed and is the two kinds together",
+          set(FLAGS) == set(FLAGS_RAISED) | set(FLAGS_ENGINE) and len(FLAGS) > 4,
+          str(FLAGS))
+    check("   a seat may raise its own testimony, and never the engine's",
+          not (set(FLAGS_RAISED) & set(FLAGS_ENGINE)),
+          str(set(FLAGS_RAISED) & set(FLAGS_ENGINE)))
+    check("   every flag the real seats wait on is a word the set knows",
+          all(f in set(FLAGS) or f == "prose" for a in reg.all()
+              for f in wake_flags(a)),
+          str({f for a in reg.all() for f in wake_flags(a)} - set(FLAGS)))
+
+    # ---- the checks, on seats built to fail ----------------------------
+    class Seat:
+        def __init__(self, name, wakes_on="", prompt=""):
+            self.name, self.wakes_on, self.system_prompt = name, wakes_on, prompt
+            self.key, self.model, self.wakes = name.lower(), "m:latest", None
+
+        def callable_set(self, known):
+            return set()
+
+    class Roster:
+        def __init__(self, seats):
+            self._s = seats
+
+        def all(self):
+            return self._s
+
+    g = Path(tempfile.mkdtemp())
+    (g / "us").mkdir()
+
+    def flags_found(seats):
+        return {(f.where, f.field, f.said)
+                for f in us.reconcile(g, Roster(seats), lib)
+                if f.field in ("wakes on", "prompt flag")}
+
+    got = flags_found([Seat("Ghost", wakes_on="banana")])
+    check("a seat waiting on a flag outside the set is found, by name",
+          ("agents/ghost", "wakes on", "banana") in got, str(got))
+    check("   and the finding names the words that DO exist",
+          any("needs_tool" in f.disk for f in us.reconcile(g, Roster(
+              [Seat("Ghost", wakes_on="banana")]), lib) if f.field == "wakes on"))
+
+    # `deliver` IS in the set -- and with no seat's prompt naming it and the
+    # engine not setting it, nothing on this roster can raise it. That is the
+    # proofreader's fault in its exact shape.
+    got = flags_found([Seat("Waiting", wakes_on="deliver")])
+    check("a seat waiting on a real flag NOTHING raises is found too",
+          ("agents/waiting", "wakes on", "deliver") in got, str(got))
+    check("   and it says the seat never wakes, not that the flag is unknown",
+          any("never wakes" in f.disk for f in us.reconcile(g, Roster(
+              [Seat("Waiting", wakes_on="deliver")]), lib)
+              if f.field == "wakes on"))
+
+    # ...and a roster where something DOES raise it is clean: the check reads
+    # the prompts, so a seat that stops naming a flag is visible here.
+    got = flags_found([Seat("Waiting", wakes_on="deliver"),
+                       Seat("Teller", prompt="raise <flags>deliver</flags> when asked")])
+    check("   and it is NOT found once some seat's prompt raises it",
+          not any(w == "agents/waiting" for w, _f, _s in got), str(got))
+
+    got = flags_found([Seat("Liar", prompt="raise <flags>banana</flags> for fruit")])
+    check("a seat teaching a model a flag that moves nothing is found",
+          ("agents/liar", "prompt flag", "banana") in got, str(got))
+
+    # AND THE WAY THAT MUST NOT FIRE: an engine-set flag needs no prompt to
+    # name it, so a seat waiting on one is never accused of waiting forever.
+    got = flags_found([Seat("Reviewer", wakes_on=FLAGS_ENGINE[0])])
+    check("a seat waiting on a flag the ENGINE sets is left alone",
+          not got, str(got))
 
 
 def test_a_greeting_never_reaches_the_reader(reg, lib, book):
@@ -14760,6 +14887,7 @@ def main() -> int:
     test_a_quoted_message_is_handed_over_as_the_argument(reg, lib, book)
     test_the_deliberation_renders_as_prose_not_a_column(reg, lib, book)
     test_the_manifest_reconciles_to_the_disk(reg, lib, book)
+    test_the_flags_are_a_closed_set(reg, lib, book)
     test_a_greeting_never_reaches_the_reader(reg, lib, book)
     test_the_deliberation_is_kept_and_never_spoken(reg, lib, book)
     test_the_dedup_keys_on_the_declared_call(reg, lib, book)

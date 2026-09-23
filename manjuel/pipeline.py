@@ -63,6 +63,37 @@ from . import gitstate as _gitstate
 # short run and never the rest of the answer. `.*?` to `$` would have.
 _FLAGS_RE = re.compile(r"<flags>([^<\n]{0,80})(?:</flags>)?",
                        re.IGNORECASE)
+
+# THE FLAGS ARE A CLOSED SET (2026-09-23, on his word: "build the flags closed
+# set and the reconcile checks").
+#
+# The estate closed every other vocabulary a declaration may use and left this
+# one open. `TAKES_ARGS` is three tags and no fourth; `HOOK_POINTS` refuses an
+# unknown point BY NAME, because "a point the engine does not fire is a promise
+# it cannot keep"; `JAILS` fails closed on a jail nobody knows. The FLAGS -- the
+# seats' entire channel to the engine -- had no such set. `_FLAGS_RE` above
+# accepts eighty characters of anything, so a seat could raise
+# `<flags>banana</flags>` and nothing in the estate would ever say so.
+#
+# IT WAS NOT HYPOTHETICAL. `agents/proofreader.md` declares `Wakes On: prose`.
+# Nothing in the engine sets `prose`; no seat's prompt tells a model to raise
+# it; the only `prose` beside the word "flag" anywhere in the code is a comment.
+# THE PROOFREADER HAS NEVER WOKEN, and the stroke that reads "the Proofreader
+# wakes on prose and nothing else" passes, because it checks the declaration
+# and not whether anything on earth can satisfy it.
+#
+# TWO LISTS, BECAUSE THEY ARE TWO DIFFERENT FACTS. A seat may RAISE the first
+# set -- they are its testimony that something is needed. The engine SETS the
+# second from what it observed, and no model may claim them. Both are flags;
+# only one is a seat's to write.
+#
+# THIS DEFINES; IT DOES NOT GATE. `read_flags` below is unchanged, so nothing
+# a seat raises today behaves differently -- `us.py` reports the disagreement,
+# the way it reports every other declaration that has drifted from the disk.
+# Refusing an unknown flag at run time is a separate ruling and is his.
+FLAGS_RAISED = ("needs_tool", "technical", "hard", "deliver", "suspicious")
+FLAGS_ENGINE = ("worked", "review", "drifted", "has_feed")
+FLAGS = FLAGS_RAISED + FLAGS_ENGINE
 # The Router's control block, when it turns up in a seat that is not the
 # Router (sitting 84). Stripped from anything a person reads; the handoff
 # in run_pipeline reads it first.
@@ -814,6 +845,20 @@ def _steward_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
             f"Do not tell the operator to run something himself when the chain "
             f"could do it. Raise the flag instead, and say in one line what "
             f"you are passing along -- in plain words, never a tool name.\n\n"
+            # RAISING IS NOT ANNOUNCING (2026-09-23). The line above says to
+            # raise AND to say what is passed along, and a door read that as
+            # licence to describe the raising: "I'll raise
+            # `<flags>needs_tool</flags>` ... please let me know if this is
+            # acceptable." Backticks make a flag a mention (sitting 87's own
+            # guard, working correctly), so both correct flags did nothing.
+            # Measured on two heads of the front-door tier the same morning:
+            # both narrated, neither raised. The instruction was the fault.
+            f"A flag is RAISED, never announced: write it bare on its own "
+            f"line, `<flags>needs_tool</flags>`, with no backticks and no "
+            f"quotes around it -- one wearing them is read as a mention and "
+            f"does nothing. Never say you are about to raise one instead of "
+            f"raising it, and never ask leave to raise one: the chain acts "
+            f"and reports back through you, and his gate stands at the end.\n\n"
             f"Answer in plain words. Never answer with tool names or flag "
             f"names -- the flag is for the chain, the sentence is for him, "
             f"and a reply that is only a flag has said nothing."

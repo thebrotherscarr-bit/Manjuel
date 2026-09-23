@@ -34,7 +34,117 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
-Nothing since v0.1.14.
+### The flags are a closed set, and the Proofreader has never woken (operator, 2026-09-23: "build the flags closed set and the reconcile checks")
+
+Why: his question, and it was the right one -- "why can't we just make the agents run through the same
+checks system you are doing in the claude.md". The half that asks a prompt to make a model obey is
+the thing this estate was built on the refusal of (`REFUSALS.md`: "a prompt is a request, and a
+request can be talked out of"), and it was measured failing the same morning. The half that holds a
+seat's DECLARATION to what the engine implements is arithmetic, and it was missing.
+
+**THE GAP.** Every other vocabulary a declaration may use is closed. `TAKES_ARGS` is three tags and
+no fourth. `HOOK_POINTS` refuses an unknown point BY NAME, because "a point the engine does not fire
+is a promise it cannot keep". `JAILS` fails closed. **The FLAGS -- the seats' entire channel to the
+engine -- had no such set**: `_FLAGS_RE` accepts eighty characters of anything, so a seat could raise
+`<flags>banana</flags>` and nothing in the estate would ever say so.
+
+**AND IT WAS NOT HYPOTHETICAL. `agents/proofreader.md` declares `Wakes On: prose`. Nothing in the
+engine sets `prose`, no seat's prompt names it, and the only `prose` beside the word "flag" anywhere
+in the code is a comment. THE PROOFREADER HAS NEVER WOKEN** -- while the stroke "the Proofreader
+wakes on prose and nothing else" passed the whole time, because it read the declaration and never
+asked whether anything on earth could satisfy it. That is a seat that has been installed and inert
+since the day it was written, and the record could not tell it from a seat that simply was not
+needed.
+
+No sitting was open. **RESTART REQUIRED:** `manjuel/pipeline.py` and `manjuel/us.py` moved.
+
+- **`manjuel/pipeline.py`:** `FLAGS_RAISED` (the five a seat may raise as its own testimony),
+  `FLAGS_ENGINE` (the four the engine sets from what it observed, which no model may claim) and
+  `FLAGS`, beside the regex that reads them. **This defines; it does not gate.** `read_flags` is
+  untouched, so nothing a seat raises today behaves differently -- refusing an unknown flag at run
+  time is a separate ruling and is his.
+- **`manjuel/us.py`, a sixth section:** both directions, because they fail differently. A flag a
+  seat waits on that is **outside the set** is an invention or a typo, and the finding names the
+  words that do exist. A flag **inside** the set that nothing can raise is the harder one -- the
+  vocabulary agrees and the wire is still dead -- and the finding says the seat never wakes rather
+  than that the flag is unknown. What CAN raise a flag is read off the seats' own prompts, not
+  trusted from a list, so a seat that stops naming one becomes visible here. And a seat's prompt
+  naming a flag the engine does not know is the same fault from the other end: it teaches a model a
+  word that moves nothing.
+- **`SPEC.md`:** the words table's `a flag` line carries the set and its two kinds.
+
+**What it finds on this ground, today:** one. `agents/proofreader — wakes on — 'prose' — no such
+flag`. Named, **not fixed**: what the Proofreader should wait on, or who should raise `prose`, is a
+ruling about a seat and that is his.
+
+Strokes: `test_the_flags_are_a_closed_set` (11), on seats built to fail rather than on the real
+roster, so they stay green when he settles the Proofreader. Both directions, the way that must not
+fire (a seat waiting on an engine-set flag is left alone), and the recovery (a roster where some
+prompt DOES raise it reports nothing). Three reversals, each red. One existing stroke moved: "an
+honest manifest yields no GAP or DRIFT" now excludes the flag fields the way it already excluded
+the rack, because they compare `agents/*.md` to the engine and never read `us/` at all -- a standing
+flag fault must not redden a stroke about a manifest that is honest.
+
+Mirror: 2761/2761 (2751 before), smoke 72/72.
+
+### Raising is not announcing: the door's flag instruction, and what two heads did with it (operator, 2026-09-23: "fix the steward prompt so it raises instead of announcing")
+
+Why: the wife test. A person who is not the operator asked for a game and got thirteen minutes and
+nothing. The maker never fired, and the reason the DOOR played no part is exact -- asked to make
+something, the Steward on `llama3.2` wrote:
+
+    To begin, I'll raise `<flags>needs_tool</flags>` to let the chain handle the file operations.
+    I'll also raise `<flags>technical</flags>` ... Please let me know if this is acceptable.
+
+Both flags were the right ones. **Neither was raised.** Backticks make a flag a MENTION, not a
+raise -- sitting 87's own guard, working exactly as built, because the door once described flags in
+prose and woke the Reasoner for 235s. So two correct flags moved nothing and she got a paragraph.
+
+The instruction invited it. Both prompts said to raise a flag **and** "say in one line what you are
+passing along", and a door read that as licence to narrate the raising.
+
+No sitting was open. **RESTART REQUIRED:** `manjuel/pipeline.py` moved, and `agents/steward.md` is
+hot-reloaded at the next turn.
+
+- **`agents/steward.md`:** THE DICTUM's lead-in now says the flag is what actually moves anything,
+  and a new block, RAISING IS NOT ANNOUNCING, shows the bare shape and forbids the three ways it
+  went wrong: backticks or quotes (read as a mention), describing a raise instead of raising, and
+  asking leave to raise one. The gate at the end is unchanged -- it always was the operator's.
+- **`manjuel/pipeline.py`, `_steward_prompt`:** the same rule in the turn's own prompt, beside the
+  line that invited the narration.
+
+**AND IT WAS MEASURED ON BOTH HEADS OF THE FRONT-DOOR TIER, which `parity.md` has pinned since
+2026-09-04** (`llama3.2:latest` against `phi4-mini:latest`). Her exact sentence, through the
+Dashboard, on the fixed prompt, each on its own thread:
+
+    llama3.2     no flag. Backticks again, and "Please let me know if this is acceptable."
+    phi4-mini    `flags raised: needs_tool`. The record's own line: "Steward replied with control
+                 markup and no words (needs_tool raised)". The Router woke and acted.
+
+**So the instruction was necessary and not sufficient, and the earlier reading that this was "the
+instruction's fault and not the model's" is corrected here.** With the rule written plainly,
+llama3.2 still announces and phi4-mini raises. SPEC 4.7 has held llama3.2 at the door open since it
+was written; this is the first measurement where a named instruction was followed by one head and
+ignored by the other on the same sentence.
+
+**Named, not fixed:** phi4-mini over-corrected -- it raised the flag with NO WORDS, which the same
+prompt forbids ("a reply that is only a flag has said nothing"). And the Router then chose
+`decompose_task`, not the maker, because `intent.wants_making` still does not match her phrasing.
+The route is untouched by this piece.
+
+Strokes: seven in `test_the_door_knows_the_chains_reach`, holding both prompts to the same three
+rules -- bare not backticked, describing a raise raises nothing, leave is never asked -- and that
+the shape it must write is SHOWN, not only described. Mirror: 2751/2751 (2744 before), and the
+gate's suites are stale again by this edit.
+
+**A flow could not do this, and that is worth writing down.** A `wife-test` flow was folded to run
+the two heads as `seat` nodes and refused at the first: `refused: seat "Steward" is not declared`.
+`play.SeatAsk` reads `<home>/agents/<seat>.us`, which this ground does not have -- and `mesh_enroll`
+is a different subsystem entirely (a Schnorr-signed actor in the message chain, `mesh/store.go`),
+not the thing that declares a seat. Even with a `.us` file it would measure the wrong thing:
+SeatAsk composes the declaration and the question as ONE user turn behind "You are @x of the atlas
+household", while the engine puts `steward.md` in the SYSTEM role. The spec was removed; its FAIL
+run stays in `flows/runs.jsonl`, which is the record.
 
 ---
 

@@ -205,6 +205,52 @@ def reconcile(ground, registry, library, installed: set | None = None
             findings.append(Finding("DRIFT", f"us/{r['id']}", "can_approve",
                                     "true", "RULE 6: no agent approves"))
 
+    # --- 6. THE FLAGS: a channel nobody feeds is a promise, not a wire ---
+    #
+    # The flags are a closed set (pipeline.FLAGS) for the reason HOOK_POINTS is
+    # one: a seat that declares a summons the engine never raises LOOKS
+    # installed and never runs, and nothing in the record distinguishes it from
+    # a seat that simply was not needed today. `agents/proofreader.md` waited on
+    # `prose` -- a flag nothing sets and no prompt names -- from the day it was
+    # written until this check was added.
+    #
+    # BOTH DIRECTIONS, because they fail differently. A flag that is not in the
+    # set at all is a typo or an invention. A flag that IS in the set but that
+    # nothing can raise is the harder one: the vocabulary agrees and the wire is
+    # still dead.
+    from .pipeline import FLAGS, FLAGS_ENGINE
+    from .seating import wake_flags
+
+    known = set(FLAGS)
+    # What can actually put a flag on a run: the engine's own, plus every flag
+    # a seat's prompt tells a model to raise. Read off the prompts rather than
+    # trusted from a list, so a seat that stops naming one is visible here.
+    raisable = set(FLAGS_ENGINE)
+    for a in registry.all():
+        raisable |= {m.lower() for m in
+                     re.findall(r"<flags>([a-z_]+)</flags>", a.system_prompt or "",
+                                re.IGNORECASE)}
+
+    for a in registry.all():
+        where = f"agents/{a.name.lower().replace(' ', '_')}"
+        for f in wake_flags(a):
+            if f not in known:
+                findings.append(Finding("DRIFT", where, "wakes on", f,
+                                        "no such flag -- " + ", ".join(sorted(known))))
+            elif f not in raisable:
+                findings.append(Finding("DRIFT", where, "wakes on", f,
+                                        "nothing raises it: this seat never wakes"))
+        # A seat's PROMPT naming a flag the engine does not know is the same
+        # fault read from the other end -- it teaches a model a word that moves
+        # nothing, and a raised flag that wakes nobody is noise in the record.
+        for f in {m.lower() for m in
+                  re.findall(r"<flags>([a-z_]+)</flags>", a.system_prompt or "",
+                             re.IGNORECASE)}:
+            if f not in known:
+                findings.append(Finding("DRIFT", where, "prompt flag", f,
+                                        "no such flag -- the seat teaches a "
+                                        "word that moves nothing"))
+
     # --- 5. the rack, when there is one to ask --------------------------
     #
     # THE UNASKED QUESTION IS NOT AN UNREACHABLE RACK. This finding used to
