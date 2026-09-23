@@ -3801,6 +3801,125 @@ def test_the_headless_door(reg, lib, book):
           all(e in src_.split('"""', 2)[1] for e in _sv.EVENTS)
           and all(c in src_.split('"""', 2)[1] for c in _sv.COMMANDS))
 
+    # ---- the head is a property of the TURN (2026-09-23) --------------------
+    #
+    # His ruling, "let's do C first": a caller names the model ONE turn runs
+    # on. That is what makes two runs of one question comparable -- the flow
+    # says WHAT to ask and the run says WHICH head -- so a spec never carries a
+    # model name and two conditions cannot drift into two experiments.
+    #
+    # OWN ROSTER FIRST. `override_model` moves the registry in place and `reg`
+    # is this suite's ONE shared fixture, so a stroke that let the door move it
+    # would leave every later test on a single model and the reds would land
+    # somewhere else entirely. Rebinding the name the stand-in Sess closes over
+    # hands the door a roster of its own; these are the last strokes in this
+    # function, so nothing after it reads the rebound name.
+    from manjuel.registry import AgentRegistry as _AR
+    reg = _AR.load(ROOT / "agents")
+    declared_head = reg.get("Steward").model
+
+    class Rack(Stub):
+        """A Stub that also answers what the rack has -- or cannot be reached."""
+
+        def __init__(self, installed=(), unreachable=False, **kw):
+            super().__init__(**kw)
+            self.installed = set(installed)
+            self.unreachable = unreachable
+            self.asked = 0
+
+        def installed_models(self, refresh: bool = False):
+            self.asked += 1
+            if self.unreachable:
+                raise RuntimeError_("the rack is not answering")
+            return set(self.installed)
+
+    # The stand-in's load() is a no-op, so the RESTORE is proved by the call
+    # rather than by the roster coming back: re-reading agents/*.md is
+    # cli.Session's own work and has its own strokes. Counting it here is what
+    # says the door hands the ground back when the turn ends.
+    loads = []
+    _keep_load = Sess.load
+    Sess.load = lambda self: (loads.append(1), True)[1]
+    try:
+        # A TAG THE RACK DOES NOT HAVE IS REFUSED BY NAME. RULE 4: nothing is
+        # pulled at run time, so running anyway would fail every seat one at a
+        # time with the cause four stages back.
+        rows, sess, text, rc = drive(
+            [{"cmd": "objective", "text": "hello there", "model": "not-here:9b"},
+             {"cmd": "close"}],
+            Rack(installed={"phi4:latest"}, reply="[Steward] hi."))
+        ref = next((r for r in rows if r["event"] == "refused"), None)
+        check("a head the rack does not have is refused by name, not quietly ignored",
+              ref is not None and "not-here:9b" in ref["text"]
+              and "phi4:latest" in ref["text"], repr(ref))
+        check("and the turn never ran on the declared targets instead",
+              not any(r["event"] in ("run", "delivery") for r in rows),
+              str([r["event"] for r in rows]))
+        check("a refused head moves no seat and needs no putting back",
+              reg.get("Steward").model == declared_head and not loads,
+              f"{reg.get('Steward').model} / {len(loads)}")
+
+        # A RACK THAT CANNOT BE ASKED IS NOT A RACK THAT AGREED.
+        rows, sess, text, rc = drive(
+            [{"cmd": "objective", "text": "hello there", "model": "phi4:latest"},
+             {"cmd": "close"}],
+            Rack(unreachable=True, reply="[Steward] hi."))
+        ref = next((r for r in rows if r["event"] == "refused"), None)
+        check("a rack that cannot be reached refuses the turn rather than running it unchecked",
+              ref is not None and "rack" in ref["text"], repr(ref))
+        check("and nothing ran on a head nobody confirmed",
+              not any(r["event"] in ("run", "delivery") for r in rows),
+              str([r["event"] for r in rows]))
+
+        # AN INSTALLED TAG MOVES THE WHOLE ROSTER FOR THIS TURN.
+        loads.clear()
+        rows, sess, text, rc = drive(
+            [{"cmd": "objective", "text": "hello there", "model": "phi4:latest"},
+             {"cmd": "close"}],
+            Rack(installed={"phi4:latest", declared_head}, reply="[Steward] hi."))
+        note = next((r for r in rows if r["event"] == "note"
+                     and "phi4:latest" in r.get("text", "")), None)
+        check("an installed head is announced, so the record says which one answered",
+              note is not None and "untouched" in note["text"], repr(note))
+        seat = next((r for r in rows if r["event"] == "seat"), None)
+        check("and the seat that sat this turn sat on it",
+              seat is not None and seat["model"] == "phi4:latest", repr(seat))
+        check("the turn itself ran to a delivery",
+              any(r["event"] == "delivery" for r in rows),
+              str([r["event"] for r in rows]))
+        check("and the ground is handed back when the turn ends -- an override "
+              "that outlived its turn would make every run after it a "
+              "measurement of something nobody asked for",
+              len(loads) == 1, str(len(loads)))
+
+        # `/model`'s MECHANISM AND NOT A SECOND ONE: a bare tag resolves the
+        # same way, so the wire and the command cannot disagree about what
+        # "phi4" means.
+        reg = _AR.load(ROOT / "agents")
+        loads.clear()
+        rows, sess, text, rc = drive(
+            [{"cmd": "objective", "text": "hello there", "model": "phi4"},
+             {"cmd": "close"}],
+            Rack(installed={"phi4:latest"}, reply="[Steward] hi."))
+        seat = next((r for r in rows if r["event"] == "seat"), None)
+        check("a head named without a colon resolves to :latest, as /model does",
+              seat is not None and seat["model"] == "phi4:latest", repr(seat))
+
+        # AND A TURN THAT NAMES NO HEAD IS THE TURN IT ALWAYS WAS.
+        reg = _AR.load(ROOT / "agents")
+        loads.clear()
+        rows, sess, text, rc = drive(
+            [{"cmd": "objective", "text": "hello there"}, {"cmd": "close"}],
+            Rack(installed={"phi4:latest"}, reply="[Steward] hi."))
+        seat = next((r for r in rows if r["event"] == "seat"), None)
+        check("a turn naming no head runs on the ground's declared targets",
+              seat is not None and seat["model"] == declared_head, repr(seat))
+        check("nothing is announced and nothing is put back, because nothing moved",
+              not any(r["event"] == "note" and "runs every seat on" in r.get("text", "")
+                      for r in rows) and not loads, str(len(loads)))
+    finally:
+        Sess.load = _keep_load
+
 
 def test_sitting_88_paths_and_evidence(reg, lib, book):
     """Sitting 88 (2026-09-07, the first live standup after the restart),

@@ -48,7 +48,12 @@ skipped) -- read off the StepResults, never off a seat's words (LAW 5).
 
 THE WIRE (protocol 1). One JSON object per line, UTF-8.
 
-  in   {"cmd":"objective","text":"...","feed":"...?","method":"...?"}
+  in   {"cmd":"objective","text":"...","feed":"...?","method":"...?",
+        "model":"...?"}                   `model` runs THIS TURN's seats on
+                                          one head and puts the declared
+                                          targets back when it ends; an
+                                          uninstalled tag is `refused` by
+                                          name, never quietly ignored
        {"cmd":"answer","text":"..."}      the reply to a needs_answer
        {"cmd":"listen","seconds":N?}      capture one spoken turn; the
                                           text comes back as `heard` and
@@ -538,6 +543,45 @@ class Door:
                 objective = str(row.get("text") or "").strip()
                 feed = str(row.get("feed") or "")
                 method = str(row.get("method") or "")
+                # THE HEAD IS A PROPERTY OF THE TURN (2026-09-23, his ruling:
+                # "let's do C first"). A caller may name the model this one
+                # turn runs on, which is what makes two runs of the same
+                # question comparable -- the flow says WHAT to ask and the run
+                # says WHICH head, so a spec never has to carry a model name
+                # and two conditions can never drift into two experiments.
+                #
+                # IT IS `/model`'s MECHANISM AND NOT A SECOND ONE: the whole
+                # roster moves, `agents/*.md` is never written to, and the turn
+                # puts it back. Per-seat is a narrower ruling and is his.
+                model = str(row.get("model") or "").strip()
+                restore = False
+                if model:
+                    # RULE 4: nothing is fetched at run time, so a tag the rack
+                    # does not have would fail every seat one at a time with
+                    # the cause four stages back. Refused here, by name.
+                    try:
+                        have = self.sess.runtime.installed_models(refresh=True)
+                    except Exception as exc:
+                        have = None
+                        self.wire.emit("refused", text=(
+                            f"cannot reach the rack to check {model!r} ({exc}); "
+                            f"the turn was not run rather than run on a head "
+                            f"nobody confirmed"))
+                    if have is None:
+                        continue
+                    tag = model if ":" in model else f"{model}:latest"
+                    if tag not in have:
+                        self.wire.emit("refused", text=(
+                            f"{tag!r} is not installed, so this turn was not run "
+                            f"(RULE 4: models are never pulled at run time). "
+                            f"The rack has: {', '.join(sorted(have))}"))
+                        continue
+                    self.sess.registry.override_model(tag)
+                    restore = True
+                    self.wire.emit("note", text=(
+                        f"this turn runs every seat on {tag}; the declared "
+                        f"targets in agents/*.md are untouched and come back "
+                        f"when it ends"))
                 if feed.strip():
                     self.sess.pending_feed = feed.strip()      # /paste's shape
                 if method.strip():
@@ -559,6 +603,15 @@ class Door:
                     # over either way; the sitting is not.
                     print("\n\nRun cancelled.\n")
                     self.wire.emit("cancelled", notes=[], seats=[])
+                finally:
+                    # A HEAD NAMED FOR ONE TURN LEAVES WITH IT. `sess.load()`
+                    # re-reads agents/*.md and re-applies any standing /model
+                    # the operator set by hand, so the next turn runs on what
+                    # the ground declares -- an override that outlived its turn
+                    # would make every run after it a measurement of something
+                    # nobody asked for, and the record would not say so.
+                    if restore:
+                        self.sess.load()
         finally:
             builtins.input = real_input
 

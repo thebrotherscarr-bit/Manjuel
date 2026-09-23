@@ -34,6 +34,46 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The head is a property of the turn, not of the roster (operator, 2026-09-23: "let's do C first, then B underneath it")
+
+Why: a parity is two runs of the SAME question on two models. Until now the only way to move the
+roster was `/model`, by hand, in the REPL, between the two runs -- so the comparison rested on a hand
+remembering to set it, unset it, and touch nothing else in between, and **nothing in the record said
+which head had answered**. That is not a measurement, it is a promise about one, and this morning's
+parity carries a caveat for exactly that reason (`parity.md`: `/model` is whole-roster, so the Router
+moved too).
+
+**WHAT THE WIRE TAKES NOW.** `{"cmd":"objective", ..., "model":"tag"}` runs THIS TURN's seats on one
+head and puts the declared targets back when the turn ends. It is **`/model`'s own mechanism and not
+a second one**: the whole roster moves, `agents/*.md` is never written to, and `sess.load()` at the
+end of the turn re-reads the ground -- which also re-applies any standing `/model` the operator set by
+hand, so a turn-level head cannot silently eat his.
+
+**AND AN UNINSTALLED TAG IS REFUSED BY NAME, BEFORE ANYTHING RUNS.** RULE 4: nothing is pulled at run
+time, so a turn fired on a tag the rack does not have would have failed every seat one at a time with
+the cause four stages back. The rack is asked, the refusal names the tag AND what the rack does have,
+and no turn runs. **A rack that cannot be ASKED is refused the same way** -- unreachable is not the
+same as agreed, and running anyway would put a number in the record for a head nobody confirmed.
+
+Per-seat, so a parity can vary ONE seat instead of the whole roster, is the narrower ruling and is his
+(B, named and not yet ordered).
+
+No sitting was open. **RESTART REQUIRED:** `manjuel/serve.py` moved.
+
+- **`manjuel/serve.py`:** the objective handler reads `model` off the wire row, checks it against
+  `runtime.installed_models(refresh=True)`, emits `refused` (terminal) for an uninstalled tag or an
+  unreachable rack, applies `registry.override_model(tag)`, and says in a `note` which head this turn
+  is on and that the declared targets are untouched. A new `finally` on the turn's own try calls
+  `sess.load()` when -- and only when -- an override was applied. The wire docstring carries `model`.
+- **`tests/test_manjuel.py`:** twelve strokes inside `test_the_headless_door`, on their own roster
+  (`override_model` moves a registry in place and `reg` is the suite's one shared fixture, so a
+  stroke that let the door move it would leave every later test on one model).
+
+Measured on a mirror: **2773/2773, PROVEN**; the same mirror at HEAD runs 2761/2761, so the delta is
+the twelve and nothing else. Reversed both ways: HEAD's `serve.py` under the new strokes goes red on
+eight of them (the other four describe what did NOT change and are green either way), and switching
+off only the `sess.load()` restore reds exactly one -- "the ground is handed back when the turn ends".
+
 ### The flags are a closed set, and the Proofreader has never woken (operator, 2026-09-23: "build the flags closed set and the reconcile checks")
 
 Why: his question, and it was the right one -- "why can't we just make the agents run through the same
