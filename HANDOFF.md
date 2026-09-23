@@ -14,7 +14,7 @@ RUN THE SMOKE SUITE, not just the strokes. It was RED at 34/50 from 14e2711
 to 2026-09-02 because its StubRuntime had not been moved with pipeline.py,
 and nothing noticed: the strokes were green the whole time.
 
-**START AT `## HANDOFF FOR 2026-09-22`** (search for it — the day blocks
+**START AT `## HANDOFF FOR 2026-09-23`** (search for it — the day blocks
 stack newest first above `## Open`). CHANGELOG.md carries the versions;
 DAYBOOK.md's last entry carries the day's intent. Everything between here and
 there is standing reference that has not moved.
@@ -669,6 +669,68 @@ dropped by operator ruling 2026-09-01 — see the fix log.
     5. CHECK THE DISK BEFORE THE TRANSCRIPT. A seat's account of what it did
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
+
+## HANDOFF FOR 2026-09-23 — read this before anything below it
+
+**THE PROOF IS HIS AGAIN, AND THAT IS THE DAY'S HEADLINE.** He ran both suites on his own
+terminal at 06:54–06:55: **strokes 2746/2746 GREEN, smoke 72/72 GREEN**, stamped in
+`tests/last_run.json`. The last time that happened was 2026-09-18 (2500/65), and five days of
+work had been resting on a hand's mirror since. A mirror runs two strokes short of the ground,
+which held exactly: 2744 on the mirror, 2746 on his. `proved` now reads green AND fresh, the
+glass has stopped saying the verdict is about code the disk no longer holds, and `git_cycle` will
+no longer refuse a commit over a stale proof.
+
+**Where the ground stands.** core `main@a7d5926`, atlas `main@26c24ab`, both level with GitHub.
+On top of both, UNSAVED, the version bump for the next mark: core `0.1.13 -> 0.1.14`
+(`pyproject.toml`, `manjuel/__init__.py`) and atlas `0.1.6 -> 0.1.7` (all eleven pins by
+`.\version.ps1 set`, which reports "All 11 pins in sync"), plus 24 version CLAIMS in atlas's docs
+and this day's record. No sitting is open: 267, the newest, closed 20:26 last night with its toll.
+
+**THE MAKER'S PIECE 3 LANDED LAST NIGHT** as core `a7d5926` (sitting 267). The page is loaded in a
+browser with no window before a version is kept, and what it throws goes back to the Coder for one
+bounded try; Edge first, Chrome as fallback, nothing downloaded. It is also THE ESTATE'S FIRST
+LAWFUL LOOP under LAW_003 -- a ceiling the loop actually reads, a stop condition the browser
+emits, and every pass in the record. CHANGELOG has it whole, including the leak it left and the
+fix: `terminate()` kills the launcher only, and 138 browser processes holding 17 profiles were
+leaked across one afternoon before the page was made to close itself.
+
+**What is running.**
+
+    the door    atlas-mcp.exe, pid 96104, :8090
+    the glass   atlas-webapp.exe, pid 78420, :8091, behind his PIN
+    NOT OURS    atlas-mcp.exe, pid 23164, from Desktop\Archive. Leave it alone; never stop a
+                door by NAME
+
+Both of ours were restarted by the hand on 2026-09-22 evening, because **the desktop app quitting
+took them with it** -- the first time that has been seen. They are started again from their own
+command lines, and the glass matters: it opens `data/webapp.db` RELATIVE TO ITS WORKING
+DIRECTORY, and two `data` folders exist under `atlas\`. Started from the wrong one it makes a
+fresh empty database and strands the 301 MB of traces and the lock. **Start the glass from
+`atlas\webapp\`.**
+
+**WHAT THE MARK STILL WAITS ON, and it is his.** The pins are bumped and the record is written;
+BUILDPATH's procedure says the gate comes next, then main is sent, then the mark is cut. The gate
+is one command ON HIS TERMINAL and it wants nine:
+
+    python tests\release.py --check v0.1.14
+
+Five are already green -- the two suites (his, this morning), the law (17/17), the manifest, and
+SPEC against the CHANGELOG. This block closes the HANDOFF check. **The LIVE STANDUP is the one
+that has not run**: it needs the rack and must be green AFTER the newest edit, so it is the real
+remaining work before a number can be cut. atlas has its own gate: `python tests/prove.py
+--check`, both Go modules, gofmt, and the door's battery.
+
+**The CHANGELOG stays under `## Unreleased` until the mark exists.** That is the estate's own
+pattern, written into v0.1.13's entry ("the heading read `Unreleased` until the mark existed"), so
+nothing is folded ahead of a tag that might not be cut.
+
+**Open, and named rather than added to TASKS.md (which is his):** the live standup and the two
+marks; the wife test, which is now the only thing between the maker and SPEC 4.8's DONE, all three
+pieces being built; the glass and the door's authorisation, set aside on 2026-09-22; a backup for
+the record, which exists once on one disk with a 301 MB append-only trace ledger and no rotation;
+and two doc faults found on the way -- `REFUSALS.md` carries its "What this does NOT protect
+against" section TWICE, byte-identical, and this file's own header still tells a new hand to run
+`python tests/test_chainkit.py`, a name that has not existed since the rename.
 
 ## HANDOFF FOR 2026-09-22 — read this before anything below it
 

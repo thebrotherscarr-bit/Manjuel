@@ -34,6 +34,44 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The proof comes back to his hand, and the pins move for the next mark (operator, 2026-09-23: "write the handoff block and bring the daybook current, also cut the tag and bump the versions by 1 on both core and atlas")
+
+**HIS OWN TERMINAL PROVED IT.** 2026-09-23 06:54–06:55: **strokes 2746/2746 GREEN, smoke 72/72
+GREEN**, stamped in `tests/last_run.json`. The last run on his hand was 2026-09-18 (2500/65), and
+five days of work -- atlas's version control, the four handoff pieces and the maker's third -- had
+been resting on a hand's mirror since. A mirror runs two strokes short of the ground, and it held
+to the stroke: 2744 on the mirror, 2746 on his. `proved` reads green AND fresh again, the glass
+has stopped saying the verdict is about code the disk no longer holds, and `git_cycle` will no
+longer refuse a commit over a stale proof.
+
+No sitting is open. **No code moved in this entry** -- the record, the pins and the doc claims
+only, so nothing needs restarting.
+
+- **`manjuel/__init__.py` and `pyproject.toml`:** `0.1.13 -> 0.1.14`, the two pins BUILDPATH's
+  mark procedure asks for first. The mark itself is not cut here: the gate comes before it.
+- **`HANDOFF.md`:** a block for 2026-09-23, and the header's START AT pointer moved to it. What
+  his terminal proved; where both repositories stand; what is running and by which pid; that the
+  desktop app quitting took the door and the glass with it, which had not been seen before, and
+  that the glass must be started from `atlas\webapp\` or it makes a fresh empty database and
+  strands 301 MB of traces and his lock; and what the mark still waits on.
+- **`DAYBOOK.md`:** Session 13, 2026-09-22 to 2026-09-23, sittings 264–267. It picks up exactly
+  where Session 12's extended entry stops -- piece 2 built but not placed -- so nothing above it is
+  rewritten (LAW 1). The four pieces in his order, what was found on the way including two faults
+  that were the hand's own, and what is waiting.
+- **atlas, in its own CHANGELOG:** all eleven pins to 0.1.7 and 24 version claims in its docs.
+
+**WHAT IS NOT DONE HERE, AND WHY.** He asked for the tag to be cut. BUILDPATH's own procedure puts
+the gate between the bump and the mark, and one of its nine has not run: **the live standup**,
+which needs the rack and must be green after the newest edit. Cutting ahead of it would be the
+exact fault this estate spent 2026-09-22 fixing -- `v0.1.6` was cut from the Cut button with only
+its root VERSION bumped, its binaries answered 0.1.5, and its release never built. So the pins are
+moved, the record is written, and the gate is named. `python tests\release.py --check v0.1.14`, on
+his terminal.
+
+**THE CHANGELOG STAYS UNDER `## Unreleased` UNTIL THE MARK EXISTS.** That is this file's own
+pattern, written into v0.1.13's entry ("the heading read `Unreleased` until the mark existed"), and
+it is why nothing is folded here.
+
 ### The maker's piece 3: the page is RUN before it is kept -- and it is the estate's first lawful loop (operator, 2026-09-22: "let's build piece 3")
 
 Why: `page_from` proves a page is WHOLE and LOCAL, which is all arithmetic over bytes can prove. It

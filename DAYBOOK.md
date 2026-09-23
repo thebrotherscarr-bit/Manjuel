@@ -1838,3 +1838,91 @@ door and glass placed (pids 8116 and 24548). **Piece 1, "Survives crashes"**: bu
 truthfully"**: built and proven, not placed, not saved -- honest node outcomes, a check that stays
 failed through a gate, every gate resumable, a cancel that reaches the turn, a resume that refuses
 rather than burning the run, and a lock per world. Pieces 3 to 5 of the plan wait on his word.
+
+
+## Session 13 — 2026-09-22 (Tuesday) to 2026-09-23 (Wednesday), sittings 264–267, the handoff's last pieces, the maker's third, and the proof returned to his hand
+
+**Standing** — follows session 12, whose entry was extended across midnight into 2026-09-22 and
+stops where piece 2 stood built but not placed. This picks up exactly there, so nothing above is
+rewritten (LAW 1). Sittings 261, 262 and 263 belong to that entry and are not re-told here.
+
+**Version** — at open: core `main@1c8abc4` (piece 2's save), atlas `main@9306a35`. At close: core
+`main@a7d5926`, atlas `main@26c24ab`, both level with GitHub, with the bump to core 0.1.14 and
+atlas 0.1.7 unsaved on top.
+
+**The plan** — his orders, in the order given: "2. Flows truthful"; "5. The handoff document";
+"4. Code safety" with "sandbox the python" beside it; then, after a step back over the whole
+record, "let's build piece 3"; "save and send it"; "run it through the glass"; the suites, run on
+his own terminal; and "write the handoff block and bring the daybook current, also cut the tag and
+bump the versions by 1 on both core and atlas".
+
+**What ran**
+- sitting 264 (12:47–12:51, 4 runs): piece 2 saved and sent -- core `1c8abc4`, atlas `9306a35`.
+- sitting 265 (12:58–13:00, 2 runs): piece 5, the handoff document -- core `8ba0ee3`.
+- sitting 266 (13:33–13:40, 6 runs): piece 4, code safety -- atlas `26c24ab`, core `c2e360e`. Six
+  runs for two saves, because two commit messages ROUTED THEMSELVES away (below).
+- sitting 267 (20:21–20:26, 2 runs): piece 3 -- core `a7d5926`. Its commit ran through the door's
+  RPC and its push and close were driven on the glass, on his word "run it through the glass".
+
+**The pieces, in his order**
+- **Piece 2, flows report truthfully** (placed, saved, sent). A turn that did not deliver now
+  fails its node instead of being recorded as its answer; a failed check stays failed through a
+  gate; a second gate is reachable; a cancel is STOPPED, not OUT_OF_TIME, and reaches the turn in
+  flight; a resume with no engine refuses rather than burning the run; and a flow locks its own
+  world instead of every world.
+- **Piece 5, the handoff document.** What running this without a hand at the front takes, written
+  for HIM: what is running and by which pid, the day in four acts from the Dashboard, what only he
+  can do, what a hand owes him, where the record is, and the traps that have bitten.
+- **Piece 4, code safety.** Five holes, one shape -- a check made at one door and not the one
+  beside it. At the door: `git_diff`'s untracked fallback and `read_plan`'s path resolution both
+  served `.env` to anything that can reach :8090. In the engine: the same fault in `/git diff`,
+  which then goes into a transcript and the index; `write_file` skipping the structural gate
+  `land_code` makes; and `run_python`'s child having the full reach of an ordinary process. The
+  child now runs inside a PEP 578 wall -- workspace only, no network, no other process, no
+  ctypes -- on his word "sandbox the python".
+- **Piece 3, the maker's check** ("let's build piece 3"). The page is loaded in a browser with no
+  window before a version is kept, and what it throws goes back to the Coder for one bounded try.
+  Edge first, Chrome as fallback -- the decision BUILDPATH said to make before building, made by
+  measuring that both were already installed. It is also the estate's FIRST LAWFUL LOOP under
+  LAW_003, which was sealed 2026-09-17 and which nothing had used.
+
+**Found** (each named where it was found; the first two are the hand's own faults)
+- **The check leaked a process tree.** `child.terminate()` kills the launcher only; Chromium's
+  browser, renderers, GPU and crash handler outlive it. Measured: 16 processes alive 5.5s after
+  one check, and **138 leaked browser processes holding 17 profile directories** across one
+  afternoon, with `rmtree(ignore_errors=True)` swallowing every failure. Fixed by having the page
+  close itself, and by putting the creation time in the profile's NAME -- a sweep that partially
+  removes a locked directory UPDATES its mtime, so a leaked profile looked younger after every
+  attempt and could never age out. 108 MB removed by hand.
+- **A commit message can route the call.** `intent.names_a_tool` scans the QUOTED message along
+  with the rest of the objective, longest match wins -- so a message opening "what changed" went
+  to `git_status` and one containing "the workspace" went to `list_directory`. Both runs came back
+  **delivered**, with the closing seat narrating around the fact that nothing had been committed;
+  `git log` was the only place the truth was. Three runs lost in sitting 266. Not fixed -- it is
+  the 2026-09-18 `operator_message` ruling not reaching far enough, and whether a quoted span
+  should be excluded from the alias scan is his call.
+- **The desktop app quitting took the door and the glass with it**, the first time that has been
+  seen. Both restarted; the glass resolves `data/webapp.db` relative to its working directory and
+  two `data` folders exist under `atlas\`, so the wrong cwd would have stranded 301 MB of traces
+  and his lock.
+- **`REFUSALS.md` carries its "What this does NOT protect against" section twice**, byte-identical.
+- A hand ran `git diff` against the working tree from its sandbox -- the exact form CLAUDE.md
+  forbids. No lock was left, and the rule is not conditional on getting away with it.
+
+**Drift** — none. Four pieces named, four built, and the step back he asked for was answered in
+words with no file written (RULE 5b).
+
+**Rulings** — Edge first with Chrome as fallback; a page that still errors after its one repair is
+SAVED with the error named, not refused, because a snake game refused over a console error is the
+sitting-257 failure the maker was built to end.
+
+**At close** — **HIS OWN TERMINAL PROVED IT**: strokes 2746/2746, smoke 72/72, 2026-09-23 06:54,
+stamped. Five days of work came off a mirror and onto his hand. The pins are bumped for the next
+mark (core 0.1.14, atlas 0.1.7) and unsaved; the CHANGELOGs stay under `Unreleased` until a mark
+exists, as v0.1.13's entry says they should. The door runs as pid 96104 and the glass as 78420;
+the Archive's door (23164) is not ours. No sitting is open.
+
+**Next session** — not decided by this hand. Waiting on his word: the live standup, which is the
+one gate check still unrun and the last thing between here and the two marks; the marks themselves
+(BUILDPATH's step 7 -- cutting and sending are buttons, and the hand on them is his); and the wife
+test, which is now the only OPEN line left in SPEC 4.8 with all three maker pieces built.
