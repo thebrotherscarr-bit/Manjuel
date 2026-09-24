@@ -1926,3 +1926,87 @@ the Archive's door (23164) is not ours. No sitting is open.
 one gate check still unrun and the last thing between here and the two marks; the marks themselves
 (BUILDPATH's step 7 -- cutting and sending are buttons, and the hand on them is his); and the wife
 test, which is now the only OPEN line left in SPEC 4.8 with all three maker pieces built.
+
+
+## Session 14 — 2026-09-24 (Thursday), no sitting opened, the heads per seat, and the day the hand's own seams were counted
+
+**Standing** — follows session 13, which closed with the proof back on his terminal and three
+things waiting on his word. None of those three is what today became.
+
+**Version** — at open: core `main@4cf4108`, atlas `main@1091ae1`. At close: core `main@48ca49f`,
+atlas `main@7a43319`, both level with GitHub, with the wire piece (9 files, core) and the auth
+piece (3 files, atlas) unsaved on top.
+
+**The plan** — his orders, in the order given: "save and send it, then move on to B"; "I would
+like the idea of being able to set the model per-seat"; "rest should set it back to the default
+racking"; "save and send it through the dashboard"; "restart the door with --auth and rebuild the
+exe"; then the long turn -- "let's talk about that auth tag", "what is the auth for", and from
+there into the review he asked for: "make an engineering pass on the whole thing", "review the
+docs", "set a subagent to the gap list", "let's talk about everything all together"; and at the
+end "wire first, add rule 11, core only, loose gates the tag", "build out the auth, let's
+consolidate the work and findings for today into the record".
+
+**NO SITTING WAS OPENED ALL DAY.** Every piece was built on a mirror and every save went through
+the Dashboard's Version control page, by his standing preference. The last sitting on the ledger
+is 267, closed 2026-09-23.
+
+**What was built**
+- **B, the head per seat** (saved, sent). `voices` on the objective row, `voice`/`voices` on
+  `flow_run`, and `/model <seat> <tag>` at the REPL with `reset` returning the WHOLE roster to its
+  declared racking. All fourteen seats walked mechanically: each swaps, and only it swaps. The
+  run's head became a TYPE (`flow.Head`, `engine.Head`) rather than a second loose string, one
+  commit after the string landed -- the compiler is the wire.
+- **The wire** (built, not saved). RULE 11 in CLAUDE.md; `a wire` and `LOOSE` in SPEC's words
+  table; `us.py`'s LOOSE check in two arms; `release.py` collecting it so it gates a mark;
+  CONTRIBUTING's teaching section; BUILDMAP regenerated LAST, because every edit above invalidated
+  it.
+- **The auth** (built, not saved). The glass reads `ATLAS_SERVICE` and carries it to the door, so
+  `--auth` can be armed without answering every page 401.
+
+**Found** — the day's substance, and most of it is about what was NOT connected.
+- **The diagnosis, in one sentence: a magnificent recording instrument with almost no actuators.**
+  Nine things that notice and write down -- `us.py`, `REFUSALS.md`, `TASKS.md`, the holds, the
+  release gate, `version-tag`, `release.yml`, DESIGN §14.12, SPEC §4's OPEN lines -- and one that
+  acts. Recording is cheap and honest; acting is manual and gated (RULE 6, correctly), so the
+  backlog of recorded-but-unclosed grows monotonically by construction.
+- **FOUR SEAMS THE HAND MADE THIS WEEK**, each a piece he named, built correctly, proved by
+  reversal and documented, and connected to nothing: a stale BUILDMAP from three modules it moved;
+  a release gate reddened by a stroke taught to allow for a fault the gate still read;
+  `run_start` unable to name a head `flow_run` takes; and a doc line the record said to fix "when
+  serve.py is next touched", touched twice. **RULE 10 is why they are invisible** -- a seam is
+  never the piece that was named -- which is the whole argument for RULE 11 beside it.
+- **The three P0 defects in `SPEC_CONTROL_CENTER` §12.5 are still exactly where they were**,
+  fifteen days on, all verified on disk: the schema publishing every argument as required
+  (`endsWithOptional` wants two `?`; every tool declares one), RBAC failing open twice, and an
+  absence test that has never tested anything while `team_send` and `mesh_post` are live.
+- **`inspect`'s LAW 9 and SITTING LAW 2 refusals are invisible three ways** because they open with
+  a filename instead of `Refused`: dropped from the delivery, primed as the drift SOURCE, and
+  marked `failed=false` on the wire. The two gates this estate guards hardest, lost from its own
+  record by a missing prefix.
+- **LOOSE found six on its first run**, all in the `.us` manifest: `covenant`, `office`,
+  `reports_to`, `mode`, `stage` and `lands` are declared and read by no check. BUILDPATH says
+  reconcile asserts `lands`. It never has.
+- **The record was ahead of the hand four times in one day** -- the `--auth` finding (TASKS:1287,
+  a week old and by then stale on both clauses), the harness-versus-appliance question (SPEC
+  §8.2 answers it in a paragraph written for the purpose), and twice more. One of those was
+  relayed to him as a live security finding before it was checked. **The docs are not the gap;
+  retrieval at the moment of need is.** The estate has a semantic index over its whole record,
+  built for the seats -- and the hand greps.
+
+**Drift** — none in the building; every piece he named was built and nothing else was. The day's
+shape drifted a long way from its opening order, but at his direction each time.
+
+**Rulings** — `wire` and `LOOSE` as the words; the teaching lives in CONTRIBUTING; RULE 11 added
+so it binds every hand and not only this one's memory; the LOOSE check core-only; **LOOSE gates
+the tag**. And earlier: reset returns the whole roster, not one seat; per-seat must reach every
+seat, the Router no differently from the Steward.
+
+**At close** — strokes 2831/2831, smoke 72/72, buildmap matches, atlas webapp module green, all on
+a mirror. **The release gate is RED**: one DRIFT (the Proofreader's `prose`) and six LOOSE. The
+door (101868) and the glass (78420) run binaries older than everything above; the rebuilt
+`atlas-mcp.exe` is proved on scratch (125/125) and unplaced. No sitting is open.
+
+**Next session** — not decided by this hand. Waiting on his word: the seven findings holding the
+gate red, each either closed or declared; the `inspect` refusal, which is the sharpest harm on the
+list and is not wire work; the three P0s; and placing the two binaries, which is his allowance and
+his restart.

@@ -14,7 +14,7 @@ RUN THE SMOKE SUITE, not just the strokes. It was RED at 34/50 from 14e2711
 to 2026-09-02 because its StubRuntime had not been moved with pipeline.py,
 and nothing noticed: the strokes were green the whole time.
 
-**START AT `## HANDOFF FOR 2026-09-23`** (search for it — the day blocks
+**START AT `## HANDOFF FOR 2026-09-24`** (search for it — the day blocks
 stack newest first above `## Open`). CHANGELOG.md carries the versions;
 DAYBOOK.md's last entry carries the day's intent. Everything between here and
 there is standing reference that has not moved.
@@ -669,6 +669,90 @@ dropped by operator ruling 2026-09-01 — see the fix log.
     5. CHECK THE DISK BEFORE THE TRANSCRIPT. A seat's account of what it did
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
+
+## HANDOFF FOR 2026-09-24 — read this before anything below it
+
+**THE DAY'S HEADLINE IS A DIAGNOSIS, NOT A FEATURE.** A full read of the vision record found the
+estate's fault is not in what it builds but in what it CONNECTS: nine instruments that notice and
+write down, and one actuator among them. `us.py` reports and nothing reads it. `REFUSALS.md`
+documents 28 guards and is reconciled to nothing. `TASKS.md` carries 23 findings and nothing closes
+them. The holds are inert without `--auth`. The release gate is not in CI. `version-tag` has never
+fired. **`buildmap --check` is the one that acts -- and it was red, from three modules this hand had
+moved without regenerating the map.**
+
+**FOUR SEAMS, ALL MADE THIS WEEK BY THE HAND, ALL FOUND IN ONE REVIEW.** Each a piece he named,
+built correctly, proved by reversal, written into the CHANGELOG -- and wired to nothing: the stale
+map; a release gate reddened by a stroke taught to allow for a fault the gate still read; a head
+`flow_run` takes and `run_start` cannot; and a doc line the record itself said to fix "when serve.py
+is next touched", touched twice. Not carelessness. Nothing connected "you moved `cli.py`" to
+"regenerate the map", and RULE 10 is why it stays invisible -- a seam is never the piece that was
+named.
+
+**Where the ground stands.** core `main@48ca49f`, atlas `main@7a43319`, both level with GitHub. On
+top of both, UNSAVED: the wire piece in core (9 files) and the auth piece in atlas (3). No sitting is
+open. **THE RELEASE GATE IS RED** -- one DRIFT (the Proofreader's `prose`, his ruling) and six LOOSE
+(below). No mark can be cut until they are closed or declared.
+
+**What landed and was sent.** Two marks' worth of work, one commit each repo at 07:30: per-seat
+heads on the wire (`voices` on the objective row), on `flow_run` (`voice`/`voices`), and at the REPL
+(`/model <seat> <tag>`), with `reset` returning the whole roster to its declared racking. All
+fourteen seats walked mechanically -- each swaps, and only it swaps.
+
+**What is built and NOT saved.**
+
+    the wire      core: CLAUDE.md RULE 11, SPEC's words table (`a wire`, `LOOSE`),
+                  us.py's LOOSE check, release.py collecting it, CONTRIBUTING's
+                  teaching section, serve.py's stale worlds/ line, BUILDMAP regenerated
+    the auth      atlas: webapp/main.go reads ATLAS_SERVICE and carries it to the
+                  door; two strokes; the boot line says whether a wire is held
+
+**LOOSE FOUND SIX ON ITS FIRST RUN, all in the manifest that is this estate's own safety claim:**
+`covenant` (57 records), `office` (57), `reports_to` (57), `mode` (14), `stage` (14) and `lands` (1)
+are declared on `.us` records and read by no check in `us.reconcile`. `lands` is the sharpest --
+BUILDPATH's Layer 8 says in as many words that reconcile asserts it. It never has. **The reconciler,
+reconciled against itself.** Closing them (write the checks) or declaring them (carried for atlas's
+enrolment, not the core) is his.
+
+**THREE P0 DEFECTS IN THE GOVERNING SPEC ARE STILL EXACTLY WHERE THEY WERE**, fifteen days after
+`SPEC_CONTROL_CENTER` §12.5 listed them as what "coming online" requires. All three verified on disk
+2026-09-24:
+
+    P0-12   `endsWithOptional` demands TWO trailing `?`; all 88 tools declare ONE. Every
+            argument is published as REQUIRED -- including `voice?`/`voices?` added this
+            morning. Both copies unchanged (protocol.go:150, httpserver.go:304)
+    P0-13   RBAC fails open twice: tools.go:191 runs no check when a call names no
+            `actor`; tenant.go:301 allows all on an empty policy, and DefaultPolicy
+            ships it empty
+    P0-14   the absence test matches whole tool NAMES against bare verbs -- no tool is
+            named `commit`, so it has never tested anything, while `team_send` POSTs to
+            Discord/Slack/WhatsApp and `mesh_post` writes signed messages, both on
+            Appendix D4's reconciled forbidden list
+
+**THE SHARPEST HARM FOUND, and it is not any of those.** `skills.py`'s `inspect` returns its LAW 9
+(secret) and SITTING LAW 2 (client material) refusals starting with the FILENAME. Three mechanisms
+test for `("Error", "Refused", "Cannot")`: `pipeline.py:2368` (so the refusal is dropped from
+`ctx.failures` and never reaches the delivery), `pipeline.py:2363` (so the refusal text is PRIMED AS
+THE DRIFT SOURCE), and `serve.py:399` (so the wire marks it `failed=false` and the Watchboard reads
+it as a success). One missing prefix; three silent failures; on the two gates this estate guards
+hardest. The tuple is copied into SIX places and one copy is missing `"Cannot"`.
+
+**A STALE LINE IN THE RECORD, CORRECTED.** `TASKS.md:1287` says the glass "listens on every address
+and its auth gate has no caller". Both clauses are stale -- `webapp/server/server.go:164` returns
+`127.0.0.1` on his own 2026-09-21 ruling, and `ConfigureAuth` has had a caller since the same day.
+This hand relayed that line to him as a live security finding before checking it.
+
+**What is running.**
+
+    the door    atlas-mcp.exe, pid 101868, :8090, carrying BOTH research and atlas
+    the glass   atlas-webapp.exe, pid 78420, :8091, behind his PIN
+    NOT OURS    atlas-mcp.exe, pid 23164, from Desktop\Archive -- never touched
+
+Neither carries any of today's work. A rebuilt `atlas-mcp.exe` sits proved on scratch (125/125) from
+his order this morning and was never placed, because arming `--auth` would have blanked the glass --
+which is the hole the auth piece closes.
+
+**Proof.** strokes **2831/2831**, smoke **72/72**, `buildmap --check` matches, atlas webapp module
+green, all on a mirror. His terminal last proved 2746/2746 on 2026-09-23.
 
 ## HANDOFF FOR 2026-09-23 — read this before anything below it
 

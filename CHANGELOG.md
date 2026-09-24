@@ -34,6 +34,75 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### THE WIRE, and LOOSE (operator, 2026-09-24: "wire first, add rule 11, core only, loose gates the tag")
+
+Why: a whole-record review found **four seams the hand built in one week**. Every one was a piece he
+named, built correctly, proved by reversal, and written into this file. Every one was connected to
+nothing -- a generated map left stale by the three modules that moved; a release gate reddened by a
+stroke taught to allow for a fault the gate still read; a head `flow_run` takes and `run_start` cannot;
+and a doc line the record itself said to fix *"when serve.py is next touched"*, touched twice that week
+and read by nobody.
+
+**NOT CARELESSNESS, AND THAT IS THE POINT.** Nothing connected "you moved `cli.py`" to "regenerate the
+map". RULE 10 is why it stays invisible: a seam is never the piece that was named, so under that rule
+alone the wire cannot be seen. The estate's own diagnosis of the same disease is three weeks old --
+DESIGN §14.12, *"The fix was applied to a SITE. The fault is a SHAPE"* -- and ends *"Not a stroke,
+yet."* It still was not.
+
+**A WIRE** is one built thing connected to another so that breaking the connection is LOUD. Three
+places a signal can arrive, earliest first: a TYPE the compiler checks, a GATE that refuses at run
+time, a STROKE or the reconciler afterwards. **A convention is not a wire** -- a string that must begin
+with a magic word, a suffix that must be doubled, a flag name that must match a set kept elsewhere.
+Every fault the review turned up was a convention doing a type's job.
+
+**LOOSE** is `us.py`'s third finding beside GAP and DRIFT: **declared, correct, and read by nothing.** A
+GAP and a DRIFT each have two sides that disagree, so either side can raise them; a LOOSE agrees with
+everything and moves nothing, which is why it is the one kind that stays invisible without a check.
+
+**AND IT FOUND SIX ON ITS FIRST RUN, all in the manifest that is this estate's own safety claim:**
+`covenant` (57 records), `office` (57), `reports_to` (57), `mode` (14), `stage` (14) and `lands` (1) are
+declared on `.us` records and read by no check in `us.reconcile`. `lands` is the sharpest -- BUILDPATH's
+Layer 8 says in as many words that reconcile asserts *"`lands` is false everywhere except the
+operator's path"*, and it never has. **The reconciler, reconciled against itself.**
+
+No sitting was open. **RESTART REQUIRED:** `manjuel/us.py` and `manjuel/serve.py` moved.
+
+- **`CLAUDE.md`:** **RULE 11** -- name the wire. A piece that lands reports what would go red if it came
+  unplugged, in the same reply as "restart required"; if the answer is "nothing", the piece is not
+  finished and the hand says so. Rule 10 is not weakened: it says build that piece and stop, and Rule 11
+  says a piece with no wire is not built yet.
+- **`SPEC.md`:** two words-table lines, `a wire` and `LOOSE`, under §1's three rules.
+- **`manjuel/us.py`:** the LOOSE finding kind, and section 7 in two arms -- a flag in the closed set
+  that nothing raises and no seat waits on, and a manifest field no check reads (`CHECKED_FIELDS` +
+  `BOOKKEEPING_FIELDS`, hand-kept and **failing loud**: add a check without naming its field and that
+  field reports LOOSE on the next run). Section 6's "nothing raises it" finding is reclassified DRIFT ->
+  LOOSE, which is what it always was. The tally counts three kinds; it read "N undeclared, the rest
+  drifted", so a LOOSE would have been reported as a DRIFT on the one line most readers stop at.
+- **`tests/release.py`:** the gate collects `  LOOSE ` beside `  GAP ` and `  DRIFT `. **This was the
+  wire the check itself needed** -- without it `us.report` prints a LOOSE line, `manifest()` does not
+  pick it up, and a tag passes over a declaration nothing reads: a check built to find unwired things,
+  unwired.
+- **`CONTRIBUTING.md`:** "Name the wire", the teaching section -- the three places a signal can arrive,
+  conventions versus types, one source per fact, and the four seams as the worked example. Written for
+  someone who has shipped software and was never taught how the pieces are held together.
+- **`manjuel/serve.py`:** the environments line says `worlds/<name>/`. Stale since the afternoon of
+  2026-09-08 and named in SPEC_CONTROL_CENTER Appendix D11 ever since.
+- **`BUILDMAP.md`:** regenerated -- `cli.py`, `registry.py` and `serve.py` had moved and it had not.
+  Regenerated LAST, on purpose, because every code edit above invalidates it.
+
+Measured on a mirror: **2831/2831, PROVEN** (2821 before this piece; the delta is the ten new strokes).
+The gate wire is proved by reversal on a mirror where LOOSE is the ONLY finding -- with it, REFUSED;
+without it, PASS. Two strokes went red on their own fixtures first and both are recorded in place: a
+`Seat` stub carrying `wakes_on` as a tuple where a real Agent carries the declaration's comma-separated
+string, and a tally assertion that expected a magic number where an empty roster correctly leaves five
+flags unraised. The second now checks the arithmetic -- three kinds summing to the total -- which the
+old two-kind line could not.
+
+**WHAT GOES RED IF THIS COMES UNPLUGGED** (RULE 11, on itself): the ten strokes, both ways; and
+`release.py --check` refuses a tag while the manifest carries a LOOSE. **The gate is red right now** --
+one DRIFT (the Proofreader's `prose`, his ruling) and six LOOSE. That is the check working on its first
+run, and no tag is cut until they are closed or declared.
+
 ### `/model <seat> <tag>` — the same thing at the REPL, where he actually sits (operator, 2026-09-24: "I would like the idea of being able to set the model per-seat, that sounds like it would be very helpful")
 
 `voices` on the wire is for the Dashboard and the flows. This is the door he uses. **One mechanism, two

@@ -44,6 +44,29 @@ _BLOCK_RE = re.compile(r"```json\s*\n(.*?)```", re.DOTALL)
 # skills.py has no opinion about `remote` -- the gate lives in the handlers.
 REMOTE_SKILLS = {"git_pull", "git_push", "rack_pull"}
 
+# THE FIELDS THIS MODULE ACTUALLY READS off a `.us` record (2026-09-24).
+#
+# A manifest field nobody reconciles is a LOOSE wire in the reconciler
+# ITSELF -- the declaration this module exists to check, unchecked. `lands`
+# is the standing example: BUILDPATH's Layer 8 says reconcile asserts
+# "`lands` is false everywhere except the operator's path", and it never
+# has. Nothing said so, because nothing compared the fields declared with
+# the fields read.
+#
+# ADDING A CHECK MEANS ADDING ITS FIELD HERE. Forget, and section 7 reports
+# the field as LOOSE on the next run -- loud, and one line to fix. That is
+# the deal: this set is hand-kept, and getting it wrong FAILS LOUD rather
+# than quietly widening what goes unchecked.
+CHECKED_FIELDS = {
+    "wall", "writes", "remote", "model", "source", "can_approve",
+    "may_call", "permission",
+}
+
+# Read by `load` and the finding lines rather than by a check, and carried
+# deliberately: `id`/`kind` key every record, `us` is the format version,
+# `_file` is this module's own. Named so they are not mistaken for unread.
+BOOKKEEPING_FIELDS = {"id", "kind", "us", "_file"}
+
 
 @dataclass(frozen=True)
 class Finding:
@@ -53,7 +76,17 @@ class Finding:
     lied. Both are required: a finding that says only "router is wrong"
     sends someone hunting, and hunting is where a fix becomes a guess.
     """
-    level: str          # "GAP" (undeclared) | "DRIFT" (declared wrongly)
+    # GAP   -- on the disk and undeclared, or declared and absent
+    # DRIFT -- declared, and the disk says otherwise
+    # LOOSE -- declared, correct, and NOTHING READS IT (2026-09-24, his word)
+    #
+    # The third one is the one that stays invisible. A GAP and a DRIFT both
+    # have two sides that disagree, so either side can raise them. A LOOSE
+    # agrees with everything: the vocabulary is right, the spelling is right,
+    # the file exists -- and the wire is dead. `agents/proofreader.md` waited
+    # on `prose` from the day it was written and no check, stroke or reader
+    # said so, because nothing was WRONG.
+    level: str
     where: str
     field: str
     said: str
@@ -238,7 +271,11 @@ def reconcile(ground, registry, library, installed: set | None = None
                 findings.append(Finding("DRIFT", where, "wakes on", f,
                                         "no such flag -- " + ", ".join(sorted(known))))
             elif f not in raisable:
-                findings.append(Finding("DRIFT", where, "wakes on", f,
+                # LOOSE, not DRIFT (2026-09-24). Nothing here disagrees with
+                # anything: the flag is in the closed set, spelled right, and
+                # the seat is declared correctly. It simply never wakes. That
+                # is the whole reason the third kind exists.
+                findings.append(Finding("LOOSE", where, "wakes on", f,
                                         "nothing raises it: this seat never wakes"))
         # A seat's PROMPT naming a flag the engine does not know is the same
         # fault read from the other end -- it teaches a model a word that moves
@@ -250,6 +287,46 @@ def reconcile(ground, registry, library, installed: set | None = None
                 findings.append(Finding("DRIFT", where, "prompt flag", f,
                                         "no such flag -- the seat teaches a "
                                         "word that moves nothing"))
+
+    # --- 7. LOOSE: declared, correct, and read by nothing ----------------
+    #
+    # His ruling, 2026-09-24, after a review found four seams built in one
+    # week -- each piece correct, proved by reversal, documented, and wired to
+    # nothing. RULE 10 is why they stay invisible: the wire is never the piece
+    # that was named, so it is never the piece that gets built. This is the
+    # place that notices anyway.
+    #
+    # Two arms here; the third is the `wakes on` line in section 6 above,
+    # which is the archetype and was already being found under the wrong name.
+    #
+    # WHAT THIS IS NOT: general dead-code detection. A name in `manjuel/` that
+    # nothing references is a different question, wants an exception list for
+    # entry points and dynamic access, and that list would be a convention
+    # doing a type's job -- the exact fault this check is for. The three known
+    # cases (`can_call`, `registry.override`, `history_block`'s limit) are on
+    # his TASKS list already and close by hand. What recurs here is a
+    # DECLARATION nobody wired, because "add a markdown file" is how this
+    # ground grows.
+
+    # A word in the closed set that neither end uses: nothing raises it and no
+    # seat waits on it. Not a typo -- vocabulary carried for a wire that was
+    # never run, or that was removed and left its word behind.
+    waited_on: set[str] = set()
+    for a in registry.all():
+        waited_on |= set(wake_flags(a))
+    for f in sorted(known - (raisable | waited_on)):
+        findings.append(Finding("LOOSE", "pipeline.FLAGS", "flag", f,
+                                "nothing raises it and no seat waits on it"))
+
+    # A manifest field this module never reads. The reconciler, reconciled
+    # against itself: `lands` has been declared and unchecked since the
+    # manifest was written, and BUILDPATH says otherwise in as many words.
+    for field in sorted({k for r in records for k in r}
+                        - CHECKED_FIELDS - BOOKKEEPING_FIELDS):
+        carried = sorted({r["id"] for r in records if field in r})
+        findings.append(Finding("LOOSE", f"{US_DIR}/*.us", field,
+                                f"{len(carried)} record(s)",
+                                "no check in us.reconcile reads it"))
 
     # --- 5. the rack, when there is one to ask --------------------------
     #
@@ -283,8 +360,15 @@ def report(ground, registry, library, installed=None) -> str:
             f"{len(findings)} finding(s)")
     if not findings:
         return head + "\n  the manifest agrees with the disk."
+    # THREE KINDS SINCE 2026-09-24, and the tally counts all three. It read
+    # "N undeclared, the rest drifted" -- so a LOOSE finding would have been
+    # reported as a DRIFT in the one line most readers stop at, which is the
+    # fault this check was built to name, committed by the line describing it.
     gaps = sum(1 for f in findings if f.level == "GAP")
-    return "\n".join([head, f"  {gaps} undeclared, {len(findings) - gaps} drifted", ""]
+    loose = sum(1 for f in findings if f.level == "LOOSE")
+    return "\n".join([head,
+                      f"  {gaps} undeclared, {len(findings) - gaps - loose} drifted, "
+                      f"{loose} loose", ""]
                      + [f.line() for f in findings])
 
 

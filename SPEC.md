@@ -95,6 +95,8 @@ A proposal that needs a word uses the nearest one below.
 | **a project** | one thing the maker made: a folder under `projects/` with its own git history, never part of the core's repository. | the operator, 2026-09-21 |
 | **a version** | one save of a project, numbered from 1, with a plain-English note. "Go back" saves an old one again as the next number, so nothing is thrown away. | 2026-09-21; LAW 1 |
 | **in hand** | the one project a sitting is working on -- made, changed or picked up in it ("work on the snake game"); "put it down" leaves none, and a new sitting starts with none. The engine's delivery names it, which is how the glass knows. | 2026-09-21, the maker's pieces 1 and 2 |
+| **a wire** | one built thing connected to another so that BREAKING the connection is loud. The three places a signal can arrive, earliest first: a type the compiler checks, a gate that refuses at run time, a stroke or a reconciler that says so afterwards. A CONVENTION is not a wire -- a string that must start with a magic word, a suffix that must be doubled, a flag name that must match a set kept somewhere else. That is where these faults live. | the operator, 2026-09-24: "the wiring between the bones" |
+| **LOOSE** | `us.py`'s third finding, beside GAP and DRIFT: something this ground DECLARES that nothing reads. Not wrong -- unread. A GAP is undeclared; a DRIFT disagrees with the disk; a LOOSE agrees with everything and moves nothing, which is why it is the one that stays invisible. | the operator, 2026-09-24 |
 
 ---
 

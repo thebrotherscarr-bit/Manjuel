@@ -98,8 +98,11 @@ commits without an `answer` from the client's hand (RULE 6 / LAW 6).
 WHAT IT IS NOT. Not a second executor, not a second engine, not
 multi-session: one process, one ground, one sitting, one writer -- the
 same shape as the REPL it stands beside. Environments (grounds under
-agent_workspace/) are THE LINE's to open, one door each (SPEC_CONTROL_CENTER
-§4.2). Voice: ONE HALF crosses the wire, and one does not. `listen` (below)
+worlds/<name>/) are THE LINE's to open, one door each (SPEC_CONTROL_CENTER
+§4.2; this line read `agent_workspace/` until 2026-09-24 -- the ruling moved
+them to worlds/ on the afternoon of 2026-09-08, and Appendix D11 has said
+"a doc line to fix when serve.py is next touched" ever since. It was touched
+twice in one week before anybody read the line that asked). Voice: ONE HALF crosses the wire, and one does not. `listen` (below)
 captures a single spoken turn through voice.py -- the same compiled
 whisper.cpp, the same vocabulary bias, the same call the REPL's /chat
 makes -- because the engine runs on the operator's own machine and the

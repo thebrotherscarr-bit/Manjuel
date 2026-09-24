@@ -180,7 +180,16 @@ def manifest(root: Path = ROOT) -> Check:
                          SkillLibrary.load(root / "skills"), installed)
     except Exception as exc:
         return Check("manifest", False, f"could not reconcile ({exc})")
-    findings = [l for l in text.splitlines() if l.startswith(("  GAP ", "  DRIFT "))]
+    # ALL THREE KINDS GATE (LOOSE added 2026-09-24, his word: "loose gates the
+    # tag"). This list was the wire the LOOSE check needed and did not have:
+    # `us.report` would have printed a LOOSE line, this filter would not have
+    # collected it, and the gate would have passed a manifest carrying a
+    # declaration nothing reads -- a check built to find unwired things,
+    # unwired. Spelled with the trailing space each line actually carries
+    # (`Finding.line` pads the level to five), so a fourth kind added without
+    # a thought here fails to gate LOUDLY rather than silently.
+    findings = [l for l in text.splitlines()
+                if l.startswith(("  GAP ", "  DRIFT ", "  LOOSE "))]
     if installed is None:
         # The rack could not be asked. That is a fact about this machine
         # (a mirror, a box without Ollama), not a drift in the manifest;

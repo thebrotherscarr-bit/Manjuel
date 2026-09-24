@@ -11272,6 +11272,147 @@ def test_the_flags_are_a_closed_set(reg, lib, book):
           not got, str(got))
 
 
+def test_loose_is_declared_and_read_by_nothing(reg, lib, book):
+    """LOOSE -- the third finding, beside GAP and DRIFT (2026-09-24, his word:
+    "wire first ... loose gates the tag").
+
+    A GAP and a DRIFT each have two sides that disagree, so either side can
+    raise them. A LOOSE agrees with everything -- the vocabulary is right, the
+    spelling is right, the file exists -- and the wire is dead. That is why it
+    is the one kind that stays invisible without a check.
+
+    Named after a review that found four seams built in one week, each piece
+    correct, proved by reversal, documented, and wired to nothing: a generated
+    map left stale by the three modules that moved, a release gate reddened by
+    a stroke taught to ignore what the gate still read, a head `flow_run` takes
+    and `run_start` cannot, and a doc line the record said to fix the next time
+    its file was touched, touched twice.
+    """
+    import json as _json
+    from manjuel import pipeline as _pl
+    from manjuel import us as _us
+
+    class Seat:
+        # `Wakes On:` IS A STRING on a real Agent -- the declaration's own
+        # comma-separated form, which `seating.wake_flags` splits. A first cut
+        # of this fixture held a tuple, and `wake_flags` died on `.replace`.
+        # A fixture that does not mirror the real shape proves the fixture
+        # (the warning at the head of this file, earned three times).
+        def __init__(self, name, prompt="", wakes=()):
+            self.name, self.system_prompt = name, prompt
+            self.wakes_on = ", ".join(wakes)
+            self.model = "llama3.2:latest"
+
+        def callable_set(self, every):
+            return set()
+
+    class Roster:
+        def __init__(self, seats):
+            self._s = list(seats)
+
+        def all(self):
+            return list(self._s)
+
+    class Lib:
+        def keywords(self):
+            return set()
+
+        def spec(self, k):
+            return None
+
+    def findings_for(seats, us_dir):
+        """Reconcile a temp ground carrying exactly these records and seats."""
+        g = Path(tempfile.mkdtemp())
+        (g / "us").mkdir()
+        for name, blocks in us_dir.items():
+            body = "\n\n".join("```json\n" + _json.dumps(b, indent=1) + "\n```"
+                               for b in blocks)
+            (g / "us" / name).write_text(body, encoding="utf-8")
+        return _us.reconcile(g, Roster(seats), Lib(), installed=set())
+
+    _BARE = {"id": "x", "kind": "skill", "us": 1, "can_approve": False,
+             "wall": "none", "writes": False}
+
+    # ---- a manifest field no check reads -------------------------------
+    f = findings_for([], {"a.us": [dict(_BARE, ferrule="deep blue")]})
+    loose = [x for x in f if x.level == "LOOSE" and x.field == "ferrule"]
+    check("a manifest field no check reads is LOOSE, named, and counted",
+          len(loose) == 1 and "1 record(s)" in loose[0].said
+          and "us.reconcile" in loose[0].disk, str([x.line() for x in f]))
+    check("and a field the reconciler DOES read raises nothing",
+          not [x for x in findings_for([], {"a.us": [dict(_BARE)]})
+               if x.level == "LOOSE" and x.field in _us.CHECKED_FIELDS])
+    check("nor does the bookkeeping every record carries",
+          not [x for x in findings_for([], {"a.us": [dict(_BARE)]})
+               if x.level == "LOOSE" and x.field in _us.BOOKKEEPING_FIELDS],
+          str(sorted(_us.BOOKKEEPING_FIELDS)))
+    # THE RECONCILER, RECONCILED AGAINST ITSELF. Adding a check without adding
+    # its field to CHECKED_FIELDS reports that field LOOSE on the next run --
+    # loud, and one line to fix. Getting it wrong must never quietly widen
+    # what goes unchecked.
+    _src = (ROOT / "manjuel" / "us.py").read_text(encoding="utf-8")
+    check("every field CHECKED_FIELDS claims is read is named in us.py itself",
+          all(repr(n) in _src or f'"{n}"' in _src for n in _us.CHECKED_FIELDS),
+          str(sorted(n for n in _us.CHECKED_FIELDS if repr(n) not in _src)))
+
+    # ---- a word in the closed set that neither end uses -----------------
+    _known = set(_pl.FLAGS)
+    orphan = sorted(_known - set(_pl.FLAGS_ENGINE))[0]
+    speaks = Seat("Speaker", prompt="".join(f"<flags>{n}</flags>"
+                                            for n in _known if n != orphan))
+    f = findings_for([speaks], {"a.us": [dict(_BARE)]})
+    check("a flag in the closed set that nothing raises and no seat waits on is LOOSE",
+          any(x.level == "LOOSE" and x.field == "flag" and x.said == orphan
+              for x in f), str([x.line() for x in f]))
+    waiter = Seat("Waiter", wakes=(orphan,))
+    check("and one seat waiting on it is enough to make it a live wire",
+          not any(x.level == "LOOSE" and x.field == "flag" and x.said == orphan
+                  for x in findings_for([speaks, waiter], {"a.us": [dict(_BARE)]})))
+
+    # ---- a seat waiting on a flag nothing raises ------------------------
+    lonely = Seat("Lonely", wakes=(orphan,))
+    f = findings_for([lonely], {"a.us": [dict(_BARE)]})
+    never = [x for x in f if x.field == "wakes on" and x.said == orphan]
+    check("a seat waiting on a flag nothing raises reads LOOSE, never DRIFT",
+          len(never) == 1 and never[0].level == "LOOSE"
+          and "never wakes" in never[0].disk, str([x.line() for x in f]))
+
+    # ---- the tally counts all three -------------------------------------
+    g = Path(tempfile.mkdtemp())
+    (g / "us").mkdir()
+    (g / "us" / "a.us").write_text(
+        "```json\n" + _json.dumps(dict(_BARE, ferrule="x")) + "\n```",
+        encoding="utf-8")
+    # THE ARITHMETIC, NOT A MAGIC NUMBER. A first cut asserted "1 loose, 0
+    # drifted" and went red on its own fixture: an empty roster raises none of
+    # the five prompt-raised flags, so all five are correctly LOOSE. What the
+    # tally must do is count three kinds that SUM TO THE TOTAL -- which the old
+    # two-kind line could not, and which is the fault this stroke is for.
+    import re as _re
+    text = _us.report(g, Roster([]), Lib(), installed=set())
+    head, tally = text.splitlines()[0], text.splitlines()[1]
+    total = int(_re.search(r"(\d+) finding", head).group(1))
+    counted = [int(n) for n in
+               _re.findall(r"(\d+) (?:undeclared|drifted|loose)", tally)]
+    check("the tally names loose as its own kind, and the three sum to the total",
+          "loose" in tally and len(counted) == 3 and sum(counted) == total,
+          f"{head.strip()} | {tally.strip()}")
+
+    # ---- AND THE GATE COLLECTS IT ---------------------------------------
+    #
+    # This is the wire the check itself needed and did not have: `us.report`
+    # would have printed a LOOSE line, `release.manifest` would not have picked
+    # it up, and the gate would have passed a manifest carrying a declaration
+    # nothing reads -- a check built to find unwired things, unwired.
+    rel_src = (ROOT / "tests" / "release.py").read_text(encoding="utf-8")
+    body = rel_src[rel_src.index("def manifest("):]
+    body = body[:body.index("\ndef ", 1)]
+    check("the release gate collects all three kinds, LOOSE among them",
+          all(f'"  {k} "' in body for k in ("GAP", "DRIFT", "LOOSE")), body[:200])
+    check("and it spells them with the trailing space a finding line carries",
+          _us.Finding("LOOSE", "w", "f", "s", "d").line().startswith("  LOOSE "))
+
+
 def test_a_greeting_never_reaches_the_reader(reg, lib, book):
     """Sitting 79: "good morning, sunshine, how are ya?" was dispatched to
     semantic_search and cost the operator 155 SECONDS on a greeting.
@@ -15407,6 +15548,7 @@ def main() -> int:
     test_the_deliberation_renders_as_prose_not_a_column(reg, lib, book)
     test_the_manifest_reconciles_to_the_disk(reg, lib, book)
     test_the_flags_are_a_closed_set(reg, lib, book)
+    test_loose_is_declared_and_read_by_nothing(reg, lib, book)
     test_a_greeting_never_reaches_the_reader(reg, lib, book)
     test_the_deliberation_is_kept_and_never_spoken(reg, lib, book)
     test_the_dedup_keys_on_the_declared_call(reg, lib, book)

@@ -45,6 +45,92 @@ standard:
   every sitting, so an assertion over it goes red because someone used the
   CLI. `audit_record.py` and `manjuel/us.py` both report and exit 0.
 
+## Name the wire — "what would go red if this came unplugged?"
+
+This is RULE 11, and it is the section to read if you have written working
+software and never been taught how the pieces are held together. It is the
+least glamorous layer there is and it is where this estate's faults live.
+
+**A wire** is one built thing connected to another so that breaking the
+connection is LOUD. A module is not finished when it works. It is finished
+when something would go red if it came unplugged. Ask that question of
+anything you build, and if the answer is "nothing", you are not done.
+
+### The three places a signal can arrive
+
+Use the earliest one that will carry it. Each step later costs more and
+depends on somebody remembering to run something.
+
+**1 — write time.** You cannot even express the wrong thing. When the
+engine's `Run` took a bare `model string` and grew a second head field, the
+fix was a `Head` TYPE rather than a sixth argument: the compiler then
+pointed at every call site by itself. Nobody had to remember them.
+
+**2 — run time.** The wrong thing is expressible and refused the moment it
+is attempted. `skills.py`'s clearance check — a seat asks for `write_file`
+and is told *"not cleared to call"*. The law gate. The LAW 8 path jail.
+
+**3 — check time.** The wrong thing happens and something later says so.
+`manjuel/us.py`, `tests/buildmap.py --check`, `tests/release.py --check`.
+
+A comment is a fourth tier and it is not wiring at all.
+
+### A convention is not a wire
+
+This is the one to internalise, because every fault the 2026-09-24 review
+turned up was the same shape: **a convention doing a type's job.**
+
+| the fault | the convention holding it |
+|---|---|
+| `inspect`'s LAW 9 and SITTING LAW 2 refusals vanish from the delivery, read as a success on the wire, AND prime the drift checker | a refusal must begin with the word `Refused` |
+| the same test copied into six places, one of them missing a word | the six copies match |
+| every tool's arguments published as required | "optional" means one `?` — and the reader wanted two |
+| the Proofreader never woke, for weeks, green the whole time | `Wakes On:` names a flag something raises |
+
+None of those is a typo. Each is a rule held in a person's head and checked
+by nothing. `inspect`'s refusal would need no convention at all if there
+were one function that built the prefix: you could not write an invisible
+refusal, because you could not write a refusal without going through the
+thing that makes it visible.
+
+### One source per fact
+
+Cohesion is not correctness; it is **one place holding each fact, and
+everything else derived from it.** That is already this ground's second
+architecture rule — *the record is the truth, everything else is
+`fold(record)`* — and `BUILDMAP.md` and `rack.md` are two working examples.
+Three catalogues of the same gates, two copies of one helper, six copies of
+one tuple: none of those is a bug today, and copies always drift.
+
+### LOOSE
+
+`us.py`'s third finding, beside GAP and DRIFT: **declared, correct, and read
+by nothing.** A GAP and a DRIFT each have two sides that disagree, so either
+side can raise them. A LOOSE agrees with everything — right vocabulary,
+right spelling, file present — and moves nothing. It gates a tag, because a
+declaration nobody reads is a promise and this ground does not ship
+promises.
+
+### The four that earned this section, all in one week
+
+Each was a piece the operator named, built correctly, proved by reversal,
+and written into the CHANGELOG. Each was connected to nothing:
+
+- `cli.py`, `registry.py` and `serve.py` moved; `BUILDMAP.md` is generated
+  FROM them and was never regenerated. `buildmap --check` is in CI.
+- the flags check surfaced a real fault; the STROKE was taught to allow for
+  it and the release GATE, reading the same report, was not — so the gate
+  went red and nothing said so, because it is deferred at boot and absent
+  from CI.
+- `flow_run` learned to name a model; `run_start`, one layer down, did not.
+- a doc line the record itself said to fix *"when serve.py is next
+  touched"* — touched twice that week, read by nobody.
+
+Not carelessness. **Nothing connected "you moved `cli.py`" to "regenerate
+the map."** That sentence is the whole of what this section is about, and
+`RULE 10` is why it is easy to miss: a seam is never the piece that was
+named, so under Rule 10 alone the wire is invisible by construction.
+
 ## Adding a skill
 
 1. `skills/<name>.md` — Action Keyword, Description, Parameters Needed.

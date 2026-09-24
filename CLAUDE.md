@@ -232,7 +232,45 @@ asked. Nothing else.
     acting before reading what it had already read. The pieces it was
     asked for held. The rest cost the afternoon. Do the piece. Stop.
 
+## RULE 11 — NAME THE WIRE. WHAT WOULD GO RED IF THIS CAME UNPLUGGED?
+
+Recorded 2026-09-24 on the operator's word, after a review found FOUR seams
+the hand had made in a single week. Every one of them was a piece he had
+named, built correctly, proved by reversal, and written into the CHANGELOG.
+Every one was connected to nothing.
+
+    A generated map left stale by the three modules that moved. A release
+    gate reddened by a stroke taught to ignore what the gate still read. A
+    head `flow_run` takes and `run_start` cannot. A doc line the record
+    itself said to fix "when serve.py is next touched", touched twice.
+
+So: WHEN A PIECE LANDS, THE HAND REPORTS WHAT WOULD GO RED IF IT CAME
+UNPLUGGED -- one line, in the same reply as "restart required". If the
+answer is "nothing", the piece is NOT FINISHED, and the hand says that
+rather than reporting it done.
+
+    A WIRE is one built thing connected to another so that breaking the
+    connection is LOUD. Three places a signal can arrive, and the earliest
+    that will carry it is the one to use: a TYPE the compiler checks; a
+    GATE that refuses at run time; a STROKE or the reconciler, after.
+
+    A CONVENTION IS NOT A WIRE. A string that must begin with a magic word,
+    a suffix that must be doubled, a flag name that must match a set kept
+    somewhere else -- every fault the 2026-09-24 review turned up was a
+    convention doing a type's job. That is where to look first.
+
+    LOOSE is the name for what this catches: declared, correct, and read by
+    nothing. `us.py` reports it and the release gate refuses a tag over it.
+
+WHY THIS RULE HAD TO EXIST BESIDE RULE 10. Rule 10 is right and is not
+weakened here. But a seam is never the piece he named, so under Rule 10
+alone the wire is invisible by construction -- which is exactly how four of
+them were built in a week by a hand that knew better. Rule 10 says build
+that piece and stop; Rule 11 says a piece with no wire is not built yet.
+Naming the wire is part of the piece, not a second piece.
+
 ---
 
 Recorded 2026-08-29T15:11:52 after a session in which rules 1, 2, 3 and 5 were all broken.
-Rule 9 added 2026-09-04; the READ FIRST list rewritten and rule 10 added 2026-09-08.
+Rule 9 added 2026-09-04; the READ FIRST list rewritten and rule 10 added 2026-09-08;
+rule 11 added 2026-09-24.
