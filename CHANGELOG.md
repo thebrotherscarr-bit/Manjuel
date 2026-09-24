@@ -34,6 +34,115 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### `/model <seat> <tag>` — the same thing at the REPL, where he actually sits (operator, 2026-09-24: "I would like the idea of being able to set the model per-seat, that sounds like it would be very helpful")
+
+`voices` on the wire is for the Dashboard and the flows. This is the door he uses. **One mechanism, two
+doors** -- both are `registry.override_seat`, so the REPL and the wire cannot drift into two answers
+about what a seat is running.
+
+**THE LAST WORD IS THE TAG, and everything before it is the seat.** Six of the fourteen seats have a
+space in their names, and `/model deep researcher phi4:latest` reads correctly with no quoting and no
+second syntax. A single word that names a SEAT is caught and answered as a half-typed command --
+`/model steward` would otherwise be refused as an uninstalled model tag, which is true and useless.
+
+**IT SURVIVES A RELOAD, which is the whole reason it lives on the Session and not on the registry.**
+`/reload` and the ground watcher both rebuild the roster from disk; an override they dropped would make
+every turn after them a measurement of something nobody asked for, and nothing would say so. It is
+applied in `load()` AFTER the roster-wide one, always -- the narrower choice lands over the wider one
+or it does not land at all. And a seat that left `agents/*.md` while its override stood is **dropped and
+said**, never raised: failing the reload would take the sitting with it.
+
+**A ROSTER-WIDE MOVE NO LONGER WIPES THE SEATS HE NAMED.** `/model phi4` re-lays the per-seat overrides
+over itself and reports them under "except the seats named one by one", so the REPL agrees with what
+the next `load()` would produce rather than disagreeing until then. The "moved OFF a purpose-chosen
+model" warning skips those seats, because a seat he moved himself is not a seat the roster move took
+somewhere it was not chosen to be -- that warning crying wolf over his own instruction is how a warning
+stops being read.
+
+**AND THE REPORT MARKS THEM.** `/model` bare names every override standing, widest first, and marks each
+moved seat with what `agents/*.md` declares. The mark is DERIVED from the divergence against
+`declared_models()` rather than read from a second list, so there is no copy to keep in step.
+
+**`/model reset` PUTS THE WHOLE ROSTER BACK ON ITS DECLARED RACKING** (his ruling, 2026-09-24: "reset
+should set it back to the default racking for the models"), clearing the roster-wide and the per-seat
+overrides together and naming what stood -- an override that vanished silently is a measurement nobody
+can trace afterwards. It is all-or-nothing on purpose: there is no `/model <seat> reset`, because
+"back to the declared racking" is one idea and splitting it into fourteen would make the state of the
+roster something the operator has to hold in his head.
+
+**AND IT IS EVERY SEAT** (his words: "the router should be able to be swapped with a different one same
+as the coder/steward/etc"). The seat loop resolves every step through `registry.get(name)` with no
+per-seat branch, so there is nothing for a seat to be special about -- but that is a reading of the
+code, and the record now carries a measurement instead: a stroke walks all fourteen seats, swaps each,
+and asserts that seat moved and no other. The Router is proved a second time through a real turn on
+the wire, because the registry moving and the seat SITTING on it are two different facts and only the
+second is what a parity measures.
+
+No sitting was open. **RESTART REQUIRED:** `manjuel/cli.py` moved.
+
+- **`manjuel/cli.py`:** `Session.seat_overrides` beside `model_override`, re-applied in `load()` after
+  it; `_cmd_model` rebuilt around the seat/tag split; `_model_report` and `_override_lines` split out
+  of it so the report has one home; the palette line names both shapes.
+- **`tests/test_manjuel.py`:** twenty-six strokes -- twenty-four in `test_model_override`, driving
+  `_cmd_model` against a stand-in Session (a real one opens a sitting in the ledger at construction,
+  which no stroke may do), and two in `test_the_headless_door` putting a Router override through a
+  real turn.
+
+Measured on a mirror: **2821/2821, PROVEN** (2795 before this piece; the delta is the twenty-six).
+Reversed eight ways -- the reload forgetting them, the reload applying them under the roster-wide one
+instead of over it, a roster-wide move wiping them, `reset` leaving one seat behind, `override_seat`
+moving nothing, and the bare-seat-name answer removed -- each reds its own strokes and no other.
+
+**TWO REVERSALS DO NOT GO RED AT ALL; THEY KILL THE SUITE**, and that is the finding worth keeping.
+Removing the unknown-seat pre-check, and making `override_seat` read a name case-sensitively while
+`has` still lowercases it, both end the same way: the `RegistryError` reaches the top of the headless
+door's loop and takes the process down. **`has` and `override_seat` resolving a name identically is
+what makes every pre-check in front of them worth anything**, and a stroke now says so -- while noting
+honestly that it cannot be the one that catches it, because the door dies before that stroke runs.
+Whether the door should survive a raise from inside a turn at all is a separate ruling and is his.
+
+### And a head per SEAT, so a parity can vary one voice (operator, 2026-09-23: "then B underneath it")
+
+Why: the turn-level head above answers "is this ground better on that model". It cannot answer **"does
+the STEWARD raise a flag where it used to announce"**, which is the question the wife test actually
+left open -- because `/model`'s mechanism moves the whole roster, and moving the Router in the same
+breath makes the answer a fact about two changes at once. `parity.md` carries that exact caveat for
+this morning's run: `[2/3] Router phi4-mini:latest` went along for the ride.
+
+**WHAT THE WIRE TAKES NOW.** `{"cmd":"objective", ..., "voices":{"Steward":"phi4-mini:latest"}}`, applied
+OVER `model`, so *everything on X except the Steward on Y* is one turn and one record. Both are put
+back by the same `sess.load()` when the turn ends.
+
+**NOTHING IS APPLIED BEFORE EVERYTHING IS CHECKED** -- every tag against the rack, every seat against the
+roster, in one pass, before a single seat moves. A map refused on its third entry after moving the
+first two would leave the roster part-moved on a turn that never ran, and with no turn there is no
+`finally` to put it back: the NEXT turn would silently measure the leftovers. Proved by reversal.
+
+**AND AN UNKNOWN SEAT IS REFUSED BY NAME, WITH THE ROSTER.** A typo that quietly moved nothing would
+report a parity between a model and itself, and both columns would look honest -- the one answer a
+parity must never be able to give. Switching that check off does not merely red a stroke: the
+`RegistryError` reaches the top of the door's loop and takes the whole headless process down, which is
+its own argument for checking first.
+
+No sitting was open. **RESTART REQUIRED:** `manjuel/serve.py` and `manjuel/registry.py` moved.
+
+- **`manjuel/registry.py`:** `override_seat(seat, tag)` beside `override_model`. It moves one seat and
+  reports `(seat, from, to)` -- with `from == to` when it was already there, because nothing happening
+  is a thing that happened. `self.override` is deliberately NOT set: it means "every seat is on this
+  one tag", which is false here. No second field records a per-seat override either, because
+  `declared_models()` already makes it **derivable** -- a seat whose live model differs from its
+  declared one is overridden -- and a stored copy is one more thing to keep in step.
+- **`manjuel/serve.py`:** `_head_plan` reads `model` and `voices` into an ordered plan or refuses in
+  words; `_head_words` says the plan in the operator's own terms for the `note`. The wire docstring
+  carries `voices`.
+- **`tests/test_manjuel.py`:** twenty-two strokes -- ten on the registry (in `test_model_override`, its
+  proper home) and twelve on the wire (beside the turn-level head's).
+
+Measured on a mirror: **2795/2795, PROVEN**; the same mirror before this piece ran 2773/2773, so the
+delta is the twenty-two and nothing else. Reversed three ways: `override_seat` moving the whole roster
+reds four strokes and no other; applying `voices` under `model` instead of over it reds exactly one;
+dropping the seat pre-check crashes the door, as above.
+
 ### The head is a property of the turn, not of the roster (operator, 2026-09-23: "let's do C first, then B underneath it")
 
 Why: a parity is two runs of the SAME question on two models. Until now the only way to move the

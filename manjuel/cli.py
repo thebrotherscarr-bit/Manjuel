@@ -189,6 +189,12 @@ class Session:
         # declared targets in agents/*.md are untouched -- reapplied on every
         # load so /reload and the ground watcher cannot silently drop it.
         self.model_override = ""
+        # /model <seat> <tag>: ONE seat, same sitting, same rules (2026-09-24,
+        # his word: "I would like the idea of being able to set the model
+        # per-seat"). Kept beside the roster-wide one rather than folded into
+        # it, because the two answer different questions and both have to be
+        # sayable at once: everything on X, except the Steward on Y.
+        self.seat_overrides: dict[str, str] = {}
 
     # ---- loading ----------------------------------------------------
 
@@ -205,6 +211,24 @@ class Session:
         # seat rack is checked in the state the run will actually use.
         if self.model_override:
             self.registry.override_model(self.model_override)
+        # AND THE PER-SEAT ONES AFTER IT, ALWAYS. The narrower choice lands
+        # over the wider one or it does not land at all: applied first, the
+        # roster-wide override would wipe every seat the operator had just
+        # named, and `/model` would go on reporting the seat override he could
+        # no longer see in the list.
+        for seat in sorted(self.seat_overrides):
+            try:
+                self.registry.override_seat(seat, self.seat_overrides[seat])
+            except RegistryError:
+                # The seat left agents/*.md while its override stood -- which
+                # `/reload` and the ground watcher make an ordinary thing. It is
+                # dropped and SAID, because an override that quietly stopped
+                # applying makes every run after it a measurement of something
+                # nobody asked for; and it is dropped rather than raised,
+                # because failing the reload would take the sitting with it.
+                del self.seat_overrides[seat]
+                print(f"\n  /model override for '{seat}' dropped -- "
+                      f"agents/*.md no longer declares that seat\n")
 
         seat_errors = seating.validate(self.registry)
         if seat_errors:
@@ -505,7 +529,7 @@ COMMANDS = [
     ("find",      "ground",    "search the ground by meaning: /find <q>"),
     ("parity",    "ground",    "chain vs bare calls; references set per case"),
     ("models",    "rack",      "VRAM plan for this pipeline"),
-    ("model",     "rack",      "run every seat on one model: /model <tag> | reset"),
+    ("model",     "rack",      "one model for all or one seat: /model <tag> | <seat> <tag> | reset"),
     ("warm",      "rack",      "load this pipeline's models now"),
     ("rack",      "rack",      "resurvey Ollama, rewrite rack.md"),
     ("agents",    "plumbing",  "list seats, models, stages"),
@@ -978,51 +1002,82 @@ def _cmd_warm(sess: Session, quiet: bool = False) -> None:
 
 
 def _cmd_model(sess: Session, arg: str = "") -> None:
-    """Run the whole roster on one model for this sitting.
+    """One model for the whole roster, or for ONE seat, for this sitting.
 
     The seats declare their defaults in agents/*.md and those files are never
     written to here -- the operator asked to try a bigger model without an
     edit he then has to remember to undo. `/model` alone reports; `/model
-    reset` restores the declared targets; `/model <tag>` moves everything.
+    reset` restores the declared targets; `/model <tag>` moves everything;
+    `/model <seat> <tag>` moves one and leaves the rest where they are.
+
+    WHY THE NARROW ONE EXISTS (2026-09-24, his word: "I would like the idea of
+    being able to set the model per-seat"). Moving everything answers "is this
+    ground better on that model". It cannot answer "does the STEWARD raise a
+    flag where it used to announce", because it moves the Router in the same
+    breath and the answer becomes a fact about two changes at once -- which is
+    the caveat `parity.md` carries for 2026-09-23.
+
+    THE LAST WORD IS THE TAG and everything before it is the seat, so the six
+    seats whose names have a space in them (`/model deep researcher
+    qwen3.5:9b`) need no quoting and no second syntax.
 
     Fail closed on an uninstalled tag: RULE 4 says nothing is fetched at
     runtime, so a tag Ollama does not have would fail every seat on the next
-    turn, one at a time, with the cause four stages back.
+    turn, one at a time, with the cause four stages back. And fail closed on an
+    unknown seat, for the reason a parity lives or dies on: a typo that quietly
+    moved nothing would leave him comparing a model against itself.
     """
     arg = (arg or "").strip()
 
     if not arg:
-        print()
-        if sess.model_override:
-            print(f"  override: every seat on {sess.model_override} "
-                  f"(this sitting only)")
-            print("  /model reset restores what agents/*.md declares")
-        else:
-            print("  no override -- every seat on its declared Model Target")
-        for a in sess.registry.all():
-            print(f"    {a.name:22} {a.model}")
-        print()
+        _model_report(sess)
         return
 
     if arg.lower() in ("reset", "off", "default", "declared"):
-        if not sess.model_override:
+        if not sess.model_override and not sess.seat_overrides:
             print("\n  no override to clear\n")
             return
+        was = _override_lines(sess)
         sess.model_override = ""
+        sess.seat_overrides = {}
         sess.load()
-        print("\n  override cleared -- seats back on their declared targets\n")
+        print("\n  override cleared -- seats back on their declared targets")
+        for line in was:
+            print(f"    was: {line}")
+        print()
+        return
+
+    # The last word is the tag; anything before it names the seat.
+    parts = arg.split()
+    seat, want = ("", arg) if len(parts) == 1 else (" ".join(parts[:-1]), parts[-1])
+
+    # ONE WORD THAT IS A SEAT IS A HALF-TYPED COMMAND, not a model nobody has.
+    # `/model steward` would otherwise be refused as an uninstalled tag, which
+    # is true and useless.
+    if not seat and sess.registry is not None and sess.registry.has(want):
+        print(f"\n  '{want}' is a seat, not a model. "
+              f"/model {want.lower()} <tag> runs that one seat on a tag;\n"
+              f"  /model <tag> runs every seat on it.\n")
+        return
+
+    if seat and (sess.registry is None or not sess.registry.has(seat)):
+        roster = ", ".join(a.name for a in (sess.registry.all() if sess.registry else []))
+        print(f"\n  no seat named '{seat}'. Nothing changed.")
+        if roster:
+            print(f"  the roster is: {roster}")
+        print()
         return
 
     try:
         installed = sess.runtime.installed_models(refresh=True)
     except Exception as exc:                     # ollama down: say so, do nothing
-        print(f"\n  cannot reach the rack to check '{arg}' ({exc}).\n"
+        print(f"\n  cannot reach the rack to check '{want}' ({exc}).\n"
               f"  Refusing rather than setting a target that may not exist.\n")
         return
 
-    tag = arg if ":" in arg else f"{arg}:latest"
+    tag = want if ":" in want else f"{want}:latest"
     if tag not in installed:
-        near = sorted(m for m in installed if arg.split(":")[0] in m)
+        near = sorted(m for m in installed if want.split(":")[0] in m)
         print(f"\n  '{tag}' is not installed. Nothing changed.")
         if near:
             print(f"  installed and close: {', '.join(near)}")
@@ -1030,16 +1085,75 @@ def _cmd_model(sess: Session, arg: str = "") -> None:
               "/rack lists what is here.\n")
         return
 
+    if seat:
+        name, was, _ = sess.registry.override_seat(seat, tag)
+        # Stored under the seat's OWN name, never the operator's casing, so the
+        # report and the reload both speak the roster's language.
+        sess.seat_overrides[name] = tag
+        if was == tag:
+            print(f"\n  {name} was already on {tag} -- nothing moved, and the "
+                  f"override now stands so /reload keeps it.\n")
+            return
+        print(f"\n  {name} now runs {tag} (was {was}) -- this sitting only.")
+        print("  every other seat is where it was; "
+              "agents/*.md is untouched and /model reset restores it.\n")
+        return
+
     sess.model_override = tag
     moved = sess.registry.override_model(tag)
+    # THE NARROW ONES LAND BACK OVER IT. A roster-wide move after a per-seat one
+    # has just wiped it, and `load()` puts them back on the next reload either
+    # way -- so doing it here is what keeps the REPL and the record agreeing in
+    # between, rather than for one turn only.
+    for s2 in sorted(sess.seat_overrides):
+        sess.registry.override_seat(s2, sess.seat_overrides[s2])
     print(f"\n  every seat now runs {tag} -- this sitting only.")
     print("  agents/*.md is untouched; /model reset restores it.")
+    if sess.seat_overrides:
+        print("  except the seats named one by one, which stand over it:")
+        for s2 in sorted(sess.seat_overrides):
+            print(f"    {s2:22} {sess.seat_overrides[s2]}")
     specialists = [(n, was) for n, was, _ in moved
-                   if not was.startswith(("llama3.2", "phi4-mini"))]
+                   if not was.startswith(("llama3.2", "phi4-mini"))
+                   and n not in sess.seat_overrides]
     if specialists:
         print("\n  moved OFF a purpose-chosen model:")
         for n, was in specialists:
             print(f"    {n:22} was {was}")
+    print()
+
+
+def _override_lines(sess: Session) -> list[str]:
+    """Every override standing, in words, widest first."""
+    out = []
+    if sess.model_override:
+        out.append(f"every seat on {sess.model_override}")
+    for seat in sorted(sess.seat_overrides, key=str.lower):
+        out.append(f"{seat} on {sess.seat_overrides[seat]}")
+    return out
+
+
+def _model_report(sess: Session) -> None:
+    """What every seat is on, and which of them the operator moved.
+
+    THE MOVED ONES ARE MARKED against `declared_models()`, which is the record
+    the overrides are deliberately kept out of -- so the mark is DERIVED from
+    the divergence rather than read from a list that could drift out of step
+    with the seats it describes.
+    """
+    print()
+    lines = _override_lines(sess)
+    if lines:
+        for line in lines:
+            print(f"  override: {line} (this sitting only)")
+        print("  /model reset restores what agents/*.md declares")
+    else:
+        print("  no override -- every seat on its declared Model Target")
+    declared = sess.registry.declared_models() if sess.registry else {}
+    for a in (sess.registry.all() if sess.registry else []):
+        was = declared.get(a.name, a.model)
+        mark = f"   (declared {was})" if a.model != was else ""
+        print(f"    {a.name:22} {a.model}{mark}")
     print()
 
 

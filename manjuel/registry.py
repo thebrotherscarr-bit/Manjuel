@@ -497,5 +497,48 @@ class AgentRegistry:
         self.override = tag
         return sorted(moved)
 
+    def override_seat(self, seat: str, tag: str) -> tuple[str, str, str]:
+        """Run ONE seat on a named model and leave every other where it is.
+
+        `override_model` moves the whole roster, which is the right shape for
+        "try this sitting on a bigger model" and the WRONG one for a parity.
+        Asking whether the Steward raises a flag where it used to announce is a
+        question about the Steward; moving the Router in the same breath makes
+        the answer a fact about two changes at once. The parity of 2026-09-23
+        carries that exact caveat in `parity.md` -- `[2/3] Router phi4-mini`
+        went along for the ride -- because per-seat did not exist yet.
+
+        Refuses an unknown seat BY NAME, with the roster, rather than moving
+        nothing and saying it moved one: a typo that silently did nothing would
+        report a parity between a model and itself.
+
+        Like `override_model` this touches the live seats only. `agents/*.md`
+        is never written to and `declared_models()` is unmoved, so any writer
+        that describes this ground still reads the declaration -- which is also
+        what makes a per-seat override VISIBLE without a second field to keep
+        in step: a seat whose live model differs from its declared one is
+        overridden, and that is derivable rather than remembered.
+
+        `self.override` is deliberately NOT set. It means "every seat is on
+        this one tag", and that is not true here.
+
+        Returns (seat, from, to), with `from` == `to` when the seat was already
+        on it -- the caller says what happened, and nothing happening is a
+        thing that happened.
+        """
+        key = seat.strip().lower()
+        a = self._agents.get(key)
+        if a is None:
+            roster = ", ".join(sorted(x.name for x in self._agents.values()))
+            raise RegistryError(
+                f"No seat named {seat!r} in {self.source}, so nothing was "
+                f"moved. The roster is: {roster}"
+            )
+        tag = _normalize_model(tag)
+        was = a.model
+        if was != tag:
+            self._agents[key] = replace(a, model=tag)
+        return (a.name, was, tag)
+
     def __len__(self) -> int:
         return len(self._agents)

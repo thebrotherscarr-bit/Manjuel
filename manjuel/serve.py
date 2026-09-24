@@ -49,11 +49,16 @@ skipped) -- read off the StepResults, never off a seat's words (LAW 5).
 THE WIRE (protocol 1). One JSON object per line, UTF-8.
 
   in   {"cmd":"objective","text":"...","feed":"...?","method":"...?",
-        "model":"...?"}                   `model` runs THIS TURN's seats on
-                                          one head and puts the declared
-                                          targets back when it ends; an
-                                          uninstalled tag is `refused` by
-                                          name, never quietly ignored
+        "model":"...?","voices":{"seat":"tag"}?}
+                                          `model` runs THIS TURN's seats on
+                                          one head; `voices` names a head per
+                                          SEAT and is applied over it, so a
+                                          parity can vary one voice and not
+                                          the roster. Both put the declared
+                                          targets back when the turn ends; an
+                                          uninstalled tag or an unknown seat
+                                          is `refused` by name before anything
+                                          moves, never quietly ignored
        {"cmd":"answer","text":"..."}      the reply to a needs_answer
        {"cmd":"listen","seconds":N?}      capture one spoken turn; the
                                           text comes back as `heard` and
@@ -552,34 +557,34 @@ class Door:
                 #
                 # IT IS `/model`'s MECHANISM AND NOT A SECOND ONE: the whole
                 # roster moves, `agents/*.md` is never written to, and the turn
-                # puts it back. Per-seat is a narrower ruling and is his.
+                # puts it back.
+                #
+                # `voices` IS THE NARROWER ONE (2026-09-23, "then B underneath
+                # it"): seat -> model, applied OVER `model`, so "everything on
+                # X except the Steward on Y" is one turn and one record. A
+                # parity of the Steward is a question about the Steward, and
+                # moving the Router in the same breath makes the answer a fact
+                # about two changes at once -- which is the caveat this
+                # morning's parity carries.
                 model = str(row.get("model") or "").strip()
+                voices = row.get("voices") or {}
                 restore = False
-                if model:
-                    # RULE 4: nothing is fetched at run time, so a tag the rack
-                    # does not have would fail every seat one at a time with
-                    # the cause four stages back. Refused here, by name.
-                    try:
-                        have = self.sess.runtime.installed_models(refresh=True)
-                    except Exception as exc:
-                        have = None
-                        self.wire.emit("refused", text=(
-                            f"cannot reach the rack to check {model!r} ({exc}); "
-                            f"the turn was not run rather than run on a head "
-                            f"nobody confirmed"))
-                    if have is None:
+                if model or voices:
+                    plan, why = self._head_plan(model, voices)
+                    if why:
+                        # NOTHING IS APPLIED BEFORE EVERYTHING IS CHECKED. A
+                        # `voices` map refused halfway would leave the roster
+                        # part-moved with no turn to put it back.
+                        self.wire.emit("refused", text=why)
                         continue
-                    tag = model if ":" in model else f"{model}:latest"
-                    if tag not in have:
-                        self.wire.emit("refused", text=(
-                            f"{tag!r} is not installed, so this turn was not run "
-                            f"(RULE 4: models are never pulled at run time). "
-                            f"The rack has: {', '.join(sorted(have))}"))
-                        continue
-                    self.sess.registry.override_model(tag)
+                    for seat, tag in plan:
+                        if seat is None:
+                            self.sess.registry.override_model(tag)
+                        else:
+                            self.sess.registry.override_seat(seat, tag)
                     restore = True
                     self.wire.emit("note", text=(
-                        f"this turn runs every seat on {tag}; the declared "
+                        f"this turn runs {self._head_words(plan)}; the declared "
                         f"targets in agents/*.md are untouched and come back "
                         f"when it ends"))
                 if feed.strip():
@@ -614,6 +619,72 @@ class Door:
                         self.sess.load()
         finally:
             builtins.input = real_input
+
+    # ---- the head this turn runs on ------------------------------------
+
+    def _head_plan(self, model: str, voices) -> tuple[list, str]:
+        """Read `model` and `voices` off the wire into a plan, or refuse.
+
+        Returns `(plan, "")` or `([], why)`. A plan is an ordered list of
+        `(seat_or_None, tag)`: `None` is the whole roster, and it comes first
+        so a per-seat entry lands OVER it rather than under it.
+
+        EVERYTHING IS CHECKED BEFORE ANYTHING IS APPLIED. A map refused on its
+        third entry after moving the first two would leave the roster
+        part-moved on a turn that never ran -- so there would be no `finally`
+        to put it back and the next turn would silently measure the leftovers.
+
+        THE RACK IS ASKED ONCE, for every tag at once. RULE 4: nothing is
+        pulled at run time, so a tag the rack does not have must be refused
+        here by name -- run anyway and it fails every seat one at a time with
+        the cause four stages back. A rack that cannot be ASKED is refused the
+        same way: unreachable is not agreed.
+        """
+        if not isinstance(voices, dict):
+            return [], (f"`voices` must be an object of seat -> model, got "
+                        f"{type(voices).__name__}; the turn was not run")
+        named = [str(v or "").strip() for v in voices.values()]
+        if model:
+            named.append(model)
+        if any(not t for t in named):
+            return [], ("`voices` names a seat with an empty model; the turn "
+                        "was not run rather than run on nothing")
+        try:
+            have = self.sess.runtime.installed_models(refresh=True)
+        except Exception as exc:
+            return [], (f"cannot reach the rack to check {sorted(set(named))} "
+                        f"({exc}); the turn was not run rather than run on a "
+                        f"head nobody confirmed")
+        tagged = {t: (t if ":" in t else f"{t}:latest") for t in named}
+        missing = sorted({tagged[t] for t in named if tagged[t] not in have})
+        if missing:
+            return [], (f"{', '.join(repr(m) for m in missing)} not installed, "
+                        f"so this turn was not run (RULE 4: models are never "
+                        f"pulled at run time). The rack has: "
+                        f"{', '.join(sorted(have))}")
+        # The seats are checked here too, and by the same rule: a typo that
+        # quietly moved nothing would report a parity between a model and
+        # itself, which is the one answer a parity must never be able to give.
+        unknown = sorted(s for s in voices if not self.sess.registry.has(str(s)))
+        if unknown:
+            roster = ", ".join(sorted(a.name for a in self.sess.registry.all()))
+            return [], (f"no seat named {', '.join(repr(s) for s in unknown)}, "
+                        f"so this turn was not run. The roster is: {roster}")
+        plan: list = []
+        if model:
+            plan.append((None, tagged[model]))
+        for seat in sorted(voices, key=lambda s: str(s).lower()):
+            plan.append((str(seat), tagged[str(voices[seat] or "").strip()]))
+        return plan, ""
+
+    @staticmethod
+    def _head_words(plan: list) -> str:
+        """The plan in the operator's words, for the `note` that says what
+        this turn moved. The record has to name it or a parity's two runs are
+        two numbers with nothing attached."""
+        parts = [f"every seat on {tag}" if seat is None else f"{seat} on {tag}"
+                 for seat, tag in plan]
+        return ", then ".join(parts)
 
     def _close(self, why: str) -> None:
         st = self.sess.sitting

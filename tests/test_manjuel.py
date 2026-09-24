@@ -3920,6 +3920,133 @@ def test_the_headless_door(reg, lib, book):
     finally:
         Sess.load = _keep_load
 
+    # ---- and a head per SEAT (2026-09-23, "then B underneath it") ----------
+    #
+    # The whole-roster head above answers "is this ground better on that
+    # model". It cannot answer "does the STEWARD raise a flag where it used to
+    # announce", because it moves the Router in the same breath and the answer
+    # becomes a fact about two changes at once. `voices` is that narrower
+    # question, and the stand-in's no-op load() is what lets these read the
+    # roster AFTER the turn to see exactly which seats moved.
+    _keep_load = Sess.load
+    Sess.load = lambda self: (loads.append(1), True)[1]
+    try:
+        reg = _AR.load(ROOT / "agents")
+        declared = {a.name: a.model for a in reg.all()}
+        loads.clear()
+        rows, sess, text, rc = drive(
+            [{"cmd": "objective", "text": "hello there",
+              "voices": {"Steward": "phi4-mini:latest"}},
+             {"cmd": "close"}],
+            Rack(installed={"phi4-mini:latest"}, reply="[Steward] hi."))
+        seat = next((r for r in rows if r["event"] == "seat"), None)
+        check("a seat named in `voices` sits on the head it was given",
+              seat is not None and seat["model"] == "phi4-mini:latest", repr(seat))
+        after = {a.name: a.model for a in reg.all()}
+        check("and NOT ONE other seat moved -- which is the whole of why this "
+              "exists beside the roster-wide head",
+              {n: m for n, m in after.items() if n != "Steward"}
+              == {n: m for n, m in declared.items() if n != "Steward"},
+              str([(n, declared[n], after[n]) for n in after if after[n] != declared[n]]))
+        note = next((r for r in rows if r["event"] == "note"
+                     and "Steward on phi4-mini:latest" in r.get("text", "")), None)
+        check("the note names the seat and its head, so the record says what "
+              "this run actually varied",
+              note is not None, repr([r for r in rows if r["event"] == "note"]))
+        check("and the ground is handed back when the turn ends",
+              len(loads) == 1, str(len(loads)))
+
+        # BOTH AT ONCE, IN ORDER: everything on X, then the named seat on Y.
+        reg = _AR.load(ROOT / "agents")
+        loads.clear()
+        rows, sess, text, rc = drive(
+            [{"cmd": "objective", "text": "hello there", "model": "phi4:latest",
+              "voices": {"Steward": "phi4-mini:latest"}},
+             {"cmd": "close"}],
+            Rack(installed={"phi4:latest", "phi4-mini:latest"}, reply="[Steward] hi."))
+        seat = next((r for r in rows if r["event"] == "seat"), None)
+        check("a per-seat head lands OVER a roster-wide one, never under it",
+              seat is not None and seat["model"] == "phi4-mini:latest", repr(seat))
+        check("and the seats it did not name went with the roster",
+              reg.get("Router").model == "phi4:latest", reg.get("Router").model)
+
+        # AN UNKNOWN SEAT IS REFUSED BY NAME. A typo that quietly moved nothing
+        # would report a parity between a model and itself.
+        reg = _AR.load(ROOT / "agents")
+        loads.clear()
+        rows, sess, text, rc = drive(
+            [{"cmd": "objective", "text": "hello there",
+              "voices": {"Stewart": "phi4-mini:latest"}},
+             {"cmd": "close"}],
+            Rack(installed={"phi4-mini:latest"}, reply="[Steward] hi."))
+        ref = next((r for r in rows if r["event"] == "refused"), None)
+        check("a seat this ground does not have is refused by name, with the roster",
+              ref is not None and "Stewart" in ref["text"] and "Steward" in ref["text"],
+              repr(ref))
+        check("and no turn ran on it",
+              not any(r["event"] in ("run", "delivery") for r in rows),
+              str([r["event"] for r in rows]))
+
+        # NOTHING IS APPLIED BEFORE EVERYTHING IS CHECKED. A map refused on its
+        # second entry after moving the first would leave the roster part-moved
+        # on a turn that never ran -- and with no turn there is no `finally` to
+        # put it back, so the NEXT turn silently measures the leftovers.
+        reg = _AR.load(ROOT / "agents")
+        loads.clear()
+        rows, sess, text, rc = drive(
+            [{"cmd": "objective", "text": "hello there",
+              "voices": {"Steward": "phi4-mini:latest", "Router": "not-here:9b"}},
+             {"cmd": "close"}],
+            Rack(installed={"phi4-mini:latest"}, reply="[Steward] hi."))
+        ref = next((r for r in rows if r["event"] == "refused"), None)
+        check("one uninstalled tag in the map refuses the whole turn, by name",
+              ref is not None and "not-here:9b" in ref["text"], repr(ref))
+        check("and the seats named BEFORE the bad one did not move -- a "
+              "part-moved roster on a turn that never ran has nothing to put "
+              "it back",
+              {a.name: a.model for a in reg.all()} == declared and not loads,
+              str([(n, declared[n], m) for n, m in
+                   ((a.name, a.model) for a in reg.all()) if m != declared[n]]))
+
+        # AND THE SHAPE ITSELF IS CHECKED.
+        rows, sess, text, rc = drive(
+            [{"cmd": "objective", "text": "hello there", "voices": "Steward"},
+             {"cmd": "close"}],
+            Rack(installed={"phi4-mini:latest"}, reply="[Steward] hi."))
+        ref = next((r for r in rows if r["event"] == "refused"), None)
+        check("`voices` that is not an object of seat -> model is refused, not guessed at",
+              ref is not None and "seat -> model" in ref["text"], repr(ref))
+        rows, sess, text, rc = drive(
+            [{"cmd": "objective", "text": "hello there", "voices": {"Steward": ""}},
+             {"cmd": "close"}],
+            Rack(installed={"phi4-mini:latest"}, reply="[Steward] hi."))
+        ref = next((r for r in rows if r["event"] == "refused"), None)
+        check("a seat named with an empty model is refused rather than run on nothing",
+              ref is not None and "empty model" in ref["text"], repr(ref))
+
+        # AND IT REACHES A REAL TURN, for a seat that is not the Steward. The
+        # registry moving is one fact; the seat SITTING on it is another, and
+        # only the second is what a parity measures. His word, 2026-09-24:
+        # "the router should be able to be swapped with a different one same as
+        # the coder/steward/etc." The seat loop resolves every step through
+        # `registry.get(name)` with no per-seat branch, so this is the whole
+        # roster's proof -- taken on the Router because he named it.
+        reg = _AR.load(ROOT / "agents")
+        loads.clear()
+        rows, sess, text, rc = drive(
+            [{"cmd": "objective", "text": "what is in the skills dir",
+              "voices": {"Router": "phi4:latest"}},
+             {"cmd": "close"}],
+            Rack(installed={"phi4:latest"}, reply="[Router] read it."))
+        seats = {r["seat"]: r["model"] for r in rows if r["event"] == "seat"}
+        check("a seat that is not the Steward sits on the head it was given",
+              seats.get("Router") == "phi4:latest", repr(seats))
+        check("and the seats beside it in the same turn sat on their declared targets",
+              all(m == declared[n] for n, m in seats.items() if n != "Router"),
+              str({n: (declared.get(n), m) for n, m in seats.items() if n != "Router"}))
+    finally:
+        Sess.load = _keep_load
+
 
 def test_sitting_88_paths_and_evidence(reg, lib, book):
     """Sitting 88 (2026-09-07, the first live standup after the restart),
@@ -13134,6 +13261,279 @@ def test_model_override(reg, lib, book):
 
     check("/model is registered, so the palette and dispatch agree",
           "model" in {n for n, _, _ in _cli.COMMANDS})
+
+    # ---- one seat, not the roster (2026-09-23, "then B underneath it") -----
+    #
+    # `override_model` is the right shape for "try this sitting on a bigger
+    # model" and the WRONG one for a parity. Asking whether the Steward raises
+    # a flag where it used to announce is a question about the Steward; moving
+    # the Router in the same breath makes the answer a fact about two changes
+    # at once -- which is the caveat `parity.md` carries for 2026-09-23.
+    one = AgentRegistry.load(ROOT / "agents")
+    before = {a.name: a.model for a in one.all()}
+    moved_one = one.override_seat("Steward", "phi4-mini:latest")
+    check("one seat moves, and it reports which, from what, to what",
+          moved_one == ("Steward", before["Steward"], "phi4-mini:latest"),
+          repr(moved_one))
+    after = {a.name: a.model for a in one.all()}
+    check("and every other seat is exactly where it was",
+          {n: m for n, m in after.items() if n != "Steward"}
+          == {n: m for n, m in before.items() if n != "Steward"},
+          str([(n, before[n], after[n]) for n in after if after[n] != before[n]]))
+    check("the declaration is unmoved, so a per-seat override is DERIVABLE "
+          "and needs no second field to keep in step",
+          one.declared_models() == before
+          and one.get("Steward").model != one.declared_models()["Steward"])
+    check("`override` is not set by a per-seat move -- it means every seat is "
+          "on one tag, and that is not true here",
+          one.override == "", repr(one.override))
+
+    two = AgentRegistry.load(ROOT / "agents")
+    check("the seat name is read the way every other lookup reads it",
+          two.override_seat("steward", "phi4-mini")[0] == "Steward")
+    check("and a tag with no colon resolves to :latest, as /model does",
+          two.get("Steward").model == "phi4-mini:latest")
+    check("a seat already on the tag says so rather than claiming a move",
+          two.override_seat("Steward", "phi4-mini:latest")
+          == ("Steward", "phi4-mini:latest", "phi4-mini:latest"))
+
+    # A TYPO THAT QUIETLY MOVED NOTHING would report a parity between a model
+    # and itself, which is the one answer a parity must never be able to give.
+    three = AgentRegistry.load(ROOT / "agents")
+    try:
+        three.override_seat("Stewart", "phi4-mini:latest")
+        said = ""
+    except RegistryError as exc:
+        said = str(exc)
+    check("an unknown seat is refused BY NAME, with the roster, not ignored",
+          "Stewart" in said and "Steward" in said and "Router" in said, said)
+    check("and the refused move moved nothing",
+          {a.name: a.model for a in three.all()} == before)
+
+    # THE TWO COMPOSE, IN THAT ORDER: the roster moves, then one seat lands
+    # over it. "Everything on X except the Steward on Y" is the shape a parity
+    # of one voice actually needs.
+    both = AgentRegistry.load(ROOT / "agents")
+    both.override_model("phi4:latest")
+    both.override_seat("Steward", "phi4-mini:latest")
+    check("a per-seat head lands over a whole-roster one",
+          both.get("Steward").model == "phi4-mini:latest"
+          and both.get("Router").model == "phi4:latest",
+          f"{both.get('Steward').model} / {both.get('Router').model}")
+
+    # ---- and the operator can say it by hand (2026-09-24) ------------------
+    #
+    # His word: "I would like the idea of being able to set the model per-seat,
+    # that sounds like it would be very helpful." `voices` on the wire is for
+    # the Dashboard and the flows; this is the same thing at the REPL, where he
+    # actually sits. One mechanism, two doors -- both `override_seat`.
+    import contextlib as _ctx
+    import io as _io
+    from manjuel.runtime import RuntimeError_
+
+    class SeatRack:
+        """Just the one thing `/model` asks a runtime, refusing the way the
+        real one refuses -- a fixture that does not mirror the runtime is how
+        a guard tests green while dead (see `Stub` at the head of this file)."""
+
+        def __init__(self, installed=(), unreachable=False):
+            self.installed, self.unreachable = set(installed), unreachable
+
+        def installed_models(self, refresh: bool = False):
+            if self.unreachable:
+                raise RuntimeError_("the rack is not answering")
+            return set(self.installed)
+
+    class ModelSess:
+        """cli.Session's shape where `/model` touches it, and nowhere else --
+        a real Session opens a sitting in the ledger at construction, which no
+        stroke may do."""
+
+        def __init__(self, rack):
+            self.runtime = rack
+            self.registry = AgentRegistry.load(ROOT / "agents")
+            self.model_override = ""
+            self.seat_overrides: dict = {}
+            self.loads = 0
+
+        def load(self):
+            # What cli.Session.load does to the roster, and only that: re-read
+            # the declaration, then the wide override, then the narrow ones.
+            self.loads += 1
+            self.registry = AgentRegistry.load(ROOT / "agents")
+            if self.model_override:
+                self.registry.override_model(self.model_override)
+            for s in sorted(self.seat_overrides):
+                self.registry.override_seat(s, self.seat_overrides[s])
+            return True
+
+    def say(sess, arg=""):
+        out = _io.StringIO()
+        with _ctx.redirect_stdout(out):
+            _cli._cmd_model(sess, arg)
+        return out.getvalue()
+
+    rack = SeatRack(installed={"phi4-mini:latest", "phi4:latest", "qwen3.5:9b"})
+    ms = ModelSess(rack)
+    said = say(ms, "steward phi4-mini")
+    check("/model <seat> <tag> moves that seat and says what it was",
+          ms.registry.get("Steward").model == "phi4-mini:latest"
+          and "Steward now runs phi4-mini:latest" in said
+          and "llama3.2:latest" in said, said)
+    check("and it says out loud that nothing else moved",
+          "every other seat is where it was" in said
+          and ms.registry.get("Router").model == "qwen3.5:4b", said)
+    check("the override is stored under the SEAT's own name, not the typing",
+          ms.seat_overrides == {"Steward": "phi4-mini:latest"}, str(ms.seat_overrides))
+
+    # THE LAST WORD IS THE TAG, so the six seats with a space in their names
+    # need no quoting and no second syntax.
+    said = say(ms, "deep researcher phi4:latest")
+    check("a seat whose name has a space in it is named the way it is spelled",
+          ms.registry.get("Deep Researcher").model == "phi4:latest"
+          and "Deep Researcher now runs" in said, said)
+    # A SEAT ALREADY ON THE TAG SAYS SO -- and still takes the override, so
+    # /reload keeps it there rather than letting the declaration win back a
+    # seat he had named.
+    said = say(ms, "deep researcher phi4:latest")
+    check("naming a seat's current model claims no move but still stands",
+          "was already on phi4:latest" in said
+          and ms.seat_overrides["Deep Researcher"] == "phi4:latest", said)
+
+    # A TYPO THAT QUIETLY MOVED NOTHING would leave him comparing a model
+    # against itself, and both columns would look honest.
+    said = say(ms, "stewart phi4-mini")
+    check("an unknown seat is refused by name, with the roster, and moves nothing",
+          "no seat named 'stewart'" in said and "Steward" in said
+          and "Router" in said, said)
+    said = say(ms, "router not-here")
+    check("an uninstalled tag is refused by name (RULE 4) and moves nothing",
+          "not-here:latest' is not installed" in said
+          and ms.registry.get("Router").model == "qwen3.5:4b", said)
+    said = say(ModelSess(SeatRack(unreachable=True)), "router phi4-mini")
+    check("a rack that cannot be reached refuses rather than setting a target blind",
+          "cannot reach the rack" in said, said)
+
+    # ONE WORD THAT IS A SEAT IS A HALF-TYPED COMMAND. Refusing it as an
+    # uninstalled tag would be true and useless.
+    said = say(ms, "steward")
+    check("a bare seat name says it is a seat and shows both shapes",
+          "is a seat, not a model" in said
+          and "/model steward <tag>" in said, said)
+
+    # THE REPORT NAMES EVERY OVERRIDE AND MARKS THE SEATS THAT MOVED, derived
+    # from the declaration rather than read from a second list that could drift.
+    said = say(ms)
+    check("the bare report names each per-seat override",
+          "override: Steward on phi4-mini:latest" in said
+          and "override: Deep Researcher on phi4:latest" in said, said)
+    check("and marks a moved seat against what agents/*.md declares",
+          "phi4-mini:latest   (declared llama3.2:latest)" in said, said)
+    check("an unmoved seat carries no mark",
+          "Router                 qwen3.5:4b\n" in said, said)
+
+    # BOTH AT ONCE: the roster moves, and the seats named one by one stand over
+    # it -- in the REPL between reloads, not only after the next one.
+    said = say(ms, "phi4")
+    check("a roster-wide move does not wipe the seats he named one by one",
+          ms.registry.get("Steward").model == "phi4-mini:latest"
+          and ms.registry.get("Router").model == "phi4:latest"
+          and "stand over it" in said, said)
+    # The "moved OFF a purpose-chosen model" warning is about seats the ROSTER
+    # move took somewhere they were not chosen to be. A seat he named himself
+    # did not go there, so warning him about it would be the report crying wolf
+    # over his own instruction.
+    off = said.split("moved OFF", 1)
+    check("and a seat standing over the roster is not reported as moved off a "
+          "purpose-chosen model, because it was not",
+          len(off) == 2 and "Deep Researcher" not in off[1]
+          and "Steward" not in off[1], said)
+    check("while the seats the roster move DID take off a chosen model are named",
+          "Expert Coder" in off[1], said)
+
+    # RESET CLEARS BOTH, and says what it cleared -- an override that vanished
+    # silently is a measurement nobody can trace afterwards.
+    said = say(ms, "reset")
+    # THE WHOLE ROSTER, not the two seats this stroke happened to move (his
+    # word, 2026-09-24: "reset should set it back to the default racking for
+    # the models"). Checking the two would pass while a third stayed moved,
+    # and a seat left on an override nobody remembers setting is the failure
+    # this whole mechanism exists to avoid.
+    after_reset = {a.name: a.model for a in ms.registry.all()}
+    check("reset clears the roster-wide and the per-seat overrides together",
+          not ms.model_override and not ms.seat_overrides
+          and after_reset == ms.registry.declared_models(),
+          str({n: m for n, m in after_reset.items()
+               if m != ms.registry.declared_models().get(n)}))
+    check("and names what stood before it cleared them",
+          "was: every seat on phi4:latest" in said
+          and "was: Steward on phi4-mini:latest" in said, said)
+    check("reset on a clean sitting says so rather than reloading for nothing",
+          "no override to clear" in say(ms, "reset"))
+
+    # EVERY SEAT, NOT THE ONE THIS STROKE LIKED. His word, 2026-09-24: "the
+    # router should be able to be swapped with a different one same as the
+    # coder/steward/etc." A per-seat move proved on the Steward alone would
+    # pass while a seat with an unusual name, a specialist's model or a
+    # two-word name behaved differently -- so it is walked over the roster and
+    # the claim is mechanical: each seat moves, and ONLY that seat moves.
+    walked = AgentRegistry.load(ROOT / "agents")
+    declared_all = {a.name: a.model for a in walked.all()}
+    wrong = []
+    for name in sorted(declared_all):
+        one = ModelSess(SeatRack(installed={"phi4:latest"}))
+        say(one, f"{name.lower()} phi4:latest")
+        now = {a.name: a.model for a in one.registry.all()}
+        moved = sorted(n for n in now if now[n] != declared_all[n])
+        if moved != [name] or one.seat_overrides != {name: "phi4:latest"}:
+            wrong.append((name, moved, one.seat_overrides))
+    check(f"each of the {len(declared_all)} seats can be swapped, and swaps alone "
+          f"-- the Router is no different from the Steward",
+          not wrong, str(wrong))
+
+    # `has` AND `override_seat` MUST READ A NAME THE SAME WAY. Both the wire
+    # and this command pre-check with `has` and then call `override_seat`; if
+    # the two ever disagree, the pre-check passes, the call raises, and the
+    # RegistryError reaches the top of the headless door's loop and takes the
+    # whole process down. Measured 2026-09-24 by making one of them
+    # case-sensitive: the suite did not go red, it died.
+    probe = AgentRegistry.load(ROOT / "agents")
+    disagreed = []
+    for spelling in ("Steward", "steward", "  STEWARD  ", "Deep Researcher",
+                     "deep researcher", "DEEP RESEARCHER", "Stewart", "", "  "):
+        agreed = probe.has(spelling)
+        try:
+            probe.override_seat(spelling, "phi4:latest")
+            took = True
+        except RegistryError:
+            took = False
+        if agreed is not took:
+            disagreed.append((spelling, agreed, took))
+    check("`has` and `override_seat` read a seat name the same way, or a "
+          "pre-check that passes is followed by a call that kills the door",
+          not disagreed, str(disagreed))
+
+    # AND IT SURVIVES A RELOAD, which is the whole reason it lives on the
+    # session and not on the registry: /reload and the ground watcher both
+    # rebuild the roster from disk, and an override they dropped would make
+    # every turn after them a measurement of something nobody asked for.
+    src_cli = (ROOT / "manjuel" / "cli.py").read_text(encoding="utf-8")
+    body = src_cli[src_cli.index("    def load(self) -> bool:"):]
+    body = body[:body.index("\n    def ", 1)]
+    # `find`, never `index`: a stroke that RAISES when the thing it guards is
+    # gone takes the whole suite down instead of naming one red, which is the
+    # one way a guard can be worse than no guard at all.
+    wide, narrow = body.find("override_model"), body.find("override_seat")
+    check("Session.load re-applies the per-seat overrides", narrow >= 0)
+    check("and does it AFTER the roster-wide one, or the wide one wipes them",
+          0 <= wide < narrow, f"override_model@{wide} override_seat@{narrow}")
+    check("a seat that left agents/*.md is dropped and SAID, not raised -- "
+          "failing the reload would take the sitting with it",
+          "except RegistryError:" in body and "del self.seat_overrides[seat]" in body
+          and "dropped" in body)
+    check("/model's help line names both shapes",
+          any(n == "model" and "<seat> <tag>" in h for n, _, h in _cli.COMMANDS),
+          str([h for n, _, h in _cli.COMMANDS if n == "model"]))
 
 
 def test_path_gate(reg, lib, book):
