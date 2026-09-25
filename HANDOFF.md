@@ -14,7 +14,7 @@ RUN THE SMOKE SUITE, not just the strokes. It was RED at 34/50 from 14e2711
 to 2026-09-02 because its StubRuntime had not been moved with pipeline.py,
 and nothing noticed: the strokes were green the whole time.
 
-**START AT `## HANDOFF FOR 2026-09-24`** (search for it — the day blocks
+**START AT `## HANDOFF FOR 2026-09-25`** (search for it — the day blocks
 stack newest first above `## Open`). CHANGELOG.md carries the versions;
 DAYBOOK.md's last entry carries the day's intent. Everything between here and
 there is standing reference that has not moved.
@@ -669,6 +669,73 @@ dropped by operator ruling 2026-09-01 — see the fix log.
     5. CHECK THE DISK BEFORE THE TRANSCRIPT. A seat's account of what it did
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
+
+## HANDOFF FOR 2026-09-25 — read this before anything below it
+
+**THE DAY'S HEADLINE: THE GATE NOW READS THE RECORD, THE FLOWS AND THE WORKFLOWS -- AND THE
+ENGINE HIDES NOTHING.** Yesterday's diagnosis was "a recording instrument with almost no
+actuators". Today four pieces put actuators on the mark: the release gate fires in CI on a tag
+(`release-gate.yml`, record-only, stamps as evidence of his terminal); it checks version control
+against the record (ticks dated since the mark, pins at the commit, every mark headed, both remotes
+level); it reads `flows/` on his terminal and the CI workflows everywhere; and the door's `flow.List`
+names a corrupt spec instead of skipping it. Every check was proved by reversal on temp
+repositories, and two of the hand's own strokes were caught being conventions (a number typed
+into an assertion; an em-dash stroke that could not tell the fix from the fault) and rebuilt.
+
+**Where the ground stands.** core `main@1a58b93`, atlas `main@e3f9d91`, both level with GitHub,
+nothing unsaved as this block is written. No sitting is open as it is written; `version-tag` is to
+be FIRED right after it on his word -- its first run ever -- which opens an engine on research and
+pauses at its `judge` gate for his hand. Nothing is cut before that gate.
+
+**What landed and was sent.**
+
+    core 1a58b93   .github/workflows/release-gate.yml (new); tests/release.py grew from
+                   nine checks to sixteen: mark, tasks, pins, marks, remotes, flows,
+                   workflows, and `handoff` reads THE MARK'S OWN DATE; TERMINAL_ONLY is
+                   four (`flows` for a different reason: no checkout has the folder);
+                   `tagged_file` reads git as UTF-8 (cp1252 had "flipped" 28 titles);
+                   .gitignore's flows/ note names its one reader; TASKS:1105 ticked on
+                   his word; BUILDPATH step 3 no longer names a count
+    atlas e3f9d91  flow.List returns ([]Spec, []Unread, error); flow_list prints
+                   UNREADABLE with why; TestListHidesNothing; one battery leg
+
+**THE GATE ON THE GROUND** (`--check --record-only`, after this block): REFUSED 1 of 11 --
+`manifest` (one DRIFT, the Proofreader's `Wakes On: prose`; six LOOSE fields: `covenant`,
+`office`, `reports_to`, `mode`, `stage`, `lands`). Both are his ruling. `workflows` went green the
+moment `release-gate.yml` was saved -- it was red for exactly that reason, correctly. The full
+form wants his own run of the suites and a live standup. **No mark can be cut cleanly until
+`manifest` is ruled**: BUILDPATH's procedure wants the gate PASSED, and the CI gate would refuse the
+tag on the same line.
+
+**What `flows` reported on its first real run:** 4 flows, each valid; 12 folded versions, each
+still lawful; **NEVER FIRED: `version-tag`**; `coder` fired 19 times, never COMPLETE; a run of
+`wife-test`, whose spec is no longer on disk. What `workflows` reported: every python command in
+`prove.yml` and `release-gate.yml` names a script in the tree and flags it knows.
+
+**What is running.**
+
+    the door    atlas-mcp.exe, pid 61492, :8090, 0.1.7 -- placed and restarted on his
+                word today; carries flow.List's fix; started per RUNBOOK from atlas\line,
+                every stream into mcp.log; NOT --auth
+    the glass   atlas-webapp.exe, pid 78420, :8091 -- the OLD build: it does not carry
+                ATLAS_SERVICE yet (that piece is in atlas 793ea4e, unbuilt)
+    NOT OURS    atlas-mcp.exe, pid 23164, from Desktop\Archive -- never touched
+
+**Still open, all his.** The `--auth` + `ATLAS_SERVICE` restart (rebuild the glass first); the
+`manifest` ruling; the harm list (`inspect`'s refusal prefix -- three silent failures; P0-12/13/14
+in SPEC_CONTROL_CENTER §12.5, verified live 2026-09-24); `run_start` cannot name a head; the door's
+88 tools have no `.us` records; `REFUSALS.md`'s 28 against 66 `Refused:` sites, unlinked.
+
+**Proof.** strokes **2907/2907** (a LONE run on a mirror -- see below), smoke **72/72**; the door's
+battery PROVEN with its new leg; the flow package green; the `tools` package's seven reds in the
+scratch are environmental (identical at HEAD, `git archive` baseline). Reversals P1-P4, F1-F3,
+W1-W3 each red their own strokes.
+
+**Three things the next hand should know about proving here.** (1) ONE SUITE AT A TIME: the maker
+stroke counts browser processes machine-wide, so parallel suites red each other. (2)
+`python tests/test_manjuel.py <substring>` runs one stroke function (plus three of the harness's)
+-- seconds, for a reversal. (3) A mirror carries no `atlas/`, so a stroke guarded on it never runs
+there; the flow-law reconciler was proved only by carrying `flow.go` and `play.go` into the mirror.
 
 ## HANDOFF FOR 2026-09-24 — read this before anything below it
 
