@@ -34,6 +34,81 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### `prose` made real: the Proofreader can wake (operator, 2026-09-25: "make `prose` real: add the flag and a raiser")
+
+`agents/proofreader.md` has said `Wakes On: prose` since the day it was written, and `prose` was in
+no set and named by no prompt -- so the seat never woke, and the stroke "the Proofreader wakes on
+prose and nothing else" passed the whole time, reading the declaration and never asking whether
+anything could satisfy it. The flags check found it on 2026-09-23; the gate refused the mark over it
+from 2026-09-24. This is the last of the manifest's refusals, closed.
+
+- **`manjuel/pipeline.py`:** `prose` joins `FLAGS_RAISED`. A seat's testimony, like the other five.
+- **`agents/steward.md`:** the Steward -- the one seat that hears the operator -- is taught to raise
+  it: his own draft, written to be SENT, wanting a read for grammar and sense before it goes; not
+  code, not an answer of the Steward's own. `seating.summon` then seats the Proofreader on it, last.
+- **`tests/test_manjuel.py`:** `test_the_flags_are_a_closed_set` carried a carve-out for exactly this
+  fault (`f in set(FLAGS) or f == "prose"`) -- a stroke excusing the thing it was written about;
+  gone. `test_proofreader_is_racked` now asks the wire end to end: the word is in the set, the
+  Steward's prompt raises it, a bare raise reads as itself, the reconciler finds no fault in the
+  wake, and summoning on `prose` seats her and says why.
+
+On the ground: `python -m manjuel.us` -- **0 undeclared, 0 drifted, 0 loose; the manifest agrees
+with the disk.** The gate's `manifest` check is green for the first time since LOOSE was born.
+
+No sitting was open. **RESTART REQUIRED:** `manjuel/pipeline.py` moved.
+
+**WHAT GOES RED IF THIS COMES UNPLUGGED:** the six strokes above; `prose` struck from
+`FLAGS_RAISED` reds two of them and the reconciler's own; struck from the Steward's prompt, three.
+
+### The reconciler reads every field it carries -- the six LOOSE, closed on his rulings (2026-09-25)
+
+`us.py`'s LOOSE check found six fields in its own manifest on its first run: declared on 57
+records, read by nothing. Each was put to him with what it actually holds, and each got a ruling.
+
+- **`covenant`** -- every record cites `1512741580b7239b`, which is the DID namespace the door mints
+  credentials in (`atlas/line/internal/vc/vc.go`: `did:atlas:<covenant>:<id>`, and the reporting
+  line the same way), not the law's `65118a147dd49ed9`. Ruled: ONE SOURCE, THE MANIFEST, TWO
+  READERS. The core check is that no record drifts from the rest of the manifest -- no constant
+  anywhere, which would have been a 58th copy. The door reading its issuer namespace off the
+  manifest instead of its own literal is the atlas half, next.
+- **`reports_to`** -- "Manjuel of answerability": must name a seat in `agents/`.
+- **`lands`** -- "false everywhere except the operator's path" (BUILDPATH Layer 8, which said the
+  reconciler asserted this; it never had). `true` anywhere is DRIFT.
+- **`mode`** -- all fourteen seats said `subagent`, a word nothing defines, the spine seats
+  included. Ruled: DERIVED. A seat with a `Wakes On` rests off the spine until raised -- `racked`;
+  the rest sit on it -- `spine`. The fourteen records are re-cited from the registry (six racked,
+  eight spine), and a record that says otherwise is DRIFT naming where the mode came from.
+- **`stage`** -- the seat's declared Stage, checked the way `model` is.
+- **`office`** -- `MANJUEL` on all 57 and read by nothing in the core; struck, until the measurement
+  showed `vc.go` reads it into every credential's `CredentialSubject.Office`. Ruled: keep it, and the
+  core RECORDS its reader. `READ_ELSEWHERE` names the reader and the needle it reads by; the LOOSE
+  arm leaves those fields alone; the report SAYS `read elsewhere: office -> atlas/line/internal/vc/vc.go`
+  on a line the gate does not count; and the table is proved, not trusted -- a stroke opens `vc.go`
+  on a ground that has it and refuses an entry whose needle is gone.
+
+TERSE IS NOT A LIE. Every new check fires only on a record that carries the field; one that omits
+it raises nothing (BUILDPATH: "red on a record that lies, green on one that is merely terse"), which
+is also what keeps the existing honest-manifest stroke honest.
+
+On the ground: **0 undeclared, 1 drifted, 0 loose** -- the one DRIFT is the Proofreader's `prose`,
+ruled the same day ("make it real") and the next piece.
+
+No sitting was open. **RESTART REQUIRED:** `manjuel/us.py` moved; the REPL does not hot-reload it.
+
+- **`manjuel/us.py`:** `CHECKED_FIELDS` +5; `READ_ELSEWHERE`; section 3 derives `mode` and checks
+  `stage`; section 4b checks `covenant`, `reports_to`, `lands` over every record; section 7 leaves
+  read-elsewhere fields alone; `report()` says what is read elsewhere.
+- **`us/seat_*.us` (14):** `mode` re-cited from the registry.
+- **`tests/test_manjuel.py`:** `test_every_manifest_field_is_read_by_something`, 18 strokes (16 check
+  lines; one runs once per READ_ELSEWHERE entry) on temp
+  grounds -- each check both ways, terse records, the derived mode against `subagent`, the report
+  line and that the gate does not count it, and the READ_ELSEWHERE needles against `vc.go` itself.
+
+**WHAT GOES RED IF THIS COMES UNPLUGGED:** those 18, and seven reversals -- `covenant` no longer
+compared (A1), `mode` derived the wrong way round (A2), `stage` (A3), `lands` (A4) and `reports_to`
+(A7) no longer checked, a needle `vc.go` does not carry (A5), and the LOOSE arm forgetting
+READ_ELSEWHERE (A6).
+
 ### The gate reads the flows and the workflows -- piece 3 (operator, 2026-09-24: "proper provers for the workflows and the system"; where the flows half lives ruled 2026-09-25)
 
 Two checks. `flows` is the terminal's; `workflows` is asked everywhere.

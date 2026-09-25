@@ -165,8 +165,14 @@ knows Ollama; nothing else knows either.**
                       remote        does it leave this machine
                       lands         may it write the operator's record
                       can_approve   may it authorise anything (always false)
-                      covenant      the hash binding a record to its office
-                      reports_to    Manjuel of answerability
+                      covenant      the DID namespace the door mints a record's
+                                    credential in (vc.go) -- one source, the
+                                    manifest itself; no constant (2026-09-25)
+                      reports_to    Manjuel of answerability -- a seat in agents/
+                      office        read by the door's us_to_vc into the
+                                    credential; the core names that reader
+                      mode          DERIVED: racked (has a Wakes On) or spine
+                      stage         the seat's declared Stage
 
     THE MANIFEST IS THE SAFETY CLAIM. Every other harness answers "what
     can this tool do?" with prose. This one answers "what may it reach?"
@@ -200,6 +206,14 @@ knows Ollama; nothing else knows either.**
                     `writes` matches WRITING_SKILLS
                     `remote` matches the git remote gate
                     `lands` is false everywhere except the operator's path
+                       (said here since the manifest was written; asserted
+                       since 2026-09-25)
+                    `covenant` agrees across the manifest; `reports_to`
+                       names a seat; `mode` is derived from Wakes On;
+                       `stage` is the seat's (2026-09-25)
+                    `office` is READ ELSEWHERE (vc.go) and the report says
+                       so -- READ_ELSEWHERE, proved against the reader's
+                       source by a stroke, never trusted from the table
                     `can_approve` is false EVERYWHERE, without exception
                     declared model tags are on the rack
 

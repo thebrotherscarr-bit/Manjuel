@@ -65,7 +65,7 @@ reason the estate can say a seat never touches the filesystem.
     "when",
     "write_file"
   ],
-  "mode": "subagent",
+  "mode": "spine",
   "model": "qwen3.5:4b",
   "office": "MANJUEL",
   "permission": {

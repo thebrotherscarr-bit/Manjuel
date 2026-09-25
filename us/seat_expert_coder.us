@@ -21,7 +21,7 @@ reason the estate can say a seat never touches the filesystem.
   "id": "seat_expert_coder",
   "kind": "agent",
   "may_call": [],
-  "mode": "subagent",
+  "mode": "racked",
   "model": "qwen2.5-coder:7b",
   "office": "MANJUEL",
   "permission": {

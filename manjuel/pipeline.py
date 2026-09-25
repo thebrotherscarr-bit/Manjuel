@@ -91,7 +91,12 @@ _FLAGS_RE = re.compile(r"<flags>([^<\n]{0,80})(?:</flags>)?",
 # a seat raises today behaves differently -- `us.py` reports the disagreement,
 # the way it reports every other declaration that has drifted from the disk.
 # Refusing an unknown flag at run time is a separate ruling and is his.
-FLAGS_RAISED = ("needs_tool", "technical", "hard", "deliver", "suspicious")
+# `prose` MADE REAL (2026-09-25, his ruling). The Proofreader had waited on
+# it from the day it was written -- in no set, named by no prompt -- and the
+# reconciler found it the day LOOSE existed. It is the Steward's to raise:
+# the operator's own draft, written to be sent, wanting a read before it
+# goes. seating.summon pulls the Proofreader in on it, last.
+FLAGS_RAISED = ("needs_tool", "technical", "hard", "deliver", "suspicious", "prose")
 FLAGS_ENGINE = ("worked", "review", "drifted", "has_feed")
 FLAGS = FLAGS_RAISED + FLAGS_ENGINE
 # The Router's control block, when it turns up in a seat that is not the

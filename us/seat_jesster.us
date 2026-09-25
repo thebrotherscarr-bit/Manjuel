@@ -21,7 +21,7 @@ reason the estate can say a seat never touches the filesystem.
   "id": "seat_jesster",
   "kind": "agent",
   "may_call": [],
-  "mode": "subagent",
+  "mode": "spine",
   "model": "deepseek-r1:8b",
   "office": "MANJUEL",
   "permission": {

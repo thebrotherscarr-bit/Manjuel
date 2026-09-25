@@ -5020,6 +5020,28 @@ def test_proofreader_is_racked(reg, lib, book):
     pr = reg.get("Proofreader")
     check("the Proofreader wakes on prose and nothing else",
           seating.wake_flags(pr) == ["prose"], str(seating.wake_flags(pr)))
+    # MADE REAL (2026-09-25, his ruling). The line above passed for a
+    # fortnight while nothing could satisfy the declaration it read: `prose`
+    # was in no set and named by no prompt, so this seat had never woken.
+    # Now the wire is asked end to end -- the word is in the set, the one
+    # seat that hears the operator raises it, a bare raise reads as itself,
+    # the reconciler finds no fault in the wake, and summoning on it seats
+    # her. Reversal: strike `prose` from FLAGS_RAISED, or from the Steward's
+    # prompt, and the matching line below goes red.
+    from manjuel import us as _us
+    from manjuel.pipeline import FLAGS_RAISED, read_flags
+    check("`prose` is a flag a seat may raise", "prose" in FLAGS_RAISED, str(FLAGS_RAISED))
+    check("   and the Steward's prompt raises it -- the one seat that hears the operator",
+          "<flags>prose</flags>" in reg.get("Steward").system_prompt)
+    check("   and raised bare it reads as itself", read_flags("<flags>prose</flags>") == {"prose"})
+    check("   so the reconciler finds nothing loose or drifted about the Proofreader's wake",
+          not [f for f in _us.reconcile(ROOT, reg, lib, installed=set())
+               if f.where == "agents/proofreader" and f.field == "wakes on"])
+    order = seating.Seating(book.get("default"), seating.rack_for(reg, book.get("default")))
+    check("   and summoning on it seats her, saying why",
+          order.summon({"prose"}) == ["Proofreader (on prose)"], str(order.summon({"prose"})))
+    check("   while summoning on nothing seats nobody", seating.Seating(
+        book.get("default"), seating.rack_for(reg, book.get("default"))).summon(set()) == [])
     check("and sits last, after the work is done",
           seating.parse_anchor(pr.wakes).kind == "last")
     check("it is racked, not written into the default order",
@@ -11207,7 +11229,9 @@ def test_the_flags_are_a_closed_set(reg, lib, book):
     `Wakes On: prose`; nothing sets `prose` and no prompt names it, so that
     seat has never woken -- while the stroke "the Proofreader wakes on prose
     and nothing else" passed the whole time, because it read the declaration
-    and never asked whether anything could satisfy it.
+    and never asked whether anything could satisfy it. MADE REAL 2026-09-25
+    on his word: `prose` is in FLAGS_RAISED, the Steward's prompt raises it,
+    and test_proofreader_is_racked now asks the wire end to end.
 
     BOTH DIRECTIONS, because they fail differently: a flag outside the set is
     an invention, and a flag INSIDE it that nothing raises is a dead wire with
@@ -11224,9 +11248,11 @@ def test_the_flags_are_a_closed_set(reg, lib, book):
     check("   a seat may raise its own testimony, and never the engine's",
           not (set(FLAGS_RAISED) & set(FLAGS_ENGINE)),
           str(set(FLAGS_RAISED) & set(FLAGS_ENGINE)))
+    # NO CARVE-OUT. This read `f in set(FLAGS) or f == "prose"` for two days:
+    # a stroke excusing the one fault it was written about. `prose` is in the
+    # set now (2026-09-25), and the excuse went with it.
     check("   every flag the real seats wait on is a word the set knows",
-          all(f in set(FLAGS) or f == "prose" for a in reg.all()
-              for f in wake_flags(a)),
+          all(f in set(FLAGS) for a in reg.all() for f in wake_flags(a)),
           str({f for a in reg.all() for f in wake_flags(a)} - set(FLAGS)))
 
     # ---- the checks, on seats built to fail ----------------------------
@@ -11887,6 +11913,167 @@ def test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book):
           "flows" in rec and not rec["flows"].ran and "checkout" in rec["flows"].why
           and "workflows" in rec and rec["workflows"].ran,
           f"{rec['flows'].line()} / {rec['workflows'].line()}")
+
+
+def test_every_manifest_field_is_read_by_something(reg, lib, book):
+    """His rulings, 2026-09-25, on the six LOOSE fields the reconciler found
+    in itself: `covenant` agrees across the manifest (the one source of the
+    DID namespace the door mints credentials in -- no constant anywhere);
+    `reports_to` names a seat; `lands` is false everywhere; `mode` is
+    DERIVED from `Wakes On`, racked or spine; `stage` is the seat's declared
+    Stage; `office` is read on the far side of the seam by vc.go and the
+    report says so. TERSE IS NOT A LIE: a record that omits a field raises
+    nothing; one that carries it must be right.
+
+    No stroke here reads the real manifest: it is his, and a stroke over it
+    would go red because he edited it (audit_record.py's rule). The gate is
+    where the ground is judged.
+    """
+    import json as _json
+    from manjuel import us as _us
+
+    class Seat:
+        def __init__(self, name, stage="transform", wakes=()):
+            self.name, self.system_prompt, self.stage = name, "", stage
+            self.wakes_on = ", ".join(wakes) or None    # a real Agent's shape
+            self.model = "llama3.2:latest"
+
+        def callable_set(self, every):
+            return set()
+
+    class Roster:
+        def __init__(self, seats):
+            self._s = list(seats)
+
+        def all(self):
+            return list(self._s)
+
+    class Lib:
+        def keywords(self):
+            return set()
+
+        def spec(self, k):
+            return None
+
+    def ground(us_dir):
+        g = Path(tempfile.mkdtemp())
+        (g / "us").mkdir()
+        for name, blocks in us_dir.items():
+            body = "\n\n".join("```json\n" + _json.dumps(b, indent=1) + "\n```"
+                               for b in blocks)
+            (g / "us" / name).write_text(body, encoding="utf-8")
+        return g
+
+    def findings_for(seats, us_dir):
+        return _us.reconcile(ground(us_dir), Roster(seats), Lib(), installed=set())
+
+    def drift(fs, field):
+        return [x for x in fs if x.level == "DRIFT" and x.field == field]
+
+    BARE = {"id": "x", "kind": "skill", "us": 1, "can_approve": False,
+            "wall": "none", "writes": False}
+    SEAT = {"id": "seat_steward", "kind": "agent", "us": 1, "can_approve": False,
+            "model": "llama3.2:latest", "may_call": [],
+            "permission": {"edit": {"*": "deny"}}}
+    steward = Seat("Steward")
+    coder = Seat("Expert Coder", wakes=("technical",))
+
+    # ---- covenant: one source, the manifest itself ------------------------
+    f = findings_for([], {"a.us": [dict(BARE, id="a", covenant="1111"),
+                                   dict(BARE, id="b", covenant="1111"),
+                                   dict(BARE, id="c", covenant="2222")]})
+    check("a record whose covenant differs from the rest of the manifest is DRIFT, by id",
+          [x.where for x in drift(f, "covenant")] == ["us/c"]
+          and "2 record(s) cite 1111" in drift(f, "covenant")[0].disk,
+          str([x.line() for x in f]))
+    f = findings_for([], {"a.us": [dict(BARE, id="a", covenant="1111"),
+                                   dict(BARE, id="b", covenant="1111")]})
+    check("   and a manifest that agrees with itself raises nothing -- with no constant in us.py",
+          not drift(f, "covenant")
+          and "1512741580b7239b" not in (ROOT / "manjuel" / "us.py").read_text(encoding="utf-8"),
+          str([x.line() for x in f]))
+    check("   and a record that omits it is terse, not a liar",
+          not [x for x in findings_for([], {"a.us": [dict(BARE)]}) if x.field == "covenant"])
+
+    # ---- reports_to: a seat that exists --------------------------------------
+    f = findings_for([steward], {"a.us": [dict(BARE, reports_to="steward")],
+                                 "s.us": [dict(SEAT, reports_to="nobody")]})
+    check("reports_to must name a seat in agents/: a stranger is DRIFT, a seat is not",
+          [x.where for x in drift(f, "reports_to")] == ["us/seat_steward"]
+          and "no such seat" in drift(f, "reports_to")[0].disk,
+          str([x.line() for x in f]))
+
+    # ---- lands: false everywhere except the operator's path -----------------
+    f = findings_for([], {"a.us": [dict(BARE, id="a", lands=True),
+                                   dict(BARE, id="b", lands=False)]})
+    check("lands true is DRIFT and lands false is not -- BUILDPATH's sentence, asserted at last",
+          [x.where for x in drift(f, "lands")] == ["us/a"]
+          and "operator's path" in drift(f, "lands")[0].disk,
+          str([x.line() for x in f]))
+
+    # ---- mode: derived from Wakes On ------------------------------------------
+    f = findings_for([steward, coder],
+                     {"s.us": [dict(SEAT, mode="racked"),
+                               dict(SEAT, id="seat_expert_coder", mode="spine")]})
+    m = drift(f, "mode")
+    check("mode is DERIVED: a seat with Wakes On is racked, the rest spine; a record saying "
+          "otherwise is DRIFT and the finding says where the mode came from",
+          sorted(x.where for x in m) == ["us/seat_expert_coder", "us/seat_steward"]
+          and all("from Wakes On" in x.disk for x in m), str([x.line() for x in f]))
+    f = findings_for([steward, coder],
+                     {"s.us": [dict(SEAT, mode="spine"),
+                               dict(SEAT, id="seat_expert_coder", mode="racked")]})
+    check("   and the true modes raise nothing", not drift(f, "mode"),
+          str([x.line() for x in f]))
+    check("   and `subagent` -- the word every record carried, which nothing defines -- is DRIFT",
+          drift(findings_for([steward], {"s.us": [dict(SEAT, mode="subagent")]}), "mode") != [])
+
+    # ---- stage: the seat's declared Stage -------------------------------------
+    f = findings_for([Seat("Steward", stage="transform")], {"s.us": [dict(SEAT, stage="gate")]})
+    check("stage is the seat's declared Stage: a record that says another is DRIFT, disk named",
+          [x.where for x in drift(f, "stage")] == ["us/seat_steward"]
+          and drift(f, "stage")[0].disk == "transform", str([x.line() for x in f]))
+    check("   and the declared one raises nothing",
+          not drift(findings_for([Seat("Steward", stage="gate")],
+                                 {"s.us": [dict(SEAT, stage="gate")]}), "stage"))
+
+    # ---- none of the six is LOOSE any more ----------------------------------
+    f = findings_for([steward], {"a.us": [dict(BARE, covenant="1", office="MANJUEL",
+                                               reports_to="steward", lands=False)],
+                                 "s.us": [dict(SEAT, mode="spine", stage="transform")]})
+    # MANIFEST-FIELD FINDINGS ONLY. With a roster that raises nothing, every
+    # raised flag is LOOSE too (section 7's other arm) -- the first cut of
+    # this counted those and redded over a manifest that was clean.
+    check("none of the six is LOOSE now: five are checked here, office is read by vc.go",
+          not [x for x in f if x.level == "LOOSE" and x.where.startswith("us/")],
+          str([x.line() for x in f]))
+    check("   and a field that is neither is still LOOSE -- the check did not go blind",
+          [x.field for x in findings_for([], {"a.us": [dict(BARE, ferrule="deep blue")]})
+           if x.level == "LOOSE" and x.where.startswith("us/")] == ["ferrule"])
+    check("   and READ_ELSEWHERE names office's reader and the needle it reads by",
+          _us.READ_ELSEWHERE.get("office", ("", ""))[0].endswith("vc.go")
+          and "office" in _us.READ_ELSEWHERE["office"][1], str(_us.READ_ELSEWHERE))
+
+    # ---- the report SAYS it, on a line the gate does not count ---------------
+    text = _us.report(ground({"a.us": [dict(BARE, office="MANJUEL")]}), Roster([]), Lib(), set())
+    check("the report says a field is read elsewhere, and names the reader, rather than "
+          "passing it in silence",
+          "read elsewhere: office -> atlas/line/internal/vc/vc.go" in text, text)
+    check("   on a line the gate does not count as a finding",
+          not any(l.startswith(("  GAP ", "  DRIFT ", "  LOOSE ")) and "elsewhere" in l
+                  for l in text.splitlines()), text)
+
+    # ---- THE TABLE IS PROVED, NOT TRUSTED --------------------------------------
+    #
+    # On a ground that has atlas/, the reader's own source is opened and each
+    # needle must still be there; an entry whose reader stopped reading the
+    # field is refused. A core checkout has no atlas/ and skips this, so it is
+    # the operator's terminal's (and the hermetic mirror carries vc.go in).
+    for field, (rel, needle) in sorted(_us.READ_ELSEWHERE.items()):
+        src = ROOT / rel
+        if src.is_file():
+            check(f"READ_ELSEWHERE is proved, not trusted: {rel} still reads {field}",
+                  needle in src.read_text(encoding="utf-8"), f"{needle!r} not in {rel}")
 
 
 def test_loose_is_declared_and_read_by_nothing(reg, lib, book):
@@ -16169,6 +16356,7 @@ def main() -> int:
     test_the_release_gate_runs_on_a_mark(reg, lib, book)
     test_version_control_matches_the_record(reg, lib, book)
     test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book)
+    test_every_manifest_field_is_read_by_something(reg, lib, book)
     test_a_greeting_never_reaches_the_reader(reg, lib, book)
     test_the_deliberation_is_kept_and_never_spoken(reg, lib, book)
     test_the_dedup_keys_on_the_declared_call(reg, lib, book)

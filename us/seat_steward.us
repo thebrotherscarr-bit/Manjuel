@@ -26,7 +26,7 @@ reason the estate can say a seat never touches the filesystem.
     "list_directory",
     "read_file"
   ],
-  "mode": "subagent",
+  "mode": "spine",
   "model": "llama3.2:latest",
   "office": "MANJUEL",
   "permission": {

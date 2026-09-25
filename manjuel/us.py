@@ -60,6 +60,22 @@ REMOTE_SKILLS = {"git_pull", "git_push", "rack_pull"}
 CHECKED_FIELDS = {
     "wall", "writes", "remote", "model", "source", "can_approve",
     "may_call", "permission",
+    # 2026-09-25, his rulings on the six the check above found in itself:
+    "covenant", "reports_to", "lands", "mode", "stage",
+}
+
+# READ ON THE FAR SIDE OF THE SEAM (2026-09-25, his ruling). A field this
+# module does not check, read by a named program in atlas off the same
+# record: the door's `us_to_vc` (line/internal/vc/vc.go) mints a W3C
+# credential from a record and reads these into it. Not LOOSE -- the reader
+# is real, it is just not here. And NOT TRUSTED FROM THIS TABLE: a stroke
+# opens the reader's source on a ground that has atlas/ and refuses an entry
+# whose needle the reader no longer carries. A table nobody checks would be
+# the convention this module exists to refuse.
+READ_ELSEWHERE = {
+    "office": ("atlas/line/internal/vc/vc.go", 'block["office"]'),
+    "covenant": ("atlas/line/internal/vc/vc.go", 'block["covenant"]'),
+    "reports_to": ("atlas/line/internal/vc/vc.go", 'block["reports_to"]'),
 }
 
 # Read by `load` and the finding lines rather than by a check, and carried
@@ -142,6 +158,7 @@ def reconcile(ground, registry, library, installed: set | None = None
     with Ollama running, because main() never asked. `rack_tags()` asks,
     and names the error when the answer is no.
     """
+    from .seating import wake_flags
     from .skills import WRITING_SKILLS
 
     records, findings = load(ground)
@@ -231,12 +248,63 @@ def reconcile(ground, registry, library, installed: set | None = None
         if set(may) & WRITING_SKILLS and not allows_edit:
             findings.append(Finding("DRIFT", f"us/seat_{name}", "permission.edit",
                                     "deny", "cleared for a writing skill"))
+        # `mode` IS DERIVED (2026-09-25, his ruling). The registry already
+        # knows the real distinction: a seat with a `Wakes On` rests off the
+        # spine until it is raised -- racked; the rest sit on it -- spine. All
+        # fourteen records said `subagent`, a word nothing defines, from the
+        # day the manifest was written. The record says which; the
+        # declaration is the source. Absent is terse, not a lie.
+        if "mode" in rec:
+            derived = "racked" if wake_flags(seat) else "spine"
+            if str(rec["mode"]) != derived:
+                findings.append(Finding("DRIFT", f"us/seat_{name}", "mode",
+                                        str(rec["mode"]), f"{derived} (from Wakes On)"))
+        # `stage` is the seat's declared Stage, the same way `model` is.
+        if "stage" in rec and str(rec["stage"]) != seat.stage:
+            findings.append(Finding("DRIFT", f"us/seat_{name}", "stage",
+                                    str(rec["stage"]), seat.stage))
 
     # --- 4. THE INVARIANT. No record, ever, may approve anything --------
     for r in records:
         if r.get("can_approve"):
             findings.append(Finding("DRIFT", f"us/{r['id']}", "can_approve",
                                     "true", "RULE 6: no agent approves"))
+
+    # --- 4b. THE FIELDS EVERY RECORD CARRIES (2026-09-25, his rulings) ---
+    #
+    # Declared on every record and read by nothing here from the day the
+    # manifest was written; found LOOSE the day the third kind existed. TERSE
+    # IS NOT A LIE (BUILDPATH: "red on a record that lies, green on one that
+    # is merely terse"): a record that omits one of these raises nothing; a
+    # record that carries one must carry it truthfully.
+    #
+    # `covenant` is the DID namespace the door mints credentials in
+    # (vc.go: did:atlas:<covenant>:<id>, and the reporting line the same
+    # way). The core has no source for it and gets none: the manifest IS
+    # the source, and the check is that no record drifts from the rest of
+    # it. A constant here would be a 58th copy.
+    cited = [str(r["covenant"]) for r in records if r.get("covenant")]
+    if cited:
+        common = max(sorted(set(cited)), key=cited.count)
+        for r in records:
+            c = r.get("covenant")
+            if c and str(c) != common:
+                findings.append(Finding("DRIFT", f"us/{r['id']}", "covenant", str(c),
+                                        f"the manifest's other {cited.count(common)} "
+                                        f"record(s) cite {common}"))
+    # `reports_to` -- "Manjuel of answerability" (BUILDPATH Layer 8): a seat
+    # that exists, by id. The door builds a DID from it too.
+    for r in records:
+        to = r.get("reports_to")
+        if to and str(to).strip().lower().replace(" ", "_") not in seats_on_disk:
+            findings.append(Finding("DRIFT", f"us/{r['id']}", "reports_to", str(to),
+                                    "no such seat in agents/"))
+    # `lands` -- may it write the operator's record. "False everywhere
+    # except the operator's path" (BUILDPATH Layer 8), asserted at last.
+    for r in records:
+        if r.get("lands"):
+            findings.append(Finding("DRIFT", f"us/{r['id']}", "lands", "true",
+                                    "false everywhere except the operator's path"))
 
     # --- 6. THE FLAGS: a channel nobody feeds is a promise, not a wire ---
     #
@@ -252,7 +320,6 @@ def reconcile(ground, registry, library, installed: set | None = None
     # nothing can raise is the harder one: the vocabulary agrees and the wire is
     # still dead.
     from .pipeline import FLAGS, FLAGS_ENGINE
-    from .seating import wake_flags
 
     known = set(FLAGS)
     # What can actually put a flag on a run: the engine's own, plus every flag
@@ -322,7 +389,7 @@ def reconcile(ground, registry, library, installed: set | None = None
     # against itself: `lands` has been declared and unchecked since the
     # manifest was written, and BUILDPATH says otherwise in as many words.
     for field in sorted({k for r in records for k in r}
-                        - CHECKED_FIELDS - BOOKKEEPING_FIELDS):
+                        - CHECKED_FIELDS - BOOKKEEPING_FIELDS - set(READ_ELSEWHERE)):
         carried = sorted({r["id"] for r in records if field in r})
         findings.append(Finding("LOOSE", f"{US_DIR}/*.us", field,
                                 f"{len(carried)} record(s)",
@@ -358,8 +425,16 @@ def report(ground, registry, library, installed=None) -> str:
     records, _ = load(ground)
     head = (f"the manifest: {len(records)} records in {US_DIR}/, "
             f"{len(findings)} finding(s)")
+    # A field read only on the far side of the seam is SAID, never folded
+    # into a green: the reader is named so a person can go and look. On a
+    # line the gate does not count -- it starts with no level.
+    elsewhere = sorted(k for k in READ_ELSEWHERE if k not in CHECKED_FIELDS
+                       and any(k in r for r in records))
+    tail = (["  read elsewhere: " + ", ".join(f"{k} -> {READ_ELSEWHERE[k][0]}"
+                                              for k in elsewhere)]
+            if elsewhere else [])
     if not findings:
-        return head + "\n  the manifest agrees with the disk."
+        return "\n".join([head, "  the manifest agrees with the disk."] + tail)
     # THREE KINDS SINCE 2026-09-24, and the tally counts all three. It read
     # "N undeclared, the rest drifted" -- so a LOOSE finding would have been
     # reported as a DRIFT in the one line most readers stop at, which is the
@@ -369,7 +444,7 @@ def report(ground, registry, library, installed=None) -> str:
     return "\n".join([head,
                       f"  {gaps} undeclared, {len(findings) - gaps - loose} drifted, "
                       f"{loose} loose", ""]
-                     + [f.line() for f in findings])
+                     + [f.line() for f in findings] + tail)
 
 
 def rack_tags() -> tuple[set | None, str]:

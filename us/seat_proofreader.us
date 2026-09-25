@@ -21,7 +21,7 @@ reason the estate can say a seat never touches the filesystem.
   "id": "seat_proofreader",
   "kind": "agent",
   "may_call": [],
-  "mode": "subagent",
+  "mode": "racked",
   "model": "phi4-mini:latest",
   "office": "MANJUEL",
   "permission": {
