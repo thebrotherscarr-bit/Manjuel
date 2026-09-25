@@ -34,6 +34,8 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+## v0.1.15 — 2026-09-25 10:23 (tag on af50522)
+
 ### The standup's greeting says a plain thing, and its file case reads a small file whole (operator, 2026-09-25)
 
 **"A file"** read `pipelines.md` -- 24.5 KB, over the 12 KB read window, so the front seat got "part 1
