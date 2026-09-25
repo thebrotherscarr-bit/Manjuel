@@ -95,7 +95,7 @@ and restart it -- editing the file on disk does nothing to a running server.
 is the only thing that spawns a Manjuel engine. It holds `127.0.0.1:8090`.
 
     cd atlas\line
-    .\atlas-mcp.exe --http 127.0.0.1:8090 --tenant research=<PATH-TO-YOUR-GROUND> --default-project research --manjuel "python <PATH-TO-YOUR-GROUND>/manjuel.py" *> mcp.log
+    .\atlas-mcp.exe --http 127.0.0.1:8090 --auth --tenant research=<PATH-TO-YOUR-GROUND> --default-project research --manjuel "python <PATH-TO-YOUR-GROUND>/manjuel.py" *> mcp.log
 
 `<PATH-TO-YOUR-GROUND>` is the folder holding `manjuel.py` -- an ABSOLUTE
 path, forward slashes, no trailing slash. This line carried the author's own
@@ -107,12 +107,29 @@ is the one the dashboard uses when you do not name another. `--manjuel` is the
 command the door runs to raise an engine -- `--headless` and `--ground` are
 appended by the door itself, so do not add them.
 
+**`--auth` and the service wire (since 2026-09-25).** With `--auth` the door
+demands a bearer on every call and HOLDS a writing call from anything but the
+glass until you decide it on Version control; without it, RULE 6 is a
+sentence. Two secrets live in `.env` and nowhere else (RULE 7):
+`ATLAS_SERVICE`, the same-computer wire the door and the glass share, and
+`MANJUEL_MCP_ATLAS_KEY`, the bearer the council presents (minted once with
+`auth_key_create` while the door was unarmed; scoped to research and atlas).
+Neither process reads `.env` itself: put the wire in the environment before
+starting each one --
+
+    $env:ATLAS_SERVICE = ((Get-Content .env | Where-Object { $_ -match '^ATLAS_SERVICE=' }) -replace '^ATLAS_SERVICE=','').Trim()
+
+-- and never on a command line, where `ps` reads it. The boot line says which
+state the door is in: `auth=true, holds ARMED` or `auth=false, holds off`.
+
 **Start the glass.** `atlas-webapp` serves the dashboard on `:8091` and talks
 to the door at `127.0.0.1:8090`.
 
     cd atlas\webapp
     .\atlas-webapp.exe *> web.log
 
+    ATLAS_SERVICE=<wire> the door's service wire, from .env as above; the boot
+                         line then says "service wire held"
     ATLAS_WEB_PORT=<n>   serve on another port
     OLLAMA_HOST=<url>    if the rack is not on the default loopback
 

@@ -3534,6 +3534,15 @@ _MCP_DIAL = "MANJUEL_MCP_"
 # skill timeout with nothing to say.
 _MCP_TIMEOUT = 60
 _MCP_LOOPBACK = {"127.0.0.1", "localhost", "::1", "[::1]"}
+# THE KEY RIDES BESIDE THE DIAL (2026-09-25, his ruling: the core learns a key
+# before the door is armed). `MANJUEL_MCP_<NAME>_KEY` in .env is the bearer
+# this ground presents to <NAME> once its door demands one (`--auth`);
+# without it every call is a stranger's and is answered 401. Read where it is
+# needed and nowhere else: never returned to a seat, never in a refusal, and
+# NEVER LISTED AS A SERVER -- `_mcp_servers` skips it by this suffix, or the
+# key would have been dialled as an address and refused by the wall with its
+# value on the way (RULE 7).
+_MCP_KEY = "_KEY"
 
 
 def _mcp_servers() -> dict:
@@ -3542,23 +3551,43 @@ def _mcp_servers() -> dict:
     nothing that returns to a seat carries the url."""
     out = {}
     for k, v in os.environ.items():
-        if k.startswith(_MCP_DIAL) and v.strip():
+        if k.startswith(_MCP_DIAL) and v.strip() and not k.endswith(_MCP_KEY):
             out[k[len(_MCP_DIAL):].strip().lower()] = v.strip()
     return out
 
 
-def _mcp_rpc(url: str, method: str, params: dict) -> tuple[dict | None, str]:
+def _mcp_key(name: str) -> str:
+    """The bearer this ground holds for server `name`, or "". It leaves this
+    function only as a request header."""
+    return (os.environ.get(f"{_MCP_DIAL}{name.upper()}{_MCP_KEY}") or "").strip()
+
+
+def _mcp_hint(name: str, err: str) -> str:
+    """What a 401 from `name` is asking for, in words that name the dial and
+    never a value."""
+    if "401" not in err:
+        return ""
+    return (f" This ground presents no key to {name}: declare "
+            f"{_MCP_DIAL}{name.upper()}{_MCP_KEY} in .env (the door mints one "
+            f"with auth_key_create).")
+
+
+def _mcp_rpc(url: str, method: str, params: dict, key: str = "") -> tuple[dict | None, str]:
     """One JSON-RPC call. Returns (result, error-in-plain-words).
 
     stdlib only: urllib, because a dependency for one POST is a dependency the
-    whole estate then carries (LAW 6, and the atlas law beside it).
+    whole estate then carries (LAW 6, and the atlas law beside it). `key`, when
+    this ground holds one, rides as the bearer and nowhere else.
     """
     import json as _json
     import urllib.error
     import urllib.request
     body = _json.dumps({"jsonrpc": "2.0", "id": 1,
                         "method": method, "params": params}).encode("utf-8")
-    req = urllib.request.Request(url, body, {"Content-Type": "application/json"})
+    headers = {"Content-Type": "application/json"}
+    if key:
+        headers["Authorization"] = "Bearer " + key
+    req = urllib.request.Request(url, body, headers)
     try:
         with urllib.request.urlopen(req, timeout=_MCP_TIMEOUT) as r:
             row = _json.loads(r.read().decode("utf-8", "replace"))
@@ -3666,6 +3695,7 @@ def _mcp_call(env: SkillExecutionEnv, args: dict) -> str:
                 + f". A server is declared as {_MCP_DIAL}{name.upper()} in .env.")
 
     url = servers[name]
+    key = _mcp_key(name)
 
     # THE WALL. RULE 4, enforced here rather than trusted to whoever wrote the
     # dial. A hostname that is not loopback does not get dialled, and the
@@ -3685,7 +3715,7 @@ def _mcp_call(env: SkillExecutionEnv, args: dict) -> str:
     # and matching against THAT is the only way to name a tool without
     # guessing -- and it costs one call to a server already on this machine.
     if not tool and said:
-        listing, lerr = _mcp_rpc(url, "tools/list", {})
+        listing, lerr = _mcp_rpc(url, "tools/list", {}, key=key)
         if not lerr:
             tool = _mcp_named(
                 said, [str(t.get("name")) for t in (listing.get("tools") or [])])
@@ -3694,9 +3724,9 @@ def _mcp_call(env: SkillExecutionEnv, args: dict) -> str:
     # This is why there is one skill here and not two -- discovery is what a
     # refusal already has to say to be worth reading.
     if not tool:
-        result, err = _mcp_rpc(url, "tools/list", {})
+        result, err = _mcp_rpc(url, "tools/list", {}, key=key)
         if err:
-            return f"Refused: {name} could not be read -- {err}."
+            return f"Refused: {name} could not be read -- {err}." + _mcp_hint(name, err)
         tools = result.get("tools") or []
         if not tools:
             return f"{name} carries no tools."
@@ -3744,20 +3774,20 @@ def _mcp_call(env: SkillExecutionEnv, args: dict) -> str:
     from . import __version__ as _ver
     _mcp_rpc(url, "initialize", {
         "protocolVersion": "2025-06-18", "capabilities": {},
-        "clientInfo": {"name": "manjuel", "version": _ver}})
+        "clientInfo": {"name": "manjuel", "version": _ver}}, key=key)
 
     result, err = _mcp_rpc(url, "tools/call",
-                           {"name": tool, "arguments": payload})
+                           {"name": tool, "arguments": payload}, key=key)
     if err:
         # An unknown tool is the commonest miss, so it is answered with the
         # roster rather than with the word "refused" and nothing else.
-        listing, lerr = _mcp_rpc(url, "tools/list", {})
+        listing, lerr = _mcp_rpc(url, "tools/list", {}, key=key)
         if not lerr:
             known = [str(t.get("name")) for t in (listing.get("tools") or [])]
             if tool not in known:
                 return (f"Refused: {name} carries no tool called {tool!r}. "
                         f"It carries: {', '.join(sorted(known))}.")
-        return f"Refused: {name} could not run {tool!r} -- {err}."
+        return f"Refused: {name} could not run {tool!r} -- {err}." + _mcp_hint(name, err)
 
     text = _mcp_text(result)
     # THE TOOL'S OWN WORDS OUTRANK THE ENVELOPE. atlas learned this on

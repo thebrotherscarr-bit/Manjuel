@@ -717,17 +717,18 @@ still lawful; **NEVER FIRED: `version-tag`**; `coder` fired 19 times, never COMP
 
 **What is running.**
 
-    the door    atlas-mcp.exe, pid 61492, :8090, 0.1.7 -- placed and restarted on his
-                word today; carries flow.List's fix; started per RUNBOOK from atlas\line,
-                every stream into mcp.log; NOT --auth
-    the glass   atlas-webapp.exe, pid 78420, :8091 -- the OLD build: it does not carry
-                ATLAS_SERVICE yet (that piece is in atlas 793ea4e, unbuilt)
+    the door    atlas-mcp.exe, pid 95832, :8090, 0.1.8 -- placed and restarted on his
+                word today WITH --auth: holds ARMED, a bearer on every call. The
+                service wire and the council's key come from .env into the
+                environment by the launcher, never a command line; started from
+                atlas\line, every stream into mcp.log
+    the glass   atlas-webapp.exe, pid 34104, :8091, 0.1.8 -- rebuilt today on
+                793ea4e's wire: "service wire held"; sessions kept, PIN unchanged
     NOT OURS    atlas-mcp.exe, pid 23164, from Desktop\Archive -- never touched
 
 **Still open, all his.** Why the Router returns nothing on a long `mcp_call` objective --
 `version-tag` cannot cut until that is understood; core CI's two Windows reds at `#131`/`#132`
-(green at `#135` on the same code; the logs need his sign-in); the `--auth` + `ATLAS_SERVICE`
-restart (rebuild the glass first); the harm list (`inspect`'s refusal prefix -- three silent failures; P0-12/13/14
+(green at `#135` on the same code; the logs need his sign-in); the harm list (`inspect`'s refusal prefix -- three silent failures; P0-12/13/14
 in SPEC_CONTROL_CENTER §12.5, verified live 2026-09-24); `run_start` cannot name a head; the door's
 88 tools have no `.us` records; `REFUSALS.md`'s 28 against 66 `Refused:` sites, unlinked.
 

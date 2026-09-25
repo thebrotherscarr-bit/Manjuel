@@ -34,6 +34,53 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The door is armed: `--auth`, the service wire, and the council's key (operator, 2026-09-25: "go ahead with the --auth + ATLAS_SERVICE restart (the glass rebuilt first)")
+
+Both binaries rebuilt at 0.1.8 and placed -- the glass on `793ea4e`'s wire, the door on `d0bbed5`'s
+issuer -- the door restarted with `--auth`, the glass with `ATLAS_SERVICE`; both secrets read from
+`.env` into each process's environment by its launcher, never on a command line (RULE 7). Measured
+after the restart: a stranger and a wrong key at `tools/call` get `401: a bearer key rides
+Authorization -- strangers get nothing`; the council's key and the wire are answered; the door's
+boot line reads `auth=true, holds ARMED`, the glass's `service wire held`, and its Version control
+page says "Writing calls from anything but this page park here for your decision". RULE 6 was a
+sentence on that page this morning. It is a gate tonight.
+
+- **`RUNBOOK.md`:** the door line carries `--auth`; where the two secrets live and how they reach
+  each process; the glass's boot line.
+- The builds they replaced carried none of today: the door was piece C's 0.1.7, the glass Sep 22's.
+
+### The council carries its key to the door (operator, 2026-09-25: "teach the core a key first, then arm")
+
+The door demands a bearer on every `/rpc` call once it is armed (`--auth`), and the council sent
+none: `_mcp_rpc` built its request with `Content-Type` alone. Arming the door would have answered
+every `mcp_call` 401 -- version-tag's `run` nodes could not have reached it at all. Measured before
+the switch, and put to him.
+
+- **`MANJUEL_MCP_<NAME>_KEY` in .env** is the bearer this ground presents to `<NAME>`, beside the
+  dial `MANJUEL_MCP_<NAME>` it already reads. It rides as `Authorization: Bearer` on every request
+  to that server and nowhere else -- never returned to a seat, never in a refusal. `_mcp_servers`
+  skips the suffix, or the key would have been dialled as an ADDRESS and refused by the loopback wall
+  with its value on the way (RULE 7).
+- **A 401 names the dial to set**, not a value and not the address: "This ground presents no key to
+  atlas: declare MANJUEL_MCP_ATLAS_KEY in .env (the door mints one with auth_key_create)."
+- The key is minted on the unarmed door (`auth_key_create`, scoped to research and atlas) and
+  written straight into .env by a script that prints neither it nor the service secret. With the
+  door armed, the council's WRITES through it wait in the holds for the glass -- RULE 6 as a gate,
+  not a sentence.
+
+No sitting was open. **RESTART REQUIRED:** `manjuel/skills.py` moved -- the REPL does not
+hot-reload it; the door spawns a fresh engine per sitting and picks it up.
+
+- **`manjuel/skills.py`:** `_MCP_KEY`, `_mcp_key`, `_mcp_hint`; `_mcp_rpc(..., key=)`; the five
+  call sites in `mcp_call` pass it; `_mcp_servers` skips `*_KEY`.
+- **`tests/test_manjuel.py`:** `test_the_council_carries_its_key_to_the_door` -- a loopback stub
+  records what the client actually sends: the bearer on every request when a key is declared, no
+  header when none, a door that demands one refusing the keyless council with the dial named and
+  the key in no line, and the same door answering once the key is declared.
+
+**WHAT GOES RED IF THIS COMES UNPLUGGED:** those strokes; three reversals -- a `*_KEY` listed as a
+server (F1), the bearer never sent (F2), a 401 that names nothing (F3).
+
 ### The day's two marks, and what the first end-to-end cut found (2026-09-25)
 
 `v0.1.15` (core, on `af50522`) and `v0.1.8` (atlas, on `56a3078`) are cut and sent, each through

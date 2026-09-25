@@ -12780,6 +12780,104 @@ def test_sitting48_no_router_for_greetings(reg, lib, book):
               for st in ctx3.steps), str([st.output[:40] for st in ctx3.steps]))
 
 
+def test_the_council_carries_its_key_to_the_door(reg, lib, book):
+    """The door demands a bearer once it is armed (`--auth`), and until
+    2026-09-25 the council sent none: every `mcp_call` would have been a
+    stranger's, answered 401, and version-tag's run nodes could not have
+    reached the door at all. His ruling: the core learns its key BEFORE the
+    door is armed.
+
+    A stub on loopback records what the client actually sends; nothing here
+    reaches the real door. RULE 7 in the same stroke: the key is read from
+    `MANJUEL_MCP_<NAME>_KEY`, is never listed as a server, and appears in no
+    line the skill returns -- not the answer, not the refusal.
+    """
+    import http.server as _hs
+    import json as _json
+    import os as _os
+    import threading as _th
+    from manjuel import skills as _sk
+
+    seen: list[dict] = []
+    demand = {"on": False}
+
+    class Stub(_hs.BaseHTTPRequestHandler):
+        def do_POST(self):
+            n = int(self.headers.get("Content-Length") or 0)
+            req = _json.loads(self.rfile.read(n) or b"{}")
+            seen.append({"method": req.get("method"),
+                         "auth": self.headers.get("Authorization") or ""})
+            if demand["on"] and not self.headers.get("Authorization"):
+                out = {"jsonrpc": "2.0", "id": 1, "error": {
+                    "code": -32000,
+                    "message": "401: a bearer key rides Authorization -- strangers get nothing"}}
+            elif req.get("method") == "tools/list":
+                out = {"jsonrpc": "2.0", "id": 1, "result": {"tools": [{"name": "t"}]}}
+            elif req.get("method") == "tools/call":
+                out = {"jsonrpc": "2.0", "id": 1,
+                       "result": {"content": [{"type": "text", "text": "ok from t"}]}}
+            else:
+                out = {"jsonrpc": "2.0", "id": 1, "result": {}}
+            body = _json.dumps(out).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *a):        # the stub says nothing on the console
+            pass
+
+    srv = _hs.HTTPServer(("127.0.0.1", 0), Stub)
+    port = srv.server_address[1]
+    _th.Thread(target=srv.serve_forever, daemon=True).start()
+    call = lambda **kw: _sk._HANDLERS["mcp_call"](None, kw)
+    saved = {k: v for k, v in _os.environ.items() if k.startswith("MANJUEL_MCP_")}
+    for k in saved:
+        del _os.environ[k]
+    SECRET = "atl_0123456789abcdef0123456789abcdef"
+    try:
+        _os.environ["MANJUEL_MCP_LOOP"] = f"http://127.0.0.1:{port}/rpc"
+        _os.environ["MANJUEL_MCP_LOOP_KEY"] = SECRET
+        check("a *_KEY dial is never a server",
+              _sk._mcp_servers() == {"loop": f"http://127.0.0.1:{port}/rpc"},
+              str(sorted(_sk._mcp_servers())))
+        out = call(server="loop", tool="t", content="{}")
+        check("with a key declared, every request to the door carries it as the bearer",
+              seen and all(r["auth"] == "Bearer " + SECRET for r in seen)
+              and {r["method"] for r in seen} >= {"initialize", "tools/call"},
+              str([(r["method"], r["auth"][:14]) for r in seen]))
+        check("   and the answer is the tool's, with the key in none of it",
+              "ok from t" in out and SECRET not in out, out[:120])
+
+        del _os.environ["MANJUEL_MCP_LOOP_KEY"]
+        seen.clear()
+        call(server="loop", tool="t", content="{}")
+        check("with no key declared, no Authorization header is sent at all",
+              seen and all(r["auth"] == "" for r in seen), str(seen))
+
+        demand["on"] = True
+        seen.clear()
+        out = call(server="loop", tool="t", content="{}")
+        check("a door that demands a key refuses the keyless council, and the refusal "
+              "names the dial to set -- never a value, never the address",
+              out.startswith("Refused") and "401" in out and "MANJUEL_MCP_LOOP_KEY" in out
+              and SECRET not in out and f"127.0.0.1:{port}" not in out, out[:200])
+        from manjuel.serve import _FAILED_HEADS
+        check("   and it reads as failed to the wire", out.lstrip().startswith(_FAILED_HEADS))
+
+        _os.environ["MANJUEL_MCP_LOOP_KEY"] = SECRET
+        seen.clear()
+        out = call(server="loop", tool="t", content="{}")
+        check("   and the same door, with the key declared, answers",
+              "ok from t" in out and all(r["auth"] == "Bearer " + SECRET for r in seen), out[:120])
+    finally:
+        srv.shutdown()
+        for k in ("MANJUEL_MCP_LOOP", "MANJUEL_MCP_LOOP_KEY"):
+            _os.environ.pop(k, None)
+        _os.environ.update(saved)
+
+
 def test_the_mcp_skill_never_leaves_this_machine(reg, lib, book):
     """RULE 4 -- the estate is local -- held in code, on the one skill that
     could break it.
@@ -16390,6 +16488,7 @@ def main() -> int:
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)
     test_the_mcp_skill_never_leaves_this_machine(reg, lib, book)
+    test_the_council_carries_its_key_to_the_door(reg, lib, book)
     test_a_skill_cannot_hang_the_repl(reg, lib, book)
     test_native_tool_calling(reg, lib, book)
     test_the_router_is_told_how_not_just_what(reg, lib, book)
