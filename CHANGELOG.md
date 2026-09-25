@@ -34,6 +34,28 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The day's two marks, and what the first end-to-end cut found (2026-09-25)
+
+`v0.1.15` (core, on `af50522`) and `v0.1.8` (atlas, on `56a3078`) are cut and sent, each through
+the glass's Version marks -- BUILDPATH's step 5 -- after the gate read PASSED 15 of 15 on the
+operator's own stamps. `release-gate.yml` ran for the first time, on the core's tag, and passed.
+
+- **`version-tag` could not cut a mark today, and said so honestly.** Fired with the right number,
+  its `read` and `cut` steps each woke the Router (qwen3.5:4b), which thought for 48-63 s and
+  returned NOTHING -- no `mcp_call`. The engine wrote "THE NAMED TOOL DID NOT RUN"; the Steward then
+  narrated a call that never happened; the flow's `proof` eval refused the narration -- NO EVIDENCE
+  -- verdict FAIL, nothing cut. The same Router made the call at 08:11. A seat's fault, caught by a
+  wire; the mark went through the documented button instead. Why a 4B thinking seat returns an
+  empty reply on a long `mcp_call` objective is open.
+- **Core CI was red on both Windows legs at `#131` and `#132`** (pieces A+B, then the bump) and
+  green at `#135` on the same code plus one heading. A faithful reproduction here -- a shallow
+  `core.autocrlf=true` clone with no `atlas/`, the workflow's five steps in order -- was green
+  throughout. The runner's, by every measurement available without its logs, which need a sign-in
+  the hand does not do.
+- **The standup measured the seats, not the harness, three mornings in one:** a 174 s Steward
+  timeout on a 24 KB file, a greeting that woke tools (the case stale since `c103012`), an
+  invented number. Two cases moved (below); the third run was 9/9.
+
 ## v0.1.15 — 2026-09-25 10:23 (tag on af50522)
 
 ### The standup's greeting says a plain thing, and its file case reads a small file whole (operator, 2026-09-25)

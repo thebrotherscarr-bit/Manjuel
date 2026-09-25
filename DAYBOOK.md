@@ -2083,7 +2083,19 @@ door's battery PROVEN; `python -m manjuel.us`: the manifest agrees with the disk
 **PASSED 11 of 11** (record-only) -- the first green since LOOSE was born. The three
 terminal-only checks and the live standup are his run, next, and then the mark.
 
-**Next session** — if not done today: the marks; the `--auth` + `ATLAS_SERVICE` restart with the
-glass rebuilt; the harm list (`inspect`'s prefix, P0-12/13/14); the glass's paused-run seam and
-its `prompt()`; a `ci` check so the ground reads origin's verdict; the two banner literals.
+**Later, at the marks** — three standups to a green one (a Steward timeout, a stale greeting case,
+an invented number; two cases moved). The gate read PASSED 15 of 15 on his stamps. `version-tag`
+fired with the right number and its cut step failed honestly: the Router returned empty replies,
+the Steward narrated a call it never made, the `proof` eval refused it. `v0.1.15` was cut on
+`af50522` at 10:23 and sent through Version marks; `release-gate #1` green on the tag. Atlas:
+eleven pins and seven claim files to 0.1.8, `v0.1.8` cut on `56a3078` at 10:36 and sent,
+`release.yml` fired. Core CI red on the Windows legs at `#131`/`#132`, green at `#135` on the same
+code; a faithful reproduction here was green. At close: core `main@19204a2`, atlas `main@616c4e0`,
+both marks on GitHub, no sitting open.
+
+**Next session** — the `--auth` + `ATLAS_SERVICE` restart with the glass rebuilt; why the Router
+returns nothing on a long `mcp_call` objective (version-tag cannot cut until it is understood); the
+harm list (`inspect`'s prefix, P0-12/13/14); the glass's paused-run seam and its `prompt()`; a
+`ci` check so the ground reads origin's verdict; the two banner literals; the standup's greeting
+case cannot tell an answer from a recital.
 

@@ -682,10 +682,13 @@ names a corrupt spec instead of skipping it. Every check was proved by reversal 
 repositories, and two of the hand's own strokes were caught being conventions (a number typed
 into an assertion; an em-dash stroke that could not tell the fix from the fault) and rebuilt.
 
-**Where the ground stands.** core `main@1a58b93`, atlas `main@e3f9d91`, both level with GitHub,
-nothing unsaved as this block is written. No sitting is open as it is written; `version-tag` is to
-be FIRED right after it on his word -- its first run ever -- which opens an engine on research and
-pauses at its `judge` gate for his hand. Nothing is cut before that gate.
+**Where the ground stands (end of day).** core `main@19204a2` with `v0.1.15` cut on `af50522` and
+sent; atlas `main@616c4e0` with `v0.1.8` cut on `56a3078` and sent; both level with GitHub. No
+sitting is open. `version-tag` was fired twice: once to STOP at its gate (the number was wrong), once
+with the right number -- and its cut step failed honestly: the Router (qwen3.5:4b) returned empty
+replies, the Steward narrated a call it never made, and the flow's `proof` eval refused the
+narration. Both marks went through the glass's Version marks, BUILDPATH's step 5. The gate read
+PASSED 15 of 15 on his stamps before the cut; `release-gate #1` is green on the core's tag.
 
 **What landed and was sent.**
 
@@ -721,8 +724,10 @@ still lawful; **NEVER FIRED: `version-tag`**; `coder` fired 19 times, never COMP
                 ATLAS_SERVICE yet (that piece is in atlas 793ea4e, unbuilt)
     NOT OURS    atlas-mcp.exe, pid 23164, from Desktop\Archive -- never touched
 
-**Still open, all his.** The `--auth` + `ATLAS_SERVICE` restart (rebuild the glass first); the
-`manifest` ruling; the harm list (`inspect`'s refusal prefix -- three silent failures; P0-12/13/14
+**Still open, all his.** Why the Router returns nothing on a long `mcp_call` objective --
+`version-tag` cannot cut until that is understood; core CI's two Windows reds at `#131`/`#132`
+(green at `#135` on the same code; the logs need his sign-in); the `--auth` + `ATLAS_SERVICE`
+restart (rebuild the glass first); the harm list (`inspect`'s refusal prefix -- three silent failures; P0-12/13/14
 in SPEC_CONTROL_CENTER §12.5, verified live 2026-09-24); `run_start` cannot name a head; the door's
 88 tools have no `.us` records; `REFUSALS.md`'s 28 against 66 `Refused:` sites, unlinked.
 
