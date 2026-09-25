@@ -2010,3 +2010,80 @@ door (101868) and the glass (78420) run binaries older than everything above; th
 gate red, each either closed or declared; the `inspect` refusal, which is the sharpest harm on the
 list and is not wire work; the three P0s; and placing the two binaries, which is his allowance and
 his restart.
+
+## Session 15 — 2026-09-25 (Friday), the gate green, version-tag fired, and the pieces that put actuators on the mark
+
+**Standing** — follows session 14, which closed with the gate RED on seven findings and two
+binaries unplaced. Today closed the seven, placed the door twice, and fired the flow that cuts
+marks for the first time.
+
+**Version** — at open: core `main@8fb3b6c`, atlas `main@793ea4e`. At the bump: core
+`main@a007a1f` with the pins moved to 0.1.15 on top, atlas `main@d0bbed5`, both level with
+GitHub. The mark `v0.1.15` is to be cut through `version-tag` after his suite run; atlas `0.1.8`
+the same day, on his word.
+
+**The plan** — his orders, in the order given: "take piece 2 then 3"; "save and send it through
+the dashboard. build the flow.list line. the engine shouldnt hide a corrupt spec, either";
+"write the handoff block for today and fire version-tag" with "where is the prover?"; "time to
+plan out the next few steps, what do you need from me? give me those multiple choice options";
+and then the rulings by card: close what is checkable and ask the rest; make `prose` real; both
+marks the same day; `--auth` next; one source for the covenant and two readers; keep `office`;
+derive `mode`; check `stage`; place the door after the saves; save both now; bump now.
+
+**ONE SITTING OPENED** — 276, at 08:10, for `version-tag`'s first run; closed 08:21 with nothing
+stated as thin or owed. Every edit came before it opened or after it closed (RULE 9).
+
+**What was built** — all saved and sent unless said otherwise.
+- **Pieces 2 and 3 of the release gate** (core `1a58b93`): `tasks`, `pins`, `marks`, `remotes`;
+  `flows` (the terminal's -- `flows/` is in no checkout, his ruling) and `workflows`;
+  `release-gate.yml` in the record; `tagged_file` reading git as UTF-8 after cp1252 flipped 28
+  em-dashed titles.
+- **The engine hides nothing** (atlas `e3f9d91`): `flow.List` returns what it could not read;
+  `flow_list` prints UNREADABLE; a battery leg. The door rebuilt and placed on his allowance.
+- **The day's handoff** (core `027761f`).
+- **Piece A, the six LOOSE closed** (core `a007a1f`): `covenant` agrees across the manifest (no
+  constant), `reports_to` a seat, `lands` false, `mode` derived and re-cited on all fourteen
+  records, `stage` the seat's; `office` named as read by `vc.go` and proved against it.
+- **Piece B, `prose` made real** (same commit): in `FLAGS_RAISED`, raised by the Steward, the
+  carve-out gone, the Proofreader's wire asked end to end.
+- **Piece C, the issuer is the record's own covenant** (atlas `d0bbed5`): `vc.IssuerFor`, the
+  literal gone from `us_to_vc` and `atlas-vc`, `vc`'s first test, a battery leg. The door rebuilt
+  and placed again (pid 31520).
+- **The bump to 0.1.15** (this entry; unsaved as it is written).
+
+**Found**
+- `.gitignore` had ruled `flows/` unread by any prover; a gate check over it was asked, not
+  assumed, and ruled the terminal's. `version-tag` had never been fired: fired, read the marks
+  through the council in 101 s, paused at its own gate, and was STOPPED there on his word -- the
+  number was wrong, as the gate's own text says to stop for.
+- The council's prose over that run invented a refusal the tool never made; the tool block beneath
+  it was exact. The prose is a surface; the block is the wire.
+- The glass forgets a paused run on reload -- no button can reach it afterwards -- and the Tools
+  page collects arguments with a native `prompt()` its own comments forbid elsewhere.
+- Core CI was red on `#126`-`#128` (the `windows/3.10` leg on `#128`) and nothing on the ground
+  knew; `#129` and everything since is green. A prover nobody reads is LOOSE.
+- The covenant is two things: the law's `65118a147dd49ed9`, read at every turn start, and the
+  manifest's `1512741580b7239b`, the DID namespace `vc.go` mints credentials in -- carried as a
+  literal 59 times across two repositories. `office` was ruled struck and then kept, on the
+  measurement that the credential reads it. Still literal: the TUI banner and the glass sidebar.
+- Two of the hand's own strokes were conventions: a `3` typed into an assertion (red the day the
+  list grew) and an em-dash stroke that could not tell the fix from the fault (reversal P1 redded
+  nothing until it was reshaped). The flow-law reconciler stroke had never executed on a mirror,
+  which carries no `atlas/`; proved by carrying the two Go files in. Suites run in parallel red
+  each other through the maker's machine-wide browser count; the proofs are lone runs.
+
+**Drift** — none in the building: every piece was his, by order or by card. One misreading, in
+the hand's own scratch: reversal files read as "0 red" before grep had flushed.
+
+**Rulings** — as listed under the plan. And RULE 9 held: the one sitting was opened after every
+edit and closed before the next.
+
+**At close** — at the bump: strokes **2928/2928**, smoke **72/72**, lone runs on a mirror; the
+door's battery PROVEN; `python -m manjuel.us`: the manifest agrees with the disk; the gate
+**PASSED 11 of 11** (record-only) -- the first green since LOOSE was born. The three
+terminal-only checks and the live standup are his run, next, and then the mark.
+
+**Next session** — if not done today: the marks; the `--auth` + `ATLAS_SERVICE` restart with the
+glass rebuilt; the harm list (`inspect`'s prefix, P0-12/13/14); the glass's paused-run seam and
+its `prompt()`; a `ci` check so the ground reads origin's verdict; the two banner literals.
+

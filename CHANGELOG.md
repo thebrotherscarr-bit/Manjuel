@@ -34,6 +34,31 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The standup's greeting says a plain thing, and its file case reads a small file whole (operator, 2026-09-25)
+
+**"A file"** read `pipelines.md` -- 24.5 KB, over the 12 KB read window, so the front seat got "part 1
+of 2" to summarize -- and three runs the same morning gave three verdicts: a 174 s timeout against a
+150 s bound, a pass at 29 s, and an invented number ("4000", in no tool result -- the guard was
+right). The case proves the `ground_read` path, not a 3B seat's stamina on half a document; it now
+reads `commands.md` (2.5 KB, one part). Ruled the same morning.
+
+
+The greeting case read "morning, what's on the board?" and expected no tool to wake. Since
+`c103012` (2026-09-23) the Steward is told to hand off what the chain can answer -- and the board is
+a question the ground answers -- so two standups the same morning returned two verdicts on the same
+line: once "met" (while the Steward recited its own instructions, which the case does not measure),
+once "a plain turn woke tools". Ruled: the case was the stale side. It now says "good morning", so
+`expect_no_tools` measures what it was written to measure. Open, for another day: the case cannot
+tell an answer from a recital of the prompt.
+
+### The gate before the cut: a mark named but not cut yet is `not here`, not refused (2026-09-25)
+
+The gate's first real pre-cut run (`--check v0.1.15` -- BUILDPATH step 3, which names the version
+BEING cut two steps before it exists) refused on `mark`: "names no commit in this ground". That is
+a third state, not a refusal: `mark` now says `not cut yet -- asked again once it is` and is not
+run, for a mark that does not exist yet; once it does, it runs as before. In CI the tag exists by
+construction, so nothing there changes. Three strokes moved with it.
+
 ### `prose` made real: the Proofreader can wake (operator, 2026-09-25: "make `prose` real: add the flag and a raiser")
 
 `agents/proofreader.md` has said `Wakes On: prose` since the day it was written, and `prose` was in

@@ -408,7 +408,14 @@ def mark(root: Path = ROOT, tag: str = "") -> Check:
     except Exception as exc:
         return Check("mark", False, f"git could not be asked ({exc})")
     if sha.returncode != 0:
-        return Check("mark", False, f"{tag} names no commit in this ground")
+        # NOT CUT YET IS NOT A REFUSAL (2026-09-25, the gate's first real
+        # pre-cut run). BUILDPATH's step 3 names the version BEING cut on his
+        # terminal, two steps before it exists, and the first cut of this
+        # refused it for naming no commit. In CI the tag exists by
+        # construction, so this branch is the terminal's -- and it is a third
+        # state: asked again once the mark is cut.
+        return Check("mark", True, f"{tag} is not cut yet -- asked again once it is",
+                     ran=False)
     commit = sha.stdout.strip()[:9]
     # THE LINE, by either name: a checkout in CI is detached at the mark and
     # carries `origin/main`; his ground carries `main`. Asked in that order,

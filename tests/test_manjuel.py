@@ -11351,10 +11351,17 @@ def test_the_release_gate_runs_on_a_mark(reg, lib, book):
     # terminal, where the gate runs before the mark exists. A stroke that
     # lumped them would stop noticing if one started skipping for the other's
     # reason.
-    named = [c.name for c in _rel.checks(ROOT, record_only=True,
-                                         cutting="v0.0.0-not-a-mark") if not c.ran]
-    check("with a mark named, record-only leaves exactly the terminal-only ones unrun",
-          named == list(_rel.TERMINAL_ONLY), str(named))
+    # AND A MARK NAMED BUT NOT CUT YET is the third reason (2026-09-25): his
+    # terminal names the version being cut two steps before it exists, and
+    # the gate's first real pre-cut run was refused for it. `mark` says which
+    # reason it is not here for; in CI the tag exists and it runs.
+    named_checks = _rel.checks(ROOT, record_only=True, cutting="v0.0.0-not-a-mark")
+    named = [c.name for c in named_checks if not c.ran]
+    check("with a mark named that is not cut yet, record-only leaves the terminal-only "
+          "ones and `mark` unrun, and `mark` says it is not cut yet",
+          sorted(named) == sorted(list(_rel.TERMINAL_ONLY) + ["mark"])
+          and any("not cut yet" in c.why for c in named_checks if c.name == "mark"),
+          str(named))
     bare = [c.name for c in _rel.checks(ROOT, record_only=True) if not c.ran]
     check("with none named, `mark` joins them -- for having nothing to ask, not "
           "for being unaskable",
@@ -11458,8 +11465,10 @@ def test_the_release_gate_runs_on_a_mark(reg, lib, book):
     # THE COUNT IS THE LIST'S LENGTH, NOT A NUMBER (2026-09-25). This said
     # "3" and went red the day `flows` joined -- the same convention the
     # subset stroke above had already been rewritten to refuse.
+    # +1: the mark this stroke names is not cut, so `mark` is not here too.
+    # In CI the tag exists by construction and `mark` runs.
     check("   and it says so out loud rather than counting them as passes",
-          f"NOT ASKED HERE: {len(_rel.TERMINAL_ONLY)}" in out, out[-300:])
+          f"NOT ASKED HERE: {len(_rel.TERMINAL_ONLY) + 1}" in out, out[-300:])
     check("   and it still asks the six, so the command is a gate and not a no-op",
           all(n in out for n in ("buildmap", "law", "manifest", "spec",
                                  "daybook", "handoff")), out[:400])
@@ -11501,8 +11510,9 @@ def test_the_release_gate_runs_on_a_mark(reg, lib, book):
     check("with no mark named, `mark` is NOT RUN rather than quietly passing",
           not c.ran and "nothing to point at" in c.why, c.line())
     c = _rel.mark(ROOT, "v0.0.0-not-a-mark")
-    check("a mark that names no commit is refused, and says so",
-          c.ran and not c.ok and "names no commit" in c.why, c.line())
+    check("a mark named but not cut yet is NOT RUN either, and says which reason "
+          "(BUILDPATH step 3 names the version being cut)",
+          not c.ran and "not cut yet" in c.why, c.line())
     _real = _rel.last_tag(ROOT)
     if _real:
         c = _rel.mark(ROOT, _real)
