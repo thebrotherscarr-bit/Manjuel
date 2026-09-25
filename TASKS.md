@@ -1102,11 +1102,20 @@ Kept so nobody re-derives them and starts.
          voice deadline / temp file / `say --`; dead code (can_call,
          normalize, zscore, `if True:`); three anaphora sets; the fallback
          ESTATE_PIPELINE order
-    [ ]  the release gate in prove.yml; BUILDMAP in index_roots (his call)
+    [x]  the release gate in prove.yml; BUILDMAP in index_roots (his call)
          2026-09-17, on his word: BUILDMAP in index_roots is DONE -- he
          ruled it 2026-09-09 ("index everything"), SPEC 4.1 MET. What stays
          open is the gate in CI: read at every boot since 2026-09-09, and in
          no workflow.
+         BUILT 2026-09-24 and TICKED ON HIS WORD ("tick the tasks box"). It
+         is NOT in prove.yml and that is the finding: two of the nine checks
+         are wrong on an ordinary push (`handoff` wants a block for TODAY,
+         `standup` a live run), so it fires on a MARK --
+         `.github/workflows/release-gate.yml`, `push: tags: v*`. Three more
+         cannot be asked of a checkout at all, because git carries no mtimes;
+         `--record-only` leaves those three unrun and NAMES them, and the
+         list lives in release.py so the workflow declares no subset of its
+         own. Fifteen strokes, four reversals.
     [ ]  CRLF or LF (his call); the client token in old filenames (his call)
          2026-09-17: the client token is in 0 log filenames and 0 indexed
          documents since 2026-09-09 (SPEC 4.5); it still sits in

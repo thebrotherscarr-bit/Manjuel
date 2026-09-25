@@ -469,6 +469,11 @@ moved -> stop.
        `release.yml` and of the `version-tag` flow.
     3  THE SEAL. The gate in CI first -- it is the one that keeps the rest
        honest -- then ESTATE LAW 2 as a gate, then the small-honesty list.
+       THE GATE IS IN CI SINCE 2026-09-24: it fires on a mark rather than on
+       every push, because `handoff` wants a block for TODAY and `standup` a
+       live run, and three of its nine checks cannot be asked of a checkout
+       at all -- git carries no mtimes. Those three are named in the output
+       and stay his terminal's.
        The three rulings inside it (SITTING LAW 5 sealed, the terminator, the
        client token) are his, and are not a hand's to schedule.
     4  THE DOOR AND THE COURT, measured: the court's own numbers first,
@@ -562,7 +567,9 @@ AFTER THE GATE, SENT BY NAME -- and never moved.
        sits on and never the mark's own object; a bare `## Unreleased` stays
        on top, because `tests/release.py` reads that heading.
     3  the gate: `python tests\release.py --check vX.Y.Z` on HIS terminal,
-       PASSED 9 of 9 (the core); `python tests/prove.py --check`, both Go
+       PASSED with every check asked (the core -- it read "9 of 9" here until
+       2026-09-24, when the gate grew to thirteen and the count was a number
+       written into a doc); `python tests/prove.py --check`, both Go
        modules, gofmt and the door's battery (atlas).
     4  send the main line FIRST -- Save, then Send to GitHub on Version
        control -- so the mark's commit is already on origin.

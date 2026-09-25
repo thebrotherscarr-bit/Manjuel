@@ -1,0 +1,86 @@
+# THE RELEASE GATE, ON A MARK.
+#
+# `tests/release.py` has existed since 2026-09-08 and has never run anywhere
+# but by hand. TASKS has carried "the release gate in prove.yml" open since,
+# and BUILDPATH's order calls it "the one that keeps the rest honest". This is
+# that, and it is deliberately NOT in prove.yml.
+#
+# WHY A SEPARATE TRIGGER. Two of the gate's checks are wrong on an
+# ordinary push and right on a mark: `handoff` wants a block for TODAY, and
+# `standup` wants a LIVE standup newer than the newest edit. Asking those of
+# every commit would red the board constantly and teach everyone to ignore it
+# -- a guard that cries wolf is the guard that stops being read.
+#
+# WHY THE SUITES ARE NOT RUN HERE, and this is the load-bearing one. If this
+# job ran the strokes it would stamp `tests/last_run.json` with ITS OWN green,
+# and the gate would then pass on CI's run of the suites rather than on his.
+# The stamp is tracked on purpose: it is the EVIDENCE that the operator proved
+# this ground on his own terminal. prove.yml runs the suites on every push,
+# which is a different question and already answered.
+#
+# WHAT THIS JOB CANNOT ASK, and says so in its own output rather than
+# pretending: `strokes`, `smoke` and `standup` all compare a stamp against the
+# newest file mtime, and git does not carry mtimes -- a checkout gives every
+# file the checkout time, so those three read STALE on a runner by
+# construction. `flows` is the fourth, for another reason: flows/ is gitignored
+# runtime state, so a checkout has no such folder at all (his ruling,
+# 2026-09-25). `--record-only` leaves them unrun and NAMES them; the list
+# lives in `release.py` (TERMINAL_ONLY) so this file declares no subset of its
+# own and the two doors cannot drift into two meanings.
+#
+# IT DOES NOT CUT ANYTHING AND IT DOES NOT SEND ANYTHING. RULE 6: cutting and
+# sending are buttons, and the hand on them is his. This job reads.
+
+name: release-gate
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "the mark to check against (default: the newest)"
+        required: false
+        default: ""
+
+concurrency:
+  group: release-gate-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      # `handoff` asks for `## HANDOFF FOR <today>`, and today is the RUNNER's
+      # today. A runner is UTC; a mark cut in his evening would be tomorrow
+      # here and the check would refuse a record that is whole. Set this to the
+      # operator's own zone -- it is the one line in this file that has to know
+      # where he is.
+      TZ: UTC
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # ALL OF IT, OR `spec` IS A FALSE GREEN. That check reads SPEC.md as
+          # it stood at the previous mark (`git show <tag>:SPEC.md`), so it
+          # needs the tags and the history. At depth 1 there is no previous
+          # mark to compare with, and a comparison with nothing passes.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install (one dependency, plus what the gate imports)
+        run: python -m pip install --upgrade pip && python -m pip install ".[test]"
+
+      - name: The record is whole
+        # The mark's own name is passed so `last_tag` excludes it: on a tag
+        # push the mark already exists, and without this `spec` would fetch
+        # SPEC.md at the tag being cut and compare it with itself.
+        run: |
+          python tests/release.py --check --record-only "${{ inputs.tag || github.ref_name }}"

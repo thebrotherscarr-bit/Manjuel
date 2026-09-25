@@ -2958,11 +2958,28 @@ def test_the_release_gate(reg, lib, book):
           "REFUSED: 1 of 2 -- b" in text and "not cut" in text)
     check("all green says the tag may be cut -- by the operator (RULE 6)",
           "by the operator" in _rel.render([_rel.Check("a", True)]))
+    import re as _re
     src = (ROOT / "tests" / "release.py").read_text(encoding="utf-8")
-    check("the gate writes nothing: no write_text, no open(..., 'w'), no git that touches the index",
-          "write_text(" not in src and "'w'" not in src and '"w"' not in src
-          and "git status" not in src and "git diff" not in src
-          and "git add" not in src)
+    check("the gate writes nothing: no write_text, no open(..., 'w')",
+          "write_text(" not in src and "'w'" not in src and '"w"' not in src)
+    # THE GIT VERBS ARE READ OFF THE CALL SITES, NOT GREPPED OUT OF THE FILE
+    # (2026-09-24). This asked whether the strings "git status", "git diff" and
+    # "git add" appeared ANYWHERE in the source -- and went red the day a
+    # docstring explained WHY `git status` is not used, which is prose quoting
+    # the thing it is explaining. The same fault `contains` was narrowed for on
+    # 2026-09-12, and the second time in one day a doc comment tripped a
+    # substring guard.
+    #
+    # So the argument lists are read instead, and the verbs are a DECLARED SET.
+    # Every one below is read-only and leaves the index alone; `status`, `diff`
+    # and `add` all refresh it, and from a sandbox that is the lock CLAUDE.md
+    # forbids. Adding a verb means adding it here, having thought about that.
+    verbs = set(_re.findall(r'\["git", "([\w-]+)"', src))
+    # `ls-files` joined 2026-09-25 for workflows(): it reads the index and
+    # leaves it alone, and CLAUDE.md names it among the verbs a sandbox may run.
+    allowed = {"tag", "show", "for-each-ref", "rev-parse", "merge-base", "ls-files"}
+    check("every git verb the gate runs is read-only and declared",
+          verbs and verbs <= allowed, f"{sorted(verbs)} vs {sorted(allowed)}")
     check("the gate is in the reading order: SPEC names it, RUNBOOK says when to run it",
           "release.py" in (ROOT / "SPEC.md").read_text(encoding="utf-8")
           and "release.py" in (ROOT / "RUNBOOK.md").read_text(encoding="utf-8"))
@@ -11272,6 +11289,606 @@ def test_the_flags_are_a_closed_set(reg, lib, book):
           not got, str(got))
 
 
+def test_the_release_gate_runs_on_a_mark(reg, lib, book):
+    """THE GATE IN CI (2026-09-24, his word: "integrate that missing CI gate
+    for releases and tag cutting").
+
+    `tests/release.py` has existed since 2026-09-08 and has never run anywhere
+    but by hand; TASKS has carried the line open since, and BUILDPATH calls it
+    "the one that keeps the rest honest". Three things had to be true before it
+    could run on a runner at all, and each is stroked below.
+    """
+    # The path insert is repeated rather than inherited: relying on whichever
+    # earlier stroke happened to add it makes this one pass or fail by ORDER,
+    # and a stroke that depends on its neighbours is a stroke that will go red
+    # for a reason nobody can read.
+    sys.path.insert(0, str(ROOT / "tests"))
+    import release as _rel
+
+    # ---- three checks are the ground's, not a checkout's ----------------
+    #
+    # `strokes`, `smoke` and `standup` compare a stamp against the newest file
+    # mtime, and GIT DOES NOT CARRY MTIMES: a checkout stamps every file with
+    # the checkout time, so those three read STALE on a runner whatever the
+    # truth is. Leaving them out is not a second definition of the gate -- the
+    # list lives here, and the workflow names none of its own.
+    # AND A FOURTH FOR A DIFFERENT REASON (his ruling, 2026-09-25): `flows`
+    # reads flows/, which is gitignored runtime state -- no checkout has that
+    # folder at all, mtimes or no mtimes. It sits in the same tuple so the
+    # workflow still names no subset of its own.
+    check("the checks that need the ground are named in one place",
+          _rel.TERMINAL_ONLY == ("strokes", "smoke", "standup", "flows"),
+          str(_rel.TERMINAL_ONLY))
+    # TWO REASONS A CHECK GOES UNRUN, and they are not the same fact. The three
+    # above cannot be ASKED of a checkout (no mtimes). `mark` has nothing to
+    # ASK ABOUT until a mark is named -- which is the ordinary case on his
+    # terminal, where the gate runs before the mark exists. A stroke that
+    # lumped them would stop noticing if one started skipping for the other's
+    # reason.
+    named = [c.name for c in _rel.checks(ROOT, record_only=True,
+                                         cutting="v0.0.0-not-a-mark") if not c.ran]
+    check("with a mark named, record-only leaves exactly the terminal-only ones unrun",
+          named == list(_rel.TERMINAL_ONLY), str(named))
+    bare = [c.name for c in _rel.checks(ROOT, record_only=True) if not c.ran]
+    check("with none named, `mark` joins them -- for having nothing to ask, not "
+          "for being unaskable",
+          sorted(bare) == sorted(list(_rel.TERMINAL_ONLY) + ["mark"]), str(bare))
+    # A SUBSET, NOT THE WHOLE LIST. This equated the ran set with six names and
+    # went red the day piece 2 added four more -- a stroke that has to be
+    # edited every time the gate grows is a convention wearing a stroke's
+    # clothes. What must never happen is one of the record checks being
+    # DROPPED, or a terminal-only one being RUN; both are asked directly.
+    ran = {c.name for c in _rel.checks(ROOT, record_only=True) if c.ran}
+    check("and it still asks the record checks",
+          {"buildmap", "daybook", "handoff", "law", "manifest", "spec"} <= ran
+          and not (ran & set(_rel.TERMINAL_ONLY)), str(sorted(ran)))
+
+    # ---- NOT RUN IS NOT A PASS -----------------------------------------
+    #
+    # "PASSED 9 of 9" over three checks nobody made is the one sentence this
+    # gate must never print. A skipped check that rendered as a green would be
+    # the estate's own fault -- a guard believed and absent -- committed by the
+    # thing that guards the mark.
+    left = _rel.Check("standup", True, "not asked", ran=False)
+    check("a check that did not run prints as `not here`, never as ok",
+          left.line().strip().startswith("not here"), left.line())
+    out = _rel.render([_rel.Check("law", True, "fine"), left], "v9.9.9")
+    check("and the tally counts it apart, naming it as the operator's",
+          "PASSED: 1 of 1" in out and "NOT ASKED HERE: 1" in out
+          and "standup" in out.split("NOT ASKED HERE")[1], out)
+    check("a render with nothing left out still says the mark may be cut",
+          "may be cut" in _rel.render([_rel.Check("law", True, "fine")]))
+    check("and a render with a check left out does NOT",
+          "may be cut" not in out, out)
+
+    # ---- a mark is never compared with itself ---------------------------
+    #
+    # On his terminal the gate runs BEFORE the mark exists, so the newest tag
+    # is the previous one. In CI on a tag push the mark ALREADY EXISTS -- and
+    # without `cutting`, `spec` fetches SPEC.md at the tag being cut, compares
+    # it with itself, finds nothing changed and PASSES. A gate that passes
+    # because it compared a thing to itself is a green nobody earned.
+    newest = _rel.last_tag(ROOT)
+    check("the newest mark is found at all, or this ground carries none",
+          newest == "" or newest.startswith("v"), newest)
+    if newest:
+        check("and naming it as the one being cut steps back to the one before",
+              _rel.last_tag(ROOT, cutting=newest) != newest,
+              f"{newest} -> {_rel.last_tag(ROOT, cutting=newest)}")
+
+    # ---- the workflow declares no subset of its own ---------------------
+    wf = ROOT / ".github" / "workflows" / "release-gate.yml"
+    check("the gate has a workflow of its own", wf.exists(), str(wf))
+    text = wf.read_text(encoding="utf-8")
+    check("it fires on a mark and not on every push",
+          'tags: ["v*"]' in text and "\n  push:\n    tags:" in text, text[:400])
+    check("it runs the gate with --record-only and the mark's own name",
+          "--record-only" in text and "github.ref_name" in text)
+    check("it fetches the whole history, or `spec` has no mark to compare with",
+          "fetch-depth: 0" in text)
+    # IT MUST NOT RUN THE SUITES. If it did it would stamp last_run.json with
+    # CI's own green, and the gate would then pass on the runner's proof
+    # instead of his -- the stamp is tracked precisely because it is evidence
+    # about HIS terminal.
+    check("it does not run the suites, which would stamp CI's green over his",
+          "test_manjuel.py" not in text and "smoke_cli.py" not in text, text)
+    check("and it neither cuts nor sends anything (RULE 6)",
+          not any(w in text for w in ("git tag", "git push", "gh release")), text)
+
+    # ---- THE WORKFLOW'S COMMAND IS RUN, NOT READ ------------------------
+    #
+    # Everything above reads the YAML as TEXT and calls `checks()` in Python.
+    # Neither asks the only question that decides whether this workflow works:
+    # does the command the YAML actually sends do what the YAML thinks?
+    #
+    # The two ends are joined by a CONVENTION -- the string `--record-only` in
+    # a shell line matching the string `--record-only` in `main`'s argv scan.
+    # Rename the flag in `main` and every stroke above stays green while CI
+    # silently runs the FULL gate on a checkout, where three checks are STALE
+    # by construction: a red board, for a reason nobody can read.
+    #
+    # So the line is lifted out of the workflow and RUN, and its output is read
+    # for the three it must name. This is the wire; the rest is description.
+    import subprocess as _sp
+    import time as _time
+    import re as _re
+    run_line = next((l.strip() for l in text.splitlines()
+                     if "release.py" in l and "--check" in l), "")
+    check("the workflow carries a command that runs the gate",
+          run_line.startswith("python tests/release.py"), run_line)
+    # CUT AT THE PLACEHOLDER, do not filter tokens. `"${{ inputs.tag ||
+    # github.ref_name }}"` splits into five words, four of which look like
+    # ordinary arguments -- a first cut dropped only the one carrying `${{`
+    # and handed the rest to the gate.
+    argv = run_line.split('"${{')[0].split()[1:]
+    check("   and it passes --check and --record-only, nothing else",
+          sorted(argv[1:]) == ["--check", "--record-only"], str(argv))
+    proc = _sp.run([sys.executable] + argv + ["v0.0.0-not-a-mark"],
+                   capture_output=True, text=True, cwd=str(ROOT), timeout=300,
+                   stdin=_sp.DEVNULL)
+    out = " ".join((proc.stdout + proc.stderr).split())
+    check("RUNNING the workflow's own command leaves exactly the three unrun",
+          all(f"not here {n}" in out for n in _rel.TERMINAL_ONLY), out[:400])
+    # THE COUNT IS THE LIST'S LENGTH, NOT A NUMBER (2026-09-25). This said
+    # "3" and went red the day `flows` joined -- the same convention the
+    # subset stroke above had already been rewritten to refuse.
+    check("   and it says so out loud rather than counting them as passes",
+          f"NOT ASKED HERE: {len(_rel.TERMINAL_ONLY)}" in out, out[-300:])
+    check("   and it still asks the six, so the command is a gate and not a no-op",
+          all(n in out for n in ("buildmap", "law", "manifest", "spec",
+                                 "daybook", "handoff")), out[:400])
+
+    # ---- THE MARK IS A TRUE RECORD OF TIME ------------------------------
+    #
+    # His ruling, 2026-09-24. `handoff` asked the RUNNER's clock -- his
+    # terminal's on his terminal, UTC in CI -- so a mark cut in his evening
+    # became tomorrow on the runner and the gate refused a record that was
+    # whole. A mark carries its own day; the gate reads that.
+    #
+    # Proved without a repository by standing in for `mark_date`, so this holds
+    # on a mirror with no .git as well as on the ground.
+    _keep = _rel.mark_date
+    try:
+        _rel.mark_date = lambda root, tag="": "1999-01-01" if tag else ""
+        c = _rel.handoff(ROOT, tag="v9.9.9")
+        check("with a mark named, handoff asks the MARK's day and not the clock",
+              "1999-01-01" in c.why and "the mark's own day" in c.why, c.why)
+        check("   and it refuses when the record carries no block for that day",
+              not c.ok, c.why)
+        c = _rel.handoff(ROOT, tag="")
+        check("with no mark named it falls back to today, as it always did",
+              _time.strftime("%Y-%m-%d") in c.why, c.why)
+    finally:
+        _rel.mark_date = _keep
+    check("a mark nobody named has no day to give",
+          _rel.mark_date(ROOT, "") == "")
+    check("and neither has one this ground does not carry",
+          _rel.mark_date(ROOT, "v0.0.0-not-a-mark") == "")
+
+    # ---- THE MARK POINTS AT A COMMIT THE LINE CARRIES -------------------
+    #
+    # "The gate verifies the tag points at a real commit on the main line"
+    # (his ruling, same day). A mark on a commit the main line does not carry
+    # can publish a history that line has not -- RULE 1's whole argument, and
+    # why the door refuses to SEND such a mark.
+    c = _rel.mark(ROOT, "")
+    check("with no mark named, `mark` is NOT RUN rather than quietly passing",
+          not c.ran and "nothing to point at" in c.why, c.line())
+    c = _rel.mark(ROOT, "v0.0.0-not-a-mark")
+    check("a mark that names no commit is refused, and says so",
+          c.ran and not c.ok and "names no commit" in c.why, c.line())
+    _real = _rel.last_tag(ROOT)
+    if _real:
+        c = _rel.mark(ROOT, _real)
+        check(f"and this ground's newest mark points at a commit the line carries",
+              c.ran and c.ok and "carried by" in c.why, c.line())
+
+    # ---- A MARK THE MAIN LINE DOES NOT CARRY ----------------------------
+    #
+    # FOUND BY REVERSAL, 2026-09-24, and it is the reason reversal is the
+    # method: switching this refusal to a pass left the suite GREEN at
+    # 2862/2862. Every mark on this ground sits on `main`, so the stroke above
+    # only ever walked the happy path -- and the branch it never reached is the
+    # one that stops a mark publishing a history the line does not carry
+    # (RULE 1, and the reason the door refuses to SEND such a mark).
+    #
+    # "A guard proved only on what it refuses might refuse everything"
+    # (CONTRIBUTING). The inverse is what happened here, and it needs a repo
+    # built to fail rather than a ground that happens to pass.
+    if HAVE_GIT:
+        gr = Path(tempfile.mkdtemp())
+        def _g(*a):
+            return _sp.run(["git"] + list(a), cwd=gr, capture_output=True,
+                           text=True, stdin=_sp.DEVNULL)
+        _g("init", "-q", "-b", "main")
+        # A signer, because a machine with no git identity cannot commit --
+        # the same reason maker.py gives its projects one.
+        _g("config", "user.email", "stroke@local")
+        _g("config", "user.name", "stroke")
+        (gr / "a.txt").write_text("one\n", encoding="utf-8")
+        _g("add", "-A"); _g("commit", "-q", "-m", "on the line")
+        _g("tag", "v1.0.0")
+        _g("checkout", "-q", "-b", "sidelong")
+        (gr / "b.txt").write_text("two\n", encoding="utf-8")
+        _g("add", "-A"); _g("commit", "-q", "-m", "off the line")
+        _g("tag", "v2.0.0")
+        _g("checkout", "-q", "main")
+
+        c = _rel.mark(gr, "v1.0.0")
+        check("a mark on the main line is carried, and says which line carries it",
+              c.ran and c.ok and "carried by main" in c.why, c.line())
+        c = _rel.mark(gr, "v2.0.0")
+        check("A MARK OFF THE MAIN LINE IS REFUSED -- sending it would publish "
+              "a history the line has not (RULE 1)",
+              c.ran and not c.ok and "does NOT" in c.why, c.line())
+        check("   and the refusal names the mark and the commit it points at",
+              "v2.0.0" in c.why and len(c.why.split("->")[1].split(",")[0].strip()) >= 7,
+              c.why)
+        # AND THE MARK'S OWN DAY comes off a real mark, not off the clock.
+        check("a real mark hands back its own creatordate",
+              _re.fullmatch(r"\d{4}-\d{2}-\d{2}", _rel.mark_date(gr, "v1.0.0") or ""),
+              repr(_rel.mark_date(gr, "v1.0.0")))
+
+    # THE WORKING TREE IS NOT ASKED, and that is deliberate: the door already
+    # refuses to cut over a dirty tree, and `git status` from a sandbox is the
+    # one command CLAUDE.md forbids outright. A second copy here would buy
+    # nothing and could leave a lock in his ground.
+    src_rel = (ROOT / "tests" / "release.py").read_text(encoding="utf-8")
+    body = src_rel[src_rel.index("def mark("):]
+    body = body[:body.index("\ndef ", 1)]
+    check("`mark` never runs git status, which CLAUDE.md forbids from a sandbox",
+          '"status"' not in body and "git status" not in body.split('"""')[2],
+          body[:200])
+
+
+def test_version_control_matches_the_record(reg, lib, book):
+    """PIECE 2 of the gate (2026-09-24, his word: "make sure the version
+    control is actually matching the spec and vision and tasks"). Four
+    comparisons, each arithmetic: TASKS ticks against the last mark, the two
+    version pins against each other and the mark, the marks git holds against
+    the CHANGELOG headings, and both repositories against their remotes.
+
+    Built on temp repositories rather than this ground, so every branch is
+    walked -- the first cut of `mark` was proved only on the happy path, and a
+    reversal found it (this file, the off-the-line stroke).
+    """
+    import subprocess as _sp
+
+    sys.path.insert(0, str(ROOT / "tests"))
+    import release as _rel
+
+    if not HAVE_GIT:
+        return                    # reported once, in main(); never a crash
+
+    def repo():
+        g = Path(tempfile.mkdtemp())
+        def run(*a):
+            return _sp.run(["git"] + list(a), cwd=g, capture_output=True,
+                           text=True, encoding="utf-8", stdin=_sp.DEVNULL)
+        run("init", "-q", "-b", "main")
+        run("config", "user.email", "stroke@local")
+        run("config", "user.name", "stroke")
+        return g, run
+
+    def commit(run, g, msg, **files):
+        for rel, body in files.items():
+            (g / rel).parent.mkdir(parents=True, exist_ok=True)
+            (g / rel).write_text(body, encoding="utf-8", newline="\n")
+        run("add", "-A")
+        run("commit", "-q", "-m", msg)
+
+    # ---- tasks: a tick since the mark carries a date since the mark -------
+    g, run = repo()
+    T1 = "    [ ]  the first thing \u2014 an em-dash in the title\n"
+    # T2 IS WHAT THE EM-DASH STROKE STANDS ON: ticked BEFORE the mark, dated
+    # before it, with an em-dash in its title. Read from the mark through the
+    # console's locale, that title comes back as three wrong characters, the
+    # working tree's copy is not found at the mark, and a box closed months
+    # ago reads as freshly ticked with a stale date -- and is refused.
+    T2 = "    [x]  a thing ticked long ago — with an em-dash in its title\n         landed 2026-01-01.\n"
+    T3 = "    [ ]  the second thing\n"
+    commit(run, g, "at the mark", **{"TASKS.md": "# Tasks\n\n" + T1 + T2 + T3})
+    run("tag", "-a", "v1.0.0", "-m", "one")
+    # tick T1 WITH a date, T3 with none
+    (g / "TASKS.md").write_text("# Tasks\n\n"
+                                 + T1.replace("[ ]", "[x]") + "         BUILT 2099-01-01.\n"
+                                 + T2 + T3.replace("[ ]", "[x]"),
+                                 encoding="utf-8", newline="\n")
+    c = _rel.tasks(g, tag="v1.0.0")
+    check("a box ticked since the mark with no date is refused, by title",
+          not c.ok and "second thing" in c.why and "1 of 2" in c.why, c.why)
+    check("   and a box ticked long before the mark is not counted at all",
+          "ticked long ago" not in c.why, c.why)
+    # THE EM-DASH IS THE WHOLE STROKE. `git show` hands back UTF-8 bytes; read
+    # with the console's locale they came back as three wrong characters, so a
+    # title with an em-dash never matched itself across the mark and every
+    # such box read as freshly ticked -- 28 of them, on the first real run.
+    # T1 flips here either way; it is T2, unchanged since the mark, that the
+    # locale would count a second time. The first shape of this stroke had the
+    # em-dash on T1 alone and could not tell the two apart -- a reversal found
+    # that (2026-09-25), which is what reversals are for.
+    (g / "TASKS.md").write_text("# Tasks\n\n"
+                                 + T1.replace("[ ]", "[x]") + "         BUILT 2099-01-01.\n"
+                                 + T2 + T3, encoding="utf-8", newline="\n")
+    c = _rel.tasks(g, tag="v1.0.0")
+    check("a title with an em-dash matches itself across the mark (git show is read as UTF-8)",
+          c.ok and "1 ticked" in c.why, c.why)
+    blocks = _rel.task_blocks((g / "TASKS.md").read_text(encoding="utf-8"))
+    check("a block's continuation lines ride with their box, not as boxes of their own",
+          len(blocks) == 3 and "BUILT 2099" in blocks["the first thing \u2014 an em-dash in the title"][1],
+          str(list(blocks)))
+
+    # ---- pins: two files, one number, and the mark's --------------------
+    g, run = repo()
+    commit(run, g, "pinned", **{"pyproject.toml": 'version = "1.0.0"\n',
+                                "manjuel/__init__.py": '__version__ = "1.0.0"\n'})
+    run("tag", "-a", "v1.0.0", "-m", "one")
+    check("two pins that agree pass, and say where they were read",
+          _rel.pins(g).ok and "working tree" in _rel.pins(g).why, _rel.pins(g).why)
+    check("   and read AT the mark they must equal the mark",
+          _rel.pins(g, "v1.0.0").ok and "== v1.0.0" in _rel.pins(g, "v1.0.0").why,
+          _rel.pins(g, "v1.0.0").why)
+    check("   so a mark cut over pins that say another number is refused",
+          not _rel.pins(g, "v2.0.0").ok and "but the mark is v2.0.0" in _rel.pins(g, "v2.0.0").why,
+          _rel.pins(g, "v2.0.0").why)
+    (g / "manjuel" / "__init__.py").write_text('__version__ = "1.0.1"\n', encoding="utf-8")
+    c = _rel.pins(g)
+    check("two pins that disagree are refused, both named",
+          not c.ok and "1.0.0" in c.why and "1.0.1" in c.why, c.why)
+
+    # ---- marks: every mark has a heading; the sha is reported -------------
+    g, run = repo()
+    commit(run, g, "first", **{"CHANGELOG.md": "# C\n\n## Unreleased\n\n## v1.0.0 -- x (tag on 0000000)\n"})
+    run("tag", "-a", "v1.0.0", "-m", "one")
+    c = _rel.marks(g)
+    check("a mark with a heading passes even when the heading names another commit -- "
+          "the sha is REPORTED, because it is written in the commit AFTER the cut and "
+          "older ones are history (LAW 1)",
+          c.ok and "as it stood before" in c.why and "0000000" in c.why, c.why)
+    run("tag", "-a", "v1.1.0", "-m", "two")
+    c = _rel.marks(g)
+    check("a mark with NO heading at all is refused, by name",
+          not c.ok and "v1.1.0" in c.why and "no CHANGELOG heading" in c.why, c.why)
+    check("   and the mark being cut is not asked for a heading it cannot have yet",
+          _rel.marks(g, cutting="v1.1.0").ok, _rel.marks(g, cutting="v1.1.0").why)
+
+    # ---- remotes: level with the remote as last fetched -------------------
+    g, run = repo()
+    commit(run, g, "one", **{"a.txt": "a\n"})
+    head = run("rev-parse", "HEAD").stdout.strip()
+    run("update-ref", "refs/remotes/origin/main", head)
+    (g / "atlas").mkdir()
+    c = _rel.remotes(g)
+    check("a repository level with origin/main passes, and says it is as last fetched",
+          c.ok and "core level" in c.why and "as last fetched" in c.why, c.why)
+    check("   and a folder that is no repository is reported, not refused",
+          "atlas: no repository" in c.why, c.why)
+    commit(run, g, "two", **{"b.txt": "b\n"})
+    c = _rel.remotes(g)
+    check("a HEAD ahead of the remote is refused, both shas named",
+          not c.ok and "HEAD" in c.why and "origin/main" in c.why, c.why)
+
+    # ---- and all four are in the gate -------------------------------------
+    names = [c.name for c in _rel.checks(ROOT, record_only=True)]
+    check("the gate runs tasks, pins, marks, remotes, flows and workflows, after the record checks",
+          names[-6:] == ["tasks", "pins", "marks", "remotes", "flows", "workflows"], str(names))
+
+
+def test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book):
+    """PIECE 3 of the gate. His word, 2026-09-24: "proper provers for the
+    workflows and the system"; his ruling 2026-09-25, asked because .gitignore
+    says flows/ is runtime state no prover reads: the gate reads it on HIS
+    terminal at cut time, and CI says `not here`.
+
+    `flows` restates flow.Validate in Python, because the door is not running
+    where the gate runs -- and a law stated twice is reconciled below against
+    flow.go's own text, or it is two copies and a promise. `workflows` reads
+    the CI workflows in the record: tracked, every python command naming a
+    script in the tree, every flag one that script knows.
+    """
+    import json as _json
+    import re as _re
+    import subprocess as _sp
+
+    sys.path.insert(0, str(ROOT / "tests"))
+    import release as _rel
+
+    def ground(**files):
+        g = Path(tempfile.mkdtemp())
+        (g / "flows").mkdir()
+        for name, body in files.items():
+            (g / "flows" / name).write_text(
+                body if isinstance(body, str) else _json.dumps(body, indent=1),
+                encoding="utf-8")
+        return g
+
+    def spec(nodes=None, edges=None, version=1):
+        return {"name": "probe", "version": version, "budget_s": 60,
+                "nodes": ([{"name": "first", "kind": "ask", "question": "say ready"},
+                           {"name": "check", "kind": "eval", "node": "first", "expected": "ready"}]
+                          if nodes is None else nodes),
+                "edges": ([{"from": "first", "to": "check", "when": "always"}]
+                          if edges is None else edges)}
+
+    def faults(nodes, edges):
+        return _rel.flow_faults(spec(nodes, edges))
+
+    # ---- flows: what the door would list ----------------------------------
+    g = ground(**{"probe.json": spec()})
+    (g / "flows" / "runs.jsonl").write_text(
+        _json.dumps({"kind": "start", "run": "f-1", "flow": "probe", "version": 1}) + "\n"
+        + _json.dumps({"kind": "stopped", "run": "f-1", "verdict": "COMPLETE"}) + "\n",
+        encoding="utf-8")
+    c = _rel.flows(g)
+    check("a valid flow with a COMPLETE run passes, counted, nothing reported",
+          c.ok and c.why.startswith("1 flow the door would list") and "NEVER" not in c.why
+          and "never COMPLETE" not in c.why, c.why)
+    c = _rel.flows(Path(tempfile.mkdtemp()))
+    check("a ground with no flows/ has nothing to judge, and says so",
+          c.ok and "no flows/" in c.why, c.why)
+
+    g = ground(**{"probe.json": spec(), "broken.json": "{not json"})
+    c = _rel.flows(g)
+    check("a corrupt spec is REFUSED BY FILE NAME -- and the door's flow_list names it too, "
+          "since 2026-09-25",
+          not c.ok and "broken.json" in c.why and "UNREADABLE" in c.why, c.why)
+    g = ground(**{"probe.json": spec(nodes=[{"name": "a", "kind": "dance", "question": "x"}], edges=[])})
+    c = _rel.flows(g)
+    check("   and a spec the door would refuse to fire is refused here, by file and fault",
+          not c.ok and "probe.json" in c.why and "'dance'" in c.why, c.why)
+
+    # ---- the flow law, fault by fault -------------------------------------
+    f = faults([{"name": "a", "kind": "dance", "question": "x"}], [])
+    check("an unknown kind is a fault, node and kind named",
+          any("'a'" in x and "'dance'" in x for x in f), str(f))
+    f = faults([{"name": "a", "kind": "ask", "question": "x"},
+                {"name": "b", "kind": "eval", "node": "zz", "expected": "y"}],
+               [{"from": "a", "to": "b"}])
+    check("an eval checking a node that is not there is a fault",
+          any("checks unknown node 'zz'" in x for x in f), str(f))
+    f = faults(None, [])
+    check("two starts are a fault", any("one start, got 2" in x for x in f), str(f))
+    f = faults([{"name": "a", "kind": "ask", "question": "x"}, {"name": "b", "kind": "ask", "question": "y"}],
+               [{"from": "a", "to": "b"}, {"from": "b", "to": "a"}])
+    check("a cycle is a fault", any("cycle" in x for x in f), str(f))
+    f = faults([{"name": "a", "kind": "run", "question": "x"}, {"name": "b", "kind": "ask", "question": "y"}],
+               [{"from": "a", "to": "b", "when": "fail"}])
+    check("a fail-edge leaving a run node is a fault (fail-edges leave eval/gate only)",
+          any("fail-edges leave eval/gate" in x for x in f), str(f))
+    f = faults([{"name": "a", "kind": "ask", "question": "x"},
+                {"name": "b", "kind": "eval", "node": "a", "expected": "x", "retries": 2}],
+               [{"from": "a", "to": "b"}])
+    check("retries on an eval is a fault -- a verdict is not retried",
+          any("not retried" in x for x in f), str(f))
+    f = faults([{"name": "a", "kind": "ask", "question": "about {{objective}}"},
+                {"name": "b", "kind": "run", "question": "use {{out_a}} and {{out_nobody}}"},
+                {"name": "g", "kind": "gate", "title": "read {{out_b}} before deciding"}],
+               [{"from": "a", "to": "b"}, {"from": "b", "to": "g"}])
+    check("{{out_x}} must name a node -- play.Render refuses the missing var only at RUN time, "
+          "on that node, after every node before it has spent its budget",
+          any("out_nobody" in x and "'nobody'" in x for x in f), str(f))
+    check("   while {{out_a}} and {{out_b}} on nodes that exist, and a bare {{input}}, are not faults",
+          not any("out_a" in x or "out_b" in x or "objective" in x for x in f), str(f))
+    check("   and a spec that keeps every rule has no fault at all",
+          _rel.flow_faults(spec()) == [], str(_rel.flow_faults(spec())))
+
+    # ---- what is reported, never gated ------------------------------------
+    old = spec(version=1)
+    old["nodes"][1]["retries"] = 3          # lawful when it was folded; refused today
+    g = ground(**{"probe.json": spec(version=2), "probe.v1.json": old})
+    c = _rel.flows(g)
+    check("a flow nobody has fired passes and is reported NEVER FIRED -- the LOOSE shape, named",
+          c.ok and "NEVER FIRED: probe" in c.why, c.why)
+    check("   a folded version that would not pass today's law is REPORTED, never refused "
+          "(history is not rewritten)",
+          c.ok and "1 folded version" in c.why and "probe.v1.json" in c.why
+          and "would not pass" in c.why, c.why)
+    (g / "flows" / "runs.jsonl").write_text(
+        _json.dumps({"kind": "start", "run": "f-2", "flow": "probe", "version": 2}) + "\n"
+        + _json.dumps({"kind": "stopped", "run": "f-2", "verdict": "FAIL"}) + "\n"
+        + _json.dumps({"kind": "start", "run": "f-3", "flow": "gone", "version": 1}) + "\n",
+        encoding="utf-8")
+    c = _rel.flows(g)
+    check("   a flow fired but never COMPLETE is reported so, by name",
+          c.ok and "never COMPLETE: probe" in c.why and "NEVER FIRED" not in c.why, c.why)
+    check("   and a run of a flow no longer on disk is reported by name",
+          c.ok and "no longer on disk: gone" in c.why, c.why)
+
+    # ---- the law is stated twice, so it is reconciled ---------------------
+    #
+    # flow.go is the law; release.py restates it where the door is not running.
+    # Two statements of one law drift the day one is edited alone, and nothing
+    # but this stroke would say so -- the earliest place the signal can arrive,
+    # because the two repositories share no type and no run-time gate. Only on
+    # a ground that has atlas/; a core checkout has not, and there this is the
+    # operator's terminal's.
+    flow_go = ROOT / "atlas" / "line" / "internal" / "flow" / "flow.go"
+    play_go = ROOT / "atlas" / "line" / "internal" / "play" / "play.go"
+    if flow_go.is_file() and play_go.is_file():
+        src = flow_go.read_text(encoding="utf-8")
+        kinds = set(_re.findall(r'"(\w+)":\s*true',
+                                _re.search(r"var Kinds = map\[string\]bool\{(.*?)\n\}", src, _re.S).group(1)))
+        matches = set(_re.findall(r'"(\w+)":\s*true',
+                                  _re.search(r"var Matches = map\[string\]bool\{([^}]*)\}", src).group(1)))
+        max_retries = int(_re.search(r"const MaxRetries = (\d+)", src).group(1))
+        name_law = _re.search(r"var NameRe = regexp\.MustCompile\(`([^`]+)`\)", src).group(1)
+        var_law = _re.search(r"re := regexp\.MustCompile\(`([^`]+)`\)",
+                             play_go.read_text(encoding="utf-8")).group(1)
+        check("the gate's flow law is flow.go's own: kinds, matches, retries, the name law, "
+              "and play.Render's slot",
+              kinds == _rel.FLOW_KINDS and matches == _rel.FLOW_MATCHES
+              and max_retries == _rel.FLOW_MAX_RETRIES and name_law == _rel.FLOW_NAME.pattern
+              and var_law == _rel.FLOW_VAR.pattern,
+              f"go: {sorted(kinds)} {sorted(matches)} {max_retries} {name_law} {var_law} / "
+              f"py: {sorted(_rel.FLOW_KINDS)} {sorted(_rel.FLOW_MATCHES)} {_rel.FLOW_MAX_RETRIES} "
+              f"{_rel.FLOW_NAME.pattern} {_rel.FLOW_VAR.pattern}")
+
+    # ---- workflows: what CI would run, as written --------------------------
+    def workflow(g, name, body):
+        (g / ".github" / "workflows").mkdir(parents=True, exist_ok=True)
+        (g / ".github" / "workflows" / name).write_text(body, encoding="utf-8")
+
+    GOOD = ("on: push\njobs:\n  j:\n    steps:\n"
+            "      - run: python tests/gate.py --check\n"
+            "      - name: block\n        run: |\n          echo first\n"
+            "          python tests/gate.py --check\n")
+    GATE_PY = 'import sys\nif "--check" in sys.argv:\n    pass\n'
+    g = Path(tempfile.mkdtemp())
+    (g / "tests").mkdir()
+    (g / "tests" / "gate.py").write_text(GATE_PY, encoding="utf-8")
+    workflow(g, "a.yml", GOOD)
+    c = _rel.workflows(g)
+    check("a workflow whose commands name a script in the tree and flags it knows passes; "
+          "both forms of run: are read",
+          c.ok and "2 python commands" in c.why, c.why)
+    check("   and where there is no repository, tracking is not asked and it says so",
+          "not asked" in c.why, c.why)
+    check("   run: and run: | both yield the command",
+          _rel.run_commands(GOOD) == [("tests/gate.py", "--check"), ("tests/gate.py", "--check")],
+          str(_rel.run_commands(GOOD)))
+    workflow(g, "a.yml", GOOD.replace("python tests/gate.py --check\n",
+                                      "python tests/gate.py --check --loud\n", 1))
+    c = _rel.workflows(g)
+    check("a flag the script does not know is refused -- workflow, script and flag named",
+          not c.ok and "a.yml" in c.why and "gate.py" in c.why and "--loud" in c.why, c.why)
+    workflow(g, "a.yml", GOOD.replace("tests/gate.py --check\n", "tests/missing.py --check\n", 1))
+    c = _rel.workflows(g)
+    check("a script that is not in the tree is refused, by workflow and path",
+          not c.ok and "a.yml" in c.why and "tests/missing.py" in c.why
+          and "not in the tree" in c.why, c.why)
+    check("a tree with no workflows is nothing to judge",
+          _rel.workflows(Path(tempfile.mkdtemp())).ok)
+
+    if HAVE_GIT:
+        g = Path(tempfile.mkdtemp())
+
+        def git(*a):
+            return _sp.run(["git"] + list(a), cwd=g, capture_output=True, text=True,
+                           encoding="utf-8", stdin=_sp.DEVNULL)
+        git("init", "-q", "-b", "main")
+        git("config", "user.email", "stroke@local")
+        git("config", "user.name", "stroke")
+        (g / "tests").mkdir()
+        (g / "tests" / "gate.py").write_text(GATE_PY, encoding="utf-8")
+        workflow(g, "a.yml", GOOD)
+        git("add", "-A")
+        git("commit", "-q", "-m", "one")
+        c = _rel.workflows(g)
+        check("a tracked workflow passes, and says each is tracked",
+              c.ok and "each tracked" in c.why, c.why)
+        workflow(g, "b.yml", GOOD)
+        c = _rel.workflows(g)
+        check("an untracked workflow is refused BY NAME -- it is one CI never sees",
+              not c.ok and "b.yml is untracked" in c.why and "a.yml" not in c.why, c.why)
+
+    # ---- and both are in the gate; flows is the terminal's ----------------
+    rec = {c.name: c for c in _rel.checks(ROOT, record_only=True)}
+    check("under --record-only, `flows` is `not here` and says why, and `workflows` is asked",
+          "flows" in rec and not rec["flows"].ran and "checkout" in rec["flows"].why
+          and "workflows" in rec and rec["workflows"].ran,
+          f"{rec['flows'].line()} / {rec['workflows'].line()}")
+
+
 def test_loose_is_declared_and_read_by_nothing(reg, lib, book):
     """LOOSE -- the third finding, beside GAP and DRIFT (2026-09-24, his word:
     "wire first ... loose gates the tag").
@@ -15549,6 +16166,9 @@ def main() -> int:
     test_the_manifest_reconciles_to_the_disk(reg, lib, book)
     test_the_flags_are_a_closed_set(reg, lib, book)
     test_loose_is_declared_and_read_by_nothing(reg, lib, book)
+    test_the_release_gate_runs_on_a_mark(reg, lib, book)
+    test_version_control_matches_the_record(reg, lib, book)
+    test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book)
     test_a_greeting_never_reaches_the_reader(reg, lib, book)
     test_the_deliberation_is_kept_and_never_spoken(reg, lib, book)
     test_the_dedup_keys_on_the_declared_call(reg, lib, book)

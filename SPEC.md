@@ -437,7 +437,10 @@ BUILDPATH, "The order it goes next".
                    finished
 
     THE SEAL -- what 0.1.9 sent to 0.1.10 and v0.1.11 never carried
-      what it is   the release gate in CI; ESTATE LAW 2 as a gate on
+      what it is   the release gate in CI (BUILT 2026-09-24: it fires on a
+                   mark, `.github/workflows/release-gate.yml`, asking the six
+                   checks a checkout can answer and naming the three that are
+                   his terminal's); ESTATE LAW 2 as a gate on
                    `worlds/`; SITTING LAW 5 sealed onto the chain (his act);
                    the terminator ruling (his); the client token's last two
                    places (his); the small-honesty list

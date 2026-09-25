@@ -110,9 +110,13 @@ data/
 # flows/ is the workflow engine's own store -- <home>/flows/<name>.json, the
 # folded version history beside it, and runs.jsonl (line/internal/flow/flow.go,
 # flowsDir). It is written the moment a flow is saved or fired, it is per-ground
-# runtime state exactly as atlas's state/ is, and NO PROVER READS IT: flow's own
+# runtime state exactly as atlas's state/ is, and NO STROKE READS IT: flow's own
 # strokes build their homes with t.TempDir(). Ignored 2026-09-11, the day the
-# builder page came back and the first flow was fired from it.
+# builder page came back and the first flow was fired from it. ONE READER, on
+# his word (2026-09-25): the release gate's `flows` check reads it on the
+# operator's terminal at cut time -- every spec the door would list, judged by
+# the flow law, and the never-fired named -- and says `not here` in CI, where
+# this folder does not exist (tests/release.py, TERMINAL_ONLY).
 flows/
 #
 # state/ is the door's own per-tenant record (the LINE's chat.go: "one

@@ -34,6 +34,218 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The gate reads the flows and the workflows -- piece 3 (operator, 2026-09-24: "proper provers for the workflows and the system"; where the flows half lives ruled 2026-09-25)
+
+Two checks. `flows` is the terminal's; `workflows` is asked everywhere.
+
+- **`flows`** -- every spec in `flows/` the door would list (the name law) parses and passes the
+  flow law; a corrupt one is refused BY FILE NAME, because `flow.List` reads it back and skips it
+  without a word (`atlas/line/internal/flow/flow.go`, `List`: `if err != nil { continue }`) -- a
+  broken flow was invisible until somebody fired it. The engine was taught the same day, on his
+  word ("the engine shouldn't hide a corrupt spec, either"): `flow.List` returns what it could not
+  read and `flow_list` prints it UNREADABLE (atlas). The law is `flow.Validate`'s, restated in
+  Python because the door is not running where the gate runs, plus the one question Validate
+  does not ask: that every `{{out_x}}` names a node. `play.Render` refuses a missing var by name,
+  but at RUN time, on the node that reads it, after every node before it has already spent its
+  budget; the gate asks first and fires nothing. Folded versions that would fail today's law,
+  flows never fired, flows never COMPLETE, runs of flows no longer on disk: REPORTED. On the
+  ground today: 4 flows, each valid; 12 folded versions, each still lawful; **NEVER FIRED:
+  `version-tag`** -- the flow that cuts marks, declared and fired by nothing, which is the LOOSE
+  shape with a name on it; `coder` fired 19 times and never COMPLETE; `wife-test` ran once and is
+  no longer on disk.
+- WHERE IT LIVES, AND WHY THAT WAS HIS TO RULE. `.gitignore` has said since 2026-09-11 that
+  `flows/` is per-ground runtime state and "NO PROVER READS IT". A gate check over it contradicts
+  that sentence, so it was asked rather than assumed. His ruling: the gate reads it on his terminal
+  at cut time and CI says `not here`. So `flows` is the fourth name in `TERMINAL_ONLY`, for a
+  different reason than the three (not mtimes -- no checkout has the folder at all), and the
+  `.gitignore` sentence now names its one reader.
+- **THE LAW IS STATED TWICE, SO IT IS RECONCILED.** `FLOW_KINDS`, `FLOW_MATCHES`,
+  `FLOW_MAX_RETRIES`, `FLOW_NAME` and `FLOW_VAR` are held to `flow.go`'s and `play.go`'s own text
+  by a stroke, on every run of the suite on a ground that has `atlas/` -- his terminal. A core
+  checkout and the hermetic mirror have no `atlas/` and skip it, as CI does, so it was proved on a
+  mirror carrying the two Go files. Two repositories that share no type and no run-time gate: the
+  stroke is the earliest carrier there is, and a reversal that adds a kind to the Python set alone
+  reds it.
+- **`workflows`** -- every `.github/workflows/*.yml` is tracked (an untracked one is one CI never
+  sees), and every `python <script>` in a `run:` step -- both forms, `run: cmd` and `run: |` --
+  names a script in the tree and flags that script's source knows. Record, not run: whether a
+  workflow last went green is GitHub's to say (RULE 4). **Red on the ground today, correctly:**
+  `release-gate.yml is untracked -- CI never sees it`. The file the CI gate was built in has not
+  been saved, and until it is, that gate is a file on one disk. `git ls-files` joins the read-only
+  verbs the suite allows the gate.
+
+No sitting was open. **RESTART REQUIRED:** nothing under `manjuel/` moved.
+
+- **`tests/release.py`:** `flow_faults`, `flows`, `run_commands`, `workflows`; `TERMINAL_ONLY` is
+  four and `FLOWS_WHY` says why; `checks()` runs both after `remotes`; the docstring carries both.
+- **`tests/test_manjuel.py`:** `test_the_flows_and_workflows_are_read_before_a_mark`, twenty-seven strokes
+  on temp grounds and one temp repository -- a corrupt spec, an unlawful one, each fault of the
+  law by name, `{{out_x}}` against a node that is not there, the never-fired, the never-COMPLETE, a
+  folded version that would fail today, the reconciliation with `flow.go`, both forms of `run:`, a
+  flag a script does not know, a script not in the tree, a tracked and an untracked workflow.
+  Four older strokes moved with the gate (the tuple, the two record-only counts, the gate's tail).
+- **`.gitignore`**, **`.github/workflows/release-gate.yml`:** the flows/ note names its reader;
+  the workflow's head names the fourth.
+
+**WHAT GOES RED IF THIS COMES UNPLUGGED:** those twenty-seven strokes, and six reversals -- `flows` no
+longer judging kinds (F1), no longer asking that `{{out_x}}` names a node (F2), the Python law
+drifting from `flow.go` (F3), `workflows` no longer checking flags (W1) or tracking (W2), and
+`flows` run in CI against a folder no checkout has (W3).
+
+### Version control against the record -- piece 2 of the gate (operator, 2026-09-24: "make sure the version control is actually matching the spec and vision and tasks")
+
+Four comparisons, each arithmetic, each reading git through the read-only verbs the suite's
+allowlist permits. Every one was proved on a temp repository built to FAIL, because the first cut
+of `mark` was proved only on a ground that happens to pass and a reversal found the hole.
+
+- **`tasks`** -- every TASKS box ticked since the last mark carries a date on or after that mark.
+  TASKS is his (RULE 10), so nothing here judges WHAT was ticked; what it asks is that a tick has an
+  account of when it closed, because a box closed with nothing written down is the one shape the
+  record cannot later explain. Blocks are read whole -- a `[ ]` line and the indented lines under
+  it -- keyed by the first line, which is how a task keeps its identity as annotations grow beneath
+  it.
+- **`pins`** -- `pyproject.toml` and `manjuel/__init__.py` say one number; read AT the mark's commit
+  when one is named, that number is the mark's. BUILDPATH's first step in cutting a mark is "bump
+  the pins and save them", and the door refuses a number the version file does not agree with at
+  the commit -- this is the same question asked BEFORE the button, where a disagreement costs a
+  line rather than a refused mark.
+- **`marks`** -- every mark git holds has a CHANGELOG heading (GATED); where each heading says its
+  mark sits, against where it actually does, is REPORTED. Two facts off the record decided that
+  split: the heading's sha is written in the commit AFTER the mark is cut (`v0.1.14` sits on
+  `de2420e`; `e88039b`, the next commit, is the one that wrote "tag on de2420e"), so at cut time a
+  mark's own heading cannot yet name it; and four older headings name commits as they stood before
+  the history was rewritten on his word on 2026-09-21, which LAW 1 forbids rewriting to agree.
+  This is the check BUILDPATH's "THE MARKS AS GIT HOLDS THEM" pass did by hand on 2026-09-17, made
+  automatic. On the ground today: six marks, each with a heading; one sits where it says; four name
+  pre-rewrite commits; `0.1.9` names none.
+- **`remotes`** -- core and atlas each level with `origin/main` AS LAST FETCHED, and says so. The
+  gate fetches nothing, so this is "level with what this machine last heard". Unsaved work is the
+  door's refusal at cut time, and `git status` is not run from here (CLAUDE.md).
+
+**A LATENT FAULT FOUND ON THE FIRST RUN, in `tagged_file`.** `subprocess.run(text=True)` decodes
+`git show` with the console's LOCALE, which on this Windows ground is cp1252 -- so every em-dash in
+a file read at a mark came back as three wrong characters. `spec` never noticed, because its regexes
+are ASCII. `tasks` found it in its first minute: **28 titles "flipped"** only because the copy from
+the mark no longer spelled them the way the working tree does. `git show` is UTF-8 now, and a stroke
+holds an em-dashed title to itself across a mark.
+
+No sitting was open. **RESTART REQUIRED:** nothing under `manjuel/` moved.
+
+- **`tests/release.py`:** `task_blocks`, `tasks`, `pins`, `marks`, `remotes`; `tagged_file` decodes
+  UTF-8; `checks()` runs the four after the record checks; the docstring's list carries them.
+- **`tests/test_manjuel.py`:** `test_version_control_matches_the_record`, fifteen strokes on temp
+  repositories -- a tick with no date, a tick from before the mark, the em-dash, a block's
+  continuation lines, agreeing and disagreeing pins, pins against a mark, a mark with and without a
+  heading, the mark being cut not asked for a heading it cannot have, a repository level and one
+  ahead of its remote, a folder that is no repository.
+
+**WHAT GOES RED IF THIS COMES UNPLUGGED:** those fifteen, and four reversals -- `tagged_file`
+back to the locale (three strokes red: the em-dash, and the two that count ticks), `tasks`
+ignoring the date, `marks` gating on the sha (the "reported, not gated" stroke reds), and
+`remotes` passing an unlevel HEAD. The em-dash stroke's FIRST shape redded nothing under that
+first reversal -- it put the em-dash on a box that flips either way, so a mangled title at the
+mark still counted as "1 ticked, dated" -- and was reshaped onto a box ticked BEFORE the mark,
+which is the shape the ground's 28 false flips actually had (2026-09-25). A stroke that cannot
+tell the fix from the fault is a convention, not a wire.
+
+### The release gate fires on a mark (operator, 2026-09-24: "integrate that missing CI gate for releases and tag cutting")
+
+`tests/release.py` has existed since 2026-09-08 and **had never run anywhere but by hand**. TASKS has
+carried the line open since; BUILDPATH's order calls it *"the one that keeps the rest honest"*. It now
+runs on a tag push, and getting it there turned up two faults that would have made it a false green.
+
+**A MARK WAS COMPARED WITH ITSELF.** `spec` reads SPEC.md as it stood at the previous mark. On his
+terminal the gate runs BEFORE the mark exists, so `last_tag` returns the previous one and all is well.
+In CI on a tag push **the mark already exists** — so `last_tag` returned the tag being cut, `spec`
+fetched SPEC.md at that tag, compared it with itself, found nothing changed, and passed. `last_tag`
+now takes `cutting` and steps back. Proved by reversal: remove it and the stroke reads `v0.1.14 ->
+v0.1.14`.
+
+**THREE CHECKS CANNOT BE ASKED OF A CHECKOUT, AND SAY SO RATHER THAN GUESSING.** `strokes`, `smoke`
+and `standup` each compare a stamp against the newest file mtime, and **git does not carry mtimes** —
+a checkout gives every file the checkout time, so all three read STALE on a runner by construction,
+whatever the truth is. That is not a defect to work around; it is this file's own docstring already:
+*THE OPERATOR'S TERMINAL IS THE PROOF*. `--record-only` leaves exactly those three unrun and NAMES
+them, and the list (`TERMINAL_ONLY`) lives in `release.py` so the workflow declares no subset of its
+own and the two doors cannot drift into two meanings.
+
+**NOT RUN IS A THIRD STATE, NEVER A GREEN.** `Check.ran` prints as `not here`, is counted apart, and
+`render` says how many were left to his terminal. *"PASSED 9 of 9"* over three checks nobody made is
+the one sentence a gate must never print — a guard believed and absent, committed by the thing that
+guards the mark.
+
+**AND THE WORKFLOW DOES NOT RUN THE SUITES**, which is the load-bearing decision in it. If it did it
+would stamp `tests/last_run.json` with CI's own green, and the gate would then pass on the runner's
+proof instead of his. The stamp is tracked on purpose: it is the evidence that he proved this ground
+on his own terminal. `prove.yml` runs the suites on every push; that is a different question and is
+already answered.
+
+No sitting was open. **RESTART REQUIRED:** nothing under `manjuel/` moved.
+
+- **`tests/release.py`:** `TERMINAL_ONLY`; `Check.ran` as a third state; `last_tag(cutting=)`;
+  `checks(record_only=)`; `render` counting the unrun apart and withholding "the tag may be cut" when
+  any is.
+- **`.github/workflows/release-gate.yml`:** fires on `push: tags: v*` and on demand, `fetch-depth: 0`
+  so `spec` has a previous mark to read, and `--record-only` with the mark's own name. It cuts
+  nothing and sends nothing (RULE 6). Deliberately NOT in `prove.yml`: `handoff` wants a block for
+  TODAY and `standup` a live run, and asking those of every commit reds the board until nobody reads
+  it.
+- **`tests/test_manjuel.py`:** fifteen strokes, including two that hold the workflow to the list in
+  `release.py` rather than one of its own, and one that asserts it never runs the suites.
+
+**A LINE THIS PIECE CANNOT CLOSE:** TASKS' "the release gate in prove.yml" is his to tick, and every
+previous tick in that file is marked "on his word". The work is done; the box is his.
+
+**WHAT GOES RED IF THIS COMES UNPLUGGED** (RULE 11): the fifteen strokes. Proved by four reversals —
+counting the unrun as passes, dropping `cutting`, adding the suites to the workflow, and firing it on
+every push — each reddening its own stroke and no other. Measured on a mirror: **2846/2846** with the
+repository present, **2845/2845** without it (the tag stroke guards itself where there is no mark).
+
+**AND THE WORKFLOW'S COMMAND IS RUN, NOT READ** (his word, 2026-09-24: "the new file needs to be wired
+in"). Every stroke on it read the YAML as TEXT and called `checks()` in Python — neither asked the only
+question that decides whether the workflow works: does the command the YAML sends do what the YAML
+thinks? The two ends were joined by a CONVENTION, the string `--record-only` in a shell line matching
+the string `--record-only` in `main`'s argv scan. The stroke now lifts that line out of the YAML and
+RUNS it. Proved by reversal: rename the flag in `main` alone and every other stroke stays green while
+the workflow silently runs the FULL gate — `REFUSED: 5 of 9`, a red board for a reason nobody could
+read.
+
+**THE MARK IS A TRUE RECORD OF TIME** (his ruling, answering the TZ note this entry used to carry).
+`handoff` asked the RUNNER's clock — his terminal's on his terminal, UTC in CI — so a mark cut in his
+evening became tomorrow on the runner and the gate refused a record that was whole. A mark carries its
+own day (`creatordate`, which answers for annotated and lightweight marks alike); the gate reads that,
+and falls back to today only when no mark is named. Measured: naming `v0.1.14` finds
+`HANDOFF FOR 2026-09-23 (the mark's own day)`, not today's.
+
+**AND A NEW CHECK, `mark`** (his ruling: the gate "verifies the tag points at a real commit on the main
+line"). A mark on a commit the main line does not carry can publish a history that line has not —
+RULE 1's whole argument, and why the door already refuses to SEND such a mark. With no mark named it is
+NOT RUN rather than quietly passing, which is the ordinary case on his terminal where the gate runs
+before the mark exists. **The working tree is deliberately not asked:** the door refuses to cut over a
+dirty tree already, and `git status` from a sandbox is the one command CLAUDE.md forbids outright — a
+second copy here would buy nothing and could leave a lock in his ground.
+
+**THE REVERSAL FOUND A HOLE IN THE STROKES, WHICH IS WHY IT IS THE METHOD.** Switching `mark`'s refusal
+to a pass left the suite GREEN at 2862/2862: every mark on this ground sits on `main`, so the stroke
+only ever walked the happy path, and the branch it never reached is the one that guards RULE 1.
+CONTRIBUTING says *"a guard proved only on what it refuses might refuse everything"*; this was the
+inverse, and it needed a repository built to FAIL rather than a ground that happens to pass. A hermetic
+temp repo now cuts one mark on `main` and one on a side branch, and the refusal reds when switched off.
+
+Two strokes went red on PROSE rather than on code, both mine, both the same fault: a guard grepping a
+file for a string that its own explanation contains. The RULE 7 assertion asks the import block
+instead; the "gate writes nothing" assertion now reads the git verbs off the ARGUMENT LISTS against a
+declared allowlist — `tag`, `show`, `for-each-ref`, `rev-parse`, `merge-base`, every one read-only,
+where `status`, `diff` and `add` all refresh the index. A verb added without that thought now fails
+loudly.
+
+**WHAT GOES RED IF THIS COMES UNPLUGGED:** the gate's own strokes, and nine reversals across the piece.
+The sharpest is the workflow one — it is the only stroke that would notice the flag being renamed — and
+the most consequential is the off-the-line mark, which no stroke covered until a reversal said so.
+
+Measured on a mirror: **2866/2866, PROVEN**.
+
+
 ### THE WIRE, and LOOSE (operator, 2026-09-24: "wire first, add rule 11, core only, loose gates the tag")
 
 Why: a whole-record review found **four seams the hand built in one week**. Every one was a piece he
