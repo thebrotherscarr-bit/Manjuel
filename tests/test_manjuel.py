@@ -4308,6 +4308,56 @@ def test_sitting_88_paths_and_evidence(reg, lib, book):
           out6.startswith("REFUSED") and "testimony, not tool output" not in out6, out6[:120])
 
 
+def test_a_refusal_reads_as_failed_everywhere(reg, lib, book):
+    """The harm list's first item (2026-09-25). `inspect`'s LAW 9 and SITTING
+    LAW 2 refusals opened with the FILENAME, and the three readers of a failed
+    result -- the tool loop, the recompose, the wire -- each held their own
+    copy of what a failure starts with, one of them a word short. So the two
+    refusals this estate guards hardest were read as results: dropped from the
+    delivery, primed as the drift source, marked failed=false on the wire. One
+    missing prefix, three silent failures. Now there is one source
+    (context.FAILED_HEADS), every reader imports it, and both refusals begin
+    with it. The copies are counted off the source, not believed gone.
+    """
+    import re as _re
+    from manjuel import context as _ctx, serve as _sv, pipeline as _pl, skills as _sk
+    from manjuel.skills import inspect_file
+
+    check("one source: the wire, the tool loop and the skills read the same tuple",
+          _sv._FAILED_HEADS is _ctx.FAILED_HEADS and _pl.FAILED_HEADS is _ctx.FAILED_HEADS
+          and _sk.FAILED_HEADS is _ctx.FAILED_HEADS, str(_sv._FAILED_HEADS))
+    copies = {}
+    for m in ("pipeline", "serve", "skills", "cli", "maker", "boot", "serve"):
+        src = (ROOT / "manjuel" / f"{m}.py").read_text(encoding="utf-8")
+        n = len(_re.findall(r'\(\s*"Error",\s*"Refused"', src))
+        if n:
+            copies[m] = n
+    check("   and no module keeps a private copy of the heads -- read off the source",
+          not copies, str(copies))
+
+    g = Path(tempfile.mkdtemp())
+    ws = g / "agent_workspace"
+    ws.mkdir()
+    (g / "law").mkdir()
+    (ws / ".env").write_text("KEY=1", encoding="utf-8", newline="\n")
+    (ws / "notes.client.md").write_text("client", encoding="utf-8", newline="\n")
+    e = env_for(g, reg, Stub(reply="x"))
+    e.ground = g
+    secret = inspect_file(e, ".env")
+    client = inspect_file(e, "notes.client.md")
+    check("inspect's LAW 9 refusal begins with the word every reader tests for",
+          secret.startswith(_ctx.FAILED_HEADS) and "SECRET" in secret and "LAW 9" in secret
+          and "KEY=1" not in secret, secret)
+    check("   and so does its SITTING LAW 2 refusal",
+          client.startswith(_ctx.FAILED_HEADS) and "CLIENT DATA" in client
+          and "SITTING LAW 2" in client, client)
+    check("   and the filename still follows, so a reader knows which file",
+          ".env" in secret and "notes.client.md" in client, secret[:60] + " / " + client[:60])
+    check("   so the wire marks both failed, and the loop never primes them as a source",
+          secret.lstrip().startswith(_sv._FAILED_HEADS)
+          and client.lstrip().startswith(_pl.FAILED_HEADS))
+
+
 def test_inspect_remember_that_and_the_brief(reg, lib, book):
     """2026-09-07, the operator's "go on all 4": (1) `inspect` -- the facts
     about a file before anything reads it, never its contents; (2)
@@ -16489,6 +16539,7 @@ def main() -> int:
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)
     test_the_mcp_skill_never_leaves_this_machine(reg, lib, book)
     test_the_council_carries_its_key_to_the_door(reg, lib, book)
+    test_a_refusal_reads_as_failed_everywhere(reg, lib, book)
     test_a_skill_cannot_hang_the_repl(reg, lib, book)
     test_native_tool_calling(reg, lib, book)
     test_the_router_is_told_how_not_just_what(reg, lib, book)

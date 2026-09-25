@@ -13,6 +13,19 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 
+# WHAT A FAILED RESULT STARTS WITH -- ONE SOURCE (2026-09-25, the harm list).
+# A skill's refusal is read by three things that must agree: the tool loop
+# (pipeline: never primed as the drift source, and recorded as a failure the
+# moment it happens), the recompose (pipeline: a refusal for a file still not
+# there is waiting on a write), and the wire (serve: `failed` on the
+# tool_result event). Until today each carried its own copy of this tuple, one
+# of them a word short -- and `inspect`'s LAW 9 and SITTING LAW 2 refusals
+# began with the FILENAME, so all three read them as results: dropped from the
+# delivery, primed as the source, marked failed=false. The two gates this
+# estate guards hardest, lost from its own record by a missing prefix.
+FAILED_HEADS = ("Error", "Refused", "Cannot")
+
+
 @dataclass
 class StepResult:
     agent: str

@@ -34,6 +34,34 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### A refusal reads as failed everywhere -- the harm list's first item (operator, 2026-09-25: "then the harm list")
+
+`inspect`'s LAW 9 (a secret by name) and SITTING LAW 2 (client data by tag) refusals opened with the
+FILENAME, and the three readers of a failed result -- the tool loop (never primed as the drift
+source; recorded as a failure the moment it happens), the recompose (a refusal for a file still not
+there is waiting on a write) and the wire (`failed` on the tool_result event) -- each held a private
+copy of what a failure starts with, one of them a word short. So the two refusals this estate guards
+hardest were read as RESULTS: dropped from the delivery, primed as the drift source, marked
+`failed=false`. One missing prefix; three silent failures; found 2026-09-24, closed today.
+
+- **`manjuel/context.py`:** `FAILED_HEADS = ("Error", "Refused", "Cannot")` -- the one source, in
+  the leaf module every reader already imports.
+- **`manjuel/pipeline.py`** (three sites), **`manjuel/serve.py`** (the wire), **`manjuel/skills.py`**
+  (two sites) read it; no module keeps a copy. `serve._FAILED_HEADS` is the same object, so the
+  strokes that import it there still hold.
+- **`inspect_file`:** both refusals begin `Refused:`; the filename follows, so a reader still knows
+  which file, and the record knows it refused.
+- **`tests/test_manjuel.py`:** `test_a_refusal_reads_as_failed_everywhere` -- one source by
+  identity; the copies counted OFF THE SOURCE with a regex, not believed gone; both refusals on a
+  temp ground begin with the word, name their law, carry the filename, and leak nothing.
+
+No sitting was open. **RESTART REQUIRED:** `context.py`, `pipeline.py`, `serve.py` and `skills.py`
+moved.
+
+**WHAT GOES RED IF THIS COMES UNPLUGGED:** those strokes; three reversals -- the secret refusal
+opening with the filename again (G1), the wire keeping a private copy (G2), the tool loop's priming
+site keeping one (G3).
+
 ### The door is armed: `--auth`, the service wire, and the council's key (operator, 2026-09-25: "go ahead with the --auth + ATLAS_SERVICE restart (the glass rebuilt first)")
 
 Both binaries rebuilt at 0.1.8 and placed -- the glass on `793ea4e`'s wire, the door on `d0bbed5`'s

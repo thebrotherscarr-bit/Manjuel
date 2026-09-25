@@ -728,8 +728,8 @@ still lawful; **NEVER FIRED: `version-tag`**; `coder` fired 19 times, never COMP
 
 **Still open, all his.** Why the Router returns nothing on a long `mcp_call` objective --
 `version-tag` cannot cut until that is understood; core CI's two Windows reds at `#131`/`#132`
-(green at `#135` on the same code; the logs need his sign-in); the harm list (`inspect`'s refusal prefix -- three silent failures; P0-12/13/14
-in SPEC_CONTROL_CENTER §12.5, verified live 2026-09-24); `run_start` cannot name a head; the door's
+(green at `#135` on the same code; the logs need his sign-in); the harm list (`inspect`'s refusal prefix closed 2026-09-25; P0-12/13/14
+in SPEC_CONTROL_CENTER §12.5, verified live 2026-09-24, still open); `run_start` cannot name a head; the door's
 88 tools have no `.us` records; `REFUSALS.md`'s 28 against 66 `Refused:` sites, unlinked.
 
 **Proof.** strokes **2907/2907** (a LONE run on a mirror -- see below), smoke **72/72**; the door's

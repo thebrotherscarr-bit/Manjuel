@@ -13,7 +13,7 @@ import re
 import time
 from dataclasses import replace
 
-from .context import RunContext, StepResult, now_block
+from .context import FAILED_HEADS, RunContext, StepResult, now_block
 from . import intent
 from . import seating
 from .registry import Agent, AgentRegistry
@@ -2367,10 +2367,10 @@ def run_pipeline(
                     # would call every honest report of a failure a drift.
                     if (drift is not None
                             and not result.lstrip().startswith(
-                                ("Error", "Refused", "Cannot"))):
+                                FAILED_HEADS)):
                         drift.prime(str(result))
 
-                    if result.lstrip().startswith(("Error", "Refused", "Cannot")):
+                    if result.lstrip().startswith(FAILED_HEADS):
                         # Recorded as a FACT the moment it happens, so the
                         # recompose does not depend on any seat remembering
                         # it (sittings 66 and 68).
@@ -2918,7 +2918,7 @@ def carry_unblocked(result: str, action: str, path, absent: bool,
     if path is None:
         return result
     key = str(path).lower()
-    refused = str(result).lstrip().startswith(("Error", "Refused", "Cannot"))
+    refused = str(result).lstrip().startswith(FAILED_HEADS)
     if refused:
         # Only a refusal for a file that is STILL not there is waiting on a
         # write. Every other refusal -- a bad anchor, a jail, a timeout -- is

@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Callable
 
 from .registry import AgentRegistry
+from .context import FAILED_HEADS
 from .vectors import VectorIndex, load_roots
 from . import memory as _mem
 from . import gitstate as _git
@@ -1828,12 +1829,18 @@ def inspect_file(env, rel: str) -> str:
         shown = path.relative_to(Path(env.ground).resolve()).as_posix()
     except ValueError:
         shown = rel
+    # A REFUSAL BEGINS WITH THE WORD (2026-09-25, the harm list). These two
+    # began with the filename, and every reader of a failed result -- the tool
+    # loop, the recompose, the wire -- tests the first word: so the LAW 9 and
+    # SITTING LAW 2 refusals were dropped from the delivery, primed as the drift
+    # source and marked failed=false. The filename still follows, so a reader
+    # knows which file; the word comes first, so the record knows it refused.
     if is_secret(path.name):
-        return (f"{shown}: a SECRET by name. Nothing about it is read, shown or "
-                f"indexed (LAW 9: keys are silent). Do not read it.")
+        return (f"Refused: {shown} is a SECRET by name. Nothing about it is read, "
+                f"shown or indexed (LAW 9: keys are silent). Do not read it.")
     if is_protected(path):
-        return (f"{shown}: CLIENT DATA by tag. Never read into the chain, never "
-                f"indexed, never cross-referenced (SITTING LAW 2). Do not read it.")
+        return (f"Refused: {shown} is CLIENT DATA by tag. Never read into the chain, "
+                f"never indexed, never cross-referenced (SITTING LAW 2). Do not read it.")
     try:
         st = path.stat()
         with path.open("rb") as fh:
@@ -1872,7 +1879,7 @@ def inspect_file(env, rel: str) -> str:
 def inspect_line(env, rel: str) -> str:
     """One line of the facts, for the stamp a workspace read carries."""
     block = inspect_file(env, rel)
-    if block.startswith(("Error", "Refused")) or "-- inspected" not in block:
+    if block.startswith(FAILED_HEADS) or "-- inspected" not in block:
         return ""
     got = {}
     for l in block.splitlines()[1:]:
@@ -4479,7 +4486,7 @@ class SkillLibrary:
                 # three strings is the worse trade. THE ENGINE DOES NOT NAME
                 # THE DOOR -- a stroke holds exactly that, and it went red on
                 # the first draft of this comment, which named it.
-                if (text.startswith(("Error", "Refused", "Cannot"))
+                if (text.startswith(FAILED_HEADS)
                         or text.startswith(f"Skill '{s.keyword}' raised")):
                     self.last_hook_fault = (s.keyword, text[:200])
             except Exception as exc:     # belt and braces; _call rarely lets one out

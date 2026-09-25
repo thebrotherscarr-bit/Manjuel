@@ -155,9 +155,10 @@ TERMINAL = ("delivery", "refused", "aborted", "cancelled", "unreachable",
 IDLE_CLOSE = 30 * 60
 
 # The first characters of a tool result that mean it failed -- the
-# pipeline's own test (pipeline.py, the tool loop), repeated here so the
-# event says what the record will say.
-_FAILED_HEADS = ("Error", "Refused", "Cannot")
+# pipeline's own test (pipeline.py, the tool loop) -- READ FROM THE ONE SOURCE
+# since 2026-09-25, not repeated, so the event says what the record says by
+# construction rather than by a copy kept in step.
+from .context import FAILED_HEADS as _FAILED_HEADS  # noqa: E402
 _RESULT_HEAD_CHARS = 400
 
 
