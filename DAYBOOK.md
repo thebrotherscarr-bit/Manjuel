@@ -2093,9 +2093,21 @@ eleven pins and seven claim files to 0.1.8, `v0.1.8` cut on `56a3078` at 10:36 a
 code; a faithful reproduction here was green. At close: core `main@19204a2`, atlas `main@616c4e0`,
 both marks on GitHub, no sitting open.
 
-**Next session** — the `--auth` + `ATLAS_SERVICE` restart with the glass rebuilt; why the Router
-returns nothing on a long `mcp_call` objective (version-tag cannot cut until it is understood); the
-harm list (`inspect`'s prefix, P0-12/13/14); the glass's paused-run seam and its `prompt()`; a
-`ci` check so the ground reads origin's verdict; the two banner literals; the standup's greeting
-case cannot tell an answer from a recital.
+**Later, the afternoon** — his order: the `--auth` restart with the glass rebuilt first, then the
+harm list. Measured before the switch: the council's own door client sent no bearer, so arming
+would have refused every `mcp_call` 401; he ruled the core learns its key first. The key was
+minted on the unarmed door and written into `.env` with the service secret, neither printed; both
+binaries rebuilt at 0.1.8 and placed; the door up with `--auth` (`holds ARMED`), the glass with
+the wire (`service wire held`); a stranger gets 401, the council's key and the wire are answered.
+Then the harm list, each piece proved by reversal: `inspect`'s two refusals lead with the word and
+the failed heads have one source (`context.FAILED_HEADS`); P0-12 -- `project?` is optional at
+last, one rule, exported; P0-13 -- RBAC judges the transport on every call and says when a tenant
+is open; P0-14 -- the absence test that never fired now measures the invariant that is true: a
+forbidden verb is never free. The door placed a third time, carrying all three. Core CI red on
+`#131`/`#132` (Windows legs) and green from `#135`; a faithful reproduction here was green.
+
+**Next session** — why the Router returns nothing on a long `mcp_call` objective (version-tag
+cannot cut until it is understood); the RBAC role model (kinds vs tool names) is a ruling; the
+glass's paused-run seam and its `prompt()`; a `ci` check so the ground reads origin's verdict; the
+two banner literals; the standup's greeting case cannot tell an answer from a recital.
 

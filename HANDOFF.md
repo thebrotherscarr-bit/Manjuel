@@ -717,19 +717,23 @@ still lawful; **NEVER FIRED: `version-tag`**; `coder` fired 19 times, never COMP
 
 **What is running.**
 
-    the door    atlas-mcp.exe, pid 95832, :8090, 0.1.8 -- placed and restarted on his
-                word today WITH --auth: holds ARMED, a bearer on every call. The
-                service wire and the council's key come from .env into the
-                environment by the launcher, never a command line; started from
-                atlas\line, every stream into mcp.log
+    the door    atlas-mcp.exe, pid 81492, :8090, 0.1.8 -- placed three times today
+                on his word, the last carrying P0-12/13/14, WITH --auth: holds
+                ARMED, a bearer on every call, and the boot line names which
+                tenant is in RBAC open mode (research). The service wire and the
+                council's key come from .env into the environment by the
+                launcher, never a command line; started from atlas\line, every
+                stream into mcp.log
     the glass   atlas-webapp.exe, pid 34104, :8091, 0.1.8 -- rebuilt today on
                 793ea4e's wire: "service wire held"; sessions kept, PIN unchanged
     NOT OURS    atlas-mcp.exe, pid 23164, from Desktop\Archive -- never touched
 
 **Still open, all his.** Why the Router returns nothing on a long `mcp_call` objective --
 `version-tag` cannot cut until that is understood; core CI's two Windows reds at `#131`/`#132`
-(green at `#135` on the same code; the logs need his sign-in); the harm list (`inspect`'s refusal prefix closed 2026-09-25; P0-12/13/14
-in SPEC_CONTROL_CENTER §12.5, verified live 2026-09-24, still open); `run_start` cannot name a head; the door's
+(green at `#135` on the same code; the logs need his sign-in); the harm list is CLOSED (`inspect`'s refusal prefix and P0-12/13/14, all
+2026-09-25); found on the way and not built: the shipped RBAC roles carry
+permissions by KIND while `rbac.Can` looks up TOOL NAMES, so assigning a
+shipped role to a key denies it every tool -- a design ruling; `run_start` cannot name a head; the door's
 88 tools have no `.us` records; `REFUSALS.md`'s 28 against 66 `Refused:` sites, unlinked.
 
 **Proof.** strokes **2907/2907** (a LONE run on a mirror -- see below), smoke **72/72**; the door's
