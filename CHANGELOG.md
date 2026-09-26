@@ -34,6 +34,61 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The Router's empty replies: a spelled-out door call is written by the engine, and a blank is never delivered (operator, 2026-09-26: "engine writes it, Router reads")
+
+WHAT FAILED. `version-tag`'s two `run` nodes on 2026-09-25 -- 10:03 the list, 10:05 the cut -- handed
+the Router a question that already carried the server, the tool and the exact JSON, and asked a 4B
+model to write the call. It thought 63 s and 48 s and emitted neither words nor a call. The glass
+streams every seat, and the streaming-with-tools path was the ONE way out of `runtime.chat` that
+handed back "" over a seat that had thought (the other three salvage and mark the deliberation), so
+the record said "Router returned an empty reply", the executor is never pressed, the proof node
+failed, and the mark was cut by hand on Version marks. Replayed six times the same question never
+went blank; once in three streaming replays the Router wrote the call as BARE JSON with no server
+named, which `mcp_call` would have answered with the roster instead of the cut. The rack's own log
+(read once, on his allowance, 10:03-10:06 only) shows both requests as ordinary 200s at 1m3s and
+47.9s with four runners loaded: the model stopped, not the wire. NOT THE CAUSE: the 900-token
+budget -- both deliberations stopped well under it.
+
+- **`manjuel/skills.py`:** `mcp_spelled_out(text)` -- a declared server named as a whole word AND a
+  JSON object; `_mcp_braced` is the one reader of the `{...}` a sentence carries, shared with
+  `_mcp_call`. The tool is not judged there: the skill resolves it against the door's roster, as it
+  always has, and a sentence naming none is answered with that roster.
+- **`manjuel/pipeline.py`:** `decided_call` gains its third clause -- a spelled-out `mcp_call` the
+  OBJECTIVE named is decided; the engine writes `<action>mcp_call</action>` with no content and the
+  skill reads the objective, so the door receives exactly the arguments the flow spelled. The Router
+  sits once to read the result (sitting 91's shape). `mcp_call` is not in `WRITING_SKILLS`; the
+  door's own side (holds, RBAC, `git_tag`'s refusals) and the flow's gate before `cut` stand.
+- **`manjuel/runtime.py`:** the streaming-with-tools path salvages the deliberation like the other
+  three; a seat that thought and emitted nothing comes back marked `(deliberation only ...)`, never
+  as "".
+- **`tests/test_manjuel.py`:** `test_a_spelled_out_door_call_is_written_by_the_engine` (33 strokes)
+  -- the reading both ways; decided only when the objective named the tool; THE FLOW SPEC ITSELF
+  READ: every `run` question in `flows/version-tag.json` must be spelled out or it goes red (the
+  terminal's half; `flows/` is in no checkout); end to end through a stub door on loopback with a
+  Router that would have written bare JSON: ONE `tools/call` to `git_tag` with exactly the flow's
+  arguments, the Router asked once to read, no NAMED TOOL DID NOT RUN stamp; a question with no JSON
+  still asked of the Router; the blank on the streaming path, and through the glass's own path in
+  the pipeline: deliberation in the record, no "empty reply", the Router still never pressed.
+  Reversals on the mirror: R1 the clause struck -- 6 red (the door receives nothing it was asked;
+  the Router is asked to write); R2 the salvage struck -- 2 red (the blank is back, "returned an
+  empty reply" with it); R3 the cut question no longer names the server -- 1 red, the spec line.
+- **`SPEC.md` 4.2:** the third clause recorded. **`BUILDMAP.md`** regenerated.
+
+FOUND AND NOT BUILT (his ruling: note it in the handoff): the Router's prompt is 7,526 tokens of an
+8,192 window -- the 43 tool schemas are most of it -- leaving about 660 for thinking and the call
+while `Max Tokens` says 900. Yesterday's failures stopped well under that room.
+
+No sitting was open (281 ended 10:25). **RESTART REQUIRED**, in the sense the door reads it:
+`runtime.py`, `skills.py` and `pipeline.py` moved, so an engine already open would be running old
+code (the glass's Stale line says so). None is open -- the door opens a fresh engine per sitting
+(`engine.Open`) and sitting 281's process is gone -- so the next engine the door opens carries the
+fix, and `version-tag` can be fired again as it stands.
+
+**WHAT GOES RED IF THIS COMES UNPLUGGED:** the stroke above, three ways, each measured: strike the
+clause and the door receives nothing the flow asked (R1); reword a `run` question in
+`flows/version-tag.json` so the server or the JSON is gone and the spec half reds (R3); strike the
+salvage and the streaming path hands back "" again (R2).
+
 ### A refusal reads as failed everywhere -- the harm list's first item (operator, 2026-09-25: "then the harm list")
 
 `inspect`'s LAW 9 (a secret by name) and SITTING LAW 2 (client data by tag) refusals opened with the

@@ -14,7 +14,7 @@ RUN THE SMOKE SUITE, not just the strokes. It was RED at 34/50 from 14e2711
 to 2026-09-02 because its StubRuntime had not been moved with pipeline.py,
 and nothing noticed: the strokes were green the whole time.
 
-**START AT `## HANDOFF FOR 2026-09-25`** (search for it — the day blocks
+**START AT `## HANDOFF FOR 2026-09-26`** (search for it — the day blocks
 stack newest first above `## Open`). CHANGELOG.md carries the versions;
 DAYBOOK.md's last entry carries the day's intent. Everything between here and
 there is standing reference that has not moved.
@@ -669,6 +669,49 @@ dropped by operator ruling 2026-09-01 — see the fix log.
     5. CHECK THE DISK BEFORE THE TRANSCRIPT. A seat's account of what it did
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
+
+## HANDOFF FOR 2026-09-26 — read this before anything below it
+
+**THE DAY'S FIRST PIECE: THE ROUTER'S EMPTY REPLIES ARE UNDERSTOOD AND CLOSED.** Yesterday's open
+line -- why the Router returns nothing on a long `mcp_call` objective -- has its answer in the record
+and in the rack's log (read once, 10:03-10:06, on his allowance): `version-tag`'s two `run` nodes
+handed the Router a question that already carried the server, the tool and the exact JSON;
+qwen3.5:4b thought 63 s and 48 s, emitted neither words nor a call, and the rack answered both
+requests 200 -- the model stopped, not the wire. The glass streams every seat, and the
+streaming-with-tools path was the one way out of `runtime.chat` that handed back "" over a seat that
+had thought, so the record said "empty reply" and the flow's proof failed. Not the cause: the
+900-token budget. His ruling by card: the engine writes a spelled-out door call and the Router reads
+the result (`decided_call`'s third clause, `skills.mcp_spelled_out`), and the blank is salvaged
+like the other three paths. CHANGELOG Unreleased carries the whole account.
+
+**Where the ground stands.** core `main@06ffac9` plus this piece UNSAVED as this block is written
+-- `manjuel/runtime.py`, `manjuel/skills.py`, `manjuel/pipeline.py`, `tests/test_manjuel.py`,
+`SPEC.md`, `CHANGELOG.md`, `BUILDMAP.md`, this file -- to be saved and sent through the glass's
+Version control on his word. **RESTART REQUIRED** only for an engine already open, and none is: the
+door opens a fresh engine per sitting (`engine.Open`) and sitting 281's process is gone, so the next
+engine carries this code and `version-tag` can be fired as it stands. The door (0.1.8, `--auth`) is
+untouched by this piece. atlas `main@ef5d0c5`, level
+with GitHub, its `v0.1.8` release still a DRAFT awaiting his publish. No sitting is open.
+
+**Found and not built (his ruling: note it here).** The Router's prompt is 7,526 tokens of an 8,192
+window -- the 43 tool schemas are most of it -- leaving about 660 tokens for thinking and the call,
+while `agents/router.md` says `Max Tokens: 900`: the budget cannot be spent inside the window as it
+stands. Yesterday's failures stopped well under that room. Two shapes if he wants it: widen the
+window (VRAM, measured before and after) or show the Router only the shortlist's schemas plus the
+named one (a piece of its own, with a stroke).
+
+**Still open, all his.** The RBAC role model -- the shipped `DefaultPolicy` roles carry permissions
+by KIND while `rbac.Can` looks up TOOL NAMES, so a shipped role assigned to a key denies it every
+tool; the second half of his last order, next; core CI's two Windows reds at `#131`/`#132` (green at
+`#135`; the logs need his sign-in); `run_start` cannot name a head; the door's 88 tools have no `.us`
+records; `REFUSALS.md`'s 28 against 66 `Refused:` sites, unlinked; the glass forgets a paused run on
+reload and its Tools page's `prompt()`; a `ci` check so the ground reads origin's verdict; the two
+banner literals; the standup's greeting case cannot tell an answer from a recital.
+
+**Proof.** strokes **2976/2976** and smoke **72/72**, lone runs on a mirror with `flow.go`,
+`play.go` and `vc.go` carried in; the new stroke alone 36/36; reversals R1, R2, R3 red 6, 2 and 1 of
+their own lines and the restored mirror is green. The live proof -- `version-tag` fired again -- is
+his, after the restart.
 
 ## HANDOFF FOR 2026-09-25 — read this before anything below it
 

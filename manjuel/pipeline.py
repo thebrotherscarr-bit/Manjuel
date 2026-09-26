@@ -26,7 +26,7 @@ from .skills import (GATE_MARK, MESSAGE_IS_THE_OPERATORS, REVIEW_ONLY_SKILLS,
                      SkillExecutionEnv, SkillLibrary, extract_tool_call,
                      args_from_words as skills_args_from_words,
                      _inside_ground as skills_inside_ground, declared_path,
-                     operator_message, unjail)
+                     mcp_spelled_out, operator_message, unjail)
 from .drift import DriftChecker
 from . import ink
 from . import lawgate
@@ -1140,8 +1140,9 @@ def decided_call(ctx: RunContext, skills: SkillLibrary | None = None) -> str:
 
     Decided means the tool is named AND there is nothing left to choose:
     an argument checked on disk -- a folder that exists (names_a_folder),
-    a file that exists (named_file_ok), the operator's own words -- or NO
-    ARGUMENT AT ALL.
+    a file that exists (named_file_ok), the operator's own words -- NO
+    ARGUMENT AT ALL, or a door call the objective spells out WHOLE (the
+    third clause, below).
 
     THE LAST CLAUSE CLOSES SPEC 4.2, open since 2026-09-04. A tool named
     with no argument still went to the Router to write the call, and there
@@ -1166,7 +1167,24 @@ def decided_call(ctx: RunContext, skills: SkillLibrary | None = None) -> str:
     WITHOUT THE LIBRARY NOTHING IS DECIDED BY THIS RULE, because nothing
     can say what a skill declares. That is why `skills` is optional rather
     than required: a caller that has no library gets the behaviour that
-    stood before this clause."""
+    stood before this clause.
+
+    THE THIRD CLAUSE, A DOOR CALL SPELLED OUT WHOLE (his ruling, 2026-09-26:
+    "engine writes it, Router reads"). version-tag's `run` nodes hand the
+    Router a question that already carries the server, the tool and the
+    exact JSON -- "Call the atlas MCP server's git_tag tool ... Send it
+    exactly: {...}" -- and on 2026-09-25 a 4B model asked to transcribe
+    that twice thought for a minute and wrote nothing; replayed, it once
+    wrote the call as bare JSON with no server named. A copy is arithmetic.
+    When the objective names `mcp_call` outright and `skills.mcp_spelled_out`
+    finds a declared server named and a JSON object, the call is decided
+    with NO CONTENT: the skill reads the objective, as its declaration has
+    always said it does when handed nothing, so the door receives exactly
+    the arguments the flow wrote and the engine guesses none of them. The
+    write guard is not touched: `mcp_call` is not in WRITING_SKILLS -- its
+    handler writes nothing on this ground -- and what the door does with a
+    call is judged on the door's side (holds, RBAC, `git_tag`'s own
+    refusals), with a flow's gate standing before its cut."""
     tool = getattr(ctx, "named_tool", "")
     if not tool:
         return ""
@@ -1182,7 +1200,11 @@ def decided_call(ctx: RunContext, skills: SkillLibrary | None = None) -> str:
           # ...or the skill takes nothing, so the call is already whole.
           or (skills is not None and not by and tool not in WRITING_SKILLS
               and skills.spec(tool) is not None
-              and not declares(skills.spec(tool))))
+              and not declares(skills.spec(tool)))
+          # ...or the objective spells the door call out whole -- a declared
+          # server named and the arguments as a JSON object -- so a model
+          # would only be copying it (the third clause, above).
+          or (tool == "mcp_call" and not by and mcp_spelled_out(ctx.objective)))
     if not ok:
         return ""
     xml = f"<action>{tool}</action>"

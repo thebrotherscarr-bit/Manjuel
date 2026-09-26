@@ -4308,6 +4308,299 @@ def test_sitting_88_paths_and_evidence(reg, lib, book):
           out6.startswith("REFUSED") and "testimony, not tool output" not in out6, out6[:120])
 
 
+def test_a_spelled_out_door_call_is_written_by_the_engine(reg, lib, book):
+    """THE ROUTER'S EMPTY REPLIES (his ruling, 2026-09-26: "engine writes it,
+    Router reads"; the blank fixed either way).
+
+    WHAT FAILED. version-tag's two `run` nodes on 2026-09-25 (10:03 the list,
+    10:05 the cut) handed the Router a question that already carried the
+    server, the tool and the exact JSON, and asked it to write the call. It
+    thought 63 s and 48 s and emitted neither words nor a call; the rack's
+    own log shows two ordinary 200s, so the model stopped, not the wire. The
+    glass streams every seat, and the streaming-with-tools path was the one
+    way out of chat() that handed back "" over a seat that had thought -- so
+    the record said "returned an empty reply", the proof node failed, and
+    the mark was cut by hand. Replayed six times the same question never
+    went blank, and once came back as bare JSON with no server named, which
+    the skill would have answered with the roster instead of the cut.
+
+    TWO THINGS, STROKED BOTH WAYS. A door call the objective spells out whole
+    -- a declared server named and a JSON object -- is DECIDED: the engine
+    writes `<action>mcp_call</action>` with no content, the skill reads the
+    objective, the door receives exactly the arguments the flow spelled, and
+    the Router sits once to read the result. And the streaming path salvages
+    the deliberation like the other three, so a blank is never delivered.
+
+    THE WIRE (RULE 11): the flow spec itself is read. Every `run` question in
+    flows/version-tag.json must be spelled out, or the engine is back to
+    asking a model to copy -- reword one and this goes red. On a checkout
+    flows/ is absent (gitignored runtime state) and that half is the
+    terminal's.
+
+    Hermetic: a stub door on loopback records what it is sent; the servers in
+    the environment are replaced and put back; nothing reaches the real door.
+    """
+    import http.server as _hs
+    import json as _json
+    import os as _os
+    import threading as _th
+    from manjuel import skills as _sk
+    from manjuel.pipeline import decided_call
+    from manjuel.runtime import OllamaRuntime, SALVAGE_MARK
+
+    WORLD, MARK = "research", "v0.1.15"
+    WHAT = ("The gate reads the record; the manifest reads every field; "
+            "the engine hides nothing")
+    LIST = (f"Call the atlas MCP server's git_tag tool to LIST the marks in {WORLD}. "
+            f'Send it exactly: {{"project": "{WORLD}", "action": "list"}}. Then report '
+            f"what version the ground declares, which file said so, and which marks "
+            f"GitHub already has.")
+    CUT = (f"Call the atlas MCP server's git_tag tool to CUT the mark in {WORLD}. Send it "
+           f'exactly: {{"project": "{WORLD}", "action": "cut", "name": "{MARK}", '
+           f'"message": "{WHAT}"}}. The door refuses the mark unless it equals the '
+           f"version the ground declares AT THAT COMMIT, so do not argue with a "
+           f"refusal -- report it.")
+    LIST_BARE = f"Call the atlas MCP server's git_tag tool to LIST the marks in {WORLD}."
+
+    # ---- a stub door: records every call it is sent, carries git_tag -------
+    seen: list = []
+
+    class Door(_hs.BaseHTTPRequestHandler):
+        def do_POST(self):
+            n = int(self.headers.get("Content-Length") or 0)
+            req = _json.loads(self.rfile.read(n) or b"{}")
+            seen.append(req)
+            m = req.get("method")
+            if m == "tools/list":
+                out = {"tools": [{"name": "git_tag"}, {"name": "muster"}]}
+            elif m == "tools/call":
+                args = (req.get("params") or {}).get("arguments") or {}
+                text = (f"Cut {args.get('name')} at abc1234" if args.get("action") == "cut"
+                        else _json.dumps({"declared": "0.1.15", "tags": []}))
+                out = {"content": [{"type": "text", "text": text}]}
+            else:
+                out = {}
+            body = _json.dumps({"jsonrpc": "2.0", "id": 1, "result": out}).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *a):        # the stub says nothing on the console
+            pass
+
+    srv = _hs.HTTPServer(("127.0.0.1", 0), Door)
+    port = srv.server_address[1]
+    _th.Thread(target=srv.serve_forever, daemon=True).start()
+    saved = {k: v for k, v in _os.environ.items() if k.startswith("MANJUEL_MCP_")}
+    for k in saved:
+        del _os.environ[k]
+    try:
+        # ---- with no server declared, nothing is spelled out ---------------
+        check("with no server declared, the flow's cut question spells nothing out",
+              not _sk.mcp_spelled_out(CUT))
+        check("   so the call is the Router's to write, as it was",
+              decided_call(RunContext(objective=CUT, named_tool="mcp_call"), lib) == "")
+
+        _os.environ["MANJUEL_MCP_ATLAS"] = f"http://127.0.0.1:{port}/rpc"
+
+        # ---- the reading, both ways -------------------------------------------
+        check("the flow's cut question is spelled out: a declared server named and a JSON object",
+              _sk.mcp_spelled_out(CUT))
+        check("   and so is its list question", _sk.mcp_spelled_out(LIST))
+        for said, why in (("atlas muster", "no JSON"),
+                          ('call git_tag {"project": "research"}', "no server named"),
+                          ("atlas git_tag [1, 2]", "JSON that is not an object"),
+                          ('atlas git_tag {"project": research}', "braces that are not JSON"),
+                          ("", "nothing at all")):
+            check(f"not spelled out, so the Router's to write: {why}",
+                  not _sk.mcp_spelled_out(said), said)
+        check("the braces are read by ONE reader, the skill's own",
+              _sk._mcp_braced('send {"a": 1}. then') == '{"a": 1}'
+              and _sk._mcp_braced("no braces here") == "")
+
+        # ---- decided: the engine writes the call and passes no content --------
+        d = RunContext(objective=CUT, named_tool="mcp_call")
+        check("a spelled-out door call is DECIDED with no content -- the skill reads the "
+              "objective itself",
+              decided_call(d, lib) == "<action>mcp_call</action>", decided_call(d, lib))
+        chosen = RunContext(objective=CUT, named_tool="mcp_call", named_by="asks_the_ground")
+        check("   only when the OBJECTIVE named the tool; a branch's guess stays the Router's",
+              decided_call(chosen, lib) == "")
+
+        # ---- THE WIRE: the flow spec itself ----------------------------------
+        spec_path = ROOT / "flows" / "version-tag.json"
+        if spec_path.is_file():
+            spec = _json.loads(spec_path.read_text(encoding="utf-8"))
+            fills = {"world": WORLD, "mark": MARK, "what": WHAT, "out_check": "x"}
+            runs = [nd for nd in spec["nodes"] if nd.get("kind") == "run"]
+            check("version-tag has run nodes to hold to this, or the wire holds nothing",
+                  len(runs) >= 3, str([nd["name"] for nd in runs]))
+            for nd in runs:
+                q = nd["question"]
+                for k, v in fills.items():
+                    q = q.replace("{{" + k + "}}", v)
+                check(f"version-tag's `{nd['name']}` question is spelled out, so no model is "
+                      f"asked to copy it", _sk.mcp_spelled_out(q), q[:100])
+        else:
+            check("flows/ is not in this checkout, so the spec half is the terminal's", True)
+
+        # ---- END TO END: the door receives exactly what the flow spelled ------
+        class BareJson(Stub):
+            """The Router the replay showed once in three: asked to write the
+            call, it drops the server and the tool and answers bare JSON."""
+            def chat(self, agent, prompt, stream_to=None, tools=None, think_to=None,
+                     think=None):
+                self.seen.append((agent.name, prompt))
+                self.souls.append((agent.name, agent.system_prompt or ""))
+                if agent.stage == "guard":
+                    return "SAFE"
+                if agent.key == "router":
+                    if "Results So Far" in prompt:
+                        return "the mark is cut."
+                    return ('<action>mcp_call</action><content>{"project": "research", '
+                            '"action": "cut", "name": "v0.1.15"}</content>')
+                return "words"
+
+        g = Path(tempfile.mkdtemp())
+        r = BareJson()
+        ctx = RunContext(objective=CUT)
+        e = env_for(g, reg, r, skills=lib)
+        e.ground = g
+        seen.clear()
+        run_pipeline(ctx, reg, r, lib, e, steps=book.get("default"), report=lambda s: None)
+        check("the flow's question names mcp_call outright",
+              ctx.named_tool == "mcp_call" and ctx.named_by == "",
+              f"{ctx.named_tool}/{ctx.named_by}")
+        check("the call was decided by arithmetic: the Router was never asked to write it",
+              any("decided by arithmetic (the objective): `mcp_call` runs first" in n
+                  for n in ctx.notes)
+              and not any("Available Skills" in p for n, p in r.seen if n == "Router"),
+              str([n for n in ctx.notes if "decided" in n]))
+        calls = [q for q in seen if q.get("method") == "tools/call"]
+        check("the door received ONE call, to git_tag",
+              len(calls) == 1 and calls[0]["params"]["name"] == "git_tag", str(calls)[:200])
+        check("   with EXACTLY the arguments the flow spelled -- read off the objective, "
+              "never off a seat's rewording",
+              bool(calls) and calls[0]["params"]["arguments"]
+              == {"project": WORLD, "action": "cut", "name": MARK, "message": WHAT},
+              str(calls and calls[0]["params"]["arguments"]))
+        out = ctx.output_of("Router") or ""
+        check("   and the door's own words are in the record for the proof node to read",
+              "Tool executed: mcp_call" in out and f"Cut {MARK} at" in out, out[:160])
+        check("   the Router sat once, only to read the result",
+              sum(1 for n, _ in r.seen if n == "Router") == 1
+              and all("Results So Far" in p for n, p in r.seen if n == "Router"),
+              str([p[:60] for n, p in r.seen if n == "Router"]))
+        check("   and no NAMED TOOL DID NOT RUN stamp -- the named tool ran",
+              "THE NAMED TOOL DID NOT RUN" not in (ctx.last_output() or ""),
+              (ctx.last_output() or "")[-200:])
+
+        # ---- a question that spells nothing out is still the Router's ---------
+        seen.clear()
+        r2 = BareJson()
+        ctx2 = RunContext(objective=LIST_BARE)
+        e2 = env_for(g, reg, r2, skills=lib)
+        e2.ground = g
+        run_pipeline(ctx2, reg, r2, lib, e2, steps=book.get("default"), report=lambda s: None)
+        check("a question with no JSON is not decided -- the Router is asked, as before",
+              ctx2.named_tool == "mcp_call"
+              and not any("decided by arithmetic" in n for n in ctx2.notes)
+              and any("Available Skills" in p for n, p in r2.seen if n == "Router"),
+              str(ctx2.notes)[-200:])
+    finally:
+        srv.shutdown()
+        for k in list(_os.environ):
+            if k.startswith("MANJUEL_MCP_"):
+                del _os.environ[k]
+        _os.environ.update(saved)
+
+    # ---- THE BLANK: the streaming path with tools salvages like the other three
+    class Thinks:
+        """qwen3.5:4b at 10:05: thinking, then nothing -- no words, no call."""
+        def __init__(self, chunks):
+            self.chunks = chunks
+
+        def chat(self, **kw):
+            return iter(self.chunks) if kw.get("stream") else self.chunks[-1]
+
+    router = reg.get("Router")
+    schema = lib.tool_schemas({"mcp_call"})
+    rt = OllamaRuntime()
+    shown: list = []
+    thoughts: list = []
+    rt._client = Thinks([{"message": {"content": "", "thinking": "I should execute "}},
+                         {"message": {"content": "", "thinking": "this mcp_call with these arguments."}},
+                         {"message": {"content": ""}, "done": True, "done_reason": "stop"}])
+    out = rt.chat(router, CUT, tools=schema, stream_to=shown.append, think_to=thoughts.append)
+    check("the streaming path with tools no longer hands back a blank over a seat that thought",
+          out.startswith(SALVAGE_MARK) and "mcp_call with these arguments" in out,
+          repr(out)[:160])
+    check("   the deliberation still reaches the record's sink, and never the screen",
+          "".join(thoughts) == "I should execute this mcp_call with these arguments."
+          and shown == [], f"{thoughts} {shown}")
+    rt._client = Thinks([{"message": {"content": "", "thinking": "hmm"}},
+                         {"message": {"content": "", "tool_calls": [
+                             {"function": {"name": "mcp_call",
+                                           "arguments": {"content": "atlas muster"}}}]}}])
+    out = rt.chat(router, "x", tools=schema, stream_to=shown.append, think_to=thoughts.append)
+    check("   a call that DOES arrive on that path is rendered as before",
+          out == "<action>mcp_call</action><content>atlas muster</content>", repr(out))
+    rt._client = Thinks([{"message": {"content": "the ", "thinking": "hmm"}},
+                         {"message": {"content": "answer"}}])
+    shown.clear()
+    out = rt.chat(router, "x", tools=schema, stream_to=shown.append, think_to=thoughts.append)
+    check("   and words that arrive on that path are the words, streamed as before",
+          out == "the answer" and "".join(shown) == "the answer", repr((out, shown)))
+    rt._client = Thinks([{"message": {"content": ""}}])
+    check("   a seat that thought nothing and said nothing is still blank, not a bare label",
+          rt.chat(router, "x", tools=schema, stream_to=shown.append) == "")
+
+    # ---- and through the glass's own path in the pipeline ----------------------
+    class Rack(Thinks):
+        """A rack whose Router thinks and stops, and whose every other seat answers."""
+        def __init__(self, router_model, chunks):
+            super().__init__(chunks)
+            self.router_model = router_model
+
+        def show(self, model):
+            return {"capabilities": ["tools", "thinking"]}
+
+        def chat(self, **kw):
+            if kw.get("model") == self.router_model:
+                return super().chat(**kw)
+            reply = [{"message": {"content": "the seat's own words."}}]
+            return iter(reply) if kw.get("stream") else reply[0]
+
+    rt2 = OllamaRuntime()
+    rt2._client = Rack(router.model,
+                       [{"message": {"content": "", "thinking": "the objective wants git_tag, "}},
+                        {"message": {"content": "", "thinking": "I should execute this mcp_call."}}])
+    g2 = Path(tempfile.mkdtemp())
+    ctx3 = RunContext(objective=LIST_BARE)
+    e3 = env_for(g2, reg, rt2, skills=lib)
+    e3.ground = g2
+    real_print = __import__("builtins").print
+    __import__("builtins").print = lambda *a, **k: None
+    try:
+        run_pipeline(ctx3, reg, rt2, lib, e3, steps=book.get("default"),
+                     report=lambda s: None, stream=True)
+    finally:
+        __import__("builtins").print = real_print
+    router_steps = [s for s in ctx3.steps if s.agent == "Router" and not s.skipped]
+    check("through the glass's own path, a Router that thinks and emits nothing is recorded "
+          "as deliberation, not as an empty reply",
+          len(router_steps) == 1 and router_steps[0].output.startswith(SALVAGE_MARK)
+          and not any("empty reply" in n for n in ctx3.notes),
+          f"{[s.output[:80] for s in router_steps]} {ctx3.notes[-3:]}")
+    check("   the Router is still never pressed by the ruling loop -- its loop is the tool loop",
+          not any("asked to rule" in n for n in ctx3.notes), str(ctx3.notes)[-200:])
+    check("   and the record still says the named tool did not run",
+          "THE NAMED TOOL DID NOT RUN" in (ctx3.last_output() or ""),
+          (ctx3.last_output() or "")[-200:])
+
+
 def test_a_refusal_reads_as_failed_everywhere(reg, lib, book):
     """The harm list's first item (2026-09-25). `inspect`'s LAW 9 and SITTING
     LAW 2 refusals opened with the FILENAME, and the three readers of a failed
@@ -16539,6 +16832,7 @@ def main() -> int:
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)
     test_the_mcp_skill_never_leaves_this_machine(reg, lib, book)
     test_the_council_carries_its_key_to_the_door(reg, lib, book)
+    test_a_spelled_out_door_call_is_written_by_the_engine(reg, lib, book)
     test_a_refusal_reads_as_failed_everywhere(reg, lib, book)
     test_a_skill_cannot_hang_the_repl(reg, lib, book)
     test_native_tool_calling(reg, lib, book)

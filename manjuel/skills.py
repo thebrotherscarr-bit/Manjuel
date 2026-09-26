@@ -3637,6 +3637,55 @@ def _mcp_named(text: str, candidates) -> str:
     return ""
 
 
+def _mcp_braced(said: str) -> str:
+    """The `{...}` a sentence carries, first brace to last, or "".
+
+    ONE READER FOR THE ARGUMENTS IN A SENTENCE. `_mcp_call` parses what this
+    hands back; `mcp_spelled_out` asks whether it is there at all. Two
+    readings of one sentence would drift the day one of them moved.
+    """
+    said = said or ""
+    i, j = said.find("{"), said.rfind("}")
+    return said[i:j + 1] if i != -1 and j > i else ""
+
+
+def mcp_spelled_out(text: str) -> bool:
+    """Does `text` spell a door call out WHOLE -- a declared server named as a
+    word, and the arguments as a JSON object?
+
+    THE ENGINE WRITES IT, THE ROUTER READS (his ruling, 2026-09-26). On
+    2026-09-25 version-tag's two `run` nodes handed the Router a question
+    that already carried the server, the tool and the exact JSON -- "Call
+    the atlas MCP server's git_tag tool ... Send it exactly: {...}" -- and
+    asked a 4B model to transcribe it into a call. Twice it thought for a
+    minute and emitted nothing; replayed six times it once wrote the call as
+    bare JSON with no server named, which this skill would have answered
+    with the roster instead of the cut. A model was being asked to copy, and
+    a copy is arithmetic: when this is true, `pipeline.decided_call` writes
+    the call itself with no content, and the skill reads the objective, as
+    its declaration has always said it does when handed nothing.
+
+    THE TOOL IS NOT JUDGED HERE, on purpose. `_mcp_call` resolves it against
+    the server's own roster, over the wire; a sentence naming none the
+    server carries is answered with that roster, in the record, which is the
+    honest answer and needs no model to find. The server IS judged: one
+    declared in `.env`, named as a whole word. The fallback to a lone
+    declared server is the skill's, not this one's -- "nothing left to
+    choose" is only true when the sentence chose.
+    """
+    import json as _json
+    said = (text or "").strip()
+    if not said or not _mcp_named(said, _mcp_servers()):
+        return False
+    raw = _mcp_braced(said)
+    if not raw:
+        return False
+    try:
+        return isinstance(_json.loads(raw), dict)
+    except ValueError:
+        return False
+
+
 @skill("mcp_call")
 def _mcp_call(env: SkillExecutionEnv, args: dict) -> str:
     """Call one tool on a local MCP server this ground declares.
@@ -3766,12 +3815,12 @@ def _mcp_call(env: SkillExecutionEnv, args: dict) -> str:
                 return (f"Refused: the arguments for {tool!r} must be a JSON "
                         f"OBJECT, not {type(payload).__name__}.")
     else:
-        i, j = said.find("{"), said.rfind("}")
-        if i != -1 and j > i:
+        raw = _mcp_braced(said)
+        if raw:
             try:
-                payload = _json.loads(said[i:j + 1])
+                payload = _json.loads(raw)
             except ValueError:
-                return (f"Refused: {said[i:j + 1][:80]!r} sits in that request "
+                return (f"Refused: {raw[:80]!r} sits in that request "
                         f"where {tool!r}'s arguments would, and it is not JSON.")
             if not isinstance(payload, dict):
                 payload = {}

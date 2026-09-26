@@ -545,6 +545,7 @@ class OllamaRuntime:
                 # not there must not take routing down with it.
                 try:
                     chunks: list[str] = []
+                    thought: list[str] = []
                     call_part = None
                     for part in self._bounded_stream(self._chat(
                         think,
@@ -563,13 +564,31 @@ class OllamaRuntime:
                             chunks.append(piece)
                             stream_to(piece)
                         t = thinking_of(part)
-                        if t and think_to is not None:
-                            think_to(t)
+                        if t:
+                            thought.append(t)
+                            if think_to is not None:
+                                think_to(t)
                     if call_part is not None:
                         called = calls_to_action_xml(call_part)
                         if called:
                             return called
-                    return _THINK_RE.sub("", "".join(chunks)).strip()
+                    spoken = _THINK_RE.sub("", "".join(chunks)).strip()
+                    if not spoken:
+                        # THE BLANK (2026-09-26, the Router's empty replies).
+                        # This was the ONE way out of chat() that could hand
+                        # back "" over a seat that had thought: the other
+                        # three salvage the deliberation and mark it. It is
+                        # also the path the glass streams every seat on, so
+                        # version-tag's two run nodes on 2026-09-25 -- the
+                        # Router thinking 63 s and 48 s and then emitting
+                        # neither words nor a call -- came back as blanks,
+                        # the record said "returned an empty reply", and the
+                        # rack's own log shows two ordinary 200s: the model
+                        # stopped, not the wire. Same rule as the other paths:
+                        # thought is worse than an answer and better than
+                        # silence, and the mark says which of the two it is.
+                        spoken = _salvage("".join(thought))
+                    return spoken
                 except TypeError:
                     pass          # this client cannot stream with tools
                 except ollama.ResponseError:
