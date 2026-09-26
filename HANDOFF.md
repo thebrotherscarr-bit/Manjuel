@@ -682,16 +682,38 @@ streaming-with-tools path was the one way out of `runtime.chat` that handed back
 had thought, so the record said "empty reply" and the flow's proof failed. Not the cause: the
 900-token budget. His ruling by card: the engine writes a spelled-out door call and the Router reads
 the result (`decided_call`'s third clause, `skills.mcp_spelled_out`), and the blank is salvaged
-like the other three paths. CHANGELOG Unreleased carries the whole account.
+like the other three paths. CHANGELOG Unreleased carries the whole account. Saved and sent on his
+word (`7856faa`), then LIVE-PROVED on his word: an engine booted from the Dashboard (sitting 282),
+`version-tag` fired, the read node ran the decided `mcp_call` against the armed door in 38 s -- the
+transcript says the call was decided by arithmetic and the Router only read the result -- and paused
+at the gate, where the hand stopped it. Nothing was cut.
 
-**Where the ground stands.** core `main@06ffac9` plus this piece UNSAVED as this block is written
--- `manjuel/runtime.py`, `manjuel/skills.py`, `manjuel/pipeline.py`, `tests/test_manjuel.py`,
-`SPEC.md`, `CHANGELOG.md`, `BUILDMAP.md`, this file -- to be saved and sent through the glass's
-Version control on his word. **RESTART REQUIRED** only for an engine already open, and none is: the
-door opens a fresh engine per sitting (`engine.Open`) and sitting 281's process is gone, so the next
-engine carries this code and `version-tag` can be fired as it stands. The door (0.1.8, `--auth`) is
-untouched by this piece. atlas `main@ef5d0c5`, level
-with GitHub, its `v0.1.8` release still a DRAFT awaiting his publish. No sitting is open.
+**THE DAY'S SECOND PIECE: THE RBAC ROLE MODEL SPEAKS IN THE KINDS THE DOOR DECLARES.** The shipped
+`DefaultPolicy` roles carried permissions by KIND (`read`, `edit`, `bash`, `net`, `tools`) while
+`rbac.Can` looked up tool names and `*`, so any shipped role assigned to a key denied it every tool.
+His ruling by card: kinds from the tool's own declaration. `Can` asks a role the tool BY NAME, then
+`*`, then the KINDS the call carries -- `edit` for `Writes: true`, `read` otherwise, `tools` on every
+call -- and `tools.Call` hands `Tool.Writes` down with the name; `bash` and `net` are gone from the
+shipped roles. `internal/rbac` has its first prover (8 strokes), the door a stroke over all four
+shipped roles and a battery leg; four reversals red. atlas CHANGELOG Unreleased carries the account.
+On his word the rebuilt `atlas-mcp.exe` (battery PROVEN, 129 legs) was PLACED: pid 81492 stopped by
+pid and path, the old binary kept in the hand's scratch, the build copied in and hashing as built,
+the door started as RUNBOOK says (from `atlas\line`, `ATLAS_SERVICE` from `.env` into its
+environment, every stream into `mcp.log`) -- **pid 42840** on 127.0.0.1:8090, boot line `auth=true,
+holds ARMED; rbac open (no roles assigned) on: research`. And his ruling on atlas's own `rbac.json`
+("Steward is the default actor"): the accidental actor `5 carried projects` struck, and the council's
+key `k-ae2e9481` (`manjuel-council`) assigned `steward` -- the door names a bearer by its key id, so
+that is the actor the word means. FOUND ON THE WAY: that key's store scopes it to `research` alone
+(RUNBOOK says research and atlas), so on the atlas tenant it is refused `403` before RBAC is asked;
+widening the scope (`auth_key_create` with `tenants`) is his.
+
+**Where the ground stands.** core `main@7856faa` plus this file, to be saved and sent through the
+glass's Version control on his word. atlas `main@32bd106`: the RBAC piece (11 files -- `rbac.go` and
+its new `rbac_test.go`, `tenant.go`, `tools.go`, `holds.go`, `tools_test.go`, `prove.go`,
+`docs/ARCHITECTURE.md`, `tests/PROVING.md`, `CHANGELOG.md`, `rbac.json`) saved and sent the same
+way on his word (`ef5d0c5..32bd106`), level with GitHub; its `v0.1.8` release still a DRAFT
+awaiting his publish. The door runs the new code: pid 42840, 0.1.8, `--auth`. No sitting is open:
+282, booted for the live proof, closed itself at 10:54 with its toll paid.
 
 **Found and not built (his ruling: note it here).** The Router's prompt is 7,526 tokens of an 8,192
 window -- the 43 tool schemas are most of it -- leaving about 660 tokens for thinking and the call,
@@ -700,9 +722,10 @@ stands. Yesterday's failures stopped well under that room. Two shapes if he want
 window (VRAM, measured before and after) or show the Router only the shortlist's schemas plus the
 named one (a piece of its own, with a stroke).
 
-**Still open, all his.** The RBAC role model -- the shipped `DefaultPolicy` roles carry permissions
-by KIND while `rbac.Can` looks up TOOL NAMES, so a shipped role assigned to a key denies it every
-tool; the second half of his last order, next; core CI's two Windows reds at `#131`/`#132` (green at
+**Still open, all his.** The council's key's scope (above): `research` alone in the store, so the
+atlas tenant's new `steward` assignment cannot be reached by it until the key carries `atlas`; the
+`rbac.json` roles still carry the dead `bash`/`net` keys, harmless and read by nothing. Then:
+core CI's two Windows reds at `#131`/`#132` (green at
 `#135`; the logs need his sign-in); `run_start` cannot name a head; the door's 88 tools have no `.us`
 records; `REFUSALS.md`'s 28 against 66 `Refused:` sites, unlinked; the glass forgets a paused run on
 reload and its Tools page's `prompt()`; a `ci` check so the ground reads origin's verdict; the two
@@ -710,8 +733,12 @@ banner literals; the standup's greeting case cannot tell an answer from a recita
 
 **Proof.** strokes **2976/2976** and smoke **72/72**, lone runs on a mirror with `flow.go`,
 `play.go` and `vc.go` carried in; the new stroke alone 36/36; reversals R1, R2, R3 red 6, 2 and 1 of
-their own lines and the restored mirror is green. The live proof -- `version-tag` fired again -- is
-his, after the restart.
+their own lines and the restored mirror is green. The live proof was run on his word (above). The
+RBAC piece: `go test ./...` on a scratch copy of `atlas/line` green but the seven "Filename too
+long" strokes that path always reds (the same seven before the piece, on the same copy); `gofmt -l`
+and `go vet` clean; `rbac_test.go` 8/8; the battery PROVEN, 129 legs, from the rebuilt binary on
+scratch; reversals R1-R4 red 2 (the door stroke and the battery), 1, 6 (5 in the package, 1 through
+the door) and 1.
 
 ## HANDOFF FOR 2026-09-25 — read this before anything below it
 
