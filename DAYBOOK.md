@@ -2111,3 +2111,114 @@ cannot cut until it is understood); the RBAC role model (kinds vs tool names) is
 glass's paused-run seam and its `prompt()`; a `ci` check so the ground reads origin's verdict; the
 two banner literals; the standup's greeting case cannot tell an answer from a recital.
 
+## Session 16 — 2026-09-26 (Saturday), sitting 282, the Router's empty replies understood, and the RBAC role model made to speak the door's own words
+
+**Standing** — follows session 15, which closed with two things named as rulings: why the Router
+returns nothing on a long `mcp_call` objective, and the RBAC role model. His standing order for the
+day: "take the Router's empty replies, then the RBAC role model." Both are closed, saved and sent,
+and the door runs the second.
+
+**Version** — at open: core `main@06ffac9`, atlas `main@ef5d0c5`, both level with GitHub, with
+`v0.1.15` and `v0.1.8` cut the day before. At close: core `main@99ae4cc` (this entry unsaved as it is
+written), atlas `main@32bd106`, both level with GitHub. No mark today; atlas's `v0.1.8` release is
+still a DRAFT awaiting his publish.
+
+**The plan** — the standing order above, then the rulings by card, in the order given: the rack's
+own log read once, 10:03-10:06 of the day before and nothing else; "engine writes it, Router reads"
+(a spelled-out door call is decided by the engine and the Router only reads the result); the
+Router's window pressure noted in the handoff, not built; save and send now; fire `version-tag` and
+stop at the gate; kinds from the tool's own declaration; then, after the context was cut and
+rejoined: close the sitting from the Dashboard (it had closed itself); save and send both; place the
+door and restart it; and on atlas's own `rbac.json`, in his words, "Steward is the default actor."
+One message in his own hand: "i put the PIN in the dashboard for you. its ublocked now." The PIN is
+his, never a hand's.
+
+**ONE SITTING OPENED** — 282, at 10:23, booted from the Dashboard by the hand for the live proof of
+the first piece, one run; closed by the door's thirty-minute idle close at 10:54, its toll paid.
+Every edit came before it opened (the first piece, saved at 10:21) or after it closed (the second).
+RULE 9 held.
+
+**What was built** — all saved and sent.
+- **The Router's empty replies** (core `7856faa`, eight files): `version-tag`'s two `run` nodes had
+  handed a 4B model a question already carrying the server, the tool and the exact JSON, and asked it
+  to copy the call; it thought 63 s and 48 s and wrote nothing, and the rack's log shows both
+  requests as ordinary 200s -- the model stopped, not the wire, and not the 900-token budget. The
+  streaming-with-tools path was the one way out of `runtime.chat` that handed back "" over a seat
+  that had thought. Now `decided_call` has a third clause (`skills.mcp_spelled_out`): a door call the
+  objective spells out is written by the engine, the door receives exactly the flow's arguments, and
+  the Router sits once to read; the streaming path salvages a blank like the other three. The flow
+  spec itself is the wire -- the stroke reads every `run` question in `flows/version-tag.json`.
+  Thirty-three strokes; reversals R1-R3 red 6, 2 and 1.
+- **The live proof**, on his word, through sitting 282: the read node's decided `mcp_call` reached
+  the armed door in 38 s -- the transcript's own note says the call was decided by arithmetic and
+  the Router only read the result -- and the door HELD it (under Found). The flow paused at its gate
+  and was stopped there by hand; nothing was cut.
+- **The RBAC role model** (atlas `32bd106`, eleven files): the shipped roles spoke in kinds
+  (`read`, `edit`, `bash`, `net`, `tools`) while `rbac.Can` read tool names and `*`, so any shipped
+  role assigned to a key denied it every tool, and no stroke had ever assigned one. Now a role is
+  asked the tool by name, then the wildcard, then the kinds the call carries -- `edit` for
+  `Writes: true`, `read` otherwise, `tools` on every call -- and `tools.Call` hands `Tool.Writes`
+  down with the name; `bash` and `net` are gone from the shipped roles. `internal/rbac` has its
+  first prover (8), the door a stroke over all four shipped roles and a battery leg; reversals R1-R4
+  red 2, 1, 6 and 1. ARCHITECTURE 4d, PROVING (the unproven count measured: two) and the atlas
+  CHANGELOG carry it.
+- **atlas's `rbac.json`**, on his word: the accidental actor `5 carried projects` struck; the
+  council's key `k-ae2e9481` (`manjuel-council`) assigned `steward`, the door naming a bearer by its
+  key id.
+- **The door placed and restarted**, on his allowance: pid 81492 stopped by pid and path, the old
+  binary kept in the hand's scratch, the proven build copied in and hashing as built, started as
+  RUNBOOK says -- pid 42840 on 127.0.0.1:8090, `auth=true, holds ARMED`, research the one tenant in
+  open mode.
+- **The day's handoff** (core `99ae4cc`), and this entry.
+
+**Found**
+- With `--auth` on, `version-tag`'s read step cannot list marks through the council: `git_tag` is
+  declared writing whatever its action, so its `list` from the council's key parked as
+  `hold_1790443435789_1_git_tag` and the node's output was the hold's own words. The day before it
+  had run unheld, on the unarmed door. The restart at 14:07 dropped the parked call; the record
+  holds its `held` line and no closing one. An action-level declaration for `git_tag`, or a reading
+  tool for the marks, is a ruling.
+- atlas's `rbac.json`, tracked since 2026-09-09, assigned `agent` to `5 carried projects` --
+  muster's first line, pasted into the glass's Assign Role box. It had put the atlas tenant in
+  closed mode (the 2026-09-25 boot line named only `research` as open), refusing every keyed caller
+  there `no assigned role`. Struck on his word.
+- The council's key is scoped to `research` alone in the store (RUNBOOK says research and atlas),
+  so on the atlas tenant it is refused `403` before RBAC is asked, and the `steward` assignment
+  there cannot yet be reached by it.
+- The Router's prompt is 7,526 tokens of an 8,192 window -- the 43 tool schemas are most of it --
+  leaving about 660 for thinking and the call while `Max Tokens` says 900. Noted in the handoff on
+  his ruling; not built.
+- PROVING.md still said sixteen packages carry no prover; measured, two (`cmd/atlas-vc`,
+  `internal/orient`). `internal/tenant` had come off the list on 2026-09-11 unrecorded.
+- The hand's own tools: the Bash tool lost its shell mid-session and PowerShell carried the rest;
+  the auto-mode classifier refused a .NET byte write into the ground, and the Write and Edit tools
+  were measured instead -- Write emits LF, Edit keeps a file's CRLF, multi-line anchors included.
+  The first placement copy failed on a lock in the second after the old door exited; the retry
+  took, and the door was down for about a minute between.
+- The Go suites on a scratch copy of `atlas/line` red the same seven strokes before and after the
+  piece ("Filename too long" under the scratch path); nothing to chase.
+
+**Drift** — none in the building: every piece was his, by order or by card. One in the hand's own
+record: the handoff line on the live proof said the read node ran its call and paused at the gate,
+and did not say the door had HELD it; corrected at this session's close. The context was cut and
+rejoined once, mid-day; the summary carried the order and the rulings, and the disk carried the
+rest.
+
+**Rulings** — as listed under the plan. And on the words "Steward is the default actor": the door
+names a bearer by its key id, so the actor the word means is the council's key, and that is what
+was written.
+
+**At close** — the first piece: strokes **2976/2976**, smoke **72/72**, lone runs on a mirror with
+`flow.go`, `play.go` and `vc.go` carried in; the new stroke alone 36/36. The second: `go test ./...`
+on the scratch copy green but the seven; `gofmt -l` and `go vet` clean; `rbac_test.go` 8/8; the
+door's battery PROVEN, 129 legs, from the placed binary. His terminal is still the proof; no live
+standup ran today. Both repositories level with GitHub; no sitting open.
+
+**Next session** — the held `git_tag list` (a ruling: action-level `Writes`, or a reading tool for
+the marks) and the council's key's scope; core CI's Windows reds at `#131`/`#132` (the logs need
+his sign-in); `run_start` cannot name a head; the door's 88 tools have no `.us` records;
+`REFUSALS.md`'s 28 against 66 `Refused:` sites, unlinked; the glass's paused-run seam and its
+`prompt()`; a `ci` check so the ground reads origin's verdict; the two banner literals; the
+standup's greeting case; the Router's window (widen it, measured, or show the Router only the
+shortlist's schemas).
+

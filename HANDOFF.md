@@ -685,8 +685,14 @@ the result (`decided_call`'s third clause, `skills.mcp_spelled_out`), and the bl
 like the other three paths. CHANGELOG Unreleased carries the whole account. Saved and sent on his
 word (`7856faa`), then LIVE-PROVED on his word: an engine booted from the Dashboard (sitting 282),
 `version-tag` fired, the read node ran the decided `mcp_call` against the armed door in 38 s -- the
-transcript says the call was decided by arithmetic and the Router only read the result -- and paused
-at the gate, where the hand stopped it. Nothing was cut.
+transcript says the call was decided by arithmetic and the Router only read the result -- and the
+door HELD it: `git_tag` is declared writing whatever its action, and the council's key is not the
+glass, so `list` parked as `hold_1790443435789_1_git_tag` and the node's output was the hold's own
+words. The flow paused at its gate, where the hand stopped it; nothing was cut, and the restart at
+14:07 dropped the parked call (a restart drops the queue; the record keeps the `held` line). FOUND,
+his ruling: with `--auth` on, `version-tag`'s read step cannot list marks through the council until
+a mark can be listed without being held -- an action-level declaration for `git_tag`, or a reading
+tool for the marks.
 
 **THE DAY'S SECOND PIECE: THE RBAC ROLE MODEL SPEAKS IN THE KINDS THE DOOR DECLARES.** The shipped
 `DefaultPolicy` roles carried permissions by KIND (`read`, `edit`, `bash`, `net`, `tools`) while
@@ -722,7 +728,8 @@ stands. Yesterday's failures stopped well under that room. Two shapes if he want
 window (VRAM, measured before and after) or show the Router only the shortlist's schemas plus the
 named one (a piece of its own, with a stroke).
 
-**Still open, all his.** The council's key's scope (above): `research` alone in the store, so the
+**Still open, all his.** `version-tag`'s read step held under `--auth` (above). The council's key's
+scope (above): `research` alone in the store, so the
 atlas tenant's new `steward` assignment cannot be reached by it until the key carries `atlas`; the
 `rbac.json` roles still carry the dead `bash`/`net` keys, harmless and read by nothing. Then:
 core CI's two Windows reds at `#131`/`#132` (green at
