@@ -2356,6 +2356,11 @@ been in the plan from the beginning."
   shares the code. One stroke (60), 3059/3059 and 72/72 on a mirror, five reversals red (30, 9,
   1, 2, 2); `manjuel/skills.py` moved, restart required; unsaved.
 
+- **The ninth piece**, by card the third of the pass: `suite_run` at the door -- the strokes and
+  the smoke from the glass, one after the other, the head read off the stamp the suites write,
+  failures first, one suite at a time machine-wide, a reader so the loop can ask it. One stroke,
+  two battery legs, 85 tools, four reversals red (R1 the set running one suite where it should run two -- 1 red; R2 the verdict left off the head -- 1; R3 the lock released before the run -- 1; R4 the failures dropped from the body -- 1); the door not yet placed.
+
 **Found** — the glass's Tools page asks for a tool's arguments with the browser's `prompt()`, which
 the desktop's browser pane dismisses unseen (the page's own `App.tool` was called from the page
 instead: the same request, the glass's session); a check over the tools block cannot see the maker
@@ -2381,8 +2386,8 @@ Dashboard; the door pid 86180 carries all six door pieces; both repositories sav
 11:52 on his word (core `044ef46`, atlas `325888c`, level with GitHub), the seventh piece saved and
 sent after it (core `c92751d`), the eighth on top, unsaved.
 
-**Next session** — the rest of the code safety pass in the order the card gave: `suite_run` at
-the door, the coder-on-the-tree flow; the dials (Steward 180, the court 900 as a
+**Next session** — the rest of the code safety pass in the order the card gave: the
+coder-on-the-tree flow; the dials (Steward 180, the court 900 as a
 deadline a pipeline declares); the front-end agent handoff's plan is in the record (CHANGELOG, this
 day) and waits on those; a Dashboard button for the standup and a `loops` box in the builder; a
 maker evidence line a check can read; the open lines above.

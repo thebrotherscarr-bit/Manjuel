@@ -821,6 +821,16 @@ says it. Unsaved: `manjuel/skills.py`, `tests/test_manjuel.py`, `skills/ground_w
 `skills/ground_edit.md`, `REFUSALS.md`, `BUILDMAP.md`, this file, CHANGELOG, DAYBOOK. The seventh
 piece was saved and sent as core `c92751d`.
 
+**THE DAY'S NINTH PIECE: THE SUITES FROM THE GLASS.** By card, the third piece of the pass, on his
+ruling "if its on the glass, and the record mathes, id call it proof". `suite_run` (strokes | smoke
+| both) runs the world's suites one after the other with the door's python, bounded at thirty
+minutes together; the suites stamp their own proof and the head is read off the stamp, failures
+first in the body; one suite at a time machine-wide; a reader in the door's eyes so the coder's
+loop can ask it without a hand. One stroke, two battery legs, the battery PROVEN at **85 tools**,
+four reversals red (R1 the set running one suite where it should run two -- 1 red; R2 the verdict left off the head -- 1; R3 the lock released before the run -- 1; R4 the failures dropped from the body -- 1). atlas moved: `line/internal/tools/tools.go`, `tools_test.go`,
+`line/cmd/atlas-mcp/prove.go`, `CHANGELOG.md`; the core's RUNBOOK and CHANGELOG say it. The door
+must be placed and restarted to carry it; that is his allowance.
+
 **Where the ground stands.** core `main@3e0b5b4` plus `RUNBOOK.md` and this file, to be saved and
 sent through the glass's Version control on his word. atlas `main@1336fa8`: both pieces --
 `line/internal/tools/tools.go`, `gitctl.go`, `tools_test.go`, `line/internal/auth/auth.go`,

@@ -34,6 +34,17 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The suites from the glass are proof (operator, 2026-09-28: "if its on the glass, and the record mathes, id call it proof")
+
+The door's piece (atlas `CHANGELOG.md` Unreleased carries the account: `suite_run` runs the strokes
+and the smoke in the world, one after the other, the suites stamping their own proof, the head read
+off the stamp). What moved in this ground:
+
+- **`RUNBOOK.md`:** the morning paragraph says the suites too can be fired from the glass, and
+  that his ruling makes such a run proof when the record matches; the door's tool count is 85.
+- NOT CHANGED: `tests/release.py` reads `tests/last_run.json` exactly as before; a run from the
+  glass writes the same stamp his terminal does, which is the whole of the ruling.
+
 ### The tree doors: a seat writes the ground itself, on a line of work (operator, 2026-09-28: "yes, that's the whole idea of the coder, I want to actually be able to write/read/modify files within the harness"; by card, the tree doors)
 
 The second piece of the code safety pass. Until now a seat wrote only into `agent_workspace/`,
