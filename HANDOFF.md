@@ -725,7 +725,8 @@ awaiting his publish. No sitting is open (282, 2026-09-26, was the last).
 **Still open, all his.** What the hold queue shows of a `key` argument (above); whether a gate he
 crossed carries his hand to the flow's `cut` and `send` (above); core CI's two Windows reds at
 `#131`/`#132` (green at `#135`; the logs need his sign-in); `run_start` cannot name a head; the
-door's 88 tools have no `.us` records; `REFUSALS.md`'s 28 against 66 `Refused:` sites, unlinked;
+door's 83 tools (its own battery's count, 2026-09-28; the record said 88, unmeasured) have no
+`.us` records; `REFUSALS.md`'s 28 against 66 `Refused:` sites, unlinked;
 the glass forgets a paused run on reload and its Tools page's `prompt()`; a `ci` check so the
 ground reads origin's verdict; the two banner literals; the standup's greeting case cannot tell an
 answer from a recital; the Router's window (7,526 of 8,192 tokens).

@@ -2222,3 +2222,93 @@ his sign-in); `run_start` cannot name a head; the door's 88 tools have no `.us` 
 standup's greeting case; the Router's window (widen it, measured, or show the Router only the
 shortlist's schemas).
 
+## Session 17 — 2026-09-28 (Monday), no sitting opened, the held list freed and the council's key widened
+
+**Standing** — follows session 16, which closed with two findings named as rulings: `version-tag`'s
+read step held under `--auth` because `git_tag` writes whatever its action, and the council's key
+scoped to `research` alone while the record said research and atlas. His order for the day: "take
+the held git_tag list next, then the key's scope." Both are closed, placed, proved on the door,
+saved and sent.
+
+**Version** — at open: core `main@3e0b5b4`, atlas `main@32bd106`, both level with GitHub. At
+close: core `main@d02b72f` (this entry unsaved as it is written), atlas `main@1336fa8`, both level
+with GitHub. No mark today; atlas's `v0.1.8` release is still a DRAFT awaiting his publish.
+
+**The plan** — the order above, then the rulings by card, in the order given: save and send both
+now; place the door and restart it; for the key's scope, "a scope verb, then widen it" (over
+minting a wider key and rotating `.env`, and over leaving it); then, with the glass found locked:
+unlocked, go on; place and restart again; "call it, and click Approve for me"; save and send both
+repositories. And "write the daybook entry for today."
+
+**NO SITTING OPENED.** Sitting 282 (2026-09-26) is still the last. Every edit was made with no
+engine standing and the door restarted only by his allowance (RULE 9 held).
+
+**What was built** — all saved and sent.
+- **A reading action of a writing tool is not held** (atlas `1336fa8`, with the second piece):
+  `Tool.Reads` names the actions of a writing tool that only read -- `git_tag` and `git_branch`
+  declare `list`, their default too -- and `Tool.WritesFor(args)` is what THIS CALL does, the
+  declaration narrowed by the action; `tools.Call` asks it once and both the hold queue and RBAC's
+  kind read that one answer; `actionOf` is the one reader of the word, for the door and both
+  handlers. Two strokes (one on a real repository with holds armed: the list answered in three
+  spellings, the cut and the open parked with nothing landed, the glass never held, the shipped
+  `agent` role listing and refused the cut by kind before any hold), a battery leg, reversals R1-R4
+  red 2 (and the battery), 2, 2 and 1. ARCHITECTURE 4d says it; the core's RUNBOOK names which
+  actions wait. NOT CHANGED: the flow's `cut` and `send` steps are still parked under `--auth`,
+  which is RULE 6 working; whether a gate he crossed carries his hand to the next node's writes
+  is his ruling.
+- **A key's scope moves without the secret** (same commit): `auth.Scope` replaces a live key's
+  tenants whole -- widen and narrow the same act, never empty, a revoked or unknown id refused by
+  id -- and audits it; `auth_key_scope` re-proves possession like create and revoke, refuses a
+  tenant the door does not carry by name, and writes, so from any hand but the glass it parks in
+  the holds, where the approval runs exactly the parked call. Two strokes (the auth package's; one
+  through `Call` with holds armed, the held move moving nothing until the glass approves it and
+  the same plaintext carrying both grounds after), three battery legs, reversals R1-R4 red 1, 1, 1
+  (and the battery) and 1. The core's RUNBOOK says the key was minted for research alone and how
+  a scope moves.
+- **The door placed twice**, on his allowance, each by pid and path with the old binary kept in the
+  hand's scratch and the build hashing as built: pid 22316 at 08:12 with the first piece, pid 42704
+  at 08:29 with both. Both times the copy hit the same one-second lock after the old process
+  exited, and the retry took.
+- **The widening**, on his word, on the placed door: `k-ae2e9481` (`manjuel-council`) carries
+  `research,atlas`; the store and the audit line say so. Measured with the council's own bearer
+  over loopback, before and after: `muster` on atlas was `403: key k-ae2e9481 does not carry
+  project "atlas"` and is the roster now; `tenant_rbac_check` on atlas answers ALLOWED as
+  `steward`; and `git_tag list` on atlas answers the list, not a hold -- the first piece proved
+  live by the second.
+- **The day's handoff and RUNBOOK** (core `d02b72f`), and this entry.
+
+**Found**
+- A call parked in the holds has its ARGUMENTS shown on Version control (`hold_list`), so a
+  re-proof `key` parked there would be displayed -- RULE 7. He had chosen the hold path for the
+  widening; the hand made the call as the glass's own wire instead (his hand, no hold), with both
+  secrets read from `.env` into the request over loopback and never printed, and said so. What
+  the queue shows of a `key` argument is his ruling.
+- The glass was LOCKED when the first piece was to be saved: the browser pane had been reopened
+  fresh and its session with it. The PIN is his; he typed it, and the first piece's save waited on
+  that while the second was built.
+- The placed door's own battery counts **83 tools**; the handoff's still-open line said 88, a
+  number nobody had measured lately. Corrected in the handoff to the measured one.
+- Under `--auth` the flow's `cut` and `send` steps park for his hand, so `version-tag` still
+  cannot cut through the council; its read and check steps can now list.
+
+**Drift** — none in the building: both pieces were his, by order and by card, and the reversals
+were run before the record was written. One deviation, the hand's, reported at once: the widening
+rode the wire rather than the hold queue he chose, for the reason under Found. The first piece's
+save came after the second piece was built, because the glass was locked when it was ordered.
+
+**Rulings** — as listed under the plan; and the key's scope shape, "a scope verb, then widen it,"
+chosen over rotating the secret.
+
+**At close** — `go test ./...` on a scratch copy of `atlas/line` green but the seven "Filename too
+long" strokes that path always reds, unchanged across three runs today; `gofmt -l` and `go vet`
+clean; the battery PROVEN, **133 legs**, from the binary that is placed (the hashes agree). No
+core code moved; his terminal is still the proof, and no live standup ran today. Both
+repositories level with GitHub; no sitting open.
+
+**Next session** — what the hold queue shows of a `key` argument (a ruling); whether a crossed
+gate carries his hand to the flow's `cut` and `send`; core CI's Windows reds at `#131`/`#132` (the
+logs need his sign-in); `run_start` cannot name a head; the door's 83 tools have no `.us` records;
+`REFUSALS.md`'s 28 against 66 `Refused:` sites, unlinked; the glass's paused-run seam and its
+`prompt()`; a `ci` check so the ground reads origin's verdict; the two banner literals; the
+standup's greeting case; the Router's window.
+
