@@ -112,7 +112,13 @@ demands a bearer on every call and HOLDS a writing call from anything but the
 glass until you decide it on Version control; without it, RULE 6 is a
 sentence. A writing tool's reading action is not held: `git_tag list` and
 `git_branch list` (their default, too) answer any bearer, while `cut`, `send`,
-`remove`, `new`, `switch` and `close` wait for your hand (since 2026-09-28). Two secrets live in `.env` and nowhere else (RULE 7):
+`remove`, `new`, `switch` and `close` wait for your hand (since 2026-09-28). A
+secret a parked call carries (the auth verbs' re-proof `key`) is withheld where
+the queue is shown and kept for the call. And a flow's gate may declare
+`grants`: the writing tools your `continue` authorises for the nodes after it,
+until the next gate. Those calls run instead of parking and are written to
+`state/holds.jsonl` as `crossed`, naming the run and the gate -- `version-tag`'s
+two gates grant `git_tag` (since 2026-09-28). Two secrets live in `.env` and nowhere else (RULE 7):
 `ATLAS_SERVICE`, the same-computer wire the door and the glass share, and
 `MANJUEL_MCP_ATLAS_KEY`, the bearer the council presents (minted once with
 `auth_key_create` while the door was unarmed, for research alone; which

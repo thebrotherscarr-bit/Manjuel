@@ -713,13 +713,53 @@ by pid and path, its binary kept in scratch, the build copied in and hashing as 
 copy hit the same one-second lock as on the 26th; the retry took) -- **pid 42704** on
 127.0.0.1:8090 at 08:29, the same boot line.
 
+**THE DAY'S THIRD PIECE: A SECRET PARKED IN THE HOLDS IS WITHHELD WHERE THE QUEUE IS SHOWN.** His
+order: "take the hold queue's key argument next, then the crossed gate"; his ruling by card:
+withhold it where it is shown. `Tool.Secrets` names the arguments whose values are secrets (the
+four auth verbs declare `key`); `hold_list` shows a parked call with those as `[withheld: a
+secret; the parked call keeps it]`, and any value in the door's own key shape is withheld even
+where nobody declared it; the parked call keeps the real values and approving runs it whole. Two
+strokes, a battery leg, four reversals red.
+
+**THE DAY'S FOURTH PIECE: A GATE DECLARES WHAT ITS CROSSING GRANTS.** His ruling by card: the gate
+declares what it grants. `flow.Node.Grants` on a GATE names the writing tools its `continue`
+authorises, from that gate until the next gate or the end of the run; the pause and the resume
+lines carry them and the waterfall says "continue grants the council: ...". `runFrom` binds a
+crossed gate's grants onto the engine (`onHand`, a copy), the council raises the hand over the
+world for the length of each turn (`WithHand`, `underHand`), and `tools.Call` lets a granted write
+run instead of parking, writing a `crossed` line to the holds record naming the run and the gate;
+ungranted writers still park and RBAC still judges. `flow_save` refuses a grant naming a tool the
+door does not carry or one that does not write. Two flow strokes, two door strokes, two battery
+legs, four reversals red. `version-tag`'s `judge` and `send_gate` declare `git_tag`: FOLDED as v3
+through `flow_save` as the glass's wire on his word, eight nodes and seven edges unchanged in
+everything else, v1 and v2 kept on disk.
+
+**THE DOOR, PLACED A THIRD TIME TODAY on his allowance,** carrying all four pieces: pid 42704
+stopped by pid and path, its binary kept in scratch, the build copied in and hashing as built --
+**pid 55236** on 127.0.0.1:8090 at 09:20, the same boot line.
+
+**THE LIVE PROOF OF THE CROSSED GATE, on his word.** An engine booted from the Dashboard (sitting
+283, 09:20-09:23, two runs, closed from the Dashboard with its toll paid); `version-tag` v3 fired
+on research for the mark it already carries, `v0.1.15`, as the glass's wire: the read step listed
+the marks through the council in 47.9 s (not held), the judge gate paused with "continue grants
+the council: git_tag" on the waterfall, and the crossing on his word ran the cut UNDER THE HAND:
+the council's `git_tag cut` reached the tool, which refused on its own law ("v0.1.15 already exists
+here, on af50522. A mark is never moved"), the proof step failed honestly, the run ended FAIL, no
+mark moved, and `state/holds.jsonl` carries `{"what":"crossed","tool":"git_tag","caller":
+"k-ae2e9481","note":"run f-20260928-162148-23fc4784 gate judge"}`. Transcripts:
+`logs/2026-09-28_092148_*` (the list) and `logs/2026-09-28_092245_*` (the refused cut).
+
 **Where the ground stands.** core `main@3e0b5b4` plus `RUNBOOK.md` and this file, to be saved and
 sent through the glass's Version control on his word. atlas `main@1336fa8`: both pieces --
 `line/internal/tools/tools.go`, `gitctl.go`, `tools_test.go`, `line/internal/auth/auth.go`,
 `auth_test.go`, `line/cmd/atlas-mcp/prove.go`, `docs/ARCHITECTURE.md`, `CHANGELOG.md` -- saved
 and sent the same way on his word (`32bd106..1336fa8`), level with GitHub. The glass was found
 LOCKED when the first piece was to be saved (a fresh browser pane; the PIN is his) and he unlocked
-it. The door (pid 42704) carries both. atlas's `v0.1.8` release still a DRAFT
+it. The third and fourth pieces: atlas `main@d2d91ce` -- `line/internal/flow/flow.go`, `run.go`,
+`run_test.go`, `line/internal/tools/tools.go`, `holds.go`, `tools_test.go`,
+`line/cmd/atlas-mcp/prove.go`, `CHANGELOG.md` -- saved and sent on his word (`1336fa8..d2d91ce`),
+level with GitHub. The door (pid 55236) carries all four. No sitting is open: 283, booted for the live proof, closed 09:23 with its
+toll paid. atlas's `v0.1.8` release still a DRAFT
 awaiting his publish. No sitting is open (282, 2026-09-26, was the last).
 
 **Still open, all his.** What the hold queue shows of a `key` argument (above); whether a gate he
@@ -732,9 +772,12 @@ ground reads origin's verdict; the two banner literals; the standup's greeting c
 answer from a recital; the Router's window (7,526 of 8,192 tokens).
 
 **Proof.** `go test ./...` on a scratch copy of `atlas/line` green but the seven "Filename too
-long" strokes that path always reds; `gofmt -l` and `go vet` clean; the battery PROVEN, 130 legs,
-from the placed binary; reversals R1-R4 red 2 (and the battery), 2, 2 and 1. No core code moved;
-his terminal is still the proof and no live standup ran today.
+long" strokes that path always reds, unchanged across every run today; `gofmt -l` and `go vet`
+clean; the battery PROVEN, **136 legs**, from the placed binary (130 after the first piece, 133
+after the second); reversals red for each piece: the reading action 2 (and the battery), 2, 2, 1;
+the scope 1, 1, 1 (and the battery), 1; the withheld secret 1, 1, 1 (and the battery), 1; the
+crossed gate 1, 1, 1 (and the battery), 1. The crossed gate proved live (above). No core code
+moved; his terminal is still the proof and no live standup ran today.
 
 ## HANDOFF FOR 2026-09-26 — read this before anything below it
 
