@@ -2348,7 +2348,13 @@ been in the plan from the beginning."
   they stand and found the 09-22 pass holding and one door short -- `edit_file` checked parsing
   only. It now runs `inspect_code` on the whole file as it would stand (by card, first of the
   four pieces the pass named). One stroke, 2992/2992 and 72/72 on a mirror, the reversal 13
-  red; `manjuel/skills.py` moved, restart required; unsaved.
+  red; `manjuel/skills.py` moved, restart required; saved and sent, core `c92751d`.
+
+- **The eighth piece**, by card the second of the pass: the tree doors. `ground_write` and
+  `ground_edit` write the ground itself on a line of work, refusing by name what the pass named
+  and refusing the main line, a new folder, a MIXED file and what the gate refuses; `edit_file`
+  shares the code. One stroke (60), 3059/3059 and 72/72 on a mirror, five reversals red (30, 9,
+  1, 2, 2); `manjuel/skills.py` moved, restart required; unsaved.
 
 **Found** — the glass's Tools page asks for a tool's arguments with the browser's `prompt()`, which
 the desktop's browser pane dismisses unseen (the page's own `App.tool` was called from the page
@@ -2372,11 +2378,11 @@ for the reason under Found, and the record says so.
 
 **At close** — sittings 284, 285 and 286 closed with their tolls, 287 (his, no runs) from the
 Dashboard; the door pid 86180 carries all six door pieces; both repositories saved and sent at
-11:52 on his word (core `044ef46`, atlas `325888c`, level with GitHub), the seventh piece on top,
-unsaved.
+11:52 on his word (core `044ef46`, atlas `325888c`, level with GitHub), the seventh piece saved and
+sent after it (core `c92751d`), the eighth on top, unsaved.
 
-**Next session** — the rest of the code safety pass in the order the card gave: the tree doors,
-`suite_run` at the door, the coder-on-the-tree flow; the dials (Steward 180, the court 900 as a
+**Next session** — the rest of the code safety pass in the order the card gave: `suite_run` at
+the door, the coder-on-the-tree flow; the dials (Steward 180, the court 900 as a
 deadline a pipeline declares); the front-end agent handoff's plan is in the record (CHANGELOG, this
 day) and waits on those; a Dashboard button for the standup and a `loops` box in the builder; a
 maker evidence line a check can read; the open lines above.

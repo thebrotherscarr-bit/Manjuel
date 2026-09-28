@@ -885,3 +885,59 @@ Stated plainly, because a security page that only lists wins is marketing.
   informed.
 
 ---
+
+## 27. The tree doors write on a line of work, and refuse the rest by name
+
+**Trigger.** `ground_write` or `ground_edit` is given a path in the ground that
+is a secret or `.env`, client data, under `worlds/`, inside any `.git/`, under
+`law/`, one of the governing files (CLAUDE.md, .gitignore, .gitattributes,
+index_roots.txt, agents/, skills/, pipelines.md, commands.md, .env.example),
+the record or a runtime store (sessions/, logs/, index/, state/, flows/,
+memory/, memory.md, SEAT_LOG.md, agent_workspace/), a proof stamp under
+tests/, BUILDMAP.md, a binary, or under projects/; or the file's repository
+stands on main or master or detached, or there is no repository; or the folder
+does not exist; or the file is MIXED; or the .py would not parse or would carry
+what §24 refuses.
+
+**Action.** Refused, and NOTHING IS WRITTEN. The refusal names the rule -- RULE
+7, SITTING LAW 2, ESTATE LAW 2, LAW 8, RULE 8, RULE 6 -- and, for the main
+line, the cure: open a line of work (`git_branch new` through the door, or
+Lines of work on Version control) and write on it.
+
+**Why.** His ruling, 2026-09-28: "yes, that's the whole idea of the coder, I
+want to actually be able to write/read/modify files within the harness." Until
+then a seat wrote only into `agent_workspace/`, the quarantine; `ground_read`
+read the ground and nothing wrote it. The code safety pass before the doors
+were opened named what the tree needs, and each is a refusal at ONE function
+both doors call (`never_written`, `line_of_work`, `terminator_for`,
+`checked_python`) rather than a habit at each door -- §24's lesson, made the
+rule before the third and fourth doors existed.
+
+THE MAIN LINE IS HIS (RULE 6): a write lands only on a branch that is not
+main, judged by the NEAREST repository -- atlas/ carries its own `.git` inside
+the ground, and a file under it is judged by atlas's line. Merging a line is
+his click. A FOLDER IS HIS TO PLACE (RULE 8): a seat makes none. THE TERMINATOR
+IS THE FILE'S OWN, or its neighbours' for a new file, so a new .py beside LF
+files is LF and a new root .md beside CRLF docs is CRLF (the ruling of
+2026-09-03). `run_python` is NOT moved to the tree: its wall is the workspace,
+and moved it would put `.env` inside the wall.
+
+**The honest limits.** The never-written names are a list, and a list is
+complete only until the ground grows a store it does not name; a new one is
+added here by hand. The line-of-work rule reads git, so a ground with no
+repository refuses rather than guesses. Nothing here is the hold queue or
+RBAC: the tree doors are skills inside the engine, and the door's holds do not
+see them -- what lands is gated by the branch and, once folded, by the coder's
+flow and its gate.
+
+Stroked: `test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name`
+(60): no repository refuses; main refuses at both doors and names the cure; on
+a line a new .py takes LF and a new root .md CRLF, and an edit keeps its own;
+the gate at both doors; a folder that does not exist; sixteen never-written
+names, each with the file as it was; a path out of the ground; MIXED at both
+doors; atlas judged by its own line; `edit_file` unchanged in shape; both
+doors in the writers' roster. By reversal: the names not asked, 30 red; the
+line not asked, 9; the terminator not the neighbours', 1; the gate struck at
+the write door, 2; at the edit door, 2.
+
+---

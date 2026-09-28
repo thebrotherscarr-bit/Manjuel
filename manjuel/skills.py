@@ -489,6 +489,9 @@ WRITING_SKILLS = {
     # is declared in prose on its `wall` where a reader will meet it. This
     # roster answers "does the handler write", which is what the checker asks.
     "edit_file",
+    # 2026-09-28: the tree doors write into the ground itself, on a line of
+    # work (see THE TREE DOORS, beside them).
+    "ground_write", "ground_edit",
 }
 
 # THE WRITERS WHOSE ARGUMENT IS A MESSAGE ONLY THE OPERATOR CAN SUPPLY.
@@ -3905,10 +3908,9 @@ def _edit_file(env: SkillExecutionEnv, args: dict) -> str:
     bring into a file exactly what the write door refuses to put there. The
     2026-09-22 lesson, at the third door: a gate one door enforces and the
     other does not is a preference. On the tree the edit is the main verb.
+    The shape and the write are `_edit_passage` and `_apply_passage`, shared
+    with `ground_edit`.
     """
-    import ast as _ast
-    from .pipeline import inspect_code as _inspect_code
-
     rel = (args.get("filepath") or "").strip()
     if not rel:
         return ("Refused: edit_file needs the file to edit as <filepath>, and "
@@ -3924,16 +3926,26 @@ def _edit_file(env: SkillExecutionEnv, args: dict) -> str:
                 f"write_file makes a new file; edit_file changes one that is "
                 f"already there.")
 
-    body = args.get("content") or ""
+    old, new, why = _edit_passage(args.get("content") or "")
+    if why:
+        return why
+    return _apply_passage(path, old, new)
+
+
+def _edit_passage(body: str) -> tuple[str, str, str]:
+    """The two-marker shape, read: (old, new, refusal). ONE READER for every
+    door that takes an edit (2026-09-28: `edit_file` in the workspace and
+    `ground_edit` on the tree), so the shape a seat learns at one door is the
+    shape at the other."""
     lines = body.replace("\r\n", "\n").split("\n")
     heads = [i for i, l in enumerate(lines) if l.strip() == _EDIT_OLD]
     news = [i for i, l in enumerate(lines) if l.strip() == _EDIT_NEW]
     if len(heads) != 1 or len(news) != 1 or news[0] < heads[0]:
-        return (f"Refused: the edit needs exactly one `{_EDIT_OLD}` line and "
-                f"one `{_EDIT_NEW}` line after it. Found {len(heads)} and "
-                f"{len(news)}. The shape is:\n"
-                f"{_EDIT_OLD}\n<the exact text already in the file>\n"
-                f"{_EDIT_NEW}\n<what replaces it>")
+        return "", "", (f"Refused: the edit needs exactly one `{_EDIT_OLD}` line and "
+                        f"one `{_EDIT_NEW}` line after it. Found {len(heads)} and "
+                        f"{len(news)}. The shape is:\n"
+                        f"{_EDIT_OLD}\n<the exact text already in the file>\n"
+                        f"{_EDIT_NEW}\n<what replaces it>")
     old = "\n".join(lines[heads[0] + 1:news[0]])
     new = "\n".join(lines[news[0] + 1:])
     # A trailing blank from the fence or the wire is not part of the passage.
@@ -3942,9 +3954,20 @@ def _edit_file(env: SkillExecutionEnv, args: dict) -> str:
     while new.endswith("\n"):
         new = new[:-1]
     if not old.strip():
-        return f"Refused: the text after `{_EDIT_OLD}` is empty; nothing to find."
+        return "", "", f"Refused: the text after `{_EDIT_OLD}` is empty; nothing to find."
     if old == new:
-        return "Refused: the old and new text are identical. Nothing to do."
+        return "", "", "Refused: the old and new text are identical. Nothing to do."
+    return old, new, ""
+
+
+def _apply_passage(path: Path, old: str, new: str) -> str:
+    """Replace `old` with `new` in the file at `path`, or refuse and write
+    nothing. ONE WRITER for every door that edits (2026-09-28): the unique
+    anchor, the terminator kept and MIXED refused, and the structural gate on
+    the whole file as it would stand, are the same at the workspace door and
+    at the tree door because they are the same code."""
+    import ast as _ast
+    from .pipeline import inspect_code as _inspect_code
 
     raw = path.read_bytes()
     eol = _one_terminator(raw)
@@ -3995,6 +4018,265 @@ def _edit_file(env: SkillExecutionEnv, args: dict) -> str:
             f"{len(old.splitlines())} line(s) replaced by "
             f"{len(new.splitlines())}, file now {after} lines (was {before}). "
             f"Terminator kept: {kept}.")
+
+
+# =====================================================================
+# THE TREE DOORS (2026-09-28)
+# =====================================================================
+#
+# His ruling, in his words: "yes, that's the whole idea of the coder, I want
+# to actually be able to write/read/modify files within the harness." And his
+# order before it: "code safety pass, and then we put the coder on the tree."
+#
+# `write_file` and `edit_file` write INTO THE WORKSPACE, the quarantine, and
+# nowhere else -- `safe_path` collapses every other path to a basename there.
+# `ground_read` has read the ground itself for weeks. `ground_write` and
+# `ground_edit` are its writing half: they reach a tracked file in the ground
+# -- source in manjuel/ or atlas/line/, a test, a doc -- and hold, at ONE
+# function both call, what the pass found the tree needs before a seat is let
+# onto it:
+#
+#   NEVER WRITTEN, BY NAME (`never_written`). `.env` and every secret (RULE
+#   7). The protected (SITTING LAW 2). `worlds/` (ESTATE LAW 2). Every `.git/`
+#   -- this ground's, atlas's, each project's: the history is git's to write.
+#   `law/`: sealed, and a hand does not edit it, so a seat neither. The
+#   governing files -- CLAUDE.md, .gitignore, .gitattributes, index_roots.txt,
+#   agents/, skills/, pipelines.md, commands.md, .env.example -- his, and four
+#   of them hot-reloaded into his live sitting. The record and the runtime
+#   stores -- sessions/, logs/, index/, state/, flows/, memory/, memory.md,
+#   SEAT_LOG.md, agent_workspace/ (which has doors of its own) -- one
+#   write-path each (LAW 8). The proof stamps under tests/ -- a seat never
+#   writes its own proof. BUILDMAP.md -- generated, never authored. Binaries
+#   -- placed on his allowance. projects/ -- the maker's.
+#
+#   THE MAIN LINE IS HIS (`line_of_work`). A write lands only while the
+#   repository the file belongs to stands on a line of work: a branch that is
+#   not main or master and is not detached. The council opens one through the
+#   door (`git_branch new`) or he does on Version control; merging it is his
+#   click (RULE 6). The repository is the NEAREST one -- atlas/ carries its
+#   own `.git` inside the ground -- and a ground with none refuses, because a
+#   rule that cannot be checked is not a rule.
+#
+#   A FOLDER IS HIS TO PLACE (RULE 8). A new file lands in a folder that
+#   exists; a seat makes no folder.
+#
+#   THE TERMINATOR IS THE FILE'S OWN (`terminator_for`). An edit keeps what
+#   the file has and refuses MIXED, as `edit_file` does. A new file takes the
+#   terminator of its nearest sibling of the same suffix in its folder, and
+#   LF where there is none: a new .py beside LF files is LF, a new root .md
+#   beside CRLF files is CRLF (the terminator ruling, 2026-09-03).
+#
+#   THE SAME STRUCTURAL GATE. A .py is parsed and put through `inspect_code`
+#   on the whole file as it would stand -- `write_file`'s, `edit_file`'s,
+#   and the coder's landing's.
+#
+# NOT MOVED: `run_python`. Its wall is the workspace; moved to the tree it
+# would put `.env` inside the wall. The suites run through the door, not
+# through the child.
+
+_NEVER_WRITTEN_TOP = {
+    "worlds": "worlds/ is another world's, closed until the operator points at it (ESTATE LAW 2, SITTING LAW 2)",
+    "law": "law/ is sealed, and a hand does not edit the law, so a seat does not either",
+    "agents": "agents/ is the seats' own declarations, the operator's to set, and hot-reloaded into his live sitting",
+    "skills": "skills/ is the estate's own tools, the operator's to set, and hot-reloaded into his live sitting",
+    "sessions": "sessions/ is the ledger, written by the chain alone (LAW 8: one write-path)",
+    "logs": "logs/ is the transcripts, written by the runs alone (LAW 8)",
+    "index": "index/ is derived from the ground and rebuilt, never authored",
+    "state": "state/ is the door's own record (LAW 8)",
+    "flows": "flows/ is the workflow engine's own store (LAW 8)",
+    "memory": "memory/ is the memory's own store (LAW 8)",
+    "projects": "projects/ is the maker's, each project its own repository with its own doors",
+    "agent_workspace": "agent_workspace/ has doors of its own: write_file and edit_file",
+    "bin": "bin/ holds binaries, which are placed on the operator's allowance",
+}
+_NEVER_WRITTEN_FILES = {
+    "claude.md": "CLAUDE.md is the operator's standing rules",
+    ".gitignore": ".gitignore says what is not part of the work, and is the operator's",
+    ".gitattributes": ".gitattributes governs the terminators, and is the operator's",
+    "index_roots.txt": "index_roots.txt governs what is indexed, on his ruling",
+    "pipelines.md": "pipelines.md is the pipelines' law, the operator's, and hot-reloaded into his live sitting",
+    "commands.md": "commands.md is the REPL's own commands, hot-reloaded into his live sitting",
+    ".env.example": ".env.example names the dials and the keys' shapes, and is the operator's",
+    "memory.md": "memory.md is the memory's own record (LAW 8)",
+    "seat_log.md": "SEAT_LOG.md is the tolls, written by the chain alone (LAW 8)",
+    "buildmap.md": "BUILDMAP.md is generated from the code by tests/buildmap.py, never authored",
+}
+_NEVER_WRITTEN_STAMPS = {
+    "tests/last_run.json", "tests/last_run.md", "tests/run_history.jsonl", "tests/last_audit.md",
+}
+_NEVER_WRITTEN_SUFFIXES = {".exe", ".dll", ".bin", ".pyc", ".pyd", ".so", ".bundle", ".obj"}
+
+
+def never_written(env, path: Path) -> str:
+    """Why a seat may never write THIS path in the ground, or "" when it may.
+    Judged on the resolved path, by name -- never on what the caller meant."""
+    from .vectors import is_protected, is_secret
+    try:
+        rel = path.resolve().relative_to(Path(env.ground).resolve())
+    except ValueError:
+        return f"Refused: '{path}' is outside the ground. Nothing was written."
+    parts = [p.lower() for p in rel.parts]
+    posix = rel.as_posix().lower()
+    if is_secret(path.name):
+        return (f"Refused: '{rel.as_posix()}' is a secret, and keys are silent -- never "
+                f"written by a seat (RULE 7). Nothing was written.")
+    if is_protected(path):
+        return ("Refused: that is CLIENT DATA -- tagged protected, never read into the "
+                "chain and never written by it. Nothing was written.")
+    if ".git" in parts:
+        return ("Refused: a `.git/` is the history, and the history is git's to write "
+                "(LAW 8). Nothing was written.")
+    if parts and parts[0] in _NEVER_WRITTEN_TOP:
+        return f"Refused: {_NEVER_WRITTEN_TOP[parts[0]]}. Nothing was written."
+    if posix in _NEVER_WRITTEN_STAMPS:
+        return (f"Refused: '{rel.as_posix()}' is a proof stamp, written by the suite that "
+                f"ran and by nothing else -- a seat never writes its own proof. Nothing "
+                f"was written.")
+    if path.name.lower() in _NEVER_WRITTEN_FILES:
+        return f"Refused: {_NEVER_WRITTEN_FILES[path.name.lower()]}. Nothing was written."
+    if path.suffix.lower() in _NEVER_WRITTEN_SUFFIXES:
+        return (f"Refused: '{path.name}' is a binary, and a binary is placed on the "
+                f"operator's allowance, never written by a seat. Nothing was written.")
+    return ""
+
+
+def repo_of(env, path: Path) -> Path | None:
+    """The nearest repository the path belongs to, inside the ground: the first
+    folder walking up from the file that carries a `.git`, or None."""
+    ground = Path(env.ground).resolve()
+    cur = path.resolve().parent
+    while True:
+        if (cur / ".git").exists():
+            return cur
+        if cur == ground or ground not in cur.parents:
+            return None
+        cur = cur.parent
+
+
+def line_of_work(env, path: Path) -> tuple[str, str]:
+    """(refusal, branch): the branch the file's repository stands on, or why a
+    write may not land there. THE MAIN LINE IS HIS."""
+    from . import gitstate
+    repo = repo_of(env, path)
+    if repo is None:
+        return ("Refused: the ground is not under version control here, so a line of "
+                "work cannot be checked, and a write on the tree lands only on a line of "
+                "work. Nothing was written.", "")
+    g = gitstate.read(repo)
+    if g.error:
+        return f"Refused: git could not be asked ({g.error}). Nothing was written.", ""
+    branch = (g.branch or "").strip()
+    if branch in ("", "main", "master"):
+        where = "detached" if branch == "" else f"on `{branch}`"
+        return (f"Refused: the repository at `{repo.name or repo}` stands {where}, and the "
+                f"main line is the operator's (RULE 6). Open a line of work first -- "
+                f"`git_branch new <name>` through the door, or Lines of work on Version "
+                f"control -- and write on it. Nothing was written.", "")
+    return "", branch
+
+
+def terminator_for(path: Path) -> bytes | None:
+    """The terminator a write must use: the file's own (None when MIXED), or
+    for a new file its nearest sibling's of the same suffix, or LF."""
+    if path.exists():
+        return _one_terminator(path.read_bytes()) or None
+    for sib in sorted(path.parent.glob("*" + path.suffix)):
+        if sib.is_file() and sib != path:
+            eol = _one_terminator(sib.read_bytes())
+            if eol:
+                return eol
+    return b"\n"
+
+
+def checked_python(path: Path, body: str) -> str:
+    """The structural gate for a whole file about to be written: parse, then
+    `inspect_code`. "" when it may be written, else the refusal."""
+    import ast as _ast
+    from .pipeline import inspect_code as _inspect_code
+    if path.suffix.lower() != ".py":
+        return ""
+    try:
+        _ast.parse(body)
+    except SyntaxError as exc:
+        line = (exc.text or "").strip()
+        shown = f" The line: {line!r}." if line else ""
+        return (f"Refused: that content is not parseable Python -- {exc.msg} at line "
+                f"{exc.lineno}.{shown} NOTHING WAS WRITTEN. Send the code alone: a stray "
+                f"closing tag or a flag block from your own answer counts as source here.")
+    ok, why = _inspect_code(path.name, body)
+    if not ok:
+        return (f"Refused: {path.name} {why}. NOTHING WAS WRITTEN. This is the same "
+                f"check the coder's own landing and write_file make, and it reads what "
+                f"the SOURCE says -- not what the code would do if it ran.")
+    return ""
+
+
+def _tree_target(env, args: dict, verb: str) -> tuple:
+    """The resolved file a tree door was asked for: (path, rel, branch, refusal)."""
+    rel = unjail((args.get("filepath") or "").strip().strip("'\"`"))
+    if not rel:
+        return None, "", "", (f"Refused: {verb} needs the file as <filepath>, relative to the "
+                              f"ground (e.g. manjuel/intent.py or tests/test_x.py).")
+    path = _inside_ground(env, rel)
+    if path is None:
+        return None, rel, "", f"Refused: '{rel}' is outside the ground. Nothing was written."
+    why = never_written(env, path)
+    if why:
+        return None, rel, "", why
+    why, branch = line_of_work(env, path)
+    if why:
+        return None, rel, "", why
+    return path, rel, branch, ""
+
+
+@skill("ground_write")
+def _ground_write(env: SkillExecutionEnv, args: dict) -> str:
+    """Write one whole file into the ground, on a line of work."""
+    path, rel, branch, why = _tree_target(env, args, "ground_write")
+    if why:
+        return why
+    if path.is_dir():
+        return f"Refused: '{rel}' is a folder, not a file. Nothing was written."
+    if not path.parent.is_dir():
+        return (f"Refused: '{path.parent.name}/' is not a folder in the ground, and a seat "
+                f"makes no folder -- a new folder is the operator's to place (RULE 8). "
+                f"Nothing was written.")
+    body = args.get("content") or ""
+    why = checked_python(path, body)
+    if why:
+        return why
+    eol = terminator_for(path)
+    if eol is None:
+        return (f"Refused: {path.name} has MIXED line endings, so a write cannot keep what "
+                f"it has. That is a file to fix before it is written, not through a write.")
+    was = "new file" if not path.exists() else "replaced whole"
+    flat = body.replace("\r\n", "\n")
+    try:
+        path.write_bytes(flat.replace("\n", eol.decode()).encode("utf-8"))
+    except Exception as exc:
+        return f"Write error: {exc}"
+    kept = "CRLF" if eol == b"\r\n" else "LF"
+    return (f"Wrote {rel} on line of work `{branch}`: {len(flat.split(chr(10)))} lines, "
+            f"{was}, terminator {kept}. It is unsaved until git_commit lands it on that "
+            f"line; the main line moves only by the operator's hand.")
+
+
+@skill("ground_edit")
+def _ground_edit(env: SkillExecutionEnv, args: dict) -> str:
+    """Replace one exact passage in a file in the ground, on a line of work."""
+    path, rel, branch, why = _tree_target(env, args, "ground_edit")
+    if why:
+        return why
+    if not path.is_file():
+        return (f"Refused: there is no '{rel}' in the ground to edit. ground_write makes a "
+                f"new file; ground_edit changes one that is already there.")
+    old, new, why = _edit_passage(args.get("content") or "")
+    if why:
+        return why
+    out = _apply_passage(path, old, new)
+    if out.startswith("Edited"):
+        out += (f" On line of work `{branch}`; unsaved until git_commit lands it there.")
+    return out
 
 
 # The bound on a child, its own dial because a run is not a skill call: the

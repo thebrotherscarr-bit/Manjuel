@@ -807,6 +807,20 @@ engine running. The rest of the pass is named in CHANGELOG and not built: the tr
 atlas `325888c`, level with GitHub); this piece is unsaved. Sitting 287, an engine he booted at
 11:50 with no runs, was closed from the Dashboard at 11:55.
 
+**THE DAY'S EIGHTH PIECE: THE TREE DOORS.** By card, the second piece of the pass, on his ruling
+"I want to actually be able to write/read/modify files within the harness". `ground_write` and
+`ground_edit` reach a tracked file in the ground and hold at one function both call: the
+never-written names (secrets, the protected, `worlds/`, `.git/`, `law/`, the governing files, the
+record and the runtime stores, the proof stamps, `BUILDMAP.md`, binaries, `projects/`), the main
+line his (a write lands only on a line of work of the file's NEAREST repository; atlas judged by
+its own), no new folder (RULE 8), the file's own terminator (a new file takes its neighbours'), the
+same structural gate. `edit_file` shares the code. One stroke (60), the LAW 8 roster stroke moved
+to sixteen, strokes 3059/3059 and smoke 72/72 on a mirror, buildmap regenerated, five reversals red
+(30, 9, 1, 2, 2). `manjuel/skills.py` moved: RESTART REQUIRED, no engine running. REFUSALS §27
+says it. Unsaved: `manjuel/skills.py`, `tests/test_manjuel.py`, `skills/ground_write.md`,
+`skills/ground_edit.md`, `REFUSALS.md`, `BUILDMAP.md`, this file, CHANGELOG, DAYBOOK. The seventh
+piece was saved and sent as core `c92751d`.
+
 **Where the ground stands.** core `main@3e0b5b4` plus `RUNBOOK.md` and this file, to be saved and
 sent through the glass's Version control on his word. atlas `main@1336fa8`: both pieces --
 `line/internal/tools/tools.go`, `gitctl.go`, `tools_test.go`, `line/internal/auth/auth.go`,

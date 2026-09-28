@@ -34,6 +34,47 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The tree doors: a seat writes the ground itself, on a line of work (operator, 2026-09-28: "yes, that's the whole idea of the coder, I want to actually be able to write/read/modify files within the harness"; by card, the tree doors)
+
+The second piece of the code safety pass. Until now a seat wrote only into `agent_workspace/`,
+the quarantine, and `ground_read` read the ground with nothing writing it. No sitting was open.
+**RESTART REQUIRED:** `manjuel/skills.py` moved; no engine is running, so the next Boot runs it.
+
+- **`manjuel/skills.py`:** `ground_write` (one whole file) and `ground_edit` (one exact passage,
+  the `@@ OLD`/`@@ NEW` shape) reach a tracked file in the ground -- source, a test, a doc -- and
+  hold, at ONE function both call, what the pass named: `never_written` (`.env` and every secret,
+  the protected, `worlds/`, every `.git/`, `law/`, the governing files, the record and the
+  runtime stores, the proof stamps, `BUILDMAP.md`, binaries, `projects/` -- refused by name, with
+  the rule); `line_of_work` (a write lands only while the file's NEAREST repository stands on a
+  branch that is not main or master and is not detached -- atlas/ is judged by its own line; the
+  cure is named, `git_branch new` through the door or Lines of work on Version control; merging
+  is his click); a folder that does not exist refuses (RULE 8); `terminator_for` (the file's own,
+  MIXED refused; a new file takes its nearest same-suffix sibling's, else LF); `checked_python`
+  (parse, then `inspect_code` on the whole file). `edit_file`'s shape and write moved into
+  `_edit_passage` and `_apply_passage`, shared with `ground_edit`, so the workspace door and the
+  tree door are the same code. `run_python` stays in the workspace on purpose. Both doors are in
+  `WRITING_SKILLS`.
+- **`skills/ground_write.md`, `skills/ground_edit.md`:** the declarations, jailing into the
+  ground (`Path Args: filepath -> ground`), each naming what it refuses and its cure.
+- **`tests/test_manjuel.py`:** `test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name`
+  (60): no repository refuses; main refuses at both doors and names the cure; on a line a new .py
+  takes LF and a new root .md CRLF, an edit keeps its own and names the line; the gate at both
+  doors; a folder that does not exist; sixteen never-written names, each with the file as it was
+  and no folder made; a path out of the ground; MIXED at both doors; atlas judged by its own line;
+  `edit_file` unchanged in shape; both doors in the writers' roster and in no reading one. The
+  LAW 8 roster stroke moved from fourteen jailing declarations to sixteen, dated.
+- **`REFUSALS.md` §27** says it; **`BUILDMAP.md`** regenerated.
+
+Proven on a mirror: strokes 3059/3059, smoke 72/72, buildmap clean. By reversal: R1 the
+never-written names not asked -- 30 red; R2 the line of work not asked -- 9; R3 the terminator
+not the neighbours' -- 1; R4 the gate struck at the write door -- 2; R5 at the edit door -- 2;
+each put back green. His terminal is still the proof. WHAT GOES RED IF THIS COMES UNPLUGGED: the
+stroke, on the first write to a never-written name, on main, into a new folder, with the wrong
+terminator, or carrying what the gate refuses. NOT CHANGED: the door's holds and RBAC do not see
+these skills (they run inside the engine); what lands is gated by the branch and, once folded,
+by the coder's flow and its gate. NEXT, by the card's order: `suite_run` at the door, the
+coder-on-the-tree flow, the dials.
+
 ### The edit door holds the same line as the write door (operator, 2026-09-28: "code safety pass, and then we put the coder on the tree"; by card, edit_file first)
 
 The pass before the coder is let onto the tree: the doors it will use, read as they stand. The

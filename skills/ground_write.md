@@ -1,0 +1,7 @@
+# Skill: Write a File in the Ground
+
+- **Action Keyword:** ground_write
+- **Description:** Writes one WHOLE file into the ground itself — source in manjuel/ or atlas/line/, a test under tests/, a doc — at a path relative to the ground, on a LINE OF WORK. Refused by name, with nothing written: while the file's repository stands on main or master (open a line first with git_branch new through the door), a secret or .env, client data, worlds/, any .git/, law/, the governing files (CLAUDE.md, .gitignore, agents/, skills/, pipelines.md, commands.md, index_roots.txt), the record and the runtime stores (sessions/, logs/, index/, state/, flows/, memory/, SEAT_LOG.md, memory.md, agent_workspace/), the proof stamps under tests/, BUILDMAP.md, binaries, projects/, and a folder that does not exist yet. A .py is checked as write_file checks one: it must parse, and it may not import the network, call eval/exec/__import__, reach importlib or pass shell=True. The terminator is the file's own, or its neighbours' for a new file. The write is unsaved until git_commit lands it on the line. Use for "write manjuel/x.py", "add a test file to the ground", "create the module in the tree". write_file is the workspace's door, for scratch.
+- **Parameters Needed:** <filepath>The file's path relative to the ground, e.g. manjuel/intent.py or tests/test_thing.py</filepath> <content>The whole text of the file</content>
+- **Path Args:** filepath -> ground
+- **Says:** write in the ground, write the source file, write into the tree, create the module in the ground

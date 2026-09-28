@@ -14005,6 +14005,160 @@ def test_the_edit_door_holds_the_same_line_as_the_write_door(reg, lib, book):
           out.startswith("Refused") and "unparseable" in out and "line" in out, out[:140])
 
 
+def test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name(reg, lib, book):
+    """THE TREE DOORS (2026-09-28). His ruling: "yes, that's the whole idea of
+    the coder, I want to actually be able to write/read/modify files within
+    the harness." `ground_write` and `ground_edit` reach a tracked file in
+    the ground, and hold at one function what the code safety pass found the
+    tree needs before a seat is let onto it: the never-written names, the
+    main line his, a folder his to place, the file's own terminator, and the
+    same structural gate the other doors run.
+    """
+    from manjuel import skills as _sk
+    g = Path(tempfile.mkdtemp())
+    env = env_for(g, reg, Stub())
+    # A small ground: LF source under manjuel/, CRLF docs at the root, the
+    # governing files, and the folders the door must refuse by name.
+    (g / "manjuel").mkdir()
+    (g / "manjuel" / "thing.py").write_bytes(b"import json\nX = 1\n")
+    (g / "README.md").write_bytes(b"# a doc\r\nwords\r\n")
+    (g / "CLAUDE.md").write_bytes(b"rules\r\n")
+    for d in ("law", "agents", "skills", "sessions", "logs", "worlds",
+              "projects", "bin", "tests", "vault"):
+        (g / d).mkdir(exist_ok=True)
+    (g / "law" / "LAW.md").write_bytes(b"sealed\r\n")
+    (g / "tests" / "last_run.json").write_bytes(b"{}")
+    (g / ".env").write_bytes(b"KEY=x\n")
+
+    def w(rel, body):
+        return lib.execute("ground_write", {"filepath": rel, "content": body}, env)
+
+    def e(rel, old, new):
+        return lib.execute("ground_edit", {"filepath": rel,
+                                           "content": f"@@ OLD\n{old}\n@@ NEW\n{new}\n"}, env)
+
+    # NO REPOSITORY: the line of work cannot be checked, so nothing lands.
+    out = w("manjuel/new.py", "Y = 2\n")
+    check("with no repository the tree door refuses",
+          out.startswith("Refused") and "version control" in out, out[:120])
+    check("and wrote nothing", not (g / "manjuel" / "new.py").exists())
+    if not HAVE_GIT:
+        return                    # reported once, in main(); never a crash
+    for args in (["init", "-q"], ["config", "user.email", "t@t"],
+                 ["config", "user.name", "t"], ["checkout", "-q", "-b", "main"]):
+        subprocess.run(["git", *args], cwd=g)
+    gitstate.commit(g, "manjuel: the ground")
+
+    # THE MAIN LINE IS HIS.
+    out = w("manjuel/new.py", "Y = 2\n")
+    check("on main the write door refuses and names the cure",
+          out.startswith("Refused") and "main line" in out and "git_branch new" in out, out[:160])
+    check("and wrote nothing on main", not (g / "manjuel" / "new.py").exists())
+    out = e("manjuel/thing.py", "X = 1", "X = 2")
+    check("on main the edit door refuses too",
+          out.startswith("Refused") and "main line" in out, out[:120])
+    check("and the file stands",
+          (g / "manjuel" / "thing.py").read_bytes() == b"import json\nX = 1\n")
+    subprocess.run(["git", "checkout", "-q", "-b", "piece-x"], cwd=g)
+
+    # ON A LINE OF WORK: a new .py beside LF files is LF; a new root .md
+    # beside CRLF docs is CRLF; an edit keeps what the file has.
+    out = w("manjuel/new.py", "Y = 2\r\nZ = 3\r\n")
+    check("on a line of work a new source file lands",
+          out.startswith("Wrote manjuel/new.py on line of work `piece-x`"), out[:120])
+    check("and takes its neighbours' terminator (LF)",
+          (g / "manjuel" / "new.py").read_bytes() == b"Y = 2\nZ = 3\n")
+    out = w("NOTES.md", "a\nb\n")
+    check("a new root doc takes its neighbours' terminator (CRLF)",
+          out.startswith("Wrote") and (g / "NOTES.md").read_bytes() == b"a\r\nb\r\n", out[:100])
+    out = e("manjuel/thing.py", "X = 1", "X = 2")
+    check("an edit on a line of work lands and names the line",
+          out.startswith("Edited thing.py at line 2") and "piece-x" in out, out[:160])
+    check("and keeps the terminator",
+          (g / "manjuel" / "thing.py").read_bytes() == b"import json\nX = 2\n")
+
+    # THE SAME STRUCTURAL GATE AT BOTH DOORS.
+    out = w("manjuel/bad.py", "import socket\n")
+    check("the write door on the tree refuses a network import",
+          out.startswith("Refused") and "RULE 4" in out
+          and not (g / "manjuel" / "bad.py").exists(), out[:120])
+    out = e("manjuel/thing.py", "X = 2", "X = eval('2')")
+    check("the edit door on the tree refuses eval",
+          out.startswith("Refused") and "executes a string" in out, out[:120])
+    check("and the file stands after the refused edit",
+          (g / "manjuel" / "thing.py").read_bytes() == b"import json\nX = 2\n")
+    out = w("manjuel/bad2.py", "def (\n")
+    check("unparseable is refused with the line",
+          out.startswith("Refused") and "not parseable" in out, out[:120])
+
+    # A FOLDER IS HIS TO PLACE (RULE 8).
+    out = w("newdir/x.py", "Y = 1\n")
+    check("a file in a folder that does not exist is refused",
+          out.startswith("Refused") and "RULE 8" in out and not (g / "newdir").exists(), out[:120])
+
+    # NEVER WRITTEN, BY NAME: each refused, nothing created, nothing changed.
+    never = {
+        ".env": "RULE 7", "vault/x.md": "CLIENT DATA", "worlds/w/x.md": "ESTATE LAW 2",
+        ".git/config": "history", "law/LAW.md": "sealed", "CLAUDE.md": "standing rules",
+        "agents/steward.md": "hot-reloaded", "skills/x.md": "hot-reloaded",
+        "pipelines.md": "hot-reloaded", "commands.md": "hot-reloaded",
+        "sessions/sessions.jsonl": "LAW 8", "logs/x.md": "LAW 8",
+        "tests/last_run.json": "proof", "BUILDMAP.md": "generated",
+        "bin/x.exe": "allowance", "projects/p/page.html": "maker",
+    }
+    for rel, mark in never.items():
+        before = (g / rel).read_bytes() if (g / rel).exists() else None
+        out = w(rel, "x\n")
+        check(f"never written: {rel}", out.startswith("Refused") and mark in out, out[:140])
+        after = (g / rel).read_bytes() if (g / rel).exists() else None
+        check(f"and {rel} is as it was", before == after)
+    check("no folder was made by a refused write",
+          not (g / "worlds" / "w").exists() and not (g / "projects" / "p").exists())
+
+    # OUTSIDE THE GROUND: refused at the gate, before the handler (LAW 8).
+    out = lib.execute("ground_write", {"filepath": "../escape.py", "content": "Y = 1\n"}, env)
+    check("a path out of the ground is refused",
+          out.startswith("Refused") and not (g.parent / "escape.py").exists(), out[:120])
+
+    # A MIXED FILE is refused by both doors.
+    (g / "manjuel" / "mixed.py").write_bytes(b"A = 1\r\nB = 2\n")
+    out = e("manjuel/mixed.py", "A = 1", "A = 3")
+    check("a MIXED file is refused by the edit door",
+          out.startswith("Refused") and "MIXED" in out, out[:100])
+    out = w("manjuel/mixed.py", "A = 3\n")
+    check("and by the write door", out.startswith("Refused") and "MIXED" in out, out[:100])
+
+    # THE NEAREST REPOSITORY: atlas/ inside the ground carries its own .git,
+    # and a file in it is judged by atlas's own line.
+    (g / "atlas" / "line").mkdir(parents=True)
+    for args in (["init", "-q"], ["config", "user.email", "t@t"],
+                 ["config", "user.name", "t"], ["checkout", "-q", "-b", "main"]):
+        subprocess.run(["git", *args], cwd=g / "atlas")
+    (g / "atlas" / "line" / "a.go").write_bytes(b"package line\n")
+    gitstate.commit(g / "atlas", "atlas: the ground")
+    out = w("atlas/line/b.go", "package line\n")
+    check("a file in atlas is judged by atlas's own line: on main, refused",
+          out.startswith("Refused") and "main line" in out and "atlas" in out, out[:160])
+    subprocess.run(["git", "checkout", "-q", "-b", "piece-y"], cwd=g / "atlas")
+    out = w("atlas/line/b.go", "package line\n")
+    check("and lands once atlas stands on a line of work",
+          out.startswith("Wrote atlas/line/b.go on line of work `piece-y`"), out[:120])
+
+    # THE WORKSPACE DOORS ARE UNTOUCHED in shape, and share the code.
+    (g / "agent_workspace" / "s.py").write_bytes(b"X = 1\n")
+    out = lib.execute("edit_file", {"filepath": "s.py",
+                                    "content": "@@ OLD\nX = 1\n@@ NEW\nX = 5\n"}, env)
+    check("edit_file in the workspace is unchanged in shape",
+          out.startswith("Edited s.py at line 1") and "line of work" not in out, out[:120])
+
+    # AND THE DOORS ARE WRITERS: counsel may not use them, and a claim to have
+    # written through them is checked like any other write.
+    check("both tree doors are in the writers' roster",
+          {"ground_write", "ground_edit"} <= _sk.WRITING_SKILLS)
+    check("and neither is a reading skill",
+          not ({"ground_write", "ground_edit"} & _sk.REVIEW_ONLY_SKILLS))
+
+
 def test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book):
     """"sandbox the python" (the operator, 2026-09-22).
 
@@ -15108,15 +15262,20 @@ def test_path_gate(reg, lib, book):
     # because the Router's grammar has no fourth tag to give it. They jail
     # into the GROUND, so a world outside it is refused at dispatch by the
     # same gate, before any handler runs.
+    # SIXTEEN since 2026-09-28: the tree doors, `ground_write` and
+    # `ground_edit`, jail into the GROUND like ground_read, and hold their
+    # own refusals beyond the gate (the never-written names, the main line
+    # his) in `never_written` and `line_of_work`, stroked on their own.
     # This roster is written out rather than counted on purpose -- a skill
     # that starts taking a path is a skill that must be seen doing it, and a
     # bare count would have let the eighth arrive unnoticed.
-    check("and the declarations are exactly the fourteen that jail",
+    check("and the declarations are exactly the sixteen that jail",
           sorted(declared) == ["edit_file", "embed_text", "git_commit",
                                "git_cycle", "git_init", "git_pull", "git_push",
-                               "git_status", "ground_list", "ground_read",
-                               "inspect", "read_file", "run_python",
-                               "write_file"], str(sorted(declared)))
+                               "git_status", "ground_edit", "ground_list",
+                               "ground_read", "ground_write", "inspect",
+                               "read_file", "run_python", "write_file"],
+          str(sorted(declared)))
 
 
 def test_flags_are_not_speech(reg, lib, book):
@@ -16886,6 +17045,7 @@ def main() -> int:
     test_a_run_is_bounded_jailed_and_blind_to_the_keys(reg, lib, book)
     test_both_doors_into_the_workspace_hold_the_same_line(reg, lib, book)
     test_the_edit_door_holds_the_same_line_as_the_write_door(reg, lib, book)
+    test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)
