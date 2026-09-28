@@ -3896,8 +3896,18 @@ def _edit_file(env: SkillExecutionEnv, args: dict) -> str:
     follows from that one: an edit that guesses which of three matches was
     meant is a write nobody authorised, and a write gate that guesses is the
     thing this estate has spent its whole life refusing to be.
+
+    AND THE EDIT GOES THROUGH THE SAME STRUCTURAL GATE AS A WRITE (2026-09-28,
+    the code safety pass before the coder is let onto the tree). This door
+    checked that the result PARSED and nothing more, while `write_file` and
+    the coder's own landing refuse a network import (RULE 4), `eval`/`exec`/
+    `__import__`, a dynamic `importlib` and `shell=True` -- so an edit could
+    bring into a file exactly what the write door refuses to put there. The
+    2026-09-22 lesson, at the third door: a gate one door enforces and the
+    other does not is a preference. On the tree the edit is the main verb.
     """
     import ast as _ast
+    from .pipeline import inspect_code as _inspect_code
 
     rel = (args.get("filepath") or "").strip()
     if not rel:
@@ -3958,14 +3968,23 @@ def _edit_file(env: SkillExecutionEnv, args: dict) -> str:
     out = flat.replace(old, new, 1)
 
     # REFUSE BY PROOF, the way land_code does. A .py that would not parse
-    # after the edit is not written -- and this is a PARSE check only, not
-    # the full structural gate the coder's own landing runs.
+    # after the edit is not written -- the parse message stays its own, it
+    # names the line -- and then the RESULT is put through `inspect_code`,
+    # the structural gate `write_file` and the coder's landing already run.
+    # Judged on the whole file as it would stand, not on the fragment: a
+    # fragment can complete an import the file already half-carried.
     if path.suffix.lower() == ".py":
         try:
             _ast.parse(out)
         except SyntaxError as exc:
             return (f"Refused: that edit would leave {path.name} unparseable "
                     f"-- {exc.msg} at line {exc.lineno}. Nothing was written.")
+        ok, why = _inspect_code(path.name, out)
+        if not ok:
+            return (f"Refused: that edit would leave {path.name} {why}. "
+                    f"Nothing was written. This is the same check the coder's "
+                    f"own landing and write_file make, and it reads what the "
+                    f"SOURCE says -- not what the code would do if it ran.")
 
     kept = "CRLF" if eol == b"\r\n" else "LF"
     before = len(flat.split("\n"))

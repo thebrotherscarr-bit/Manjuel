@@ -636,9 +636,12 @@ Stated plainly, because a security page that only lists wins is marketing.
 ## 23. An edit names one passage, and a run is not a shell
 
 **Trigger.** `edit_file` is given an anchor that appears twice, or none, or an
-edit that would leave a `.py` unparseable, or a file whose line endings are
-already MIXED. `run_python` is given something that is not a `.py`, or a file
-that is not there, or a script that will not finish.
+edit that would leave a `.py` unparseable, or one that would leave it carrying
+what the write door refuses (§24: a network import, `eval`/`exec`/`__import__`,
+`importlib`, `shell=True` — since 2026-09-28, judged on the whole file as it
+would stand), or a file whose line endings are already MIXED. `run_python` is
+given something that is not a `.py`, or a file that is not there, or a script
+that will not finish.
 
 **Action.** Refused, and NOTHING IS WRITTEN — each refusal is checked by
 reading the file back. The anchor refusal says HOW MANY times it matched, which
@@ -749,6 +752,17 @@ The parse check stays where it is, because its message is the earned one:
 recognised by the line's TEXT. Prose is still nobody's syntax to judge —
 `inspect_code` fails open by name on anything that is not `.py`, which is the
 same bound this door already drew.
+
+**AND THE THIRD DOOR** (2026-09-28, the code safety pass before the coder is
+let onto the tree). `edit_file` checked that the RESULT parsed and nothing
+more, so an edit could bring into a file exactly what this door refuses to put
+there — the same lesson, at the door the coder on the tree will use most. The
+edit now goes through `inspect_code` too, judged on the whole file as it would
+stand rather than on the fragment, because a fragment can complete an import
+the file already half-carried. Stroked:
+`test_the_edit_door_holds_the_same_line_as_the_write_door` — six edits refused
+with the file's bytes unchanged, an ordinary edit still landing, prose still
+unjudged, and the unparseable message still naming the line.
 
 Stroked: `test_a_write_refuses_python_that_will_not_parse`, with the exact
 bytes that leaked, and both ways -- a real `.py`, a `.md` carrying the same

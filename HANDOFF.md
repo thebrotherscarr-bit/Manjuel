@@ -794,6 +794,19 @@ made -- the `make` step read the ground (`ground_list`) and talked, both checks 
 the 2026-09-23 finding again, now on the record as two runs of one spec. `flow_compare`:
 the two heads named (A: Steward on llama3.2:latest, B: Steward on phi4-mini:latest); the checks `made` and `played` IDENTICAL (both `fail`), the three answers DIFFER in prose.
 
+**THE DAY'S SEVENTH PIECE: THE EDIT DOOR HOLDS THE SAME LINE AS THE WRITE DOOR.** His order,
+after the day's review and his three rulings (a suite run from the glass whose record matches is
+proof; the coder may read, write and modify files within the harness; 180 for the Steward, 300 to
+route, 600 max per seat, the court 900): "code safety pass, and then we put the coder on the
+tree"; by card, `edit_file` first. The pass read the doors as they stand: the 2026-09-22 pass holds
+and `edit_file` alone checked parsing only. The edit now goes through `inspect_code` on the whole
+file as it would stand. One stroke (19), strokes 2992/2992 and smoke 72/72 on a mirror, buildmap
+regenerated, the reversal 13 red. `manjuel/skills.py` moved: RESTART REQUIRED, no
+engine running. The rest of the pass is named in CHANGELOG and not built: the tree doors,
+`suite_run`, the flow, the dials. Both repositories were saved and sent at 11:52 (core `044ef46`,
+atlas `325888c`, level with GitHub); this piece is unsaved. Sitting 287, an engine he booted at
+11:50 with no runs, was closed from the Dashboard at 11:55.
+
 **Where the ground stands.** core `main@3e0b5b4` plus `RUNBOOK.md` and this file, to be saved and
 sent through the glass's Version control on his word. atlas `main@1336fa8`: both pieces --
 `line/internal/tools/tools.go`, `gitctl.go`, `tools_test.go`, `line/internal/auth/auth.go`,

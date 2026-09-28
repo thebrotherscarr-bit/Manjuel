@@ -34,6 +34,43 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The edit door holds the same line as the write door (operator, 2026-09-28: "code safety pass, and then we put the coder on the tree"; by card, edit_file first)
+
+The pass before the coder is let onto the tree: the doors it will use, read as they stand. The
+2026-09-22 pass holds in the code -- `write_file` runs the structural gate, the child runs inside
+its wall, `git_diff` and `read_plan` refuse what the world keeps out of history -- and one door
+did not: `edit_file` checked that the result PARSED and nothing more, so a network import,
+`eval`/`exec`/`__import__`, `importlib` or `shell=True` that the write door refuses could be
+brought into a file one edit at a time. On the tree the edit is the main verb. No sitting was
+open. **RESTART REQUIRED:** `manjuel/skills.py` moved; no engine is running, so the next Boot runs
+the new code.
+
+- **`manjuel/skills.py`, `edit_file`:** after the parse check (its message stays; it names the
+  line) the RESULT goes through `inspect_code`, the same call `write_file` and the coder's landing
+  make -- judged on the whole file as it would stand, not on the fragment, because a fragment can
+  complete an import the file already half-carried. Refused with nothing written.
+- **`skills/edit_file.md`, `REFUSALS.md` §23 and §24:** say so. **`BUILDMAP.md`:** regenerated.
+- **`tests/test_manjuel.py`:** `test_the_edit_door_holds_the_same_line_as_the_write_door` (19):
+  six edits refused with the file byte for byte what it was; an edit that completes a refused
+  import refused on the whole file; an ordinary edit still lands, prose is still unjudged, and
+  the unparseable message still names the line.
+
+Proven on a mirror: strokes 2992/2992, smoke 72/72, buildmap clean. By reversal -- the gate
+struck at the edit door -- 13 red, put back green. His terminal is still the proof.
+WHAT GOES RED IF THIS COMES UNPLUGGED: the stroke, on the first edit that carries what the write
+door refuses.
+
+THE REST OF THE PASS, named and not built: the tree doors (one jail under the ground that both
+doors call -- `.env` and every secret, the protected, `worlds/`, every `.git/`, `law/`, the
+governing files, the record and the runtime stores, the proof stamps, binaries and `projects/`
+refused by name; refused while the ground stands on `main`; the file's own terminator kept; the
+same structural gate); `suite_run` at the door, the suites in `standup_run`'s shape, one after the
+other; the coder-on-the-tree flow (`git_branch new` spelled out, the attempt on the tree,
+`suite_run` as the check, the loop bounded, a gate that grants `git_commit` on the line, the merge
+his); and the dials. HIS RULINGS, taken this evening: a suite run from the glass whose record
+matches is proof; the coder may read, write and modify files within the harness; the numbers --
+180 for the Steward, 300 to route, 600 max per seat, the court 900.
+
 ### The standup fired from the glass, and the flow engine's bounded return (operator, 2026-09-28: "fire the standup through the glass: create the bounded back-edge looping")
 
 Both are the door's (atlas `CHANGELOG.md` Unreleased carries the accounts, the strokes, the

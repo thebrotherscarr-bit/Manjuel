@@ -13947,6 +13947,64 @@ def test_both_doors_into_the_workspace_hold_the_same_line(reg, lib, book):
           out.startswith("Refused") and "The line:" in out, out[:140])
 
 
+def test_the_edit_door_holds_the_same_line_as_the_write_door(reg, lib, book):
+    """The code safety pass of 2026-09-28, before the coder is let onto the tree.
+
+    `edit_file` checked that the RESULT parsed and nothing more, while
+    `write_file` and the coder's own landing put the bytes through
+    `inspect_code` (the stroke above). So the same network import, `eval`,
+    `importlib` or `shell=True` that the write door refuses could be brought
+    into a file one edit at a time -- and on the tree the edit is the main
+    verb. The third door now holds the same line, judged on the whole file as
+    it would stand, so a fragment cannot complete an import the file already
+    half-carried.
+    """
+    g = Path(tempfile.mkdtemp())
+    env = env_for(g, reg, Stub())
+    ws = g / "agent_workspace"
+    clean = "import json\nprint(json.dumps(sum(range(10))))\n"
+
+    def edit(name, old, new):
+        return lib.execute("edit_file", {"filepath": name,
+                                         "content": f"@@ OLD\n{old}\n@@ NEW\n{new}\n"}, env)
+
+    for name, new, why in (
+            ("net.py", "import socket\nprint(socket)", "RULE 4"),
+            ("net2.py", "from urllib import request", "RULE 4"),
+            ("dyn.py", "eval('1+1')", "executes a string as code"),
+            ("dyn2.py", "exec('x=1')", "executes a string as code"),
+            ("imp.py", "import importlib", "runtime"),
+            ("sh.py", "import subprocess\nsubprocess.run('dir', shell=True)", "shell")):
+        (ws / name).write_bytes(clean.encode("utf-8"))
+        out = edit(name, "import json", new)
+        check(f"edit_file refuses {name}: {why}",
+              out.startswith("Refused") and "Nothing was written" in out, out[:140])
+        check(f"and {name} is byte for byte what it was",
+              (ws / name).read_bytes() == clean.encode("utf-8"), out[:80])
+    # A FRAGMENT CANNOT FINISH WHAT THE FILE HALF-CARRIES: judged on the whole
+    # file as it would stand, an edit that turns `sock = None` into a network
+    # import is refused although the fragment alone names no module the file
+    # did not.
+    (ws / "half.py").write_bytes(b"import json\nsock = None\nprint(sock)\n")
+    out = edit("half.py", "sock = None", "import socket as sock")
+    check("an edit completing a refused import is refused on the whole file",
+          out.startswith("Refused") and "RULE 4" in out, out[:140])
+
+    # AND THE WAYS THAT MUST NOT FIRE.
+    (ws / "calc.py").write_bytes(clean.encode("utf-8"))
+    out = edit("calc.py", "range(10)", "range(20)")
+    check("an ordinary edit still lands",
+          out.startswith("Edited") and b"range(20)" in (ws / "calc.py").read_bytes(), out[:100])
+    (ws / "notes.md").write_bytes(b"a note\n")
+    out = edit("notes.md", "a note", "import socket is a phrase in this sentence")
+    check("prose is not Python and is still edited",
+          out.startswith("Edited"), out[:100])
+    (ws / "broken.py").write_bytes(clean.encode("utf-8"))
+    out = edit("broken.py", "print(json.dumps(sum(range(10))))", "print(")
+    check("the unparseable message still names the line",
+          out.startswith("Refused") and "unparseable" in out and "line" in out, out[:140])
+
+
 def test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book):
     """"sandbox the python" (the operator, 2026-09-22).
 
@@ -16827,6 +16885,7 @@ def main() -> int:
     test_an_edit_refuses_an_anchor_that_does_not_say_which(reg, lib, book)
     test_a_run_is_bounded_jailed_and_blind_to_the_keys(reg, lib, book)
     test_both_doors_into_the_workspace_hold_the_same_line(reg, lib, book)
+    test_the_edit_door_holds_the_same_line_as_the_write_door(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)

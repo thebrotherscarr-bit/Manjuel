@@ -2341,6 +2341,15 @@ been in the plan from the beginning."
   167 s) -- nothing made on either, every check `fail`: the 2026-09-23 finding, now two
   runs of one spec in the record.
 
+- **The seventh piece**, after the review and his three rulings of the evening (a suite run from the
+  glass whose record matches is proof; the coder may read, write and modify files within the
+  harness; 180 for the Steward, 300 to route, 600 max per seat, the court 900) and his order
+  "code safety pass, and then we put the coder on the tree": the pass read the coder's doors as
+  they stand and found the 09-22 pass holding and one door short -- `edit_file` checked parsing
+  only. It now runs `inspect_code` on the whole file as it would stand (by card, first of the
+  four pieces the pass named). One stroke, 2992/2992 and 72/72 on a mirror, the reversal 13
+  red; `manjuel/skills.py` moved, restart required; unsaved.
+
 **Found** — the glass's Tools page asks for a tool's arguments with the browser's `prompt()`, which
 the desktop's browser pane dismisses unseen (the page's own `App.tool` was called from the page
 instead: the same request, the glass's session); a check over the tools block cannot see the maker
@@ -2351,16 +2360,23 @@ talks; the court's cut today is Jesster's alone.
 **Rulings** — by card, in order: withhold the secret where it is shown; the gate declares what it
 grants; fold version-tag v3 as the glass; a door tool for the standup; the ceiling on the target
 node; fold coder v13; fire the standup; refold and fire the wife test twice; measure the court
-first; her words verbatim; place the door (a fourth time).
+first; her words verbatim; place the door (a fourth time). And in the evening, in his words:
+"if its on the glass, and the record mathes, id call it proof"; "yes, that's the whole idea of the
+coder, I want to actually be able to write/read/modify files within the harness"; "180 for
+steward. 300 to route and 600 max per seat other than the court which requires a max of 900"; then
+"code safety pass, and then we put the coder on the tree".
 
 **Drift** — none in the building: every piece was his by order and by card, and the reversals ran
 before the record was written. The standup went through the glass's page rather than its button,
 for the reason under Found, and the record says so.
 
-**At close** — sittings 284, 285 and 286 closed with their tolls; the door pid 86180 carries all
-six pieces; both repositories carry the day's records unsaved, to be saved and sent on his word.
+**At close** — sittings 284, 285 and 286 closed with their tolls, 287 (his, no runs) from the
+Dashboard; the door pid 86180 carries all six door pieces; both repositories saved and sent at
+11:52 on his word (core `044ef46`, atlas `325888c`, level with GitHub), the seventh piece on top,
+unsaved.
 
-**Next session** — the court's dials (`MANJUEL_SEAT_TIMEOUT`, `MANJUEL_TURN_DEADLINE`: his
-number); the front-end agent handoff (SPEC 8.2), in the plan from the beginning and wanting a plan
-before a piece; a Dashboard button for the standup and a `loops` box in the builder; a maker
-evidence line a check can read; the open lines above.
+**Next session** — the rest of the code safety pass in the order the card gave: the tree doors,
+`suite_run` at the door, the coder-on-the-tree flow; the dials (Steward 180, the court 900 as a
+deadline a pipeline declares); the front-end agent handoff's plan is in the record (CHANGELOG, this
+day) and waits on those; a Dashboard button for the standup and a `loops` box in the builder; a
+maker evidence line a check can read; the open lines above.
