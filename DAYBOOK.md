@@ -2361,6 +2361,12 @@ been in the plan from the beginning."
   failures first, one suite at a time machine-wide, a reader so the loop can ask it. One stroke,
   two battery legs, 85 tools, four reversals red (R1 the set running one suite where it should run two -- 1 red; R2 the verdict left off the head -- 1; R3 the lock released before the run -- 1; R4 the failures dropped from the body -- 1); the door not yet placed.
 
+- **The tenth piece**, by card the last of the pass: the `coder-tree` flow, folded as v1 as the
+  glass -- his hand opens the line at a gate, the change goes through the tree doors, the strokes
+  and the smoke from the door are the checks that return to the attempt (loops 2), and his hand
+  saves on the line. Not fired. The door placed a fifth time (pid 32328, 13:05) with suite_run;
+  the ninth piece saved and sent (core `81e69b0`, atlas `0cb5c63`).
+
 **Found** — the glass's Tools page asks for a tool's arguments with the browser's `prompt()`, which
 the desktop's browser pane dismisses unseen (the page's own `App.tool` was called from the page
 instead: the same request, the glass's session); a check over the tools block cannot see the maker
@@ -2386,8 +2392,8 @@ Dashboard; the door pid 86180 carries all six door pieces; both repositories sav
 11:52 on his word (core `044ef46`, atlas `325888c`, level with GitHub), the seventh piece saved and
 sent after it (core `c92751d`), the eighth on top, unsaved.
 
-**Next session** — the rest of the code safety pass in the order the card gave: the
-coder-on-the-tree flow; the dials (Steward 180, the court 900 as a
+**Next session** — fire `coder-tree` on a small change, on his word, and read what the council
+does with the tree doors; the dials (Steward 180, the court 900 as a
 deadline a pipeline declares); the front-end agent handoff's plan is in the record (CHANGELOG, this
 day) and waits on those; a Dashboard button for the standup and a `loops` box in the builder; a
 maker evidence line a check can read; the open lines above.

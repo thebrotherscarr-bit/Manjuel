@@ -831,6 +831,15 @@ four reversals red (R1 the set running one suite where it should run two -- 1 re
 `line/cmd/atlas-mcp/prove.go`, `CHANGELOG.md`; the core's RUNBOOK and CHANGELOG say it. The door
 must be placed and restarted to carry it; that is his allowance.
 
+**THE DAY'S TENTH PIECE: THE CODER-TREE FLOW**, folded as v1 as the glass (by card, "then I fold
+the coder-on-the-tree flow"): brief -> open (gate, grants git_branch) -> line (git_branch new
+through the door) -> attempt (loops 2, the tree doors) -> strokes -> strokes_ok -> smoke ->
+smoke_ok -> land (gate) -> save (git commit on the line), the checks reading `green · exit 0` off
+the door's head and returning to the attempt on fail. Ten nodes, budget 3600 s, inputs
+`objective`, `line`, `message`. pipelines.md carries the shape. NOT FIRED: that is his word. The
+door pid 32328 (13:05) carries all seven door pieces of the day; core `81e69b0` and atlas `0cb5c63`
+are level with GitHub; this piece (pipelines.md, CHANGELOG, this file, DAYBOOK) is unsaved.
+
 **Where the ground stands.** core `main@3e0b5b4` plus `RUNBOOK.md` and this file, to be saved and
 sent through the glass's Version control on his word. atlas `main@1336fa8`: both pieces --
 `line/internal/tools/tools.go`, `gitctl.go`, `tools_test.go`, `line/internal/auth/auth.go`,

@@ -497,3 +497,53 @@ THE SHAPE IS WRITTEN HERE BECAUSE THE FLOW ITSELF IS NOT IN THE RECORD.
 `flows/` is the engine's runtime store and is gitignored -- specs, their folded
 history and runs.jsonl. A flow worth keeping is one a reader can rebuild from
 the record; the instance on disk is state, and state does not travel.
+
+### The `coder-tree` flow — the coder on the harness itself, on a line of work
+
+His ruling, 2026-09-28: "yes, that's the whole idea of the coder, I want to
+actually be able to write/read/modify files within the harness." The `coder`
+flow above writes in the workspace; this one writes the ground -- manjuel/,
+tests/ -- and the estate's own suites are the check. Folded as v1 the same day,
+the last piece of the code safety pass.
+
+```
+brief ──→ open (gate: grants git_branch) ──pass──→ line ──→ attempt ──→ strokes ──→ strokes_ok
+                                                           ▲                          │ pass
+                                                           │                          ▼
+                                                           │                        smoke ──→ smoke_ok ──pass──→ land (gate) ──pass──→ save
+                                                           │                                    │
+                                                           └──────────── fail (either check) ───┘      attempt declares `loops: 2`
+```
+
+    brief       ask    ONE concrete change to the harness: the files, as paths
+                       relative to the ground, what changes, and the stroke or
+                       check that will show it worked
+    open        gate   HIS HAND opens the line: `continue` grants `git_branch`
+                       to the node after it, and nothing on main moves
+    line        run    a spelled-out door call, decided by arithmetic:
+                       `git_branch new {{line}}` -- the door moves the ground
+                       onto the line
+    attempt     run    the change, with `ground_edit` / `ground_write` (the tree
+                       doors, which refuse the main line and the never-written
+                       names by themselves); `{{fail_attempt}}` carries what the
+                       suites said on a pass that was sent back. `loops: 2`
+    strokes     run    a spelled-out `suite_run` (strokes); the suite stamps its
+                       own proof
+    strokes_ok  eval   on `strokes`, expecting `green · exit 0` in the tools
+                       block -- the head the door reads off the stamp; fail
+                       RETURNS to `attempt`
+    smoke       run    a spelled-out `suite_run` (smoke)
+    smoke_ok    eval   the same, on `smoke`; fail returns to `attempt`
+    land        gate   the strokes and the smoke green on the line: save it
+                       there? Merging to main stays his click on Version control
+    save        run    `git commit: "{{message}}"` -- the council's own commit,
+                       on the line, the message his (MESSAGE_IS_THE_OPERATORS)
+
+Ten nodes, budget 3600s. Inputs: `objective`, `line`, `message`. THE LOOP IS
+LAW_003'S: the ceiling on `attempt`, read by the runner; the stop is the door's
+own head off the suites' stamp, machine-emitted, never a seat's account; every
+pass on the record. THE GATE STANDS AT THE ENDS, NOT INSIDE: his hand opens the
+line and his hand saves on it, and nothing between asks him. What the doors
+refuse by themselves (REFUSALS §27) the flow never has to: a write on main, a
+governing file, a folder that does not exist. `run_python` is not in this flow
+on purpose -- the suites are the run, and they run through the door.

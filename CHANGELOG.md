@@ -34,6 +34,21 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The coder on the tree: the `coder-tree` flow (operator, 2026-09-28: "yes, that's the whole idea of the coder, I want to actually be able to write/read/modify files within the harness"; by card, "then I fold the coder-on-the-tree flow")
+
+The last piece of the code safety pass, folded as `coder-tree` v1 through `flow_save` as the
+glass's wire. Its shape is in `pipelines.md` (the flow itself is runtime state): `brief` (ask) ->
+`open` (a gate whose `continue` grants `git_branch`) -> `line` (a spelled-out `git_branch new
+{{line}}` through the door) -> `attempt` (`run`, `loops: 2`, the change made with the tree doors,
+`{{fail_attempt}}` carrying what the suites said) -> `strokes` (a spelled-out `suite_run`) ->
+`strokes_ok` (contains `green · exit 0`; fail returns to `attempt`) -> `smoke` -> `smoke_ok` (the
+same) -> `land` (a gate: save on the line?) -> `save` (`git commit: "{{message}}"`, the council's
+own commit on the line). Ten nodes, budget 3600 s, inputs `objective`, `line`, `message`. LAW_003
+whole: the ceiling on the node returned to, the stop a machine's line off the suites' own stamp,
+every pass on the record, the gate at the ends and not inside. NOT FIRED YET: firing it is his
+word, and the first run will say what the council does with the tree doors. No code moved; no
+restart.
+
 ### The suites from the glass are proof (operator, 2026-09-28: "if its on the glass, and the record mathes, id call it proof")
 
 The door's piece (atlas `CHANGELOG.md` Unreleased carries the account: `suite_run` runs the strokes
