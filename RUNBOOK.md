@@ -110,10 +110,15 @@ appended by the door itself, so do not add them.
 **`--auth` and the service wire (since 2026-09-25).** With `--auth` the door
 demands a bearer on every call and HOLDS a writing call from anything but the
 glass until you decide it on Version control; without it, RULE 6 is a
-sentence. Two secrets live in `.env` and nowhere else (RULE 7):
+sentence. A writing tool's reading action is not held: `git_tag list` and
+`git_branch list` (their default, too) answer any bearer, while `cut`, `send`,
+`remove`, `new`, `switch` and `close` wait for your hand (since 2026-09-28). Two secrets live in `.env` and nowhere else (RULE 7):
 `ATLAS_SERVICE`, the same-computer wire the door and the glass share, and
 `MANJUEL_MCP_ATLAS_KEY`, the bearer the council presents (minted once with
-`auth_key_create` while the door was unarmed; scoped to research and atlas).
+`auth_key_create` while the door was unarmed, for research alone; which
+tenants a live key carries is moved with `auth_key_scope` -- the list replaced
+whole, possession re-proved like create and revoke, the move audited, and from
+any hand but the glass parked in the holds for yours -- since 2026-09-28).
 Neither process reads `.env` itself: put the wire in the environment before
 starting each one --
 
