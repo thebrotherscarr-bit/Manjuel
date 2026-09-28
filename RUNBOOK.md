@@ -22,6 +22,13 @@ off in TASKS.md.
                     naming one is asking for it.
     --dry      the harness on a stub, no models.
 
+From the glass (since 2026-09-28): the door's `standup_run` tool (`set` =
+morning, the default, `court` or `all`) runs this same script in the world
+with the python the door runs the engine with, and hands back the tally line
+and the report's path over everything it printed. It refuses while an engine
+is open on the world or its ledger has an open sitting, because the standup
+opens and tolls a sitting of its own.
+
 Only a run of the WHOLE morning set is written to the record as suite
 "standup"; anything less is "court" or "partial", so a one-case run cannot
 satisfy the release gate. Where to look for anything it names: BUILDMAP.md.
@@ -91,7 +98,7 @@ Rebuild after any Go change. The webapp EMBEDS its own HTML, CSS and
 JavaScript (`go:embed`), so a change to a page is not live until you rebuild
 and restart it -- editing the file on disk does nothing to a running server.
 
-**Start the door.** `atlas-mcp` is the MCP door: it serves the 82 tools and it
+**Start the door.** `atlas-mcp` is the MCP door: it serves the 84 tools and it
 is the only thing that spawns a Manjuel engine. It holds `127.0.0.1:8090`.
 
     cd atlas\line

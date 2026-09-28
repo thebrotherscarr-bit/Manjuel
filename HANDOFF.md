@@ -749,6 +749,51 @@ mark moved, and `state/holds.jsonl` carries `{"what":"crossed","tool":"git_tag",
 "k-ae2e9481","note":"run f-20260928-162148-23fc4784 gate judge"}`. Transcripts:
 `logs/2026-09-28_092148_*` (the list) and `logs/2026-09-28_092245_*` (the refused cut).
 
+**THE DAY'S FIFTH PIECE: THE STANDUP FROM THE GLASS.** His order: "fire the standup through the
+glass"; by card, a door tool that runs it. `standup_run` (set = morning | court | all) runs the
+world's own `tests/standup.py` with the python the door runs the engine with, bounded at thirty
+minutes, and hands back one head -- set, world, exit, tally, report path -- over everything the
+script printed; refuses by name with no core command, on a world with no standup, on a set not one
+of the three, and while an engine or a sitting is open on the world (the standup opens its own).
+One stroke, two battery legs, two reversals red. The door's own battery counts 84 tools with it.
+
+**THE DAY'S SIXTH PIECE: THE BOUNDED RETURN -- LAW_003'S MECHANISM.** His order: "create the
+bounded back-edge looping"; by card, the ceiling lives on the node returned to. `flow.Node.Loops`
+(0 to 5) on the node the work starts at; a return is a check's `fail` edge into such a node and
+nothing else is (`loopsOf`, one reading for `Validate` and the runner); `Validate` refuses a
+ceiling nothing returns to, a return that does not go back, a gate inside the return, a return that
+re-does no work, `loops` on a check or a gate, and a check that returns twice. The runner unfires
+the body and walks again from the node, at most `loops` times, a `loop` line between passes with
+the why, `spent` at the ceiling, then a forward fail-edge or FAIL; `pass_<node>` and `fail_<node>`
+are seeded on every pass so the retry reads what failed; `Resume` rebuilds them off the record;
+`flow_status` renders the returns. Four flow strokes, five fixture vectors, two battery legs, five
+reversals red. The glass's builder offers no `loops` box yet; a looped spec is folded with
+`flow_save` and the JSON.
+
+**THE DOOR, PLACED A FOURTH TIME TODAY on his allowance,** carrying the fifth and sixth pieces:
+pid 55236 stopped by pid and path, its binary kept in scratch, the build copied in and hashing as
+built (`9BA33C91...`) -- **pid 86180** on 127.0.0.1:8090 at 10:36, the same boot line; `tools/list`
+over the wire counts 84.
+
+**FOLDED ON IT, as the glass's wire:** `coder` v13 (five nodes; `verdict --fail--> attempt`,
+`attempt` declares `loops: 2`; `repair`, `recheck`, `proof` struck; v1-v12 on disk; pipelines.md
+carries the shape) and `wife-test` v1 (her three messages verbatim as `run` nodes, a recorded
+`RAN:` check after each that steers on either way; the 2026-09-23 spec had never been on disk).
+
+**THE STANDUP FIRED FROM THE GLASS:** sitting **284**, 10:40:41-10:42:38, **9/9 LIVE**,
+`logs/standup_2026-09-28_104238.md`, the `standup` line green in `tests/run_history.jsonl` --
+`standup_run` (morning) called from the glass's own page as the glass (the Tools page's Call button
+asks with `prompt()`, which the desktop's browser pane dismisses; the page's `App.tool` makes the
+same request). **THE COURT, MEASURED** on his ruling: sitting **285**, 10:43:01-10:53:02, **0/1**
+-- Jesster cut at its 552 s seat bound, Manjuel never seated inside the 600 s turn; on 09-18 the
+whole court took 569 s. The dials are `MANJUEL_SEAT_TIMEOUT` and `MANJUEL_TURN_DEADLINE`; the
+number is his. **THE WIFE TEST, TWICE**, on sitting 286 (engine booted and closed from the
+Dashboard): f-20260928-175419-96bf71ee (Steward on llama3.2) COMPLETE in 200 s and f-20260928-175803-001a887b (Steward
+on phi4-mini) COMPLETE in 167 s; on neither did anything get
+made -- the `make` step read the ground (`ground_list`) and talked, both checks `fail` -- which is
+the 2026-09-23 finding again, now on the record as two runs of one spec. `flow_compare`:
+the two heads named (A: Steward on llama3.2:latest, B: Steward on phi4-mini:latest); the checks `made` and `played` IDENTICAL (both `fail`), the three answers DIFFER in prose.
+
 **Where the ground stands.** core `main@3e0b5b4` plus `RUNBOOK.md` and this file, to be saved and
 sent through the glass's Version control on his word. atlas `main@1336fa8`: both pieces --
 `line/internal/tools/tools.go`, `gitctl.go`, `tools_test.go`, `line/internal/auth/auth.go`,
@@ -765,7 +810,7 @@ awaiting his publish. No sitting is open (282, 2026-09-26, was the last).
 **Still open, all his.** What the hold queue shows of a `key` argument (above); whether a gate he
 crossed carries his hand to the flow's `cut` and `send` (above); core CI's two Windows reds at
 `#131`/`#132` (green at `#135`; the logs need his sign-in); `run_start` cannot name a head; the
-door's 83 tools (its own battery's count, 2026-09-28; the record said 88, unmeasured) have no
+door's 84 tools (its own battery's count, 2026-09-28; the record said 88, unmeasured) have no
 `.us` records; `REFUSALS.md`'s 28 against 66 `Refused:` sites, unlinked;
 the glass forgets a paused run on reload and its Tools page's `prompt()`; a `ci` check so the
 ground reads origin's verdict; the two banner literals; the standup's greeting case cannot tell an
@@ -773,11 +818,13 @@ answer from a recital; the Router's window (7,526 of 8,192 tokens).
 
 **Proof.** `go test ./...` on a scratch copy of `atlas/line` green but the seven "Filename too
 long" strokes that path always reds, unchanged across every run today; `gofmt -l` and `go vet`
-clean; the battery PROVEN, **136 legs**, from the placed binary (130 after the first piece, 133
-after the second); reversals red for each piece: the reading action 2 (and the battery), 2, 2, 1;
-the scope 1, 1, 1 (and the battery), 1; the withheld secret 1, 1, 1 (and the battery), 1; the
-crossed gate 1, 1, 1 (and the battery), 1. The crossed gate proved live (above). No core code
-moved; his terminal is still the proof and no live standup ran today.
+clean; the battery PROVEN, **140 legs**, from the placed binary (130 after the first piece, 133
+after the second, 136 after the fourth); reversals red for each piece: the reading action 2 (and the
+battery), 2, 2, 1; the scope 1, 1, 1 (and the battery), 1; the withheld secret 1, 1, 1 (and the
+battery), 1; the crossed gate 1, 1, 1 (and the battery), 1; the bounded return 1, 1, 1 and the
+fixture's golden, 1, 1; the standup tool 1, 1. The crossed gate proved live (above). No core code
+moved; his terminal is still the proof. THE STANDUP RAN LIVE TODAY, 9/9, from the glass (sitting
+284), and the court was measured (sitting 285, 0/1).
 
 ## HANDOFF FOR 2026-09-26 — read this before anything below it
 

@@ -2312,3 +2312,55 @@ logs need his sign-in); `run_start` cannot name a head; the door's 83 tools have
 `prompt()`; a `ci` check so the ground reads origin's verdict; the two banner literals; the
 standup's greeting case; the Router's window.
 
+**Later the same day — sittings 283 to 286: the crossed gate, the standup from the glass, and
+the loop.** The morning above ended with its record saved; the afternoon took his next two orders
+in turn ("take the hold queue's key argument next, then the crossed gate") and then the four-part
+directive: "fire the standup through the glass: create the bounded back-edge looping: the courts
+numbers?: the wife test is on record, and can be rerun from there: the front-end agent handoff has
+been in the plan from the beginning."
+
+- **The third piece**, a secret parked in the holds is withheld where the queue is shown (ruling
+  by card); **the fourth**, a gate declares what its crossing grants (ruling by card); the door
+  placed a third time (pid 55236, 09:20) and the crossed gate PROVED LIVE on sitting 283 (09:20 to
+  09:23, booted and closed from the Dashboard): `version-tag` v3 fired for the mark it already
+  carries, the judge gate crossed on his word, the council's cut ran under the hand and was refused
+  by the door's own law, no mark moved, the `crossed` line in the holds record. Saved and sent
+  (core `b5d5e97`, atlas `d2d91ce`).
+- **The fifth piece**, the standup fired from the glass (`standup_run`; by card, a door tool) and
+  **the sixth**, the bounded return -- LAW_003's mechanism, the ceiling on the node returned to (by
+  card); proved on scratch (the full suite green but the seven scratch-path reds, the battery
+  PROVEN at 84 tools, eight reversals red), the door placed a fourth time on his allowance (pid
+  86180, 10:36).
+- **On the placed door, as the glass:** `coder` folded as v13 on the return (five nodes; v1-v12 on
+  disk; pipelines.md carries the shape); the wife test refolded as `run` nodes with her words
+  verbatim (by card); the morning standup fired from the glass's own page -- sitting 284, **9/9
+  LIVE**, `logs/standup_2026-09-28_104238.md`; the court measured on his ruling -- sitting 285,
+  **0/1**, Jesster cut at its 552 s seat bound and Manjuel never seated inside the 600 s turn,
+  where on 09-18 the whole court took 569 s; the wife test fired twice on sitting 286 -- f-20260928-175419-96bf71ee
+  (Steward on llama3.2, COMPLETE, 200 s) and f-20260928-175803-001a887b (Steward on phi4-mini, COMPLETE,
+  167 s) -- nothing made on either, every check `fail`: the 2026-09-23 finding, now two
+  runs of one spec in the record.
+
+**Found** — the glass's Tools page asks for a tool's arguments with the browser's `prompt()`, which
+the desktop's browser pane dismisses unseen (the page's own `App.tool` was called from the page
+instead: the same request, the glass's session); a check over the tools block cannot see the maker
+(a made page leaves no tool line); a person's own words -- "try making me a little game" -- reach
+neither the maker's arithmetic nor a Coder that writes a game, and the estate reads the ground and
+talks; the court's cut today is Jesster's alone.
+
+**Rulings** — by card, in order: withhold the secret where it is shown; the gate declares what it
+grants; fold version-tag v3 as the glass; a door tool for the standup; the ceiling on the target
+node; fold coder v13; fire the standup; refold and fire the wife test twice; measure the court
+first; her words verbatim; place the door (a fourth time).
+
+**Drift** — none in the building: every piece was his by order and by card, and the reversals ran
+before the record was written. The standup went through the glass's page rather than its button,
+for the reason under Found, and the record says so.
+
+**At close** — sittings 284, 285 and 286 closed with their tolls; the door pid 86180 carries all
+six pieces; both repositories carry the day's records unsaved, to be saved and sent on his word.
+
+**Next session** — the court's dials (`MANJUEL_SEAT_TIMEOUT`, `MANJUEL_TURN_DEADLINE`: his
+number); the front-end agent handoff (SPEC 8.2), in the plan from the beginning and wanting a plan
+before a piece; a Dashboard button for the standup and a `loops` box in the builder; a maker
+evidence line a check can read; the open lines above.

@@ -405,32 +405,39 @@ The Evaluator's `NEEDS:` is ONE pass back inside a single turn. For work that
 wants more than that, the shape below is a flow, gated, across turns:
 
 ```
-brief ──→ attempt ──→ verify ──→ verdict ──pass──────────────────→ land (gate)
-                                    │
-                                    └──fail──→ repair ──→ recheck ──→ proof ──pass──→ land
-                                                                        │
-                                                                     (no fail edge:
-                                                                      the run FAILS)
+brief ──→ attempt ──→ verify ──→ verdict ──pass──→ land (gate)
+            ▲                       │
+            └─────────fail──────────┘   a RETURN: at most 2, because `attempt`
+                                        declares `loops: 2`; at the ceiling the
+                                        fail is a fail and the run stops FAIL
 ```
 
     brief     ask    turn the hand's one line into ONE concrete task: the
                      exact .py filename, what a run should print, and that the
                      file is run with NO ARGUMENTS so it must exercise its own
                      cases
-    attempt   run    write what that task asks for, at the filename it names
+    attempt   run    write what that task asks for, at the filename it names --
+                     and, on a pass after a return, read `{{fail_attempt}}`:
+                     the verdict that sent it back and what `verify` said on
+                     that pass. `loops: 2`.
     verify    run    run the file that task names, report exactly what it said
     verdict   eval   on `verify`, expecting `{{expect}}` -- the marker the HAND
-                     named when it fired the flow
-    repair    run    read what it said and EDIT that file to fix it
-    recheck   run    run it again
-    proof     eval   on `recheck`, the SAME expectation -- the repaired work
-                     is judged too, and by the same standard
-    land      gate   nothing has reached the estate; carry on, or stop here
+                     named when it fired the flow; its fail-edge returns to
+                     `attempt`, its pass-edge reaches the gate
+    land      gate   nothing has reached the estate; carry on, or stop here.
+                     Its title says how many passes it took (`{{pass_attempt}}`)
 
-Eight nodes, budget 1800s. THE RETRY IS UNROLLED, not looped: `Validate`
-refuses cycles, so the bound is structural rather than a counter somebody can
-raise. Every node runs inside the workspace jail and the flow ends at a GATE,
-because landing is the operator's act and nothing else (RULE 6).
+Five nodes, budget 1800s, folded as v13 on 2026-09-28. THE RETRY IS A BOUNDED
+RETURN (LAW_003): `verdict`'s fail-edge sends the run back to `attempt`, whose
+`loops` is the ceiling -- declared on the node returned to, where a reader
+meets it, and read by the runner and nowhere else. Each return re-does the
+WORK (attempt, then verify) and never re-scores an answer; every pass and every
+return is on the record with a `loop` line between them, and `flow_status`
+renders each; the budget binds every pass. Versions 1 to 12 unrolled one repair
+into `repair -> recheck -> proof` and are kept on disk; twelve of their
+nineteen runs paused at the gate, the rest failed. Every node runs inside the
+workspace jail and the flow ends at a GATE, because landing is the operator's
+act and nothing else (RULE 6).
 
 THE ONE EVAL ASKS ABOUT THE REQUIREMENT, NOT ABOUT EXECUTION, and that is the
 whole correction of 2026-09-12. It used to be `check`, expecting `RAN:` -- and

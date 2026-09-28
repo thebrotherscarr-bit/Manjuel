@@ -34,6 +34,58 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The standup fired from the glass, and the flow engine's bounded return (operator, 2026-09-28: "fire the standup through the glass: create the bounded back-edge looping")
+
+Both are the door's (atlas `CHANGELOG.md` Unreleased carries the accounts, the strokes, the
+reversals and the wires; the door restarted on his allowance). What moved in this ground:
+
+- **`RUNBOOK.md`:** the morning paragraph says the standup can be fired from the glass --
+  `standup_run` (morning | court | all) runs the same script in the world with the door's python and
+  hands back the tally and the report's path, refusing while an engine or a sitting is open there;
+  the door's tool count read 82 and is 84 by its own battery.
+- **`SPEC.md`:** the loop row -- the maker's check was the first lawful loop (2026-09-22) and the
+  flow engine's bounded return is the second: a check's fail-edge back to a node that declares
+  `loops`, the ceiling on that node and read by the runner, the work between re-done, every pass
+  and every return on the record; and THE LOOP's block in section 8 gains its 2026-09-28 line.
+- **`pipelines.md`:** the `coder` flow's shape is v13's -- five nodes, `verdict`'s fail-edge a
+  RETURN to `attempt`, which declares `loops: 2`; `repair`, `recheck` and `proof` struck; the
+  attempt reads `{{fail_attempt}}` on a pass after a return, the gate's title says how many passes
+  it took. FOLDED as v13 through `flow_save` as the glass's wire on his card ("fold coder v13"),
+  `brief` and `verify` unchanged, v1 to v12 kept on disk.
+- **THE STANDUP FIRED FROM THE GLASS**, his order done: `standup_run` (morning) called from the
+  glass's own page as the glass, sitting **284** (10:40:41 to 10:42:38, opened and tolled by the
+  standup itself), **9/9 LIVE**, `logs/standup_2026-09-28_104238.md`, the `standup` line green in
+  `tests/run_history.jsonl`; the tool's head: `STANDUP morning on "research" · exit 0 · 9/9 cases
+  met their expectations. · report logs/standup_2026-09-28_104238.md`. NOTED ON THE WAY: the Tools
+  page's Call button asks for arguments with the browser's `prompt()`, which the desktop's browser
+  pane dismisses unseen, so the page's own `App.tool` was called from the page instead -- the same
+  request the button makes, with the glass's session; a Dashboard button is the glass's own piece.
+- **THE COURT'S NUMBERS, MEASURED** (his ruling by card: measure first): `standup_run` (court) from
+  the glass, sitting **285** (10:43:01 to 10:53:02), **0/1**, exit status 1,
+  `logs/standup_2026-09-28_105302.md`. Security Guardian, Steward, Router (36.8 s) and Neiro sat;
+  **Jesster** (deepseek-r1:8b) ran to its **552 s seat bound** and was cut at 551.8 s; **Manjuel**
+  (gemma4:12b) was never seated -- the turn's 600 s deadline had passed. On 2026-09-18 the same
+  court finished in 569 s with all seven seated. The number is his: the seat bound
+  (`MANJUEL_SEAT_TIMEOUT`) and the turn deadline (`MANJUEL_TURN_DEADLINE`, 600) are the two dials,
+  and the transcript is `logs/2026-09-28_104301_should_a_court_of_three_seats_run_on_one.md`.
+- **THE WIFE TEST, RERUN FROM THE RECORD** (his card: her words, verbatim; refold as `run` nodes;
+  fire twice). The spec that ran on 2026-09-23 was never on disk; its three messages were read off
+  that run's start line and folded as `wife-test` v1: `make` / `want` / `talk` as `run` nodes
+  through the council, each followed by a check for `RAN:` in the tools block that records its
+  verdict and steers on either way, budget 900 s. Fired twice on sitting 286 (an engine booted from
+  the Dashboard, closed from it after), the Steward named per run: **f-20260928-175419-96bf71ee** on
+  llama3.2:latest, COMPLETE in 200 s -- `make` had the council run `ground_list` and the Steward
+  describe "a grid of dirt blocks and air" that nothing had made, the check `fail` (no `RAN:`);
+  `want` answered in prose that "the game is not yet playable", `fail`; `talk` ran
+  `classify_sentiment` (140 s). **f-20260928-175803-001a887b** on phi4-mini:latest, COMPLETE in
+  167 s -- `make` had the Router run `decompose_task` ("Create a simple Minecraft-like sandbox game in Python") and wrote nothing, while the Steward described the first run's grid again (the sitting's memory), the check `fail`; `want` offered four game concepts in prose, `fail`; `talk`
+  answered in 6 s by reciting her three messages back. `flow_compare`: the two heads named (A: Steward on llama3.2:latest, B: Steward on phi4-mini:latest); the checks `made` and `played` IDENTICAL (both `fail`), the three answers DIFFER in prose. THE FINDING, as on 2026-09-23: a person's
+  own words -- "try making me a little game" -- reach neither the maker (whose arithmetic wants
+  "make me a ...") nor a Coder that writes a game; the estate reads the ground and talks. Nothing
+  was made, and the record says so on every node. A check over the tools block cannot see the
+  maker at all (a made page leaves no tool line), which is a wire to name when the maker is next
+  touched. The DONE line is still hers to sit.
+
 ### The Router's empty replies: a spelled-out door call is written by the engine, and a blank is never delivered (operator, 2026-09-26: "engine writes it, Router reads")
 
 WHAT FAILED. `version-tag`'s two `run` nodes on 2026-09-25 -- 10:03 the list, 10:05 the cut -- handed

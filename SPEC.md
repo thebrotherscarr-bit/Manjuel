@@ -123,7 +123,7 @@ A proposal that needs a word uses the nearest one below.
 | **The rack** | seven models seat fourteen seats; the everyday pipelines fit resident; the court evicts on purpose; `rack.md` is derived from Ollama, never edited | `vram.py`, `rack.py`; `test_vram` |
 | **The suites** | the engine proves offline with every model stubbed; the REPL proves the same way; the standup runs the seats live and writes a report; the map is generated from the code | `tests/test_manjuel.py`, `smoke_cli.py`, `standup.py`, `buildmap.py` |
 | **The maker** | "make me a snake game" seats the Expert Coder alone; what it answers is saved only if it is a WHOLE page that loads nothing from the network; each save is a numbered version in the project's OWN history; "go back" is git's job, not a model's; the ground's history is never written to; a project is picked up and put down by words the engine answers with no seat; the glass lists each project from its own history and shows its page sandboxed; and before a version is kept the page is LOADED in a browser with no window, its errors sent back to the Coder for one bounded try, and kept either way with the truth said (2026-09-22) | `maker.py`, `intent.wants_making`, `intent.wants_picking_up`, `pipeline._maker_prove`; §4.8; `test_the_maker`, `test_the_maker_picks_up_and_puts_down`, `test_the_maker_runs_the_page_before_it_keeps_it`; atlas `projects_test.go` (door and glass) |
-| **The loop** (LAW_003) | a node may be returned to, and only with all three bounds: a ceiling declared where a reader meets it and read BY the loop, a stop condition checked by a machine over evidence the machine emitted, and every pass in the record including the failed ones. The maker's check is the first and only one (2026-09-22) | `maker.REPAIRS`, `pipeline._maker_prove`; `law/LAW_003_THE_LOOP.md`; `test_the_maker_runs_the_page_before_it_keeps_it` |
+| **The loop** (LAW_003) | a node may be returned to, and only with all three bounds: a ceiling declared where a reader meets it and read BY the loop, a stop condition checked by a machine over evidence the machine emitted, and every pass in the record including the failed ones. The maker's check was the first (2026-09-22); the flow engine's bounded return is the second (2026-09-28): a check's fail-edge back to a node that declares `loops`, the ceiling on that node and read by the runner, the work between re-done, every pass and every return on the record | `maker.REPAIRS`, `pipeline._maker_prove`; `flow.Node.Loops`, `flow.Validate`, `flow.runFrom` (atlas); `law/LAW_003_THE_LOOP.md`; `test_the_maker_runs_the_page_before_it_keeps_it` |
 | **The toll** | every sitting that ran something ends with what proved, what is thin, what is owed — the operator's words, or an honest "not stated". A sitting that ran nothing closes with no toll, from the Dashboard's Close or on its own when idle (RUNBOOK, 2026-09-14; D2, 2026-09-16; this row said "every sitting" until 2026-09-17) | `seatlog.render_toll`; LAW 10 |
 
 ---
@@ -469,6 +469,12 @@ BUILDPATH, "The order it goes next".
                    to build each sitting was one more thing AROUND the loop.
                    This is the shape the rest of this entry can now be built
                    in; it is one small case, not the workflow direction
+      2026-09-28   THE FLOW ENGINE LOOPS. A check's fail-edge may return the
+                   run to a node that declares `loops` (the ceiling, on that
+                   node, read by the runner); every pass and every return on
+                   the record; the coder flow folded as v13 on it. And the
+                   standup is fired from the glass (`standup_run`), which is
+                   the first line of "what it is" above, done
       DONE when    a day's work is one fired flow and a report he reads,
                    with no typed command in it
 
