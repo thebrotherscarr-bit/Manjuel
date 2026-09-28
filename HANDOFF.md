@@ -840,6 +840,26 @@ the door's head and returning to the attempt on fail. Ten nodes, budget 3600 s, 
 door pid 32328 (13:05) carries all seven door pieces of the day; core `81e69b0` and atlas `0cb5c63`
 are level with GitHub; this piece (pipelines.md, CHANGELOG, this file, DAYBOOK) is unsaved.
 
+**CODER-TREE FIRED ONCE, on his word:** run `f-20260928-201849-a7674117`, sitting 288 (13:18 to
+13:46, from the Dashboard). The `open` gate answered by his hand; the line `tree-foundation` opened
+through the door under the grant; three attempts, no edit -- the map of `skills.py` does not name
+`_NEVER_WRITTEN_TOP` (a module-level assignment), the rack went out of memory once, the Router
+handed prose as a path once; the door ran the strokes three times, 3063/3063 green each, stamped
+and on the proof card, and the council never saw it because `mcp_call` waits 60 s. The loop
+returned twice, the ceiling spent, FAIL at 690 s, every pass on the record. **THE GROUND STANDS
+ON `tree-foundation`**, dirty with the suites' stamps and nothing else; nothing on main moved.
+Two wires named in CHANGELOG for his word: the door call's wait (a skill's, not 60 s) and the
+map naming assignments.
+
+**THE TWO WIRES, BUILT** (by card, "the door call's wait, then the map"): `mcp_call` waits the
+skill's bound less five (`_mcp_wait`, `MANJUEL_SKILL_TIMEOUT` 300 by default) instead of its own
+60 s, and the map of a large .py names module-level names under their own heading, fetched whole by
+name. Two strokes extended, strokes 3064/3064 and smoke 72/72 on a mirror, buildmap
+regenerated, reversals red 2 and 3. `manjuel/skills.py` moved: RESTART REQUIRED, no engine running.
+The ground is back on `main` on his word, carrying the suites' stamps and the record; the line
+`tree-foundation` stands empty until he closes it on Version control. Unsaved: the record of the
+firing and of these two wires.
+
 **Where the ground stands.** core `main@3e0b5b4` plus `RUNBOOK.md` and this file, to be saved and
 sent through the glass's Version control on his word. atlas `main@1336fa8`: both pieces --
 `line/internal/tools/tools.go`, `gitctl.go`, `tools_test.go`, `line/internal/auth/auth.go`,

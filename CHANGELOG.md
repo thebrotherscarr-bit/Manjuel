@@ -34,6 +34,72 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The two wires the first firing found: a door call waits as long as a skill may, and the map names module-level names (operator, 2026-09-28, by card: "the door call's wait, then the map")
+
+Both found by the coder-tree run above, both in `manjuel/skills.py`. No sitting was open.
+**RESTART REQUIRED:** `manjuel/skills.py` moved; no engine is running, so the next Boot runs it.
+
+- **The door call's wait.** `mcp_call` waited `_MCP_TIMEOUT = 60` on a door call -- "short enough
+  that a wedged server is a refusal a seat can read" -- and the door ran the whole stroke suite three
+  times, 3063/3063 green each, with every call coming back "did not answer inside 60s". It now waits
+  as long as a skill may run (`_mcp_wait()`: `MANJUEL_SKILL_TIMEOUT`, 300 by default, less a margin
+  of five, read at the call so the dial can move), and the refusal names that bound. The first reason
+  is kept whole -- a wedged server is still a refusal in this skill's own words, before the skill
+  bound would cut it -- and the council no longer turns while a suite it asked for is still running
+  beside it, which is where the rack went out of memory on that run's second pass.
+- **The map names module-level names.** A large .py came back as THE MAP of its defs and classes,
+  and `_NEVER_WRITTEN_TOP` -- a dict bound at module level -- was not on it, so the Router asked for
+  a line range, was refused, and never reached the passage `ground_edit` needs quoted exactly. The
+  map now lists module-level names (`Assign`, `AnnAssign`, `Name` targets) under their own heading,
+  with line bounds, and any one is fetched whole by name like a definition.
+- **`skills/mcp_call.md`, `skills/ground_read.md`:** say so. **`BUILDMAP.md`:** regenerated.
+- **`tests/test_manjuel.py`:** `test_the_mcp_skill_never_leaves_this_machine` gains a stalling
+  loopback server: with the skill bound at 7 the call is refused at 2 s naming that bound, never
+  at 60. `test_a_python_file_is_cut_by_definition_not_by_character` gains the module-level heading
+  and `_NEVER_WRITTEN_TOP` fetched whole and parsing on its own.
+
+Proven on a mirror: strokes 3064/3064, smoke 72/72, buildmap clean. By reversal: R1 the
+door call back to a sixty of its own -- 2 red; R2 the map no longer naming module-level names -- 3
+red; each put back green. His terminal is still the proof. WHAT GOES RED IF THIS COMES UNPLUGGED:
+the door-call stroke, if the wait stops following the skill's dial; the map stroke, if a module-level
+name leaves the map or comes back in part.
+
+### coder-tree fired once: the loop held, the line opened on his hand, and two wires were found short (operator, 2026-09-28: "fire coder-tree on a small change")
+
+Run `f-20260928-201849-a7674117` on sitting 288 (13:18 to 13:46, booted and closed from the
+Dashboard), inputs: add `foundation` to the tree doors' never-written folders in
+`manjuel/skills.py`; line `tree-foundation`; a commit message. Fired and resumed as the glass's own
+page; the `open` gate answered by his hand (card). Verdict FAIL after 690 s, and every step of it
+honest:
+
+- `brief` (72 s) named the one-line change. `open` paused with it; his `continue` granted
+  `git_branch`, and `line` opened `tree-foundation` through the door under that hand -- the door's
+  own words on the record: "Opened \"tree-foundation\" and moved you onto it."
+- `attempt`, three passes, and NOT ONE EDIT: the council ran `decompose_task`, then `ground_read`
+  on `manjuel/skills.py` three times and got THE MAP -- 5036 lines, 127 definitions, "ask for any
+  one BY NAME" -- and `_NEVER_WRITTEN_TOP` is a module-level assignment, which the map does not
+  list, so the Router asked for `manjuel/skills.py, 1-300` (refused: not a name) and never reached
+  the passage to quote. Pass 2 died of the rack: `llama-server reported out-of-memory during
+  startup` (a 40 GB buffer) while the door's suite from pass 1 was still running beside it. Pass 3
+  handed the objective's own prose to `ground_read` as a path (refused by the LAW 8 gate).
+- `strokes`, three times: the door ran the whole stroke suite on the ground each time -- **3063/3063
+  green, three lines in `tests/run_history.jsonl`, the stamp on the Dashboard's proof card** -- and
+  the council saw none of it: the core's `mcp_call` skill waits **60 s** (`_MCP_TIMEOUT`) on a door
+  call and the strokes take about 150 s, so every call came back "did not answer inside 60s" and
+  `strokes_ok` failed on evidence that was never delivered.
+- THE LOOP HELD, LAW_003 whole: `strokes_ok` returned the run to `attempt` twice (`loop` lines
+  `return 1/2`, `2/2`), the third fail found the ceiling spent, and the run stopped FAIL with every
+  pass on the record. Nothing on main moved; nothing was written to the tree; the ground stands on
+  `tree-foundation` with the suites' own stamps changed and nothing else.
+
+TWO WIRES, NAMED FOR HIS WORD, NOT BUILT: the door call's wait -- a skill may run
+`MANJUEL_SKILL_TIMEOUT` (300 s) and the turn 600, yet the door call cuts itself at 60; it should
+wait as long as a skill may, which also keeps the council from turning while the suite it asked for
+is still running (the out-of-memory of pass 2). And the map of a large file should name
+module-level assignments beside its definitions, so a seat can fetch `_NEVER_WRITTEN_TOP` by name
+and quote the passage `ground_edit` demands exactly. The first is the one that failed the run; the
+second is the one that would have failed it next.
+
 ### The coder on the tree: the `coder-tree` flow (operator, 2026-09-28: "yes, that's the whole idea of the coder, I want to actually be able to write/read/modify files within the harness"; by card, "then I fold the coder-on-the-tree flow")
 
 The last piece of the code safety pass, folded as `coder-tree` v1 through `flow_save` as the

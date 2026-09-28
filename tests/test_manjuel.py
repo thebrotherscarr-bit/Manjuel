@@ -9536,6 +9536,21 @@ def test_a_python_file_is_cut_by_definition_not_by_character(reg, lib, book):
     check("an unknown name lists what IS declared",
           "No definition in" in miss and "It declares" in miss, miss[:90])
 
+    # ---- MODULE-LEVEL NAMES are on the map and fetched whole (2026-09-28) --
+    # The first firing of the coder-tree flow asked for `_NEVER_WRITTEN_TOP`
+    # and the map knew only defs and classes, so the coder never reached the
+    # passage it had to quote. A name bound at module level is a definition
+    # of that name, with line bounds, under its own heading on the map.
+    check("the map lists module-level names under their own heading",
+          "Module-level names, addressable the same way" in m
+          and "_NEVER_WRITTEN_TOP" in m, m[-400:])
+    bound = windowed(src, "manjuel/skills.py", "_NEVER_WRITTEN_TOP")
+    body = bound.split("range):", 1)[1].strip() if "range):" in bound else ""
+    check("a name bound at module level comes back whole, by name",
+          "a WHOLE definition" in bound and body.startswith("_NEVER_WRITTEN_TOP = {")
+          and body.rstrip().endswith("}"), bound[:160])
+    check("   and it parses on its own", bool(body) and _parses(body), bound[:80])
+
     # ---- A BROKEN FILE STILL READS -----------------------------------
     broken = "def a():\n    return 1\n\ndef b(:\n    pass\n" + ("# pad\n" * 3000)
     out = windowed(broken, "broken.py")
@@ -13284,6 +13299,47 @@ def test_the_mcp_skill_never_leaves_this_machine(reg, lib, book):
         check("arguments that are JSON but not an object refuse too",
               out.startswith("Refused") and "OBJECT" in out, out[:110])
 
+        # THE WAIT IS THE SKILL'S OWN BOUND, NOT A 60 OF ITS OWN (2026-09-28).
+        # The first coder-tree run had the door run the whole stroke suite
+        # three times, green each time, and every call came back "did not
+        # answer inside 60s". A server that accepts and stalls is now given
+        # as long as a skill may run, less five seconds, and the refusal
+        # names that bound.
+        import http.server as _hs
+        import socketserver as _ss
+        import threading as _th
+        import time as _tm
+
+        class _Stall(_hs.BaseHTTPRequestHandler):
+            def do_POST(self):
+                _tm.sleep(6)
+                self.send_response(200)
+                self.end_headers()
+
+            def log_message(self, *a):
+                pass
+
+        srv = _ss.ThreadingTCPServer(("127.0.0.1", 0), _Stall)
+        srv.daemon_threads = True
+        _th.Thread(target=srv.serve_forever, daemon=True).start()
+        _os.environ["MANJUEL_MCP_SLOW"] = f"http://127.0.0.1:{srv.server_address[1]}/rpc"
+        _os.environ["MANJUEL_SKILL_TIMEOUT"] = "7"
+        _sk.read_dials()
+        try:
+            check("a door call waits the skill's bound less five",
+                  _sk._mcp_wait() == 2.0, str(_sk._mcp_wait()))
+            t0 = _tm.time()
+            out = call(server="slow", tool="muster")
+            took = _tm.time() - t0
+            check("a stalling server is refused at the skill's bound, not at 60s",
+                  out.startswith("Refused") and "inside 2s" in out and took < 15,
+                  f"{took:.1f}s {out[:120]}")
+        finally:
+            _os.environ.pop("MANJUEL_SKILL_TIMEOUT", None)
+            _sk.read_dials()
+            srv.shutdown()
+            srv.server_close()
+
         # Every refusal must read as FAILED to the wire (serve.py's heads),
         # or a watching client counts a refusal as a result.
         from manjuel.serve import _FAILED_HEADS
@@ -13294,7 +13350,7 @@ def test_the_mcp_skill_never_leaves_this_machine(reg, lib, book):
             check(f"the refusal for {why} reads as failed to the wire",
                   case.lstrip().startswith(_FAILED_HEADS), case[:60])
     finally:
-        for k in ("MANJUEL_MCP_FAR", "MANJUEL_MCP_SNEAK", "MANJUEL_MCP_LOOP"):
+        for k in ("MANJUEL_MCP_FAR", "MANJUEL_MCP_SNEAK", "MANJUEL_MCP_LOOP", "MANJUEL_MCP_SLOW"):
             _os.environ.pop(k, None)
         _os.environ.update(saved)
 

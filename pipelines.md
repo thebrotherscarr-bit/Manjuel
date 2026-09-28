@@ -547,3 +547,10 @@ line and his hand saves on it, and nothing between asks him. What the doors
 refuse by themselves (REFUSALS §27) the flow never has to: a write on main, a
 governing file, a folder that does not exist. `run_python` is not in this flow
 on purpose -- the suites are the run, and they run through the door.
+
+FIRED ONCE, 2026-09-28 (run `f-20260928-201849-a7674117`, sitting 288): the
+line opened on his hand, the loop returned twice and stopped FAIL at the
+ceiling, and the record found two wires short -- the core's door call waits
+60 s while the strokes take 150, and the map of a large file does not name a
+module-level assignment, so the coder never reached its passage. CHANGELOG
+carries the account; both are his to order.

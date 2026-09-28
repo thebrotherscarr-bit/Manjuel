@@ -2367,6 +2367,18 @@ been in the plan from the beginning."
   saves on the line. Not fired. The door placed a fifth time (pid 32328, 13:05) with suite_run;
   the ninth piece saved and sent (core `81e69b0`, atlas `0cb5c63`).
 
+- **coder-tree fired once** on his word ("fire coder-tree on a small change"), sitting 288: the
+  `open` gate answered by his hand, the line opened through the door under the grant, three
+  attempts with no edit, the strokes run by the door three times (3063/3063 green, stamped: proof
+  on the glass by his ruling) and never seen by the council -- the door call waits 60 s. The
+  loop returned twice and stopped FAIL at the ceiling, every pass on the record. The ground left
+  standing on `tree-foundation`, dirty with the stamps.
+
+- **The two wires, built** by card: the door call waits the skill's bound (less five) instead of
+  60 s, and the map of a large .py names module-level names, fetched whole by name. Strokes
+  3064/3064 on a mirror, reversals red; restart required; the ground back on `main`
+  carrying the stamps and the record, on his word.
+
 **Found** — the glass's Tools page asks for a tool's arguments with the browser's `prompt()`, which
 the desktop's browser pane dismisses unseen (the page's own `App.tool` was called from the page
 instead: the same request, the glass's session); a check over the tools block cannot see the maker
@@ -2392,8 +2404,8 @@ Dashboard; the door pid 86180 carries all six door pieces; both repositories sav
 11:52 on his word (core `044ef46`, atlas `325888c`, level with GitHub), the seventh piece saved and
 sent after it (core `c92751d`), the eighth on top, unsaved.
 
-**Next session** — fire `coder-tree` on a small change, on his word, and read what the council
-does with the tree doors; the dials (Steward 180, the court 900 as a
+**Next session** — fire `coder-tree` again on the same small change, on his word, with both
+wires in; the dials (Steward 180, the court 900 as a
 deadline a pipeline declares); the front-end agent handoff's plan is in the record (CHANGELOG, this
 day) and waits on those; a Dashboard button for the standup and a `loops` box in the builder; a
 maker evidence line a check can read; the open lines above.

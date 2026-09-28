@@ -952,6 +952,15 @@ def _windowed_python(text: str, rel: str, want: str):
 
     lines = text.splitlines(keepends=True)
     defs: list[tuple[str, int, int]] = []
+    # MODULE-LEVEL NAMES ARE ADDRESSABLE TOO (2026-09-28). The first firing
+    # of the coder-tree flow asked this map for `_NEVER_WRITTEN_TOP`, a dict
+    # bound at module level, and the map knew only defs and classes: the
+    # Router asked for "manjuel/skills.py, 1-300", was refused, and never
+    # reached the passage `ground_edit` needs quoted exactly. A name bound at
+    # the top of a module -- a table, a regex, a dial -- is a definition of
+    # that name, with exact line bounds, and is fetched whole the same way.
+    # Listed under their own heading, so the map's definitions stay readable.
+    names: list[tuple[str, int, int]] = []
 
     def add(node, prefix=""):
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
@@ -960,11 +969,18 @@ def _windowed_python(text: str, rel: str, want: str):
             if isinstance(node, ast.ClassDef):
                 for child in node.body:
                     add(child, prefix + node.name + ".")
+        elif not prefix and isinstance(node, (ast.Assign, ast.AnnAssign)):
+            targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+            end = getattr(node, "end_lineno", None) or node.lineno
+            for t in targets:
+                if isinstance(t, ast.Name):
+                    names.append((t.id, node.lineno, end))
 
     for node in tree.body:
         add(node)
-    if not defs:
+    if not defs and not names:
         return None
+    defs = defs + names
 
     if want and not want.isdigit():
         low = want.lower()
@@ -990,14 +1006,20 @@ def _windowed_python(text: str, rel: str, want: str):
     if want.isdigit():
         return None          # a numbered part is a character request
 
-    top = [d for d in defs if "." not in d[0]]
+    bound = set(n for n, _, _ in names)
+    top = [d for d in defs if "." not in d[0] and d[0] not in bound]
     return (f"{rel} — {len(lines)} lines, {len(defs)} definitions. THIS IS "
             f"THE MAP, NOT THE FILE.\n\n"
             f"Ask for any one BY NAME and get the whole definition:\n  "
             + "\n  ".join(f"{n}  (lines {a}-{b})" for n, a, b in top[:60])
             + (f"\n  ... and {len(top) - 60} more" if len(top) > 60 else "")
+            + (f"\n\nModule-level names, addressable the same way "
+               f"({len(names)}):\n  "
+               + "\n  ".join(f"{n}  (lines {a}-{b})" for n, a, b in names[:60])
+               + (f"\n  ... and {len(names) - 60} more" if len(names) > 60 else "")
+               if names else "")
             + (f"\n\nMethods are addressable too, as Class.method — "
-               f"{len(defs) - len(top)} of them."
+               f"{len(defs) - len(top) - len(names)} of them."
                if len(defs) > len(top) else "")
             + f"\n\nOr ask for a numbered part, 1 to "
               f"{(len(text) - 1) // READ_WINDOW + 1}, for raw character "
@@ -3539,11 +3561,27 @@ def _deep_research(env: SkillExecutionEnv, args: dict) -> str:
 # skill. Nothing new had to be taught to the Router.
 
 _MCP_DIAL = "MANJUEL_MCP_"
-# Bounded, like everything else (ESTATE LAW 7). Short enough that a wedged
-# server is a refusal a seat can read rather than a turn that dies on the
-# skill timeout with nothing to say.
-_MCP_TIMEOUT = 60
+# Bounded, like everything else (ESTATE LAW 7) -- and bounded BY THE SKILL'S
+# OWN DIAL, not by a number of its own (2026-09-28). This was `_MCP_TIMEOUT
+# = 60`, "short enough that a wedged server is a refusal a seat can read
+# rather than a turn that dies on the skill timeout with nothing to say", and
+# the first firing of the coder-tree flow measured the cost: the door ran the
+# whole stroke suite three times, 3063/3063 green each, and every call came
+# back "did not answer inside 60s" because the strokes take 150. A door call
+# now waits as long as a skill may (MANJUEL_SKILL_TIMEOUT, 300 by default),
+# less five seconds so that the refusal is still this skill's own words and
+# never the bound's -- which keeps the first reason whole: a wedged server is
+# still a refusal a seat can read. It also keeps the council from turning
+# while a suite it asked for is still running beside it, which is where the
+# rack went out of memory on that run's second pass.
+_MCP_WAIT_MARGIN = 5.0
 _MCP_LOOPBACK = {"127.0.0.1", "localhost", "::1", "[::1]"}
+
+
+def _mcp_wait() -> float:
+    """Seconds a door call waits: the skill bound, less the margin, never
+    under one second. Read at the call, so the dial can move."""
+    return max(1.0, float(SKILL_TIMEOUT) - _MCP_WAIT_MARGIN)
 # THE KEY RIDES BESIDE THE DIAL (2026-09-25, his ruling: the core learns a key
 # before the door is armed). `MANJUEL_MCP_<NAME>_KEY` in .env is the bearer
 # this ground presents to <NAME> once its door demands one (`--auth`);
@@ -3598,13 +3636,14 @@ def _mcp_rpc(url: str, method: str, params: dict, key: str = "") -> tuple[dict |
     if key:
         headers["Authorization"] = "Bearer " + key
     req = urllib.request.Request(url, body, headers)
+    wait = _mcp_wait()
     try:
-        with urllib.request.urlopen(req, timeout=_MCP_TIMEOUT) as r:
+        with urllib.request.urlopen(req, timeout=wait) as r:
             row = _json.loads(r.read().decode("utf-8", "replace"))
     except urllib.error.URLError as exc:
         return None, f"it did not answer ({exc.reason})"
     except TimeoutError:
-        return None, f"it did not answer inside {_MCP_TIMEOUT}s"
+        return None, f"it did not answer inside {wait:.0f}s (the skill's bound, less {_MCP_WAIT_MARGIN:.0f})"
     except ValueError:
         return None, "it answered with something that is not JSON"
     except Exception as exc:                     # the transport died
