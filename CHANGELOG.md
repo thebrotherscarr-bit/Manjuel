@@ -34,6 +34,25 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### WHATS_LEFT.md: everything still open, on one page, in plain words (operator, 2026-09-29: "a page with any leftover tasks, checklists, seams ... any blockers or gates, or decisions ... problems or bugs, needs to be in one area where we can see what is actually left")
+
+WHY. He asked for this page hours before it was made. The hand answered with STATUS.md -- a
+generated page of counts, in the record's vocabulary -- and that was not what he asked for. He
+asked for the list of what is left, in one place, readable by a person.
+
+WHAT. `WHATS_LEFT.md` at the root, CRLF, written by hand from TASKS.md (all 35 open boxes), SPEC
+section 4 (all 5 OPEN lines), HANDOFF 09-28 and 09-29, DAYBOOK session 18, this file and
+STATUS.md. Every line is numbered, in plain words, with its source named: A what stops the
+release (5), B decisions that are his (14), C bugs and problems known and not fixed (29), D built
+but not finished or not hooked up (15), E never tested for real (3), F paperwork out of date (6),
+G the release checklist (8 steps), and a table of the plain words against the record's names.
+Nothing in it is new work: every line was already in the record, scattered. No code moved: no
+restart. Not run on a mirror: a document only.
+
+THE WIRE (RULE 11): NONE, and so the piece is NOT FINISHED. The page is written by hand and
+nothing goes red when it goes stale; the page says so itself (D15). His to order: the gate's
+`status` check reading this page's age beside STATUS.md's, or the page printed by a script.
+
 ### The gate reads the fold and the loop, and the tree doors are declared (operator, 2026-09-29: "go for it", after the first gate on v0.1.16)
 
 WHAT THE FIRST GATE ON v0.1.16 REFUSED, on his terminal, and what each was. Three lines were the
