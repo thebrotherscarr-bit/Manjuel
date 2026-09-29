@@ -2496,7 +2496,7 @@ line; close and record.
 their tolls; the ground on `main`; the lines `tree-foundation` to `-6` standing, his to close or
 merge; the door unchanged (no Go moved today).
 
-**Next session** — merge `tree-foundation-6` on Version control (his click), then the older lines;
+**Next session** — the merge is done (his terminal, `3631498`, sent; every `tree-foundation` line closed);
 named beside it: the failed pass carried without the door's name; a SPEC 8.2 theme for the coder on
 the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that
 says a tool was used; the dials (Steward 180, the court 900); a Dashboard button for the standup and

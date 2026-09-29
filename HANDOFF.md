@@ -929,8 +929,9 @@ rewritten whole; the door landed the one line, saying skills.py already carried 
 and the edit added none; the strokes 3135/3135 and the smoke 72/72 green through the door; his hand at
 `land` ("continue at the land gate, save it on the line") and the council saved it on the line as
 `ba0e61a` (skills.py and the three stamps). The first change to the harness made by the estate on a
-person's words, end to end. MERGING `tree-foundation-6` INTO MAIN IS HIS CLICK on Version control's
-Lines of work; the older lines `tree-foundation` to `-5` are his to close.
+person's words, end to end. MERGING `tree-foundation-6` INTO MAIN WAS HIS MERGE ON HIS TERMINAL (Version control has
+no such click; done the same day, `3631498`, sent); every `tree-foundation` line closed through the
+door's own button.
 
 **Where the ground stands.** core `main@94c0928` plus the run-six record (CHANGELOG.md, DAYBOOK.md,
 HANDOFF.md, pipelines.md, BUILDMAP.md), to be saved and sent through the glass's Version control on

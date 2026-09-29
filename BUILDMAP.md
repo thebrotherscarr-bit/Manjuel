@@ -636,7 +636,7 @@ this file (where each thing is) -> REFUSALS.md (what each guard refuses)
 | def | `main` | 913-1004 |  |
 | def | `_open_and_serve` | 1007-1057 | Everything after the sitting line: the boot the REPL does, `opened`, |
 
-### manjuel/skills.py — 5086 lines
+### manjuel/skills.py — 5087 lines
 
 *Skills: markdown declares the interface, Python registers the implementation.*
 
@@ -744,32 +744,32 @@ this file (where each thing is) -> REFUSALS.md (what each guard refuses)
 | def | `_edit_file` | 3933-3971 | Replace one exact passage in a workspace file. |
 | def | `_edit_passage` | 3974-3999 | The two-marker shape, read: (old, new, refusal). ONE READER for every |
 | def | `_apply_passage` | 4002-4070 | Replace `old` with `new` in the file at `path`, or refuse and write |
-| def | `never_written` | 4160-4190 | Why a seat may never write THIS path in the ground, or "" when it may. |
-| def | `repo_of` | 4193-4203 | The nearest repository the path belongs to, inside the ground: the first |
-| def | `line_of_work` | 4206-4225 | (refusal, branch): the branch the file's repository stands on, or why a |
-| def | `terminator_for` | 4228-4238 | The terminator a write must use: the file's own (None when MIXED), or |
-| def | `checked_python` | 4241-4261 | The structural gate for a whole file about to be written: parse, then |
-| def | `_tree_target` | 4264-4279 | The resolved file a tree door was asked for: (path, rel, branch, refusal). |
-| def | `_ground_write` | 4283-4311 | Write one whole file into the ground, on a line of work. |
-| def | `_ground_edit` | 4315-4329 | Replace one exact passage in a file in the ground, on a line of work. |
-| def | `_run_python` | 4488-4569 | Run one Python file from the workspace and report what it said. |
-| class | `SkillLibrary` | 4578-4971 |  |
-| def | `SkillLibrary.__init__` | 4584-4587 |  |
-| def | `SkillLibrary.load` | 4590-4633 |  |
-| def | `SkillLibrary.validate` | 4635-4671 | Return (errors, warnings) for the md <-> handler binding. |
-| def | `SkillLibrary.manifest` | 4673-4684 | Compact by default -- this is what the router reads to pick a tool. |
-| def | `SkillLibrary.shortlist` | 4686-4742 | The manifest, narrowed to what bears on THIS objective. |
-| def | `SkillLibrary.keywords` | 4744-4745 |  |
-| def | `SkillLibrary.spec` | 4747-4749 |  |
-| def | `SkillLibrary.models` | 4751-4753 | Model tags prompt skills depend on, for the startup check. |
-| def | `SkillLibrary.tool_schemas` | 4755-4834 | Ollama `tools=` schemas -- each skill offered ONLY what it declares. |
-| def | `SkillLibrary.hooks_for` | 4836-4845 | Every skill declaring `point`, in NAME ORDER. |
-| def | `SkillLibrary._fire` | 4847-4898 | Run the hooks for one point. They watch and they act; they do not |
-| def | `SkillLibrary.execute` | 4900-4919 | Every skill call in this estate, with its declared hooks around it. |
-| def | `SkillLibrary._call` | 4921-4971 |  |
-| def | `_run_prompt_skill` | 4974-5026 | Send <content> to the skill's own model, with its markdown as the rules. |
-| def | `_json_call` | 5052-5070 |  |
-| def | `extract_tool_call` | 5073-5086 |  |
+| def | `never_written` | 4161-4191 | Why a seat may never write THIS path in the ground, or "" when it may. |
+| def | `repo_of` | 4194-4204 | The nearest repository the path belongs to, inside the ground: the first |
+| def | `line_of_work` | 4207-4226 | (refusal, branch): the branch the file's repository stands on, or why a |
+| def | `terminator_for` | 4229-4239 | The terminator a write must use: the file's own (None when MIXED), or |
+| def | `checked_python` | 4242-4262 | The structural gate for a whole file about to be written: parse, then |
+| def | `_tree_target` | 4265-4280 | The resolved file a tree door was asked for: (path, rel, branch, refusal). |
+| def | `_ground_write` | 4284-4312 | Write one whole file into the ground, on a line of work. |
+| def | `_ground_edit` | 4316-4330 | Replace one exact passage in a file in the ground, on a line of work. |
+| def | `_run_python` | 4489-4570 | Run one Python file from the workspace and report what it said. |
+| class | `SkillLibrary` | 4579-4972 |  |
+| def | `SkillLibrary.__init__` | 4585-4588 |  |
+| def | `SkillLibrary.load` | 4591-4634 |  |
+| def | `SkillLibrary.validate` | 4636-4672 | Return (errors, warnings) for the md <-> handler binding. |
+| def | `SkillLibrary.manifest` | 4674-4685 | Compact by default -- this is what the router reads to pick a tool. |
+| def | `SkillLibrary.shortlist` | 4687-4743 | The manifest, narrowed to what bears on THIS objective. |
+| def | `SkillLibrary.keywords` | 4745-4746 |  |
+| def | `SkillLibrary.spec` | 4748-4750 |  |
+| def | `SkillLibrary.models` | 4752-4754 | Model tags prompt skills depend on, for the startup check. |
+| def | `SkillLibrary.tool_schemas` | 4756-4835 | Ollama `tools=` schemas -- each skill offered ONLY what it declares. |
+| def | `SkillLibrary.hooks_for` | 4837-4846 | Every skill declaring `point`, in NAME ORDER. |
+| def | `SkillLibrary._fire` | 4848-4899 | Run the hooks for one point. They watch and they act; they do not |
+| def | `SkillLibrary.execute` | 4901-4920 | Every skill call in this estate, with its declared hooks around it. |
+| def | `SkillLibrary._call` | 4922-4972 |  |
+| def | `_run_prompt_skill` | 4975-5027 | Send <content> to the skill's own model, with its markdown as the rules. |
+| def | `_json_call` | 5053-5071 |  |
+| def | `extract_tool_call` | 5074-5087 |  |
 
 ### manjuel/spelling.py — 157 lines
 
@@ -914,7 +914,7 @@ this file (where each thing is) -> REFUSALS.md (what each guard refuses)
 | def | `GroundWatch.start` | 162-187 |  |
 | def | `GroundWatch.stop` | 189-195 |  |
 
-manjuel/: 30 files, 22901 lines.
+manjuel/: 30 files, 22902 lines.
 
 ## GUARDS — by the failure that earned them
 
@@ -1358,11 +1358,11 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 | 4047 | `_apply_passage` | HELD TO WHAT IT ADDS (2026-09-29, coder-tree run five): a file |
 | 4074 | `(module)` | THE TREE DOORS (2026-09-28) |
 | 4117 | `(module)` | beside CRLF files is CRLF (the terminator ruling, 2026-09-03). |
-| 4346 | `(module)` | THE CHILD'S WALL (2026-09-22, on his word: "sandbox the python"). |
-| 4617 | `load` | 2026-09-10 `doc_pass` claimed 35 phrases where 8 were declared, |
-| 4986 | `_run_prompt_skill` | sitting 39 waiting for a <content> nobody was going to type twice. |
-| 4992 | `_run_prompt_skill` | 2026-09-08). Sitting 95: "time align the logs" -- four words, no log |
-| 5042 | `(module)` | `<|python_tag|>`. Sitting 84 (2026-09-04): the closing Steward on llama3.2 |
+| 4347 | `(module)` | THE CHILD'S WALL (2026-09-22, on his word: "sandbox the python"). |
+| 4618 | `load` | 2026-09-10 `doc_pass` claimed 35 phrases where 8 were declared, |
+| 4987 | `_run_prompt_skill` | sitting 39 waiting for a <content> nobody was going to type twice. |
+| 4993 | `_run_prompt_skill` | 2026-09-08). Sitting 95: "time align the logs" -- four words, no log |
+| 5043 | `(module)` | `<|python_tag|>`. Sitting 84 (2026-09-04): the closing Steward on llama3.2 |
 
 ### manjuel/transcript.py
 

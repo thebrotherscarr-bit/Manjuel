@@ -918,7 +918,7 @@ rule before the third and fourth doors existed.
 THE MAIN LINE IS HIS (RULE 6): a write lands only on a branch that is not
 main, judged by the NEAREST repository -- atlas/ carries its own `.git` inside
 the ground, and a file under it is judged by atlas's line. Merging a line is
-his click. A FOLDER IS HIS TO PLACE (RULE 8): a seat makes none. THE TERMINATOR
+his own act, on his terminal. A FOLDER IS HIS TO PLACE (RULE 8): a seat makes none. THE TERMINATOR
 IS THE FILE'S OWN, or its neighbours' for a new file, so a new .py beside LF
 files is LF and a new root .md beside CRLF docs is CRLF (the ruling of
 2026-09-03). `run_python` is NOT moved to the tree: its wall is the workspace,

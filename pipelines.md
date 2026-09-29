@@ -537,7 +537,7 @@ brief ──→ open (gate: grants git_branch) ──pass──→ line ──�
     smoke       run    a spelled-out `suite_run` (smoke)
     smoke_ok    eval   the same, on `smoke`; fail returns to `attempt`
     land        gate   the strokes and the smoke green on the line: save it
-                       there? Merging to main stays his click on Version control
+                       there? Merging to main is his merge on his terminal (v5)
     save        run    `git commit: "{{message}}"` -- the council's own commit,
                        on the line, the message his (MESSAGE_IS_THE_OPERATORS)
 
@@ -615,4 +615,5 @@ FIRED A SIXTH TIME (v4, the three fixes in the engine): COMPLETE in one pass,
 rewritten whole, the door landed the one line, the strokes (3135/3135) and the
 smoke (72/72) green through the door, and his hand at `land` had the council
 save it on `tree-foundation-6` (`ba0e61a`). The flow is proven live; merging
-the line is his click (CHANGELOG, 2026-09-29).
+the line is his merge on his terminal -- Version control has no such click, and
+v5, folded the same day, says so at the `land` gate (CHANGELOG, 2026-09-29).

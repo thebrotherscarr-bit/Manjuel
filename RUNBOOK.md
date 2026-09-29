@@ -326,7 +326,8 @@ The engine reads that by arithmetic -- no Router, no plan -- fetches
 alone with it; what it answers goes through `ground_edit` and the delivery is
 the door's own line. ON MAIN THE DOOR REFUSES (RULE 6): open a line of work
 first (Lines of work on Version control, or the `coder-tree` flow's gate), and
-merging it back is your click. The name must be exact and on the map (`help`
+merging it back is yours, on your terminal -- Version control has no merge
+button and the door carries no such verb. The name must be exact and on the map (`help`
 is not `helper`); a bare `.py` is the workspace, not the ground. A DOCUMENT IS
 ASKED BY HEADING (2026-09-29), a root document by its bare name:
 

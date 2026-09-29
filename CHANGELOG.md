@@ -34,6 +34,18 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The merge is his, on his terminal: the land gate's title and the record's lines corrected, coder-tree folded as v5 (operator, 2026-09-29: "fix the gate title and the doc lines")
+
+The flow's `land` gate and six lines of the record said merging a line to main "stays your click
+on Version control", and there is no such click: Version control offers Move here, Finish with it
+and Start a new line; the core has no merge skill; the door names "merge" a forbidden verb, absent
+by construction. Found when he ordered the merge of `tree-foundation-6` and no wire could carry
+it: he merged on his terminal (`3631498`, parents `0e72ef3` and `ba0e61a`), and the send and the
+closing of every `tree-foundation` line went through the glass's own buttons. Corrected: the
+gate's title (v5, folded as the glass, v4 kept whole), this CHANGELOG (the run-six entry and the
+tree doors' entry), HANDOFF, DAYBOOK, pipelines.md (the `land` row and the sixth-firing
+paragraph), RUNBOOK and REFUSALS §27. Nothing in the engine moved.
+
 ### coder-tree fired a sixth time and COMPLETED: the coder changed the harness on a line of work, the suites ran green through the door, and the council saved it on the line (operator, 2026-09-29: "continue at the land gate, save it on the line")
 
 RUN `f-20260929-150901-9b50439e` (v4 with the three fixes, sitting 293, 08:08 to 08:18, booted and
@@ -49,7 +61,7 @@ through the door, 3135/3135 green and stamped (165 s); the smoke, 72/72 (39 s); 
 answered by his hand -- "continue at the land gate, save it on the line" -- and the council's
 `git_commit` saved it on the line as `ba0e61a` (22 s): `manjuel/skills.py` and the three proof
 stamps the suites wrote. Main is `94c0928`, untouched and level with GitHub; merging the line is
-his click on Version control, and `git diff main..tree-foundation-6 -- manjuel/skills.py` is the
+his merge on his terminal (Version control has no such click), and `git diff main..tree-foundation-6 -- manjuel/skills.py` is the
 one line.
 
 WHAT THIS IS. The first time the estate changed its own harness end to end on a person's words:
@@ -408,7 +420,7 @@ the quarantine, and `ground_read` read the ground with nothing writing it. No si
   the rule); `line_of_work` (a write lands only while the file's NEAREST repository stands on a
   branch that is not main or master and is not detached -- atlas/ is judged by its own line; the
   cure is named, `git_branch new` through the door or Lines of work on Version control; merging
-  is his click); a folder that does not exist refuses (RULE 8); `terminator_for` (the file's own,
+  is his own act, on his terminal); a folder that does not exist refuses (RULE 8); `terminator_for` (the file's own,
   MIXED refused; a new file takes its nearest same-suffix sibling's, else LF); `checked_python`
   (parse, then `inspect_code` on the whole file). `edit_file`'s shape and write moved into
   `_edit_passage` and `_apply_passage`, shared with `ground_edit`, so the workspace door and the
