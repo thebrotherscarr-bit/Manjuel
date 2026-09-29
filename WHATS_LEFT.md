@@ -17,8 +17,6 @@ the lines, finds words in them, and names any line it cannot number.
 
 The release is core **v0.1.16** and atlas **v0.1.9**. Neither tag is cut.
 
-- **A2. The release check has not passed.** Last result: 14 lines ok, 1 refused (the live
-  check, fixed since: see A1 under Done). *(STATUS)*
 - **A3. The two tags are not cut.** Core v0.1.16 and atlas v0.1.9, from the dashboard's Version
   control page, after A2. *(HANDOFF 09-29)*
 - **A4. GitHub's automatic tests were red on Windows.** Fixed here on 2026-09-29 and waiting
@@ -111,12 +109,18 @@ Nothing here gets built until you say which way.
 - **C30. The engine does not say when a model's reply was cut off by a full window.** The
   rack reports it; the transcript only said "(deliberation only, no conclusion reached)". That
   is how A1 hid for a day. *(found 2026-09-29, CHANGELOG)*
+- **C31. Four old model processes from 7:52 this morning still hold about 4 GB of graphics
+  memory.** The running Ollama does not list them. With them the card sits at 14.5 of 16 GB,
+  and the second live check of the afternoon ran in 5 minutes against the usual 2 while the
+  rack reloaded all three models. They are processes this hand did not start, so they were not
+  stopped. *(measured 2026-09-29 15:06)*
+- **C32. Eighteen of atlas's verifier scripts rewrite their test fixture on any word they do
+  not know.** Only `--verify` checks; anything else, a typo included, overwrites the fixture.
+  It happened today to the flow fixture (restored from the last save, nothing lost). The flow
+  script now refuses an unknown word; the other eighteen do not yet. *(found 2026-09-29)*
 
 ### The dashboard and the tool server (atlas)
 
-- **C22. SECURITY. The dashboard listens on every network address (port 8091),** not only this
-  machine, and nothing calls its login gate. Ollama listens on every address too. Measured
-  09-17, not re-checked. *(TASKS)*
 - **C23. `GetAgent` hands back a pointer that can race with `UpsertAgent`.** And `Run.check` reads
   a 502 error as "no engine open". *(TASKS)*
 - **C24. `/run/listen` can stall** (the same bug was fixed in `/run/stream`), and `/chat/stream`
@@ -199,8 +203,8 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 - [x] 1. Find out why the Router quits early, and fix it (A1)
 - [x] 2. Run the live check until it is 9 of 9
-- [ ] 3. Run the release check for v0.1.16 on your terminal: every line ok
-- [ ] 4. Run atlas's proof
+- [x] 3. Run the release check for v0.1.16: every line ok (16 of 16, 2026-09-29 15:10)
+- [x] 4. Run atlas's proof (21 held, 14 absent, 0 broke, 2026-09-29)
 - [ ] 5. Cut and send the tag v0.1.16 (core) from Version control
 - [ ] 6. Cut and send the tag v0.1.9 (atlas) from Version control
 - [ ] 7. Publish the atlas v0.1.8 draft on GitHub, or drop it (A5)
@@ -212,6 +216,13 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **A2. The release check has not passed.** DONE 2026-09-29 15:10. It passed 16 of 16 for
+  v0.1.16: suites 3189/3189 and 72/72 on the ground, live check 9 of 9 (sitting 299), and every
+  record line. *(STATUS)*
+- **C22. SECURITY. The dashboard listens on every network address.** DONE, and already was.
+  Measured 2026-09-29: the tool server (8090), the dashboard (8091) and Ollama (11434) all
+  listen on 127.0.0.1 only, and the dashboard opens with a PIN since 09-21. The TASKS line was
+  stale. *(measured)*
 - **A1. The live check fails 1 of 9.** DONE 2026-09-29. The Router is sent every tool's
   description on every turn. That request had grown to 8,182 tokens in a window of 8,192, so it
   had about ten tokens to answer in; the two tools added on 09-28 filled it. Its window is

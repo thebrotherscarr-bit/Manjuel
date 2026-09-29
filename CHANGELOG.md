@@ -34,6 +34,8 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+## v0.1.16 — 2026-09-29 15:15
+
 ### The Router's window: its request had filled it, and the live check is 9 of 9 again (operator, 2026-09-29: "start working through the list ... make a plan and execute"; "do the list top to bottom")
 
 WHAT'S LEFT, A1. The standup sat at 8/9 twice on 2026-09-29 (sittings 296, 297) on `what does the
@@ -176,8 +178,6 @@ the door's own suite_run and standup_run (his ruling: on the glass and the recor
 proof). No engine code moved: no restart. WHAT GOES RED IF UNPLUGGED: the gate's own stroke on the
 fold, the flow-law stroke on the loop, and the manifest stroke on the two records; on his terminal,
 `spec`, `flows` and `manifest` at cut time.
-
-## v0.1.16 — 2026-09-29 11:53
 
 ### The STATUS page: where the ground stands, printed from the record, and the gate's fifth terminal check (operator, 2026-09-29: "build it")
 
