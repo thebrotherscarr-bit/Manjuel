@@ -2490,7 +2490,11 @@ designed; the carry held on passes two and three (the feed, the Guardian first, 
 refusal); the Coder repeated the refused block both times; FAIL at the ceiling, nothing landed, the
 empty line closed. His ruling, the same evening: "put the refusal above the change in the prompt" --
 built, the Coder's tree prompt now opening a retry with what was refused and told not to answer it
-again; window stroke 64, 3134/3134 and 72/72 on a mirror, R15 red; restart required.
+again; window stroke 64, 3134/3134 and 72/72 on a mirror, R15 red; restart required. Then "fire
+coder-tree v5 an eighth time on the .github change": run eight on sitting 295 (09:28 to 09:37) -- the
+refusal first in the prompt, the seat answered the refused import again and then a malformed block; FAIL
+at the ceiling, nothing landed, the empty line closed. Three retries over two runs: SITTING LAW 3's floor
+for the Coder's seat, measured; the move is his ruling.
 
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
@@ -2505,13 +2509,12 @@ in session 17's list, written before this entry existed.
 **Rulings** — by card: build all three fixes and fire again; continue at the land gate and save on the
 line; close and record.
 
-**At close** — sittings 292 (07:46 to 07:58), 293 (08:08 to 08:18) and 294 (09:02 to 09:16) closed from
-the Dashboard with their tolls; the ground on `main`; no line of work remains (his merge of
+**At close** — sittings 292 (07:46 to 07:58), 293 (08:08 to 08:18), 294 (09:02 to 09:16) and 295 (09:28 to
+09:37) closed from the Dashboard with their tolls; the ground on `main`; no line of work remains (his merge of
 `tree-foundation-6`, the rest closed through the door); the door rebuilt once (the runner's feed) and
 placed on his allowance, pid 276.
 
-**Next session** — an eighth firing of `coder-tree` v5 on a change whose first pass fails, the measure of
-the refusal read first (his word); if the seat still repeats it, SITTING LAW 3's move is the transcript's
-to earn; named beside it: a SPEC 8.2 theme for the coder on the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that
+**Next session** — his ruling on the Expert Coder's seat (SITTING LAW 3: the transcripts of runs seven and
+eight show qwen2.5-coder:7b not acting on a refusal it was shown, first or last); named beside it: a SPEC 8.2 theme for the coder on the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that
 says a tool was used; the dials (Steward 180, the court 900); a Dashboard button for the standup and
 a `loops` box in the builder; the front-end agent handoff plan.

@@ -630,3 +630,8 @@ ceiling -- the carry held live (the feed, the Guardian first, the Coder shown
 the refusal) and the seat repeated the refused block on both retries. The
 mechanism is proven; a seat that changes course on a refusal is his ruling
 (CHANGELOG, 2026-09-29).
+
+FIRED AN EIGHTH TIME (v5, the refusal first in the Coder's prompt, his ruling
+built): the same three passes -- refused, repeated, then a malformed block --
+FAIL at the ceiling. The seat's floor is measured (SITTING LAW 3); moving the
+Expert Coder's seat is his ruling (CHANGELOG, 2026-09-29).

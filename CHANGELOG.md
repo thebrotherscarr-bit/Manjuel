@@ -34,6 +34,29 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### coder-tree fired an eighth time, the refusal first: the seat still answered the refused import -- SITTING LAW 3's floor for the Coder's seat, measured (operator, 2026-09-29: "fire coder-tree v5 an eighth time on the .github change")
+
+RUN `f-20260929-162932-d9329ac4` (v5, sitting 295, 09:28 to 09:37, booted and closed from the
+Dashboard), the same objective as run seven, the line `tree-github-2` opened at his gate (32 s).
+FAIL at 221 s at the ceiling, three passes. Pass one (90 s): refused for `import socket` (RULE 4),
+as designed. Pass two (74 s): the Coder's prompt OPENED with "THE LAST PASS FAILED -- read this
+before anything below. What was answered then is not to be answered again; what was said:" and the
+door's refusal, then the passage, then the change (the prompts companion, `logs/_prompts`); the
+Guardian read the feed first and said SAFE (1 s); the Coder answered the identical block with
+`import socket` (70 s, drift 0.70). Pass three (20 s): it changed shape -- an edit block putting
+`import socket` inside the dict -- and the door refused it as unparseable at line 4139. Nothing
+landed; the ground clean; back on `main`, the empty line closed through the door, on his word.
+
+WHAT THIS MEASURES. The ruling is built and reached the seat: the refusal was the first thing it
+read, twice, and it was told not to answer it again. Three retries over two runs (seven and eight)
+now show qwen2.5-coder:7b not acting on a refusal it was shown, below the change or above it, and
+ignoring the objective's own escape clause ("if that is refused, answer again with the dict line
+alone and no import") every time. That is SITTING LAW 3's measured floor for the Expert Coder's
+seat -- the transcripts show the model failing at its own job, which is the one ground on which a
+seat moves up. The move is his ruling; not made here. The mechanism around the seat is proven end
+to end (runs six, seven and eight): the window, the feed, the Guardian, the door, the loop, the
+gates at the ends.
+
 ### The refusal stands above the change in the Coder's prompt (operator, 2026-09-29: "put the refusal above the change in the prompt")
 
 His ruling on run seven's finding. `maker.tree_prompt` had shown the carried pass BELOW the passage

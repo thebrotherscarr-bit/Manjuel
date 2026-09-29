@@ -957,10 +957,16 @@ to be answered again, then the passage, then the change. Window stroke 64, the s
 smoke 72/72 on a mirror, R15 red. RESTART REQUIRED (`maker.py`). Not fired: an eighth firing on a change
 whose first pass fails is the measure, on his word.
 
-**Where the ground stands.** core `main@0b4f6f0` plus this piece (CHANGELOG.md, DAYBOOK.md, HANDOFF.md,
-pipelines.md, BUILDMAP.md, manjuel/maker.py, tests/test_manjuel.py), to be saved and sent through the
-glass's Version control on his word; atlas `main@a6e6c23`, level with GitHub; the door placed at pid 276
-carries the feed. No line of work remains.
+**CODER-TREE FIRED AN EIGHTH TIME** (run `f-20260929-162932-d9329ac4`, v5, sitting 295, 09:28 to 09:37),
+the refusal first in the Coder's prompt: refused for the import, repeated with the refusal read first, then a
+malformed block -- FAIL at the ceiling, nothing landed, back on `main`, the empty line `tree-github-2` closed
+through the door. THE FLOOR IS MEASURED (SITTING LAW 3): three retries over runs seven and eight show
+qwen2.5-coder:7b not acting on a refusal it was shown, first or last, and ignoring the objective's own
+escape clause. Moving the Expert Coder's seat is his ruling; the mechanism around it is proven end to end.
+
+**Where the ground stands.** core `main@98f8802` plus the run-eight record (CHANGELOG.md, DAYBOOK.md,
+HANDOFF.md, pipelines.md), to be saved and sent through the glass's Version control on his word; atlas
+`main@a6e6c23`, level with GitHub; the door placed at pid 276 carries the feed. No line of work remains.
 atlas `main@0cb5c63` (`suite_run` the last), level with GitHub; the morning's two pieces --
 `line/internal/tools/tools.go`, `gitctl.go`, `tools_test.go`, `line/internal/auth/auth.go`,
 `auth_test.go`, `line/cmd/atlas-mcp/prove.go`, `docs/ARCHITECTURE.md`, `CHANGELOG.md` -- saved
