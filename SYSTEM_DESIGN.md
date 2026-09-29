@@ -86,7 +86,7 @@ GPU; the software is what this estate already is, finished and joined.
 | Clients (TBC) | 1 today; design for 50 | four tiers, monthly cadence |
 | Runs per day | < 50 typed turns; a handful of pipelines | sittings 86–98 measured |
 | Turn latency | ≤ **600 s** ceiling, court ~300 s, a door answer 2–30 s | `TURN_DEADLINE`, sitting 98 (300.4 s court) |
-| Inference budget | **15 GB VRAM** on a 16 GB card; per-seat timeouts 150/300/600/700 by size | `vram.py`, `agents/*.md` `Timeout:` |
+| Inference budget | **15 GB VRAM** on a 16 GB card; per-seat timeouts 150/180/300/600 (by size, the door's by name); the court's turn 900 | `vram.py`, `agents/*.md` `Timeout:` |
 | Storage | photos dominate: ~**250 MB per job-month** today (47 photos ≈ 90 MB at 6-20; `picture\` 234 MB); text is negligible; index ~25 MB | `worlds\TBC` on disk |
 | Availability | one box; restart is seconds; the ground opens with the rack down | Manjuel boot, "RACK UNREACHABLE — the ground is open" |
 | Durability | append-only files + hash chain + a copy of the folder; no database is the truth | atlas `SPEC_SQLITE` rule 1–4 |

@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import threading
 import time
 
 import ollama
@@ -34,11 +35,15 @@ _DURATION_RE = re.compile(
 # more than 10 minutes between a response, thats absurd." Then, the same
 # afternoon, BY MODEL SIZE: "for the steward-sized models we are running
 # the 150-300 then the router-sized gets up to 600 and the max size is at
-# 700 for the biggest ones." The seats' own numbers are `Timeout:` in
-# agents/*.md (llama3.2 150, phi4-mini 300, qwen3.5:4b 300, the 7-9b
-# seats 600, gemma4:12b 700); this is the most any seat may take. The
-# TURN is still bounded at 600 (pipeline.TURN_DEADLINE): a 700 seat late
-# in a turn is cut to what is left.
+# 700 for the biggest ones." RULED AGAIN 2026-09-28, the evening the court
+# was measured cut at its turn (sitting 285): "180 for steward. 300 to
+# route and 600 max per seat other than the court which requires a max of
+# 900". So the seats' own numbers are `Timeout:` in agents/*.md (the
+# Steward 180, the other llama3.2 seats 150, phi4-mini 300, qwen3.5:4b
+# 300, the 7-12b seats 600); this is the most any seat may take, and it is
+# 600. The TURN is bounded at 600 too (pipeline.TURN_DEADLINE) unless its
+# pipeline declares its own -- the court's 900, in pipelines.md -- and a
+# seat seated late in a turn is cut to what is left.
 
 
 def read_dials() -> None:
@@ -51,16 +56,16 @@ def read_dials() -> None:
     keep = os.environ.get("MANJUEL_KEEP_ALIVE", "").strip()
     KEEP_ALIVE = keep if _DURATION_RE.fullmatch(keep) else "30m"
     try:
-        SEAT_TIMEOUT = float(os.environ.get("MANJUEL_SEAT_TIMEOUT") or 700)
+        SEAT_TIMEOUT = float(os.environ.get("MANJUEL_SEAT_TIMEOUT") or 600)
     except ValueError:
-        SEAT_TIMEOUT = 700.0
+        SEAT_TIMEOUT = 600.0
 
 
 read_dials()
 
 # How many seat-bound transports a runtime keeps beside its default one
 # (_client_for). Three is every bound the rack declares under the ceiling
-# today -- 150, 300 and 600 -- and the fourth is the one a turn's deadline cut.
+# today -- 150, 180 and 300 -- and the fourth is the one a turn's deadline cut.
 BOUND_TRANSPORTS = 4
 
 # httpx is what ollama-python speaks through; its timeout exceptions are the
@@ -111,13 +116,69 @@ def _client_timeout(seconds: float):
 
 
 def _seat_refusal(agent: Agent, seconds: float, elapsed: float) -> SeatTimeout:
+    # WHICH DIAL WOULD MOVE IT (2026-09-29). This named MANJUEL_SEAT_TIMEOUT
+    # for every seat, and every seat on this ground declares its own
+    # `Timeout:` -- chat() reads the seat's number first and the dial only
+    # for a seat that has none, so raising the dial moved nothing.
+    #
+    # AND A BOUND THAT WAS THE TURN'S IS SAID TO BE THE TURN'S (the same day,
+    # the court of sitting 301). A seat seated late is bound at the seconds
+    # the turn has left (pipeline._within_deadline), and neither its own
+    # `Timeout:` nor the ceiling would have given it one second more.
+    own = getattr(agent, "timeout", None)
+    if getattr(agent, "cut_to_turn", False):
+        dial = (f"That bound is what the TURN had left when this seat sat, not "
+                f"its own `Timeout:` -- the seats before it took the rest. Raise "
+                f"the turn's deadline (MANJUEL_TURN_DEADLINE, or its pipeline's "
+                f"`Deadline:` in pipelines.md)")
+    elif own:
+        dial = (f"Raise its `Timeout:` in agents/ (no seat may declare more than "
+                f"the ceiling, MANJUEL_SEAT_TIMEOUT)")
+    else:
+        dial = f"Raise the ceiling with MANJUEL_SEAT_TIMEOUT"
     return SeatTimeout(
         f"[{agent.name}] seat call ran past the {seconds:.0f}s bound "
         f"({elapsed:.0f}s) and the run has stopped waiting for it "
-        f"(LAW 7; sitting 92: Jesster, 760s, then a 500). Raise the bound "
-        f"with MANJUEL_SEAT_TIMEOUT if {agent.model} legitimately needs "
-        f"longer, or seat a smaller model (SITTING LAW 3)."
+        f"(LAW 7; sitting 92: Jesster, 760s, then a 500). {dial} if "
+        f"{agent.model} legitimately needs longer, or seat a smaller model "
+        f"(SITTING LAW 3)."
     )
+
+
+def usage_of(agent: Agent, resp, options: dict | None) -> dict | None:
+    """What the rack says about a call once it is DONE, or None.
+
+    THE RACK KNOWS WHY A REPLY STOPPED, AND THE ENGINE NEVER ASKED
+    (2026-09-29). Ollama ends every call with `done_reason` -- `stop` when
+    the model finished, `length` when the rack CUT it: the window was full,
+    or `num_predict` was spent -- beside the token counts of the prompt and
+    of the answer. For a day the Router's request stood at 8,182 tokens in a
+    window of 8,192; every reply was cut ten tokens in, the rack said
+    `length` each time, and the record said "(deliberation only, no
+    conclusion reached)" -- true, and no use to anyone looking for the cause.
+
+    A streamed call says it on its LAST part (`done` is true); a whole reply
+    says it on the reply. Anything else -- a part mid-stream, a stub that
+    says nothing -- is None, so nothing is written over a call that did say.
+    """
+    reason = _field(resp, "done_reason")
+    if not reason and not _field(resp, "done"):
+        return None
+
+    def count(name):
+        try:
+            n = _field(resp, name)
+            return int(n) if n is not None else None
+        except (TypeError, ValueError):
+            return None
+
+    opts = options or {}
+    return {"seat": agent.name, "model": agent.model,
+            "done_reason": str(reason or ""),
+            "prompt_tokens": count("prompt_eval_count"),
+            "answer_tokens": count("eval_count"),
+            "window": opts.get("num_ctx"),
+            "max_tokens": opts.get("num_predict")}
 
 
 def _has_tool_calls(part) -> bool:
@@ -248,6 +309,21 @@ class OllamaRuntime:
         # Transports for the seat bounds under the ceiling (see _client_for),
         # least recently used first, at most BOUND_TRANSPORTS of them.
         self._bounded: dict[float, object] = {}
+        # How the last call ended (usage_of), PER THREAD, for the reason
+        # chat() takes its sinks per call: a seat on another thread must not
+        # write over the answer the pipeline is about to read.
+        self._usage = threading.local()
+
+    @property
+    def last_usage(self) -> dict | None:
+        """How the last chat() on THIS thread ended -- usage_of's dict -- or
+        None when the rack did not say. Read by pipeline.note_cut_reply."""
+        return getattr(self._usage, "said", None)
+
+    def _keep_usage(self, agent: Agent, resp, options) -> None:
+        said = usage_of(agent, resp, options)
+        if said is not None:
+            self._usage.said = said
 
     def _client_for(self, bound: float):
         """The transport whose READ timeout is `bound`.
@@ -515,6 +591,7 @@ class OllamaRuntime:
         bound = float(getattr(agent, "timeout", None) or SEAT_TIMEOUT)
         client = self._client_for(bound)
         started = time.time()
+        self._usage.said = None         # this call's ending, not the last one's
 
         try:
             # A native tool call is structured and cannot stream usefully, so
@@ -559,6 +636,7 @@ class OllamaRuntime:
                     ), agent, bound, started):
                         if call_part is None and _has_tool_calls(part):
                             call_part = part
+                        self._keep_usage(agent, part, options)
                         piece = self._extract(part, strict=False)
                         if piece:
                             chunks.append(piece)
@@ -604,6 +682,7 @@ class OllamaRuntime:
                     options=options,
                     tools=tools,
                 )
+                self._keep_usage(agent, resp, options)
                 # SITTING 79, MY OWN BUG, CAUGHT BY THE OPERATOR. think_to
                 # was added to the streaming and non-streaming paths and NOT
                 # to this one -- and this is the path the ROUTER takes, the
@@ -631,6 +710,7 @@ class OllamaRuntime:
                     keep_alive=self.keep_alive,
                     options=options,
                 )
+                self._keep_usage(agent, resp, options)
                 # The non-streaming path has the deliberation in one field
                 # rather than in fragments. Same sink, so a caller does not
                 # have to know which path it got.
@@ -651,6 +731,7 @@ class OllamaRuntime:
                 options=options,
                 stream=True,
             ), agent, bound, started):
+                self._keep_usage(agent, part, options)
                 piece = self._extract(part, strict=False)
                 if piece:
                     chunks.append(piece)

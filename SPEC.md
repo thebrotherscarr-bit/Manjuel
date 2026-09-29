@@ -116,7 +116,7 @@ A proposal that needs a word uses the nearest one below.
 | **The standing** | what the sitting is FOR, from DAYBOOK's last entry, read not generated, handed to the door and the court | `seatlog.standing_block`; REFUSALS §20 |
 | **The story** | what the sitting has DONE, from its own ledger lines, read not generated, handed to the door and the court; "what happened?" is answered from it | `seatlog.story_block`, `note_for`; `intent.asks_the_sitting`; REFUSALS §22 |
 | **The ruling loop** | a seat that thought and did not rule is asked again, thinking off, at most three times; the Router is never looped | `MAX_RULING_TURNS`; `_press_for_ruling`; REFUSALS §20 |
-| **The bounds** | one seat call: its `Timeout:` by model size (150/300/600/700) or the 700s ceiling, cut at the wire; one turn: 600s, the seats after it named OUT OF TIME, the seats that failed named too; one index build at a time (`index_ground`, `embed_text` -- the watcher's turn-boundary re-index does not take the lock, found 2026-09-17 and open); twelve ruling turns; one headless engine: thirty minutes with no command between turns and it closes its own sitting (2026-09-16) | `runtime.SEAT_TIMEOUT`, `pipeline.TURN_DEADLINE`, `skills._INDEX_BUSY`, `serve.IDLE_CLOSE`; REFUSALS §21; `test_an_idle_engine_closes_its_own_sitting` |
+| **The bounds** | one seat call: its `Timeout:` by model size and the door's by name (150/180/300/600) or the 600s ceiling, cut at the wire; one turn: 600s, or what its pipeline declares for itself (the court 900, 2026-09-29), the seats after it named OUT OF TIME, the seats that failed named too; a reply the rack cut is named with the ceiling that cut it; one index build at a time (`index_ground`, `embed_text`, and the watcher's turn-boundary re-index, which takes the lock or waits a turn, 2026-09-29); twelve ruling turns; one headless engine: thirty minutes with no command between turns and it closes its own sitting (2026-09-16) | `runtime.SEAT_TIMEOUT`, `pipeline.TURN_DEADLINE`, `registry.Steps`, `pipeline.note_cut_reply`, `skills._INDEX_BUSY`, `serve.IDLE_CLOSE`; REFUSALS §21; `test_an_idle_engine_closes_its_own_sitting` |
 | **The release gate** | a tag is refused by name until the record is whole: suites, buildmap, standup, law, manifest, SPEC↔CHANGELOG, DAYBOOK, HANDOFF | `tests/release.py --check`; RUNBOOK "Before a tag" |
 | **The record** | every run is a transcript; every sitting is a numbered line and a toll; memory is landed by hand; nothing is deleted | `transcript.py`, `seatlog.py`, `memory.py`; LAW 1, LAW 10 |
 | **The index** | chunked, incremental, bounded, embedder-stamped; client material and secrets never enter it; transcripts age out of retrieval at 45 days | `vectors.py`; REFUSALS §5, §6, §16 |
@@ -248,7 +248,12 @@ index without the engine having checked it against what ran.
    running. (Today: ten of ten with a court that had no judge.)
 2. **No response gap over ten minutes.** Measure: no run in the ledger
    over `TURN_DEADLINE`; the court fits its four seats inside it.
-   (Today: measured, held at 600.0s -- with the judge cut.)
+   (Today: measured, held at 600.0s -- with the judge cut. RULED
+   2026-09-28 and built 2026-09-29: the court's turn is given 900,
+   declared in pipelines.md; every other turn keeps the ten minutes.
+   Measured on them the same day, sitting 301: held at 900.0s, the judge
+   seated with 289 s left and cut there, Jesster cut at its own 600 --
+   the court does not fit yet.)
 3. **Nothing unchecked reaches the record.** Measure: a refused feed is
    never a transcript's delivery; a number in a delivery that is in no
    tool result is stamped; a jail name never reaches a reader.

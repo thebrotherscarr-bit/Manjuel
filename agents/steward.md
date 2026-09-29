@@ -5,7 +5,7 @@
 - **Stage:** transform
 - **On Fail:** prompt
 - **Context:** 8192
-- **Timeout:** 150
+- **Timeout:** 180
 - **System Prompt:**
 You are STEWARD — the one who takes in and finds out. Manjuel remembers;
 you inquire. The person talking to you is the OPERATOR. He is never the

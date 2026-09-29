@@ -25,10 +25,14 @@ from . import mathkit
 # Below this cosine, a stage is reported as having drifted. Chosen to be
 # quiet in normal use: unrelated text on nomic-embed-text sits near 0.2-0.4,
 # a faithful summary of its source typically 0.7+.
-# A short objective carries less signal than a full feed, so a bare-objective
-# comparison is judged against a lower bar -- see `threshold_for`.
+# A SHORT SOURCE carries less signal than a full feed -- a one-line tool
+# result, a feed of a sentence -- so a source under SHORT_SOURCE_CHARS is
+# judged against the lower bar (see `score`). This comment promised that bar
+# to "a bare objective" until 2026-09-29; a bare objective has never primed
+# the checker at all (sitting 27's ruling: a request is not a source).
 DRIFT_WARN = 0.55
 DRIFT_WARN_SHORT = 0.35
+SHORT_SOURCE_CHARS = 200
 
 # Two floors, not one. An OUTPUT needs real length before a cosine means
 # anything. A SOURCE does not: "review the git init" is only 19 characters and
@@ -63,6 +67,7 @@ class DriftChecker:
         self._failed = False
         self._noted = False   # a skip is reported once, not once per stage
         self._short_source = False
+        self._too_short = False   # the last source offered was under the floor
 
     def prime(self, source_text: str) -> bool:
         """Embed the source material. False if it cannot be scored at all.
@@ -81,16 +86,43 @@ class DriftChecker:
             return False
         text = (source_text or "").strip()
         if len(text) < MIN_SOURCE_CHARS:
+            self._too_short = True
             return False
-        self._short_source = len(text) < 200
+        self._short_source = len(text) < SHORT_SOURCE_CHARS
         try:
             self._source = self.runtime.embed(self.model, text)
+            self._too_short = False
             return True
         except Exception:
             # An embedder that is missing or down must not take the run with
             # it -- the check is a courtesy, not a dependency.
             self._failed = True
             return False
+
+    def why_unscored(self) -> str:
+        """Why score() answered None, saying WHICH of three states it is.
+
+        ONE NOTE STOOD FOR ALL THREE until 2026-09-29, and it called the
+        source "not usable". It read as WE LOOKED AND FOUND NOTHING WORTH
+        SCORING, 463 times in 502 transcripts, and the truth was that the
+        check had never been armed -- no feed was pasted and no tool ran, by
+        design. The operator reasoned aloud about automating the toll on a
+        measurement that had not once run (TASKS, the drift finding).
+
+          NOT ARMED    nothing was ever offered as a source: no pasted feed,
+                       no tool result. Nothing was tried; nothing was unusable.
+          TOO SHORT    a source was offered and is under MIN_SOURCE_CHARS.
+          NOT SCORED   a source was offered and the embedder could not be
+                       reached. The check is a courtesy; the run went on.
+        """
+        if self._failed:
+            return ("not scored this run (the embedder could not be reached; "
+                    "the run went on without the check)")
+        if self._source is None and self._too_short:
+            return (f"not armed this run (the source offered was under "
+                    f"{MIN_SOURCE_CHARS} characters, too short to measure against)")
+        return ("not armed this run (no pasted source and no tool result to "
+                "measure against; an objective alone is a request, not a source)")
 
     def note_once(self, reason: str) -> str | None:
         """Return `reason` the first time only, so a skipped check is stated
@@ -112,7 +144,7 @@ class DriftChecker:
             return DriftScore(0.0, True, reason=f"embedder unavailable: {exc}")
 
         sim = mathkit.cosine(self._source, vec)
-        # Against a bare objective the expected similarity is genuinely lower;
+        # Against a SHORT source the expected similarity is genuinely lower;
         # holding it to the full-feed bar would cry drift on every short run.
         bar = DRIFT_WARN_SHORT if self._short_source else self.threshold
         return DriftScore(sim, sim >= bar)

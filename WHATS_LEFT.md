@@ -61,6 +61,18 @@ Nothing here gets built until you say which way.
 - **B14. Simplifying the system.** Proposed today, nothing decided: retire the unused atlas code
   (the Rust part is 35 files, 8,887 lines), one table for reading intent instead of several,
   fewer seats, a shorter record. *(today's conversation)*
+- **B15. The review panel's two thinking seats have no limit on how long an answer may be.**
+  Jesster (deepseek-r1:8b) and the judge (gemma4:12b) each think until they stop by
+  themselves or the clock cuts them. When Jesster finishes it takes 72 to 500 seconds; four
+  times it never finished and was cut (760, 577, 552 and 600 seconds). The judge takes 100 to
+  380 seconds when it finishes. With your limits set, the run of 2026-09-29 seated the judge
+  with 289 seconds left and cut it there: 0 of 1 (C13). On 09-07 you ruled to give the judge
+  room to think and to limit its turns, not its length, so a cap is yours to order.
+  RECOMMENDED: give Jesster a maximum answer length, so the model server stops it and the
+  engine asks once more for the ruling with thinking off (the mechanism built on 09-07), and
+  leave the judge as it is. The other ways: a shorter time limit for Jesster alone (400 would
+  leave the judge 490), or a smaller model in Jesster's seat.
+  *(logs/standup_2026-09-29_162318.md, every court transcript in logs/)*
 
 ---
 
@@ -82,16 +94,21 @@ Nothing here gets built until you say which way.
 - **C7. The model list answer dropped a model:** eleven installed, ten listed. *(TASKS)*
 - **C8. A model can say it used a tool when it did not.** The Steward claimed an edit that never
   happened. No check catches it. *(HANDOFF 09-28)*
+- **C33. At the review panel, two seats did another seat's job.** On 2026-09-29 (sitting 301)
+  Neiro wrote "The Court's Ruling" itself, which is the judge's job, and the Router answered
+  "No skill is needed" when the engine had chosen a search for it. The engine stamped the
+  second one ("THE NAMED TOOL DID NOT RUN"); nothing catches the first.
+  *(logs/2026-09-29_160817_should_a_court_of_three_seats_run_on_one.md)*
 
 ### The engine
 
-- **C11. The drift score prints "no usable source"** when the check was never switched on. There
-  is dead code beside it in `drift.py`. Half fixed. *(TASKS)*
-- **C13. The review panel does not fit its time limit.** On 09-28 it scored 0 of 1: one seat was
-  cut at 552 seconds and the judge never got a turn. *(HANDOFF 09-28, TASKS)*
+- **C13. The review panel does not fit its time limit.** Measured again on 2026-09-29 with your
+  limits set (900 for the panel, 600 a seat): 0 of 1. The judge got a turn this time, with 289
+  seconds left, and was cut; Jesster ran its whole 600 and was cut. Your numbers are in and
+  working, and they are not enough by themselves: the next step is your decision B15.
+  *(logs/standup_2026-09-29_162318.md)*
 - **C14. A failing seat asks "retry / skip / abort?"** An automated flow cannot answer, so the
   run dies. *(HANDOFF 09-28)*
-- **C15. The file watcher's re-index can run on top of an index build already running.** *(TASKS)*
 - **C16. The workspace file reader cannot read the rest of the ground.** *(TASKS)*
 - **C17. An idle close is logged as a "Dashboard Close".** The log has no field for why, and the
   idle warning does not mention the 30-minute close. *(TASKS)*
@@ -99,17 +116,18 @@ Nothing here gets built until you say which way.
 - **C19. The live check's greeting case cannot tell a real answer from a recited one.**
   *(HANDOFF 09-28)*
 - **C20. A dozen small honesty fixes:** an unreadable `.env` is not reported, `MANJUEL_OLLAMA_HOST`
-  is never read, dead code, and others. *(TASKS, "small honesty")*
+  is never read, dead code, and others. One is done (2026-09-29): the built-in order for the
+  `estate` pipeline seats the judge last, as `pipelines.md` does. *(TASKS, "small honesty")*
 - **C21. `history_block` has a limit nothing uses,** and some work done every turn could be done
   once. *(TASKS)*
-- **C30. The engine does not say when a model's reply was cut off by a full window.** The
-  rack reports it; the transcript only said "(deliberation only, no conclusion reached)". That
-  is how A1 hid for a day. *(found 2026-09-29, CHANGELOG)*
 - **C31. Four old model processes from 7:52 this morning still hold about 4 GB of graphics
   memory.** The running Ollama does not list them. With them the card sits at 14.5 of 16 GB,
   and the second live check of the afternoon ran in 5 minutes against the usual 2 while the
   rack reloaded all three models. They are processes this hand did not start, so they were not
-  stopped. *(measured 2026-09-29 15:06)*
+  stopped. Seen again at 16:47: a live check took eight and a half minutes instead of two,
+  with the tool-picking model running 73% on the processor because the card had no room.
+  Stopping those four processes, or restarting Ollama, is yours. *(measured 2026-09-29 15:06
+  and 16:47)*
 - **C32. Eighteen of atlas's verifier scripts rewrite their test fixture on any word they do
   not know.** Only `--verify` checks; anything else, a typo included, overwrites the fixture.
   It happened today to the flow fixture (restored from the last save, nothing lost). The flow
@@ -134,7 +152,6 @@ Nothing here gets built until you say which way.
 
 ## D. Built but not finished, or not hooked up
 
-- **D1. The time limits you ruled are not set.** Steward 180 seconds, review panel 900. *(DAYBOOK s18)*
 - **D2. The "make me a game" test, run as a flow, makes nothing.** Two runs on 09-28: both
   times the make step read files and talked. *(HANDOFF 09-28)*
 - **D3. The flows `coder` and `version-tag` have been fired and have never finished
@@ -148,8 +165,6 @@ Nothing here gets built until you say which way.
 - **D8. REFUSALS.md documents 28 refusals. The code has 66.** They are not linked.
   *(HANDOFF 09-28)*
 - **D9. The release check does not read GitHub's test result.** *(HANDOFF 09-28)*
-- **D10. STATUS.md is not in the search index list,** so the system cannot find it by search.
-  *(today's conversation)*
 - **D11. The self-test suite is one third done.** Part 1 landed. Part 2 (a test-case generator)
   and part 3 (REFUSALS.md findable by search) are not scheduled. *(TASKS, in hand)*
 - **D12. atlas: the `release.yml` fix rides with the next version,** and no draft release was
@@ -187,8 +202,8 @@ Nothing here gets built until you say which way.
   "rack_report facts-only" (done) beside "the door at court" (open, B7); "the client token"
   (done, B5) beside "CRLF or LF" (open, B3). Only you tick a box. *(TASKS)*
 - **F7. TASKS.md boxes for work finished on 2026-09-29 are still unticked:** the false refusal
-  (C10) and the card that cannot say "over" (C12). Both are under Done below. Only you tick a
-  box. *(TASKS)*
+  (C10), the card that cannot say "over" (C12), the drift note (C11) and the watcher's
+  re-index (C15). All four are under Done below. Only you tick a box. *(TASKS)*
 
 ---
 
@@ -212,6 +227,30 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **D1. The time limits you ruled are not set.** DONE 2026-09-29. The front door's limit is 180
+  seconds, no seat may take more than 600 (the judge's was 700), and one turn of the review
+  panel may take 900 where every other turn takes 600. I read "the court ... 900" as the
+  panel's whole turn, because that is the limit that cut it on 09-28; if you meant the judge's
+  own call, say so and it is two numbers. A seat that is cut is now told which setting would
+  have given it more time. The panel itself still fails: C13. *(CHANGELOG, "The limits he ruled")*
+- **C30. The engine does not say when a model's reply was cut off by a full window.** DONE
+  2026-09-29. It reads why the model stopped off the model server and says which limit cut the
+  reply: the window full ("the prompt took 8182 of 8192 tokens and left 10 for the answer") or
+  the seat's maximum answer length spent. The note is in the transcript, the session log and
+  the live check's report. *(CHANGELOG, "A reply the rack cut")*
+- **C11. The drift score prints "no usable source".** DONE 2026-09-29. The note says which of
+  three things happened: the check was never switched on (nothing was pasted and no tool ran),
+  the source was too short, or the embedding model could not be reached. The comments beside
+  it say what the code does. Seen in both live runs. The TASKS box is yours to tick (F7).
+  *(CHANGELOG)*
+- **C15. The file watcher's re-index can run on top of an index build already running.** DONE
+  2026-09-29. It takes the same lock the index builds take. If a build is running it does not
+  wait: it keeps the changed files for the next turn and says so. The TASKS box is yours to
+  tick (F7). *(CHANGELOG)*
+- **D10. STATUS.md is not in the search index list.** DONE 2026-09-29. STATUS.md and
+  WHATS_LEFT.md are both listed, and a test goes red if any document at the root is left off
+  the list. Tried live (sitting 302): the index was refreshed and a search for this page's
+  first line found this page first. *(CHANGELOG)*
 - **A3. The two tags are not cut.** DONE 2026-09-29 15:27. Core v0.1.16 on `e8aa9b5` and atlas
   v0.1.9 on `b1059a1`, cut and sent from the Version control page on your standing word ("do
   the list top to bottom"). The release check passed 17 of 17 with the tag named, and the

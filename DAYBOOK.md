@@ -2529,6 +2529,18 @@ fixed and stroked, reversals red. atlas's prove had one leg broken since 09-28 (
 CI green on both repositories. THE MARKS CUT AND SENT from Version control: core `v0.1.16` on `e8aa9b5`,
 atlas `v0.1.9` on `b1059a1`; the gate 17 of 17 with the mark named.
 
+**The evening, second batch** — the list goes on from the engine's lines. His limits of 09-28 set: the
+door 180, no seat over 600, the court's turn 900 (declared in `pipelines.md`, carried on the steps). A
+reply the rack cut is said so, with the ceiling that cut it; the drift note says which of three
+states it is; the watcher's re-index takes the index lock or waits a turn; `STATUS.md` and
+`WHATS_LEFT.md` are index roots and a stroke holds the list; the built-in estate order seats the
+judge last. Twenty-two reversals red by name on a mirror; on the ground from the glass strokes
+3261/3261, smoke 72/72, the standup 9/9 twice (sittings 300 and 303), the index refreshed and
+searched (302).
+THE COURT, MEASURED ON HIS LIMITS (sitting 301): 0/1 at 900.0 s -- the judge seated for the first
+time since 09-18 and cut at the 289 s the turn had left, Jesster cut at its own 600. Neither seat
+declares `Max Tokens`; a cap is his ruling (WHAT'S LEFT, B15), and nothing was built for it.
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until
@@ -2551,5 +2563,5 @@ placed on his allowance, pid 276.
 the list goes on from C, on his standing word; his ruling on the Expert Coder's seat (SITTING LAW 3: the transcripts of
 runs seven and eight show qwen2.5-coder:7b not acting on a refusal it was shown, first or last); named
 beside it: a SPEC 8.2 theme for the coder on the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that
-says a tool was used; the dials (Steward 180, the court 900); a Dashboard button for the standup and
+says a tool was used; the court's two thinking seats (WHAT'S LEFT, B15); a Dashboard button for the standup and
 a `loops` box in the builder; the front-end agent handoff plan.

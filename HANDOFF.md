@@ -749,10 +749,51 @@ before anything was saved (atlas CHANGELOG).
 **FOUND, NOT TOUCHED:** four `llama-server` processes started 07:52 hold about 4 GB of graphics memory
 and are not in `ollama ps` (WHAT'S LEFT, C31). They are not the hand's to stop.
 
-**Where the ground stands.** core `main@e8aa9b5` = `v0.1.16`, atlas `main@b1059a1` = `v0.1.9`, both
-level with GitHub, plus this record (unsaved as it is written, saved after). The glass is pid 27136,
-the 0.1.9 build placed 2026-09-29 on his allowance, carrying the What's left page; the door is pid
-276, the 08:55 build, unchanged. No sitting is open (299 closed 15:04). No line of work.
+**THE EVENING'S SECOND BATCH, THE ENGINE (WHAT'S LEFT: D1, C11, C15, C30, D10, and one of C20).**
+HIS LIMITS OF 2026-09-28 ARE SET: the door 180, no seat over 600 (the judge was 700), and the
+court's TURN 900 -- declared in `pipelines.md` (`**Deadline:** 900`) and CARRIED ON THE STEPS the
+book hands out (`registry.Steps`), so none of the five doors that start a run was edited and none
+can forget it. THE READING IS THE HAND'S AND IS SAID IN THE CHANGELOG: "the court ... 900" was read
+as the court's turn, the limit that cut it on 09-28. A seat that is cut is told the dial that would
+have moved it: its own `Timeout:`, the ceiling, or the turn's.
+A REPLY THE RACK CUT IS SAID SO (`runtime.usage_of`, `pipeline.note_cut_reply`): the window full or
+Max Tokens spent, by arithmetic over the rack's own counts, listed by the standup under GUARDS
+FIRED and carried on the ledger line. THE DRIFT NOTE says which of three states it is. THE
+WATCHER'S RE-INDEX takes `skills._INDEX_BUSY` or hands what changed back for the next turn.
+`STATUS.md` AND `WHATS_LEFT.md` ARE INDEX ROOTS, and a stroke holds every root document to the
+list. The built-in estate order seats the judge last.
+
+**THE COURT, MEASURED ON HIS LIMITS, AND IT DOES NOT FIT (WHAT'S LEFT, C13, open; B15, his).**
+Sitting **301**, 16:08:17-16:23:18, **0/1**, the turn held at 900.0 s. The judge WAS SEATED, the
+first time since 2026-09-18, with 289 s left, and was cut there; Jesster ran to its own 600 and was
+cut. Read off every court transcript in `logs/`: Jesster finishes in 72 to 500 s or not at all
+(cut four times: 760, 577, 552, 600); Manjuel in 100 to 380 s. NEITHER DECLARES `Max Tokens`, so a
+call ends when the model stops or the clock cuts it, and the ruling loop can only press a seat
+whose call returned. He ruled on 2026-09-07 for room to think and a limit on TURNS, so a cap is
+his: the facts and a recommendation are B15 on the list. NOTHING WAS BUILT FOR IT.
+
+**PROOF.** On a mirror: strokes 3257/3257, smoke 72/72, twenty-two reversals red by name. On the
+ground from the glass: strokes **3261/3261**, smoke **72/72**, after the last code edit; the standup
+**9/9** (sitting 300, 16:05:57-16:07:58) and again after the last code edit (sitting 303,
+16:43:40-16:52:17, 9/9 in 517 s: the card was full and the Router's model ran 73% on the
+processor -- C31); the index refreshed and searched (sitting 302,
+16:32:10-16:38:03: `WHATS_LEFT.md` returned first). `BUILDMAP.md` regenerated and matching.
+`manjuel/` moved (runtime, registry, context, pipeline, drift, watch, cli, seatlog): RESTART
+REQUIRED, and every engine named here booted after the edit. WHAT GOES RED IF UNPLUGGED:
+`test_the_seat_bound`, `test_the_turn_deadline`,
+`test_a_dial_in_env_is_read_and_the_transports_stay_few`, `test_a_reply_the_rack_cut_is_said_so`,
+`test_drift_needs_a_source`, `test_the_watchers_reindex_waits_for_a_build`,
+`test_every_root_document_is_in_the_index_list`, `test_the_loops_of_2026_09_08`.
+
+**THE HAND'S FAULT IN THIS BATCH, in the record:** the first build of the refusal told a seat cut
+at what the TURN had left to raise its own `Timeout:`. The live court showed it (Manjuel, 289 s);
+fixed and stroked the same hour, before anything was saved.
+
+**Where the ground stands.** core `main@ca9a54c` (the mark `v0.1.16` on `e8aa9b5`), atlas
+`main@21fed12` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus the second batch and
+this record (unsaved as it is written, saved after). The glass is pid 27136, the 0.1.9 build placed
+2026-09-29 on his allowance, carrying the What's left page; the door is pid 276, the 08:55 build,
+unchanged. No sitting is open (303 closed 16:52). No line of work.
 
 ## HANDOFF FOR 2026-09-28 — read this before anything below it
 

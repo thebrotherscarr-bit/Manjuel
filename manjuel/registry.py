@@ -76,6 +76,13 @@ class Agent:
     # (runtime.SEAT_TIMEOUT). The operator's shape, 2026-09-08: a door and a
     # router bounded tight, the court's seats given the room they measure.
     timeout: float | None = None
+    # NOT DECLARED -- SET BY THE ENGINE ON THE COPY IT SEATS (2026-09-29).
+    # True when `timeout` is what the TURN had left rather than the seat's own
+    # bound (pipeline._within_deadline), so a seat cut there is told which
+    # dial would have moved it (runtime._seat_refusal). Sitting 301: Manjuel,
+    # bound 600, was seated with 289 s of the court's turn and told to raise
+    # its own `Timeout:`, which would have changed nothing.
+    cut_to_turn: bool = False
     # Skills this seat may call natively. Absent = NONE, deliberately: a
     # capability is granted, never assumed. `all` gives the whole library --
     # the Router's job. The same shape as REVIEW_ONLY_SKILLS, which has
@@ -256,6 +263,12 @@ _STEP_RE = re.compile(
     r"^[ \t]*(?:\d+[.)]|[-*])[ \t]+(?P<seat>[^(\n]+?)[ \t]*(?:\((?P<note>[^)]*)\))?[ \t]*$",
     re.MULTILINE)
 _STEP_WHEN_RE = re.compile(r"when[ \t]*:[ \t]*(?P<flag>[A-Za-z0-9_\-]+)", re.IGNORECASE)
+# "**Deadline:** 900", on a line of its own inside a pipeline's section: the
+# seconds ONE TURN on that pipeline may take. No bullet in front of it -- a
+# bulleted line in a section is a step, and this is not a seat.
+_DEADLINE_RE = re.compile(
+    r"^[ \t]*\*\*Deadline:?\*\*:?[ \t]*(?P<val>\S.*?)[ \t]*$",
+    re.MULTILINE | re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -268,6 +281,28 @@ class Step:
         return self.seat
 
 
+class Steps(list):
+    """A pipeline's steps, in order, carrying what the PIPELINE declares.
+
+    A list everywhere a list was handed before -- iterated, sliced, copied --
+    and one thing more: `deadline`, the seconds one turn on this pipeline may
+    take when pipelines.md says so (`**Deadline:** 900`), else None and the
+    dial applies (pipeline.TURN_DEADLINE).
+
+    IT RIDES WITH THE STEPS SO NO DOOR HAS TO REMEMBER IT (2026-09-29). Five
+    places start a run -- the REPL's loop, /table, /chat, the headless door,
+    the standup -- and every one of them hands run_pipeline the steps the book
+    gave it. A deadline looked up BY NAME at each would be five conventions to
+    keep in step, and the fifth is the one that is forgotten (CLAUDE.md RULE
+    11: a convention is not a wire).
+    """
+
+    def __init__(self, steps=(), name: str = "", deadline: float | None = None):
+        super().__init__(steps)
+        self.name = name
+        self.deadline = deadline
+
+
 class PipelineBook:
     """Pipeline order, read from markdown instead of hardcoded in Python.
 
@@ -276,11 +311,14 @@ class PipelineBook:
     """
 
     def __init__(self, order: dict[str, list[str]], default: str, source: Path,
-                 warnings: list[str]):
+                 warnings: list[str], deadlines: dict[str, float] | None = None):
         self.order = order
         self.default = default
         self.source = source
         self.warnings = warnings
+        # pipeline name -> the seconds one turn on it may take, for the
+        # pipelines that declare one (`**Deadline:**`). The rest take the dial.
+        self.deadlines = dict(deadlines or {})
 
     @classmethod
     def load(cls, path: str | Path, registry: "AgentRegistry" | None = None) -> "PipelineBook":
@@ -299,11 +337,27 @@ class PipelineBook:
         # step list is not swallowed as steps.
         stops = [m.start() for m in re.finditer(r"^##+[ \t]", text, re.MULTILINE)]
         order: dict[str, list[str]] = {}
+        deadlines: dict[str, float] = {}
         warnings: list[str] = []
 
         for m in marks:
             name = m.group("name").strip().lower()
             end = next((s for s in stops if s > m.start()), len(text))
+            # THE PIPELINE'S OWN DEADLINE, if its section declares one. The
+            # same shape as a seat's `Timeout:` -- a positive number of
+            # seconds, and anything else is ignored WITH A WARNING, never
+            # obeyed and never silently dropped.
+            dm = _DEADLINE_RE.search(text[m.end():end])
+            if dm:
+                raw = dm.group("val").strip()
+                try:
+                    secs = float(raw.replace("_", "").replace(",", "").rstrip("s"))
+                    if secs <= 0:
+                        raise ValueError
+                    deadlines[name] = secs
+                except ValueError:
+                    warnings.append(f"pipeline '{name}': deadline '{raw}' is not a "
+                                    f"positive number of seconds; ignoring.")
             # Only the FIRST contiguous run of step lines counts. Prose
             # bullets below the list are commentary, not seats -- without this
             # a line like "- an ordinary question: Guardian -> Steward" is read
@@ -327,6 +381,7 @@ class PipelineBook:
                     break
             if not steps:
                 warnings.append(f"pipeline '{name}' lists no seats; ignored")
+                deadlines.pop(name, None)
                 continue
             if name in order:
                 raise RegistryError(f"{path.name}: pipeline '{name}' is defined twice.")
@@ -346,15 +401,16 @@ class PipelineBook:
                         )
 
         default = "default" if "default" in order else next(iter(order))
-        return cls(order, default, path, warnings)
+        return cls(order, default, path, warnings, deadlines)
 
     def get(self, name: str) -> list[Step]:
-        steps = self.order.get(name.strip().lower())
+        key = name.strip().lower()
+        steps = self.order.get(key)
         if steps is None:
             raise RegistryError(
                 f"Unknown pipeline '{name}'. Available: {', '.join(sorted(self.order))}"
             )
-        return list(steps)
+        return Steps(steps, name=key, deadline=self.deadlines.get(key))
 
     def names(self) -> list[str]:
         return sorted(self.order)

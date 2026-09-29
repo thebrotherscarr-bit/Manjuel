@@ -10,6 +10,12 @@ its flag is raised -- the same way a model sits cold on the rack and a skill
 sits unbound in `skills/` until it is called. The spine below holds only what
 runs every time. `Wakes: first | after <Seat> | last` says where it slots in.
 
+A pipeline may give its own turn more or less time than the rest: a line
+reading `**Deadline:**` and a number of seconds, on its own in the pipeline's
+section with no bullet in front of it, is how long ONE TURN on that pipeline
+may take. A pipeline that declares none takes the dial, `MANJUEL_TURN_DEADLINE`
+(600). Only `court` declares one.
+
 A seat named here must exist in `agents/`, or startup refuses and names it.
 A parenthetical is a note the parser ignores -- UNLESS it says `when: <flag>`, which is a step-level condition that overrides the seat's own `When:` (`when: always` seats it unconditionally). Otherwise `When:` lives on the seat.
 
@@ -96,6 +102,14 @@ THE LAW's order — the court hears every counsel, then rules. Manjuel last.
 reading skills — search, ground_read, git_status and their kin. Anything
 that changes the ground is refused at the table, by the engine, whatever
 any seat asks for. Counsel has eyes, not hands.
+
+**Deadline:** 900
+
+One turn at the table may take 900 seconds where every other turn takes 600.
+His ruling, 2026-09-28, the evening the court was measured cut at its turn
+(sitting 285: Jesster stopped at 552 s and the judge never seated): "600 max
+per seat other than the court which requires a max of 900". No seat here may
+take more than 600 of them by itself.
 
 1. Security Guardian
 2. Steward

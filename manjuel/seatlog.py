@@ -68,6 +68,7 @@ GUARD_MARKS = (
     "said it wrote", "cited", "already ran this turn", "LAW 8 gate refused",
     "recompose:", "hard gate:", "gate:", "technical flag set aside",
     "judged the work unfinished", "empty reply", "not seated", "decided by arithmetic",
+    "CUT by the rack",
 )
 
 

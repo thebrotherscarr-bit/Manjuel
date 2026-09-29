@@ -157,6 +157,18 @@ class GroundWatch:
             self._changed.clear()
         return reload_needed, changed
 
+    def requeue(self, paths) -> None:
+        """Hand drained files back, for the next turn boundary.
+
+        THE DRAIN WIPES THE SLATE, so a caller that drained and then could not
+        act holds the only copy of what changed -- cli._apply_ground_changes
+        when an index build is still running (2026-09-29). Handed back here
+        they are re-embedded at the next boundary instead of never. They were
+        classified when they were first noted and are not judged twice."""
+        with self._lock:
+            for p in paths or ():
+                self._changed.add(Path(p))
+
     # ---- the real observer (only when watchdog exists) ----------------
 
     def start(self) -> bool:

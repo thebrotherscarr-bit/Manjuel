@@ -509,14 +509,20 @@ clock or a lock; no model is asked.
 
 - **A seat call past its bound is cut** (`runtime.SeatTimeout`). The
   bound is the seat's own `Timeout:` (agents/*.md, by model size: 150 /
-  300 / 600 / 700, his words of the afternoon) or the ceiling
-  `SEAT_TIMEOUT` = 700 (`MANJUEL_SEAT_TIMEOUT`). Two halves: httpx's read
+  300 / 600, and the door's 180 by name -- ruled again 2026-09-28: "180
+  for steward. 300 to route and 600 max per seat other than the court
+  which requires a max of 900") or, for a seat that declares none, the
+  ceiling `SEAT_TIMEOUT` = 600 (`MANJUEL_SEAT_TIMEOUT`). The refusal names
+  the dial that would move THAT seat -- its own, the ceiling, or the
+  turn's when the bound was what the turn had left. Two halves: httpx's read
   timeout for a call that answers nothing (connect held at 10s), and a
   wall clock on the stream that CLOSES it for a call that never stops --
   Ollama stops generating. One named refusal; `on-fail: skip` goes on
   without the seat. Earned: sitting 92, Jesster 760s then a 500.
 - **A seat whose turn comes after the turn's deadline is not seated**
-  (`pipeline.TURN_DEADLINE` = 600, `MANJUEL_TURN_DEADLINE`). Named in
+  (`pipeline.TURN_DEADLINE` = 600, `MANJUEL_TURN_DEADLINE`; or the
+  pipeline's own `**Deadline:**` in pipelines.md, carried on the steps the
+  book hands out -- the court's 900, 2026-09-29). Named in
   the record and in the delivery under OUT OF TIME (the recompose's third
   block, beside NOT EVERYTHING RAN and READ IN PART); a seat seated just
   before the line is cut to the seconds left (`_within_deadline`); a
@@ -525,7 +531,9 @@ clock or a lock; no model is asked.
   logs`, 1858s with no seat past its bound.
 - **A second index build while one runs is refused by name**
   (`skills._INDEX_BUSY`, held for the life of the build, refusal or not;
-  `index_ground` and `embed_text` share it). **A rebuild that cannot
+  `index_ground` and `embed_text` share it, and since 2026-09-29 the
+  watcher's re-index at the turn boundary takes it or hands what changed
+  back for the next turn -- it never waits). **A rebuild that cannot
   discard the old file is refused**, not pretended (`_open_index`).
   Earned: sitting 94, two builds on one vectors.db, `UNIQUE constraint
   failed: docs.path`, and a seat log that said "finished".

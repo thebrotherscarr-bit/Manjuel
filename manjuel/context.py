@@ -370,6 +370,12 @@ class RunContext:
     # inherited by a sub-run so a child cannot outlive its parent's turn.
     # None = no deadline (the suites set it explicitly when they test it).
     deadline_at: float | None = None
+    # THE SECONDS THIS TURN WAS GIVEN, when its PIPELINE declared its own
+    # (pipelines.md `**Deadline:**`, carried on registry.Steps -- the court's
+    # 900, his ruling of 2026-09-28). None = the dial, pipeline.TURN_DEADLINE.
+    # Set by run_pipeline beside deadline_at and inherited by a sub-run, so the
+    # record and the OUT OF TIME block name the limit that actually held.
+    deadline_s: float | None = None
     # Seats that were NOT seated because the deadline had passed -- one
     # name per seat, recorded as it happens so the recompose can say OUT OF
     # TIME without any seat remembering to. Same arithmetic as failures.

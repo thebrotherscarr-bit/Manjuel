@@ -34,6 +34,185 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The limits he ruled are set: the door 180, no seat over 600, the court's turn 900 (operator, 2026-09-28: "180 for steward. 300 to route and 600 max per seat other than the court which requires a max of 900")
+
+WHAT'S LEFT, D1. His numbers of 2026-09-28, given the evening the court was measured cut at its
+turn (sitting 285: Jesster stopped at 552 s, the judge never seated inside 600), and carried in
+the record since as "the dials", unbuilt.
+
+THE READING, SAID SO HE CAN CORRECT IT IN ONE LINE: "600 max per seat" is the most ONE CALL to any
+seat may take, the court's seats among them; "the court ... 900" is the court's TURN, the number
+that cut it. If he meant the judge's own call may take 900, that is `Timeout:` in
+`agents/manjuel.md` and the ceiling in `runtime.py`.
+
+- **The seats.** `agents/steward.md` `Timeout: 180` (was 150); `agents/manjuel.md` `Timeout: 600`
+  (was 700); the ceiling `runtime.SEAT_TIMEOUT` defaults to 600 (was 700). The Router's 300 stood
+  already. The other llama3.2 seats keep 150: the ruling names the door.
+- **The court's turn.** `pipelines.md` declares `**Deadline:** 900` on a line of its own in the
+  court's section. `registry.PipelineBook` reads it, the steps the book hands out carry it
+  (`registry.Steps`, a list with a `deadline`), and `run_pipeline` reads it off the steps it is
+  handed and sets the turn's clock by it (`RunContext.deadline_s`, `pipeline._turn_limit`). A
+  pipeline that declares none takes the dial, `MANJUEL_TURN_DEADLINE`, as before. The record says
+  which limit held ("deadline: this turn may take 900s ..."), OUT OF TIME names it and the dial
+  that would move it, and a sub-task inherits it.
+- **The refusal names the dial that would move the seat.** A seat cut at its bound was told to
+  raise `MANJUEL_SEAT_TIMEOUT`, and every seat on this ground declares its own `Timeout:`, which
+  is read first: raising the dial moved nothing. The refusal names the seat's `Timeout:`, the
+  ceiling only for a seat that declares none, and THE TURN'S deadline for a seat that was cut at
+  what the turn had left (`Agent.cut_to_turn`, set by `pipeline._within_deadline` on the copy it
+  seats). That last was the hand's own miss, found live: the first build told Manjuel, cut at
+  289 s of the court's turn, to raise its own `Timeout:` of 600. `.env.example` said the dial
+  "overrides a seat's declared Timeout"; it says what the dial does.
+
+WHY THE STEPS CARRY IT (RULE 11). Five places start a run -- the REPL's loop, `/table`, `/chat`,
+the headless door, the standup -- and each hands `run_pipeline` the steps the book gave it. A
+deadline looked up by name at each of them would be five conventions to keep in step. Carried on
+the steps, no door was edited and none can forget.
+
+PROVED. `test_the_seat_bound` (22), `test_the_turn_deadline` (31) and
+`test_a_dial_in_env_is_read_and_the_transports_stay_few` (24) on a mirror; eleven reversals red
+by name: the ceiling back at 700, the door at 150, the judge at 700, the court declaring
+nothing, the book handing out a plain list, the run not reading what the steps carry, OUT OF
+TIME naming the dial's number, a sub-task forgetting the court's limit, the refusal naming the
+seat's dial for every seat, the cut not saying whose number it is, and the refusal ignoring
+that. THE COURT ON THESE LIMITS, LIVE (sitting 301, below): the judge was seated, for the first time since 2026-09-18, and the court still scored 0/1.
+
+WHAT GOES RED IF UNPLUGGED: those three strokes, by the names above. `manjuel/runtime.py`,
+`registry.py`, `context.py` and `pipeline.py` moved: RESTART REQUIRED (no engine was running).
+
+### The court, measured on his limits: the judge is seated, and the two thinking seats still run to the clock (2026-09-29, sitting 301)
+
+WHAT'S LEFT, C13, measured and NOT closed. `standup_run` (court) from the glass, sitting **301** (16:08:17 to
+16:23:18), **0/1**, `logs/standup_2026-09-29_162318.md`; the transcript is
+`logs/2026-09-29_160817_should_a_court_of_three_seats_run_on_one.md`. The turn ran its whole
+900.0 s. Security Guardian, Steward, Router and Neiro sat in eleven seconds between them;
+**Jesster** ran to its own 600 s bound and was cut; **Manjuel** WAS SEATED -- which the 600 s
+turn had not allowed since 2026-09-18 -- with 289 s of the turn left, and was cut there. The
+record named the limit that held ("deadline: this turn may take 900s"), and the delivery
+carried SEATS THAT FAILED and THE NAMED TOOL DID NOT RUN (the Router answered "No skill is
+needed" over the `semantic_search` the engine had chosen). HIS NUMBERS ARE SET AND DO WHAT
+THEY SAY; THE COURT DOES NOT FIT THEM.
+
+WHAT THE TRANSCRIPTS SAY OF THE TWO SEATS, read off every court transcript in `logs/` (41 of
+them): when Jesster (deepseek-r1:8b) finishes it takes 72 to 500 s, and four times it has run to
+its bound and been cut (760 s on 09-07, 577 on 09-08, 552 on 09-28, 600 on 09-29). When Manjuel
+(gemma4:12b) finishes it takes 100 to 380 s. NEITHER SEAT DECLARES `Max Tokens`, so a call ends
+when the model stops or when the clock cuts it; and the ruling loop (twelve turns, thinking off
+on the retry) can only press a seat whose call RETURNED.
+
+NOT BUILT, AND HIS TO RULE (WHAT'S LEFT, B15). On 2026-09-07 he ruled for room to think and a
+limit on TURNS, not on length, so a cap on either seat is not the hand's to set. The facts and
+a recommendation are on the list.
+
+### A reply the rack cut is said so, with the ceiling that cut it (operator, 2026-09-29: "do the ... list top to bottom")
+
+WHAT'S LEFT, C30. For a day the Router's request stood at 8,182 tokens in a window of 8,192 (A1).
+Every reply was cut ten tokens in. The rack said so each time -- `done_reason: length`, beside
+the prompt's and the answer's token counts -- and the engine never read it: the transcript said
+"(deliberation only, no conclusion reached)" and the standup said 8/9 with no cause beside it.
+
+- **`runtime.usage_of`** reads the rack's last word on a call: why it stopped, what the prompt
+  and the answer cost, and the window and `Max Tokens` the call was sent with. A streamed call
+  says it on its last part; a whole reply on the reply. `OllamaRuntime.last_usage` keeps it PER
+  CALL (each call clears the one before) and PER THREAD, for the reason `chat()` takes its sinks
+  per call.
+- **`pipeline.note_cut_reply`** says which ceiling cut the reply, by arithmetic: the seat's
+  `Max Tokens` spent, or the WINDOW full -- "the prompt took 8182 of 8192 tokens and left 10 for
+  the answer" -- and what to raise. Asked after a seat's call, after each hop of the tool loop,
+  and after each turn of the ruling loop. In the record once, however many hops were cut.
+- **The standup lists it** under GUARDS FIRED, and the sitting's ledger line carries it
+  (`seatlog.GUARD_MARKS`), so the story the door is handed names it.
+
+Nothing a seat says is read for this, and a runtime that says nothing (the suites' stubs) notes
+nothing.
+
+PROVED. `test_a_reply_the_rack_cut_is_said_so` (22) on a mirror; five reversals red by name: the
+stream's last part not kept, a call not clearing the one before, the pipeline not asking after
+the seat's call, the standup not listing it, the ledger not carrying it. `manjuel/runtime.py`,
+`pipeline.py` and `seatlog.py` moved: RESTART REQUIRED. WHAT GOES RED IF UNPLUGGED: that stroke.
+
+### The drift note says which of three states it is (operator, 2026-09-29: "do the ... list top to bottom")
+
+WHAT'S LEFT, C11 (TASKS, the drift finding). One note stood for three different states, and it
+read as a fault in the data: that no source was "usable", 463 times in 502 transcripts, over a
+check that had never been armed -- no feed pasted and no tool run, by design (sitting 27's
+ruling: an objective alone is a request, not a source).
+
+`DriftChecker.why_unscored` says which: NOT ARMED (nothing was offered as a source), NOT ARMED
+because the source offered was under `MIN_SOURCE_CHARS`, or NOT SCORED because the embedder could
+not be reached. The pipeline's note is that sentence. AND THE COMMENTS SAY WHAT THE CODE DOES:
+the lower bar (`DRIFT_WARN_SHORT`) was promised to "a bare objective", which has never primed the
+checker; it is a SHORT SOURCE's -- a one-line tool result, a feed of a sentence -- and the line
+between short and not is one number, `SHORT_SOURCE_CHARS`. No behaviour of the score moved.
+
+PROVED. `test_drift_needs_a_source` (13) on a mirror; two reversals red by name: the old note put
+back, and a short source leaving no mark. SEEN LIVE: the standup's greeting (sitting 300) and the
+court (301) both carry "drift: not armed this run". `manjuel/drift.py` and `pipeline.py` moved:
+RESTART REQUIRED. WHAT GOES RED IF UNPLUGGED: that stroke, which also refuses the old note's
+words in either file.
+
+### The watcher's re-index takes the lock, or waits a turn (operator, 2026-09-29: "do the ... list top to bottom")
+
+WHAT'S LEFT, C15 (TASKS, the records pass of 2026-09-17). `index_ground` and `embed_text` hold
+`skills._INDEX_BUSY` for the life of their build, and a build refused at the skill bound keeps
+running behind its refusal. The watcher's re-index at the turn boundary
+(`cli._apply_ground_changes`) took no lock, so it could write `vectors.db` on top of one --
+sitting 94's fault, by the third door.
+
+It takes the lock now and never waits for it: a turn does not stand behind an index. When a
+build is running, what changed is handed back to the watcher (`GroundWatch.requeue` -- the drain
+had wiped the slate, so without it the edit would never be embedded) and the line says so:
+"reindex on change waits: an index build is still running; 1 changed file kept for the next
+turn". The lock is let go after the build, and after a build that fails.
+
+PROVED. `test_the_watchers_reindex_waits_for_a_build` (11) on a mirror; two reversals red by
+name: no lock taken, and what changed not handed back. `manjuel/cli.py` and `watch.py` moved:
+RESTART REQUIRED. WHAT GOES RED IF UNPLUGGED: that stroke.
+
+### Every document at the root is in the index list, and a stroke holds it (operator, 2026-09-09: "index everything the embedding model is already there")
+
+WHAT'S LEFT, D10. His ruling of 2026-09-09 listed the root documents by name, and nothing held
+the list to the disk: `STATUS.md` and `WHATS_LEFT.md`, both written 2026-09-29, were in no root,
+so the estate could not find by search the two pages that say where the build stands and what is
+left. Both are in `index_roots.txt`. PROVED LIVE, sitting 302 (an engine opened
+and closed from the glass): `index_ground` refreshed the index -- 572 changed files embedded,
+1,235 unchanged, 1,809 documents and 6,971 chunks -- and `semantic_search` for the list's own
+first line returned `WHATS_LEFT.md` first, cosine 0.5057
+(`logs/2026-09-29_163223_index_ground.md`).
+
+THE WIRE (RULE 11): `test_every_root_document_is_in_the_index_list` (4) -- every `*.md` at the
+root is listed, or the suite is red, naming the file. Reversal red: `WHATS_LEFT.md` taken off the
+list. No code moved for this piece.
+
+### The built-in estate order seats the judge last (operator, 2026-09-29: "do the ... list top to bottom")
+
+WHAT'S LEFT, C20 (TASKS, "the fallback ESTATE_PIPELINE order"), one of the dozen. `pipelines.md`
+moved Manjuel behind Jesster on 2026-09-01 ("the Court ruled on counsel it had not yet heard");
+`pipeline.ESTATE_PIPELINE`, the order used when that file is missing, kept the old one. It reads
+Security Guardian, Steward, Neiro, Jesster, Manjuel now. Two checks in
+`test_the_loops_of_2026_09_08`: in every built-in order that seats the judge he rules last, and
+the built-in estate order is the one `pipelines.md` declares. Reversal red. `manjuel/pipeline.py`
+moved: RESTART REQUIRED. The rest of C20 is open.
+
+### Batch two on the ground: the suites, the standup, and the map (2026-09-29)
+
+On a mirror: strokes **3257/3257** and smoke **72/72**, twenty-two reversals red by name. On the
+ground, from the glass: strokes **3261/3261** and smoke **72/72** (`suite_run`, both green, exit 0), run
+after the last code edit. `BUILDMAP.md` regenerated and matching the code.
+THE STANDUP, LIVE, from the glass: sitting **300** (16:05:57 to 16:07:58), **9/9**,
+`logs/standup_2026-09-29_160758.md`. THE COURT: sitting **301**, 0/1 (its own entry, above).
+THE INDEX: sitting **302** (16:32:10 to 16:38:03), two runs, tolled and closed from the glass.
+Every engine booted after the edit, so all three ran the new code. AND THE STANDUP AGAIN, AFTER
+THE LAST CODE EDIT: sitting **303** (16:43:40 to 16:52:17), **9/9**,
+`logs/standup_2026-09-29_165217.md`.
+
+THAT LAST STANDUP TOOK 517 s WHERE SITTING 300 TOOK 122, AND THE CARD IS WHY. Measured while it
+ran (`ollama ps`, 16:47): the Router's qwen3.5:4b stood at **73% processor, 27% card** -- its
+window is 16,384 since A1 -- beside llama3.2, the embedder, and qwen3.5:9b, which sitting 302's
+engine had warmed for the Reasoner at its boot; and the four processes of WHAT'S LEFT C31 still
+hold about 4 GB the rack does not count. Nothing in the engine was at fault and every case met
+its expectation. It is on the list under C31.
+
 ## v0.1.16 — 2026-09-29 15:15 (tag on e8aa9b5)
 
 ### The Router's window: its request had filled it, and the live check is 9 of 9 again (operator, 2026-09-29: "start working through the list ... make a plan and execute"; "do the list top to bottom")

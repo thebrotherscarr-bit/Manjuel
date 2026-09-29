@@ -13,6 +13,7 @@ from .pipeline import Aborted, Refused, DEFAULT_PIPELINE, PIPELINES, run_pipelin
 from .registry import AgentRegistry, PipelineBook, RegistryError
 from .runtime import BackendUnreachable, OllamaRuntime, RuntimeError_
 from .skills import SkillExecutionEnv, SkillLibrary, index_roots
+from . import skills as _skills
 from . import transcript
 from . import memory as _mem
 from . import seatlog as _log
@@ -380,6 +381,23 @@ def _apply_ground_changes(sess: Session) -> None:
             print("  ground changed on disk and the reload FAILED — "
                   "fix the file above or /reload to retry")
     if changed and sess.rack_ok:
+        # ONE BUILD AT A TIME, AND THIS IS A BUILD (2026-09-29; found by the
+        # records pass of 2026-09-17). index_ground and embed_text hold
+        # skills._INDEX_BUSY for the life of their build. This took nothing,
+        # so a turn boundary could write vectors.db on top of a build still
+        # running behind a refused index_ground -- sitting 94's fault, by the
+        # third door. NEVER WAITED FOR: a turn does not stand behind an index.
+        # What changed is handed back to the watcher for the next boundary,
+        # and the line says so.
+        if not _skills._INDEX_BUSY.acquire(blocking=False):
+            requeue = getattr(sess.watcher, "requeue", None)
+            if requeue is not None:
+                requeue(changed)
+            n = len(changed)
+            print(ink.dim(f"  reindex on change waits: an index build is still "
+                          f"running; {n} changed file{'' if n == 1 else 's'} "
+                          f"kept for the next turn"))
+            return
         try:
             from .vectors import VectorIndex
             idx = VectorIndex(ROOT / "index" / "vectors.db", EMBED_MODEL)
@@ -396,6 +414,8 @@ def _apply_ground_changes(sess: Session) -> None:
                 print(ink.dim(f"  reindexed on change: {names}{more}"))
         except Exception:
             pass                          # the index catches up at /index
+        finally:
+            _skills._INDEX_BUSY.release()
 
 
 def _topic_turn(sess: Session, objective: str) -> bool:

@@ -98,6 +98,11 @@ DESIGN.md
 # worlds/ in by inheritance, and this list is the FIRST line of the vault
 # shield (the vault rule in vectors.py is the second) -- the same reasoning
 # this file already gives for never listing bare `worlds`.
+#
+# STATUS.md and WHATS_LEFT.md joined 2026-09-29: both were written that day and
+# neither was listed, so the estate could not find by search the two pages that
+# say where the build stands and what is left. A stroke holds the ruling now:
+# every document at the root is listed here, or the suite is red.
 BUILDMAP.md
 BUILDPATH.md
 CHANGELOG.md
@@ -110,10 +115,12 @@ README.md
 REFUSALS.md
 RUNBOOK.md
 SPEC.md
+STATUS.md
 atlas/docs/SPEC_CONTROL_CENTER.md
 SYSTEM_DESIGN.md
 TASKS.md
 TESTING.md
+WHATS_LEFT.md
 commands.md
 
 # THE LAW. The note above left listing it as the operator's call; he made it

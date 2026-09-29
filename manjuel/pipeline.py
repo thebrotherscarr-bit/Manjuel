@@ -156,6 +156,14 @@ MAX_RULING_TURNS = 12
 # nothing runs past the line. A sub-run inherits its parent's deadline.
 # Parity cases are runs and take the same deadline ("not run often ...
 # just for measurement", the operator, the same day).
+#
+# A PIPELINE MAY DECLARE ITS OWN (2026-09-29, on his ruling of 2026-09-28:
+# "600 max per seat other than the court which requires a max of 900"). The
+# court was measured that morning cut at its turn -- Jesster at 552 s, the
+# judge never seated -- so `court` declares `**Deadline:** 900` in
+# pipelines.md, the book carries it on the steps it hands out
+# (registry.Steps), and `_turn_limit` reads it. The dial below is every other
+# turn's, unchanged.
 def read_dials() -> None:
     """TURN_DEADLINE, from the environment as it stands NOW.
 
@@ -201,6 +209,58 @@ def _nearest_skills(word: str, skills, k: int = 3) -> list[str]:
     return [kw for _, kw in sorted(scored)[:k]]
 
 
+def _turn_limit(ctx: RunContext) -> float:
+    """The seconds THIS turn was given: its pipeline's own `Deadline:` when
+    it declared one (RunContext.deadline_s), else the dial."""
+    own = getattr(ctx, "deadline_s", None)
+    return float(own) if own else TURN_DEADLINE
+
+
+# How close to its window a call must have come for a cut to be called the
+# WINDOW's. The rack's two counts add up to the window exactly when it is
+# full; the margin is for a template token or two it does not count.
+CUT_MARGIN = 16
+
+
+def note_cut_reply(runtime, seat: Agent, ctx: RunContext, report=print) -> str:
+    """Say so when the rack CUT a seat's reply. Returns the note, or "".
+
+    Read off what the rack said as the call ended (runtime.usage_of), never
+    off the seat's words: a reply cut short looks exactly like a seat that
+    had nothing to say. `length` is the rack's word for "I stopped it", and
+    the arithmetic says which ceiling did -- the seat's `Max Tokens:` spent,
+    or the WINDOW full, the prompt having left the answer no room. The second
+    is how the Router's window hid for a day (2026-09-29: the request was
+    8,182 of 8,192 tokens and the record said only that the seat had
+    deliberated without concluding).
+
+    A runtime that says nothing -- the suites' stubs -- notes nothing."""
+    said = getattr(runtime, "last_usage", None)
+    if not isinstance(said, dict) or said.get("seat") != seat.name:
+        return ""
+    if said.get("done_reason") != "length":
+        return ""
+    asked, wrote = said.get("prompt_tokens"), said.get("answer_tokens")
+    window, cap = said.get("window"), said.get("max_tokens")
+    if cap and wrote is not None and wrote >= cap:
+        why = (f"it spent its Max Tokens ({cap}), and what it said is what "
+               f"fit. Raise `Max Tokens:` in its seat file if the answer needs more")
+    elif window and asked is not None and asked + (wrote or 0) >= window - CUT_MARGIN:
+        why = (f"its window was FULL -- the prompt took {asked} of {window} "
+               f"tokens and left {max(0, window - asked)} for the answer. Raise "
+               f"`Context:` in its seat file, or send it less")
+    else:
+        why = (f"the rack stopped it at the length limit (prompt "
+               f"{'?' if asked is None else asked} tokens, answer "
+               f"{'?' if wrote is None else wrote}, window "
+               f"{window or 'the rack default'}, Max Tokens {cap or 'none'})")
+    note = f"{seat.name}'s reply was CUT by the rack: {why}"
+    if note not in ctx.notes:
+        ctx.notes.append(note)
+    report("      " + ink.warn(note))
+    return note
+
+
 def _budget(ctx: RunContext) -> float | None:
     """Seconds left in this turn, or None when the run has no deadline."""
     at = getattr(ctx, "deadline_at", None)
@@ -222,7 +282,9 @@ def _within_deadline(seat: Agent, ctx: RunContext) -> Agent:
         return seat
     own = float(getattr(seat, "timeout", None) or _runtime.SEAT_TIMEOUT)
     left = max(1.0, left)
-    return replace(seat, timeout=min(own, left)) if left < own else seat
+    # `cut_to_turn` says whose number the bound now is, so a refusal at it
+    # names the turn's dial and not the seat's (runtime._seat_refusal).
+    return replace(seat, timeout=left, cut_to_turn=True) if left < own else seat
 
 # The first line of a windowed read (skills.windowed): the shapes that mean
 # "you were handed PART of this file". Read by the tool loop so the record
@@ -602,14 +664,16 @@ DEFAULT_PIPELINE = [
     "Delivery Agent",
 ]
 
-# The estate seats, in the operator's order: plan -> file -> check the record
-# -> refute. Manjuel and Jesster are both advisory gates; neither rewrites.
+# The estate seats, in pipelines.md's order: inquire, hold the whole, refute,
+# then rule. Manjuel LAST, here as in the court -- this fallback ran him ahead
+# of Jesster until 2026-09-29, the order pipelines.md gave up on 2026-09-01
+# ("the Court ruled on counsel it had not yet heard"). Neither rewrites.
 ESTATE_PIPELINE = [
     "Security Guardian",
     "Steward",
     "Neiro",
-    "Manjuel",
     "Jesster",
+    "Manjuel",
 ]
 
 # THE LAW's order: the court hears all counsel, then rules. Manjuel last.
@@ -1211,6 +1275,7 @@ def _press_for_ruling(seat: Agent, prompt: str, output: str, thoughts: list,
             f"material. Begin with the ruling.")
         output = runtime.chat(_within_deadline(seat, ctx), follow, stream_to=sink,
                               think_to=thoughts.append, think=False)
+        note_cut_reply(runtime, seat, ctx, report)
         if not (output or "").strip():
             output = SALVAGE_MARK + " (and the retry returned nothing)"
     if output.startswith(SALVAGE_MARK):
@@ -1810,6 +1875,10 @@ def run_pipeline(
     drift: DriftChecker | None = None,
 ) -> RunContext:
     steps = steps or DEFAULT_PIPELINE
+    # What the PIPELINE declares rides on the steps the book handed out
+    # (registry.Steps). Read here, first: every rebinding of `steps` below --
+    # the maker's, the skipped front door's -- makes a plain list of them.
+    declared = getattr(steps, "deadline", None)
 
     # A request that literally names a tool reaches the Router without needing
     # the Steward to raise the flag. The Router still chooses; this only opens
@@ -1825,8 +1894,13 @@ def run_pipeline(
 
     # THE TURN DEADLINE starts here, the first moment a seat could sit. A
     # sub-run arrives with its parent's deadline already set and keeps it.
-    if getattr(ctx, "deadline_at", None) is None and TURN_DEADLINE > 0:
-        ctx.deadline_at = time.time() + TURN_DEADLINE
+    if declared and getattr(ctx, "deadline_s", None) is None:
+        ctx.deadline_s = float(declared)
+        ctx.notes.append(f"deadline: this turn may take {declared:.0f}s -- its "
+                         f"pipeline declares it (pipelines.md); every other "
+                         f"turn takes the dial's {TURN_DEADLINE:.0f}s")
+    if getattr(ctx, "deadline_at", None) is None and _turn_limit(ctx) > 0:
+        ctx.deadline_at = time.time() + _turn_limit(ctx)
 
     # THE LAW GATE (the operator's ruling, 2026-09-04): every run passes
     # through the law before any seat sits. The chain is walked, the
@@ -2323,7 +2397,7 @@ def run_pipeline(
             )
             over = time.time() - ctx.started_at
             note = (f"{agent.name} not seated: the turn's deadline passed "
-                    f"({over:.0f}s of {TURN_DEADLINE:.0f}s)")
+                    f"({over:.0f}s of {_turn_limit(ctx):.0f}s)")
             if note not in ctx.notes:
                 ctx.notes.append(note)
             report("  " + ink.warn(f"[{i}/{total}] {note}"))
@@ -2432,6 +2506,9 @@ def run_pipeline(
                                       stream_to=sink if stream else None,
                                       tools=tools,
                                       think_to=thoughts.append)
+                # A REPLY THE RACK CUT IS SAID SO, before anything reads it
+                # as a seat that had nothing to say (note_cut_reply).
+                note_cut_reply(runtime, seat, ctx, report)
             # THE RULING LOOP (2026-09-07). A seat that thought and did not
             # rule is pressed, bounded. Never the executor: its loop is the
             # tool loop below, and a Router that thinks past its budget is
@@ -2725,6 +2802,7 @@ def run_pipeline(
                                           stream_to=sink if stream else None,
                                           tools=tools,
                                           think_to=thoughts.append)
+                    note_cut_reply(runtime, seat, ctx, report)
                     if stream:
                         print()
                 except RuntimeError_ as exc:
@@ -3058,7 +3136,9 @@ def run_pipeline(
         if drift is not None and agent.stage in ("transform", "gate", "deliver"):
             ds = drift.score(output)
             if ds is None:
-                note = drift.note_once("drift: not scored this run (no usable source)")
+                # WHICH of the three states it is (DriftChecker.why_unscored):
+                # never armed, a source too short, or an embedder unreached.
+                note = drift.note_once(f"drift: {drift.why_unscored()}")
                 if note:
                     report(f"      {note}")
                     ctx.notes.append(note)
@@ -3156,6 +3236,7 @@ def _sub_runner(parent: RunContext, registry, runtime, skills, env, report):
                            method=getattr(parent, "method", ""),
                            depth=getattr(parent, "depth", 0) + 1)
         child.deadline_at = getattr(parent, "deadline_at", None)
+        child.deadline_s = getattr(parent, "deadline_s", None)
         child.flags.add("needs_tool")
         report("      " + ink.dim(f"→ sub-task: {objective[:60]}"))
 
@@ -3442,12 +3523,16 @@ def recompose(ctx: RunContext, report=print) -> bool:
         # OUT OF TIME (2026-09-08, the operator's ten minutes). The seats
         # named here never sat; the words above are the seats that did.
         lines = [f"OUT OF TIME. {len(late)} seat{'' if len(late) == 1 else 's'} "
-                 f"did not sit this run because the turn's {TURN_DEADLINE:.0f}s "
+                 f"did not sit this run because the turn's {_turn_limit(ctx):.0f}s "
                  f"deadline had passed:"]
         for name in late:
             lines.append(f"  - {name}")
-        lines.append("What is above is the seats that sat. Ask again for the "
-                     "rest, or raise MANJUEL_TURN_DEADLINE.")
+        # THE DIAL THAT WOULD MOVE IT: a pipeline that declared its own
+        # deadline is not moved by the environment's.
+        dial = ("the `Deadline:` its pipeline declares in pipelines.md"
+                if getattr(ctx, "deadline_s", None) else "MANJUEL_TURN_DEADLINE")
+        lines.append(f"What is above is the seats that sat. Ask again for the "
+                     f"rest, or raise {dial}.")
         blocks.append("\n".join(lines))
     block = "\n\n".join(blocks)
 

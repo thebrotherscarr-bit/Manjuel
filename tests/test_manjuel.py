@@ -2577,22 +2577,33 @@ def test_the_seat_bound(reg, lib, book):
     timeout is None). 2026-09-08, the operator's numbers: "150 for
     steward, 300 for the router, 600 max for the whole system. there
     should never be more than 10 minutes between a response" -- the
-    ceiling, and a seat's own `Timeout:` beneath it."""
+    ceiling, and a seat's own `Timeout:` beneath it. RULED AGAIN 2026-09-28:
+    "180 for steward. 300 to route and 600 max per seat other than the court
+    which requires a max of 900" -- the door 180 by name, no seat over 600,
+    and the court's 900 is its TURN's (test_the_turn_deadline)."""
     import dataclasses
     import time as _t
     from manjuel import runtime as _rt
     from manjuel.runtime import OllamaRuntime, SeatTimeout, RuntimeError_
     from manjuel.registry import AgentRegistry
 
-    check("the ceiling is the operator's 700s and a dial (MANJUEL_SEAT_TIMEOUT)",
-          _rt.SEAT_TIMEOUT == 700.0 or os.environ.get("MANJUEL_SEAT_TIMEOUT"))
+    check("the ceiling is the operator's 600s and a dial (MANJUEL_SEAT_TIMEOUT)",
+          _rt.SEAT_TIMEOUT == 600.0 or os.environ.get("MANJUEL_SEAT_TIMEOUT"))
+    # BY THE MODEL'S SIZE (2026-09-08), and the door BY NAME (2026-09-28).
     sizes = {"llama3.2:latest": 150, "phi4-mini:latest": 300, "qwen3.5:4b": 300,
              "qwen3.5:9b": 600, "qwen2.5-coder:7b": 600, "deepseek-r1:8b": 600,
-             "gemma4:12b": 700}
-    check("every seat carries the operator's number for its model's size",
-          all(a.timeout == sizes.get(a.model) for a in reg.all()),
-          repr([(a.name, a.model, a.timeout) for a in reg.all() if a.timeout != sizes.get(a.model)]))
-    check("the door is bound at his 150", reg.get("Steward").timeout == 150.0)
+             "gemma4:12b": 600}
+    by_name = {"Steward": 180}
+
+    def ruled(a):
+        return by_name.get(a.name, sizes.get(a.model))
+
+    check("every seat carries the operator's number: its model's size, or its own by name",
+          all(a.timeout == ruled(a) for a in reg.all()),
+          repr([(a.name, a.model, a.timeout) for a in reg.all() if a.timeout != ruled(a)]))
+    check("the door is bound at his 180", reg.get("Steward").timeout == 180.0)
+    check("and the judge at his 600, the most any seat is given",
+          reg.get("Manjuel").timeout == 600.0 == max(a.timeout or 0 for a in reg.all()))
     check("the Router at his 300", reg.get("Router").timeout == 300.0)
     check("no seat declares more than the ceiling",
           all((a.timeout or 0) <= _rt.SEAT_TIMEOUT for a in reg.all()),
@@ -2647,16 +2658,39 @@ def test_the_seat_bound(reg, lib, book):
     except SeatTimeout as exc:
         msg = str(exc)
     check("a transport timeout is the same named refusal",
-          "ran past the 150s bound" in msg and "[Steward]" in msg
+          "ran past the 180s bound" in msg and "[Steward]" in msg
           and "MANJUEL_SEAT_TIMEOUT" in msg, msg)
+    check("... and names the dial that would move THIS seat: its own `Timeout:`",
+          "Raise its `Timeout:` in agents/" in msg, msg)
+    try:
+        rt2.chat(dataclasses.replace(reg.get("Steward"), timeout=None), "go")
+        msg0 = ""
+    except SeatTimeout as exc:
+        msg0 = str(exc)
+    check("... where a seat that declares none is told to raise the ceiling",
+          "Raise the ceiling with MANJUEL_SEAT_TIMEOUT" in msg0
+          and f"ran past the {_rt.SEAT_TIMEOUT:.0f}s bound" in msg0, msg0)
+    try:
+        rt2.chat(dataclasses.replace(reg.get("Manjuel"), timeout=289.0, cut_to_turn=True), "go")
+        msg9 = ""
+    except SeatTimeout as exc:
+        msg9 = str(exc)
+    check("... and a seat cut at what the TURN had left is told it was the turn's, not its own",
+          "ran past the 289s bound" in msg9 and "what the TURN had left" in msg9
+          and "MANJUEL_TURN_DEADLINE" in msg9 and "pipelines.md" in msg9
+          and "Raise its `Timeout:`" not in msg9, msg9)
+    check("no seat file can declare that: it is the engine's mark on the seat it seats",
+          not any(a.cut_to_turn for a in reg.all()))
 
     # THE SEAT'S OWN NUMBER: `- **Timeout:** 300` in agents/*.md.
     d = Path(tempfile.mkdtemp())
     src = (ROOT / "agents" / "steward.md").read_text(encoding="utf-8")
     (d / "steward.md").write_text(
-        src.replace("- **Timeout:** 150", "- **Timeout:** 300", 1),
+        src.replace("- **Timeout:** 180", "- **Timeout:** 300", 1),
         encoding="utf-8")
     seat = AgentRegistry.load(d).get("Steward")
+    check("the door's file carries the number this stroke rewrites",
+          "- **Timeout:** 180" in src)
     check("a seat declares its own bound with `Timeout:`", seat.timeout == 300.0,
           repr(seat.timeout))
     bare = dataclasses.replace(reg.get("Manjuel"), timeout=None)
@@ -2664,7 +2698,7 @@ def test_the_seat_bound(reg, lib, book):
           bare.timeout is None and float(bare.timeout or _rt.SEAT_TIMEOUT) == _rt.SEAT_TIMEOUT)
     warns: list = []
     (d / "steward.md").write_text(
-        src.replace("- **Timeout:** 150", "- **Timeout:** soon", 1),
+        src.replace("- **Timeout:** 180", "- **Timeout:** soon", 1),
         encoding="utf-8")
     from manjuel.registry import AgentRegistry as _AR
     bad = _AR._parse_file(d / "steward.md", warns)[0]
@@ -2690,10 +2724,17 @@ def test_the_turn_deadline(reg, lib, book):
     seat bound caps one call; a turn seats several, and sitting 95's `time
     align the logs` ran 1858s with no seat past its bound. So the run keeps
     a wall clock: a seat whose turn comes after it is not seated and is
-    named in the delivery; a seat seated before it is cut to what is left."""
+    named in the delivery; a seat seated before it is cut to what is left.
+
+    AND THE COURT'S TURN IS GIVEN 900 (2026-09-28, his ruling: "600 max per
+    seat other than the court which requires a max of 900"), the evening it
+    was measured cut at 600 with the judge never seated. The pipeline declares
+    it in pipelines.md and the steps carry it, so no door has to remember."""
     import shutil
     import time as _t
-    from manjuel.pipeline import run_pipeline, TURN_DEADLINE, _within_deadline
+    from manjuel.pipeline import (run_pipeline, TURN_DEADLINE, _turn_limit,
+                                  _within_deadline)
+    from manjuel.registry import Steps
 
     check("the turn deadline is the operator's 600s and a dial (MANJUEL_TURN_DEADLINE)",
           TURN_DEADLINE == 600.0 or os.environ.get("MANJUEL_TURN_DEADLINE"))
@@ -2724,6 +2765,79 @@ def test_the_turn_deadline(reg, lib, book):
           sum("deadline passed" in n for n in ctx.notes) == len(ctx.out_of_time),
           str(ctx.notes))
 
+    # THE COURT'S OWN 900, declared in pipelines.md and carried on its steps.
+    court = book.get("court")
+    declared_of = lambda steps: getattr(steps, "deadline", None)      # noqa: E731
+    check("the court declares its turn's 900 and the steps the book hands out carry it",
+          isinstance(court, Steps) and declared_of(court) == 900.0
+          and getattr(court, "name", "") == "court",
+          f"{type(court).__name__} {declared_of(court)}")
+    check("... as a list still: the declaration is never read as a seat",
+          [str(s) for s in court] == ["Security Guardian", "Steward", "Router", "Neiro",
+                                      "Jesster", "Manjuel"], str([str(s) for s in court]))
+    check("every other pipeline declares none, and takes the dial",
+          all(isinstance(book.get(n), Steps) and declared_of(book.get(n)) is None
+              for n in book.names() if n != "court"),
+          str({n: declared_of(book.get(n)) for n in book.names()}))
+    check("no seat is given more than its turn: the court's 900 is the turn's, a seat's most is 600",
+          max(a.timeout or 0 for a in reg.all()) <= 600 < (declared_of(court) or 0))
+    check("the run knows which limit held, though its clock was set before it",
+          ctx.deadline_s == 900.0 and _turn_limit(ctx) == 900.0, repr(ctx.deadline_s))
+    check("so OUT OF TIME names the 900, and the dial that would move it",
+          "the turn's 900s deadline" in out and "pipelines.md" in out
+          and "MANJUEL_TURN_DEADLINE" not in out, out[-400:])
+    check("and the record names the 900 on every seat it did not seat",
+          all("of 900s" in n for n in ctx.notes if "deadline passed" in n), str(ctx.notes))
+
+    rc = Stub(reply="[seat] words")
+    ec = env_for(g / "agent_workspace", reg, rc)
+    ec.ground = g
+    t0 = _t.time()
+    sat_court = RunContext(objective="should the court sit on one model?", review_only=True)
+    run_pipeline(sat_court, reg, rc, lib, ec, steps=book.get("court"), report=lambda s: None)
+    check("a court turn's clock is set 900 seconds out, and the record says whose number it is",
+          sat_court.deadline_at is not None and 895 <= sat_court.deadline_at - t0 <= 910
+          and any(n.startswith("deadline: this turn may take 900s") for n in sat_court.notes),
+          f"{(sat_court.deadline_at or 0) - t0:.1f} {sat_court.notes[:3]}")
+    t1 = _t.time()
+    plain = RunContext(objective="a plain question with no tools needed")
+    run_pipeline(plain, reg, rc, lib, ec, steps=book.get("default"), report=lambda s: None)
+    check("every other turn's clock is the dial's, and says nothing of a deadline of its own",
+          plain.deadline_s is None and plain.deadline_at is not None
+          and TURN_DEADLINE - 5 <= plain.deadline_at - t1 <= TURN_DEADLINE + 10
+          and not any(n.startswith("deadline:") for n in plain.notes),
+          f"{(plain.deadline_at or 0) - t1:.1f} {plain.deadline_s}")
+    late_plain = RunContext(objective="a plain question with no tools needed")
+    late_plain.deadline_at = _t.time() - 1
+    run_pipeline(late_plain, reg, rc, lib, ec, steps=book.get("default"), report=lambda s: None)
+    check("... and its OUT OF TIME names the dial, as it always did",
+          f"the turn's {TURN_DEADLINE:.0f}s deadline" in late_plain.last_output()
+          and "raise MANJUEL_TURN_DEADLINE" in late_plain.last_output(),
+          late_plain.last_output()[-300:])
+
+    dd = Path(tempfile.mkdtemp())
+    (dd / "p.md").write_text(
+        "## Pipeline: a\n\nProse about it.\n\n**Deadline:** 45\n\n1. Steward\n\n"
+        "## Pipeline: b\n\n**Deadline:** soon\n\n1. Steward\n\n"
+        "## Pipeline: c\n\nIt says `**Deadline:** 99` in passing, mid-line.\n\n1. Steward\n\n"
+        "## Pipeline: d\n\n**Deadline:** 1,200s\n\n1. Steward\n2. Router\n",
+        encoding="utf-8")
+    bk = PipelineBook.load(dd / "p.md", reg)
+    check("a pipeline declares its own turn with `**Deadline:**`, and its steps are its seats",
+          declared_of(bk.get("a")) == 45.0 and [str(s) for s in bk.get("a")] == ["Steward"],
+          f"{declared_of(bk.get('a'))} {[str(s) for s in bk.get('a')]}")
+    check("a deadline that is not a number is ignored with a warning, not obeyed",
+          declared_of(bk.get("b")) is None
+          and any("pipeline 'b'" in w and "deadline" in w for w in bk.warnings),
+          str(bk.warnings))
+    check("a deadline named in passing is prose, not a declaration",
+          isinstance(bk.get("c"), Steps) and declared_of(bk.get("c")) is None)
+    check("the number is read as a seat's `Timeout:` is: separators and a trailing s allowed",
+          declared_of(bk.get("d")) == 1200.0 and len(bk.get("d")) == 2,
+          str(declared_of(bk.get("d"))))
+    check("a copy of the steps is a plain list: the deadline is read before anything slices them",
+          not hasattr(list(bk.get("a")), "deadline") and not hasattr(bk.get("d")[1:], "deadline"))
+
     # THE DEADLINE MID-TURN: the seats before it sit, the seats after are
     # named, and the delivery is the last seat that sat plus the block.
     class Slow(Stub):
@@ -2749,12 +2863,14 @@ def test_the_turn_deadline(reg, lib, book):
 
     # THE BUDGET: a seat seated with less time left than its own bound is
     # handed the smaller number; a seat with more keeps its own.
-    seat = reg.get("Manjuel")                  # Timeout: 700, the biggest
+    seat = reg.get("Manjuel")                  # Timeout: 600, the most a seat is given
     ctx3 = RunContext(objective="x")
     ctx3.deadline_at = _t.time() + 30
     cut = _within_deadline(seat, ctx3)
     check("a seat seated with 30s left is bound at 30s, not the ceiling",
           cut.timeout is not None and 25 <= cut.timeout <= 30, repr(cut.timeout))
+    check("... and carries whose number that is: the turn's, not its own",
+          cut.cut_to_turn is True and seat.cut_to_turn is False)
     ctx3.deadline_at = _t.time() + 5000
     check("a seat with more time left than its bound keeps its own bound",
           _within_deadline(seat, ctx3) is seat)
@@ -2762,8 +2878,8 @@ def test_the_turn_deadline(reg, lib, book):
     check("no deadline, no cut", _within_deadline(seat, ctx3) is seat)
     door = reg.get("Steward")
     ctx3.deadline_at = _t.time() + 100
-    check("... and the door's own 150 is cut to 100",
-          _within_deadline(door, ctx3).timeout <= 100)
+    check("... and the door's own 180 is cut to 100",
+          door.timeout == 180.0 and _within_deadline(door, ctx3).timeout <= 100)
 
     # THE SUB-RUN inherits the parent's clock.
     from manjuel.pipeline import _sub_runner
@@ -2776,6 +2892,14 @@ def test_the_turn_deadline(reg, lib, book):
     check("a sub-task started past the parent's deadline seats nobody and says so",
           "OUT OF TIME" in got and parent.out_of_time
           and all("(sub-task)" in n for n in parent.out_of_time), got[:200])
+    parent9 = RunContext(objective="p")
+    parent9.deadline_at = _t.time() - 1
+    parent9.deadline_s = 900.0
+    e9 = env_for(g / "agent_workspace", reg, Stub(reply="x"))
+    e9.ground = g
+    got9 = _sub_runner(parent9, reg, Stub(reply="x"), lib, e9, lambda m: None)("list the ground")
+    check("... and a sub-task of the court names the court's 900, not the dial",
+          "the turn's 900s deadline" in got9, got9[:300])
 
 
 def test_the_loops_of_2026_09_08(reg, lib, book):
@@ -2838,6 +2962,18 @@ def test_the_loops_of_2026_09_08(reg, lib, book):
     #    /toll then exit writes ONE closing line; an escape still closes.
     cli = (ROOT / "manjuel" / "cli.py").read_text(encoding="utf-8")
     check("the `if False:` block is gone", "\n    if False:\n" not in cli)
+
+    # 6. THE FALLBACK ORDERS SEAT THE JUDGE LAST (2026-09-29). pipelines.md
+    #    moved Manjuel behind Jesster on 2026-09-01 ("the Court ruled on
+    #    counsel it had not yet heard"); the built-in estate order, used when
+    #    that file is missing, kept the old one for four weeks.
+    from manjuel.pipeline import PIPELINES
+    check("in every built-in order that seats the judge, he rules last",
+          all(p[-1] == "Manjuel" for p in PIPELINES.values() if "Manjuel" in p),
+          str({n: p for n, p in PIPELINES.items() if "Manjuel" in p}))
+    check("and the built-in estate order is the one pipelines.md declares",
+          PIPELINES["estate"] == [str(s) for s in book.get("estate")],
+          f"{PIPELINES['estate']} vs {[str(s) for s in book.get('estate')]}")
     check("a Runs: that is a command is refused before it re-enters the loop",
           "a command may not run" in cli.split("custom_commands().get(name)", 1)[1][:1200])
     chat = cli.split("def _cmd_chat", 1)[1].split("\ndef ", 1)[0]
@@ -6472,6 +6608,57 @@ def test_drift_needs_a_source(reg, lib, book):
     check("so the Evaluator stays asleep on small talk",
           not any(st.agent == "Quality Evaluator" and not st.skipped
                   for st in ctx.steps))
+
+    # THE NOTE SAYS WHICH STATE IT IS (2026-09-29). "not scored this run (no
+    # usable source)" stood for all three, 463 times in 502 transcripts, and
+    # read as a data problem over a check that had never been armed.
+    said = [n for n in ctx.notes if n.startswith("drift:")]
+    check("a feedless turn says the check was NOT ARMED, once, and why",
+          len(said) == 1 and "not armed this run" in said[0]
+          and "no pasted source and no tool result" in said[0], str(said))
+    check("... and never that a source was unusable",
+          not any("no usable source" in n for n in ctx.notes))
+    never = DriftChecker(r, "m")
+    check("never armed: nothing was offered",
+          never.score("x" * 200) is None and "not armed" in never.why_unscored()
+          and "no pasted source" in never.why_unscored(), never.why_unscored())
+    short = DriftChecker(r, "m")
+    check("too short: a source was offered and is under the floor",
+          short.prime("hi") is False and short.score("x" * 200) is None
+          and "too short to measure against" in short.why_unscored(), short.why_unscored())
+    check("... which is a fact about that string: a longer one still arms it",
+          short.prime("the ledger covenant seat refute " * 6) is True
+          and short.score("the ledger covenant seat refute " * 6) is not None)
+
+    class Down(Stub):
+        def embed(self, model, text):
+            raise RuntimeError("embedder down")
+
+    down = DriftChecker(Down(), "m")
+    check("not scored: a source was offered and the embedder could not be reached",
+          down.prime("the ledger covenant seat refute " * 6) is False
+          and "embedder could not be reached" in down.why_unscored()
+          and "not armed" not in down.why_unscored(), down.why_unscored())
+    rd = Down(reply="bread recipe cooking bread recipe cooking " * 4)
+    ctx_down = RunContext(objective="summarise this",
+                          feed="the ledger covenant seat refute " * 6)
+    run_pipeline(ctx_down, reg, rd, lib, env_for(g, reg, rd),
+                 steps=book.get("default"), report=lambda m: None,
+                 drift=DriftChecker(rd, "m"))
+    check("a turn WITH a feed and a dead embedder says that, not that it was never armed",
+          any(n.startswith("drift: not scored this run (the embedder") for n in ctx_down.notes)
+          and not any("not armed" in n for n in ctx_down.notes), str(ctx_down.notes))
+    for name in ("pipeline.py", "drift.py"):
+        check(f"the old note is gone from {name}",
+              "no usable source" not in (ROOT / "manjuel" / name).read_text(encoding="utf-8"))
+    from manjuel import drift as _drift
+    lo = DriftChecker(r, "m")
+    lo.prime("x" * (_drift.SHORT_SOURCE_CHARS - 1))
+    hi = DriftChecker(r, "m")
+    hi.prime("x" * _drift.SHORT_SOURCE_CHARS)
+    check("the lower bar is a SHORT SOURCE's, and the line between them is one number",
+          lo._short_source and not hi._short_source
+          and _drift.DRIFT_WARN_SHORT < _drift.DRIFT_WARN)
 
     # 2026-09-03: this ended `or "drifted" in ctx2.flags or True` -- a
     # disjunction whose last clause is the constant. It could not fail, and
@@ -10531,7 +10718,7 @@ def test_a_dial_in_env_is_read_and_the_transports_stay_few(reg, lib, book):
         clear()
         _pkg.read_dials()
         check("with no dial set, each reads its default",
-              dials() == (700.0, "30m", 300.0, 60.0, 600.0, "base.en"), str(dials()))
+              dials() == (600.0, "30m", 300.0, 60.0, 600.0, "base.en"), str(dials()))
         rt0 = _rt.OllamaRuntime(host="http://127.0.0.1:9")
 
         g = Path(tempfile.mkdtemp())
@@ -10552,9 +10739,9 @@ def test_a_dial_in_env_is_read_and_the_transports_stay_few(reg, lib, book):
         check("a runtime built after the read holds .env's keep_alive",
               rt.keep_alive == "45m", rt.keep_alive)
         check("and its default transport carries .env's ceiling",
-              rt._client_for(321.0) is rt._client and rt._client_for(700.0) is not rt._client)
+              rt._client_for(321.0) is rt._client and rt._client_for(600.0) is not rt._client)
         check("a runtime built before the read keeps the transport it was built with",
-              rt0._client_for(700.0) is rt0._client and rt0._client_for(321.0) is not rt0._client)
+              rt0._client_for(600.0) is rt0._client and rt0._client_for(321.0) is not rt0._client)
         bare = dataclasses.replace(reg.get("Steward"), timeout=None)
         late = RunContext(objective="x")
         late.deadline_at = time.time() + 500
@@ -10572,7 +10759,7 @@ def test_a_dial_in_env_is_read_and_the_transports_stay_few(reg, lib, book):
         except Exception as exc:
             raised = f"{type(exc).__name__}: {exc}"
         check("a value that is not a number falls back to the default, and never raises",
-              not raised and _rt.SEAT_TIMEOUT == 700.0 and _sk.RUN_TIMEOUT == 60.0,
+              not raised and _rt.SEAT_TIMEOUT == 600.0 and _sk.RUN_TIMEOUT == 60.0,
               raised or str(dials()))
         check("a keep_alive that is not a duration is never sent -- .env.example's own line, as dotenv keeps it",
               _rt.KEEP_ALIVE == "30m", _rt.KEEP_ALIVE)
@@ -14832,6 +15019,299 @@ def test_a_seat_that_holds_tools_has_room_to_answer(reg, lib, book):
           not split, str(split))
 
 
+def test_a_reply_the_rack_cut_is_said_so(reg, lib, book):
+    """A CUT REPLY (2026-09-29). For a day the Router's request stood at 8,182
+    tokens in a window of 8,192. Every reply was cut ten tokens in; the rack
+    said `length` each time; the record said "(deliberation only, no
+    conclusion reached)" and the standup said 8/9 with no cause beside it.
+
+    The rack's last word is kept now (runtime.usage_of), per call and per
+    thread, and the pipeline says which ceiling cut the reply: the window
+    full, or the seat's Max Tokens spent (pipeline.note_cut_reply). Read off
+    the rack, never off the seat's words."""
+    import dataclasses
+    import threading
+    from manjuel.pipeline import CUT_MARGIN, note_cut_reply
+    from manjuel.runtime import OllamaRuntime, usage_of
+
+    seat = dataclasses.replace(reg.get("Router"), context=8192, max_tokens=400)
+    full = {"done": True, "done_reason": "length",
+            "prompt_eval_count": 8182, "eval_count": 10}
+
+    said = usage_of(seat, dict(full, message={"content": ""}),
+                    {"num_ctx": 8192, "num_predict": 400})
+    check("the rack's last word is read: why it stopped, what the prompt and the answer cost",
+          said == {"seat": "Router", "model": seat.model, "done_reason": "length",
+                   "prompt_tokens": 8182, "answer_tokens": 10,
+                   "window": 8192, "max_tokens": 400}, str(said))
+    check("a part mid-stream says nothing, so nothing is written over a call that did",
+          usage_of(seat, {"message": {"content": "more "}}, None) is None)
+    check("a count the rack left out is None, never a guessed zero",
+          usage_of(seat, {"done": True, "done_reason": "stop"}, None)["prompt_tokens"] is None)
+
+    class Rack:
+        """A client that answers as Ollama does: parts, the last one `done`."""
+
+        def __init__(self, last):
+            self.last = last
+
+        def chat(self, **kw):
+            if kw.get("stream"):
+                return iter([{"message": {"content": "I "}},
+                             {"message": {"content": "was"}},
+                             dict(self.last, message={"content": ""})])
+            return dict(self.last, message={"content": "I was"})
+
+    rt = OllamaRuntime()
+    rt._client = Rack(full)
+    check("a runtime that has made no call says nothing", rt.last_usage is None)
+    rt.chat(seat, "go")
+    check("a whole reply: the runtime keeps how the call ended, and the window it was sent",
+          bool(rt.last_usage) and rt.last_usage["done_reason"] == "length"
+          and rt.last_usage["window"] == 8192 and rt.last_usage["max_tokens"] == 400,
+          str(rt.last_usage))
+    shown: list = []
+    rt._client = Rack(dict(full, prompt_eval_count=8000, eval_count=192))
+    got = rt.chat(seat, "go", stream_to=shown.append)
+    check("a streamed reply: the same, read off its last part",
+          got == "I was" and bool(rt.last_usage)
+          and rt.last_usage["prompt_tokens"] == 8000
+          and rt.last_usage["answer_tokens"] == 192, f"{got!r} {rt.last_usage}")
+    rt._client = Rack({"done": True, "done_reason": "stop",
+                       "prompt_eval_count": 500, "eval_count": 40})
+    rt.chat(seat, "go")
+    check("each call keeps its OWN ending: a reply that finished is `stop`, not the last one's `length`",
+          rt.last_usage["done_reason"] == "stop", str(rt.last_usage))
+
+    class Quiet:
+        def chat(self, **kw):
+            return {"message": {"content": "words"}}
+
+    rt._client = Quiet()
+    rt.chat(seat, "go")
+    check("and a call the rack said nothing about leaves nothing standing from the one before",
+          rt.last_usage is None, str(rt.last_usage))
+
+    rt._client = Rack(full)
+    rt.chat(seat, "go")
+    mine = dict(rt.last_usage)
+    elsewhere: dict = {}
+
+    def other():
+        rt.chat(dataclasses.replace(reg.get("Steward"), context=4096), "go")
+        elsewhere["said"] = rt.last_usage
+
+    t = threading.Thread(target=other)
+    t.start()
+    t.join()
+    check("a seat on another thread does not write over it",
+          rt.last_usage == mine and (elsewhere.get("said") or {}).get("seat") == "Steward",
+          f"{rt.last_usage} / {elsewhere}")
+
+    # ---- what the pipeline says about it ------------------------------------
+    class Said:
+        def __init__(self, **over):
+            self.last_usage = dict({"seat": "Router", "model": "m",
+                                    "done_reason": "length", "prompt_tokens": None,
+                                    "answer_tokens": None, "window": None,
+                                    "max_tokens": None}, **over)
+
+    quiet = lambda s: None                                        # noqa: E731
+    ctx = RunContext(objective="x")
+    n = note_cut_reply(Said(prompt_tokens=8182, answer_tokens=10, window=8192,
+                            max_tokens=400), seat, ctx, quiet)
+    check("a full window is named as the WINDOW's: what the prompt took and what it left",
+          "Router's reply was CUT by the rack" in n and "window was FULL" in n
+          and "8182 of 8192" in n and "left 10 " in n and "`Context:`" in n, n)
+    note_cut_reply(Said(prompt_tokens=8182, answer_tokens=10, window=8192,
+                        max_tokens=400), seat, ctx, quiet)
+    check("the record carries it once, however many hops were cut the same way",
+          ctx.notes.count(n) == 1, str(ctx.notes))
+    n2 = note_cut_reply(Said(prompt_tokens=900, answer_tokens=400, window=8192,
+                             max_tokens=400), seat, RunContext(objective="x"), quiet)
+    check("Max Tokens spent is named as that, and never as the window",
+          "spent its Max Tokens (400)" in n2 and "window was FULL" not in n2
+          and "`Max Tokens:`" in n2, n2)
+    edge = 8192 - CUT_MARGIN
+    check("the window's edge is arithmetic: within the margin it is the window's, one short it is not",
+          "window was FULL" in note_cut_reply(
+              Said(prompt_tokens=edge - 10, answer_tokens=10, window=8192),
+              seat, RunContext(objective="x"), quiet)
+          and "window was FULL" not in note_cut_reply(
+              Said(prompt_tokens=edge - 11, answer_tokens=10, window=8192),
+              seat, RunContext(objective="x"), quiet))
+    n3 = note_cut_reply(Said(prompt_tokens=None, answer_tokens=12), seat,
+                        RunContext(objective="x"), quiet)
+    check("a cut with no counts beside it is still said, with what is known",
+          "CUT by the rack" in n3 and "prompt ? tokens" in n3 and "answer 12" in n3, n3)
+    check("a reply that finished by itself is not called cut",
+          note_cut_reply(Said(done_reason="stop", prompt_tokens=8182, answer_tokens=10,
+                              window=8192), seat, RunContext(objective="x"), quiet) == "")
+    check("another seat's ending is never read as this one's",
+          note_cut_reply(Said(seat="Steward", prompt_tokens=8182, answer_tokens=10,
+                              window=8192), seat, RunContext(objective="x"), quiet) == "")
+    check("a runtime that says nothing notes nothing",
+          note_cut_reply(Stub(), seat, RunContext(objective="x"), quiet) == "")
+
+    # ---- and a turn carries it ------------------------------------------------
+    class Cut(Stub):
+        def chat(self, agent, prompt, stream_to=None, tools=None, think_to=None,
+                 think=None):
+            out = super().chat(agent, prompt, stream_to, tools, think_to, think)
+            self.last_usage = ({"seat": agent.name, "model": agent.model,
+                                "done_reason": "length", "prompt_tokens": 8182,
+                                "answer_tokens": 10, "window": 8192, "max_tokens": 400}
+                               if agent.name == "Router" else None)
+            return out
+
+    g = Path(tempfile.mkdtemp())
+    r = Cut(reply="words")
+    turn = RunContext(objective="write hello.md with a greeting in it")
+    run_pipeline(turn, reg, r, lib, env_for(g, reg, r), steps=book.get("default"),
+                 report=lambda s: None)
+    sat = [name for name, _ in r.seen]
+    cut = [x for x in turn.notes if "CUT by the rack" in x]
+    check("a turn whose Router was cut says so in its record, by the seat's name",
+          "Router" in sat and len(cut) == 1 and cut[0].startswith("Router's reply"),
+          f"sat={sat} notes={turn.notes}")
+    check("... and says it of no seat the rack did not cut",
+          not any(x.startswith("Steward's reply") for x in turn.notes), str(turn.notes))
+
+    sys.path.insert(0, str(ROOT / "tests"))
+    import standup as _su
+    check("the live check lists a cut reply among the guards that fired",
+          any(m in cut[0] for m in _su.GUARD_MARKS) if cut else False, str(_su.GUARD_MARKS))
+    line = seatlog.note_for(turn, "default", "logs/this_run.md")
+    check("and the sitting's own ledger line carries it, so the story the door is handed names it",
+          any("CUT by the rack" in g_ for g_ in line.guards), str(line.guards))
+    check("the ledger's guard list holds every mark the live check reads, but the one it widens",
+          set(_su.GUARD_MARKS) - {"gate: objective did not parse"} <= set(seatlog.GUARD_MARKS),
+          str(sorted(set(_su.GUARD_MARKS) - set(seatlog.GUARD_MARKS))))
+
+
+def test_the_watchers_reindex_waits_for_a_build(reg, lib, book):
+    """ONE BUILD AT A TIME, AT THE THIRD DOOR (2026-09-29; found by the records
+    pass of 2026-09-17). index_ground and embed_text hold skills._INDEX_BUSY
+    for the life of their build, and a build refused at the skill bound keeps
+    running behind its refusal. The watcher's re-index at the turn boundary
+    took no lock, so it could write vectors.db on top of one.
+
+    It takes the lock now, never waits for it, and hands what changed back to
+    the watcher -- the drain had wiped the slate, so without that the edit
+    would never be embedded at all."""
+    import contextlib
+    import io
+    from manjuel import cli as _cli
+    from manjuel import skills as _sk
+    from manjuel.watch import GroundWatch
+
+    g = Path(tempfile.mkdtemp())
+    (g / "docs").mkdir()
+    f = g / "docs" / "a.md"
+    f.write_text("the ledger covenant, as first written", encoding="utf-8")
+    embedded: list = []
+    held: list = []
+
+    class Counting(Stub):
+        def embed(self, model, text):
+            embedded.append(text)
+            held.append(_sk._INDEX_BUSY.locked())
+            return super().embed(model, text)
+
+    w = GroundWatch(g, roots=[g / "docs"])
+    w.note(f)
+
+    class TurnSess:
+        watcher = w
+        rack_ok = True
+        runtime = Counting()
+
+        def load(self):
+            return True
+
+    keep = _cli.ROOT
+    waited, built = io.StringIO(), io.StringIO()
+    try:
+        _cli.set_ground(g)
+        _sk._INDEX_BUSY.acquire()
+        took_it = False
+        try:
+            with contextlib.redirect_stdout(waited):
+                _cli._apply_ground_changes(TurnSess())
+        finally:
+            # Still ours to let go -- unless the boundary let go of a lock it
+            # never took, which is its own red below.
+            took_it = not _sk._INDEX_BUSY.locked()
+            if not took_it:
+                _sk._INDEX_BUSY.release()
+        check("while a build runs, the boundary leaves the lock with the build that holds it",
+              not took_it)
+        check("while a build runs, the turn boundary embeds nothing",
+              embedded == [], str(embedded)[:120])
+        check("... and writes no index of its own",
+              not (g / "index" / "vectors.db").exists())
+        check("... and says it waits, and how many files it kept",
+              "reindex on change waits" in waited.getvalue()
+              and "1 changed file kept" in waited.getvalue(), waited.getvalue()[:200])
+        check("... and never held the lock it could not take",
+              not _sk._INDEX_BUSY.locked())
+
+        with contextlib.redirect_stdout(built):
+            _cli._apply_ground_changes(TurnSess())
+        check("the next boundary re-embeds what was handed back",
+              "reindexed on change: a.md" in built.getvalue() and bool(embedded),
+              built.getvalue()[:200])
+        check("... under the lock, for the whole of its build",
+              bool(held) and all(held), str(held))
+        check("... and lets it go after", not _sk._INDEX_BUSY.locked())
+        check("... with nothing left waiting", w.drain() == (False, []))
+
+        # A build that FAILS still lets the lock go.
+        class Broken(Stub):
+            def embed(self, model, text):
+                raise RuntimeError("embedder down")
+
+        f.write_text("the ledger covenant, edited", encoding="utf-8")
+        w.note(f)
+
+        class BrokenSess(TurnSess):
+            runtime = Broken()
+
+        with contextlib.redirect_stdout(io.StringIO()):
+            _cli._apply_ground_changes(BrokenSess())
+        check("a build that fails lets the lock go too",
+              not _sk._INDEX_BUSY.locked())
+    finally:
+        _cli.set_ground(keep)
+
+    w2 = GroundWatch(g, roots=[g / "docs"])
+    w2.requeue([f, f])
+    check("what is handed back is queued once, and asks for no reload",
+          w2.drain() == (False, [f.resolve()]))
+
+
+def test_every_root_document_is_in_the_index_list(reg, lib, book):
+    """"INDEX EVERYTHING" IS A RULING, AND NOTHING HELD IT (his word,
+    2026-09-09: "index everything the embedding model is already there").
+    Seventeen root documents were listed that day by name. STATUS.md and
+    WHATS_LEFT.md were written on 2026-09-29 and neither was listed, so the
+    estate could not find by search the two pages that say where the build
+    stands and what is left. The list is held to the disk now: a document at
+    the root that is not in index_roots.txt is red."""
+    raw = (ROOT / "index_roots.txt").read_text(encoding="utf-8")
+    listed = {l.strip() for l in raw.splitlines()
+              if l.strip() and not l.lstrip().startswith("#")}
+    docs = sorted(p.name for p in ROOT.glob("*.md"))
+    check("there are root documents to hold the list to", len(docs) >= 20, str(len(docs)))
+    missing = [d for d in docs if d not in listed]
+    check("every document at the root is listed in index_roots.txt",
+          not missing, "not listed: " + ", ".join(missing))
+    check("the page of where the build stands and the page of what is left are among them",
+          {"STATUS.md", "WHATS_LEFT.md"} <= listed)
+    check("and they are listed as FILES: the ground's root itself is never a root",
+          "." not in listed and "./" not in listed)
+
+
 def test_the_status_page_is_read_off_the_record(reg, lib, book):
     """THE STATUS PAGE (2026-09-29, his word: "build it"). "What are we on as far
     as the overall build order and path, versus the docs? What is left for
@@ -17892,6 +18372,9 @@ def main() -> int:
     test_the_coders_window_on_the_tree(reg, lib, book)
     test_the_status_page_is_read_off_the_record(reg, lib, book)
     test_a_seat_that_holds_tools_has_room_to_answer(reg, lib, book)
+    test_a_reply_the_rack_cut_is_said_so(reg, lib, book)
+    test_the_watchers_reindex_waits_for_a_build(reg, lib, book)
+    test_every_root_document_is_in_the_index_list(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)

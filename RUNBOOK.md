@@ -331,7 +331,7 @@ button and the door carries no such verb. The name must be exact and on the map 
 is not `helper`); a bare `.py` is the workspace, not the ground. A DOCUMENT IS
 ASKED BY HEADING (2026-09-29), a root document by its bare name:
 
-    In RUNBOOK.md, under `The dials`, change the Steward's 150 to 180.
+    In RUNBOOK.md, under `The dials`, say that MANJUEL_NO_WARM takes 1, true or yes.
 
 The Coder is handed that section whole, through its subsections; `dials` alone
 would be refused, because two headings here contain it. What it answers lands
@@ -612,17 +612,38 @@ guard you just built would have caught anything historically.
     OUT OF TIME. 2 seats did not sit this run because the turn's 600s
     deadline had passed: ...
 
-Two bounds, both the operator's (2026-09-08): ONE CALL to a seat may take
-at most its own `Timeout:` (agents/*.md, by the model's size -- his
-words: steward-sized 150-300, router-sized up to 600, the biggest 700:
-llama3.2 150, phi4-mini 300, qwen3.5:4b 300, the 7-9b seats 600,
-gemma4:12b 700) or the ceiling `MANJUEL_SEAT_TIMEOUT` (700); ONE TURN may take at most
-`MANJUEL_TURN_DEADLINE` (600) -- a seat whose turn comes after that is
-not seated and is NAMED in the delivery, and a seat seated just before it
-is cut to what is left. Both are dials, neither is a fault: the seat that
+Two bounds, both the operator's (2026-09-08; ruled again 2026-09-28: "180
+for steward. 300 to route and 600 max per seat other than the court which
+requires a max of 900"): ONE CALL to a seat may take at most its own
+`Timeout:` (agents/*.md -- the Steward 180, the other llama3.2 seats 150,
+phi4-mini 300, qwen3.5:4b 300, the 7-12b seats 600), and a seat that
+declares none takes the ceiling `MANJUEL_SEAT_TIMEOUT` (600); ONE TURN may
+take at most `MANJUEL_TURN_DEADLINE` (600), or what its pipeline declares for
+itself in pipelines.md (`court` declares `**Deadline:** 900`) -- a seat whose
+turn comes after that is not seated and is NAMED in the delivery, and a seat
+seated just before it is cut to what is left. The refusal and the OUT OF TIME
+block each name the dial that would move THAT seat or THAT turn: the seat's
+own `Timeout:`, the ceiling, or the turn's deadline when the bound was what
+the turn had left. Both are dials, neither is a fault: the seat that
 hung is the fault, and its name is in the record. Raise the dial only for
 a run that legitimately needs it (a parity sweep is many runs, each with
 its own deadline; it needs nothing raised).
+
+## A reply was cut short by the rack
+
+    Router's reply was CUT by the rack: its window was FULL -- the prompt
+    took 8182 of 8192 tokens and left 10 for the answer. Raise `Context:`
+    in its seat file, or send it less
+
+The rack ends every call by saying why it stopped, and `length` means the
+rack stopped the model: the seat's window was full, or its `Max Tokens:` was
+spent. The engine reads that off the rack (2026-09-29) and the note says
+which. It is in the transcript, in the delivery's notes, in the sitting's
+ledger line, and under GUARDS FIRED in the standup's report. A seat that
+holds tools is sent every skill's declaration, so ITS window fills as skills
+are added: `test_a_seat_that_holds_tools_has_room_to_answer` reds before the
+rack does. Seats that share a model share a window (one context size per
+model). A seat cut by the CLOCK is a different refusal, above.
 
 ---
 
@@ -631,8 +652,11 @@ its own deadline; it needs nothing raised).
 Every `MANJUEL_*` the code reads, with its default. Set in `.env` (the
 boot report says which took effect) or the shell. Nothing else is a dial.
 
-    MANJUEL_SEAT_TIMEOUT    700    the most one seat call may take (runtime.py)
-    MANJUEL_TURN_DEADLINE   600    the most one turn may take (pipeline.py)
+    MANJUEL_SEAT_TIMEOUT    600    the most a seat that declares no `Timeout:` may
+                                   take, and the most any seat may declare (runtime.py)
+    MANJUEL_TURN_DEADLINE   600    the most one turn may take, unless its pipeline
+                                   declares its own `**Deadline:**` in pipelines.md --
+                                   the court's 900 (pipeline.py, registry.py)
     MANJUEL_SKILL_TIMEOUT   300    the most one skill call is waited for (skills.py)
     MANJUEL_RUN_TIMEOUT     60     the most a `run_python` child may take before it
                                    is KILLED -- a real kill, not a wait (skills.py)
