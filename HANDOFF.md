@@ -860,6 +860,28 @@ The ground is back on `main` on his word, carrying the suites' stamps and the re
 `tree-foundation` stands empty until he closes it on Version control. Unsaved: the record of the
 firing and of these two wires.
 
+**CODER-TREE FIRED TWICE MORE, on his word.** Run two (sitting 289, 15:33): the door call waited,
+the suites answered (strokes 3068/3068, smoke 72/72), and the run reached `land` with NOTHING
+CHANGED -- the attempt hedged and woke no tool; stopped at `land` on his word; **v2 folded** with a
+`changed` check on the attempt, the objective carried verbatim, the brief told never to ask. Run
+three (sitting 290, 18:18, v2): a wrong brief let run to measure; the `changed` check caught the
+empty pass and returned once; the second pass died on a seat's "retry / skip / abort?", a question
+a flow cannot answer. The transcript: the Router plans "ground_read by name, then ground_edit" and
+never issues it; the Expert Coder emits for the workspace; the Steward claims an edit that never
+happened. Nothing reached the tree; nothing on main moved; the ground is back on `main` carrying
+the stamps; the three empty lines `tree-foundation`, `-2`, `-3` are his to close on Version
+control. NEXT, by card: the Coder lands an `@@ OLD`/`@@ NEW` edit on the tree through the same
+jail (`land_code` on a line of work). Named beside it: the headless "retry / skip / abort?"; the
+claim check on a seat saying a tool was used.
+
+**THE CODER LANDS AN EDIT ON THE TREE**, by card: `land_code` hands a `<filepath>` with a folder,
+or an `@@ OLD` block, to `ground_edit`/`ground_write` through the skill library, the door's reply
+riding on the Coder's own tool calls so the flow's `changed` check reads it; a bare name with an
+edit block edits the workspace; a bare whole file lands as before. The Coder's seat file gains the
+shape, on his order. One stroke (14), strokes 3075/3075 and smoke 72/72 on a mirror, buildmap
+regenerated, three reversals red. `manjuel/pipeline.py` moved: RESTART REQUIRED, no engine running.
+Unsaved with the record of runs two and three.
+
 **Where the ground stands.** core `main@3e0b5b4` plus `RUNBOOK.md` and this file, to be saved and
 sent through the glass's Version control on his word. atlas `main@1336fa8`: both pieces --
 `line/internal/tools/tools.go`, `gitctl.go`, `tools_test.go`, `line/internal/auth/auth.go`,

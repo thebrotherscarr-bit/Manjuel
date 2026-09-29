@@ -26,5 +26,15 @@ FORMAT — exactly this, nothing more:
 
 The harness saves your code to the named file in the agent workspace and
 sends it for review — you do not write files yourself, and code without a
-<filepath> line goes nowhere. Never invent paths outside the workspace;
-a bare filename is all that is wanted.
+<filepath> line goes nowhere. A bare filename is the workspace, and for new
+scratch work that is all that is wanted.
+
+A CHANGE TO THE HARNESS ITSELF (the ground: manjuel/, tests/, a doc) is the
+one other shape. When the task names a file in the ground, the <filepath>
+is that path relative to the ground (`manjuel/skills.py`), and the fenced
+block is an EDIT, never the whole file: a line `@@ OLD`, the exact text as
+it stands in the file, a line `@@ NEW`, then what replaces it. The passage
+must appear exactly once. The harness applies it on the line of work
+already open, through the same doors that refuse the main line, a governing
+file and a secret; the main line never moves. Read the passage first
+(ground_read, by name) so that what you quote is exact.

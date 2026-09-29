@@ -26,7 +26,8 @@ from .skills import (GATE_MARK, MESSAGE_IS_THE_OPERATORS, REVIEW_ONLY_SKILLS,
                      SkillExecutionEnv, SkillLibrary, extract_tool_call,
                      args_from_words as skills_args_from_words,
                      _inside_ground as skills_inside_ground, declared_path,
-                     mcp_spelled_out, operator_message, unjail)
+                     mcp_spelled_out, operator_message, unjail,
+                     _EDIT_OLD as skills_edit_old)
 from .drift import DriftChecker
 from . import ink
 from . import lawgate
@@ -357,14 +358,34 @@ def inspect_code(name: str, code: str) -> tuple[bool, str]:
     return True, ""
 
 
-def land_code(output: str, env, ctx) -> str:
+def land_code(output: str, env, ctx, calls: list | None = None,
+              results: list | None = None) -> str:
     """Write the coder's declared file into the workspace jail. Returns the
     landed name, or "" when there is nothing well-formed to land.
 
     2026-09-03: the file is now PARSED before it is written (inspect_code).
     Code that does not parse used to land anyway and be reviewed as prose by
     the Quality Evaluator, which reads whatever is on disk and has no way to
-    know the difference."""
+    know the difference.
+
+    AND ON THE TREE (2026-09-28, his ruling: "the whole idea of the coder, I
+    want to actually be able to write/read/modify files within the harness").
+    The third coder-tree run showed the Router planning a two-call edit and
+    stopping at the plan while the Expert Coder emitted `<filepath>manjuel/
+    skills.py</filepath>` and this landed it in the WORKSPACE as a bare
+    `skills.py`. Now a `<filepath>` with a folder in it names a file in the
+    GROUND, and a fenced block that opens with `@@ OLD` is an EDIT in the tree
+    doors' own shape. Either goes through THE DOOR ITSELF -- `ground_edit` or
+    `ground_write`, called through the skill library so the call is
+    dispatched, gated and recorded like any other -- and the door's reply is
+    appended to the seat's tool calls (`calls`, `results`), so the tools
+    block a flow's check reads carries `ground_edit: Edited ... on line of
+    work ...` or the refusal, and never a seat's account of it. A bare name
+    with an `@@ OLD` block is an edit in the workspace (`edit_file`). The
+    doors refuse by themselves -- the main line, the never-written names, a
+    MIXED file, the structural gate -- and nothing here decides what they
+    decide; a bare name with a whole file lands in the workspace as it
+    always has."""
     fp = _FILEPATH_TAG_RE.search(output)
     fence = _CODE_FENCE_RE.search(output)
     if not fp or not fence:
@@ -373,6 +394,10 @@ def land_code(output: str, env, ctx) -> str:
     code = fence.group(1)
     if not name or not code.strip():
         return ""
+    on_tree = "/" in name or "\\" in name
+    is_edit = code.lstrip().startswith(skills_edit_old)
+    if on_tree or is_edit:
+        return _land_through_a_door(name, code, on_tree, is_edit, env, ctx, calls, results)
     ok, why = inspect_code(name, code)
     if not ok:
         ctx.notes.append(f"coder file REFUSED ({name}): {why}")
@@ -390,6 +415,28 @@ def land_code(output: str, env, ctx) -> str:
     ctx.artifacts.append(path)
     ctx.notes.append(f"coder landed {path.name} ({n} lines) -- review raised")
     return f"{path.name} ({n} lines)"
+
+
+def _land_through_a_door(name: str, code: str, on_tree: bool, is_edit: bool,
+                         env, ctx, calls, results) -> str:
+    """The coder's emission handed to a door of the estate -- `ground_edit`
+    or `ground_write` on the tree, `edit_file` in the workspace -- with the
+    door's own reply written to the record and to the seat's tool calls.
+    Returns "<name> (<door>)" when the door landed it, else ""."""
+    door = ("ground_edit" if is_edit else "ground_write") if on_tree else "edit_file"
+    lib = getattr(env, "skills_ref", None)
+    if lib is None or not hasattr(lib, "execute"):
+        ctx.notes.append(f"coder {door} NOT landed ({name}): no skill library on this env")
+        return ""
+    result = lib.execute(door, {"filepath": name, "content": code}, env) or ""
+    if calls is not None and results is not None:
+        calls.append(door)
+        results.append(result)
+    head = result.strip().splitlines()[0] if result.strip() else "(the door said nothing)"
+    ctx.notes.append(f"coder {door} {name}: {head[:200]}")
+    if head.startswith(("Edited", "Wrote")):
+        return f"{name} ({door})"
+    return ""
 
 
 _CODEISH = re.compile(
@@ -2713,9 +2760,16 @@ def run_pipeline(
                 # check that belongs to it (piece 3), not by a rewrite.
                 _maker_land(ctx, env, output, report)
             else:
-                saved = land_code(output, env, ctx)
+                # The door's reply, when a door landed it, rides on THIS seat's
+                # tool calls (2026-09-28), so the tools block says what the
+                # tree door said and a flow's check can read it there.
+                saved = land_code(output, env, ctx, calls=tool_calls, results=tool_results)
                 if saved:
-                    ctx.flags.add("review")
+                    # `review` wakes the Quality Evaluator to read code landed
+                    # in the workspace; a change on the tree is judged by the
+                    # suites, which is what the coder-tree flow runs next.
+                    if "(ground_" not in saved:
+                        ctx.flags.add("review")
                     report("      " + ink.dim(f"code landed: {saved}"))
 
         # Sitting 31: "heloo stewy" raised `technical` and woke the coder on

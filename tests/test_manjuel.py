@@ -14215,6 +14215,113 @@ def test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name(reg, lib, boo
           not ({"ground_write", "ground_edit"} & _sk.REVIEW_ONLY_SKILLS))
 
 
+def test_the_coder_lands_an_edit_on_the_tree(reg, lib, book):
+    """His ruling, 2026-09-28: the coder may write, read and modify files within
+    the harness. The third coder-tree run showed the Router planning a two-call
+    edit and stopping at the plan, while the Expert Coder emitted
+    `<filepath>manjuel/skills.py</filepath>` and land_code put it in the
+    workspace as a bare file. Now a path with a folder names the ground, an
+    `@@ OLD` block is an edit, and either goes through the door itself, whose
+    reply rides on the seat's tool calls so a flow's check can read it.
+    """
+    from manjuel.pipeline import land_code
+    from manjuel.context import tool_verdicts
+    from manjuel.skills import SkillExecutionEnv
+    g = Path(tempfile.mkdtemp())
+    env = env_for(g, reg, Stub())
+    (g / "manjuel").mkdir()
+    (g / "manjuel" / "thing.py").write_bytes(b"import json\nX = 1\n")
+    if not HAVE_GIT:
+        return                    # reported once, in main(); never a crash
+    for args in (["init", "-q"], ["config", "user.email", "t@t"],
+                 ["config", "user.name", "t"], ["checkout", "-q", "-b", "main"]):
+        subprocess.run(["git", *args], cwd=g)
+    gitstate.commit(g, "manjuel: the ground")
+    edit = ("<filepath>manjuel/thing.py</filepath>\n"
+            "```\n@@ OLD\nX = 1\n@@ NEW\nX = 2\n```\n")
+
+    # ON MAIN: the door refuses, the refusal is the seat's tool result, and
+    # nothing changes.
+    calls, results = [], []
+    ctx = RunContext(objective="change it")
+    out = land_code(edit, env, ctx, calls=calls, results=results)
+    check("on main a tree edit is refused by the door and lands nothing",
+          out == "" and (g / "manjuel" / "thing.py").read_bytes() == b"import json\nX = 1\n", out)
+    check("   and the refusal rides as the seat's tool call",
+          calls == ["ground_edit"] and bool(results) and results[0].startswith("Refused")
+          and "main line" in results[0], str(results)[:160])
+    check("   and is in the record, naming the door",
+          any(n.startswith("coder ground_edit manjuel/thing.py: Refused") for n in ctx.notes),
+          str(ctx.notes)[:200])
+    subprocess.run(["git", "checkout", "-q", "-b", "piece"], cwd=g)
+
+    # ON A LINE OF WORK: the edit lands through the door, and the tools block
+    # a flow's check reads carries the door's own reply.
+    calls, results = [], []
+    ctx = RunContext(objective="change it")
+    out = land_code(edit, env, ctx, calls=calls, results=results)
+    check("on a line of work the coder's edit lands on the tree",
+          out == "manjuel/thing.py (ground_edit)"
+          and (g / "manjuel" / "thing.py").read_bytes() == b"import json\nX = 2\n", out)
+    block = tool_verdicts([StepResult(agent="Expert Coder", model="m", output="",
+                                      tool_calls=calls, tool_results=results)])
+    check("   and a check reading the tools block sees the door's reply",
+          any(b.startswith("ground_edit: Edited thing.py at line 2") and "line of work `piece`" in b
+              for b in block), str(block)[:220])
+    check("   and the record says which door landed it",
+          any(n.startswith("coder ground_edit manjuel/thing.py: Edited") for n in ctx.notes),
+          str(ctx.notes)[:200])
+
+    # A WHOLE FILE NAMED IN THE GROUND goes through the write door.
+    calls, results = [], []
+    ctx = RunContext(objective="add it")
+    out = land_code("<filepath>manjuel/new.py</filepath>\n```python\nY = 2\n```\n",
+                    env, ctx, calls=calls, results=results)
+    check("a whole file named in the ground lands through ground_write",
+          out == "manjuel/new.py (ground_write)" and calls == ["ground_write"]
+          and (g / "manjuel" / "new.py").read_bytes() == b"Y = 2\n", out)
+
+    # THE GATE IS THE DOOR'S: an edit that brings in a network import is
+    # refused there, with nothing written.
+    calls, results = [], []
+    ctx = RunContext(objective="net")
+    out = land_code("<filepath>manjuel/thing.py</filepath>\n"
+                    "```\n@@ OLD\nX = 2\n@@ NEW\nimport socket\nX = 3\n```\n",
+                    env, ctx, calls=calls, results=results)
+    check("a tree edit that brings in a network import is refused by the door",
+          out == "" and bool(results) and "RULE 4" in results[0]
+          and (g / "manjuel" / "thing.py").read_bytes() == b"import json\nX = 2\n",
+          str(results)[:160])
+
+    # A BARE NAME WITH AN EDIT BLOCK is an edit in the workspace.
+    (env.workspace / "s.py").write_bytes(b"A = 1\n")
+    calls, results = [], []
+    ctx = RunContext(objective="ws")
+    out = land_code("<filepath>s.py</filepath>\n```\n@@ OLD\nA = 1\n@@ NEW\nA = 5\n```\n",
+                    env, ctx, calls=calls, results=results)
+    check("a bare name with an edit block edits in the workspace",
+          out == "s.py (edit_file)" and calls == ["edit_file"]
+          and (env.workspace / "s.py").read_bytes() == b"A = 5\n", out)
+
+    # AND THE WORKSPACE LANDING IS AS IT WAS: a bare name with a whole file
+    # lands there through no door, with the old note.
+    calls, results = [], []
+    ctx = RunContext(objective="ws")
+    out = land_code("<filepath>plain.py</filepath>\n```python\nB = 1\n```\n",
+                    env, ctx, calls=calls, results=results)
+    check("a bare name with a whole file still lands in the workspace as before",
+          out.startswith("plain.py (") and calls == [] and (env.workspace / "plain.py").is_file()
+          and any("coder landed plain.py" in n for n in ctx.notes), out)
+
+    # NO LIBRARY ON THE ENV: nothing lands, and the record says why.
+    bare = SkillExecutionEnv(workspace=g / "agent_workspace", registry=reg,
+                             runtime=Stub(), ground=g)
+    ctx = RunContext(objective="no lib")
+    out = land_code(edit, bare, ctx)
+    check("with no skill library on the env a door landing refuses and says so",
+          out == "" and any("no skill library" in n for n in ctx.notes), str(ctx.notes)[:160])
+
+
 def test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book):
     """"sandbox the python" (the operator, 2026-09-22).
 
@@ -17102,6 +17209,7 @@ def main() -> int:
     test_both_doors_into_the_workspace_hold_the_same_line(reg, lib, book)
     test_the_edit_door_holds_the_same_line_as_the_write_door(reg, lib, book)
     test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name(reg, lib, book)
+    test_the_coder_lands_an_edit_on_the_tree(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)

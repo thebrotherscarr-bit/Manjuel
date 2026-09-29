@@ -922,6 +922,13 @@ files is LF and a new root .md beside CRLF docs is CRLF (the ruling of
 2026-09-03). `run_python` is NOT moved to the tree: its wall is the workspace,
 and moved it would put `.env` inside the wall.
 
+**And the Coder's own landing goes through them** (2026-09-28, the same day):
+when the Expert Coder emits `<filepath>` with a folder in it, or a fenced
+block that opens with `@@ OLD`, `land_code` hands the emission to
+`ground_edit` or `ground_write` through the skill library rather than writing
+it, and the door's reply rides on the seat's tool calls. The Coder gets no
+door of its own; it gets these.
+
 **The honest limits.** The never-written names are a list, and a list is
 complete only until the ground grows a store it does not name; a new one is
 added here by hand. The line-of-work rule reads git, so a ground with no

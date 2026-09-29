@@ -34,6 +34,84 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The Coder lands an edit on the tree (operator, 2026-09-28, by card: "the Coder lands edits on the tree")
+
+The first of the three pieces the coder-tree runs named. The Expert Coder is the seat that can
+make a change to the harness -- a 7B coder model against the Router's 4B -- and until now every
+emission of its landed in the workspace: `land_code` read `<filepath>` and a fenced whole file and
+wrote it inside the workspace jail, a folder in the path collapsing to a bare name there. No
+sitting was open. **RESTART REQUIRED:** `manjuel/pipeline.py` moved; no engine is running, so the
+next Boot runs it, and `agents/expert_coder.md` is read at the next boot too.
+
+- **`manjuel/pipeline.py`, `land_code`:** a `<filepath>` with a folder in it names a file in the
+  GROUND, and a fenced block that opens with `@@ OLD` is an EDIT in the tree doors' own shape.
+  Either goes through THE DOOR ITSELF -- `ground_edit` or `ground_write`, called through the skill
+  library (`_land_through_a_door`) so the call is dispatched, gated and recorded like any other --
+  and the door's reply is appended to the Expert Coder's own tool calls, so the tools block a flow's
+  check reads carries `ground_edit: Edited ... on line of work ...` or the refusal, never a seat's
+  account of it. A bare name with an `@@ OLD` block is an edit in the workspace (`edit_file`); a
+  bare name with a whole file lands in the workspace exactly as before. The doors refuse by
+  themselves (the main line, the never-written names, a MIXED file, the structural gate); nothing
+  here decides what they decide. `review` is raised only for a workspace landing: a change on the
+  tree is judged by the suites the coder-tree flow runs next.
+- **`agents/expert_coder.md`:** the Coder's FORMAT gains the one other shape, on his order: for a
+  change to the harness, the path relative to the ground and an `@@ OLD`/`@@ NEW` edit, never the
+  whole file, read first by name so the quote is exact; the main line never moves.
+- **`tests/test_manjuel.py`:** `test_the_coder_lands_an_edit_on_the_tree` (14): on main the door
+  refuses and the refusal rides as the seat's tool call and in the record; on a line the edit lands
+  and the tools block carries the door's reply; a whole file named in the ground goes through
+  `ground_write`; a network import is refused by the door with nothing written; a bare name with an
+  edit block edits the workspace; a bare whole file lands as before with the old note; no library on
+  the env refuses and says so. The two strokes that pinned the old landing stand.
+- **`BUILDMAP.md`:** regenerated. **REFUSALS.md §27** says the Coder's landing goes through the
+  same doors.
+
+Proven on a mirror: strokes 3075/3075, smoke 72/72, buildmap clean. By reversal: R1 a folder
+path no longer naming the ground -- red; R2 the door's reply not carried to the seat's tool calls
+-- red; R3 the edit shape not recognised -- red; each put back green. His terminal is still the
+proof. WHAT GOES RED IF THIS COMES UNPLUGGED: the stroke, on the first Coder emission that names
+a file in the ground. NEXT: `coder-tree` v3, the attempt spoken to the Coder's shape, then fire.
+
+### coder-tree fired twice more: the wires hold, the loop steers, and the seats do not act (operator, 2026-09-28: "fire coder-tree again"; by card, v2 and a third run)
+
+Both on his word, both as the glass's own page, both gates answered by his hand.
+
+- **The second run** (`f-20260928-223354-55298696`, sitting 289, 15:33): the line
+  `tree-foundation-2` opened under the grant; the door call now waited and the suites answered --
+  strokes 3068/3068 green in 136 s, smoke 72/72 -- and the run reached `land` in one pass asking
+  to save a change that DID NOT EXIST: the attempt (13 s) answered a hedging brief with a hedge and
+  woke no tool, and the flow's checks measured the suites, not the tree. Stopped at `land` on his
+  word. FOUND: a run that changes nothing passes every check it had.
+- **`coder-tree` v2**, folded as the glass: a `changed` check on the attempt (its tools block must
+  carry a tree door's "on line of work" reply, else the run returns to the attempt); the attempt
+  handed his original objective beside the brief; the brief told never to ask for more. Eleven nodes,
+  thirteen edges; pipelines.md carries the shape.
+- **The third run** (`f-20260929-011830-5c4b3b8d`, sitting 290, 18:18, v2): the brief was WRONG
+  (a new file `manjuel/foundation.py`, not the one-line entry) and he let it run to measure; the
+  line `tree-foundation-3` opened; the `changed` check caught the empty first pass (388 s: the
+  Router ran `decompose_task` and read THE MAP -- 197 definitions now, the module-level names on
+  it -- and never issued the by-name read or the edit) and RETURNED once; on the second pass a
+  seat failed and the engine asked "retry / skip / abort?", a terminal's question a flow cannot
+  answer, and the run died FAIL at 623 s. In the transcript: the Router (qwen3.5:4b) reasons the
+  right plan -- "ground_read `_NEVER_WRITTEN_TOP` by name, then ground_edit" -- and does not issue
+  it; the Expert Coder emits `<filepath>manjuel/skills.py</filepath>` for the WORKSPACE, where
+  `land_code` puts every emission; and the Steward then claims "The `ground_edit` tool was used to
+  update manjuel/skills.py. The change was verified." -- which never happened.
+- Nothing reached the tree in any run; nothing on main moved; the three empty lines
+  `tree-foundation`, `-2`, `-3` stand for him to close on Version control; the ground is back on
+  `main` carrying the suites' stamps, on his word each time.
+
+WHAT THE THREE RUNS MEASURED. The mechanism holds end to end -- the line on his hand, the tree
+doors, the checks off the door's head, the loop's returns and its ceiling, the suites as proof, the
+gates at the ends -- and the seats do not act: a 4B Router plans a two-call edit and stops at the
+plan; the 7B coder that could make it lands only in the workspace; and the door's claim check let
+a seat say an edit was verified. THREE PIECES NAMED FOR HIS WORD, the first ordered: (1) the Coder
+lands an `@@ OLD`/`@@ NEW` edit on the tree -- `land_code` on a line of work applies the Expert
+Coder's emission through the same jail (`never_written`, `line_of_work`, the terminator, the gate)
+so the coder does the work instead of the Router's skill calls; (2) headless, a failed seat is
+skipped with a note, never asked "retry / skip / abort?"; (3) a seat's claim that a tool was used
+is checked against the tools that ran, and stamped when none did.
+
 ### The two wires the first firing found: a door call waits as long as a skill may, and the map names module-level names (operator, 2026-09-28, by card: "the door call's wait, then the map")
 
 Both found by the coder-tree run above, both in `manjuel/skills.py`. No sitting was open.

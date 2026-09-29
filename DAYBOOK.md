@@ -2379,6 +2379,18 @@ been in the plan from the beginning."
   3064/3064 on a mirror, reversals red; restart required; the ground back on `main`
   carrying the stamps and the record, on his word.
 
+- **coder-tree fired twice more** on his word: run two reached `land` with nothing changed (the
+  checks measured the suites, not the tree) and was stopped; v2 gained a `changed` check and the
+  objective verbatim; run three, on a wrong brief let run to measure, returned once on the empty
+  pass and died on a seat's "retry / skip / abort?". The mechanism holds; the seats do not act:
+  the Router plans and stops, the Coder lands in the workspace, the Steward claims an edit that
+  never happened. Back on `main` each time, on his word.
+
+- **The Coder lands an edit on the tree**, by card: `land_code` hands a path with a folder, or an
+  `@@ OLD` block, to the tree doors through the skill library, the door's reply on the Coder's own
+  tool calls; the Coder's seat file gains the shape on his order. One stroke, strokes 3075/3075,
+  three reversals red; restart required.
+
 **Found** — the glass's Tools page asks for a tool's arguments with the browser's `prompt()`, which
 the desktop's browser pane dismisses unseen (the page's own `App.tool` was called from the page
 instead: the same request, the glass's session); a check over the tools block cannot see the maker
@@ -2404,8 +2416,9 @@ Dashboard; the door pid 86180 carries all six door pieces; both repositories sav
 11:52 on his word (core `044ef46`, atlas `325888c`, level with GitHub), the seventh piece saved and
 sent after it (core `c92751d`), the eighth on top, unsaved.
 
-**Next session** — fire `coder-tree` again on the same small change, on his word, with both
-wires in; the dials (Steward 180, the court 900 as a
+**Next session** — `coder-tree` v3 spoken to the Coder's shape, and a fourth firing on his
+word; named beside it, the headless "retry / skip / abort?" and the claim check on a seat that says
+a tool was used; the dials (Steward 180, the court 900 as a
 deadline a pipeline declares); the front-end agent handoff's plan is in the record (CHANGELOG, this
 day) and waits on those; a Dashboard button for the standup and a `loops` box in the builder; a
 maker evidence line a check can read; the open lines above.

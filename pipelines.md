@@ -554,3 +554,25 @@ ceiling, and the record found two wires short -- the core's door call waits
 60 s while the strokes take 150, and the map of a large file does not name a
 module-level assignment, so the coder never reached its passage. CHANGELOG
 carries the account; both are his to order.
+
+V2, THE SAME DAY: a `changed` check on the attempt -- its tools block must
+carry a tree door's "on line of work" reply, else the run returns to the
+attempt -- because the second run reached `land` in one pass with nothing
+changed and every check green; the attempt is handed the operator's objective
+verbatim beside the brief; the brief is told never to ask for more.
+
+    changed     eval   on `attempt`, expecting a tree door's reply (`on line
+                       of work ``) in the tools block; fail returns to `attempt`
+
+Eleven nodes, thirteen edges. FIRED TWICE MORE (runs two and three): the wires
+hold and the loop steers, and the seats do not act -- the Router plans the
+two-call edit and stops at the plan, the Expert Coder lands only in the
+workspace, and the Steward claims an edit that never happened.
+
+V3, THE SAME EVENING: the Coder now lands on the tree (`land_code` hands a
+path with a folder, or an `@@ OLD` block, to `ground_edit`/`ground_write`,
+the door's reply on the Coder's own tool calls), so the attempt is spoken to
+THAT shape: read the passage by name, then answer with `<filepath>` (the path
+in the ground) and one fenced `@@ OLD`/`@@ NEW` edit, never the whole file
+and never the workspace doors; the turn is judged on whether a door reports
+the edit, which is what `changed` reads. Same nodes and edges as v2.
