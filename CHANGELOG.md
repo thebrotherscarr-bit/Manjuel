@@ -34,6 +34,52 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The STATUS page: where the ground stands, printed from the record, and the gate's fifth terminal check (operator, 2026-09-29: "build it")
+
+WHY. His question of the afternoon -- "what are we on as far as the overall build order and path,
+versus the docs? What is left for release/deployment? what is missing in packaging?" -- cost a hand
+an hour of reading twenty files, and the answer was already three weeks behind in every planning
+document (SPEC 8.2 and BUILDPATH's ladder stop at 09-17; four core marks and three atlas marks
+were cut after). A page that a hand reads and writes is stale the day after; a page the ground
+prints is not.
+
+WHAT. `tests/status.py` prints `STATUS.md` at the root the way `tests/buildmap.py` prints the map:
+the marks and the distance (the nearest mark on the main line, how far HEAD stands past it, main
+against origin as last fetched, CHANGELOG's Unreleased headings quoted; atlas the same); the
+proof (the suites' stamp and the last live standup, by the gate's own staleness rule); THE GATE
+(`release.checks()`, every line -- what a mark would be refused on today); the contract (SPEC
+section 4 tallied MET/OPEN/RULED OUT by subsection, every OPEN line quoted); the list (TASKS'
+boxes by the legend's four states, the open ones quoted); the surface (seats, skills, pipelines,
+flows, the door's tools, lines of code by part); the record (the ledger's last sitting, DAYBOOK's
+last entry and its next-session line, HANDOFF's newest block); packaging (the core and atlas pins
+and whether they agree, the workflows tracked, what the wheel carries, the binaries present).
+`--print` reads it to the terminal; `--no-gate` leaves the gate's lines out. It judges nothing and
+types nothing: every number is read at the moment of printing, and the gate's readers are reused
+so the page has no second meaning of "stale". THE WIRE (RULE 11): the release gate gained a fifth
+terminal-only check, `status` -- a mark is refused while STATUS.md is missing, hand-written, or
+older than the record it reads (CHANGELOG, DAYBOOK, HANDOFF, TASKS, SPEC); in CI it is "not here",
+like the four before it. The mark procedure gains its line: print the page after the fold.
+
+WHAT THE FIRST PRINT FOUND, on 2026-09-29, in the gate's own lines: `manifest` refuses -- the two
+tree doors (`ground_edit`, `ground_write`) landed 09-28 without a `.us` record, and `us/seat_router`
+drifts; `flows` refuses every flow that loops (`coder` v13 and `coder-tree`: "cycle or unreachable
+node"), because the gate's Python copy of the flow law predates the bounded return of 09-28 while
+the runner's Validate allows it -- two copies of one law; `marks` reports four CHANGELOG headings
+naming a commit as it stood before the rewrite of 09-21; and no HANDOFF block for today (opened
+with this entry). Each is his to order. And the fourth reader of the page is a person: the page
+says what the docs would say if they were true today.
+
+PROVED on a mirror: `test_the_status_page_is_read_off_the_record` (21: the page printed from a
+temp ground with a small record of every kind and git inside it, writing nothing; the nearest
+mark and the distance; the Unreleased entries counted and quoted; the proof in the gate's words;
+the contract tallied with the OPEN line quoted; the boxes counted and the open ones quoted; the
+surface; the record; the pins; a pin that disagrees said; an open sitting read OPEN; the written
+page CRLF and marked GENERATED; the `status` check passing a fresh page and refusing an older
+one by file, a hand-written one, and none at all; `status` the fifth of TERMINAL_ONLY, not asked
+in record-only mode). The gate's own strokes hold with the fifth. The whole suite 3152/3152, the
+smoke 72/72. No engine code moved: no restart. WHAT GOES RED IF UNPLUGGED: the `status` check
+at cut time on his terminal, and the stroke.
+
 ### coder-tree fired an eighth time, the refusal first: the seat still answered the refused import -- SITTING LAW 3's floor for the Coder's seat, measured (operator, 2026-09-29: "fire coder-tree v5 an eighth time on the .github change")
 
 RUN `f-20260929-162932-d9329ac4` (v5, sitting 295, 09:28 to 09:37, booted and closed from the

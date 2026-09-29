@@ -666,6 +666,20 @@ in `law/LAW_LEDGER.md` without that half, sealed the same morning, and
 
 ---
 
+## Where the ground stands
+
+    python tests\status.py            writes STATUS.md at the root
+    python tests\status.py --print    prints it; --no-gate leaves the gate's lines out
+
+One page, printed from the record (2026-09-29): the marks and how far main stands
+past them, the suites' stamp against the newest edit, the release gate's own
+lines, SPEC section 4's OPEN lines, TASKS' open boxes, the surface, the ledger
+and the day's entries, the pins. Nothing on it is typed by a hand; a count you
+cannot find on disk is a bug in the page. Print it after the fold and before a
+tag: the gate refuses a page older than the record it reads.
+
+---
+
 ## Before a tag: the release gate
 
     python tests\release.py --check 0.1.11
@@ -675,7 +689,8 @@ the suites green and stamped after the newest edit; buildmap clean; the
 standup run LIVE and green after the newest edit; the law proves; the
 manifest agrees with the disk; every SPEC section-4 line whose status
 changed since the last tag has an Unreleased CHANGELOG line naming it;
-DAYBOOK's last entry closed; a HANDOFF block for today; It reads; it never writes. A REFUSED line is the
+DAYBOOK's last entry closed; a HANDOFF block for today; STATUS.md printed after
+the record moved. It reads; it never writes. A REFUSED line is the
 thing to do next, not a thing to argue with. PASSED means the tag may be
 cut -- by you (RULE 6).
 

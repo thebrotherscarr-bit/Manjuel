@@ -179,6 +179,9 @@ corrections, the interrupt, the spoken cap.
     python law/law.py --prove         the ledger, hermetic, exit 0
     python tests/buildmap.py --check  BUILDMAP.md matches the code (regenerate
                                       with `python tests/buildmap.py`)
+    python tests/status.py            STATUS.md, where the ground stands, printed
+                                      from the record (`--print` to read it;
+                                      `--no-gate` leaves the gate's lines out)
     python tests/standup.py --dry     the standup harness itself, on a stub
 
     LIVE, the operator's terminal only (models, VRAM, a sitting opened):

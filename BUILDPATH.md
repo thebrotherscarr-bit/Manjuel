@@ -248,6 +248,13 @@ knows Ollama; nothing else knows either.**
                       class and function with line ranges; every guard by
                       the sitting that earned it; every stroke and what it
                       touches. `--check` in CI refuses a stale map.
+    STATUS.md         LANDED 2026-09-29 (his word: "build it"). Where the
+                      ground STANDS, printed from the record by
+                      tests/status.py: the marks and the distance, the
+                      proof, the release gate's own lines, SPEC's OPEN
+                      lines, TASKS' open boxes, the surface, the record,
+                      the pins. The gate's `status` check refuses a mark
+                      while the page is older than the record it reads.
     tests/standup.py  LANDED 2026-09-04. The seats through nine fixed
                       objectives (the court split out 2026-09-09, --court),
                       live, with mechanical expectations and a
@@ -580,6 +587,8 @@ AFTER THE GATE, SENT BY NAME -- and never moved.
        `## vX.Y.Z -- <date> (tag on <commit sha>)`, naming the COMMIT the mark
        sits on and never the mark's own object; a bare `## Unreleased` stays
        on top, because `tests/release.py` reads that heading.
+       Then print STATUS.md (`python tests\status.py`, 2026-09-29): the
+       gate's `status` check refuses a page older than the record it reads.
     3  the gate: `python tests\release.py --check vX.Y.Z` on HIS terminal,
        PASSED with every check asked (the core -- it read "9 of 9" here until
        2026-09-24, when the gate grew to thirteen and the count was a number

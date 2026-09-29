@@ -2496,6 +2496,16 @@ refusal first in the prompt, the seat answered the refused import again and then
 at the ceiling, nothing landed, the empty line closed. Three retries over two runs: SITTING LAW 3's floor
 for the Coder's seat, measured; the move is his ruling.
 
+**The status page** — his question of the afternoon ("what are we on as far as the overall build order
+and path, versus the docs? What is left for release/deployment? what is missing in packaging? How do we
+condense/simplify this architecture?") answered in words from a full read of SPEC, BUILDPATH, TASKS, the
+gate, both changelogs, CI and the parts by size; then his word "build it": `STATUS.md`, printed from the
+record by `tests/status.py` -- the marks and the distance, the proof, the gate's own lines, SPEC's OPEN
+lines, TASKS' open boxes, the surface, the record, the pins -- and the gate's fifth terminal-only check,
+`status`. One stroke (21), 3152/3152 and 72/72 on a mirror. The first print found the tree doors
+undeclared in the manifest, the gate's flow law behind the runner's, and no HANDOFF block for today (a
+block opened). No engine code moved.
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until
@@ -2514,7 +2524,10 @@ line; close and record.
 `tree-foundation-6`, the rest closed through the door); the door rebuilt once (the runner's feed) and
 placed on his allowance, pid 276.
 
-**Next session** — his ruling on the Expert Coder's seat (SITTING LAW 3: the transcripts of runs seven and
-eight show qwen2.5-coder:7b not acting on a refusal it was shown, first or last); named beside it: a SPEC 8.2 theme for the coder on the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that
+**Next session** — read STATUS.md first: its first print names what a mark needs before his terminal's
+suites and standup -- `.us` records for the two tree doors and the Router's drift, and the gate's flow
+law taught the bounded return; his ruling on the Expert Coder's seat (SITTING LAW 3: the transcripts of
+runs seven and eight show qwen2.5-coder:7b not acting on a refusal it was shown, first or last); named
+beside it: a SPEC 8.2 theme for the coder on the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that
 says a tool was used; the dials (Steward 180, the court 900); a Dashboard button for the standup and
 a `loops` box in the builder; the front-end agent handoff plan.

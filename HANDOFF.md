@@ -14,7 +14,7 @@ RUN THE SMOKE SUITE, not just the strokes. It was RED at 34/50 from 14e2711
 to 2026-09-02 because its StubRuntime had not been moved with pipeline.py,
 and nothing noticed: the strokes were green the whole time.
 
-**START AT `## HANDOFF FOR 2026-09-28`** (search for it — the day blocks
+**START AT `## HANDOFF FOR 2026-09-29`** (search for it — the day blocks
 stack newest first above `## Open`). CHANGELOG.md carries the versions;
 DAYBOOK.md's last entry carries the day's intent. Everything between here and
 there is standing reference that has not moved.
@@ -669,6 +669,37 @@ dropped by operator ruling 2026-09-01 — see the fix log.
     5. CHECK THE DISK BEFORE THE TRANSCRIPT. A seat's account of what it did
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
+
+## HANDOFF FOR 2026-09-29 — read this before anything below it
+
+**THE DAY.** Sittings 292 to 295, all booted, run and closed from the glass. The pieces are written
+under the 2026-09-28 block below, where the hand wrote them before this block was opened: the heading
+window; coder-tree v4 and run five; the three fixes; run six, COMPLETE -- the first change to the harness
+made by the estate end to end, merged by his hand (`3631498`); the gate title corrected and v5; the
+failed pass as the feed; run seven; the refusal above the change; run eight. Every `tree-foundation` and
+`tree-github` line closed; no line of work remains.
+
+**THE STATUS PAGE** (his word: "build it"): `STATUS.md`, printed from the record by `tests/status.py`
+-- the marks and the distance, the proof, the release gate's own lines, SPEC's OPEN lines, TASKS' open
+boxes, the surface, the ledger and the day's entries, the pins. The gate gained a fifth terminal-only
+check, `status`: a mark is refused while the page is older than the record it reads. One stroke (21),
+the suite 3152/3152 and the smoke 72/72 on a mirror. Nothing in the engine moved.
+
+**WHAT THE FIRST PRINT FOUND**, in the gate's own lines: the manifest refuses -- the two tree doors
+(`ground_edit`, `ground_write`) have no `.us` record and `us/seat_router` drifts; the `flows` check
+refuses every flow that loops (`coder`, `coder-tree`: "cycle or unreachable node"), because the gate's
+Python copy of the flow law predates the bounded return of 2026-09-28 while the runner's allows it;
+four CHANGELOG headings name a commit as it stood before the rewrite of 2026-09-21 (reported, not
+gated). Each is his to order; none is built here.
+
+**THE MEASURED FLOOR** (runs seven and eight): qwen2.5-coder:7b, shown a door's refusal last and then
+first, answered the refused block again three times. Moving the Expert Coder's seat is his ruling
+(SITTING LAW 3).
+
+**Where the ground stands.** core `main@d280b10` plus this piece (STATUS.md, tests/status.py,
+tests/release.py, tests/test_manjuel.py, BUILDMAP.md, CHANGELOG.md, DAYBOOK.md, HANDOFF.md, BUILDPATH.md,
+README.md, RUNBOOK.md, TESTING.md), to be saved and sent through the glass's Version control on his
+word; atlas `main@a6e6c23`, level with GitHub; the door placed at pid 276 carries the runner's feed.
 
 ## HANDOFF FOR 2026-09-28 — read this before anything below it
 

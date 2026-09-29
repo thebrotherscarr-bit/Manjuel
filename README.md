@@ -180,6 +180,7 @@ no earlier doc named: `deep_research`, `ground_report`, `skill_report`,
 - `parity.md`     — what Manjuel is measured against, and how to read a score
 - `RUNBOOK.md`    — when the machine misbehaves: rack down, locks, VRAM, voice
 - `BUILDPATH.md`  — every module, what it owns, and the order it was built
+- `STATUS.md`     — where the ground stands, printed from the record by `tests/status.py`
 - `DESIGN.md`     — the architecture record, including what was tried and superseded
 - `HANDOFF.md`    — the live operational record: patterns, fix log, rulings
 - `CLAUDE.md`     — standing rules for any agent working in this ground

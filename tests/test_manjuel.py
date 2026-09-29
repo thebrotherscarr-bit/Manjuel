@@ -11700,8 +11700,10 @@ def test_the_release_gate_runs_on_a_mark(reg, lib, book):
     # reads flows/, which is gitignored runtime state -- no checkout has that
     # folder at all, mtimes or no mtimes. It sits in the same tuple so the
     # workflow still names no subset of its own.
+    # AND A FIFTH (2026-09-29, the STATUS page): `status` compares the page's
+    # mtime against the record's, and a checkout has neither.
     check("the checks that need the ground are named in one place",
-          _rel.TERMINAL_ONLY == ("strokes", "smoke", "standup", "flows"),
+          _rel.TERMINAL_ONLY == ("strokes", "smoke", "standup", "flows", "status"),
           str(_rel.TERMINAL_ONLY))
     # TWO REASONS A CHECK GOES UNRUN, and they are not the same fact. The three
     # above cannot be ASKED of a checkout (no mtimes). `mark` has nothing to
@@ -12064,8 +12066,9 @@ def test_version_control_matches_the_record(reg, lib, book):
 
     # ---- and all four are in the gate -------------------------------------
     names = [c.name for c in _rel.checks(ROOT, record_only=True)]
-    check("the gate runs tasks, pins, marks, remotes, flows and workflows, after the record checks",
-          names[-6:] == ["tasks", "pins", "marks", "remotes", "flows", "workflows"], str(names))
+    # `status` is the seventh, last, since 2026-09-29 (the STATUS page).
+    check("the gate runs tasks, pins, marks, remotes, flows, workflows and status, after the record checks",
+          names[-7:] == ["tasks", "pins", "marks", "remotes", "flows", "workflows", "status"], str(names))
 
 
 def test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book):
@@ -14632,6 +14635,151 @@ def test_the_coders_window_on_the_tree(reg, lib, book):
     check("and a request that names a tool is never the tree's: git's words go to git",
           _maker_route(RunContext(objective="edit manjuel/thing.py `TABLE`, then git commit it"),
                        reg, lib, env_for(g, reg, Stub()), lambda m: None) == "")
+
+
+def test_the_status_page_is_read_off_the_record(reg, lib, book):
+    """THE STATUS PAGE (2026-09-29, his word: "build it"). "What are we on as far
+    as the overall build order and path, versus the docs? What is left for
+    release/deployment? what is missing in packaging?" cost a hand an hour of
+    reading twenty files. tests/status.py prints that reading from the record
+    -- the marks and the distance, the proof, the gate's own lines, the
+    contract's OPEN lines, the operator's open boxes, the surface, the record,
+    the pins -- the way BUILDMAP.md is printed from the code. Every number on
+    it is read; none is typed. THE WIRE: the release gate's `status` check
+    refuses a mark while the page is older than the record it reads.
+
+    Hermetic: a temp ground with a small record of every kind, git inside it.
+    """
+    import json as _json
+    import time as _t
+    sys.path.insert(0, str(ROOT / "tests"))
+    import release as _rel
+    import status as _st
+
+    g = Path(tempfile.mkdtemp())
+    for d in ("manjuel", "agents", "skills", "tests", "sessions"):
+        (g / d).mkdir()
+    (g / "manjuel" / "a.py").write_text("x = 1\n", encoding="utf-8")
+    (g / "manjuel" / "__init__.py").write_text('__version__ = "0.0.1"\n', encoding="utf-8")
+    (g / "pyproject.toml").write_text('[project]\nversion = "0.0.1"\n\n[tool.setuptools]\n'
+                                      'packages = ["manjuel"]\n', encoding="utf-8")
+    for n in ("steward", "router"):
+        (g / "agents" / f"{n}.md").write_text(f"## {n}\n", encoding="utf-8")
+    for n in ("a", "b", "c"):
+        (g / "skills" / f"{n}.md").write_text(f"# {n}\n", encoding="utf-8")
+    (g / "pipelines.md").write_text("## Pipeline: default\n1. Steward\n\n## Pipeline: quick\n1. Steward\n",
+                                    encoding="utf-8")
+    now = _t.time()
+    (g / "tests" / "last_run.json").write_text(_json.dumps(
+        {"strokes": {"green": True, "passed": 5, "total": 5, "state": "finished", "at": now + 5},
+         "smoke": {"green": True, "passed": 2, "total": 2, "state": "finished", "at": now + 5}}),
+        encoding="utf-8")
+    (g / "tests" / "run_history.jsonl").write_text(_json.dumps(
+        {"suite": "standup", "at": now + 9, "green": True, "passed": 10, "total": 10,
+         "report": "logs/standup_x.md"}) + "\n", encoding="utf-8")
+    (g / "SPEC.md").write_text(
+        "# SPEC\n\n### 4.1 First\n- MET — a thing proved\n- MET (later) — another\n"
+        "- OPEN — the thing still missing, whose call it is\n\n### 4.2 Second\n"
+        "- RULED OUT — never\n", encoding="utf-8")
+    (g / "TASKS.md").write_text(
+        "# Tasks\n\n## Layer 0\n\n    [ ]  open one, the first box\n         more about it\n"
+        "    [x]  done one\n    [-]  declined one\n    [~]  in hand one\n", encoding="utf-8")
+    (g / "sessions" / "sessions.jsonl").write_text(_json.dumps(
+        {"n": 7, "id": "S-7", "started": "2026-09-29T09:00:00", "ended": "2026-09-29T09:30:00"}) + "\n",
+        encoding="utf-8")
+    (g / "DAYBOOK.md").write_text(
+        "# Daybook\n\n## Session 1 — the first day\n\n**Standing** — x\n\n"
+        "**Next session** — do the thing,\nand the other thing.\n\n", encoding="utf-8")
+    (g / "HANDOFF.md").write_text("# HANDOFF\n\n## HANDOFF FOR 2026-09-29 — read this first\n\nx\n",
+                                  encoding="utf-8")
+    (g / "CHANGELOG.md").write_text(
+        "# CHANGELOG\n\n## Unreleased\n\n### one entry, the first\n\nwords\n\n### two entry\n\n"
+        "## v0.0.1 — 2026-09-29 (tag on abc)\n\n### old entry\n", encoding="utf-8")
+    if not HAVE_GIT:
+        return                    # reported once, in main(); never a crash
+    for args in (["init", "-q"], ["config", "user.email", "t@t"], ["config", "user.name", "t"],
+                 ["checkout", "-q", "-b", "main"]):
+        subprocess.run(["git", *args], cwd=g, capture_output=True, stdin=subprocess.DEVNULL)
+    gitstate.commit(g, "the ground")
+    subprocess.run(["git", "tag", "v0.0.1"], cwd=g, capture_output=True, stdin=subprocess.DEVNULL)
+    (g / "manjuel" / "b.py").write_text("y = 2\n", encoding="utf-8")
+    gitstate.commit(g, "past the mark")
+
+    before = sorted(p.name for p in g.iterdir())
+    text = _st.render(g, gate=False)
+    check("the page is printed, and printing it writes nothing",
+          text.startswith("# STATUS") and sorted(p.name for p in g.iterdir()) == before,
+          str(sorted(p.name for p in g.iterdir()))[:200])
+    check("the marks: the nearest mark on the line, and how far HEAD stands past it",
+          "nearest mark `v0.0.1`, 1 commit(s) past it" in text and "on `main` at `" in text,
+          text[:600])
+    check("   and CHANGELOG's Unreleased entries, counted and quoted",
+          "2 unreleased entries in CHANGELOG.md:" in text and "- one entry, the first" in text
+          and "old entry" not in text, text[:900])
+    check("the proof: the suites and the standup, in the gate's own words",
+          "ok       strokes    5/5 green, after the newest edit" in text
+          and "ok       standup    10/10 live" in text, text[:1400])
+    check("   and the gate's section says it was not asked on a --no-gate print",
+          "not asked on this print (--no-gate)" in text)
+    check("the contract: SPEC section 4 tallied by subsection, the OPEN line quoted",
+          "section 4: MET 2, OPEN 1, RULED OUT 1" in text
+          and "OPEN: OPEN — the thing still missing, whose call it is" in text, text[:2400])
+    check("the list: the operator's boxes counted, the open ones quoted",
+          "boxes: open 1, in hand 1, landed 1, declined 1" in text
+          and "[ ] open one, the first box" in text and "[ ] [in hand] in hand one" in text
+          and "done one" not in text.split("## THE LIST")[1].split("## THE SURFACE")[0],
+          text.split("## THE LIST")[1][:400])
+    check("the surface: seats, skills and pipelines counted off the disk",
+          "seats 2 · skills 3 · pipelines 2" in text and "core manjuel/ 3 modules" in text,
+          text.split("## THE SURFACE")[1][:300])
+    check("the record: the ledger's last sitting, DAYBOOK's last entry and its next line, HANDOFF's block",
+          "sitting 7 (S-7), closed 2026-09-29 09:30" in text
+          and "DAYBOOK's last entry: Session 1 — the first day" in text
+          and "its next-session line: do the thing, and the other thing." in text
+          and "HANDOFF's newest block: HANDOFF FOR 2026-09-29" in text,
+          text.split("## THE RECORD")[1][:500])
+    check("packaging: the pins agree, and what the wheel carries is said",
+          "core pins: pyproject 0.0.1, manjuel/__init__ 0.0.1 -- agree" in text
+          and 'the wheel carries: "manjuel"' in text, text.split("## PACKAGING")[1][:400])
+
+    # THE PAGE MOVES WITH THE RECORD: a pin that disagrees, a sitting left open.
+    (g / "pyproject.toml").write_text('[project]\nversion = "0.0.2"\n', encoding="utf-8")
+    (g / "sessions" / "sessions.jsonl").write_text(_json.dumps(
+        {"n": 8, "id": "S-8", "started": "2026-09-29T10:00:00", "ended": ""}) + "\n", encoding="utf-8")
+    text2 = _st.render(g, gate=False)
+    check("a pin that disagrees is said, not smoothed over",
+          "pyproject 0.0.2, manjuel/__init__ 0.0.1 -- DISAGREE" in text2, text2.split("## PACKAGING")[1][:200])
+    check("   and an open sitting reads OPEN", "sitting 8 (S-8), OPEN" in text2,
+          text2.split("## THE RECORD")[1][:200])
+
+    # WRITTEN, IT IS CRLF LIKE EVERY ROOT DOCUMENT, AND MARKED AS GENERATED.
+    out = _st.write(g, gate=False)
+    raw = out.read_bytes()
+    check("written, the page is CRLF and carries the generated mark in its head",
+          out.name == "STATUS.md" and b"\r\n" in raw and b"\n" not in raw.replace(b"\r\n", b"")
+          and _rel.STATUS_MARK.encode() in raw[:600], repr(raw[:120]))
+
+    # THE WIRE: the gate's `status` check.
+    check("the gate passes a page printed after the record it reads",
+          _rel.status(g).ok, _rel.status(g).why)
+    import os as _os
+    now_t = _t.time()
+    (g / "CHANGELOG.md").write_text((g / "CHANGELOG.md").read_text(encoding="utf-8") + "\n### three\n",
+                                    encoding="utf-8")
+    _os.utime(g / "CHANGELOG.md", (now_t + 5, now_t + 5))
+    check("   and refuses one older than the record it reads, naming the file",
+          not _rel.status(g).ok and "older than CHANGELOG.md" in _rel.status(g).why, _rel.status(g).why)
+    out.write_text("# STATUS\n\nwritten by a hand\n", encoding="utf-8")
+    _os.utime(out, (now_t + 9, now_t + 9))
+    check("   a page a hand wrote is refused, however fresh",
+          not _rel.status(g).ok and "not printed by tests/status.py" in _rel.status(g).why,
+          _rel.status(g).why)
+    out.unlink()
+    check("   and no page at all is refused, with the command that prints one",
+          not _rel.status(g).ok and "python tests/status.py" in _rel.status(g).why, _rel.status(g).why)
+    check("`status` is the fifth of the terminal's checks: a checkout carries no mtimes",
+          "status" in _rel.TERMINAL_ONLY
+          and any(c.name == "status" and not c.ran for c in _rel.checks(g, record_only=True)))
 
 
 def test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book):
@@ -17523,6 +17671,7 @@ def main() -> int:
     test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name(reg, lib, book)
     test_the_coder_lands_an_edit_on_the_tree(reg, lib, book)
     test_the_coders_window_on_the_tree(reg, lib, book)
+    test_the_status_page_is_read_off_the_record(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)
