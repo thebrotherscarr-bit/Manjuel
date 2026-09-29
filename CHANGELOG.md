@@ -34,6 +34,35 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### coder-tree fired a sixth time and COMPLETED: the coder changed the harness on a line of work, the suites ran green through the door, and the council saved it on the line (operator, 2026-09-29: "continue at the land gate, save it on the line")
+
+RUN `f-20260929-150901-9b50439e` (v4 with the three fixes, sitting 293, 08:08 to 08:18, booted and
+closed from the Dashboard), the same objective as run five, the line `tree-foundation-6`. COMPLETE
+at 315 s in ONE PASS: the brief (6 s); the `open` gate answered by his hand; the line opened through
+the door under the grant (29 s); the attempt (53 s) through the window -- the Expert Coder, handed
+`_NEVER_WRITTEN_TOP` as it stands, answered THE PASSAGE REWRITTEN WHOLE, the `foundation` line
+beside `law` and nothing else moved; the engine composed the edit and `ground_edit` landed it:
+"Edited skills.py at line 4127: 15 line(s) replaced by 16, file now 5088 lines (was 5087).
+Terminator kept: LF. The file already carried what the gate refuses -- imports `urllib.error` --
+and the edit added none of it."; `changed` read "line of work `" off the tools block; the strokes
+through the door, 3135/3135 green and stamped (165 s); the smoke, 72/72 (39 s); the `land` gate
+answered by his hand -- "continue at the land gate, save it on the line" -- and the council's
+`git_commit` saved it on the line as `ba0e61a` (22 s): `manjuel/skills.py` and the three proof
+stamps the suites wrote. Main is `94c0928`, untouched and level with GitHub; merging the line is
+his click on Version control, and `git diff main..tree-foundation-6 -- manjuel/skills.py` is the
+one line.
+
+WHAT THIS IS. The first time the estate changed its own harness end to end on a person's words:
+the words read by arithmetic, the passage fetched by name, one seat, one edit, the doors' law at
+the landing, the suites as the review, and a hand at both ends and nowhere between -- LAW_003's
+three bounds and the gate at the ends. Six firings from the first fold to this one, each finding
+one wire and the record naming it: the door call's wait, the map's module-level names, the Coder's
+landing on the tree, the Coder never seated, the window, the file, the shape, the door's judgment.
+
+NOTED, NOT BUILT: the failed pass is not carried into a retry (it quotes a door's name); a save on
+the line carries the suite stamps with the change, as every run's would; SPEC 8.2 has no theme for
+the coder on the tree.
+
 ### coder-tree v4 fired through the window, and its three findings built: the window's file when no `<filepath>`, the passage rewritten whole as an edit, and the door held to what an edit ADDS (operator, 2026-09-29: "fold coder-tree v4 and fire it"; the three by card)
 
 V4 FOLDED as the glass (`flow_save`, v3 kept whole): the attempt is the objective ALONE --

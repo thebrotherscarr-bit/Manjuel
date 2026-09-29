@@ -609,3 +609,10 @@ passage rewritten whole, and the door judges what an edit ADDS. The failed
 pass is not carried on purpose: it quotes the door's name, and the retry is
 a fresh roll, which the record says. An objective typed for this flow must
 name no tool ("the founding documents" names `semantic_search`).
+
+FIRED A SIXTH TIME (v4, the three fixes in the engine): COMPLETE in one pass,
+315 s -- the line opened at his gate, the Coder handed the passage answered it
+rewritten whole, the door landed the one line, the strokes (3135/3135) and the
+smoke (72/72) green through the door, and his hand at `land` had the council
+save it on `tree-foundation-6` (`ba0e61a`). The flow is proven live; merging
+the line is his click (CHANGELOG, 2026-09-29).

@@ -2444,9 +2444,60 @@ Dashboard; the door pid 86180 carries all six door pieces; both repositories sav
 11:52 on his word (core `044ef46`, atlas `325888c`, level with GitHub), the seventh piece saved and
 sent after it (core `c92751d`), the eighth on top, unsaved.
 
-**Next session** — on his word, a sixth firing of `coder-tree` v4 through the three fixes; named
+**Next session** — see Session 18 below, the day's own entry (the sixth firing completed); named
 beside it, the failed pass carried without the door's name, the map's how-to-ask, the
 headless "retry / skip / abort?" and the claim check on a seat that says a tool was used; the dials (Steward 180, the court 900 as a
 deadline a pipeline declares); the front-end agent handoff's plan is in the record (CHANGELOG, this
 day) and waits on those; a Dashboard button for the standup and a `loops` box in the builder; a
 maker evidence line a check can read; the open lines above.
+
+## Session 18 — 2026-09-29 (Tuesday), sittings 292 and 293: the coder changes the harness end to end
+
+**Standing** — follows session 17, whose last word was the Coder's window on the tree (saved `a73fe36`
+late on the 28th). The morning's two pieces were written into session 17's list before this entry was
+opened, and stand there: the heading window, and coder-tree v4 with run five and its three fixes.
+
+**Version** — at open: core `main@a73fe36`, atlas `main@0cb5c63`, both level with GitHub. At close:
+core `main@94c0928` plus this record (unsaved as it is written), atlas unchanged; `tree-foundation-6`
+at `ba0e61a` carries the coder's line and the suite stamps, his to merge.
+
+**The plan** — his words in order: "fold coder-tree v4 and fire it"; "also add in the heading window
+for a .md file"; by card after run five: close 292, back to main, build all three fixes, fire again;
+"continue at the land gate, save it on the line"; by card after run six: close 293, back to main,
+record it.
+
+**What was built** — the heading window (a .md by heading, a root document by its bare name, the
+Coder's answer on the window's file or nowhere; stroke 54, suite 3124, smoke 72, R5-R8 red;
+`77c6e04`); coder-tree v4 (the attempt the objective alone; `changed` on "line of work `"; v3 kept);
+the three fixes after run five (the `<filepath>` line optional on a tree turn, the passage rewritten
+whole as an edit, the door held to what an edit adds; stroke 59, suite 3129, smoke 72, R9-R12 red;
+`94c0928`). The engine's code moved three times; each Boot carried it.
+
+**What was fired** — run five (sitting 292): FAIL at the ceiling, and the Coder sat on every pass
+through the window, each pass one finding. Run six (sitting 293): COMPLETE in one pass, 315 s -- the
+line at his gate, the passage rewritten whole, the door landing the one line, 3135/3135 and 72/72
+through the door, the council's save on the line at his hand (`ba0e61a`). The first change to the
+harness made by the estate on a person's words, end to end.
+
+**Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
+typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
+so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until
+the door was held to what an edit adds; the glass locks when the pane is reopened (his PIN, twice
+today); a save on the line carries the suite stamps with the change.
+
+**Drift** — none in the building: every piece was his by word or by card, the reversals ran before
+the record, and every save and every gate was his allowance. The DAYBOOK's two morning bullets sit
+in session 17's list, written before this entry existed.
+
+**Rulings** — by card: build all three fixes and fire again; continue at the land gate and save on the
+line; close and record.
+
+**At close** — sittings 292 (07:46 to 07:58) and 293 (08:08 to 08:18) closed from the Dashboard with
+their tolls; the ground on `main`; the lines `tree-foundation` to `-6` standing, his to close or
+merge; the door unchanged (no Go moved today).
+
+**Next session** — merge `tree-foundation-6` on Version control (his click), then the older lines;
+named beside it: the failed pass carried without the door's name; a SPEC 8.2 theme for the coder on
+the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that
+says a tool was used; the dials (Steward 180, the court 900); a Dashboard button for the standup and
+a `loops` box in the builder; the front-end agent handoff plan.

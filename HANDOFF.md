@@ -921,12 +921,20 @@ composing the edit, an outsized block refused by name; the door holds an edit to
 the smoke 72/72 on a mirror, four reversals red (3, 2, 2, 1). RESTART REQUIRED
 (`pipeline.py`, `skills.py`, `maker.py`). The ground back on `main`; the lines `tree-foundation`
 to `-5` are yours to close on Version control. Measured on the way: an objective for the flow must
-name no tool ("the founding documents" names `semantic_search`).
+name no tool ("the founding documents" names `semantic_search`). Saved and sent, core `94c0928`.
 
-**Where the ground stands.** core `main@77c6e04` plus run five and its three fixes (CHANGELOG.md,
-DAYBOOK.md, HANDOFF.md, pipelines.md, REFUSALS.md, RUNBOOK.md, BUILDMAP.md, agents/expert_coder.md,
-manjuel/maker.py, manjuel/pipeline.py, manjuel/skills.py, tests/test_manjuel.py), to be saved and
-sent through the glass's Version control on his word.
+**CODER-TREE FIRED A SIXTH TIME AND COMPLETED** (run `f-20260929-150901-9b50439e`, sitting 293, one
+pass, 315 s): the line `tree-foundation-6` opened at his gate; the Coder, handed the passage, answered it
+rewritten whole; the door landed the one line, saying skills.py already carried the loopback `urllib`
+and the edit added none; the strokes 3135/3135 and the smoke 72/72 green through the door; his hand at
+`land` ("continue at the land gate, save it on the line") and the council saved it on the line as
+`ba0e61a` (skills.py and the three stamps). The first change to the harness made by the estate on a
+person's words, end to end. MERGING `tree-foundation-6` INTO MAIN IS HIS CLICK on Version control's
+Lines of work; the older lines `tree-foundation` to `-5` are his to close.
+
+**Where the ground stands.** core `main@94c0928` plus the run-six record (CHANGELOG.md, DAYBOOK.md,
+HANDOFF.md, pipelines.md, BUILDMAP.md), to be saved and sent through the glass's Version control on
+his word; `tree-foundation-6` at `ba0e61a` carries the coder's line and the stamps, his to merge.
 atlas `main@0cb5c63` (`suite_run` the last), level with GitHub; the morning's two pieces --
 `line/internal/tools/tools.go`, `gitctl.go`, `tools_test.go`, `line/internal/auth/auth.go`,
 `auth_test.go`, `line/cmd/atlas-mcp/prove.go`, `docs/ARCHITECTURE.md`, `CHANGELOG.md` -- saved
