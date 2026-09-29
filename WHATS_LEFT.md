@@ -8,17 +8,8 @@ STATUS.md. The source is named at the end of every line.
 
 Every line has a number. Say the number to order the work: "do C10".
 
-## The count
-
-| | What | How many |
-|---|---|---|
-| A | Stops the release right now | 5 |
-| B | Decisions only you can make | 14 |
-| C | Bugs and problems, known and not fixed | 29 |
-| D | Built but not finished, or not hooked up | 15 |
-| E | Never tested for real | 3 |
-| F | Paperwork that is out of date | 6 |
-| G | The release checklist | 8 steps |
+This file is the list behind the webapp's **What's left** page. Read it there: the page counts
+the lines, finds words in them, and names any line it cannot number.
 
 ---
 
@@ -173,7 +164,8 @@ Nothing here gets built until you say which way.
   made for v0.1.5. *(TASKS)*
 - **D13. The front-end agent handoff plan** is named and not written. *(DAYBOOK s18)*
 - **D14. "The map's how-to-ask"** is named and not written. *(DAYBOOK s18)*
-- **D15. This page.** It is written by hand, and nothing warns anyone when it goes stale.
+- **D15. This list is kept by hand.** The webapp's page names a line with no number or a
+  number used twice. Nothing warns anyone when the list is simply out of date.
 
 ---
 
@@ -240,5 +232,6 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 ## How this page is kept
 
-By hand. Whoever finishes something strikes its line here in the same pass. Whoever finds
-something new adds it here, with a number, in plain words. Numbers are never reused.
+By hand, in this one file. Whoever finishes something moves its line to a section named
+`## Done` at the foot of this file, with the date, in the same pass. Whoever finds something new
+adds it under its letter, with the next number, in plain words. Numbers are never reused.

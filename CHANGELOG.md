@@ -34,6 +34,24 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### What's left is a page on the webapp (operator, 2026-09-29: "I SAID WRITE A ... PAGE ON THE ... WEBAPP")
+
+WHY. He asked for a page and was given a file, twice: STATUS.md, then WHATS_LEFT.md. His words:
+"DID I ever say make a ... markdown file? NOPE." A page is a page on the webapp.
+
+WHAT. The webapp gains **What's left**, second in the side menu (atlas CHANGELOG carries the
+account). It reads `WHATS_LEFT.md` through the door's `records` tool, which already served every
+root document, so nothing in the door or the engine moved. `WHATS_LEFT.md` is now the list behind
+that page: its hand-typed count table is gone (the page counts the lines it draws, so there is no
+second count to drift), D15 says what the page does and does not warn about, and a finished line
+is moved to `## Done` at the foot with its date. No core code moved: no restart of the engine.
+THE WEBAPP MUST BE REBUILT AND RESTARTED to carry the page; placing it is his allowance.
+
+WHAT GOES RED IF UNPLUGGED: atlas `server.TestTheWhatsLeftPageIsWired` (the menu line, the
+router's case, the script and its order, the glyph, the document's name, the records read, the
+fault list), four reversals red; and on the page itself, in red at the top, any line of the list
+with no number, a number used twice, or a number under the wrong letter.
+
 ### WHATS_LEFT.md: everything still open, on one page, in plain words (operator, 2026-09-29: "a page with any leftover tasks, checklists, seams ... any blockers or gates, or decisions ... problems or bugs, needs to be in one area where we can see what is actually left")
 
 WHY. He asked for this page hours before it was made. The hand answered with STATUS.md -- a
