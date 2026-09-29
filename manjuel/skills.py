@@ -4127,6 +4127,7 @@ def _apply_passage(path: Path, old: str, new: str) -> str:
 _NEVER_WRITTEN_TOP = {
     "worlds": "worlds/ is another world's, closed until the operator points at it (ESTATE LAW 2, SITTING LAW 2)",
     "law": "law/ is sealed, and a hand does not edit the law, so a seat does not either",
+    "foundation": "foundation/ holds the founding texts, sealed elders among them, and is the operator's",
     "agents": "agents/ is the seats' own declarations, the operator's to set, and hot-reloaded into his live sitting",
     "skills": "skills/ is the estate's own tools, the operator's to set, and hot-reloaded into his live sitting",
     "sessions": "sessions/ is the ledger, written by the chain alone (LAW 8: one write-path)",
