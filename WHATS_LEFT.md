@@ -17,18 +17,14 @@ the lines, finds words in them, and names any line it cannot number.
 
 The release is core **v0.1.16** and atlas **v0.1.9**. Neither tag is cut.
 
-- **A1. The live check fails 1 of 9.** The question is "what does the covenant say?". The
-  tool-picking model (Router, qwen3.5:4b) quits after 3 seconds and calls no tool. The same
-  question passed on 09-28 (two tools, 40 seconds). It failed twice today (sittings 296 and 297).
-  **The cause is not known. Nobody has looked into it yet.** The release check refuses the tag
-  until the live check is 9 of 9. *(HANDOFF 09-29, STATUS)*
-- **A2. The release check has not passed.** Last result: 14 lines ok, 1 refused (A1). It has to
-  pass on your terminal. *(STATUS)*
+- **A2. The release check has not passed.** Last result: 14 lines ok, 1 refused (the live
+  check, fixed since: see A1 under Done). *(STATUS)*
 - **A3. The two tags are not cut.** Core v0.1.16 and atlas v0.1.9, from the dashboard's Version
   control page, after A2. *(HANDOFF 09-29)*
-- **A4. GitHub's automatic tests were red on Windows** when last looked at: the test that checks
-  the game-maker's browser leaves nothing running. Not fixed, not re-checked. It does not stop
-  the tag, but the release would show red on GitHub. *(HANDOFF 09-28)*
+- **A4. GitHub's automatic tests were red on Windows.** Fixed here on 2026-09-29 and waiting
+  on GitHub's next run to confirm. The test counted browsers the instant a page check ended, and
+  counted other runs' browsers too. It now counts only its own and gives them 20 seconds to
+  close. *(HANDOFF 09-28, CHANGELOG)*
 - **A5. The atlas v0.1.8 release on GitHub is still a draft.** It waits for you to publish it.
   *(HANDOFF 09-28)*
 
@@ -92,18 +88,11 @@ Nothing here gets built until you say which way.
 - **C7. The model list answer dropped a model:** eleven installed, ten listed. *(TASKS)*
 - **C8. A model can say it used a tool when it did not.** The Steward claimed an edit that never
   happened. No check catches it. *(HANDOFF 09-28)*
-- **C9. The Router's prompt fills 7,526 of its 8,192-token window.** This may be connected to A1.
-  Not checked. *(HANDOFF 09-28)*
 
 ### The engine
 
-- **C10. A refusal message says something false.** When the review panel refuses a read-only
-  tool, it says the tool "CHANGES THINGS". A three-line fix. *(TASKS)*
 - **C11. The drift score prints "no usable source"** when the check was never switched on. There
   is dead code beside it in `drift.py`. Half fixed. *(TASKS)*
-- **C12. The GPU memory report cannot say "over".** It showed 0.0 GB free when the card was
-  0.5 GB over. And the per-model numbers (size on disk) do not add up to the total (memory in
-  use). *(TASKS)*
 - **C13. The review panel does not fit its time limit.** On 09-28 it scored 0 of 1: one seat was
   cut at 552 seconds and the judge never got a turn. *(HANDOFF 09-28, TASKS)*
 - **C14. A failing seat asks "retry / skip / abort?"** An automated flow cannot answer, so the
@@ -119,6 +108,9 @@ Nothing here gets built until you say which way.
   is never read, dead code, and others. *(TASKS, "small honesty")*
 - **C21. `history_block` has a limit nothing uses,** and some work done every turn could be done
   once. *(TASKS)*
+- **C30. The engine does not say when a model's reply was cut off by a full window.** The
+  rack reports it; the transcript only said "(deliberation only, no conclusion reached)". That
+  is how A1 hid for a day. *(found 2026-09-29, CHANGELOG)*
 
 ### The dashboard and the tool server (atlas)
 
@@ -194,6 +186,9 @@ Nothing here gets built until you say which way.
 - **F6. TASKS.md has boxes that are half done and still open:** the sitting laws (B12);
   "rack_report facts-only" (done) beside "the door at court" (open, B7); "the client token"
   (done, B5) beside "CRLF or LF" (open, B3). Only you tick a box. *(TASKS)*
+- **F7. TASKS.md boxes for work finished on 2026-09-29 are still unticked:** the false refusal
+  (C10) and the card that cannot say "over" (C12). Both are under Done below. Only you tick a
+  box. *(TASKS)*
 
 ---
 
@@ -202,14 +197,35 @@ Nothing here gets built until you say which way.
 Already done: version numbers set (0.1.16 and 0.1.9), both changelogs folded, STATUS.md printed,
 both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
-- [ ] 1. Find out why the Router quits early, and fix it (A1)
-- [ ] 2. Run the live check until it is 9 of 9
+- [x] 1. Find out why the Router quits early, and fix it (A1)
+- [x] 2. Run the live check until it is 9 of 9
 - [ ] 3. Run the release check for v0.1.16 on your terminal: every line ok
 - [ ] 4. Run atlas's proof
 - [ ] 5. Cut and send the tag v0.1.16 (core) from Version control
 - [ ] 6. Cut and send the tag v0.1.9 (atlas) from Version control
 - [ ] 7. Publish the atlas v0.1.8 draft on GitHub, or drop it (A5)
 - [ ] 8. Look at GitHub's tests after the tag (A4)
+
+---
+
+## Done
+
+Finished lines, newest first. A number is never used again.
+
+- **A1. The live check fails 1 of 9.** DONE 2026-09-29. The Router is sent every tool's
+  description on every turn. That request had grown to 8,182 tokens in a window of 8,192, so it
+  had about ten tokens to answer in; the two tools added on 09-28 filled it. Its window is
+  16,384 now (the Quality Evaluator's too, because they share a model). Live check: 9 of 9
+  (sitting 298). A test now goes red before the request outgrows the window again.
+  *(CHANGELOG, "The Router's window")*
+- **C9. The Router's prompt fills 7,526 of its 8,192-token window.** DONE 2026-09-29 with A1.
+  Measured at 8,182 that day; the window is 16,384 now. *(CHANGELOG)*
+- **C10. A refusal message says something false.** DONE 2026-09-29. A refused tool is called a
+  writer only when it is one; the rest are told "is not cleared for the table". The TASKS box is
+  yours to tick (F7). *(CHANGELOG)*
+- **C12. The GPU memory report cannot say "over".** DONE 2026-09-29. An overcommitted card says
+  "OVER by ~0.5GB", and every size says whether it is on disk or in memory. The TASKS box is
+  yours to tick (F7). *(CHANGELOG)*
 
 ---
 

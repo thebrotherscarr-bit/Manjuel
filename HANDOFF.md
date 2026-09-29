@@ -704,6 +704,18 @@ manifest gains the two tree doors and the Router's 45. Proof from the glass afte
 3175/3175, smoke 72/72, the standup 8/9 twice (sittings 296 and 297, the same case both times: on `what does the covenant say?` the Router's reply stopped at three seconds with a 150-character thought and no call, where on the 28th it ran two tools in forty; measured, his to rule -- the gate's standup line stays REFUSED until a live run is green). The marks are his click on Version control once the gate
 passes on his terminal.
 
+**WHAT'S LEFT, A PAGE ON THE WEBAPP** (his words: "I said write a page on the webapp"): he asked for one
+place that shows everything still open and was handed a file twice (STATUS.md, then WHATS_LEFT.md). The
+page is `What's left`, second in the webapp's side menu, `/left`: it reads `WHATS_LEFT.md` through the
+door's `records` tool, counts the lines it draws, finds words in them, and names in red any line with no
+number, a number used twice, or a number under the wrong letter. Every open line is numbered (A1, C10) and
+in plain words; a finished line moves to `## Done` at the foot of the file with its date. KEEP THAT LIST
+CURRENT IN THE SAME PASS AS THE WORK. The webapp was rebuilt and PLACED on his allowance: pid 34104
+stopped by pid and path, its binary kept in the hand's scratch, the build copied in and hashing as built
+(`B5A6DE54...`), started as RUNBOOK says -- pid 27136, "service wire held", version 0.1.9. Saved and sent:
+atlas `6a38f6f`, core `caf573a`. TWO THINGS HE RULED THE SAME HOUR, for any hand: a page means a page on
+the webapp, never a file; and he is never left minutes without a line saying what is being done.
+
 **Where the ground stands.** core `main@d280b10` plus this piece (STATUS.md, tests/status.py,
 tests/release.py, tests/test_manjuel.py, BUILDMAP.md, CHANGELOG.md, DAYBOOK.md, HANDOFF.md, BUILDPATH.md,
 README.md, RUNBOOK.md, TESTING.md), to be saved and sent through the glass's Version control on his

@@ -2977,11 +2977,20 @@ def _rack_list(env: SkillExecutionEnv, args: dict) -> str:
 
     ours = _pipeline_models(env)
     lines = [f"{len(installed)} models installed, {len(resident)} loaded in VRAM:"]
+    # TWO QUANTITIES, NAMED AS TWO (sitting 82, built 2026-09-29). The size
+    # beside each tag is its FILE ON DISK; what a loaded model holds IN MEMORY
+    # is larger, because it carries its window. One column under one heading
+    # had the four loaded rows adding to 13.5GB beneath a card line of 15.5,
+    # and the Router could not reconcile them either.
+    lines.append("  (each size is the model's file ON DISK; a loaded model also "
+                 "says what it holds IN MEMORY)")
     for tag in sorted(installed):
         size = _vram.gb(sizes[tag]) if sizes.get(tag) else "?"
         state = "LOADED " if tag in resident else "       "
         mine = "declared here" if tag in ours else ""
-        lines.append(f"  {state} {tag:<30} {size:>7}  {mine}")
+        held = (f"  in memory {_vram.gb(resident[tag])}"
+                if resident.get(tag) else "")
+        lines.append(f"  {state} {tag:<30} {size:>7} on disk{held}  {mine}".rstrip())
 
     foreign = [t for t in resident if t not in ours]
     if foreign:
@@ -3011,8 +3020,18 @@ def _rack_list(env: SkillExecutionEnv, args: dict) -> str:
     used = sum(b for b in resident.values() if b)
     budget = _vram.budget_bytes()
     lines.append("")
-    lines.append(f"Card: {_vram.gb(used)} of ~{_vram.gb(budget)} in use, "
-                 f"~{_vram.gb(max(0, budget - used))} headroom.")
+    # AN OVERCOMMITTED CARD SAYS SO. This read `max(0, budget - used)`, which
+    # turned the one state that matters into the state just below it: sitting
+    # 82 printed "15.5GB of ~15.0GB in use, ~0.0GB headroom" over a card that
+    # was half a gigabyte OVER.
+    if used > budget:
+        lines.append(f"Card: {_vram.gb(used)} of ~{_vram.gb(budget)} in use -- "
+                     f"OVER by ~{_vram.gb(used - budget)}; there is no headroom.")
+    else:
+        lines.append(f"Card: {_vram.gb(used)} of ~{_vram.gb(budget)} in use, "
+                     f"~{_vram.gb(budget - used)} headroom.")
+    lines.append("(the card line is MEMORY IN USE: the loaded models' `in memory` "
+                 "added up, not their sizes on disk)")
     return "\n".join(lines)
 
 
@@ -4925,9 +4944,18 @@ class SkillLibrary:
         # A prompt skill runs the model named in its own markdown, using its
         # body as the system prompt. Adding one is writing a file -- no Python.
         if getattr(env, "review_only", False) and key not in REVIEW_ONLY_SKILLS:
-            return (f"Refused: the table reviews; it does not act. "
-                    f"'{key}' changes things, and counsel has eyes, not "
-                    f"hands. Reading skills available: "
+            # SAY WHAT WAS CHECKED, AND NOTHING ELSE (sitting 82, built
+            # 2026-09-29). The gate is an allowlist and that is the whole test:
+            # `key` is not on it. This used to add "'{key}' changes things" to
+            # every refusal, which is false of every skill that is merely not
+            # cleared -- rack_report, lint_code, linear_regression, time_align
+            # and subtask write nothing. A skill is called a writer only when
+            # the writers' own roster says it is one.
+            why = (f"'{key}' changes things, and counsel has eyes, not hands."
+                   if key in WRITING_SKILLS else
+                   f"'{key}' is not cleared for the table.")
+            return (f"Refused: the table reviews; it does not act. {why} "
+                    f"Reading skills available: "
                     f"{', '.join(sorted(REVIEW_ONLY_SKILLS & set(self.keywords())))}.")
 
         # A capability is granted, never assumed. Same shape as the table's

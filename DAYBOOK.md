@@ -2513,6 +2513,14 @@ uncut mark; `flows` knows the bounded return, seven refusals in the runner's wor
 flow.go) and the manifest gained the two tree doors and the Router's 45. Proof from the glass: strokes
 3175/3175, smoke 72/72, the standup 8/9 twice (sittings 296 and 297, the same case both times: on `what does the covenant say?` the Router's reply stopped at three seconds with a 150-character thought and no call, where on the 28th it ran two tools in forty; measured, his to rule -- the gate's standup line stays REFUSED until a live run is green).
 
+**What's left** — the hand's miss of the day. He asked for one place showing everything still open; the
+hand built STATUS.md (counts, in the record's vocabulary), re-printed it when he asked again, then wrote
+WHATS_LEFT.md, a file, and read for minutes in silence while he waited. His words: "DID I ever say make a
+... markdown file? NOPE", "I said write a page on the webapp", "never make me wait 3 ... minutes for a
+... response". Built on that word: `What's left` on the webapp (`/left`, `webapp/static/js/left.js`),
+reading WHATS_LEFT.md through `records`; 80 open lines in seven lettered sections; one stroke in atlas,
+four reversals red; the webapp placed on his allowance (pid 27136); atlas `6a38f6f`, core `caf573a`.
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until
@@ -2531,7 +2539,7 @@ line; close and record.
 `tree-foundation-6`, the rest closed through the door); the door rebuilt once (the runner's feed) and
 placed on his allowance, pid 276.
 
-**Next session** — read STATUS.md first; the marks v0.1.16 and v0.1.9 are his to cut on Version control
+**Next session** — open `What's left` on the webapp first (the list is WHATS_LEFT.md); the marks v0.1.16 and v0.1.9 are his to cut on Version control
 once his terminal's gate passes; his ruling on the Expert Coder's seat (SITTING LAW 3: the transcripts of
 runs seven and eight show qwen2.5-coder:7b not acting on a refusal it was shown, first or last); named
 beside it: a SPEC 8.2 theme for the coder on the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that

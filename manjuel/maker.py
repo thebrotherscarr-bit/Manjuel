@@ -303,6 +303,17 @@ PROFILE_PREFIX = "maker-check-"
 PROFILE_STALE = 600.0
 
 
+def profile_prefix() -> str:
+    """The front of a check's profile name: the mark, WHEN, and WHOSE.
+
+    THE TIME COMES FIRST, because `_made_at` reads it there. THE PROCESS COMES
+    SECOND (2026-09-29), so a browser still closing can be told from another
+    run's: two suites on one machine each count their own, and a stroke that
+    asks "did this check leave a process behind" is asking about this check.
+    """
+    return f"{PROFILE_PREFIX}{int(time.time())}-{os.getpid()}-"
+
+
 def _drop_profile(path, tries: int = 6, gap: float = 0.4) -> bool:
     """Remove the browser's profile, waiting for the browser to let go of it.
 
@@ -485,7 +496,7 @@ def run_page(page: str, settle: float = SETTLE,
     _sweep_profiles()            # whatever an earlier run could not let go of
     # THE TIME GOES IN THE NAME. See `_made_at`: a directory's mtime is not a
     # clock a sweep can trust, because the sweep itself moves it.
-    profile = tempfile.mkdtemp(prefix=f"{PROFILE_PREFIX}{int(time.time())}-")
+    profile = tempfile.mkdtemp(prefix=profile_prefix())
     child = None
     why = ""
     try:

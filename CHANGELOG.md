@@ -34,6 +34,72 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The Router's window: its request had filled it, and the live check is 9 of 9 again (operator, 2026-09-29: "start working through the list ... make a plan and execute"; "do the list top to bottom")
+
+WHAT'S LEFT, A1. The standup sat at 8/9 twice on 2026-09-29 (sittings 296, 297) on `what does the
+covenant say?`: the Router's reply stopped at three seconds, a thought of 150 characters and no
+call, where on the 28th it ran two tools in forty.
+
+THE CAUSE, MEASURED ON THE RACK. The Router is sent its prompt and the declaration of every skill
+it may call. Asked of the rack with one token to generate: **8,182 tokens in a window of 8,192**
+with today's 45 skills; 7,778 with the 43 of the morning of the 28th. The two tree doors, declared
+that afternoon, took the last four hundred. It had ten tokens to answer in. Nothing in the engine
+was at fault, and nothing had gone red, because nothing compared the two numbers.
+
+THE FIX. `agents/router.md` declares `Context: 16384` -- the number he ruled for Manjuel on
+2026-09-07, when that seat's window was the fault -- and `agents/quality_evaluator.md` the same,
+because the two seats share qwen3.5:4b and the rack treats another window as another runner
+(RUNBOOK, "one context size per model"). By the plan's own estimate the wider window costs that
+model about 90 MB.
+
+PROVED LIVE: the standup from the glass, sitting 298, **9/9**; the case ran `ground_read` and
+`semantic_search` in 44 s (`logs/standup_2026-09-29_144908.md`).
+
+THE WIRE (RULE 11): `test_a_seat_that_holds_tools_has_room_to_answer` (6). Off the disk: what the
+seat is sent (its prompt with the longest manual it can be handed, the law block, the tools'
+declarations), what it may say (`Max Tokens`), and one read coming back from a tool
+(`READ_WINDOW`), against the window it declares -- characters over 3.5, set below the 4.1 measured
+so the count runs high and the stroke reds early; and seats that share a model share a window.
+Reversals red: both seats back at 8192 (the sum: ~14,152 against 8,192); the Quality Evaluator
+alone at 8192 (the split named). Agents are hot-reloaded; no engine code moved for this piece.
+
+FOUND, NOT BUILT (WHAT'S LEFT, C30): the engine does not say when a reply was cut by a full
+window. The rack says so (`done_reason: length`, the prompt's count); the transcript said only
+"(deliberation only, no conclusion reached)".
+
+### The browser count is this run's own, and it is given a bound to settle in (operator, 2026-09-29: "start working through the list ... make a plan and execute"; "do the list top to bottom")
+
+WHAT'S LEFT, A4. Core CI's two Windows legs went red and green by turns on "the check leaves no
+process behind on this machine" with nothing in the code moved. The stroke counted every browser
+on the machine carrying the check's prefix, at the instant the second check returned -- so it
+could not tell a leak from another suite's checks running beside it, nor from a browser still
+CLOSING (the page closes itself and the tree follows; on a slow machine that is not instant).
+`maker.profile_prefix()` names a check's profile for WHEN it was made and WHOSE it is (the time
+first, where `_made_at` reads it; the process second), and the stroke counts its own process's
+browsers, polling for at most twenty seconds. Reversal red: the process left out of the name.
+`manjuel/maker.py` moved: RESTART REQUIRED. WHAT GOES RED IF UNPLUGGED: that stroke, and CI's
+Windows legs on the next push.
+
+### A refusal at the table names only what it checked (operator, 2026-09-29: "start working through the list ... make a plan and execute"; "do the list top to bottom")
+
+WHAT'S LEFT, C10 (TASKS, sitting 82). The table's gate is an allowlist, and its refusal added
+"'<skill>' changes things" for every skill not on it -- false of every skill that is merely not
+cleared (`rack_report`, `lint_code`, `linear_regression`, `time_align`, `subtask` write nothing).
+A skill is called a writer only when `WRITING_SKILLS` says it is one; the rest are told "is not
+cleared for the table". Three checks in `test_the_table_has_eyes_not_hands`, the last over every
+skill outside the whitelist, read off the writers' roster. Reversal red (2). The behaviour of the
+gate did not move. `manjuel/skills.py` moved: RESTART REQUIRED.
+
+### The card can say OVER, and the two sizes are named as two (operator, 2026-09-29: "start working through the list ... make a plan and execute"; "do the list top to bottom")
+
+WHAT'S LEFT, C12 (TASKS, sitting 82). `rack_list` floored the headroom at zero, so a card half a
+gigabyte over read "~0.0GB headroom"; and the size beside each model was its file on disk while
+the card line was memory in use, one column under one heading. Now an overcommitted card says
+"OVER by ~0.5GB; there is no headroom", each row says "on disk", a loaded model also says what it
+holds "in memory", and the card line says it is memory in use. Four checks in
+`test_the_card_is_priced_live`, the budget read off the dial. Reversals red (the floor put back;
+the memory left unsaid). `manjuel/skills.py` moved: RESTART REQUIRED.
+
 ### What's left is a page on the webapp (operator, 2026-09-29: "I SAID WRITE A ... PAGE ON THE ... WEBAPP")
 
 WHY. He asked for a page and was given a file, twice: STATUS.md, then WHATS_LEFT.md. His words:

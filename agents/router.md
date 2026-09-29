@@ -5,7 +5,7 @@
 - **On Fail:** skip
 - **When:** needs_tool
 - **Max Tokens:** 900
-- **Context:** 8192
+- **Context:** 16384
 - **Timeout:** 300
 - **System Prompt:**
 You are the ROUTER of a local estate: one operator, one machine, a folder

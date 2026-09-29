@@ -6394,6 +6394,26 @@ def test_the_card_is_priced_live(reg, lib, book):
               "Reasoner: qwen3.5:9b  (warm" in out, out[-200:])
         check("and the card states use and headroom",
               "Card:" in out and "headroom" in out)
+        # THE CARD CAN SAY "OVER", AND THE TWO SIZES ARE NAMED AS TWO (sitting
+        # 82; built 2026-09-29). The budget is a dial, so it is read, not typed.
+        budget, held = _vram.budget_bytes(), 8_600_000_000
+        check("   with room, it says how much: the budget less what is in use",
+              (f"Card: {_vram.gb(held)} of ~{_vram.gb(budget)} in use, "
+               f"~{_vram.gb(budget - held)} headroom.") in out, out[-260:])
+        check("   a loaded model says what it holds in memory beside its size on disk",
+              "LOADED  qwen3.5:9b" in out and "6.6GB on disk  in memory 6.6GB" in out
+              and "ON DISK" in out and "MEMORY IN USE" in out, out)
+        check("   and a cold one says its size on disk alone",
+              any("qwen2.5-coder:7b" in l and "on disk" in l and "in memory" not in l
+                  for l in out.splitlines()), out)
+        over = Rack([("llama3.2:latest", 9_000_000_000),
+                     ("qwen3.5:9b", budget - 9_000_000_000 + 500_000_000)])
+        env.runtime = over
+        out3 = lib.execute("rack_list", {}, env)
+        check("an overcommitted card says OVER, and by how much -- never 0.0 headroom",
+              (f"Card: {_vram.gb(budget + 500_000_000)} of ~{_vram.gb(budget)} in use -- "
+               f"OVER by ~0.5GB; there is no headroom.") in out3
+              and "~0.0GB headroom" not in out3, out3[-260:])
 
         alone = Rack([("llama3.2:latest", SZ["llama3.2:latest"])])
         env.runtime = alone
@@ -7029,6 +7049,22 @@ def test_the_table_has_eyes_not_hands(reg, lib, book):
     check("but reading is allowed",
           "DIRECTORY" in lib.execute("read_file", {"filepath": "."}, env)
           or "not found" in lib.execute("read_file", {"filepath": "zz.txt"}, env))
+    # A REFUSAL NAMES ONLY WHAT IT CHECKED (sitting 82; built 2026-09-29).
+    # `rack_report` writes nothing and was told it "changes things", twice in
+    # one sitting: the gate tested the allowlist and then stated a reason it
+    # had never tested.
+    from manjuel.skills import WRITING_SKILLS
+    check("a writer refused at the table is called a writer",
+          "'write_file' changes things" in out and "eyes, not hands" in out, out[:160])
+    said = lib.execute("rack_report", {}, env)
+    check("a reader that is not cleared is refused WITHOUT being called a writer",
+          said.startswith("Refused:") and "'rack_report' is not cleared for the table" in said
+          and "changes things" not in said, said[:160])
+    outside = sorted(lib.keywords() - REVIEW_ONLY_SKILLS)
+    wrong = [k for k in outside
+             if ("changes things" in lib.execute(k, {}, env)) != (k in WRITING_SKILLS)]
+    check("and that holds for every skill outside the whitelist, read off the writers' roster",
+          len(outside) > 10 and not wrong, f"{len(outside)} outside; wrong: {wrong}")
     check("the reading whitelist holds no writers",
           not any(k in REVIEW_ONLY_SKILLS for k in
                   ("write_file", "git_commit", "git_push", "speak",
@@ -14715,6 +14751,87 @@ def test_the_coders_window_on_the_tree(reg, lib, book):
                        reg, lib, env_for(g, reg, Stub()), lambda m: None) == "")
 
 
+def test_a_seat_that_holds_tools_has_room_to_answer(reg, lib, book):
+    """THE ROUTER'S WINDOW (2026-09-29; the standup 8/9 twice, sittings 296 and
+    297). `what does the covenant say?` passed on the 28th and failed on the
+    29th with nothing in the engine moved between them: the Router's reply
+    stopped at three seconds -- a thought of 150 characters and no call.
+
+    MEASURED ON THE RACK. The Router's request -- its prompt and the declaration
+    of every skill it may call -- was 8,182 tokens in a window of 8,192. It had
+    ten tokens to answer in. On the morning of the 28th, with 43 skills, it was
+    7,778; the two tree doors, declared that afternoon, took the rest. The
+    window is 16,384 now, the number he ruled for Manjuel on 2026-09-07 when
+    that seat's window was the fault.
+
+    NOTHING WENT RED, because nothing compared the two numbers. This does, off
+    the disk: what the seat is sent, what it may say, and one read coming back
+    from a tool, against the window the seat declares. A token cannot be
+    counted without the rack, so the count is characters over CHARS_PER_TOKEN,
+    set BELOW the 4.1 measured -- the estimate runs high and this reds early.
+
+    AND SEATS THAT SHARE A MODEL SHARE A WINDOW: the rack treats another
+    window as another runner, so two seats on one model with two windows pay a
+    reload every time one follows the other (RUNBOOK, "one context size per
+    model").
+    """
+    import json as _json
+    from dataclasses import replace as _replace
+    from manjuel.pipeline import build_prompt, carried_blocks
+    from manjuel.skills import READ_WINDOW
+
+    CHARS_PER_TOKEN = 3.5
+
+    def need(agent, library):
+        tools = library.tool_schemas(agent.callable_set(library.keywords()))
+        # the longest manual the Router can be handed: the skill the objective names
+        longest = max((s for s in library.specs if not s.is_prompt_skill),
+                      key=lambda s: len(s.body))
+        ctx = RunContext(objective="what does the covenant say?", feed="")
+        ctx.named_tool = longest.keyword
+        sent = (len(agent.system_prompt or "") + len(carried_blocks(agent, ctx))
+                + len(build_prompt(agent, ctx, library)) + len(_json.dumps(tools)))
+        return {"skills": len(tools),
+                "sent": int(sent / CHARS_PER_TOKEN),
+                "answer": int(agent.max_tokens or 0),
+                "read": int(READ_WINDOW / CHARS_PER_TOKEN)}
+
+    def fits(agent, library):
+        n = need(agent, library)
+        return n["sent"] + n["answer"] + n["read"] <= (agent.context or 0)
+
+    live = AgentRegistry.load(ROOT / "agents")
+    now = SkillLibrary.load(ROOT / "skills")
+    holders = [a for a in live.all()
+               if (a.stage == "route" or a.key == "router")
+               and a.callable_set(now.keywords())]
+    check("one seat holds the tools on this ground, so there is a window to measure",
+          [a.name for a in holders] == ["Router"], str([a.name for a in holders]))
+    for a in holders:
+        n = need(a, now)
+        total = n["sent"] + n["answer"] + n["read"]
+        check(f"{a.name} declares its window and its answer's length",
+              bool(a.context) and bool(a.max_tokens),
+              f"context {a.context}, max tokens {a.max_tokens}")
+        check(f"{a.name}'s window holds what it is sent, what it may say, and one read coming back",
+              fits(a, now),
+              f"sent ~{n['sent']} + answer {n['answer']} + a read ~{n['read']} = ~{total} "
+              f"tokens against a window of {a.context} ({n['skills']} skills declared)")
+        check("   and a window too small for the same request is refused by the same sum",
+              not fits(_replace(a, context=n["sent"] + n["answer"]), now)
+              and not fits(_replace(a, context=1024), now))
+        check("   whereas the sum is exact at its edge: one token more than it needs, and it fits",
+              fits(_replace(a, context=total), now)
+              and not fits(_replace(a, context=total - 1), now))
+
+    windows: dict = {}
+    for a in live.all():
+        windows.setdefault(a.model, set()).add(a.context)
+    split = {m: sorted(w, key=str) for m, w in windows.items() if len(w) > 1}
+    check("seats that share a model share a window -- another window is another runner",
+          not split, str(split))
+
+
 def test_the_status_page_is_read_off_the_record(reg, lib, book):
     """THE STATUS PAGE (2026-09-29, his word: "build it"). "What are we on as far
     as the overall build order and path, versus the docs? What is left for
@@ -16454,15 +16571,39 @@ def test_the_maker_runs_the_page_before_it_keeps_it(reg, lib, book):
     # afternoon. The page closes itself, so the tree goes with it.
     check("   because the page closes itself: no browser of ours is left running",
           maker.SETTLE >= 0 and "window.close()" in maker._CATCH, maker._CATCH[-200:])
-    alive = subprocess.run(
-        ["powershell", "-NoProfile", "-Command",
-         "(Get-CimInstance Win32_Process -Filter \"Name='msedge.exe' OR "
-         "Name='chrome.exe'\" | Where-Object { $_.CommandLine -like "
-         f"'*{maker.PROFILE_PREFIX}*' " + "} | Measure-Object).Count"],
-        capture_output=True, text=True, stdin=subprocess.DEVNULL).stdout.strip()
-    if alive.isdigit():
-        check("   and none is: the check leaves no process behind on this machine",
-              int(alive) == 0, f"{alive} still running")
+    # COUNTED FOR THIS RUN ALONE, AND GIVEN A BOUND TO SETTLE IN (2026-09-29).
+    # This counted every browser on the machine carrying the prefix, at the
+    # instant the second check returned. Two things it could not tell apart
+    # from a leak: another suite's checks running beside this one, and a
+    # browser that was still CLOSING -- the page closes itself and the tree
+    # follows, which on a slow machine is not instant. CI's two Windows legs
+    # went red and green on it by turns with nothing in the code moved. A
+    # profile is named for the process that made it now, so the count is this
+    # run's own, and "left behind" means still alive when the bound is spent.
+    check("a check's profile is named for WHEN it was made and WHOSE it is",
+          maker.profile_prefix().startswith(maker.PROFILE_PREFIX)
+          and maker.profile_prefix().endswith(f"-{os.getpid()}-")
+          and abs(maker._made_at(Path(maker.profile_prefix() + "x")) - time.time()) < 5,
+          maker.profile_prefix())
+
+    def alive_now():
+        said = subprocess.run(
+            ["powershell", "-NoProfile", "-Command",
+             "(Get-CimInstance Win32_Process -Filter \"Name='msedge.exe' OR "
+             "Name='chrome.exe'\" | Where-Object { $_.CommandLine -like "
+             f"'*{maker.PROFILE_PREFIX}*-{os.getpid()}-*' " + "} | Measure-Object).Count"],
+            capture_output=True, text=True, stdin=subprocess.DEVNULL).stdout.strip()
+        return int(said) if said.isdigit() else None
+
+    SETTLE_BOUND = 20.0
+    alive, began = alive_now(), time.time()
+    while alive and time.time() - began < SETTLE_BOUND:
+        time.sleep(1.0)
+        alive = alive_now()
+    if alive is not None:
+        check("   and none is: the check leaves no process of its own behind",
+              alive == 0,
+              f"{alive} still running {time.time() - began:.0f}s after the check returned")
 
     # ---- THE LOOP: one repair, in the record --------------------------------
     def coder_says(*answers):
@@ -17750,6 +17891,7 @@ def main() -> int:
     test_the_coder_lands_an_edit_on_the_tree(reg, lib, book)
     test_the_coders_window_on_the_tree(reg, lib, book)
     test_the_status_page_is_read_off_the_record(reg, lib, book)
+    test_a_seat_that_holds_tools_has_room_to_answer(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)

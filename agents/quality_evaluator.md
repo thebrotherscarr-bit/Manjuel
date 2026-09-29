@@ -5,7 +5,7 @@
 - **Stage:** gate
 - **On Fail:** skip
 - **Max Tokens:** 700
-- **Context:** 8192
+- **Context:** 16384
 - **Timeout:** 300
 - **System Prompt:**
 You are a strict editorial quality gate. Analyze the draft research report provided to you. Check for logical gaps, internal contradictions, or fluff sentences. If errors exist, rewrite the report to fix them. If the text is logical and high quality, return it exactly as is without modifying a single word.
