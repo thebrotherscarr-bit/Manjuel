@@ -2484,7 +2484,11 @@ through the door; the gate title and the record's lines corrected, v5 folded (`4
 word "carry the failed pass without the door's name": the runner hands `fail_<node>` over as the
 turn's FEED, the Coder's tree prompt shows it, the arithmetic never reads it; R13 red at the runner,
 R14 red at the prompt; window stroke 63, 3133/3133 and 72/72 on a mirror, the flow package green;
-the door rebuilt and placed on his allowance.
+the door rebuilt and placed on his allowance. Then "fire coder-tree v5 on a change whose first pass
+fails": run seven on sitting 294 (09:02 to 09:16) -- the door refused `import socket` on pass one as
+designed; the carry held on passes two and three (the feed, the Guardian first, the Coder shown the
+refusal); the Coder repeated the refused block both times; FAIL at the ceiling, nothing landed, the
+empty line closed. A seat that changes course on a refusal is his ruling.
 
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
@@ -2499,12 +2503,13 @@ in session 17's list, written before this entry existed.
 **Rulings** — by card: build all three fixes and fire again; continue at the land gate and save on the
 line; close and record.
 
-**At close** — sittings 292 (07:46 to 07:58) and 293 (08:08 to 08:18) closed from the Dashboard with
-their tolls; the ground on `main`; the lines `tree-foundation` to `-6` standing, his to close or
-merge; the door unchanged (no Go moved today).
+**At close** — sittings 292 (07:46 to 07:58), 293 (08:08 to 08:18) and 294 (09:02 to 09:16) closed from
+the Dashboard with their tolls; the ground on `main`; no line of work remains (his merge of
+`tree-foundation-6`, the rest closed through the door); the door rebuilt once (the runner's feed) and
+placed on his allowance, pid 276.
 
-**Next session** — a seventh firing of `coder-tree` v5 on a change whose first pass fails, to see the
-carried pass read (the retry no longer a fresh roll); named beside it: a SPEC 8.2 theme for the coder on
-the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that
+**Next session** — his ruling on a seat that changes course on a refusal it has read (a coder that reads
+one, SITTING LAW 3, or a prompt that puts the refusal above the change); named beside it: a SPEC 8.2
+theme for the coder on the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that
 says a tool was used; the dials (Steward 180, the court 900); a Dashboard button for the standup and
 a `loops` box in the builder; the front-end agent handoff plan.

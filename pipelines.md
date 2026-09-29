@@ -622,3 +622,10 @@ smoke (72/72) green through the door, and his hand at `land` had the council
 save it on `tree-foundation-6` (`ba0e61a`). The flow is proven live; merging
 the line is his merge on his terminal -- Version control has no such click, and
 v5, folded the same day, says so at the `land` gate (CHANGELOG, 2026-09-29).
+
+FIRED A SEVENTH TIME (v5, the failed pass riding as the feed) on a change whose
+first pass the door refuses by design (`import socket`, RULE 4): FAIL at the
+ceiling -- the carry held live (the feed, the Guardian first, the Coder shown
+the refusal) and the seat repeated the refused block on both retries. The
+mechanism is proven; a seat that changes course on a refusal is his ruling
+(CHANGELOG, 2026-09-29).

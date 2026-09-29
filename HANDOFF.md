@@ -943,11 +943,17 @@ mirror, R14 red; battery PROVEN, 142 legs, 85 tools, from the built binary. REST
 placed on his allowance. v5 needs no fold: its attempt is the objective alone and the feed comes by
 itself.
 
-**Where the ground stands.** core `main@47c7032` (his merge `3631498` carrying the coder's line, and the
-record's correction) plus this piece (CHANGELOG.md, DAYBOOK.md, HANDOFF.md, pipelines.md, REFUSALS.md,
-BUILDMAP.md, manjuel/maker.py, manjuel/pipeline.py, tests/test_manjuel.py), to be saved and sent through
-the glass's Version control on his word; atlas `main@0cb5c63` plus `line/internal/flow/run.go`,
-`run_test.go` and `CHANGELOG.md`, the same way. No `tree-foundation` line remains.
+**CODER-TREE FIRED A SEVENTH TIME** (run `f-20260929-160346-97011134`, v5 on the placed door, sitting 294,
+09:02 to 09:16) on a change whose first pass fails by design (`import socket`): FAIL at the ceiling, three
+passes. The carry held live -- the failed pass rode as the feed, the window opened on the words alone,
+the Guardian sat first and said SAFE, the Coder's prompt showed the refusal -- and the Coder answered the
+identical refused block on both retries. Nothing landed; back on `main`; the empty line `tree-github`
+closed through the door. HIS RULING, NOT BUILT: a seat that changes course on a refusal it has read (a
+coder that reads one, SITTING LAW 3; or a prompt that puts the refusal above the change).
+
+**Where the ground stands.** core `main@b88bbdb` plus the run-seven record (CHANGELOG.md, DAYBOOK.md,
+HANDOFF.md, pipelines.md), to be saved and sent through the glass's Version control on his word; atlas
+`main@a6e6c23`, level with GitHub; the door placed at pid 276 carries the feed. No line of work remains.
 atlas `main@0cb5c63` (`suite_run` the last), level with GitHub; the morning's two pieces --
 `line/internal/tools/tools.go`, `gitctl.go`, `tools_test.go`, `line/internal/auth/auth.go`,
 `auth_test.go`, `line/cmd/atlas-mcp/prove.go`, `docs/ARCHITECTURE.md`, `CHANGELOG.md` -- saved
