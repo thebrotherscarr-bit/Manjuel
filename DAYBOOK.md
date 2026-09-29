@@ -2391,6 +2391,19 @@ been in the plan from the beginning."
   tool calls; the Coder's seat file gains the shape on his order. One stroke, strokes 3075/3075,
   three reversals red; restart required.
 
+- **coder-tree fired a fourth time** (v3) on his word: FAIL, three passes, no edit -- the Expert
+  Coder never sat, because a big objective wakes the Router directly and skips the Steward who
+  raises `technical`; the Router stalled at the map. Back on `main`, on his word. By card, next:
+  the Coder's window on the tree.
+
+- **The Coder's window on the tree**, by card: a change to a named file in the ground -- a folder
+  in the path, a change verb, the passage in backticks -- is read by arithmetic before every other
+  route; the engine resolves the name EXACTLY off the file's own map and the Expert Coder sits
+  alone, handed the passage as it stands; the edit goes through the tree door and the door's word
+  is the delivery; nine shapes answered with no seat. One stroke (40), 3110/3110 and 72/72 on a
+  mirror, four reversals red (13, 3, 6, 5); restart required. Measured on the way: v3's attempt
+  text names `ground_read`, so the flow needs a v4 that names no tool before it fires again.
+
 **Found** — the glass's Tools page asks for a tool's arguments with the browser's `prompt()`, which
 the desktop's browser pane dismisses unseen (the page's own `App.tool` was called from the page
 instead: the same request, the glass's session); a check over the tools block cannot see the maker
@@ -2416,9 +2429,9 @@ Dashboard; the door pid 86180 carries all six door pieces; both repositories sav
 11:52 on his word (core `044ef46`, atlas `325888c`, level with GitHub), the seventh piece saved and
 sent after it (core `c92751d`), the eighth on top, unsaved.
 
-**Next session** — `coder-tree` v3 spoken to the Coder's shape, and a fourth firing on his
-word; named beside it, the headless "retry / skip / abort?" and the claim check on a seat that says
-a tool was used; the dials (Steward 180, the court 900 as a
+**Next session** — on his word, `coder-tree` v4 (an attempt that names no tool) and a fifth firing
+through the Coder's window; named beside it, a heading window for a .md, the map's how-to-ask, the
+headless "retry / skip / abort?" and the claim check on a seat that says a tool was used; the dials (Steward 180, the court 900 as a
 deadline a pipeline declares); the front-end agent handoff's plan is in the record (CHANGELOG, this
 day) and waits on those; a Dashboard button for the standup and a `loops` box in the builder; a
 maker evidence line a check can read; the open lines above.

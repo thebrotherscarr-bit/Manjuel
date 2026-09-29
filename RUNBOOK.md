@@ -315,6 +315,21 @@ ledger is a true record of its day, not a claim about now.
 Push is disabled unless the wall is open (`MANJUEL_GIT_REMOTE` in `.env`) and
 there is something to push; hover it and it says which.
 
+**Asking for a change to the harness itself (2026-09-28).** Name the file
+with its folder and the passage in backticks, with a change verb:
+
+    In manjuel/skills.py, add `foundation` to the `_NEVER_WRITTEN_TOP` dict,
+    one line beside the `law` entry.
+
+The engine reads that by arithmetic -- no Router, no plan -- fetches
+`_NEVER_WRITTEN_TOP` whole off the file's own map, and seats the Expert Coder
+alone with it; what it answers goes through `ground_edit` and the delivery is
+the door's own line. ON MAIN THE DOOR REFUSES (RULE 6): open a line of work
+first (Lines of work on Version control, or the `coder-tree` flow's gate), and
+merging it back is your click. The name must be exact and on the map (`help`
+is not `helper`); a bare filename is the workspace, not the ground; a .md has
+no map yet. REFUSALS §28 lists what the engine answers with no seat.
+
 ## Running it from the terminal instead
 
     python manjuel.py            the REPL -- the same engine, no glass

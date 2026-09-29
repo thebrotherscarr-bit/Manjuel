@@ -34,6 +34,80 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The Coder's window on the tree: a change to a named file in the ground wakes the Expert Coder alone, handed the passage by name, and the tree door lands what it answers (operator, 2026-09-28, by card: "then the Coder's window on the tree")
+
+WHY. Four firings of `coder-tree` put one small change to the harness through the estate and
+nothing was edited. The fourth found the cause in the routing: the attempt's text is read as big,
+the Router is woken directly, the front Steward is skipped, nobody raises `technical`, and the
+Expert Coder -- the seat `land_code` was built for -- never sits. A 4B Router plans a two-call edit
+and stops at the plan. The seat that can make the change was never in the room.
+
+WHAT. `intent.wants_a_tree_change` reads a change to a NAMED FILE IN THE GROUND by arithmetic, as
+`wants_making` reads a make request: a file with a folder in its path (a bare name is the
+workspace's), a change verb (add, edit, fix, replace, remove, rename, update...), and the names in
+backticks the passage is fetched by. A question about changing is a question, a read and a run are
+not changes, and a backticked file is the file, not a passage (`Class.method` is one). `_maker_route`
+takes it FIRST, before the make request and before every other route: `_tree_window` resolves the
+first backticked name the file's own map resolves EXACTLY -- the same `_windowed_python` map
+`ground_read` shows, a whole definition or module-level name, never a containing match (`help` is
+not `helper`), never a character range -- and the Coder sits ALONE, handed `maker.tree_prompt`: the
+passage as it stands, the change asked for, and the one shape to answer in (`<filepath>` relative to
+the ground, one fenced `@@ OLD`/`@@ NEW` block). What it answers goes through `land_code` to the tree
+door as before, the door's reply on the Coder's own tool calls, and THE DELIVERY IS WHAT THE DOOR
+SAID (`_tree_report`): "Landed on the line of work through ground_edit: Edited ... On line of work
+`x`", or "Nothing landed -- ground_edit said: Refused: ... main line ..."; a Coder that answers in
+words is told the shape wanted. No `review` is raised: the suites are the review of a change on the
+tree.
+
+THE ENGINE ANSWERS AND NO SEAT SITS for a name not on the map, no name in backticks, a passage
+longer than one window (a passage the Coder cannot see whole it cannot quote whole), a file that
+does not parse, a file that is not Python (the window is a definition by name, and only a .py has a
+map of them), a secret or a protected file (refused before it is read), a path out of the ground,
+and a file that is not there -- each named, each ending "nothing sat". A request that names a tool
+is never the tree's, as it was never the maker's. REFUSALS §28; RUNBOOK says how to ask.
+
+MEASURED, AND HIS TO ORDER: the v3 attempt text names `ground_read` and the workspace doors by name,
+so on it `names_a_tool` fires and the maker route yields before the window opens -- fired as it
+stands, v3 would still wake the Router. The flow needs a v4 whose attempt carries the objective, the
+brief and the failed pass and names no tool. Not folded here.
+
+PROVED on a mirror: one stroke, `test_the_coders_window_on_the_tree` (40: the words both ways; the
+window resolving a dict and a def and refusing nine shapes by name; the turn end to end with a
+stand-in Coder -- the Coder alone on a big-shaped objective, handed the passage and not the rest of
+the file, the door refusing on main with the refusal on the Coder's tool calls and as the delivery,
+the edit landing on a line of work with the head unmoved and the tree dirty, a name not on the map
+answered with no seat, a Coder answering in words landing nothing, a tool's words never the
+tree's). The whole suite 3110/3110, the smoke 72/72. Four reversals red: R1 the arithmetic unplugged
+(13: the Router and the Steward sit); R2 the window handing the whole file (3); R3 the landing not
+routed to the door (6: the maker's page landing says "Nothing was saved"); R4 a containing match
+accepted (5: `b` resolves to `TABLE` and the wrong passage is handed). `manjuel/intent.py`,
+`manjuel/pipeline.py`, `manjuel/maker.py` moved: RESTART REQUIRED. WHAT GOES RED IF UNPLUGGED: the
+arithmetic (R1), the exact passage (R2, R4), the door as the landing (R3) -- the stroke, and on the
+glass the delivery of every tree turn, which is the door's line or nothing.
+
+### coder-tree fired a fourth time: the Coder never sat (operator, 2026-09-28: "then fire the fourth run")
+
+Run `f-20260929-014534-4642327c`, v3, sitting 291 (18:45 to 18:51, booted and closed from the
+Dashboard), the `open` gate answered by his hand, the brief right this time. FAIL at 217 s: three
+passes, no edit, the loop returning twice and stopping at the ceiling exactly as built, the
+`changed` check red each time on the tools block. THE FINDING IS ROUTING. The attempt's objective
+is read as big (`is_big_objective`), so the Router is woken directly and the front Steward is
+SKIPPED ("front Steward skipped -- arithmetic already dispatched"); nobody raises `technical`, and
+the Expert Coder -- the seat the landing was built for -- never sits. The Router (qwen3.5:4b)
+reads the map three times, once asks for `_NEVER_WRITTEN_TOP` as a file, and never issues the
+edit. On the second pass the STEWARD emitted the Coder's shape -- `<filepath>manjuel/skills.py
+</filepath>` and an `@@ OLD` block -- and `land_code` lands only the Coder's. Nothing reached the
+tree; nothing on main moved; the ground is back on `main`, clean, on his word; the four empty
+lines `tree-foundation` to `-4` are his to close on Version control.
+
+NEXT, BY CARD: THE CODER'S WINDOW ON THE TREE. An objective that names a file in the ground and a
+backticked name in it wakes the Expert Coder by arithmetic, as `wants_making` wakes it for a page;
+the engine reads that definition by name off the map and hands the passage to the Coder; the Coder
+answers with the `@@ OLD`/`@@ NEW` edit that `land_code` lands. No Router planning in the way.
+Named beside it: the map should say how to ask by name (the path as `<filepath>`, the name as
+`<content>`); the headless "retry / skip / abort?"; the claim check on a seat that says a tool was
+used.
+
 ### The Coder lands an edit on the tree (operator, 2026-09-28, by card: "the Coder lands edits on the tree")
 
 The first of the three pieces the coder-tree runs named. The Expert Coder is the seat that can

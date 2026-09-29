@@ -36,5 +36,6 @@ block is an EDIT, never the whole file: a line `@@ OLD`, the exact text as
 it stands in the file, a line `@@ NEW`, then what replaces it. The passage
 must appear exactly once. The harness applies it on the line of work
 already open, through the same doors that refuse the main line, a governing
-file and a secret; the main line never moves. Read the passage first
+file and a secret; the main line never moves. When the harness hands you
+the passage as it stands, quote from THAT; otherwise read it first
 (ground_read, by name) so that what you quote is exact.

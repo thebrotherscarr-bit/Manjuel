@@ -14322,6 +14322,166 @@ def test_the_coder_lands_an_edit_on_the_tree(reg, lib, book):
           out == "" and any("no skill library" in n for n in ctx.notes), str(ctx.notes)[:160])
 
 
+def test_the_coders_window_on_the_tree(reg, lib, book):
+    """THE CODER'S WINDOW ON THE TREE (2026-09-28, his card). Four firings of
+    the coder-tree flow put one small change to the harness through the estate
+    and nothing was edited: the objective was read as big, the Router was woken
+    directly, the front Steward was skipped, `technical` was never raised, and
+    the Expert Coder -- the seat the landing was built for -- never sat. So a
+    change to a NAMED FILE IN THE GROUND is the Coder's by arithmetic, as a
+    make request is: the engine reads the passage BY NAME off the file's own
+    map and hands it over, the Coder answers with the `@@ OLD`/`@@ NEW` edit,
+    `land_code` puts it through the tree door, and the delivery is what the
+    door said. No Router plans in the way.
+
+    STROKED BOTH WAYS. A file with a folder, a change verb and a passage in
+    backticks opens the window; a read, a run, a question, a bare name, a make
+    request and a tool's own words do not. The engine answers and no seat sits
+    for a name not on the map, no name at all, a containing match, a passage
+    too long for one window, a file that does not parse, a secret, a protected
+    file, a file that is not Python. Hermetic: temp grounds, a stand-in Coder.
+    """
+    from manjuel import intent
+    from manjuel.pipeline import _maker_route, _tree_window
+
+    # ---- THE WORDS ----------------------------------------------------------
+    said = ("In manjuel/thing.py, add `b` to the `TABLE` dict beside the `a` entry, "
+            "then add a comment above it saying why.")
+    check("a change to a named file in the ground is read by arithmetic: the file, "
+          "then the names in order",
+          intent.wants_a_tree_change(said) == ("manjuel/thing.py", ["b", "TABLE", "a"]),
+          repr(intent.wants_a_tree_change(said)))
+    check("   and a method is a name too, as the map says (Class.method)",
+          intent.wants_a_tree_change("edit manjuel/skills.py: change `SkillLibrary.execute`")
+          == ("manjuel/skills.py", ["SkillLibrary.execute"]))
+    check("   and a file in backticks is the file, not a passage",
+          intent.wants_a_tree_change("In `manjuel/skills.py`, fix `helper`")
+          == ("manjuel/skills.py", ["helper"]))
+    for other in ("read manjuel/skills.py", "run tests/probe.py", "add a helper to thing.py",
+                  "how do I add x to manjuel/skills.py?", "should we change `X` in manjuel/a.py",
+                  "make me a snake game", "git commit manjuel/skills.py"):
+        check(f"and this does not open the window: {other!r}",
+              intent.wants_a_tree_change(other) == ("", []),
+              repr(intent.wants_a_tree_change(other)))
+
+    # ---- THE WINDOW: the passage by name, off the file's own map -------------
+    g = Path(tempfile.mkdtemp())
+    (g / "manjuel").mkdir()
+    THING = (b"import json\n\nTABLE = {\n    'a': 1,\n}\n\n\ndef helper(x):\n"
+             b"    return x + 1\n\n\ndef helper_two(x):\n    return x\n")
+    (g / "manjuel" / "thing.py").write_bytes(THING)
+    (g / "manjuel" / "broken.py").write_bytes(b"def (\n")
+    (g / "manjuel" / "big.py").write_bytes(b"def big():\n" + b"    x = 1\n" * 3000)
+    (g / "manjuel" / "vault").mkdir()
+    (g / "manjuel" / "vault" / "c.py").write_bytes(b"X = 1\n")
+    (g / "manjuel" / "note.md").write_bytes(b"# a\n")
+    env = env_for(g, reg, Stub())
+    check("the engine hands the FIRST name the map resolves, whole, as it stands on disk",
+          _tree_window(env, "manjuel/thing.py", ["b", "TABLE", "a"])
+          == (("TABLE", "TABLE = {\n    'a': 1,\n}"), ""),
+          repr(_tree_window(env, "manjuel/thing.py", ["b", "TABLE", "a"])))
+    check("   a def the same way",
+          _tree_window(env, "manjuel/thing.py", ["helper"])
+          == (("helper", "def helper(x):\n    return x + 1"), ""),
+          repr(_tree_window(env, "manjuel/thing.py", ["helper"])))
+    found, why = _tree_window(env, "manjuel/thing.py", ["help"])
+    check("   and a containing match is NOT the name asked for -- `help` is not `helper`",
+          found is None and "none of the names" in why and "`help`" in why, why)
+    for rel, names, word in (("manjuel/thing.py", [], "no passage in backticks"),
+                             ("manjuel/thing.py", ["nope"], "none of the names"),
+                             ("manjuel/broken.py", ["x"], "does not parse"),
+                             ("manjuel/big.py", ["big"], "longer than one window"),
+                             ("manjuel/vault/c.py", ["X"], "never read into the chain"),
+                             ("manjuel/.env", ["X"], "never read into the chain"),
+                             ("manjuel/note.md", ["a"], "not a Python file"),
+                             ("../x.py", ["a"], "outside the ground"),
+                             ("manjuel/none.py", ["a"], "not a file in the ground")):
+        found, why = _tree_window(env, rel, names)
+        check(f"the window refuses by name and says why: {rel} {names} -> {word!r}",
+              found is None and word in why and why.endswith("nothing sat"), why)
+
+    # ---- THE TURN: the Coder alone, handed the passage; the door lands it ---
+    if not HAVE_GIT:
+        return                    # reported once, in main(); never a crash
+    for args in (["init", "-q"], ["config", "user.email", "t@t"],
+                 ["config", "user.name", "t"], ["checkout", "-q", "-b", "main"]):
+        subprocess.run(["git", *args], cwd=g, capture_output=True, stdin=subprocess.DEVNULL)
+    gitstate.commit(g, "manjuel: the ground")
+    head = gitstate.read(g).head
+    EDIT = ("<filepath>manjuel/thing.py</filepath>\n"
+            "```\n@@ OLD\n    'a': 1,\n@@ NEW\n    'a': 1,\n    'b': 2,  # beside a\n```\n")
+    coder = {"answer": EDIT}
+
+    def reply(a):
+        return coder["answer"] if a.key == "expert coder" else "A SEAT THAT SAT"
+
+    def turn(objective):
+        r = Stub(reply=reply)
+        ctx = RunContext(objective=objective)
+        run_pipeline(ctx, reg, r, lib, env_for(g, reg, r),
+                     steps=book.get("default"), report=lambda m: None)
+        return ctx, [n for n, _ in r.seen], r
+
+    check("the objective is the big-shaped kind that woke the Router directly in run four",
+          intent.is_big_objective(said))
+    ctx, sat, r = turn(said)
+    check("a change to a named file in the ground seats the Expert Coder ALONE -- "
+          "no Steward, no Router, no plan", sat == ["Expert Coder"], str(sat))
+    asked = next((pr for n, pr in r.seen if n == "Expert Coder"), "")
+    check("   handed the passage as it stands, by name, and the change asked for",
+          "TABLE = {\n    'a': 1,\n}" in asked and "@@ OLD" in asked
+          and "THE CHANGE ASKED FOR: In manjuel/thing.py" in asked, asked[:300])
+    check("   and NOT the rest of the file -- one definition, not a map or a window of characters",
+          "def helper" not in asked, asked[:300])
+    check("   the record says the tree had the turn, naming the file and the passage",
+          any(n.startswith("tree: a change to `manjuel/thing.py` at `TABLE`") for n in ctx.notes),
+          str(ctx.notes)[:300])
+    check("ON MAIN the door refuses and nothing changes",
+          (g / "manjuel" / "thing.py").read_bytes() == THING)
+    out = ctx.last_output()
+    check("   and the delivery is what the DOOR said, not the seat",
+          out.startswith("Nothing landed -- ground_edit said: Refused") and "main line" in out,
+          out[:200])
+    step = next((s for s in ctx.steps if s.agent == "Expert Coder"), None)
+    check("   with the door's reply on the Coder's own tool calls",
+          step is not None and step.tool_calls == ["ground_edit"]
+          and step.tool_results[0].startswith("Refused"),
+          "no Coder step" if step is None else str(step.tool_calls) + str(step.tool_results)[:120])
+
+    subprocess.run(["git", "checkout", "-q", "-b", "piece"], cwd=g, capture_output=True,
+                   stdin=subprocess.DEVNULL)
+    ctx, sat, r = turn(said)
+    CHANGED = THING.replace(b"    'a': 1,\n", b"    'a': 1,\n    'b': 2,  # beside a\n")
+    check("ON A LINE OF WORK the Coder's edit lands on the tree through the door",
+          sat == ["Expert Coder"] and (g / "manjuel" / "thing.py").read_bytes() == CHANGED,
+          repr((g / "manjuel" / "thing.py").read_bytes()[:80]))
+    out = ctx.last_output()
+    check("   and the delivery is the door's own line, then where things stand",
+          out.startswith("Landed on the line of work through ground_edit: Edited thing.py")
+          and "line of work `piece`" in out and "Nothing has reached the main line" in out,
+          out[:300])
+    check("   no `review` is raised -- the suites are the review of a change on the tree",
+          "review" not in ctx.flags, str(ctx.flags))
+    check("   and nothing is saved: the edit sits unsaved on the line, the main line untouched",
+          gitstate.read(g).head == head and gitstate.read(g).dirty,
+          f"{gitstate.read(g).head[:8]} dirty={gitstate.read(g).dirty}")
+
+    ctx, sat, r = turn("In manjuel/thing.py, add `b` to the `NOPE` dict.")
+    check("a name not on the map is answered by the engine -- no seat sits",
+          sat == [] and "none of the names" in ctx.last_output() and "`NOPE`" in ctx.last_output(),
+          f"{sat} {ctx.last_output()[:160]}")
+    coder["answer"] = "I would add 'b': 2 to TABLE, beside 'a'."
+    ctx, sat, r = turn(said)
+    check("a Coder that answers in words lands nothing, and the delivery names the shape wanted",
+          sat == ["Expert Coder"]
+          and ctx.last_output().startswith("Nothing landed: the Expert Coder answered with no edit")
+          and "@@ OLD" in ctx.last_output()
+          and (g / "manjuel" / "thing.py").read_bytes() == CHANGED, ctx.last_output()[:200])
+    check("and a request that names a tool is never the tree's: git's words go to git",
+          _maker_route(RunContext(objective="edit manjuel/thing.py `TABLE`, then git commit it"),
+                       reg, lib, env_for(g, reg, Stub()), lambda m: None) == "")
+
+
 def test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book):
     """"sandbox the python" (the operator, 2026-09-22).
 
@@ -17210,6 +17370,7 @@ def main() -> int:
     test_the_edit_door_holds_the_same_line_as_the_write_door(reg, lib, book)
     test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name(reg, lib, book)
     test_the_coder_lands_an_edit_on_the_tree(reg, lib, book)
+    test_the_coders_window_on_the_tree(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)

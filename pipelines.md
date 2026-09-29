@@ -576,3 +576,21 @@ THAT shape: read the passage by name, then answer with `<filepath>` (the path
 in the ground) and one fenced `@@ OLD`/`@@ NEW` edit, never the whole file
 and never the workspace doors; the turn is judged on whether a door reports
 the edit, which is what `changed` reads. Same nodes and edges as v2.
+
+FIRED A FOURTH TIME (v3): the Expert Coder never sat -- a big objective wakes
+the Router directly and skips the front Steward, so `technical` is never
+raised -- and the Router stalled at the map while the Steward, of all seats,
+emitted the Coder's shape. What comes next is the Coder's window on the tree:
+the Coder woken by arithmetic and handed the passage, as the maker hands it a
+page (CHANGELOG, for his word).
+
+THE CODER'S WINDOW, THE SAME NIGHT: a change to a named file in the ground (a
+folder in the path, a change verb, the passage in backticks) is read by
+arithmetic before any other route (`intent.wants_a_tree_change`); the Expert
+Coder sits ALONE, handed the passage as it stands off the file's own map
+(`_tree_window`, the name resolved exactly), and the door's reply is the
+delivery. MEASURED: v3's attempt text names `ground_read` and the workspace
+doors, so on it `names_a_tool` fires first and the window never opens -- fired
+as it stands, v3 would still wake the Router. A v4 whose attempt carries the
+objective, the brief and the failed pass and names no tool is his to order;
+not folded here.

@@ -947,4 +947,39 @@ doors in the writers' roster. By reversal: the names not asked, 30 red; the
 line not asked, 9; the terminator not the neighbours', 1; the gate struck at
 the write door, 2; at the edit door, 2.
 
+## 28. The Coder's window on the tree opens for one passage, by name, or not at all
+
+**Trigger.** The words ask for a CHANGE to a file in the ground -- a path with
+a folder in it, a change verb, names in backticks -- and the engine cannot hand
+the Expert Coder one passage: no name in backticks; none of the names is on the
+file's map (a containing match is not the name -- `help` is not `helper`); the
+passage is longer than one window; the file does not parse; the file is not
+Python; the file is a secret or client-tagged; the path leaves the ground; the
+file is not there.
+
+**Action.** The engine answers in the delivery, by name, ending "nothing sat",
+and NO SEAT SITS -- not the Coder, not the Router. When the door refuses what
+the Coder answered (the main line, a never-written name, an anchor that is not
+there), the door's own refusal is the delivery: "Nothing landed -- ground_edit
+said: Refused: ...". A Coder that answers in words is told the shape wanted.
+
+**Why.** Four firings of `coder-tree` (2026-09-28) put one small change through
+the estate and the seat that could make it never sat: the text was read as big,
+the Router was woken directly and planned, and the front Steward who raises
+`technical` was skipped. The window (`intent.wants_a_tree_change`,
+`pipeline._tree_window`, `maker.tree_prompt`) puts the passage in front of the
+one seat that can change it, and refuses everything it cannot put there exactly
+-- because an edit is an exact quotation, and a passage the Coder cannot see
+whole it cannot quote whole.
+
+**The honest limits.** The window is a .py definition or module-level name; a
+.md has no map of definitions and is refused as not Python until a heading
+window is built. A request that names a tool is never the tree's (§25's
+arithmetic), so a flow's attempt text must name none. The window hands the
+first name the map resolves, in the order the words gave them.
+
+Stroked: `test_the_coders_window_on_the_tree` (40). By reversal: the
+arithmetic unplugged, 13 red; the whole file handed, 3; the landing not routed
+to the door, 6; a containing match accepted, 5.
+
 ---

@@ -27,7 +27,8 @@ from .skills import (GATE_MARK, MESSAGE_IS_THE_OPERATORS, REVIEW_ONLY_SKILLS,
                      args_from_words as skills_args_from_words,
                      _inside_ground as skills_inside_ground, declared_path,
                      mcp_spelled_out, operator_message, unjail,
-                     _EDIT_OLD as skills_edit_old)
+                     _EDIT_OLD as skills_edit_old,
+                     _windowed_python as skills_windowed_python)
 from .drift import DriftChecker
 from . import ink
 from . import lawgate
@@ -969,6 +970,8 @@ def _coder_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
     whole, self-contained page, new or changed (maker.coder_prompt); on every
     other turn it is the generic builder it has always had."""
     if getattr(ctx, "make", None):
+        if ctx.make.get("kind") == "tree":
+            return maker.tree_prompt(ctx.make, ctx.objective)
         return maker.coder_prompt(ctx.make, ctx.objective)
     return _default_prompt(agent, ctx, skills)
 
@@ -1313,6 +1316,69 @@ def unread_parts(ctx: RunContext) -> list[str]:
 MAKER_SEAT = "Expert Coder"
 
 
+def _tree_window(env, rel: str, names: list) -> tuple:
+    """The passage the Coder is handed on a tree turn: ((name, body), "") for
+    the first backticked name the file's map resolves EXACTLY, else
+    (None, why). Read by the engine, off the disk, by the same map
+    `ground_read` shows -- a WHOLE definition or module-level name, never a
+    character range, never a containing match; secrets and the protected are
+    refused before they are read."""
+    from .vectors import is_protected, is_secret
+    path = skills_inside_ground(env, rel)
+    if path is None:
+        return None, f"`{rel}` is outside the ground; nothing sat"
+    if is_secret(path) or is_protected(path):
+        return None, f"`{rel}` is never read into the chain (RULE 7, SITTING LAW 2); nothing sat"
+    if not path.is_file():
+        return None, f"`{rel}` is not a file in the ground; nothing sat"
+    if not rel.lower().endswith(".py"):
+        return None, (f"`{rel}` is not a Python file; the {MAKER_SEAT}'s window on the tree "
+                      f"is one definition by name, and only a .py has a map of them; nothing sat")
+    if not names:
+        return None, (f"the request names `{rel}` but no passage in backticks -- name the "
+                      f"definition or module-level name to change, as `_LIKE_THIS`; nothing sat")
+    try:
+        text = path.read_text(encoding="utf-8", errors="replace")
+    except OSError as exc:
+        return None, f"`{rel}` could not be read ({exc}); nothing sat"
+    marker = "range):\n\n"
+    for name in names:
+        shown = skills_windowed_python(text, rel, name)
+        if shown is None:
+            break                       # the file declares nothing to map
+        if shown.startswith(f"{rel} does not parse"):
+            return None, (shown.split(", so it cannot", 1)[0] + "; a passage cannot be found "
+                          "by name in a file that does not parse; nothing sat")
+        if marker not in shown:
+            continue                    # "No definition in <rel> is called ..."
+        head, body = shown.split(marker, 1)
+        if not head.startswith(f"{rel} — `{name}`, lines "):
+            continue                    # a containing match is not the name asked for
+        if f"\n... ({name} is " in body:
+            return None, (f"`{name}` in `{rel}` is longer than one window; a passage the "
+                          f"{MAKER_SEAT} cannot see whole it cannot quote whole -- name a "
+                          f"smaller one; nothing sat")
+        return (name, body.rstrip("\n")), ""
+    return None, (f"none of the names in the request ({', '.join('`' + n + '`' for n in names)}) "
+                  f"is on the map of `{rel}`; name one of its definitions or module-level "
+                  f"names exactly; nothing sat")
+
+
+def _tree_report(ctx: RunContext, saved: str, door: str, said: str) -> str:
+    """The engine's own account of a tree turn, for the delivery: what the
+    door said, never what the seat said about it."""
+    make = ctx.make or {}
+    if saved:
+        return (f"Landed on the line of work through {door}: {said}\n\nNothing has reached "
+                f"the main line; the suites are the review, and merging the line is the "
+                f"operator's click on Version control.")
+    if door:
+        return f"Nothing landed -- {door} said: {said}"
+    return (f"Nothing landed: the {MAKER_SEAT} answered with no edit in the shape the tree "
+            f"lands -- one line `<filepath>{make.get('rel', '')}</filepath>` and one fenced "
+            f"`@@ OLD` / `@@ NEW` block.")
+
+
 def _maker_route(ctx: RunContext, registry: AgentRegistry, skills: SkillLibrary,
                  env, report) -> str:
     """Is this turn the maker's? "" (no), "made" (the Coder sits alone and the
@@ -1330,6 +1396,29 @@ def _maker_route(ctx: RunContext, registry: AgentRegistry, skills: SkillLibrary,
         return ""
     if not any(a.key == MAKER_SEAT.lower() for a in registry.all()):
         return ""
+    # THE CODER'S WINDOW ON THE TREE (2026-09-28; see intent.wants_a_tree_change
+    # for the four runs that earned it). A change to a named file in the
+    # ground is the Coder's alone: the engine fetches the passage BY NAME off
+    # the map and hands it over, the Coder answers with an edit, and the tree
+    # doors land it -- the same shape as a made page, with `land_code` as the
+    # landing. No Router plans in the way. A name that is not on the map, or
+    # a file that cannot be read, is answered by the engine and no seat sits.
+    rel, names = intent.wants_a_tree_change(ctx.objective)
+    if rel:
+        found, why = _tree_window(env, rel, names)
+        if why:
+            ctx.notes.append(f"tree: {why}")
+            ctx.steps.append(StepResult(agent="Gate", model="(none)", output=why))
+            report("  " + ink.warn(why))
+            return "answered"
+        name, passage = found
+        ctx.make = {"kind": "tree", "rel": rel, "name": name, "passage": passage,
+                    "what": ctx.objective}
+        note = (f"tree: a change to `{rel}` at `{name}` -- the {MAKER_SEAT} is handed "
+                f"the passage as it stands and answers with an edit the tree doors land")
+        ctx.notes.append(note)
+        report("  " + ink.dim(note))
+        return "made"
     what = intent.wants_making(ctx.objective)
     if what:
         ctx.make = {"kind": "new", "name": maker.name_for(what), "what": what}
@@ -2753,7 +2842,17 @@ def run_pipeline(
         # Evaluator reads the code that was actually saved. Code that stayed
         # in a transcript was the operator's complaint: written, then lost.
         if agent.key == "expert coder" and output.strip():
-            if getattr(ctx, "make", None):
+            if getattr(ctx, "make", None) and ctx.make.get("kind") == "tree":
+                # A TREE TURN (2026-09-28): the edit goes through the tree door
+                # by land_code, its reply on this seat's tool calls, and the
+                # engine's report is the delivery. No `review`: the suites are.
+                before = len(tool_calls)
+                saved = land_code(output, env, ctx, calls=tool_calls, results=tool_results)
+                door = tool_calls[before] if len(tool_calls) > before else ""
+                said = tool_results[before].strip() if door and len(tool_results) > before else ""
+                ctx.make["report"] = _tree_report(ctx, saved, door, said)
+                report("      " + (ink.dim if saved else ink.warn)(ctx.make["report"]))
+            elif getattr(ctx, "make", None):
                 # A MAKER TURN: the page goes into its project as a version,
                 # checked first (maker.page_from). No `review` is raised -- the
                 # Quality Evaluator edits prose, and a page is judged by the

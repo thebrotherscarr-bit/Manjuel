@@ -743,6 +743,24 @@ _SHAPE = (f"Answer with exactly this, and nothing after it:\n"
           f"<filepath>{PAGE}</filepath>\n```html\n...the whole page...\n```")
 
 
+def tree_prompt(make: dict, objective: str) -> str:
+    """The Coder's one job on a TREE turn (2026-09-28): an edit to a passage
+    it is handed, in the shape the tree doors land. The passage is the
+    engine's read of the file by name, so what the Coder quotes is what is
+    there."""
+    rel = make.get("rel", "")
+    return (f"Here is the passage as it stands in `{rel}` -- `{make.get('name')}`:\n\n"
+            f"```python\n{str(make.get('passage') or '').rstrip()}\n```\n\n"
+            f"THE CHANGE ASKED FOR: {(objective or '').strip()}\n\n"
+            f"Answer with exactly this and nothing more: one line "
+            f"`<filepath>{rel}</filepath>`, then ONE fenced block that is an EDIT -- "
+            f"a line `@@ OLD`, the exact lines to replace quoted exactly as they stand "
+            f"above (as few as make the passage unique), a line `@@ NEW`, then the "
+            f"lines that replace them. Never the whole file, never a plan, no other "
+            f"words. The harness applies the edit on the line of work through the "
+            f"tree doors; the main line never moves.")
+
+
 def coder_prompt(make: dict, objective: str) -> str:
     """The Coder's one job for this turn: a whole page, new or changed."""
     if make.get("kind") == "change":

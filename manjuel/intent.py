@@ -1223,6 +1223,39 @@ def wants_changing(objective: str) -> bool:
     return bool(_CHANGE_RE.match(objective or ""))
 
 
+# THE CODER'S WINDOW ON THE TREE (2026-09-28). Four firings of the coder-tree
+# flow put "In manjuel/skills.py, add `foundation` to the `_NEVER_WRITTEN_TOP`
+# dict, one line beside the `law` entry" through the estate and nothing was
+# edited: a 4B Router planned the two-call edit and stopped at the plan, and
+# the Expert Coder -- the seat that can make it -- never sat, because a big
+# objective wakes the Router directly and skips the seat that raises
+# `technical`. So a change to a NAMED FILE IN THE GROUND is read by
+# arithmetic, as a make request is: the file, a change verb, and the names in
+# backticks the passage is fetched by. NARROW ON PURPOSE: the file must carry
+# a folder (a bare name is the workspace's), the sentence must carry a change
+# verb, and a question about changing is a question.
+_TREE_CHANGE_VERB = re.compile(
+    r"(?i)\b(?:add|append|insert|change|edit|fix|replace|rename|remove|delete|"
+    r"update|move|put|set|extend|widen|narrow)\b")
+_BACKTICKED = re.compile(r"`([A-Za-z_][\w.]*)`")
+
+
+def wants_a_tree_change(objective: str) -> tuple[str, list[str]]:
+    """(the file in the ground, the backticked names in order) when the words
+    ask for a CHANGE to a named file with a folder in its path; else ("", [])."""
+    text = objective or ""
+    if _ASKS_ABOUT_MAKING.match(text):
+        return "", []
+    rel = names_a_file(text)
+    if not rel or ("/" not in rel and "\\" not in rel):
+        return "", []
+    if not _TREE_CHANGE_VERB.search(text):
+        return "", []
+    # A backticked FILE is not a passage; `Class.method` is, as the map says.
+    names = [n for n in _BACKTICKED.findall(text) if not _FILENAME_RE.fullmatch(n)]
+    return rel, list(dict.fromkeys(names))
+
+
 # GOING BACK. Asked before a change, so "change it back" is never handed to the
 # Coder to guess at: the earlier version is on disk, and restoring it is git's
 # job, not a model's.

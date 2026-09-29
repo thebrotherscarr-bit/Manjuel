@@ -882,8 +882,30 @@ shape, on his order. One stroke (14), strokes 3075/3075 and smoke 72/72 on a mir
 regenerated, three reversals red. `manjuel/pipeline.py` moved: RESTART REQUIRED, no engine running.
 Unsaved with the record of runs two and three.
 
-**Where the ground stands.** core `main@3e0b5b4` plus `RUNBOOK.md` and this file, to be saved and
-sent through the glass's Version control on his word. atlas `main@1336fa8`: both pieces --
+**CODER-TREE FIRED A FOURTH TIME (v3), on his word:** sitting 291, FAIL at 217 s, three passes, no
+edit; the loop and the `changed` check exact. The finding: the objective is read as big, the Router
+is woken directly, the front Steward is skipped, `technical` is never raised, the Expert Coder never
+sits; the Router stalls at the map; the Steward emitted the Coder's shape once. Back on `main`,
+clean, on his word. NEXT, by card: the Coder's window on the tree -- woken by arithmetic and handed
+the passage by name, as the maker hands it a page.
+
+**THE CODER'S WINDOW ON THE TREE, by card (the day's last piece):** a change to a named file in the
+ground -- a folder in the path, a change verb, the passage in backticks -- is read by arithmetic
+before every other route (`intent.wants_a_tree_change`); the engine resolves the first name the
+file's own map resolves EXACTLY (`_tree_window`: never a containing match, never a character range)
+and the Expert Coder sits ALONE, handed the passage as it stands and the one shape to answer in
+(`maker.tree_prompt`); `land_code` puts the edit through the tree door and the delivery is what the
+door said (`_tree_report`). Nine shapes answered by the engine with no seat, each by name (REFUSALS
+§28; RUNBOOK says how to ask). One stroke (40), the suite 3110/3110 and the smoke 72/72 on a mirror,
+four reversals red (13, 3, 6, 5). RESTART REQUIRED (`intent.py`, `pipeline.py`, `maker.py`).
+MEASURED, HIS TO ORDER: v3's attempt text names `ground_read`, so on it `names_a_tool` fires before
+the window opens; the flow needs a v4 that names no tool before it is fired again. Unsaved.
+
+**Where the ground stands.** core `main@4e922fa` plus the run-four record and the Coder's window
+(CHANGELOG.md, DAYBOOK.md, HANDOFF.md, pipelines.md, REFUSALS.md, RUNBOOK.md, BUILDMAP.md,
+agents/expert_coder.md, manjuel/intent.py, manjuel/maker.py, manjuel/pipeline.py,
+tests/test_manjuel.py), to be saved and sent through the glass's Version control on his word.
+atlas `main@0cb5c63` (`suite_run` the last), level with GitHub; the morning's two pieces --
 `line/internal/tools/tools.go`, `gitctl.go`, `tools_test.go`, `line/internal/auth/auth.go`,
 `auth_test.go`, `line/cmd/atlas-mcp/prove.go`, `docs/ARCHITECTURE.md`, `CHANGELOG.md` -- saved
 and sent the same way on his word (`32bd106..1336fa8`), level with GitHub. The glass was found
