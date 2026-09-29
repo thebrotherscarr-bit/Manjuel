@@ -2506,6 +2506,13 @@ lines, TASKS' open boxes, the surface, the record, the pins -- and the gate's fi
 undeclared in the manifest, the gate's flow law behind the runner's, and no HANDOFF block for today (a
 block opened). No engine code moved.
 
+**The fold and the gate on it** — "fold and then print the page": the core under `## v0.1.16` (25 entries,
+pins 0.1.16), atlas under `## [v0.1.9]` (12 entries, eleven pins), saved and sent. His terminal's gate on
+v0.1.16 refused six lines; on "go for it" the two gate faults were fixed (`spec` reads a fold under an
+uncut mark; `flows` knows the bounded return, seven refusals in the runner's words, reconciled against
+flow.go) and the manifest gained the two tree doors and the Router's 45. Proof from the glass: strokes
+3175/3175, smoke 72/72, the standup 8/9 twice (sittings 296 and 297, the same case both times: on `what does the covenant say?` the Router's reply stopped at three seconds with a 150-character thought and no call, where on the 28th it ran two tools in forty; measured, his to rule -- the gate's standup line stays REFUSED until a live run is green).
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until
@@ -2524,9 +2531,8 @@ line; close and record.
 `tree-foundation-6`, the rest closed through the door); the door rebuilt once (the runner's feed) and
 placed on his allowance, pid 276.
 
-**Next session** — read STATUS.md first: its first print names what a mark needs before his terminal's
-suites and standup -- `.us` records for the two tree doors and the Router's drift, and the gate's flow
-law taught the bounded return; his ruling on the Expert Coder's seat (SITTING LAW 3: the transcripts of
+**Next session** — read STATUS.md first; the marks v0.1.16 and v0.1.9 are his to cut on Version control
+once his terminal's gate passes; his ruling on the Expert Coder's seat (SITTING LAW 3: the transcripts of
 runs seven and eight show qwen2.5-coder:7b not acting on a refusal it was shown, first or last); named
 beside it: a SPEC 8.2 theme for the coder on the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that
 says a tool was used; the dials (Steward 180, the court 900); a Dashboard button for the standup and

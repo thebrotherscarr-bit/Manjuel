@@ -2933,6 +2933,23 @@ def test_the_release_gate(reg, lib, book):
         check("... and passes once the Unreleased entry names the section", c.ok, c.why)
         check("the Unreleased block is read up to the next version heading, not past it",
               "4.1 old" not in _rel.unreleased((g / "CHANGELOG.md").read_text(encoding="utf-8")))
+        # THE FOLD BEFORE THE GATE (2026-09-29): an entry moved under a version
+        # heading whose mark is not cut yet still counts; under a cut mark it is history.
+        (g / "CHANGELOG.md").write_text("# log\n\n## Unreleased\n\n## v0.0.2 — today\n\n"
+                                        "- SPEC 4.1 line 2 MET: b was built\n\n## v0.0.1\n- 4.1 old\n",
+                                        encoding="utf-8")
+        keep_held = _rel.held_marks
+        _rel.held_marks = lambda root: {"v0.0.1"}
+        try:
+            c = _rel.spec(g, "v0.0.1")
+            check("an entry folded under a version heading whose mark is not cut yet still names the section",
+                  c.ok, c.why)
+            _rel.held_marks = lambda root: {"v0.0.1", "v0.0.2"}
+            c = _rel.spec(g, "v0.0.1")
+            check("   and once that mark is cut, the folded section is history and no longer counts",
+                  not c.ok and "4.1" in c.why and "uncut version" in c.why, c.why)
+        finally:
+            _rel.held_marks = keep_held
         _rel.tagged_file = lambda root, tag, rel: None
         c = _rel.spec(g, "v0.0.1")
         check("no SPEC at the last tag is the first tag with one -- counted and passed",
@@ -12169,6 +12186,58 @@ def test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book):
     check("   and a spec that keeps every rule has no fault at all",
           _rel.flow_faults(spec()) == [], str(_rel.flow_faults(spec())))
 
+    # ---- the bounded return (LAW_003), as flow.go judges it (2026-09-29) --
+    # Until today this copy of the law called every loop a cycle, and the gate
+    # refused `coder` v13 and `coder-tree` while the runner fired them.
+    def looped(loops=2, gate_inside=False, body_work=True, back=True, twice=False, extra_loops=None):
+        nodes = [{"name": "brief", "kind": "ask", "question": "Q"},
+                 {"name": "attempt", "kind": "run" if body_work else "eval",
+                  **({"question": "do it"} if body_work else {"node": "brief", "expected": "x"}),
+                  "loops": loops},
+                 {"name": "verdict", "kind": "eval", "node": "attempt", "expected": "RAN:",
+                  "match": "contains"},
+                 {"name": "land", "kind": "gate", "title": "land?"}]
+        if gate_inside:
+            nodes.insert(2, {"name": "inner", "kind": "gate", "title": "inside"})
+        if extra_loops:
+            nodes.append({"name": "spare", "kind": "run", "question": "x", "loops": extra_loops})
+        chain = [n["name"] for n in nodes if n["name"] not in ("land", "spare")]
+        edges = [{"from": a, "to": b, "when": "always"} for a, b in zip(chain, chain[1:])]
+        edges.append({"from": "verdict", "to": "land", "when": "pass"})
+        edges.append({"from": "verdict", "to": "attempt" if back else "land", "when": "fail"})
+        if twice:
+            edges.append({"from": "verdict", "to": "attempt", "when": "fail"})
+        if extra_loops:
+            edges.append({"from": "land", "to": "spare", "when": "pass"})
+        return spec(nodes, edges)
+
+    f = _rel.flow_faults(looped())
+    check("a check's fail-edge back to a node that declares `loops` is a RETURN, not a cycle: no fault",
+          f == [], str(f))
+    f = _rel.flow_faults(looped(loops=6))
+    check("   a ceiling past MaxLoops is refused, the range named",
+          any("may be returned to 6 times; the range is 0 to 5" in x for x in f), str(f))
+    f = _rel.flow_faults(looped(body_work=False))
+    check("   `loops` on an eval is refused -- the work is returned to, never the verdict",
+          any("is a eval and is not returned to" in x for x in f), str(f))
+    f = _rel.flow_faults(looped(gate_inside=True))
+    check("   a gate inside the return is refused by name (LAW_003 §3)",
+          any("gate 'inner' stands inside the return from verdict to attempt" in x for x in f), str(f))
+    f = _rel.flow_faults(looped(extra_loops=1))
+    check("   a node that declares `loops` and is returned to by nothing is a ceiling read by nothing",
+          any("'spare' declares `loops` and nothing returns to it" in x for x in f), str(f))
+    f = _rel.flow_faults(looped(twice=True))
+    check("   a check that returns twice is refused", any("returns twice" in x for x in f), str(f))
+    cyc = spec([{"name": "a", "kind": "ask", "question": "A"}, {"name": "b", "kind": "run", "question": "B"}],
+               [{"from": "a", "to": "b"}, {"from": "b", "to": "a"}])
+    f = _rel.flow_faults(cyc)
+    check("   and a forward edge that closes a cycle, with no `loops` declared, is still a cycle",
+          any("cycle or unreachable node" in x for x in f), str(f))
+    tree = ROOT / "flows" / "coder-tree.json"
+    if tree.is_file():
+        f = _rel.flow_faults(_json.loads(tree.read_text(encoding="utf-8")))
+        check("   the coder-tree flow as folded on this ground passes the gate's law", f == [], str(f))
+
     # ---- what is reported, never gated ------------------------------------
     old = spec(version=1)
     old["nodes"][1]["retries"] = 3          # lawful when it was folded; refused today
@@ -12208,13 +12277,22 @@ def test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book):
         matches = set(_re.findall(r'"(\w+)":\s*true',
                                   _re.search(r"var Matches = map\[string\]bool\{([^}]*)\}", src).group(1)))
         max_retries = int(_re.search(r"const MaxRetries = (\d+)", src).group(1))
+        max_loops = int(_re.search(r"const MaxLoops = (\d+)", src).group(1))
         name_law = _re.search(r"var NameRe = regexp\.MustCompile\(`([^`]+)`\)", src).group(1)
         var_law = _re.search(r"re := regexp\.MustCompile\(`([^`]+)`\)",
                              play_go.read_text(encoding="utf-8")).group(1)
-        check("the gate's flow law is flow.go's own: kinds, matches, retries, the name law, "
+        # AND THE RETURN LAW, phrase by phrase (2026-09-29): every refusal
+        # lawfulReturns and loopsOf make is one this copy makes in the same words.
+        for phrase in ("does not return:", "stands inside the return from",
+                       "re-does no work", "a ceiling read by nothing", "returns twice; one return per check",
+                       "may be returned to", "is not returned to -- a loop"):
+            check(f"   the return law's refusal {phrase!r} is in both copies",
+                  phrase in src and phrase in (ROOT / "tests" / "release.py").read_text(encoding="utf-8"))
+        check("the gate's flow law is flow.go's own: kinds, matches, retries, loops, the name law, "
               "and play.Render's slot",
               kinds == _rel.FLOW_KINDS and matches == _rel.FLOW_MATCHES
-              and max_retries == _rel.FLOW_MAX_RETRIES and name_law == _rel.FLOW_NAME.pattern
+              and max_retries == _rel.FLOW_MAX_RETRIES and max_loops == _rel.FLOW_MAX_LOOPS
+              and name_law == _rel.FLOW_NAME.pattern
               and var_law == _rel.FLOW_VAR.pattern,
               f"go: {sorted(kinds)} {sorted(matches)} {max_retries} {name_law} {var_law} / "
               f"py: {sorted(_rel.FLOW_KINDS)} {sorted(_rel.FLOW_MATCHES)} {_rel.FLOW_MAX_RETRIES} "

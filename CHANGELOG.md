@@ -34,6 +34,46 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The gate reads the fold and the loop, and the tree doors are declared (operator, 2026-09-29: "go for it", after the first gate on v0.1.16)
+
+WHAT THE FIRST GATE ON v0.1.16 REFUSED, on his terminal, and what each was. Three lines were the
+machine's proof, stale against the morning's edits. Two were faults in the gate itself, found by
+this cut. One was the manifest.
+
+THE GATE READS THE FOLD. `spec` refused "4.2 changed since v0.1.15 with no Unreleased line" while
+the line stood one heading down: BUILDPATH's own order folds the record (step 2) BEFORE the gate is
+asked with the version named (step 3), and the check read `## Unreleased` alone -- so every cut in
+which a SPEC line had changed would red this line by construction. `logged_since` now reads the
+Unreleased block plus every section folded under a version heading whose mark git does not hold
+yet (`held_marks`); a section under a cut mark is history and does not count. Stroked in the gate's
+own stroke: the folded entry counts until its mark is cut, and not after.
+
+THE GATE READS THE LOOP. `flows` refused `coder` v13 and `coder-tree` as "cycle or unreachable
+node": the gate's Python copy of the flow law predated the bounded return of 2026-09-28, while the
+runner's `Validate` allows a check's fail-edge back to a node that declares `loops` -- two copies
+of one law, drifted. `flow_faults` now restates `loopsOf` and `lawfulReturns` in the runner's own
+words: a return leaves Kahn's count; it must go BACK; its body (the forward paths from the node
+returned to up to the check, both included) holds no gate and does work; a check returns once;
+`loops` is 0 to 5 and never on an eval or a gate; a declared ceiling is reached by something. The
+flow-law stroke gains the loop shape (the coder-tree flow as folded on this ground passes; seven
+refusals named in the runner's words) and the reconciliation gains `MaxLoops` and every refusal
+phrase, read off `flow.go`. On his terminal the gate now says `flows` ok: six flows, eighteen folded
+versions, and REPORTED, not gated, that `coder` and `version-tag` were fired and never COMPLETE.
+
+THE TREE DOORS ARE DECLARED. `us/manjuel.us` gains records for `ground_edit` and `ground_write` --
+the wall the ground on a line of work only, the never-written names, MIXED, the gate held to what
+an edit adds, one passage or one whole file, the terminator kept, unsaved until git_commit -- and
+`us/seat_router.us` lists them, 43 to 45, since the Router's seat file says "May Call: all". The
+reconciler: 59 records, 0 findings.
+
+PROVED. The gate's strokes (release 59/59; gate 158/158; flows 37/37) and the
+manifest's (44/44, 24/24) on a mirror; and ON THE GROUND, FROM THE GLASS, after the last edit:
+strokes 3175/3175, smoke 72/72, the standup 8/9 twice (sittings 296 and 297, the same case both times: on `what does the covenant say?` the Router's reply stopped at three seconds with a 150-character thought and no call, where on the 28th it ran two tools in forty; measured, his to rule -- the gate's standup line stays REFUSED until a live run is green) -- the stamps the gate reads, written by
+the door's own suite_run and standup_run (his ruling: on the glass and the record matching is
+proof). No engine code moved: no restart. WHAT GOES RED IF UNPLUGGED: the gate's own stroke on the
+fold, the flow-law stroke on the loop, and the manifest stroke on the two records; on his terminal,
+`spec`, `flows` and `manifest` at cut time.
+
 ## v0.1.16 — 2026-09-29 11:53
 
 ### The STATUS page: where the ground stands, printed from the record, and the gate's fifth terminal check (operator, 2026-09-29: "build it")

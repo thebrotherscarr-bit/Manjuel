@@ -334,6 +334,40 @@ def unreleased(changelog: str) -> str:
     return m.group(1) if m else ""
 
 
+VERSION_SECTION = re.compile(r"^## (v?\d+\.\d+\.\d+)\b[^\n]*\n(.*?)(?=^## |\Z)", re.M | re.S)
+
+
+def held_marks(root: Path = ROOT) -> set[str]:
+    """Every mark git holds here, as named; empty where git cannot answer."""
+    try:
+        r = subprocess.run(["git", "tag", "--list"], capture_output=True, text=True,
+                           encoding="utf-8", errors="replace", cwd=str(root), timeout=30,
+                           stdin=DEVNULL)
+    except Exception:
+        return set()
+    return set(r.stdout.split()) if r.returncode == 0 else set()
+
+
+def logged_since(changelog: str, tag: str, held: set[str]) -> str:
+    """What the record says since `tag`: the Unreleased block, plus every
+    section folded under a version heading whose mark is NOT cut yet.
+
+    THE FOLD COMES BEFORE THE GATE (BUILDPATH, "The marks": step 2 folds,
+    step 3 asks this gate with the version named), so at cut time the entries
+    stand under `## vX.Y.Z`, not under Unreleased -- and this check read
+    Unreleased alone. Found 2026-09-29 by the first cut in which a SPEC line
+    had changed: "4.2 changed since v0.1.15 with no Unreleased line", with
+    the line sitting one heading down. A section under a mark git already
+    holds is history and does not count; the one under the mark about to be
+    cut, or any heading with no mark yet, does."""
+    text = unreleased(changelog)
+    bare = {m.lstrip("v") for m in held} | {tag.lstrip("v")}
+    for m in VERSION_SECTION.finditer(changelog):
+        if m.group(1).lstrip("v") not in bare:
+            text += "\n" + m.group(2)
+    return text
+
+
 def spec(root: Path = ROOT, tag: str | None = None, cutting: str = "") -> Check:
     tag = last_tag(root, cutting) if tag is None else tag
     try:
@@ -351,10 +385,11 @@ def spec(root: Path = ROOT, tag: str | None = None, cutting: str = "") -> Check:
     changed = [s for s in sorted(set(cur) | set(before)) if cur.get(s) != before.get(s)]
     if not changed:
         return Check("spec", True, f"{n_lines} section-4 lines, none changed since {tag}")
-    unlogged = [s for s in changed if s not in unreleased(log)]
+    logged = logged_since(log, tag, held_marks(root))
+    unlogged = [s for s in changed if s not in logged]
     if unlogged:
-        return Check("spec", False, f"changed since {tag} with no Unreleased CHANGELOG line "
-                                    f"naming them: {', '.join(unlogged)}")
+        return Check("spec", False, f"changed since {tag} with no CHANGELOG line naming them "
+                                    f"under Unreleased or an uncut version: {', '.join(unlogged)}")
     return Check("spec", True, f"changed since {tag}: {', '.join(changed)} -- each in CHANGELOG")
 
 
@@ -690,7 +725,24 @@ FLOW_HISTORY = re.compile(r"^([a-z0-9][a-z0-9_-]{0,63})\.v(\d+)$")   # <name>.v<
 FLOW_KINDS = {"ask", "prompt", "seat", "memory", "eval", "gate", "run"}  # flow.go Kinds
 FLOW_MATCHES = {"equals", "contains"}                                  # flow.go Matches
 FLOW_MAX_RETRIES = 5                                                   # flow.go MaxRetries
+FLOW_MAX_LOOPS = 5                                                     # flow.go MaxLoops
 FLOW_VAR = re.compile(r"\{\{\s*([A-Za-z0-9_]+)\s*\}\}")                # play.Render's slot
+
+
+def _reach(start: str, forward: list, up: bool) -> set:
+    """flow.go's reach: every node reachable from `start` over the forward
+    edges, walked backwards when `up`; the start itself not included."""
+    out: set = set()
+    queue = [start]
+    while queue:
+        cur = queue.pop(0)
+        for frm, to in forward:
+            nxt = to if (not up and frm == cur) else (frm if (up and to == cur) else "")
+            if not nxt or nxt in out or nxt == start:
+                continue
+            out.add(nxt)
+            queue.append(nxt)
+    return out
 
 
 def flow_faults(spec) -> list[str]:
@@ -738,6 +790,17 @@ def flow_faults(spec) -> list[str]:
         elif retries > 0 and kind in ("eval", "gate"):
             faults.append(f"node {nn!r} is a {kind}, and a {kind} is not retried -- "
                           f"retry answers an ERROR, never a verdict")
+        # THE BOUNDED RETURN (LAW_003; flow.go 2026-09-28, restated here
+        # 2026-09-29 -- until then this copy refused every flow that loops as
+        # a cycle, `coder` v13 and `coder-tree` among them, while the runner
+        # allowed them: two copies of one law).
+        loops = n.get("loops") or 0
+        if not isinstance(loops, int) or loops < 0 or loops > FLOW_MAX_LOOPS:
+            faults.append(f"node {nn!r} may be returned to {loops!r} times; the range is "
+                          f"0 to {FLOW_MAX_LOOPS}")
+        elif loops > 0 and kind in ("eval", "gate"):
+            faults.append(f"node {nn!r} is a {kind} and is not returned to -- a loop re-does "
+                          f"WORK, so `loops` goes on the node that does it")
         by_name[nn] = n
     for nn, n in by_name.items():
         ref = str(n.get("node") or "")
@@ -751,6 +814,8 @@ def flow_faults(spec) -> list[str]:
                 faults.append(f"node {nn!r} reads {{{{{var}}}}} and no node is named {var[4:]!r}")
     incoming = {k: 0 for k in by_name}
     adj: dict[str, list[str]] = {}
+    returning: dict[str, str] = {}        # check -> the node it returns to (flow.go loopsOf)
+    forward: list[tuple[str, str]] = []
     for e in spec.get("edges") or []:
         e = e if isinstance(e, dict) else {}
         frm, to = str(e.get("from", "")), str(e.get("to", ""))
@@ -761,6 +826,14 @@ def flow_faults(spec) -> list[str]:
         if to not in by_name:
             faults.append(f"edge to unknown node {to!r}")
             continue
+        # A check's fail-edge into a node that declares `loops` is a RETURN,
+        # not a forward edge: it leaves Kahn's count and is judged below.
+        if ((by_name[to].get("loops") or 0) > 0 and by_name[frm].get("kind") == "eval"
+                and when == "fail"):
+            if frm in returning:
+                faults.append(f"check {frm!r} returns twice; one return per check")
+            returning[frm] = to
+            continue
         if when not in ("always", "pass", "fail"):
             faults.append(f"edge {frm}->{to} carries bad when {when!r}")
         if when == "fail" and by_name[frm].get("kind") not in ("eval", "gate"):
@@ -768,6 +841,7 @@ def flow_faults(spec) -> list[str]:
                           f"({frm} is {by_name[frm].get('kind')})")
         incoming[to] += 1
         adj.setdefault(frm, []).append(to)
+        forward.append((frm, to))
     if by_name:
         starts = sorted(k for k, v in incoming.items() if v == 0)
         if len(starts) != 1:
@@ -782,7 +856,34 @@ def flow_faults(spec) -> list[str]:
                     ready.append(to)
             ready.sort()
         if len(order) != len(by_name):
-            faults.append(f"cycle or unreachable node in flow {name!r}")
+            faults.append(f"cycle or unreachable node in flow {name!r} -- a node is returned "
+                          f"to only by a check's fail-edge, and only when it declares `loops`")
+        # lawfulReturns: a return goes BACK, around a body that does work, with
+        # no gate inside; and a declared ceiling is reached by something.
+        pos = {n: i for i, n in enumerate(order)}
+        reached: set = set()
+        for chk in sorted(returning):
+            to = returning[chk]
+            if pos.get(to, -1) >= pos.get(chk, -1):
+                faults.append(f"edge {chk}->{to} does not return: {to} does not stand before {chk}")
+                continue
+            body = {to, chk} | (_reach(to, forward, False) & _reach(chk, forward, True))
+            work = False
+            for nm in sorted(body):
+                k = by_name[nm].get("kind")
+                if k == "gate":
+                    faults.append(f"gate {nm!r} stands inside the return from {chk} to {to}; a "
+                                  f"gate stands at the end of a loop, never inside it (LAW_003 §3)")
+                elif k != "eval":
+                    work = True
+            if not work:
+                faults.append(f"the return from {chk} to {to} re-does no work -- it would score "
+                              f"the same answer again until the score agrees (LAW_003 §4)")
+            reached.add(to)
+        for nn, n in by_name.items():
+            if (n.get("loops") or 0) > 0 and nn not in reached:
+                faults.append(f"node {nn!r} declares `loops` and nothing returns to it -- "
+                              f"a ceiling read by nothing")
     return faults
 
 

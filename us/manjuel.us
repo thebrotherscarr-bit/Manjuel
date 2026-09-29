@@ -367,6 +367,21 @@ other (LAW 5); now a record that lies is a finding.
 {
   "can_approve": false,
   "covenant": "1512741580b7239b",
+  "id": "ground_edit",
+  "kind": "skill",
+  "office": "MANJUEL",
+  "reports_to": "manjuel",
+  "source": "skills/ground_edit.md",
+  "us": 1,
+  "wall": "the ground itself, on a line of work only -- the main line is refused (RULE 6); refuses by name a secret, client material, worlds/, any .git/, law/, the governing files (CLAUDE.md, .gitignore, .gitattributes, index_roots.txt, agents/, skills/, pipelines.md, commands.md, .env.example), the record and runtime stores (sessions/, logs/, index/, state/, flows/, memory/, memory.md, SEAT_LOG.md, agent_workspace/), a proof stamp under tests/, BUILDMAP.md, a binary, projects/; a MIXED file; and an edit that ADDS what the structural gate refuses (the file's own carrying is said, never refused). Replaces ONE uniquely-anchored passage and keeps the file's terminator; unsaved until git_commit lands it on that line.",
+  "writes": true
+}
+```
+
+```json
+{
+  "can_approve": false,
+  "covenant": "1512741580b7239b",
   "id": "ground_read",
   "kind": "skill",
   "office": "MANJUEL",
@@ -390,6 +405,21 @@ other (LAW 5); now a record that lies is a finding.
   "us": 1,
   "wall": "the whole ground, read-only; reports where the chain stands",
   "writes": false
+}
+```
+
+```json
+{
+  "can_approve": false,
+  "covenant": "1512741580b7239b",
+  "id": "ground_write",
+  "kind": "skill",
+  "office": "MANJUEL",
+  "reports_to": "manjuel",
+  "source": "skills/ground_write.md",
+  "us": 1,
+  "wall": "the ground itself, on a line of work only -- the main line is refused (RULE 6); the same never-written names as ground_edit; a folder that does not exist (RULE 8: a folder is the operator's to place); a MIXED file; and a .py that would not parse or carries what the structural gate refuses. Writes ONE whole file with the file's own terminator, or its neighbours' for a new one; unsaved until git_commit lands it on that line.",
+  "writes": true
 }
 ```
 

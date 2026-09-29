@@ -696,6 +696,14 @@ gated). Each is his to order; none is built here.
 first, answered the refused block again three times. Moving the Expert Coder's seat is his ruling
 (SITTING LAW 3).
 
+**THE FOLD, AND THE GATE ON IT** ("fold and then print the page", then "go for it"): the core folded under
+`## v0.1.16` with the pins at 0.1.16, atlas under `## [v0.1.9]` with eleven pins at 0.1.9, both saved and sent.
+His terminal's first gate on v0.1.16 refused six lines; the two that were the gate's own are fixed --
+`spec` now reads a section folded under an uncut mark, `flows` now knows the bounded return -- and the
+manifest gains the two tree doors and the Router's 45. Proof from the glass after the last edit: strokes
+3175/3175, smoke 72/72, the standup 8/9 twice (sittings 296 and 297, the same case both times: on `what does the covenant say?` the Router's reply stopped at three seconds with a 150-character thought and no call, where on the 28th it ran two tools in forty; measured, his to rule -- the gate's standup line stays REFUSED until a live run is green). The marks are his click on Version control once the gate
+passes on his terminal.
+
 **Where the ground stands.** core `main@d280b10` plus this piece (STATUS.md, tests/status.py,
 tests/release.py, tests/test_manjuel.py, BUILDMAP.md, CHANGELOG.md, DAYBOOK.md, HANDOFF.md, BUILDPATH.md,
 README.md, RUNBOOK.md, TESTING.md), to be saved and sent through the glass's Version control on his
