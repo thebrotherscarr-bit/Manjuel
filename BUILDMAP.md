@@ -281,7 +281,7 @@ this file (where each thing is) -> REFUSALS.md (what each guard refuses)
 | def | `laws_text` | 267-290 | The ten estate laws as sealed -- the numbered list under the LAST |
 | def | `run` | 300-329 | The whole gate for one run. Cheap: the chain walk is four files and a |
 
-### manjuel/maker.py — 912 lines
+### manjuel/maker.py — 918 lines
 
 *THE MAKER -- "make me a snake game", and the bookkeeping nobody thinks about.*
 
@@ -314,22 +314,22 @@ this file (where each thing is) -> REFUSALS.md (what each guard refuses)
 | def | `restore` | 657-690 | Go back to version `target` (0 = the one before this) by saving it |
 | def | `projects` | 697-706 | Every project in the ground, by name: a folder under projects/ with a |
 | def | `find` | 709-725 | The projects these words name. The one whose folder name they make |
-| def | `tree_prompt` | 746-770 | The Coder's one job on a TREE turn (2026-09-28): an edit to a passage |
-| def | `coder_prompt` | 773-784 | The Coder's one job for this turn: a whole page, new or changed. |
-| def | `_where` | 787-788 |  |
-| def | `_trouble` | 791-799 | The check's word, as a paragraph, or nothing at all. |
-| def | `report_made` | 802-811 |  |
-| def | `report_changed` | 814-822 |  |
-| def | `said_checked` | 825-841 | What the check found, for the person, in one paragraph -- or "" when it |
-| def | `report_back` | 844-850 |  |
-| def | `report_unsaved` | 853-856 |  |
-| def | `report_too_big` | 859-864 |  |
-| def | `report_picked` | 867-880 |  |
-| def | `report_put_down` | 883-888 |  |
-| def | `_named` | 891-892 |  |
-| def | `report_nothing_in_hand` | 895-898 |  |
-| def | `report_which` | 901-903 |  |
-| def | `report_no_such` | 906-912 |  |
+| def | `tree_prompt` | 746-776 | The Coder's one job on a TREE turn (2026-09-28): an edit to a passage |
+| def | `coder_prompt` | 779-790 | The Coder's one job for this turn: a whole page, new or changed. |
+| def | `_where` | 793-794 |  |
+| def | `_trouble` | 797-805 | The check's word, as a paragraph, or nothing at all. |
+| def | `report_made` | 808-817 |  |
+| def | `report_changed` | 820-828 |  |
+| def | `said_checked` | 831-847 | What the check found, for the person, in one paragraph -- or "" when it |
+| def | `report_back` | 850-856 |  |
+| def | `report_unsaved` | 859-862 |  |
+| def | `report_too_big` | 865-870 |  |
+| def | `report_picked` | 873-886 |  |
+| def | `report_put_down` | 889-894 |  |
+| def | `_named` | 897-898 |  |
+| def | `report_nothing_in_hand` | 901-904 |  |
+| def | `report_which` | 907-909 |  |
+| def | `report_no_such` | 912-918 |  |
 
 ### manjuel/mathkit.py — 236 lines
 
@@ -914,7 +914,7 @@ this file (where each thing is) -> REFUSALS.md (what each guard refuses)
 | def | `GroundWatch.start` | 162-187 |  |
 | def | `GroundWatch.stop` | 189-195 |  |
 
-manjuel/: 30 files, 22908 lines.
+manjuel/: 30 files, 22914 lines.
 
 ## GUARDS — by the failure that earned them
 
@@ -1604,27 +1604,27 @@ its line range. The suites are the memory (HANDOFF: test discipline).
 | `test_the_edit_door_holds_the_same_line_as_the_write_door` | 14006-14061 | — |
 | `test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name` | 14064-14215 | `_sk`, `_sk.REVIEW_ONLY_SKILLS`, `_sk.WRITING_SKILLS`, `gitstate`, `gitstate.commit` |
 | `test_the_coder_lands_an_edit_on_the_tree` | 14218-14322 | `RunContext`, `SkillExecutionEnv`, `StepResult`, `gitstate`, `gitstate.commit`, `land_code`, `tool_verdicts` |
-| `test_the_coders_window_on_the_tree` | 14325-14628 | `RunContext`, `_maker_route`, `_tree_window`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.is_big_objective`, `intent.names_a_tool`, `intent.wants_a_tree_change`, `run_pipeline` |
-| `test_a_run_python_child_is_walled_into_the_workspace` | 14631-14716 | `_sk`, `_sk.JAIL_MARK` |
-| `test_a_hook_watches_a_call_without_taking_it_over` | 14719-14823 | `_sk`, `_sk.SkillSpec`, `_sk._HANDLERS`, `_sk.hook_faults`, `_sk.parse_hooks`, `_sk.pop` |
-| `test_a_run_in_flight_can_be_interrupted` | 14826-14898 | `SV`, `SV.ASKING`, `SV.COMMANDS`, `SV.IDLE`, `SV.Inbox`, `SV.RUNNING`, `SV.TERMINAL`, `SV.Wire`, `SV._thread`, `_cli`, `_cli._loop`, `_in` |
-| `test_a_skill_cannot_hang_the_repl` | 14901-14943 | `_sk`, `_sk.SKILL_TIMEOUT`, `_sk._HANDLERS`, `_sk._run_bounded`, `_sk.pop` |
-| `test_native_tool_calling` | 14946-15074 | `REVIEW_ONLY`, `calls_to_action_xml`, `declares`, `extract_tool_call` |
-| `test_the_router_is_told_how_not_just_what` | 15077-15144 | `RunContext`, `_router_prompt`, `_steward_prompt` |
-| `test_a_thinking_router_is_never_silent` | 15147-15206 | `OllamaRuntime`, `_salvage`, `thinking_of` |
-| `test_write_read_and_speak_about_it` | 15209-15299 | `REVIEW_ONLY_SKILLS`, `RunContext`, `intent`, `intent.names_a_tool`, `run_pipeline` |
-| `test_model_override` | 15302-15613 | `AgentRegistry`, `AgentRegistry.load`, `RegistryError`, `RuntimeError_`, `_cli`, `_cli.COMMANDS`, `_cli._cmd_model`, `_ctx`, `_ctx.redirect_stdout`, `rack`, `spelling` |
-| `test_path_gate` | 15616-15747 | `RunContext`, `SkillSpec`, `gate_paths`, `parse_path_args`, `run_pipeline` |
-| `test_flags_are_not_speech` | 15750-15790 | `RunContext`, `build_prompt`, `read_flags`, `run_pipeline`, `strip_control` |
-| `test_the_maker` | 15793-16070 | `RunContext`, `_maker_route`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.wants_changing`, `intent.wants_going_back`, `intent.wants_making`, `maker`, `maker.AUTHOR_NAME`, `maker.MakerRefused` |
-| `test_the_maker_runs_the_page_before_it_keeps_it` | 16073-16337 | `RunContext`, `maker`, `maker.CHECK_BUDGET`, `maker.PROFILE_PREFIX`, `maker.PROFILE_STALE`, `maker.REPAIRS`, `maker.SETTLE`, `maker._BROWSERS`, `maker._CATCH`, `maker._inject`, `maker._made_at`, `maker._sweep_profiles` |
-| `test_the_maker_picks_up_and_puts_down` | 16340-16573 | `RunContext`, `_maker_route`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `intent`, `intent.wants_going_back`, `intent.wants_picking_up`, `intent.wants_putting_down`, `maker` |
-| `test_ink` | 16576-16624 | `ink`, `ink.RESET`, `ink.Spinner`, `ink._STATE`, `ink.bad`, `ink.body`, `ink.dim`, `ink.enabled`, `ink.good`, `ink.seat`, `ink.seat_color`, `ink.warn` |
-| `test_math` | 16627-16650 | `M`, `M.MathError`, `M.cosine`, `M.linear_regression`, `M.matmul`, `M.parse_numbers`, `M.stdev`, `M.transpose`, `M.variance` |
-| `test_a_commit_is_not_a_tag` | 16653-16694 | `_HANDLERS` |
-| `test_says_is_a_phrase_list_not_a_paragraph` | 16697-16762 | `SkillLibrary`, `SkillLibrary.load`, `parse_says` |
-| `test_the_stamp_is_not_an_edit` | 16765-16873 | `_BOOT_STAMPS`, `_H`, `_sf`, `suite_tally` |
-| `test_doctrine` | 16876-17050 | `D`, `D.dead_paths`, `D.doc_pass_report`, `D.doctrine_report`, `D.living`, `D.open_tasks`, `D.sittings`, `D.skills_axis`, `D.stale_tallies`, `D.versions`, `_H`, `_SL` |
-| `test_the_core_sees_its_own_repository` | 17053-17200 | `gitstate`, `gitstate.GitRefused`, `gitstate._bad_branch_name`, `gitstate._host_of`, `gitstate._jailed`, `gitstate.branches`, `gitstate.close_branch`, `gitstate.commit`, `gitstate.diff`, `gitstate.read`, `gitstate.remotes`, `gitstate.switch` |
-| `test_record_and_git` | 17203-17307 | `RunContext`, `_cli`, `_cli._toll_answer`, `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.pull`, `gitstate.push`, `gitstate.read`, `seatlog`, `seatlog.RunNote` |
+| `test_the_coders_window_on_the_tree` | 14325-14634 | `RunContext`, `_maker_route`, `_tree_window`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.is_big_objective`, `intent.names_a_tool`, `intent.wants_a_tree_change`, `run_pipeline` |
+| `test_a_run_python_child_is_walled_into_the_workspace` | 14637-14722 | `_sk`, `_sk.JAIL_MARK` |
+| `test_a_hook_watches_a_call_without_taking_it_over` | 14725-14829 | `_sk`, `_sk.SkillSpec`, `_sk._HANDLERS`, `_sk.hook_faults`, `_sk.parse_hooks`, `_sk.pop` |
+| `test_a_run_in_flight_can_be_interrupted` | 14832-14904 | `SV`, `SV.ASKING`, `SV.COMMANDS`, `SV.IDLE`, `SV.Inbox`, `SV.RUNNING`, `SV.TERMINAL`, `SV.Wire`, `SV._thread`, `_cli`, `_cli._loop`, `_in` |
+| `test_a_skill_cannot_hang_the_repl` | 14907-14949 | `_sk`, `_sk.SKILL_TIMEOUT`, `_sk._HANDLERS`, `_sk._run_bounded`, `_sk.pop` |
+| `test_native_tool_calling` | 14952-15080 | `REVIEW_ONLY`, `calls_to_action_xml`, `declares`, `extract_tool_call` |
+| `test_the_router_is_told_how_not_just_what` | 15083-15150 | `RunContext`, `_router_prompt`, `_steward_prompt` |
+| `test_a_thinking_router_is_never_silent` | 15153-15212 | `OllamaRuntime`, `_salvage`, `thinking_of` |
+| `test_write_read_and_speak_about_it` | 15215-15305 | `REVIEW_ONLY_SKILLS`, `RunContext`, `intent`, `intent.names_a_tool`, `run_pipeline` |
+| `test_model_override` | 15308-15619 | `AgentRegistry`, `AgentRegistry.load`, `RegistryError`, `RuntimeError_`, `_cli`, `_cli.COMMANDS`, `_cli._cmd_model`, `_ctx`, `_ctx.redirect_stdout`, `rack`, `spelling` |
+| `test_path_gate` | 15622-15753 | `RunContext`, `SkillSpec`, `gate_paths`, `parse_path_args`, `run_pipeline` |
+| `test_flags_are_not_speech` | 15756-15796 | `RunContext`, `build_prompt`, `read_flags`, `run_pipeline`, `strip_control` |
+| `test_the_maker` | 15799-16076 | `RunContext`, `_maker_route`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.wants_changing`, `intent.wants_going_back`, `intent.wants_making`, `maker`, `maker.AUTHOR_NAME`, `maker.MakerRefused` |
+| `test_the_maker_runs_the_page_before_it_keeps_it` | 16079-16343 | `RunContext`, `maker`, `maker.CHECK_BUDGET`, `maker.PROFILE_PREFIX`, `maker.PROFILE_STALE`, `maker.REPAIRS`, `maker.SETTLE`, `maker._BROWSERS`, `maker._CATCH`, `maker._inject`, `maker._made_at`, `maker._sweep_profiles` |
+| `test_the_maker_picks_up_and_puts_down` | 16346-16579 | `RunContext`, `_maker_route`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `intent`, `intent.wants_going_back`, `intent.wants_picking_up`, `intent.wants_putting_down`, `maker` |
+| `test_ink` | 16582-16630 | `ink`, `ink.RESET`, `ink.Spinner`, `ink._STATE`, `ink.bad`, `ink.body`, `ink.dim`, `ink.enabled`, `ink.good`, `ink.seat`, `ink.seat_color`, `ink.warn` |
+| `test_math` | 16633-16656 | `M`, `M.MathError`, `M.cosine`, `M.linear_regression`, `M.matmul`, `M.parse_numbers`, `M.stdev`, `M.transpose`, `M.variance` |
+| `test_a_commit_is_not_a_tag` | 16659-16700 | `_HANDLERS` |
+| `test_says_is_a_phrase_list_not_a_paragraph` | 16703-16768 | `SkillLibrary`, `SkillLibrary.load`, `parse_says` |
+| `test_the_stamp_is_not_an_edit` | 16771-16879 | `_BOOT_STAMPS`, `_H`, `_sf`, `suite_tally` |
+| `test_doctrine` | 16882-17056 | `D`, `D.dead_paths`, `D.doc_pass_report`, `D.doctrine_report`, `D.living`, `D.open_tasks`, `D.sittings`, `D.skills_axis`, `D.stale_tallies`, `D.versions`, `_H`, `_SL` |
+| `test_the_core_sees_its_own_repository` | 17059-17206 | `gitstate`, `gitstate.GitRefused`, `gitstate._bad_branch_name`, `gitstate._host_of`, `gitstate._jailed`, `gitstate.branches`, `gitstate.close_branch`, `gitstate.commit`, `gitstate.diff`, `gitstate.read`, `gitstate.remotes`, `gitstate.switch` |
+| `test_record_and_git` | 17209-17313 | `RunContext`, `_cli`, `_cli._toll_answer`, `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.pull`, `gitstate.push`, `gitstate.read`, `seatlog`, `seatlog.RunNote` |
 

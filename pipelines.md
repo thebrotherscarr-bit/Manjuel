@@ -531,7 +531,8 @@ brief ──→ open (gate: grants git_branch) ──pass──→ line ──�
                        can name a door and shut the window. The failed pass
                        rides as the turn's FEED instead (the runner hands
                        `fail_attempt` over as source material, same day), and
-                       the Coder reads it under "THE LAST PASS FAILED". `loops: 2`
+                       the Coder reads it FIRST, under "THE LAST PASS FAILED",
+                       above the passage and the change (his ruling). `loops: 2`
     strokes     run    a spelled-out `suite_run` (strokes); the suite stamps its
                        own proof
     strokes_ok  eval   on `strokes`, expecting `green · exit 0` in the tools

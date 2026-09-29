@@ -34,6 +34,21 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The refusal stands above the change in the Coder's prompt (operator, 2026-09-29: "put the refusal above the change in the prompt")
+
+His ruling on run seven's finding. `maker.tree_prompt` had shown the carried pass BELOW the passage
+and the change asked for, and the Coder answered the refused block again, twice. Now, on a pass after
+a return, the prompt OPENS with it: "THE LAST PASS FAILED -- read this before anything below. What
+was answered then is not to be answered again; what was said:" and the door's own words; then the
+passage as it stands, then the change asked for, then the shape to answer in. Nothing else moved:
+the feed still rides as the runner's feed, the arithmetic still reads the objective alone, the
+Guardian still reads the feed first. PROVED on a mirror: the window stroke grows to 64 (the refusal
+the first thing the Coder reads, above the passage and the change, told not to answer it again); the
+whole suite 3134/3134, the smoke 72/72; the reversal R15 (the refusal put back below the change) red.
+`manjuel/maker.py` moved: RESTART REQUIRED. WHAT GOES RED IF UNPLUGGED: R15 -- and on the glass, the
+eighth firing on a change whose first pass fails is the measure of whether a seat that reads the
+refusal first changes course; not fired here.
+
 ### coder-tree fired a seventh time on a change whose first pass fails: the carried pass rode as the feed and reached the Coder, and the seat repeated what was refused (operator, 2026-09-29: "fire coder-tree v5 on a change whose first pass fails")
 
 THE CHANGE, chosen so the door itself fails the first pass: add `.github` to the never-written

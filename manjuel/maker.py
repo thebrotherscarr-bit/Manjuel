@@ -750,16 +750,22 @@ def tree_prompt(make: dict, objective: str, feed: str = "") -> str:
     there. A FEED is what the last pass said (2026-09-29, his word: "carry the
     failed pass without the door's name"): a flow's runner hands a sent-back
     pass over as the turn's feed, never in the objective, so the door's name
-    in it routes nothing and the Coder still reads why the last try failed."""
+    in it routes nothing and the Coder still reads why the last try failed.
+    THE REFUSAL STANDS ABOVE THE CHANGE (his ruling, 2026-09-29: "put the
+    refusal above the change in the prompt"): the seventh firing showed the
+    Coder read the refusal below the change and answered the refused block
+    again, twice; so what was refused is the first thing it reads, and it is
+    told not to answer it again."""
     rel = make.get("rel", "")
     low = rel.lower()
     fence = "python" if low.endswith(".py") else "markdown" if low.endswith(".md") else ""
-    failed = ((f"THE LAST PASS FAILED -- what was said, read it before you answer:\n"
+    failed = ((f"THE LAST PASS FAILED -- read this before anything below. What was "
+               f"answered then is not to be answered again; what was said:\n"
                f"{feed.strip()}\n\n") if (feed or "").strip() else "")
-    return (f"Here is the passage as it stands in `{rel}` -- `{make.get('name')}`:\n\n"
+    return (f"{failed}"
+            f"Here is the passage as it stands in `{rel}` -- `{make.get('name')}`:\n\n"
             f"```{fence}\n{str(make.get('passage') or '').rstrip()}\n```\n\n"
             f"THE CHANGE ASKED FOR: {(objective or '').strip()}\n\n"
-            f"{failed}"
             f"Answer with ONE fenced block and nothing more -- either an EDIT: a line "
             f"`@@ OLD`, the exact lines to replace quoted exactly as they stand above "
             f"(as few as make the passage unique), a line `@@ NEW`, then the lines that "

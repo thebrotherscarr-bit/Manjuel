@@ -2488,7 +2488,9 @@ the door rebuilt and placed on his allowance. Then "fire coder-tree v5 on a chan
 fails": run seven on sitting 294 (09:02 to 09:16) -- the door refused `import socket` on pass one as
 designed; the carry held on passes two and three (the feed, the Guardian first, the Coder shown the
 refusal); the Coder repeated the refused block both times; FAIL at the ceiling, nothing landed, the
-empty line closed. A seat that changes course on a refusal is his ruling.
+empty line closed. His ruling, the same evening: "put the refusal above the change in the prompt" --
+built, the Coder's tree prompt now opening a retry with what was refused and told not to answer it
+again; window stroke 64, 3134/3134 and 72/72 on a mirror, R15 red; restart required.
 
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
@@ -2508,8 +2510,8 @@ the Dashboard with their tolls; the ground on `main`; no line of work remains (h
 `tree-foundation-6`, the rest closed through the door); the door rebuilt once (the runner's feed) and
 placed on his allowance, pid 276.
 
-**Next session** — his ruling on a seat that changes course on a refusal it has read (a coder that reads
-one, SITTING LAW 3, or a prompt that puts the refusal above the change); named beside it: a SPEC 8.2
-theme for the coder on the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that
+**Next session** — an eighth firing of `coder-tree` v5 on a change whose first pass fails, the measure of
+the refusal read first (his word); if the seat still repeats it, SITTING LAW 3's move is the transcript's
+to earn; named beside it: a SPEC 8.2 theme for the coder on the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that
 says a tool was used; the dials (Steward 180, the court 900); a Dashboard button for the standup and
 a `loops` box in the builder; the front-end agent handoff plan.

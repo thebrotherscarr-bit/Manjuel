@@ -14613,6 +14613,12 @@ def test_the_coders_window_on_the_tree(reg, lib, book):
           and "ground_edit said: Refused: that passage is not in thing.py" in asked
           and asked.index("THE LAST PASS FAILED") < asked.index("Answer with ONE fenced block"),
           asked[:400])
+    check("   and ABOVE the passage and the change -- the first thing it reads -- told not to "
+          "answer it again (his ruling, 2026-09-29)",
+          asked.startswith("THE LAST PASS FAILED")
+          and asked.index("THE LAST PASS FAILED") < asked.index("Here is the passage")
+          and asked.index("Here is the passage") < asked.index("THE CHANGE ASKED FOR")
+          and "not to be answered again" in asked, asked[:300])
     check("   and the retry lands",
           (g / "manjuel" / "thing.py").read_bytes() == CHANGED4,
           repr((g / "manjuel" / "thing.py").read_bytes()[:100]))
