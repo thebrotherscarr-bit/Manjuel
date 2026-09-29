@@ -27,7 +27,7 @@ from .skills import (GATE_MARK, MESSAGE_IS_THE_OPERATORS, REVIEW_ONLY_SKILLS,
                      args_from_words as skills_args_from_words,
                      _inside_ground as skills_inside_ground, declared_path,
                      mcp_spelled_out, operator_message, unjail,
-                     _EDIT_OLD as skills_edit_old,
+                     _EDIT_OLD as skills_edit_old, _EDIT_NEW as skills_edit_new,
                      _windowed_python as skills_windowed_python,
                      _HEADING as skills_heading, READ_WINDOW as skills_read_window)
 from .drift import DriftChecker
@@ -317,47 +317,91 @@ def inspect_code(name: str, code: str) -> tuple[bool, str]:
     except (ValueError, RecursionError) as exc:
         # Null bytes and pathological nesting raise before SyntaxError does.
         return False, f"could not be parsed: {type(exc).__name__}: {exc}"
+    faults = _faults(tree)
+    if faults:
+        return False, faults[0]
+    return True, ""
 
+
+def _faults(tree) -> list[str]:
+    """Every structural fault in a parsed module, in source order, each with
+    its line -- the walk `inspect_code` has always made, as a list instead of
+    a first answer, so an edit can be held to what it ADDS (2026-09-29)."""
+    out: list[str] = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for a in node.names:
                 top = a.name.split(".")[0]
                 if top in NETWORK_MODULES:
-                    return False, (f"imports `{a.name}` (line {node.lineno}) "
-                                   f"-- RULE 4: the estate is local")
+                    out.append(f"imports `{a.name}` (line {node.lineno}) "
+                               f"-- RULE 4: the estate is local")
                 if top in DYNAMIC_IMPORT:
-                    return False, (f"imports `{a.name}` (line {node.lineno}) "
-                                   f"-- reaches any module by name at "
-                                   f"runtime, which this gate cannot read")
+                    out.append(f"imports `{a.name}` (line {node.lineno}) "
+                               f"-- reaches any module by name at "
+                               f"runtime, which this gate cannot read")
         elif isinstance(node, ast.ImportFrom):
             # `from . import x` has no module name to judge; level > 0 is
             # relative and cannot reach the network by this route.
             if node.level == 0 and node.module:
                 top = node.module.split(".")[0]
                 if top in NETWORK_MODULES:
-                    return False, (f"imports from `{node.module}` "
-                                   f"(line {node.lineno}) -- RULE 4: the "
-                                   f"estate is local")
+                    out.append(f"imports from `{node.module}` "
+                               f"(line {node.lineno}) -- RULE 4: the "
+                               f"estate is local")
                 if top in DYNAMIC_IMPORT:
-                    return False, (f"imports from `{node.module}` "
-                                   f"(line {node.lineno}) -- reaches any "
-                                   f"module by name at runtime, which this "
-                                   f"gate cannot read")
+                    out.append(f"imports from `{node.module}` "
+                               f"(line {node.lineno}) -- reaches any "
+                               f"module by name at runtime, which this "
+                               f"gate cannot read")
         elif isinstance(node, ast.Call):
             fn = node.func
             called = fn.id if isinstance(fn, ast.Name) else (
                 fn.attr if isinstance(fn, ast.Attribute) else "")
             if isinstance(fn, ast.Name) and called in DYNAMIC_CALLS:
-                return False, (f"calls `{called}()` (line {node.lineno}) "
-                               f"-- executes a string as code")
+                out.append(f"calls `{called}()` (line {node.lineno}) "
+                           f"-- executes a string as code")
             for kw in node.keywords:
                 if (kw.arg == "shell"
                         and isinstance(kw.value, ast.Constant)
                         and kw.value.value is True):
                     where = f"`{called}(shell=True)`" if called else "shell=True"
-                    return False, (f"calls {where} (line {node.lineno}) "
-                                   f"-- hands the string to a shell")
-    return True, ""
+                    out.append(f"calls {where} (line {node.lineno}) "
+                               f"-- hands the string to a shell")
+    return out
+
+
+_LINE_OF_FAULT = re.compile(r"\(line \d+\)")
+
+
+def inspect_added(name: str, before: str, after: str) -> str:
+    """The first fault `after` carries that `before` did not -- line numbers
+    aside -- or "" when the edit added none.
+
+    THE EDIT DOOR'S JUDGMENT (2026-09-29, coder-tree run five, pass three).
+    The Expert Coder answered a one-line edit to skills.py exactly, and the
+    door refused it: the gate judged the whole file as it would stand and
+    found the loopback `urllib` the door-call skill has carried on purpose
+    since it was built -- so every edit to the estate's own code was refused
+    for what the file already held, and could never have landed. An edit is
+    held to what it ADDS. A file's own faults are the operator's, are said in
+    the door's reply, and are never a reason to refuse an edit that touches
+    none of them. A file that did not parse before carried no judged fault,
+    so every fault after is the edit's."""
+    try:
+        was = {_LINE_OF_FAULT.sub("", f) for f in _faults(ast.parse(before, filename=name))}
+    except (SyntaxError, ValueError, RecursionError):
+        was = set()
+    try:
+        now = _faults(ast.parse(after, filename=name))
+    except SyntaxError as exc:
+        where = f"line {exc.lineno}" if exc.lineno else "position unknown"
+        return f"does not parse: {exc.msg} ({where})"
+    except (ValueError, RecursionError) as exc:
+        return f"could not be parsed: {type(exc).__name__}: {exc}"
+    for fault in now:
+        if _LINE_OF_FAULT.sub("", fault) not in was:
+            return fault
+    return ""
 
 
 def land_code(output: str, env, ctx, calls: list | None = None,
@@ -390,22 +434,41 @@ def land_code(output: str, env, ctx, calls: list | None = None,
     always has."""
     fp = _FILEPATH_TAG_RE.search(output)
     fence = _CODE_FENCE_RE.search(output)
-    if not fp or not fence:
-        return ""
-    name = fp.group(1).strip()
-    code = fence.group(1)
-    if not name or not code.strip():
+    make = getattr(ctx, "make", None) or {}
+    tree_turn = make.get("kind") == "tree"
+    if not fence or (not fp and not tree_turn):
         return ""
     # ON A TREE TURN (2026-09-29) the file is the ground's whatever its shape
     # -- a root document has no folder -- and it is THE FILE THE WINDOW OPENED
-    # ON: an answer for another file lands nowhere, and the delivery says so.
-    tree_turn = (getattr(ctx, "make", None) or {}).get("kind") == "tree"
-    if tree_turn and _rel_key(name) != _rel_key(ctx.make.get("rel", "")):
-        ctx.notes.append(f"coder tree: the window was on `{ctx.make.get('rel', '')}`; the "
+    # ON: the engine's fact, so a `<filepath>` line is not needed (run five,
+    # pass one: the right edit, no line, nothing landed), and an answer for
+    # another file lands nowhere, the delivery saying so.
+    name = fp.group(1).strip() if fp else make.get("rel", "")
+    code = fence.group(1)
+    if not name or not code.strip():
+        return ""
+    if tree_turn and _rel_key(name) != _rel_key(make.get("rel", "")):
+        ctx.notes.append(f"coder tree: the window was on `{make.get('rel', '')}`; the "
                          f"{MAKER_SEAT} answered for `{name}`; nothing landed")
         return ""
     on_tree = tree_turn or "/" in name or "\\" in name
     is_edit = code.lstrip().startswith(skills_edit_old)
+    if tree_turn and not is_edit:
+        # THE PASSAGE REWRITTEN WHOLE (2026-09-29, run five, pass two: the
+        # dict answered whole with the right line in it, no markers, nothing
+        # landed). The engine handed the passage, so it can compose the edit
+        # itself -- OLD the passage as handed, NEW the block -- and the door
+        # holds it to the same law: the anchor unique, the terminator kept,
+        # the gate on what the edit adds. A block far larger than the
+        # passage is neither the passage nor an edit, and lands nowhere.
+        passage = str(make.get("passage") or "")
+        if len(code) > 4 * len(passage) + 4000:
+            ctx.notes.append(f"coder tree: the block answered is {len(code):,} characters against "
+                             f"a passage of {len(passage):,} -- not the passage rewritten, and "
+                             f"not an edit; nothing landed")
+            return ""
+        code = f"{skills_edit_old}\n{passage}\n{skills_edit_new}\n{code.rstrip()}\n"
+        is_edit = True
     if on_tree or is_edit:
         return _land_through_a_door(name, code, on_tree, is_edit, env, ctx, calls, results)
     ok, why = inspect_code(name, code)
@@ -1447,8 +1510,9 @@ def _tree_report(ctx: RunContext, saved: str, door: str, said: str) -> str:
     if engine_said:
         return "Nothing landed: " + engine_said[-1][len("coder tree: "):]
     return (f"Nothing landed: the {MAKER_SEAT} answered with no edit in the shape the tree "
-            f"lands -- one line `<filepath>{make.get('rel', '')}</filepath>` and one fenced "
-            f"`@@ OLD` / `@@ NEW` block.")
+            f"lands -- one fenced block, either an `@@ OLD` / `@@ NEW` edit or the passage "
+            f"rewritten whole (a `<filepath>{make.get('rel', '')}</filepath>` line before it "
+            f"is welcome and not needed).")
 
 
 def _maker_route(ctx: RunContext, registry: AgentRegistry, skills: SkillLibrary,

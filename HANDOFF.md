@@ -908,12 +908,25 @@ heading that contains the word, two refused naming both), a root document is ask
 it is there, a backticked name may carry spaces, and on a tree turn the Coder's answer lands on the
 window's file or nowhere. The stroke grows to 54; the suite 3124/3124 and the smoke 72/72 on a mirror;
 four reversals red (R5-R8). RESTART REQUIRED (`intent.py`, `pipeline.py`, `maker.py`). REFUSALS §28 and
-RUNBOOK say the shape.
+RUNBOOK say the shape. Saved and sent, core `77c6e04`.
 
-**Where the ground stands.** core `main@a73fe36` plus the heading window (CHANGELOG.md, DAYBOOK.md,
-HANDOFF.md, REFUSALS.md, RUNBOOK.md, BUILDMAP.md, manjuel/intent.py, manjuel/maker.py,
-manjuel/pipeline.py, tests/test_manjuel.py), to be saved and sent through the glass's Version
-control on his word.
+**CODER-TREE V4 FOLDED AND FIRED (run five, sitting 292), AND ITS THREE FINDINGS BUILT, by card:** the
+attempt is the objective alone (a brief or a carried failed pass can name a door and shut the
+window); FAIL at the ceiling, but the Coder sat on every pass through the window -- the edit right
+with no `<filepath>` line, the dict rewritten whole, the edit exact and REFUSED BY THE DOOR for the
+loopback `urllib` skills.py already carries. Built: the `<filepath>` line optional on a tree turn
+(the file is the window's); a block with no markers is the passage rewritten whole, the engine
+composing the edit, an outsized block refused by name; the door holds an edit to what it ADDS
+(`inspect_added`, both edit doors), saying what the file carried. Stroke 59, the suite 3129/3129 and
+the smoke 72/72 on a mirror, four reversals red (3, 2, 2, 1). RESTART REQUIRED
+(`pipeline.py`, `skills.py`, `maker.py`). The ground back on `main`; the lines `tree-foundation`
+to `-5` are yours to close on Version control. Measured on the way: an objective for the flow must
+name no tool ("the founding documents" names `semantic_search`).
+
+**Where the ground stands.** core `main@77c6e04` plus run five and its three fixes (CHANGELOG.md,
+DAYBOOK.md, HANDOFF.md, pipelines.md, REFUSALS.md, RUNBOOK.md, BUILDMAP.md, agents/expert_coder.md,
+manjuel/maker.py, manjuel/pipeline.py, manjuel/skills.py, tests/test_manjuel.py), to be saved and
+sent through the glass's Version control on his word.
 atlas `main@0cb5c63` (`suite_run` the last), level with GitHub; the morning's two pieces --
 `line/internal/tools/tools.go`, `gitctl.go`, `tools_test.go`, `line/internal/auth/auth.go`,
 `auth_test.go`, `line/cmd/atlas-mcp/prove.go`, `docs/ARCHITECTURE.md`, `CHANGELOG.md` -- saved

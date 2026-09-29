@@ -896,8 +896,10 @@ the record or a runtime store (sessions/, logs/, index/, state/, flows/,
 memory/, memory.md, SEAT_LOG.md, agent_workspace/), a proof stamp under
 tests/, BUILDMAP.md, a binary, or under projects/; or the file's repository
 stands on main or master or detached, or there is no repository; or the folder
-does not exist; or the file is MIXED; or the .py would not parse or would carry
-what §24 refuses.
+does not exist; or the file is MIXED; or the .py would not parse or -- for an
+edit -- would ADD what §24 refuses (2026-09-29: an edit is held to what it adds;
+a file's own carrying, skills.py's loopback `urllib`, is said in the reply and
+never refused; a whole file written must still be clean).
 
 **Action.** Refused, and NOTHING IS WRITTEN. The refusal names the rule -- RULE
 7, SITTING LAW 2, ESTATE LAW 2, LAW 8, RULE 8, RULE 6 -- and, for the main
@@ -957,7 +959,8 @@ passage is longer than one window; the file does not parse; the file has no
 map (a .py is mapped by definition, a .md by heading, nothing else); a word
 two headings contain; the file is a secret or client-tagged; the path leaves
 the ground; the file is not there. Or the Coder answered for a file the window
-was not on.
+was not on, or with a block far larger than the passage (neither the passage
+rewritten nor an edit).
 
 **Action.** The engine answers in the delivery, by name, ending "nothing sat",
 and NO SEAT SITS -- not the Coder, not the Router. When the door refuses what
@@ -985,7 +988,9 @@ still refused at the door. A request that names a tool is never the tree's
 failed pass that quotes a door's name shuts the window the same way. The window
 hands the first name the map resolves, in the order the words gave them.
 
-Stroked: `test_the_coders_window_on_the_tree` (54). By reversal: the
+Stroked: `test_the_coders_window_on_the_tree` (59; 2026-09-29: the `<filepath>`
+line optional, the passage rewritten whole, the outsized block, the door's delta
+judgment -- R9 to R12 red). By reversal: the
 arithmetic unplugged, 13 red; the whole file handed, 3; the landing not routed
 to the door, 6; a containing match accepted, 5; and for the heading window, the
 whole document handed, the window's-file wire unplugged, the root-document

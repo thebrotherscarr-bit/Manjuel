@@ -523,10 +523,12 @@ brief ──→ open (gate: grants git_branch) ──pass──→ line ──�
     line        run    a spelled-out door call, decided by arithmetic:
                        `git_branch new {{line}}` -- the door moves the ground
                        onto the line
-    attempt     run    the change, with `ground_edit` / `ground_write` (the tree
-                       doors, which refuse the main line and the never-written
-                       names by themselves); `{{fail_attempt}}` carries what the
-                       suites said on a pass that was sent back. `loops: 2`
+    attempt     run    v4 (2026-09-29): the objective ALONE, through the Coder's
+                       window -- the Expert Coder handed the passage by name,
+                       its edit through `ground_edit` (the tree doors refuse the
+                       main line and the never-written names by themselves).
+                       No brief and no carried failed pass in the text: either
+                       can name a door and shut the window. `loops: 2`
     strokes     run    a spelled-out `suite_run` (strokes); the suite stamps its
                        own proof
     strokes_ok  eval   on `strokes`, expecting `green · exit 0` in the tools
@@ -594,3 +596,16 @@ doors, so on it `names_a_tool` fires first and the window never opens -- fired
 as it stands, v3 would still wake the Router. A v4 whose attempt carries the
 objective, the brief and the failed pass and names no tool is his to order;
 not folded here.
+
+V4, FOLDED 2026-09-29 as the glass (v3 kept): the attempt is `{{objective}}`
+alone; `changed` expects "line of work `" (the tail both doors' replies share;
+the eval reads the tools block alone); the brief trimmed of tool names. Same
+nodes and edges. FIRED (run five, sitting 292): FAIL at the ceiling, and for
+the first time the Coder sat on every pass, through the window -- the edit
+right with no `<filepath>` line; the dict rewritten whole; the edit exact and
+the door refusing it for what skills.py already carried. All three built the
+same day (CHANGELOG): the file is the window's, a block with no markers is the
+passage rewritten whole, and the door judges what an edit ADDS. The failed
+pass is not carried on purpose: it quotes the door's name, and the retry is
+a fresh roll, which the record says. An objective typed for this flow must
+name no tool ("the founding documents" names `semantic_search`).

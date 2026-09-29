@@ -4006,7 +4006,7 @@ def _apply_passage(path: Path, old: str, new: str) -> str:
     the whole file as it would stand, are the same at the workspace door and
     at the tree door because they are the same code."""
     import ast as _ast
-    from .pipeline import inspect_code as _inspect_code
+    from .pipeline import inspect_code as _inspect_code, inspect_added as _inspect_added
 
     raw = path.read_bytes()
     eol = _one_terminator(raw)
@@ -4035,6 +4035,7 @@ def _apply_passage(path: Path, old: str, new: str) -> str:
     # the structural gate `write_file` and the coder's landing already run.
     # Judged on the whole file as it would stand, not on the fragment: a
     # fragment can complete an import the file already half-carried.
+    carried = ""
     if path.suffix.lower() == ".py":
         try:
             _ast.parse(out)
@@ -4043,10 +4044,18 @@ def _apply_passage(path: Path, old: str, new: str) -> str:
                     f"-- {exc.msg} at line {exc.lineno}. Nothing was written.")
         ok, why = _inspect_code(path.name, out)
         if not ok:
-            return (f"Refused: that edit would leave {path.name} {why}. "
-                    f"Nothing was written. This is the same check the coder's "
-                    f"own landing and write_file make, and it reads what the "
-                    f"SOURCE says -- not what the code would do if it ran.")
+            # HELD TO WHAT IT ADDS (2026-09-29, coder-tree run five): a file
+            # that already carries what the gate refuses -- skills.py and the
+            # loopback `urllib` of its own door call -- takes an edit that
+            # adds none of it, and the reply says what the file carried. A
+            # fault the edit brings in is refused as it always was.
+            added = _inspect_added(path.name, flat, out)
+            if added:
+                return (f"Refused: that edit would leave {path.name} {added}. "
+                        f"Nothing was written. This is the same check the coder's "
+                        f"own landing and write_file make, and it reads what the "
+                        f"SOURCE says -- not what the code would do if it ran.")
+            carried = why
 
     kept = "CRLF" if eol == b"\r\n" else "LF"
     before = len(flat.split("\n"))
@@ -4056,7 +4065,9 @@ def _apply_passage(path: Path, old: str, new: str) -> str:
     return (f"Edited {path.name} at line {where}: "
             f"{len(old.splitlines())} line(s) replaced by "
             f"{len(new.splitlines())}, file now {after} lines (was {before}). "
-            f"Terminator kept: {kept}.")
+            f"Terminator kept: {kept}."
+            + (f" The file already carried what the gate refuses -- {carried} -- "
+               f"and the edit added none of it." if carried else ""))
 
 
 # =====================================================================

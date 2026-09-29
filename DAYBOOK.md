@@ -2410,6 +2410,15 @@ been in the plan from the beginning."
   backticked name may carry spaces, and the Coder's answer lands on the window's file or nowhere.
   The stroke grows to 54, 3124/3124 and 72/72 on a mirror, four reversals red; restart required.
 
+- **coder-tree v4 folded and fired** (2026-09-29, his word: "fold coder-tree v4 and fire it"): the
+  attempt is the objective alone; run five on sitting 292, FAIL at the ceiling, and the Coder sat
+  on every pass through the window -- the edit right with no `<filepath>`, the dict rewritten
+  whole, the edit exact and refused by the door for the loopback `urllib` skills.py already
+  carries. **The three findings built**, by card: the `<filepath>` line optional on a tree turn; a
+  block with no markers is the passage rewritten whole; the door holds an edit to what it ADDS
+  (`inspect_added`). Stroke 59, 3129/3129 and 72/72 on a mirror, four reversals red; restart
+  required. Back on `main`, the line `tree-foundation-5` standing.
+
 **Found** — the glass's Tools page asks for a tool's arguments with the browser's `prompt()`, which
 the desktop's browser pane dismisses unseen (the page's own `App.tool` was called from the page
 instead: the same request, the glass's session); a check over the tools block cannot see the maker
@@ -2435,8 +2444,8 @@ Dashboard; the door pid 86180 carries all six door pieces; both repositories sav
 11:52 on his word (core `044ef46`, atlas `325888c`, level with GitHub), the seventh piece saved and
 sent after it (core `c92751d`), the eighth on top, unsaved.
 
-**Next session** — on his word, `coder-tree` v4 (an attempt that names no tool) and a fifth firing
-through the Coder's window; named beside it, the map's how-to-ask, the
+**Next session** — on his word, a sixth firing of `coder-tree` v4 through the three fixes; named
+beside it, the failed pass carried without the door's name, the map's how-to-ask, the
 headless "retry / skip / abort?" and the claim check on a seat that says a tool was used; the dials (Steward 180, the court 900 as a
 deadline a pipeline declares); the front-end agent handoff's plan is in the record (CHANGELOG, this
 day) and waits on those; a Dashboard button for the standup and a `loops` box in the builder; a

@@ -34,6 +34,55 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### coder-tree v4 fired through the window, and its three findings built: the window's file when no `<filepath>`, the passage rewritten whole as an edit, and the door held to what an edit ADDS (operator, 2026-09-29: "fold coder-tree v4 and fire it"; the three by card)
+
+V4 FOLDED as the glass (`flow_save`, v3 kept whole): the attempt is the objective ALONE --
+`{{objective}}`, no brief in it, no `{{fail_attempt}}` -- because `names_a_tool` shuts the window on
+any text that names a door, and a carried failed pass quotes the door's own reply ("ground_edit
+said: Refused ..."); `changed` expects "line of work `", the tail both doors' replies share, and
+the eval reads the tools block alone; the brief is trimmed of tool names. MEASURED BEFORE FIRING:
+the fourth run's objective named `semantic_search` through the words "the founding documents", so
+the fifth was worded "founding texts" -- `names_a_tool` is the same gate at every door, and an
+objective typed for the tree must name none.
+
+RUN `f-20260929-144711-a4def8e6` (v4, sitting 292, 07:47 to 07:51, booted and closed from the
+Dashboard), the `open` gate answered by his hand, the line `tree-foundation-5` opened through the
+door under the grant, FAIL at 281 s at the ceiling -- and for the first time every pass went
+THROUGH THE WINDOW ("tree: a change to `manjuel/skills.py` at `_NEVER_WRITTEN_TOP` -- the Expert
+Coder is handed the passage as it stands") and the Expert Coder sat on all three. Pass one (108
+s): the correct `@@ OLD`/`@@ NEW` edit with no `<filepath>` line -- nothing landed. Pass two (57
+s): the dict rewritten whole with the right line in it, no markers -- nothing landed. Pass three
+(16 s): the edit exactly, `<filepath>` and all, and the DOOR refused it: `_apply_passage` judged
+the whole of skills.py as it would stand and found `urllib.error` at line 3631 -- the loopback
+import the door-call skill has carried on purpose since it was built -- so every edit to the
+estate's own code was refused for what the file already held, and could never have landed.
+Nothing on the tree moved; the ground back on `main` on his word, the line standing.
+
+THE THREE, by card, all built. (1) On a tree turn the `<filepath>` line is welcome and not needed:
+the file is the window's, the engine's fact (`land_code`). (2) A fenced block with no markers on
+a tree turn is THE PASSAGE REWRITTEN WHOLE: the engine composes the edit -- OLD the passage as
+handed, NEW the block -- and the door holds it to the same law (the anchor unique, the terminator
+kept, the gate); a block more than four times the passage plus four thousand characters is
+neither the passage nor an edit, lands nowhere, and is said by name. (3) THE DOOR JUDGES WHAT THE
+EDIT ADDS: `inspect_code`'s walk is now `_faults` (every fault in source order, each with its
+line) and `inspect_added(name, before, after)` names the first fault the edit brought in, line
+numbers aside; `_apply_passage` -- both edit doors -- refuses only that, and an edit to a file
+that already carries what the gate refuses lands with the reply saying what the file carried and
+that the edit added none of it. `inspect_code` keeps its shape (the first fault), so `write_file`,
+`ground_write` and the workspace landing hold their line and a NEW file must still be clean. The
+Coder's prompt (`maker.tree_prompt`) and its seat file say both shapes.
+
+PROVED on a mirror: the window stroke grows to 59 (no `<filepath>` landing on the window's file;
+the passage rewritten whole landing; the outsized block refused; a file carrying `socket` taking
+an edit that adds no reach, the carrying said; an edit adding `urllib` refused), and
+`inspect_added` measured on skills.py itself with the run's own one-line edit: nothing added. The
+whole suite 3129/3129, the smoke 72/72. Four reversals red: R9 the `<filepath>` default off (3);
+R10 the whole-passage edit off (2); R11 the delta judgment off, the door refusing the file's own
+carrying (2); R12 the size guard off (1). `manjuel/pipeline.py`, `manjuel/skills.py`,
+`manjuel/maker.py` moved: RESTART REQUIRED. WHAT GOES RED IF UNPLUGGED: each of the four, in the
+stroke; on the glass, passes one and two of the fifth run would now land and pass three would
+not be refused -- the sixth firing is the measure.
+
 ### The heading window: a .md is asked by heading, a root document by its bare name, and the Coder's answer lands on the window's file or nowhere (operator, 2026-09-29: "also add in the heading window for a .md file")
 
 WHAT. The Coder's window on the tree (below) mapped a .py by definition and refused every other

@@ -754,13 +754,14 @@ def tree_prompt(make: dict, objective: str) -> str:
     return (f"Here is the passage as it stands in `{rel}` -- `{make.get('name')}`:\n\n"
             f"```{fence}\n{str(make.get('passage') or '').rstrip()}\n```\n\n"
             f"THE CHANGE ASKED FOR: {(objective or '').strip()}\n\n"
-            f"Answer with exactly this and nothing more: one line "
-            f"`<filepath>{rel}</filepath>`, then ONE fenced block that is an EDIT -- "
-            f"a line `@@ OLD`, the exact lines to replace quoted exactly as they stand "
-            f"above (as few as make the passage unique), a line `@@ NEW`, then the "
-            f"lines that replace them. Never the whole file, never a plan, no other "
-            f"words. The harness applies the edit on the line of work through the "
-            f"tree doors; the main line never moves.")
+            f"Answer with ONE fenced block and nothing more -- either an EDIT: a line "
+            f"`@@ OLD`, the exact lines to replace quoted exactly as they stand above "
+            f"(as few as make the passage unique), a line `@@ NEW`, then the lines that "
+            f"replace them; or THE PASSAGE REWRITTEN WHOLE, exactly as it should now "
+            f"stand, and nothing outside it. A line `<filepath>{rel}</filepath>` before "
+            f"the block is welcome and not needed: the file is this one. Never the "
+            f"whole file, never a plan, no other words. The harness applies it on the "
+            f"line of work through the tree doors; the main line never moves.")
 
 
 def coder_prompt(make: dict, objective: str) -> str:

@@ -334,8 +334,11 @@ ASKED BY HEADING (2026-09-29), a root document by its bare name:
 
 The Coder is handed that section whole, through its subsections; `dials` alone
 would be refused, because two headings here contain it. What it answers lands
-on that file or nowhere. REFUSALS §28 lists what the engine answers with no
-seat.
+on that file or nowhere -- an edit, or the passage rewritten whole; and a file
+that already carries what the gate refuses (skills.py's loopback `urllib`)
+still takes an edit that adds none of it. Type the request without a tool's
+own words in it ("the founding documents" names semantic_search, and the
+window shuts). REFUSALS §28 lists what the engine answers with no seat.
 
 ## Running it from the terminal instead
 

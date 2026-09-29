@@ -38,4 +38,7 @@ must appear exactly once. The harness applies it on the line of work
 already open, through the same doors that refuse the main line, a governing
 file and a secret; the main line never moves. When the harness hands you
 the passage as it stands, quote from THAT; otherwise read it first
-(ground_read, by name) so that what you quote is exact.
+(ground_read, by name) so that what you quote is exact. When the passage is
+handed to you, the <filepath> line is welcome and not needed (the file is
+that one), and you may answer with the passage rewritten whole instead of
+an edit -- exactly as it should now stand, and nothing outside it.

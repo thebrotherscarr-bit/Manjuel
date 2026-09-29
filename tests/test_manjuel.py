@@ -14549,6 +14549,48 @@ def test_the_coders_window_on_the_tree(reg, lib, book):
           (g / "manjuel" / "thing.py").read_bytes() == CHANGED
           and ctx.last_output().startswith("Nothing landed: the window was on `NOTES.md`")
           and "`manjuel/thing.py`" in ctx.last_output(), ctx.last_output()[:200])
+    # NO <filepath> LINE (2026-09-29, run five, pass one): the window's file is
+    # the engine's fact, and the edit lands on it.
+    coder["answer"] = "```\n@@ OLD\n    'b': 2,  # beside a\n@@ NEW\n    'b': 2,\n```\n"
+    ctx, sat, r = turn(said)
+    CHANGED2 = CHANGED.replace(b"    'b': 2,  # beside a\n", b"    'b': 2,\n")
+    check("an edit with no <filepath> line lands on the file the window opened on",
+          (g / "manjuel" / "thing.py").read_bytes() == CHANGED2
+          and ctx.last_output().startswith("Landed on the line of work through ground_edit"),
+          ctx.last_output()[:160])
+    # THE PASSAGE REWRITTEN WHOLE (run five, pass two): the engine composes the
+    # edit -- OLD the passage as handed, NEW the block -- and the door lands it.
+    coder["answer"] = "```python\nTABLE = {\n    'a': 1,\n    'b': 2,\n    'c': 3,\n}\n```\n"
+    ctx, sat, r = turn(said)
+    CHANGED3 = CHANGED2.replace(b"    'b': 2,\n}", b"    'b': 2,\n    'c': 3,\n}")
+    check("the passage rewritten whole, no markers, lands as an edit of that passage",
+          (g / "manjuel" / "thing.py").read_bytes() == CHANGED3
+          and ctx.last_output().startswith("Landed on the line of work through ground_edit"),
+          repr((g / "manjuel" / "thing.py").read_bytes()[:120]) + ctx.last_output()[:120])
+    coder["answer"] = "```python\n" + "X = 1\n" * 4000 + "```\n"
+    ctx, sat, r = turn(said)
+    check("   but a block far larger than the passage is neither the passage nor an edit -- nothing lands",
+          (g / "manjuel" / "thing.py").read_bytes() == CHANGED3
+          and ctx.last_output().startswith("Nothing landed: the block answered is"),
+          ctx.last_output()[:160])
+    # THE DOOR JUDGES WHAT THE EDIT ADDS (run five, pass three): a file that
+    # already carries what the gate refuses takes an edit that adds none of it.
+    (g / "manjuel" / "netty.py").write_bytes(b"import socket\n\nY = 1\n")
+    coder["answer"] = ("<filepath>manjuel/netty.py</filepath>\n"
+                       "```\n@@ OLD\nY = 1\n@@ NEW\nY = 2\n```\n")
+    ctx, sat, r = turn("In manjuel/netty.py, set `Y` to 2.")
+    check("a file that already carries `socket` takes an edit that adds no reach, "
+          "and the door's reply says what the file carried",
+          (g / "manjuel" / "netty.py").read_bytes() == b"import socket\n\nY = 2\n"
+          and "already carried" in ctx.last_output() and "socket" in ctx.last_output(),
+          ctx.last_output()[:240])
+    coder["answer"] = ("<filepath>manjuel/netty.py</filepath>\n"
+                       "```\n@@ OLD\nY = 2\n@@ NEW\nimport urllib\nY = 3\n```\n")
+    ctx, sat, r = turn("In manjuel/netty.py, set `Y` to 3.")
+    check("   and an edit that ADDS a reach is refused by the door, the file untouched",
+          (g / "manjuel" / "netty.py").read_bytes() == b"import socket\n\nY = 2\n"
+          and "RULE 4" in ctx.last_output() and "urllib" in ctx.last_output(),
+          ctx.last_output()[:240])
     ctx = RunContext(objective="add a line to scratch.md")
     _maker_route(ctx, reg, lib, env_for(g, reg, Stub()), lambda m: None)
     check("a bare name that is not a root document is not the tree's -- it falls through as before",
