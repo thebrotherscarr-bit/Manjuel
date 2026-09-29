@@ -953,9 +953,11 @@ the write door, 2; at the edit door, 2.
 a folder in it, a change verb, names in backticks -- and the engine cannot hand
 the Expert Coder one passage: no name in backticks; none of the names is on the
 file's map (a containing match is not the name -- `help` is not `helper`); the
-passage is longer than one window; the file does not parse; the file is not
-Python; the file is a secret or client-tagged; the path leaves the ground; the
-file is not there.
+passage is longer than one window; the file does not parse; the file has no
+map (a .py is mapped by definition, a .md by heading, nothing else); a word
+two headings contain; the file is a secret or client-tagged; the path leaves
+the ground; the file is not there. Or the Coder answered for a file the window
+was not on.
 
 **Action.** The engine answers in the delivery, by name, ending "nothing sat",
 and NO SEAT SITS -- not the Coder, not the Router. When the door refuses what
@@ -972,14 +974,21 @@ one seat that can change it, and refuses everything it cannot put there exactly
 -- because an edit is an exact quotation, and a passage the Coder cannot see
 whole it cannot quote whole.
 
-**The honest limits.** The window is a .py definition or module-level name; a
-.md has no map of definitions and is refused as not Python until a heading
-window is built. A request that names a tool is never the tree's (§25's
-arithmetic), so a flow's attempt text must name none. The window hands the
-first name the map resolves, in the order the words gave them.
+**The honest limits.** The window is a .py definition or module-level name, or
+a .md section by heading (2026-09-29): the section runs through its subsections
+to the next heading as deep or shallower, and a `#` at the start of a line inside
+a fenced block reads as a heading, as it does for the reading window. A root
+document is asked by its bare name only if it is there; the never-written names
+(CLAUDE.md, pipelines.md, commands.md, memory.md, SEAT_LOG.md, BUILDMAP.md) are
+still refused at the door. A request that names a tool is never the tree's
+(§25's arithmetic), so a flow's attempt text must name none -- and a carried
+failed pass that quotes a door's name shuts the window the same way. The window
+hands the first name the map resolves, in the order the words gave them.
 
-Stroked: `test_the_coders_window_on_the_tree` (40). By reversal: the
+Stroked: `test_the_coders_window_on_the_tree` (54). By reversal: the
 arithmetic unplugged, 13 red; the whole file handed, 3; the landing not routed
-to the door, 6; a containing match accepted, 5.
+to the door, 6; a containing match accepted, 5; and for the heading window, the
+whole document handed, the window's-file wire unplugged, the root-document
+guard removed and the headings not read, each red (CHANGELOG, 2026-09-29).
 
 ---

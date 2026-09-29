@@ -899,12 +899,21 @@ door said (`_tree_report`). Nine shapes answered by the engine with no seat, eac
 §28; RUNBOOK says how to ask). One stroke (40), the suite 3110/3110 and the smoke 72/72 on a mirror,
 four reversals red (13, 3, 6, 5). RESTART REQUIRED (`intent.py`, `pipeline.py`, `maker.py`).
 MEASURED, HIS TO ORDER: v3's attempt text names `ground_read`, so on it `names_a_tool` fires before
-the window opens; the flow needs a v4 that names no tool before it is fired again. Unsaved.
+the window opens; the flow needs a v4 that names no tool before it is fired again. Saved and
+sent, core `a73fe36`.
 
-**Where the ground stands.** core `main@4e922fa` plus the run-four record and the Coder's window
-(CHANGELOG.md, DAYBOOK.md, HANDOFF.md, pipelines.md, REFUSALS.md, RUNBOOK.md, BUILDMAP.md,
-agents/expert_coder.md, manjuel/intent.py, manjuel/maker.py, manjuel/pipeline.py,
-tests/test_manjuel.py), to be saved and sent through the glass's Version control on his word.
+**THE HEADING WINDOW (2026-09-29, his word: "also add in the heading window for a .md file"):** a
+`.md` is mapped by heading (`pipeline._md_window`: the section with its subsections, exact or the one
+heading that contains the word, two refused naming both), a root document is asked by its bare name if
+it is there, a backticked name may carry spaces, and on a tree turn the Coder's answer lands on the
+window's file or nowhere. The stroke grows to 54; the suite 3124/3124 and the smoke 72/72 on a mirror;
+four reversals red (R5-R8). RESTART REQUIRED (`intent.py`, `pipeline.py`, `maker.py`). REFUSALS §28 and
+RUNBOOK say the shape.
+
+**Where the ground stands.** core `main@a73fe36` plus the heading window (CHANGELOG.md, DAYBOOK.md,
+HANDOFF.md, REFUSALS.md, RUNBOOK.md, BUILDMAP.md, manjuel/intent.py, manjuel/maker.py,
+manjuel/pipeline.py, tests/test_manjuel.py), to be saved and sent through the glass's Version
+control on his word.
 atlas `main@0cb5c63` (`suite_run` the last), level with GitHub; the morning's two pieces --
 `line/internal/tools/tools.go`, `gitctl.go`, `tools_test.go`, `line/internal/auth/auth.go`,
 `auth_test.go`, `line/cmd/atlas-mcp/prove.go`, `docs/ARCHITECTURE.md`, `CHANGELOG.md` -- saved

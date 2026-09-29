@@ -14339,7 +14339,12 @@ def test_the_coders_window_on_the_tree(reg, lib, book):
     request and a tool's own words do not. The engine answers and no seat sits
     for a name not on the map, no name at all, a containing match, a passage
     too long for one window, a file that does not parse, a secret, a protected
-    file, a file that is not Python. Hermetic: temp grounds, a stand-in Coder.
+    file, a file with no map. A .md IS ASKED BY HEADING (2026-09-29, his word:
+    "also add in the heading window for a .md file"): a root document by its
+    bare name if it is there, the section under the heading with its
+    subsections, two headings to one word refused naming both; and what the
+    Coder answers lands on the file the window opened on or nowhere.
+    Hermetic: temp grounds, a stand-in Coder.
     """
     from manjuel import intent
     from manjuel.pipeline import _maker_route, _tree_window
@@ -14357,6 +14362,13 @@ def test_the_coders_window_on_the_tree(reg, lib, book):
     check("   and a file in backticks is the file, not a passage",
           intent.wants_a_tree_change("In `manjuel/skills.py`, fix `helper`")
           == ("manjuel/skills.py", ["helper"]))
+    check("   a root document by its bare name, a heading with spaces or with its `##`",
+          intent.wants_a_tree_change("In RUNBOOK.md, under `## The dials`, add a line about `STEWARD`")
+          == ("RUNBOOK.md", ["## The dials", "STEWARD"]),
+          repr(intent.wants_a_tree_change("In RUNBOOK.md, under `## The dials`, add a line about `STEWARD`")))
+    check("   and a document in a folder the same way",
+          intent.wants_a_tree_change("In foundation/notes.md, change `Setup`")
+          == ("foundation/notes.md", ["Setup"]))
     for other in ("read manjuel/skills.py", "run tests/probe.py", "add a helper to thing.py",
                   "how do I add x to manjuel/skills.py?", "should we change `X` in manjuel/a.py",
                   "make me a snake game", "git commit manjuel/skills.py"):
@@ -14374,7 +14386,7 @@ def test_the_coders_window_on_the_tree(reg, lib, book):
     (g / "manjuel" / "big.py").write_bytes(b"def big():\n" + b"    x = 1\n" * 3000)
     (g / "manjuel" / "vault").mkdir()
     (g / "manjuel" / "vault" / "c.py").write_bytes(b"X = 1\n")
-    (g / "manjuel" / "note.md").write_bytes(b"# a\n")
+    (g / "manjuel" / "note.txt").write_bytes(b"a\n")
     env = env_for(g, reg, Stub())
     check("the engine hands the FIRST name the map resolves, whole, as it stands on disk",
           _tree_window(env, "manjuel/thing.py", ["b", "TABLE", "a"])
@@ -14393,12 +14405,46 @@ def test_the_coders_window_on_the_tree(reg, lib, book):
                              ("manjuel/big.py", ["big"], "longer than one window"),
                              ("manjuel/vault/c.py", ["X"], "never read into the chain"),
                              ("manjuel/.env", ["X"], "never read into the chain"),
-                             ("manjuel/note.md", ["a"], "not a Python file"),
+                             ("manjuel/note.txt", ["a"], "has no map"),
                              ("../x.py", ["a"], "outside the ground"),
                              ("manjuel/none.py", ["a"], "not a file in the ground")):
         found, why = _tree_window(env, rel, names)
         check(f"the window refuses by name and says why: {rel} {names} -> {word!r}",
               found is None and word in why and why.endswith("nothing sat"), why)
+
+    # ---- AND A .md BY HEADING (2026-09-29) ------------------------------------
+    GUIDE = (b"# Guide\n\nintro\n\n## The dials\n\nSTEWARD 150\n\n### Inside\n\ninner\n\n"
+             b"## The dials, in one place\n\nall of them\n\n## Setup\n\nstep one\n")
+    (g / "manjuel" / "guide.md").write_bytes(GUIDE)
+    (g / "manjuel" / "big.md").write_bytes(b"# Big\n\n## Long\n\n" + b"x\n" * 7000)
+    NOTES = b"# Notes\r\n\r\n## Dials\r\n\r\nSTEWARD 150\r\n\r\n## Other\r\n\r\nend\r\n"
+    (g / "NOTES.md").write_bytes(NOTES)
+    check("a .md is mapped by HEADING: the section under the name, with its subsections, "
+          "up to the next heading as deep or shallower",
+          _tree_window(env, "manjuel/guide.md", ["The dials"])
+          == (("The dials", "## The dials\n\nSTEWARD 150\n\n### Inside\n\ninner"), ""),
+          repr(_tree_window(env, "manjuel/guide.md", ["The dials"])))
+    check("   asked with its `##` and in any case",
+          _tree_window(env, "manjuel/guide.md", ["## setup"])
+          == (("Setup", "## Setup\n\nstep one"), ""),
+          repr(_tree_window(env, "manjuel/guide.md", ["## setup"])))
+    check("   a word one heading alone contains resolves to it",
+          _tree_window(env, "manjuel/guide.md", ["inside"])
+          == (("Inside", "### Inside\n\ninner"), ""),
+          repr(_tree_window(env, "manjuel/guide.md", ["inside"])))
+    found, why = _tree_window(env, "manjuel/guide.md", ["dials"])
+    check("   and a word two headings contain is refused naming both -- `dials` is not a heading",
+          found is None and "names 2 headings" in why and "`The dials, in one place`" in why, why)
+    found, why = _tree_window(env, "manjuel/guide.md", ["nowhere"])
+    check("   a name that is no heading is refused with the headings listed",
+          found is None and "is a heading of" in why and "`Setup`" in why
+          and why.endswith("nothing sat"), why)
+    found, why = _tree_window(env, "manjuel/big.md", ["Long"])
+    check("   and a section past one window is refused -- name a subsection",
+          found is None and "longer than one window" in why and "subsection" in why, why)
+    check("a root document, CRLF on disk, is handed LF as the doors read it",
+          _tree_window(env, "NOTES.md", ["Dials"]) == (("Dials", "## Dials\n\nSTEWARD 150"), ""),
+          repr(_tree_window(env, "NOTES.md", ["Dials"])))
 
     # ---- THE TURN: the Coder alone, handed the passage; the door lands it ---
     if not HAVE_GIT:
@@ -14477,6 +14523,36 @@ def test_the_coders_window_on_the_tree(reg, lib, book):
           and ctx.last_output().startswith("Nothing landed: the Expert Coder answered with no edit")
           and "@@ OLD" in ctx.last_output()
           and (g / "manjuel" / "thing.py").read_bytes() == CHANGED, ctx.last_output()[:200])
+
+    # A ROOT DOCUMENT BY HEADING, on the line (2026-09-29): the Coder is handed
+    # the section, and the edit lands CRLF as the document is.
+    coder["answer"] = ("<filepath>NOTES.md</filepath>\n"
+                       "```\n@@ OLD\nSTEWARD 150\n@@ NEW\nSTEWARD 180\n```\n")
+    ctx, sat, r = turn("In NOTES.md, under `Dials`, set `STEWARD` to 180.")
+    asked = next((pr for n, pr in r.seen if n == "Expert Coder"), "")
+    check("a change to a root document by heading seats the Coder alone, handed the section",
+          sat == ["Expert Coder"] and "```markdown\n## Dials\n\nSTEWARD 150\n```" in asked
+          and "## Other" not in asked, asked[:300])
+    check("   and the edit lands through the tree door with the document's CRLF kept",
+          (g / "NOTES.md").read_bytes() == NOTES.replace(b"STEWARD 150", b"STEWARD 180")
+          and ctx.last_output().startswith(
+              "Landed on the line of work through ground_edit: Edited NOTES.md"),
+          ctx.last_output()[:200])
+    check("   the record names the document and the heading",
+          any(n.startswith("tree: a change to `NOTES.md` at `Dials`") for n in ctx.notes),
+          str(ctx.notes)[:300])
+    # THE WINDOW'S FILE IS THE ONLY FILE: an answer for another lands nowhere.
+    coder["answer"] = ("<filepath>manjuel/thing.py</filepath>\n"
+                       "```\n@@ OLD\n    'b': 2,  # beside a\n@@ NEW\n    'b': 3,\n```\n")
+    ctx, sat, r = turn("In NOTES.md, under `Dials`, set `STEWARD` to 200.")
+    check("an answer for a file the window was not on lands nowhere, and the delivery names both",
+          (g / "manjuel" / "thing.py").read_bytes() == CHANGED
+          and ctx.last_output().startswith("Nothing landed: the window was on `NOTES.md`")
+          and "`manjuel/thing.py`" in ctx.last_output(), ctx.last_output()[:200])
+    ctx = RunContext(objective="add a line to scratch.md")
+    _maker_route(ctx, reg, lib, env_for(g, reg, Stub()), lambda m: None)
+    check("a bare name that is not a root document is not the tree's -- it falls through as before",
+          not any(n.startswith("tree:") for n in ctx.notes), str(ctx.notes)[:200])
     check("and a request that names a tool is never the tree's: git's words go to git",
           _maker_route(RunContext(objective="edit manjuel/thing.py `TABLE`, then git commit it"),
                        reg, lib, env_for(g, reg, Stub()), lambda m: None) == "")

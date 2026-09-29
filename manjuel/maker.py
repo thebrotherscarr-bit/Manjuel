@@ -749,8 +749,10 @@ def tree_prompt(make: dict, objective: str) -> str:
     engine's read of the file by name, so what the Coder quotes is what is
     there."""
     rel = make.get("rel", "")
+    low = rel.lower()
+    fence = "python" if low.endswith(".py") else "markdown" if low.endswith(".md") else ""
     return (f"Here is the passage as it stands in `{rel}` -- `{make.get('name')}`:\n\n"
-            f"```python\n{str(make.get('passage') or '').rstrip()}\n```\n\n"
+            f"```{fence}\n{str(make.get('passage') or '').rstrip()}\n```\n\n"
             f"THE CHANGE ASKED FOR: {(objective or '').strip()}\n\n"
             f"Answer with exactly this and nothing more: one line "
             f"`<filepath>{rel}</filepath>`, then ONE fenced block that is an EDIT -- "

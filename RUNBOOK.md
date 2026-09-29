@@ -327,8 +327,15 @@ alone with it; what it answers goes through `ground_edit` and the delivery is
 the door's own line. ON MAIN THE DOOR REFUSES (RULE 6): open a line of work
 first (Lines of work on Version control, or the `coder-tree` flow's gate), and
 merging it back is your click. The name must be exact and on the map (`help`
-is not `helper`); a bare filename is the workspace, not the ground; a .md has
-no map yet. REFUSALS §28 lists what the engine answers with no seat.
+is not `helper`); a bare `.py` is the workspace, not the ground. A DOCUMENT IS
+ASKED BY HEADING (2026-09-29), a root document by its bare name:
+
+    In RUNBOOK.md, under `The dials`, change the Steward's 150 to 180.
+
+The Coder is handed that section whole, through its subsections; `dials` alone
+would be refused, because two headings here contain it. What it answers lands
+on that file or nowhere. REFUSALS §28 lists what the engine answers with no
+seat.
 
 ## Running it from the terminal instead
 

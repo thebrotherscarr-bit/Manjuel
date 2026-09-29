@@ -28,7 +28,8 @@ from .skills import (GATE_MARK, MESSAGE_IS_THE_OPERATORS, REVIEW_ONLY_SKILLS,
                      _inside_ground as skills_inside_ground, declared_path,
                      mcp_spelled_out, operator_message, unjail,
                      _EDIT_OLD as skills_edit_old,
-                     _windowed_python as skills_windowed_python)
+                     _windowed_python as skills_windowed_python,
+                     _HEADING as skills_heading, READ_WINDOW as skills_read_window)
 from .drift import DriftChecker
 from . import ink
 from . import lawgate
@@ -395,7 +396,15 @@ def land_code(output: str, env, ctx, calls: list | None = None,
     code = fence.group(1)
     if not name or not code.strip():
         return ""
-    on_tree = "/" in name or "\\" in name
+    # ON A TREE TURN (2026-09-29) the file is the ground's whatever its shape
+    # -- a root document has no folder -- and it is THE FILE THE WINDOW OPENED
+    # ON: an answer for another file lands nowhere, and the delivery says so.
+    tree_turn = (getattr(ctx, "make", None) or {}).get("kind") == "tree"
+    if tree_turn and _rel_key(name) != _rel_key(ctx.make.get("rel", "")):
+        ctx.notes.append(f"coder tree: the window was on `{ctx.make.get('rel', '')}`; the "
+                         f"{MAKER_SEAT} answered for `{name}`; nothing landed")
+        return ""
+    on_tree = tree_turn or "/" in name or "\\" in name
     is_edit = code.lstrip().startswith(skills_edit_old)
     if on_tree or is_edit:
         return _land_through_a_door(name, code, on_tree, is_edit, env, ctx, calls, results)
@@ -416,6 +425,14 @@ def land_code(output: str, env, ctx, calls: list | None = None,
     ctx.artifacts.append(path)
     ctx.notes.append(f"coder landed {path.name} ({n} lines) -- review raised")
     return f"{path.name} ({n} lines)"
+
+
+def _rel_key(rel: str) -> str:
+    """One spelling of a path relative to the ground, for comparing two."""
+    key = (rel or "").strip().strip("'\"`").replace("\\", "/")
+    while key.startswith("./"):
+        key = key[2:]
+    return key.lower()
 
 
 def _land_through_a_door(name: str, code: str, on_tree: bool, is_edit: bool,
@@ -1316,12 +1333,59 @@ def unread_parts(ctx: RunContext) -> list[str]:
 MAKER_SEAT = "Expert Coder"
 
 
+def _md_window(text: str, rel: str, names: list) -> tuple:
+    """A .md passage by HEADING (2026-09-29, his word: "also add in the heading
+    window for a .md file"): the section under the first name that is a
+    heading exactly (case and the `#` marks aside) or that one heading alone
+    contains, from the heading through its subsections to the next heading as
+    deep or shallower. Two headings answering to one word refuse, naming
+    both, because an edit is an exact quotation of one passage."""
+    heads = [(m.start(), len(m.group(1)), m.group("t").strip())
+             for m in skills_heading.finditer(text)]
+    if not heads:
+        return None, f"`{rel}` has no headings to ask a passage by; nothing sat"
+
+    def norm(s: str) -> str:
+        return " ".join(s.strip().lstrip("#").split()).lower()
+
+    for name in names:
+        want = norm(name)
+        if not want:
+            continue
+        hits = [h for h in heads if norm(h[2]) == want] \
+            or [h for h in heads if want in norm(h[2])]
+        if not hits:
+            continue
+        if len(hits) > 1:
+            return None, (f"`{name}` names {len(hits)} headings of `{rel}` ("
+                          + ", ".join("`" + h[2] + "`" for h in hits[:6])
+                          + "); name one exactly; nothing sat")
+        pos, depth, title = hits[0]
+        end = len(text)
+        for npos, ndepth, _ in heads:
+            if npos > pos and ndepth <= depth:
+                end = npos
+                break
+        body = text[pos:end].rstrip("\n")
+        if len(body) > skills_read_window:
+            return None, (f"`{title}` in `{rel}` is longer than one window; a passage the "
+                          f"{MAKER_SEAT} cannot see whole it cannot quote whole -- name a "
+                          f"subsection; nothing sat")
+        return (title, body), ""
+    return None, (f"none of the names in the request ({', '.join('`' + n + '`' for n in names)}) "
+                  f"is a heading of `{rel}`; its headings: "
+                  + "; ".join("`" + h[2] + "`" for h in heads[:15])
+                  + (f"; and {len(heads) - 15} more" if len(heads) > 15 else "")
+                  + "; nothing sat")
+
+
 def _tree_window(env, rel: str, names: list) -> tuple:
     """The passage the Coder is handed on a tree turn: ((name, body), "") for
-    the first backticked name the file's map resolves EXACTLY, else
-    (None, why). Read by the engine, off the disk, by the same map
-    `ground_read` shows -- a WHOLE definition or module-level name, never a
-    character range, never a containing match; secrets and the protected are
+    the first backticked name the file's own map resolves EXACTLY, else
+    (None, why). A .py is mapped by definition -- the same `_windowed_python`
+    map `ground_read` shows, a WHOLE definition or module-level name, never a
+    containing match, never a character range; a .md by heading
+    (`_md_window`); nothing else has a map. Secrets and the protected are
     refused before they are read."""
     from .vectors import is_protected, is_secret
     path = skills_inside_ground(env, rel)
@@ -1331,16 +1395,21 @@ def _tree_window(env, rel: str, names: list) -> tuple:
         return None, f"`{rel}` is never read into the chain (RULE 7, SITTING LAW 2); nothing sat"
     if not path.is_file():
         return None, f"`{rel}` is not a file in the ground; nothing sat"
-    if not rel.lower().endswith(".py"):
-        return None, (f"`{rel}` is not a Python file; the {MAKER_SEAT}'s window on the tree "
-                      f"is one definition by name, and only a .py has a map of them; nothing sat")
+    suffix = path.suffix.lower()
+    if suffix not in (".py", ".md"):
+        return None, (f"`{rel}` has no map -- the {MAKER_SEAT}'s window on the tree is a "
+                      f"definition of a .py or a heading of a .md, by name; nothing sat")
     if not names:
         return None, (f"the request names `{rel}` but no passage in backticks -- name the "
-                      f"definition or module-level name to change, as `_LIKE_THIS`; nothing sat")
+                      + ("heading to change, as `The dials`" if suffix == ".md" else
+                         "definition or module-level name to change, as `_LIKE_THIS`")
+                      + "; nothing sat")
     try:
         text = path.read_text(encoding="utf-8", errors="replace")
     except OSError as exc:
         return None, f"`{rel}` could not be read ({exc}); nothing sat"
+    if suffix == ".md":
+        return _md_window(text, rel, names)
     marker = "range):\n\n"
     for name in names:
         shown = skills_windowed_python(text, rel, name)
@@ -1374,6 +1443,9 @@ def _tree_report(ctx: RunContext, saved: str, door: str, said: str) -> str:
                 f"operator's click on Version control.")
     if door:
         return f"Nothing landed -- {door} said: {said}"
+    engine_said = [n for n in ctx.notes if n.startswith("coder tree: ")]
+    if engine_said:
+        return "Nothing landed: " + engine_said[-1][len("coder tree: "):]
     return (f"Nothing landed: the {MAKER_SEAT} answered with no edit in the shape the tree "
             f"lands -- one line `<filepath>{make.get('rel', '')}</filepath>` and one fenced "
             f"`@@ OLD` / `@@ NEW` block.")
@@ -1404,6 +1476,12 @@ def _maker_route(ctx: RunContext, registry: AgentRegistry, skills: SkillLibrary,
     # landing. No Router plans in the way. A name that is not on the map, or
     # a file that cannot be read, is answered by the engine and no seat sits.
     rel, names = intent.wants_a_tree_change(ctx.objective)
+    if rel and "/" not in rel and "\\" not in rel:
+        # A BARE NAME IS A ROOT DOCUMENT ONLY IF IT IS THERE (2026-09-29): a
+        # `.md` the ground's root does not hold is the workspace's, as before.
+        at_root = skills_inside_ground(env, rel)
+        if at_root is None or not at_root.is_file():
+            rel = ""
     if rel:
         found, why = _tree_window(env, rel, names)
         if why:

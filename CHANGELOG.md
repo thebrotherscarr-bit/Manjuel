@@ -34,6 +34,44 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The heading window: a .md is asked by heading, a root document by its bare name, and the Coder's answer lands on the window's file or nowhere (operator, 2026-09-29: "also add in the heading window for a .md file")
+
+WHAT. The Coder's window on the tree (below) mapped a .py by definition and refused every other
+file. Now a `.md` is mapped by HEADING (`pipeline._md_window`, the same `_HEADING` the reading
+window uses): the passage is the section under the first backticked name that is a heading
+exactly (case and the `#` marks aside) or that one heading alone contains, from the heading
+through its subsections to the next heading as deep or shallower; two headings answering to one
+word refuse, naming both (`dials` is not a heading where `The dials` and `The dials, in one
+place` both stand); a name that is no heading is refused with the headings listed; a section past
+one window is refused -- name a subsection. A name in backticks may now carry spaces (`The
+dials`, `## The dials`), so `intent._BACKTICKED` reads any text between backticks and the file's
+own map decides what resolves. A ROOT DOCUMENT IS ASKED BY ITS BARE NAME (`In RUNBOOK.md, under
+`The dials`, ...`): `wants_a_tree_change` lets a bare `.md` through, and `_maker_route` takes the
+turn only if that file is there at the ground's root -- a bare name that is not falls through to
+the routes it always had, so nothing the workspace held moves. The passage of a CRLF document is
+handed LF, as the doors read it, and the door writes it back CRLF (`_apply_passage`, unchanged).
+The Coder's fence says `markdown`. Files with no map (.txt, .toml, ...) are refused as such.
+
+AND THE WINDOW'S FILE IS THE ONLY FILE: on a tree turn `land_code` treats the Coder's `<filepath>`
+as the ground's whatever its shape (a root document has no folder), and an answer for a file the
+window was not on lands NOWHERE -- "Nothing landed: the window was on `NOTES.md`; the Expert Coder
+answered for `manjuel/thing.py`" -- rather than reaching a door for a file nobody asked about.
+
+PROVED on a mirror: the stroke `test_the_coders_window_on_the_tree` grows to 54 (the words for a
+root document and a heading with spaces; the section with its subsections; the `##` and any case;
+one containing heading; two refused naming both; no heading, the headings listed; a section past
+the window; a CRLF root document handed LF; a .txt refused as having no map; the turn on a root
+document with the fence `markdown`, the edit landing CRLF, the record naming the heading; an answer
+for another file landing nowhere with both files named; a bare name that is not a root document
+falling through). The whole suite 3124/3124, the smoke 72/72. Four reversals red: R5 the whole
+document handed instead of the section; R6 the window's-file wire unplugged; R7 the root-document
+guard removed; R8 the headings not read. `manjuel/intent.py`, `manjuel/pipeline.py`,
+`manjuel/maker.py` moved: RESTART REQUIRED. WHAT GOES RED IF UNPLUGGED: the section (R5), the
+file (R6), the guard (R7), the map (R8) -- and on the glass, a change to a root document either
+lands through `ground_edit` on the line or the delivery says which file the Coder named instead.
+The tree doors' never-written names still hold: CLAUDE.md, pipelines.md, commands.md, memory.md,
+SEAT_LOG.md and BUILDMAP.md are refused at the door, whatever the window handed.
+
 ### The Coder's window on the tree: a change to a named file in the ground wakes the Expert Coder alone, handed the passage by name, and the tree door lands what it answers (operator, 2026-09-28, by card: "then the Coder's window on the tree")
 
 WHY. Four firings of `coder-tree` put one small change to the harness through the estate and

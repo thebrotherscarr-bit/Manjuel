@@ -2404,6 +2404,12 @@ been in the plan from the beginning."
   mirror, four reversals red (13, 3, 6, 5); restart required. Measured on the way: v3's attempt
   text names `ground_read`, so the flow needs a v4 that names no tool before it fires again.
 
+- **The heading window** (2026-09-29, his word: "also add in the heading window for a .md file"):
+  a `.md` is mapped by heading -- the section with its subsections, exact or the one heading that
+  contains the word, two refused naming both -- a root document by its bare name if it is there, a
+  backticked name may carry spaces, and the Coder's answer lands on the window's file or nowhere.
+  The stroke grows to 54, 3124/3124 and 72/72 on a mirror, four reversals red; restart required.
+
 **Found** — the glass's Tools page asks for a tool's arguments with the browser's `prompt()`, which
 the desktop's browser pane dismisses unseen (the page's own `App.tool` was called from the page
 instead: the same request, the glass's session); a check over the tools block cannot see the maker
@@ -2430,7 +2436,7 @@ Dashboard; the door pid 86180 carries all six door pieces; both repositories sav
 sent after it (core `c92751d`), the eighth on top, unsaved.
 
 **Next session** — on his word, `coder-tree` v4 (an attempt that names no tool) and a fifth firing
-through the Coder's window; named beside it, a heading window for a .md, the map's how-to-ask, the
+through the Coder's window; named beside it, the map's how-to-ask, the
 headless "retry / skip / abort?" and the claim check on a seat that says a tool was used; the dials (Steward 180, the court 900 as a
 deadline a pipeline declares); the front-end agent handoff's plan is in the record (CHANGELOG, this
 day) and waits on those; a Dashboard button for the standup and a `loops` box in the builder; a

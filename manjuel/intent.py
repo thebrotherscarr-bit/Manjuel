@@ -1237,22 +1237,31 @@ def wants_changing(objective: str) -> bool:
 _TREE_CHANGE_VERB = re.compile(
     r"(?i)\b(?:add|append|insert|change|edit|fix|replace|rename|remove|delete|"
     r"update|move|put|set|extend|widen|narrow)\b")
-_BACKTICKED = re.compile(r"`([A-Za-z_][\w.]*)`")
+# A name in backticks: a definition (`_LIKE_THIS`, `Class.method`) or, for a
+# .md, a heading (`The dials`, `## The dials`) -- so spaces are allowed and
+# the file's own map decides what resolves.
+_BACKTICKED = re.compile(r"`([^`\n]{1,80})`")
 
 
 def wants_a_tree_change(objective: str) -> tuple[str, list[str]]:
     """(the file in the ground, the backticked names in order) when the words
-    ask for a CHANGE to a named file with a folder in its path; else ("", [])."""
+    ask for a CHANGE to a named file -- a path with a folder in it, or a bare
+    `.md` (a root document: the engine checks it is there before the turn is
+    the tree's, and a bare name that is not falls through as before) -- with
+    a change verb; else ("", [])."""
     text = objective or ""
     if _ASKS_ABOUT_MAKING.match(text):
         return "", []
     rel = names_a_file(text)
-    if not rel or ("/" not in rel and "\\" not in rel):
+    if not rel:
+        return "", []
+    if "/" not in rel and "\\" not in rel and not rel.lower().endswith(".md"):
         return "", []
     if not _TREE_CHANGE_VERB.search(text):
         return "", []
     # A backticked FILE is not a passage; `Class.method` is, as the map says.
-    names = [n for n in _BACKTICKED.findall(text) if not _FILENAME_RE.fullmatch(n)]
+    names = [n.strip() for n in _BACKTICKED.findall(text)]
+    names = [n for n in names if n and not _FILENAME_RE.fullmatch(n)]
     return rel, list(dict.fromkeys(names))
 
 
