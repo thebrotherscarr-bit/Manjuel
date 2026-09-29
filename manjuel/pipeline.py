@@ -1051,7 +1051,7 @@ def _coder_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
     other turn it is the generic builder it has always had."""
     if getattr(ctx, "make", None):
         if ctx.make.get("kind") == "tree":
-            return maker.tree_prompt(ctx.make, ctx.objective)
+            return maker.tree_prompt(ctx.make, ctx.objective, ctx.feed)
         return maker.coder_prompt(ctx.make, ctx.objective)
     return _default_prompt(agent, ctx, skills)
 

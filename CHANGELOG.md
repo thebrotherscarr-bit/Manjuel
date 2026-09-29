@@ -34,6 +34,38 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The failed pass rides as the feed, never in the objective (operator, 2026-09-29: "carry the failed pass without the door's name")
+
+WHY. A sent-back pass quotes the door's own reply ("Nothing landed -- ground_edit said: Refused
+..."), and the council reads a tool's name in the OBJECTIVE as a request for that tool
+(`names_a_tool`), so a `{{fail_attempt}}` in the attempt's question shut the Coder's window on every
+retry; v4 carried nothing, and each pass was a fresh roll of the same dice.
+
+WHAT. THE RUNNER (atlas, `flow/run.go`, `execNode` "run"): a `run` node's turn is handed
+`fail_<node>` as its FEED -- `eng.Turn(ctx, objective, feed, method)` had carried "" -- which the
+door forwards to the council as the turn's source material (`councilEngine.Turn` -> `e.Run(objective,
+feed, ...)` -> serve.py `feed` -> `RunContext.feed`). `fail_<node>` is seeded only for a node that
+declares `loops` and is empty until a pass was sent back, so a first pass and a node that never
+returns hand over nothing; a question may still name `{{fail_attempt}}`. THE COUNCIL: on a tree turn
+the Coder's prompt (`maker.tree_prompt`) shows the feed under "THE LAST PASS FAILED -- what was
+said, read it before you answer", between the change asked for and the shape to answer in; the
+arithmetic (`wants_a_tree_change`, `names_a_tool`) reads the objective alone, so the door's name in
+the feed routes nothing. The feed gate holds as for any pasted material: the injection markers, and
+the Security Guardian first, then the Coder -- one guard's turn per retry, which is the price of a
+seat's words being read.
+
+PROVED. The runner's stroke `TestTheFailedPassRidesAsTheFeedNeverInTheObjective` (a first pass fed
+nothing; the retry's feed carrying "pass 1 of `attempt` was sent back by `verdict`" and the first
+answer; the objective the words alone on both) and the loop stroke, the whole flow package green on
+a scratch copy, `gofmt` and `go vet` clean; the reversal R13 (the feed handed as "" again) red. The
+window stroke grows to 63 (a feed naming the door: the window opens, the Guardian then the Coder,
+the failed pass shown before the shape, the retry landing; the same words in the objective naming
+a door); the whole suite 3133/3133, the smoke 72/72; the reversal R14 (the pass not shown) red.
+Battery: PROVEN, 142 legs, 85 tools, from the built binary. `manjuel/maker.py`, `manjuel/pipeline.py` moved: RESTART REQUIRED; the door
+rebuilt, placed on his allowance. WHAT GOES RED IF UNPLUGGED: R13 at the runner, R14 at the prompt
+-- and on the glass, a retry that repeats the same misquote, which the fifth firing's three passes
+were.
+
 ### The merge is his, on his terminal: the land gate's title and the record's lines corrected, coder-tree folded as v5 (operator, 2026-09-29: "fix the gate title and the doc lines")
 
 The flow's `land` gate and six lines of the record said merging a line to main "stays your click

@@ -743,17 +743,23 @@ _SHAPE = (f"Answer with exactly this, and nothing after it:\n"
           f"<filepath>{PAGE}</filepath>\n```html\n...the whole page...\n```")
 
 
-def tree_prompt(make: dict, objective: str) -> str:
+def tree_prompt(make: dict, objective: str, feed: str = "") -> str:
     """The Coder's one job on a TREE turn (2026-09-28): an edit to a passage
     it is handed, in the shape the tree doors land. The passage is the
     engine's read of the file by name, so what the Coder quotes is what is
-    there."""
+    there. A FEED is what the last pass said (2026-09-29, his word: "carry the
+    failed pass without the door's name"): a flow's runner hands a sent-back
+    pass over as the turn's feed, never in the objective, so the door's name
+    in it routes nothing and the Coder still reads why the last try failed."""
     rel = make.get("rel", "")
     low = rel.lower()
     fence = "python" if low.endswith(".py") else "markdown" if low.endswith(".md") else ""
+    failed = ((f"THE LAST PASS FAILED -- what was said, read it before you answer:\n"
+               f"{feed.strip()}\n\n") if (feed or "").strip() else "")
     return (f"Here is the passage as it stands in `{rel}` -- `{make.get('name')}`:\n\n"
             f"```{fence}\n{str(make.get('passage') or '').rstrip()}\n```\n\n"
             f"THE CHANGE ASKED FOR: {(objective or '').strip()}\n\n"
+            f"{failed}"
             f"Answer with ONE fenced block and nothing more -- either an EDIT: a line "
             f"`@@ OLD`, the exact lines to replace quoted exactly as they stand above "
             f"(as few as make the passage unique), a line `@@ NEW`, then the lines that "

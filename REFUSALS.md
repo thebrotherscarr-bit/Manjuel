@@ -984,8 +984,9 @@ a fenced block reads as a heading, as it does for the reading window. A root
 document is asked by its bare name only if it is there; the never-written names
 (CLAUDE.md, pipelines.md, commands.md, memory.md, SEAT_LOG.md, BUILDMAP.md) are
 still refused at the door. A request that names a tool is never the tree's
-(§25's arithmetic), so a flow's attempt text must name none -- and a carried
-failed pass that quotes a door's name shuts the window the same way. The window
+(§25's arithmetic), so a flow's attempt text must name none; a carried failed
+pass, which quotes the door's name, rides as the turn's FEED instead (2026-09-29),
+where the arithmetic never reads it and the Guardian reads it first. The window
 hands the first name the map resolves, in the order the words gave them.
 
 Stroked: `test_the_coders_window_on_the_tree` (59; 2026-09-29: the `<filepath>`

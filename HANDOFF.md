@@ -933,9 +933,21 @@ person's words, end to end. MERGING `tree-foundation-6` INTO MAIN WAS HIS MERGE 
 no such click; done the same day, `3631498`, sent); every `tree-foundation` line closed through the
 door's own button.
 
-**Where the ground stands.** core `main@94c0928` plus the run-six record (CHANGELOG.md, DAYBOOK.md,
-HANDOFF.md, pipelines.md, BUILDMAP.md), to be saved and sent through the glass's Version control on
-his word; `tree-foundation-6` at `ba0e61a` carries the coder's line and the stamps, his to merge.
+**THE FAILED PASS RIDES AS THE FEED** (his word: "carry the failed pass without the door's name"):
+the runner hands `fail_<node>` to a `run` node's turn as its FEED (atlas `flow/run.go`), the door
+forwards it as source material, and the Coder's tree prompt shows it under "THE LAST PASS FAILED";
+the arithmetic reads the objective alone, so a door's name in the feed routes nothing. The Guardian
+reads the feed first, as any pasted material. Runner stroke green and R13 red on scratch, the flow
+package green, gofmt and vet clean; window stroke 63, the suite 3133/3133 and the smoke 72/72 on a
+mirror, R14 red; battery PROVEN, 142 legs, 85 tools, from the built binary. RESTART REQUIRED (`maker.py`, `pipeline.py`); the door rebuilt and
+placed on his allowance. v5 needs no fold: its attempt is the objective alone and the feed comes by
+itself.
+
+**Where the ground stands.** core `main@47c7032` (his merge `3631498` carrying the coder's line, and the
+record's correction) plus this piece (CHANGELOG.md, DAYBOOK.md, HANDOFF.md, pipelines.md, REFUSALS.md,
+BUILDMAP.md, manjuel/maker.py, manjuel/pipeline.py, tests/test_manjuel.py), to be saved and sent through
+the glass's Version control on his word; atlas `main@0cb5c63` plus `line/internal/flow/run.go`,
+`run_test.go` and `CHANGELOG.md`, the same way. No `tree-foundation` line remains.
 atlas `main@0cb5c63` (`suite_run` the last), level with GitHub; the morning's two pieces --
 `line/internal/tools/tools.go`, `gitctl.go`, `tools_test.go`, `line/internal/auth/auth.go`,
 `auth_test.go`, `line/cmd/atlas-mcp/prove.go`, `docs/ARCHITECTURE.md`, `CHANGELOG.md` -- saved

@@ -2479,6 +2479,13 @@ line at his gate, the passage rewritten whole, the door landing the one line, 31
 through the door, the council's save on the line at his hand (`ba0e61a`). The first change to the
 harness made by the estate on a person's words, end to end.
 
+**After the merge** — his merge on his terminal (`3631498`), sent; every `tree-foundation` line closed
+through the door; the gate title and the record's lines corrected, v5 folded (`47c7032`). Then his
+word "carry the failed pass without the door's name": the runner hands `fail_<node>` over as the
+turn's FEED, the Coder's tree prompt shows it, the arithmetic never reads it; R13 red at the runner,
+R14 red at the prompt; window stroke 63, 3133/3133 and 72/72 on a mirror, the flow package green;
+the door rebuilt and placed on his allowance.
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until
@@ -2496,8 +2503,8 @@ line; close and record.
 their tolls; the ground on `main`; the lines `tree-foundation` to `-6` standing, his to close or
 merge; the door unchanged (no Go moved today).
 
-**Next session** — the merge is done (his terminal, `3631498`, sent; every `tree-foundation` line closed);
-named beside it: the failed pass carried without the door's name; a SPEC 8.2 theme for the coder on
+**Next session** — a seventh firing of `coder-tree` v5 on a change whose first pass fails, to see the
+carried pass read (the retry no longer a fresh roll); named beside it: a SPEC 8.2 theme for the coder on
 the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that
 says a tool was used; the dials (Steward 180, the court 900); a Dashboard button for the standup and
 a `loops` box in the builder; the front-end agent handoff plan.

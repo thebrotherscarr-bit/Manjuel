@@ -14461,9 +14461,9 @@ def test_the_coders_window_on_the_tree(reg, lib, book):
     def reply(a):
         return coder["answer"] if a.key == "expert coder" else "A SEAT THAT SAT"
 
-    def turn(objective):
+    def turn(objective, feed=""):
         r = Stub(reply=reply)
-        ctx = RunContext(objective=objective)
+        ctx = RunContext(objective=objective, feed=feed)
         run_pipeline(ctx, reg, r, lib, env_for(g, reg, r),
                      steps=book.get("default"), report=lambda m: None)
         return ctx, [n for n, _ in r.seen], r
@@ -14591,6 +14591,34 @@ def test_the_coders_window_on_the_tree(reg, lib, book):
           (g / "manjuel" / "netty.py").read_bytes() == b"import socket\n\nY = 2\n"
           and "RULE 4" in ctx.last_output() and "urllib" in ctx.last_output(),
           ctx.last_output()[:240])
+    # THE FAILED PASS RIDES AS THE FEED (2026-09-29, his word: "carry the failed
+    # pass without the door's name"): the objective stays the words the
+    # arithmetic reads, the door's name in the feed routes nothing, and the
+    # Coder is shown what the last pass said before the shape to answer in.
+    FAILED = ("pass 1 of `attempt` was sent back by `changed`: expected contains \"line of work `\"\n"
+              "what `attempt` answered on that pass:\n"
+              "Nothing landed -- ground_edit said: Refused: that passage is not in thing.py. "
+              "Read the file and quote it exactly -- whitespace and all.")
+    coder["answer"] = "```\n@@ OLD\n    'c': 3,\n@@ NEW\n    'c': 4,\n```\n"
+    ctx, sat, r = turn(said, feed=FAILED)
+    asked = next((pr for n, pr in r.seen if n == "Expert Coder"), "")
+    CHANGED4 = CHANGED3.replace(b"    'c': 3,\n", b"    'c': 4,\n")
+    check("a feed that names the door shuts nothing: the window opens on the objective alone; "
+          "the feed gate wakes the Guardian first, as for any pasted material, then the Coder",
+          sat == ["Security Guardian", "Expert Coder"]
+          and any(n.startswith("tree: a change to `manjuel/thing.py`") for n in ctx.notes),
+          f"{sat} {str(ctx.notes)[:200]}")
+    check("   the Coder is shown what the last pass said, before the shape to answer in",
+          "THE LAST PASS FAILED" in asked
+          and "ground_edit said: Refused: that passage is not in thing.py" in asked
+          and asked.index("THE LAST PASS FAILED") < asked.index("Answer with ONE fenced block"),
+          asked[:400])
+    check("   and the retry lands",
+          (g / "manjuel" / "thing.py").read_bytes() == CHANGED4,
+          repr((g / "manjuel" / "thing.py").read_bytes()[:100]))
+    check("   whereas the same words IN the objective would name a door -- the words are the gate",
+          intent.names_a_tool(said + "\n\n" + FAILED, lib) in ("ground_edit", "ground_read"),
+          repr(intent.names_a_tool(said + "\n\n" + FAILED, lib)))
     ctx = RunContext(objective="add a line to scratch.md")
     _maker_route(ctx, reg, lib, env_for(g, reg, Stub()), lambda m: None)
     check("a bare name that is not a root document is not the tree's -- it falls through as before",

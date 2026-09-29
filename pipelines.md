@@ -527,8 +527,11 @@ brief ──→ open (gate: grants git_branch) ──pass──→ line ──�
                        window -- the Expert Coder handed the passage by name,
                        its edit through `ground_edit` (the tree doors refuse the
                        main line and the never-written names by themselves).
-                       No brief and no carried failed pass in the text: either
-                       can name a door and shut the window. `loops: 2`
+                       No brief and no carried failed pass in the TEXT: either
+                       can name a door and shut the window. The failed pass
+                       rides as the turn's FEED instead (the runner hands
+                       `fail_attempt` over as source material, same day), and
+                       the Coder reads it under "THE LAST PASS FAILED". `loops: 2`
     strokes     run    a spelled-out `suite_run` (strokes); the suite stamps its
                        own proof
     strokes_ok  eval   on `strokes`, expecting `green · exit 0` in the tools
@@ -606,9 +609,11 @@ right with no `<filepath>` line; the dict rewritten whole; the edit exact and
 the door refusing it for what skills.py already carried. All three built the
 same day (CHANGELOG): the file is the window's, a block with no markers is the
 passage rewritten whole, and the door judges what an edit ADDS. The failed
-pass is not carried on purpose: it quotes the door's name, and the retry is
-a fresh roll, which the record says. An objective typed for this flow must
-name no tool ("the founding documents" names `semantic_search`).
+pass was not carried in the text on purpose -- it quotes the door's name --
+and since the same evening it rides as the turn's FEED, which the arithmetic
+never reads and the Coder is shown (CHANGELOG, "carry the failed pass without
+the door's name"). An objective typed for this flow must name no tool ("the
+founding documents" names `semantic_search`).
 
 FIRED A SIXTH TIME (v4, the three fixes in the engine): COMPLETE in one pass,
 315 s -- the line opened at his gate, the Coder handed the passage answered it
