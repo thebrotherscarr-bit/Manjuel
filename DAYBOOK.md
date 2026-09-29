@@ -2521,6 +2521,14 @@ WHATS_LEFT.md, a file, and read for minutes in silence while he waited. His word
 reading WHATS_LEFT.md through `records`; 80 open lines in seven lettered sections; one stroke in atlas,
 four reversals red; the webapp placed on his allowance (pid 27136); atlas `6a38f6f`, core `caf573a`.
 
+**The evening** — his standing word ("do the ... list top to bottom and ONLY STOP if NECESSARY"): the
+hand works WHAT'S LEFT without cards. A1 was the Router's window, full to ten tokens (8,182 of 8,192,
+measured on the rack); both seats on that model declare 16384; the standup 9/9 twice. A4, C10 and C12
+fixed and stroked, reversals red. atlas's prove had one leg broken since 09-28 (the flow oracle knew no
+`loops`); taught, 21 held. Suites on the ground from the glass 3189/3189 and 72/72; the gate 16 of 16;
+CI green on both repositories. THE MARKS CUT AND SENT from Version control: core `v0.1.16` on `e8aa9b5`,
+atlas `v0.1.9` on `b1059a1`; the gate 17 of 17 with the mark named.
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until
@@ -2539,8 +2547,8 @@ line; close and record.
 `tree-foundation-6`, the rest closed through the door); the door rebuilt once (the runner's feed) and
 placed on his allowance, pid 276.
 
-**Next session** — open `What's left` on the webapp first (the list is WHATS_LEFT.md); the marks v0.1.16 and v0.1.9 are his to cut on Version control
-once his terminal's gate passes; his ruling on the Expert Coder's seat (SITTING LAW 3: the transcripts of
+**Next session** — open `What's left` on the webapp first (the list is WHATS_LEFT.md); the marks v0.1.16 and v0.1.9 are cut and sent;
+the list goes on from C, on his standing word; his ruling on the Expert Coder's seat (SITTING LAW 3: the transcripts of
 runs seven and eight show qwen2.5-coder:7b not acting on a refusal it was shown, first or last); named
 beside it: a SPEC 8.2 theme for the coder on the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that
 says a tool was used; the dials (Steward 180, the court 900); a Dashboard button for the standup and

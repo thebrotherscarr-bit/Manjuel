@@ -716,10 +716,43 @@ stopped by pid and path, its binary kept in the hand's scratch, the build copied
 atlas `6a38f6f`, core `caf573a`. TWO THINGS HE RULED THE SAME HOUR, for any hand: a page means a page on
 the webapp, never a file; and he is never left minutes without a line saying what is being done.
 
-**Where the ground stands.** core `main@d280b10` plus this piece (STATUS.md, tests/status.py,
-tests/release.py, tests/test_manjuel.py, BUILDMAP.md, CHANGELOG.md, DAYBOOK.md, HANDOFF.md, BUILDPATH.md,
-README.md, RUNBOOK.md, TESTING.md), to be saved and sent through the glass's Version control on his
-word; atlas `main@a6e6c23`, level with GitHub; the door placed at pid 276 carries the runner's feed.
+**THE EVENING: THE LIST, TOP TO BOTTOM, ON HIS STANDING WORD.** His words, in order: "start working
+through the list ... make a plan and execute, if there are questions review the ... record and ONLY ask
+if it was NEVER discussed"; "do the ... list top to bottom and ONLY STOP if NECESSARY"; "if you need to
+restart, ... restart it". So for this list the hand plans, builds, proves, saves and sends through the
+glass's buttons WITHOUT A CARD, and stops him only for what the record has never ruled. WHAT'S LEFT
+(the webapp's page; the file is `WHATS_LEFT.md`) is the state of it: read it first.
+
+**A1, THE ROUTER'S WINDOW.** The standup's 8/9 was the Router's request, measured on the rack at 8,182
+tokens in a window of 8,192 -- the prompt plus the declaration of all 45 skills; the two tree doors of
+09-28 took the last four hundred. `agents/router.md` and `agents/quality_evaluator.md` (one model, one
+window) declare 16384. Standup 9/9 twice (sittings 298, 299). The wire is
+`test_a_seat_that_holds_tools_has_room_to_answer`. A SKILL ADDED FROM HERE ON SPENDS THAT WINDOW: the
+stroke reds before the rack does.
+
+**ALSO LANDED:** the browser-count stroke counts its own process's browsers and waits twenty seconds
+(CI's Windows legs green twice since); a refusal at the table calls a skill a writer only when it is
+one; `rack_list` says OVER and names disk and memory as two sizes. atlas: `tools/cut_flow_vectors.py`
+knows the bounded return (prove had said "1 broke" since 09-28) and refuses a word it does not know.
+
+**THE MARKS ARE CUT AND SENT.** core `v0.1.16` on `e8aa9b5`, atlas `v0.1.9` on `b1059a1`, through
+Version control's own buttons, after: the suites on the ground from the glass 3189/3189 and 72/72,
+the standup 9/9 (sitting 299), atlas prove 21 held - 14 absent - 0 broke, CI green on both pushes,
+and the gate PASSED 16 of 16 before the cut and 17 of 17 after it. The tag's own `release-gate`
+workflow passed on GitHub. atlas's releases are DRAFTS until he publishes them (WHAT'S LEFT, A5).
+
+**THE HAND'S TWO FAULTS OF THE DAY, both in the record:** a page asked for and a file given, twice
+(CHANGELOG, "What's left is a page on the webapp"); and `cut_flow_vectors.py --check` run where
+`--verify` was meant, which rewrote atlas's flow fixture -- restored byte for byte from the last save
+before anything was saved (atlas CHANGELOG).
+
+**FOUND, NOT TOUCHED:** four `llama-server` processes started 07:52 hold about 4 GB of graphics memory
+and are not in `ollama ps` (WHAT'S LEFT, C31). They are not the hand's to stop.
+
+**Where the ground stands.** core `main@e8aa9b5` = `v0.1.16`, atlas `main@b1059a1` = `v0.1.9`, both
+level with GitHub, plus this record (unsaved as it is written, saved after). The glass is pid 27136,
+the 0.1.9 build placed 2026-09-29 on his allowance, carrying the What's left page; the door is pid
+276, the 08:55 build, unchanged. No sitting is open (299 closed 15:04). No line of work.
 
 ## HANDOFF FOR 2026-09-28 — read this before anything below it
 

@@ -34,7 +34,7 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
-## v0.1.16 — 2026-09-29 15:15
+## v0.1.16 — 2026-09-29 15:15 (tag on e8aa9b5)
 
 ### The Router's window: its request had filled it, and the live check is 9 of 9 again (operator, 2026-09-29: "start working through the list ... make a plan and execute"; "do the list top to bottom")
 

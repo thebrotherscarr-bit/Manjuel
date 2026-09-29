@@ -15,16 +15,12 @@ the lines, finds words in them, and names any line it cannot number.
 
 ## A. Stops the release right now
 
-The release is core **v0.1.16** and atlas **v0.1.9**. Neither tag is cut.
+The release is core **v0.1.16** and atlas **v0.1.9**. Both tags are cut and on GitHub
+(2026-09-29). One thing is left, and it needs your GitHub sign-in.
 
-- **A3. The two tags are not cut.** Core v0.1.16 and atlas v0.1.9, from the dashboard's Version
-  control page, after A2. *(HANDOFF 09-29)*
-- **A4. GitHub's automatic tests were red on Windows.** Fixed here on 2026-09-29 and waiting
-  on GitHub's next run to confirm. The test counted browsers the instant a page check ended, and
-  counted other runs' browsers too. It now counts only its own and gives them 20 seconds to
-  close. *(HANDOFF 09-28, CHANGELOG)*
-- **A5. The atlas v0.1.8 release on GitHub is still a draft.** It waits for you to publish it.
-  *(HANDOFF 09-28)*
+- **A5. The atlas releases on GitHub are drafts.** v0.1.8 has waited since 09-25, and the
+  v0.1.9 tag has started the workflow that drafts its release. Publishing a draft is done
+  signed in to GitHub, which this hand is not. *(HANDOFF 09-28, GitHub)*
 
 ---
 
@@ -205,10 +201,10 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 - [x] 2. Run the live check until it is 9 of 9
 - [x] 3. Run the release check for v0.1.16: every line ok (16 of 16, 2026-09-29 15:10)
 - [x] 4. Run atlas's proof (21 held, 14 absent, 0 broke, 2026-09-29)
-- [ ] 5. Cut and send the tag v0.1.16 (core) from Version control
-- [ ] 6. Cut and send the tag v0.1.9 (atlas) from Version control
-- [ ] 7. Publish the atlas v0.1.8 draft on GitHub, or drop it (A5)
-- [ ] 8. Look at GitHub's tests after the tag (A4)
+- [x] 5. Cut and send the tag v0.1.16 (core) from Version control (on `e8aa9b5`)
+- [x] 6. Cut and send the tag v0.1.9 (atlas) from Version control (on `b1059a1`)
+- [ ] 7. Publish the atlas drafts on GitHub, v0.1.8 and v0.1.9, or drop them (A5)
+- [x] 8. Look at GitHub's tests after the tag: green on both (A4)
 
 ---
 
@@ -216,6 +212,14 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **A3. The two tags are not cut.** DONE 2026-09-29 15:27. Core v0.1.16 on `e8aa9b5` and atlas
+  v0.1.9 on `b1059a1`, cut and sent from the Version control page on your standing word ("do
+  the list top to bottom"). The release check passed 17 of 17 with the tag named, and the
+  tag's own release check on GitHub passed. *(CHANGELOG)*
+- **A4. GitHub's automatic tests were red on Windows.** DONE 2026-09-29. The test counted
+  browsers the instant a page check ended, and counted other runs' browsers too. It counts
+  only its own now and gives them 20 seconds to close. Two runs green since, all four legs. It
+  was an on-and-off failure, so a red there again is worth a look. *(CHANGELOG, GitHub)*
 - **A2. The release check has not passed.** DONE 2026-09-29 15:10. It passed 16 of 16 for
   v0.1.16: suites 3189/3189 and 72/72 on the ground, live check 9 of 9 (sitting 299), and every
   record line. *(STATUS)*
