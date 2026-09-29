@@ -34,6 +34,8 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+## v0.1.16 — 2026-09-29 11:53
+
 ### The STATUS page: where the ground stands, printed from the record, and the gate's fifth terminal check (operator, 2026-09-29: "build it")
 
 WHY. His question of the afternoon -- "what are we on as far as the overall build order and path,
