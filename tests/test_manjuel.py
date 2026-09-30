@@ -12145,11 +12145,23 @@ def test_the_release_gate_runs_on_a_mark(reg, lib, book):
     check("a mark named but not cut yet is NOT RUN either, and says which reason "
           "(BUILDPATH step 3 names the version being cut)",
           not c.ran and "not cut yet" in c.why, c.line())
+    # ASKED OF THIS GROUND ONLY WHERE THE LINE CAN BE READ (2026-09-29).
+    # GitHub checks a TAG push out at the mark alone -- no `main`, no
+    # `origin/main` -- and this asked the question there: all four legs of run
+    # 170 went red on the push of v0.1.16, over a record that was whole. (On a
+    # push to main the same shallow checkout carries no tags, so it never
+    # asked, and every such run was green.)
     _real = _rel.last_tag(ROOT)
-    if _real:
+    if _real and _rel.line_refs(ROOT):
         c = _rel.mark(ROOT, _real)
         check(f"and this ground's newest mark points at a commit the line carries",
               c.ran and c.ok and "carried by" in c.why, c.line())
+    elif _real:
+        c = _rel.mark(ROOT, _real)
+        check("this checkout carries a mark and no line: the gate says the line cannot be "
+              "asked here, and refuses for that",
+              c.ran and not c.ok and "cannot be asked here" in c.why
+              and "does NOT" not in c.why, c.line())
 
     # ---- A MARK THE MAIN LINE DOES NOT CARRY ----------------------------
     #
@@ -12196,6 +12208,20 @@ def test_the_release_gate_runs_on_a_mark(reg, lib, book):
         check("a real mark hands back its own creatordate",
               _re.fullmatch(r"\d{4}-\d{2}-\d{2}", _rel.mark_date(gr, "v1.0.0") or ""),
               repr(_rel.mark_date(gr, "v1.0.0")))
+
+        # A CHECKOUT AT THE MARK ALONE, as GitHub makes one for a tag push:
+        # detached, and no line by either name.
+        check("a ground that carries the line says which names of it it carries",
+              _rel.line_refs(gr) == ["main"], str(_rel.line_refs(gr)))
+        _g("checkout", "-q", "--detach", "v1.0.0")
+        _g("branch", "-q", "-D", "main")
+        check("a checkout at the mark alone carries no line",
+              _rel.line_refs(gr) == [], str(_rel.line_refs(gr)))
+        c = _rel.mark(gr, "v1.0.0")
+        check("there the gate does not say the line lacks the commit: it says the line "
+              "cannot be asked, and refuses for THAT",
+              c.ran and not c.ok and "cannot be asked here" in c.why
+              and "does NOT" not in c.why and "v1.0.0" in c.why, c.line())
 
     # THE WORKING TREE IS NOT ASKED, and that is deliberate: the door already
     # refuses to cut over a dirty tree, and `git status` from a sandbox is the
@@ -15320,6 +15346,14 @@ def test_the_watchers_reindex_waits_for_a_build(reg, lib, book):
     w2.requeue([f, f])
     check("what is handed back is queued once, and asks for no reload",
           w2.drain() == (False, [f.resolve()]))
+    # ONE FILE, ONE ENTRY, HOWEVER IT IS SPELLED. GitHub's Windows runner keeps
+    # its temp folder under an 8.3 short name, and a path handed back in that
+    # spelling stood beside the resolved one as a second file (run 172).
+    w3 = GroundWatch(g, roots=[g / "docs"])
+    w3.note(f)
+    w3.requeue([f, str(f), g / "docs" / ".." / "docs" / "a.md"])
+    check("a file noted and then handed back under other spellings of its path is one entry",
+          w3.drain() == (False, [f.resolve()]))
 
 
 def test_every_root_document_is_in_the_index_list(reg, lib, book):

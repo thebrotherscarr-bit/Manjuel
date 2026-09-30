@@ -164,10 +164,18 @@ class GroundWatch:
         act holds the only copy of what changed -- cli._apply_ground_changes
         when an index build is still running (2026-09-29). Handed back here
         they are re-embedded at the next boundary instead of never. They were
-        classified when they were first noted and are not judged twice."""
+        classified when they were first noted and are not judged twice.
+
+        IN ONE SPELLING, THE RESOLVED ONE, as `note` keeps them. A path handed
+        back as it was typed is a second name for a file already queued:
+        on a machine whose temp folder carries an 8.3 short name (GitHub's
+        Windows runner) the two spellings differ, and the set held both."""
         with self._lock:
             for p in paths or ():
-                self._changed.add(Path(p))
+                try:
+                    self._changed.add(Path(p).resolve())
+                except OSError:
+                    continue
 
     # ---- the real observer (only when watchdog exists) ----------------
 

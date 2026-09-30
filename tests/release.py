@@ -425,6 +425,30 @@ def mark_date(root: Path = ROOT, tag: str = "") -> str:
     return r.stdout.strip() if r.returncode == 0 else ""
 
 
+# THE LINE, by either name: his ground carries `main`; a full checkout in CI
+# is detached at the mark and carries `origin/main`. Asked in that order, and
+# an answer from either is the same fact.
+LINES = ("main", "origin/main")
+
+
+def line_refs(root: Path = ROOT) -> list[str]:
+    """Which names of the main line THIS CHECKOUT carries, in the order they
+    are asked. Empty when it carries neither -- GitHub checks a tag push out
+    at the mark alone -- and then nothing about the line can be said here."""
+    out: list[str] = []
+    for line in LINES:
+        try:
+            r = subprocess.run(["git", "rev-parse", "--verify", "--quiet",
+                                f"{line}^{{commit}}"],
+                               capture_output=True, text=True, cwd=str(root),
+                               timeout=30, stdin=DEVNULL)
+        except Exception:
+            continue
+        if r.returncode == 0:
+            out.append(line)
+    return out
+
+
 def mark(root: Path = ROOT, tag: str = "") -> Check:
     """Does the mark point at a real commit, and is that commit on the line?
 
@@ -461,10 +485,18 @@ def mark(root: Path = ROOT, tag: str = "") -> Check:
         return Check("mark", True, f"{tag} is not cut yet -- asked again once it is",
                      ran=False)
     commit = sha.stdout.strip()[:9]
-    # THE LINE, by either name: a checkout in CI is detached at the mark and
-    # carries `origin/main`; his ground carries `main`. Asked in that order,
-    # and an answer from either is the same fact.
-    for line in ("main", "origin/main"):
+    lines = line_refs(root)
+    if not lines:
+        # THE LINE IS NOT HERE TO BE ASKED (2026-09-29). This said the line
+        # "does NOT carry" the commit of a line that was not in the checkout
+        # at all -- a statement about history made from no history. The gate
+        # still refuses, because it cannot show what it is there to show; it
+        # says why, and what would let it be asked.
+        return Check("mark", False, f"{tag} -> {commit}, and this checkout carries "
+                                    f"neither `main` nor `origin/main`, so the line "
+                                    f"cannot be asked here -- a full checkout "
+                                    f"(fetch-depth 0) carries it")
+    for line in lines:
         try:
             r = subprocess.run(["git", "merge-base", "--is-ancestor", commit, line],
                                capture_output=True, text=True, cwd=str(root),

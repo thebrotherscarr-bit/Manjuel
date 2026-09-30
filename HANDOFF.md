@@ -820,11 +820,24 @@ every engine named here booted after the edit. WHAT GOES RED IF UNPLUGGED:
 `test_an_idle_engine_closes_its_own_sitting`, `test_the_small_honesty_of_the_record_keepers`,
 `test_the_example_offers_only_dials_the_code_reads`, `test_the_small_honesty_of_the_engine`.
 
-**Where the ground stands.** core `main@bcaa707` (the mark `v0.1.16` on `e8aa9b5`), atlas
-`main@21fed12` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus the third batch and
-this record (unsaved as it is written, saved after). The glass is pid 27136, the 0.1.9 build placed
+**THE THIRD BATCH IS SAVED AND SENT:** core `a7fb750`, 36 files; origin level.
+
+**WHAT GITHUB FOUND, AND THE HAND HAD NOT READ (CHANGELOG, the entry of that name).** The run on
+the TAG `v0.1.16` (#170) was red on all four legs and the hand had read only the runs on `main`;
+the run on the second batch (#172) was red on both Windows legs. BOTH WERE THE HAND'S and both
+were reproduced here before they were touched: a path handed back unresolved
+(`GroundWatch.requeue`; GitHub's Windows temp folder has an 8.3 short name), and a stroke that
+asked about the main line in a checkout that carries none (a tag push is checked out at the mark
+alone). THE RELEASE CHECK PASSED 17 OF 17 BESIDE THE RED RUN ON THE MARK IT HAD JUST CUT: nothing
+here reads GitHub's verdict (WHAT'S LEFT, D9, his to order). TESTING.md says how each is
+reproduced here before a save.
+
+**Where the ground stands.** core `main@a7fb750` (the mark `v0.1.16` on `e8aa9b5`), atlas
+`main@21fed12` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus the two repairs
+GitHub's runs asked for and this record (unsaved as it is written, saved after). The glass is pid 27136, the 0.1.9 build placed
 2026-09-29 on his allowance, carrying the What's left page; the door is pid 276, the 08:55 build,
-unchanged. No sitting is open (304 closed 17:19). No line of work.
+unchanged. No sitting is open (305, the standup after the repairs, 9/9, closed 17:52). No line
+of work.
 
 ## HANDOFF FOR 2026-09-28 — read this before anything below it
 

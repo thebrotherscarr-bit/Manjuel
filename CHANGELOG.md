@@ -34,6 +34,50 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### What GitHub's runs found, and the hand had not read: two reds, both its own (2026-09-29)
+
+THE HAND CALLED CI GREEN AND HAD READ HALF OF IT. It read the runs on `main` (#168, #169, #171,
+green) and not the run on the TAG (#170), which was red on all four legs; and it sent the
+second batch (`bcaa707`) on a suite that had only ever run here, which went red on both Windows
+legs (#172). Read off GitHub's own job list; the logs need a sign-in the hand does not do, so
+each was REPRODUCED on this machine before it was touched.
+
+- **The Windows legs (run 172).** `GroundWatch.requeue`, built that afternoon, kept a path as it
+  was handed, where `note` keeps it resolved. GitHub's Windows runner holds its temp folder under
+  an 8.3 short name (`RUNNER~1`), so one file had two spellings and the stroke that compared them
+  failed there and nowhere else. REPRODUCED by running the suite with `TEMP` set to the short
+  form of the scratch folder: 3357 of 3358, that one check. `requeue` resolves, as `note` does;
+  a second check hands one file back under three spellings and wants one entry.
+- **The tag's run (run 170).** `prove` runs on every push, a tag's among them, and a tag is
+  checked out AT THE MARK ALONE: shallow, detached, no `main`, no `origin/main`.
+  `test_the_release_gate_runs_on_a_mark` asked whether this ground's newest mark sits on the
+  line, and `release.mark` answered that the line "does NOT carry" it -- of a line that was not
+  in the checkout to be asked. (On a push to main the same checkout carries no tags, so the
+  stroke never asked and every such run was green.) REPRODUCED in a scratch clone shaped like
+  that checkout: 3170 of 3171. The gate still refuses there -- it fails closed -- and says the
+  true reason: "this checkout carries neither `main` nor `origin/main`, so the line cannot be
+  asked here". The stroke asks the ground's own mark only where the line can be read
+  (`release.line_refs`), and proves the third state on a repository built for it.
+
+PROVED. On a mirror, the suite under BOTH spellings of the temp folder: 3362/3362 each; smoke
+72/72. In a scratch clone with one tag and no line: 3348/3348. Reversals red by name: the path
+handed back as it was spelled; the stroke asking where there is no line; the gate's old
+sentence put back (2). On the ground from the glass: strokes **3366/3366** and smoke **72/72**,
+and the standup live after the last code edit: sitting **305** (17:47:53 to 17:52:53), **9/9**,
+`logs/standup_2026-09-29_175253.md`.
+`manjuel/watch.py` moved: RESTART REQUIRED. `tests/release.py` moved: the gate's `mark` check
+words one refusal differently and passes and refuses what it did.
+
+WHAT GOES RED IF UNPLUGGED: `test_the_watchers_reindex_waits_for_a_build` and
+`test_the_release_gate_runs_on_a_mark`; and GitHub's own run on the next push and the next
+mark, which is where both were found.
+
+THE WIRE THAT WAS MISSING IS THE HAND'S PRACTICE, NOT CODE: a mirror has no `.git` and a
+long-form temp path, so it can show neither fault. TESTING.md says how each is reproduced here
+before a save. NOT BUILT, and his to order: nothing on this ground reads GitHub's verdict
+(WHAT'S LEFT, D9) -- the release check passed 17 of 17 beside a red run on the mark it had
+just cut.
+
 ### An unattended turn is not asked "retry / skip / abort?" (operator, 2026-09-29: "do the ... list top to bottom")
 
 WHAT'S LEFT, C14, the core's half. A seat marked `On Fail: prompt` that failed asked its

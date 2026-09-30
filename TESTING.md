@@ -135,6 +135,26 @@ into `worlds/` from the real ground.
 
 ---
 
+## AS GITHUB CHECKS OUT (2026-09-29)
+
+Two faults went to GitHub that no run on this machine could show. Both are reproduced HERE before
+a save now.
+
+    A SHORT-NAMED TEMP FOLDER. GitHub's Windows runner keeps its temp folder under an 8.3 short
+    name (RUNNER~1), so a path that was never resolved is spelled differently from one that
+    was. Run the strokes once more with TEMP and TMP set to the SHORT form of the folder
+    (PowerShell: (New-Object -ComObject Scripting.FileSystemObject).GetFolder($p).ShortPath).
+
+    A TAG CHECKED OUT ALONE. `prove` runs on a tag push, and the tag is checked out shallow and
+    detached, with no `main` and no `origin/main`. Anything that reads git is proved in a
+    scratch clone shaped like it: `git clone --depth 1 file:///<ground>`, a tag, `git checkout
+    --detach`, `git branch -D main`, `git remote remove origin`.
+
+    EVERY RUN IS READ. After a send, read GitHub's runs for that commit -- the tag's own run as
+    well as the branch's -- and each run's job list. A green on `main` says nothing of the tag.
+
+---
+
 ## What a stroke should look like
 
 Name it as the PROPERTY, not the mechanism — the name is what appears in

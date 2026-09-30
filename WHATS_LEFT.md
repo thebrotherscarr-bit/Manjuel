@@ -164,7 +164,9 @@ Nothing here gets built until you say which way.
 - **D7. The tool server's 85 tools have no permission records.** *(HANDOFF 09-28)*
 - **D8. REFUSALS.md documents 28 refusals. The code has 66.** They are not linked.
   *(HANDOFF 09-28)*
-- **D9. The release check does not read GitHub's test result.** *(HANDOFF 09-28)*
+- **D9. The release check does not read GitHub's test result.** It cost something on
+  2026-09-29: the check passed 17 of 17 and the v0.1.16 tag was cut while GitHub's own run on
+  that tag was red on every machine (C34, under Done). *(HANDOFF 09-28, GitHub run 170)*
 - **D11. The self-test suite is one third done.** Part 1 landed. Part 2 (a test-case generator)
   and part 3 (REFUSALS.md findable by search) are not scheduled. *(TASKS, in hand)*
 - **D12. atlas: the `release.yml` fix rides with the next version,** and no draft release was
@@ -228,6 +230,12 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **C34. GitHub's tests were red twice and nobody had read them.** DONE 2026-09-29, both. The
+  run on the v0.1.16 tag failed on every machine (a test asked about the `main` branch, and a
+  tag is checked out without one), and the run on this evening's first push failed on Windows
+  (a test of mine compared two spellings of one temp path). Both are fixed and both were
+  reproduced here first. The release check passed 17 of 17 beside the first one, because it
+  does not read GitHub: that is D9. *(CHANGELOG, GitHub runs 170 and 172)*
 - **C20. A dozen small honesty fixes.** DONE 2026-09-29, all of them. A settings file
   (`.env`) that is there and cannot be read now says so at startup; three settings the
   example file offered and nothing read are struck from it; a damaged line in the list of

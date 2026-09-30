@@ -2549,6 +2549,11 @@ and the whole small-honesty list of 2026-09-08 is built. Thirty-four reversals r
 mirror. On the ground from the glass strokes 3362/3362, smoke 72/72, the standup 9/9
 (sitting 304).
 
+**What GitHub found** — two reds the hand had not read, both its own: the tag's run (#170, every
+leg: a stroke asked about `main` in a checkout that carries none) and the second batch's (#172,
+Windows: a path handed back unresolved against a short-named temp folder). Reproduced here, fixed,
+reversed. The release check had passed 17 of 17 beside the first (WHAT'S LEFT, D9).
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until
