@@ -119,9 +119,23 @@ _ACTION_BLOCK_RE = re.compile(
 # recital, twice, and its words were lost. A recital OPENS with the
 # scaffold: the heading, or a labelled turn as the first line. Anything
 # else is a seat using what it was shown, which is what it is for.
+# WIDENED 2026-09-30 (WHAT'S LEFT C5) to the labels the record actually
+# leaked, measured over every delivery since 09-07 -- all seven OPENED with
+# one: the closer's record block ("Router produced:" and the indented copy
+# under it, twice, once in that morning's live check, scored MET); a bare
+# turn label ("operator: What happened...", four times); and the heading
+# spelled "The conversation so far", which this regex did not know. The
+# closer's own "They asked:" is the same furniture. A word followed by a
+# colon is NOT a label here -- "Summary: ..." is a way of answering, and a
+# seat naming itself ("Steward: ...") is the smoke's own fixture; only the
+# OPERATOR's turn label is the dialogue block's, and it was the one leaked.
 _SCAFFOLD_RE = re.compile(
-    r"^\s*(?:#{2,6}\s*Conversation so far\b|\(recalled(?:, [^)]*)?\) \w+:)",
-    re.IGNORECASE)
+    r"^\s*(?:#{2,6}\s*(?:the )?conversation so far\b"
+    r"|\(recalled(?:, [^)]*)?\) \w+:"
+    r"|operator(?: \([^)]*\))?: "
+    r"|[A-Z][A-Za-z ]{1,30} produced:\s*$"
+    r"|They asked: |The operator asked: )",
+    re.IGNORECASE | re.MULTILINE)
 
 # WHAT A RECITAL IS (tests/standup.py, 2026-09-29; moved here 2026-09-30 so
 # the engine and the check mean one thing by it). A run of RECITAL_CHARS or
@@ -2978,8 +2992,22 @@ def run_pipeline(
         # in common is reading aloud, and is discarded the way the scaffold
         # parrot is, the words kept in a note. A phrase in common ("bound by
         # the ten estate laws") is speech about the law, and stands.
+        # THE SEAT'S OWN WORDS, NOT ITS TOOLS' (found live, 12:48 the same
+        # day): a Router's output carries its tool results whole, above the
+        # boundary "--- <seat> reading the above (testimony, not tool output)
+        # ---", and a read of lawgate.py or a search for "covenant" hands the
+        # block's own sentences back as a RESULT. That is a fact the tool
+        # returned, and the guard fired on it. So only what stands below the
+        # boundary is read; an output that is results alone has no words of
+        # its own to read.
+        own = output or ""
+        cut = f"--- {agent.name} reading the above (testimony, not tool output) ---"
+        if cut in own:
+            own = own.split(cut, 1)[1]
+        elif own.lstrip().startswith(("Tool executed:", "Tool attempted:")):
+            own = ""
         law_seen = "\n".join(b for b in (getattr(ctx, "law_full", ""), getattr(ctx, "law", "")) if b)
-        lifted = recited(output or "", law_seen) if law_seen else ""
+        lifted = recited(own, law_seen) if law_seen and own.strip() else ""
         if lifted:
             kept = " ".join((output or "").split())[:300]
             note = (f"{agent.name} recited the law block instead of answering -- "

@@ -101,19 +101,28 @@ Nothing here gets built until you say which way.
   on 09-10), and 3 of 93 since 09-21 -- all three in one coder-flow run on 09-28, where the
   prompt's own instruction block was passed as the path. Gone from ordinary turns; three percent
   in the coder's. *(TASKS, in hand; CHANGELOG, "Three measurements the list asked for")*
-- **C3. The front door answers "what does the covenant say?" from the law text in its own
-  prompt,** not from the file. This is the same question that fails in A1. *(TASKS)*
-- **C5. The front door copies internal labels into answers:** "Router produced:", "The operator
-  asked:". *(TASKS)*
-- **C6. The closing step once read its own instruction back as the answer.** *(TASKS)*
-- **C7. The model list answer dropped a model:** eleven installed, ten listed. *(TASKS)*
+- **C6. The closing step once read its own instruction back as the answer.** Measured
+  2026-09-30: four times since 09-07 (a sentence of the front door's own instructions in the
+  answer), two of them since 09-21. The live check's greeting case catches it since 09-29; the
+  engine's new recital guard reads the law block only. *(TASKS; CHANGELOG, "Six more sightings
+  given their numbers")*
+- **C7. The model list answer dropped a model:** eleven installed, ten listed. Measured
+  2026-09-30: of fourteen "what models are on the rack" turns, the answer named all eleven
+  twice; today's eight named 3, 0, 11, 8, 4, 0, 0 and 3. The live check asks only that the tool
+  ran and no number was invented. The model at the door is your B2. *(TASKS; CHANGELOG, "Six
+  more sightings given their numbers")*
 - **C8. A model can say it used a tool when it did not.** The Steward claimed an edit that never
-  happened. No check catches it. *(HANDOFF 09-28)*
+  happened. No check catches it. Measured 2026-09-30: a claim with no tool call in the turn, 22
+  of 634 answers before 09-07, 3 of 480 after, 1 of 251 since 09-21. Rare now; still no check.
+  *(HANDOFF 09-28; CHANGELOG, "Six more sightings given their numbers")*
 - **C33. At the review panel, two seats did another seat's job.** On 2026-09-29 (sitting 301)
   Neiro wrote "The Court's Ruling" itself, which is the judge's job, and the Router answered
   "No skill is needed" when the engine had chosen a search for it. The engine stamped the
-  second one ("THE NAMED TOOL DID NOT RUN"); nothing catches the first.
-  *(logs/2026-09-29_160817_should_a_court_of_three_seats_run_on_one.md)*
+  second one ("THE NAMED TOOL DID NOT RUN"); nothing catches the first. Measured 2026-09-30
+  over all forty court runs: Neiro wrote a ruling heading of its own in 16, Jesster in 23 -- the
+  rule, not the exception -- and the named-tool stamp fired in three. The judge still rules
+  after them. *(logs/2026-09-29_160817_should_a_court_of_three_seats_run_on_one.md; CHANGELOG,
+  "Six more sightings given their numbers")*
 
 ### The engine
 
@@ -198,6 +207,17 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **C5. The front door copies internal labels into answers.** DONE 2026-09-30. Measured first
+  (seven answers since 09-07, every one opening with a label -- one in this morning's live
+  check), then fixed with the rule that already threw out a copied conversation: an answer that
+  opens with "Router produced:", a turn label, "They asked:" or the conversation heading is
+  thrown out and named in the record, and the real work's words stand in its place. *(CHANGELOG,
+  "The scaffold parrot knows the labels the record actually leaked")*
+- **C3. The front door answers "what does the covenant say?" from the law text in its own
+  prompt, not from the file.** DONE 2026-09-30, by measurement: of 71 such turns on record, one
+  answer recited the law block (this morning at 09:06, the case the new guard throws out), fifty
+  carry a passage from a file or search result of the same turn, and every one of the fourteen
+  since 09-29 searched first. *(CHANGELOG, "Six more sightings given their numbers")*
 - **C2. When a tool fails, the Router writes about the next step instead of doing it.** DONE
   2026-09-30, by measurement: since 09-07, 56 of 80 failed tool calls were followed by another
   call in the same turn, which is what the TASKS box asked to see. Of the seven since 09-21 that

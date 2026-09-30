@@ -2611,6 +2611,14 @@ time since 09-07; C1: a sentence as a path, 3 of 93 calls since 09-21, one coder
 scratch listing predicts a failed call (45% vs 13%), not a thin answer. C2 and E3 closed by their
 own DONE lines; C1 keeps its numbers.
 
+**Six more sightings measured (2026-09-30)** — C3 closed (1 recital in 71, now caught); C5 live
+this morning (labels in the delivery, the case scored met); C6 4 since 09-07; C7 the rack answer
+whole in 2 of 14; C8 1 of 251 since 09-21; C33 counsel writes a ruling heading in roughly half
+the courts.
+
+**The record's labels (2026-09-30)** — C5: measured (seven since 09-07, all opening with a label),
+then the scaffold parrot's rule widened to them.
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until

@@ -34,6 +34,80 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The scaffold parrot knows the labels the record actually leaked (2026-09-30, WHAT'S LEFT C5; TASKS "strip lines that are the record's own labels")
+
+Measured first (the entry before this one): seven deliveries since 09-07 carried the record's
+own labels, and every one OPENED with one -- the closer's record block ("Router produced:" and
+the indented copy under it; twice, once in this morning's live check, which scored it MET), a
+bare turn label ("operator: What happened...", four times), and the conversation heading spelled
+"The conversation so far", which `_SCAFFOLD_RE` did not know. So the mechanism is the one that
+exists: the scaffold parrot's rule, widened to those labels and to the closer's own "They asked:"
+/ "The operator asked:". An output that opens with any of them is discarded as a recital, the
+words kept in a note, and the last real output stands after work -- for "read commands.md" that
+is the Router's reading of the file, which is the answer. A word followed by a colon ("Summary:",
+"Note:") is a way of answering and is not a label -- and neither is a seat naming itself
+("Steward: ..."): the first cut of the regex read that as a turn label and the smoke, whose stub
+seats answer that way, went 71 of 72 from the glass; only the OPERATOR's turn label is the
+dialogue block's, and it was the one leaked.
+
+**Proved.** Five openers the record leaked are recitals; four plain openings are not; a door that
+delivers the record block under its label is discarded, the Router's own words stand, and the
+note names the scaffold. Reversal on a mirror: the old regex back in place, the record-block
+delivery is handed over whole and the five openers pass as answers (seven checks red).
+
+`manjuel/pipeline.py` moved: **restart required** for the REPL; the door's next sitting carries
+it. **What goes red if unplugged:** the two checks above, and the live check's "a file" case the
+next time the door hands back the record instead of the file.
+
+### Six more sightings given their numbers (2026-09-30, WHAT'S LEFT C3, C5, C6, C7, C8, C33)
+
+The same method as the three before: every run transcript, the engine's own marks, the delivery
+against the tool results and against what the seat was handed (`recited`, sixty characters).
+
+**C3 -- the covenant question answered from the prompt, not the file.** 71 covenant turns on
+record. Fifty deliveries carry a passage of forty characters or more from a tool result of the
+same turn; ONE recited the law block (09-30 09:06 -- the sighting the C4 guard now discards);
+every one of the fourteen since 09-29 searched first (`semantic_search`, the standup's own
+expectation). Closed by its numbers: the fault it names happened once in 71 and is caught now.
+
+**C5 -- the record's labels in a delivery.** "Router produced:", "The operator asked:", a turn
+label at the start of a line, or the conversation heading: 20 of 634 deliveries before 09-07, 5
+of 480 after, 2 of 251 since 09-21 -- and one of those two was THIS MORNING'S live check
+(09:06, "read commands.md": the delivery opened `Router produced: Tool executed: ground_read
+Result: commands.md as on disk right now: ...`, and the case scored MET). The scaffold parrot
+discards an output that OPENS with "Conversation so far" or a `(recalled ...)` label; these
+labels sit past the first line, and one delivery of 09-12 opened with "The conversation so far",
+which the regex does not know. Open, with the mechanism TASKS names (strip the record's own
+label lines) as the next build.
+
+**C6 -- the closing seat reading its own instructions back.** A sentence of `agents/steward.md`
+in the delivery: 0 of 634 before 09-07, 2 of 480 after, 2 of 251 since 09-21 (09-23, its own
+tool list; 09-28, its farewell rule). The standup's greeting case asks for own words since 09-29;
+the C4 guard reads the law block only. Open, with its numbers.
+
+**C7 -- the rack answer drops models.** Fourteen "what models are on the rack" turns; the tool
+named eleven every time; the delivery named all eleven TWICE. Today's eight: 3, 0, 11, 8, 4, 0,
+0 and 3 of 11 -- the door lists the loaded ones, or a count, and the standup's rack case asks
+only that the tool ran and that no number is invented. Open, with its numbers; the model at the
+door is B2.
+
+**C8 -- a claim of a tool act with no tool call in the turn.** A claim verb ("was created",
+"successfully pushed", "I have edited") in a delivery of a turn with no `Tool executed:` or
+`Tool attempted:` line: 22 of 634 before 09-07 (the August workspace days), 3 of 480 after, 1 of
+251 since 09-21 (09-21 12:31, a coder-flow delivery narrating the thread: "a simple snake game
+be created"). Seven more since 09-21 matched the verb and were honest refusals quoting the door
+("Nothing landed -- ground_edit said: Refused: ... a file written whole ..."), with the tool
+attempted. Open: rare, and no check yet.
+
+**C33 -- counsel doing the judge's job.** Forty court runs on record. Neiro wrote a ruling
+heading of its own in 16 of them, Jesster in 23 -- the seat that did it on 09-29 is the rule, not
+the exception -- and "THE NAMED TOOL DID NOT RUN" was stamped in three courts (09-14, 09-17,
+09-29). The judge still rules after them; the heading is a prose fault the engine does not name.
+Open, with its numbers.
+
+No code moved. **What goes red if unplugged:** nothing -- numbers on the record; the only wire
+here is the C4 guard, whose one live sighting these numbers found.
+
 ### Three measurements the list asked for, read off the transcripts (2026-09-30, WHAT'S LEFT C1, C2, E3; TASKS "a MEASUREMENT, not a build")
 
 Each TASKS box said measure first and not build; each is measured now, over every run transcript
@@ -111,6 +185,17 @@ and named, with its words kept; a Steward saying "bound by the ten estate laws" 
 sentence stands and is not named; the block rode in the seat's system role (something to recite);
 the standup's `recited` is the engine's. Reversal on a mirror: the guard struck, the recital is
 delivered whole and the record is silent (two checks red).
+
+**FOUND LIVE THE SAME AFTERNOON (12:48, the live check after C5):** the guard fired on the
+Router in the covenant case -- "Router recited the law block instead of answering -- discarded;
+it said: 'Tool executed: semantic_search ...'" -- because a Router's output carries its tool
+results whole, and that turn had read `lawgate.py`'s own `laws_text` and searched "covenant", so
+the block's sentences came back as RESULTS. The case still scored MET (the closer recomposed),
+which is how it was seen at all. The guard now reads only the seat's OWN words: what stands below
+the boundary "--- <seat> reading the above (testimony, not tool output) ---", and nothing when the
+output is results alone. Two checks: the block inside a tool result stands; the same words as the
+seat's testimony below the boundary are discarded. Reversal on a mirror: with the cut struck, the
+tool-result check reddens.
 
 `manjuel/pipeline.py` moved: **restart required** (the door boots an engine per sitting, so the
 next sitting carries it; the REPL needs its own). The guard moved the `Refused:` sites below it, and

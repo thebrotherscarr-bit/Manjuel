@@ -2034,9 +2034,79 @@ def test_a_door_that_calls_a_tool_hands_it_to_the_router(reg, lib, book):
     import standup as _su_recital
     check("the standup and the engine mean one thing by a recital",
           _su_recital.recited is recited and _su_recital.RECITAL_CHARS == RECITAL_CHARS)
+    # A TOOL RESULT IS NOT A RECITAL (found live 2026-09-30 12:48: a read of
+    # lawgate.py handed the block's sentences back as a RESULT and the guard
+    # fired on the Router). The block's words inside what a tool returned
+    # stand; the same words as the seat's own testimony below the boundary
+    # do not.
+    (g / "lawnote.md").write_text("You are bound by the ten estate laws; the engine enforces what it "
+                                  "can and refuses what it must. Testimony is never fact (LAW 5).\n", encoding="utf-8")
+    def tool_reader(a):
+        # "read lawnote.md" is decided by arithmetic: ground_read runs first,
+        # the Router reads the result, and its own words stand BELOW the
+        # boundary -- the live shape of 12:48.
+        if a.key == "router":
+            return "the note restates the law in one line; that is all it holds"
+        return "the note was read; nothing else to say about it here"
+    r10 = Stub(reply=tool_reader)
+    ctx10 = RunContext(objective="read lawnote.md", feed="")
+    run_pipeline(ctx10, reg, r10, lib, env_for(g, reg, r10),
+                 steps=book.get("default"), report=lambda s: None)
+    router_out = ctx10.output_of("Router") or ""
+    check("the block's sentences inside a tool result are a fact the tool returned, not a recital",
+          "enforces what it can" in router_out and "reading the above (testimony, not tool output)" in router_out
+          and not any("recited the law block" in n for n in ctx10.notes),
+          str(ctx10.notes)[-160:])
+    def tool_then_recital(a):
+        # "read rack.md" is decided by arithmetic: ground_read runs first and
+        # the Router reads the result -- so its prose stands BELOW the boundary.
+        if a.key == "router":
+            return ("You are bound by the ten estate laws; the engine enforces what it "
+                    "can and refuses what it must. Testimony is never fact (LAW 5).")
+        return "nine models on the rack, as the file says"
+    r11 = Stub(reply=tool_then_recital)
+    ctx11 = RunContext(objective="read rack.md", feed="")
+    run_pipeline(ctx11, reg, r11, lib, env_for(g, reg, r11),
+                 steps=book.get("default"), report=lambda s: None)
+    check("... and the same sentences as the seat's own testimony below the boundary are discarded",
+          any("Router recited the law block" in n for n in ctx11.notes)
+          and "enforces what it can" not in (ctx11.output_of("Router") or ""), str(ctx11.notes)[-200:])
     from manjuel.pipeline import _SCAFFOLD_RE
     check("ordinary prose mentioning a conversation is not a recital",
           not _SCAFFOLD_RE.search("we talked about this in the conversation so far, and it holds"))
+
+    # THE RECORD'S LABELS (WHAT'S LEFT C5, 2026-09-30). Seven deliveries since
+    # 09-07 opened with a label of the closer's own prompt -- "Router
+    # produced:" and the indented record under it (the live check of 09-30
+    # 09:06 scored it MET), a bare turn label, the heading spelled with "The".
+    for opener, name in (("Router produced:\n    Tool executed: ground_read\n    \n    Result:\n    commands.md as on disk",
+                          "the closer's record block"),
+                         ("operator: What happened after the commit on main?\nsteward: it landed", "a bare turn label"),
+                         ("operator (4m ago): git status\nsteward (4m ago): clean", "a turn label with its age"),
+                         ("##### The conversation so far\noperator: Write the code", "the heading spelled with The"),
+                         ("They asked: what is on the board\n\nWork was done on it", "the closer's own opening")):
+        check(f"an output that opens with {name} is a recital", bool(_SCAFFOLD_RE.match(opener)), opener[:40])
+    for plain, name in (("Summary: the tree is clean on main.", "a heading word of its own"),
+                        ("Steward: the tree is clean on main.", "a seat naming itself (the smoke's own fixture)"),
+                        ("The router produced nothing useful, so here is what I know.", "prose about what a seat produced"),
+                        ("Note: commands.md was read whole; it lists twelve commands.", "a note"),
+                        ("The operator asked for a game and got one -- here it is.", "prose that starts like the label but is a sentence")):
+        check(f"{name} is not a recital", not _SCAFFOLD_RE.match(plain), plain[:40])
+    def labeller(a):
+        if a.key == "router":
+            return "<action>git_status</action>"
+        if a.key == "steward":
+            return "Router produced:\n    Tool executed: git_status\n    \n    Result:\n    clean on main\nThat's the current state."
+        return "x"
+    r9 = Stub(reply=labeller)
+    ctx9 = RunContext(objective="git status", feed="")
+    run_pipeline(ctx9, reg, r9, lib, env_for(g, reg, r9),
+                 steps=book.get("default"), report=lambda s: None)
+    check("a door that delivers the record block under its label is discarded, and the work's own words stand",
+          "Router produced:" not in (ctx9.last_output() or "") and "That's the current state" not in (ctx9.last_output() or ""),
+          repr(ctx9.last_output())[:80])
+    check("and the record names it as the scaffold",
+          any("recited the conversation scaffold" in n for n in ctx9.notes), str(ctx9.notes)[:160])
 
     # A markup ask for something that is not a skill is dropped, not run.
     r3 = Stub(reply=lambda a: "<action>launch_missiles</action>" if a.key == "steward" else "x")

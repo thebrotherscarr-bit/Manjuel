@@ -760,6 +760,22 @@ time since 09-07 (the rest uncorrectable, or C1); a sentence as a path is gone f
 (3 of 93 since 09-21, one coder run); a folder listing beside another tool predicts a failed call
 (45% vs 13%), not a thin answer. Nothing built.
 
+**SIX MORE SIGHTINGS MEASURED (WHAT'S LEFT: C3 done; C5, C6, C7, C8, C33 given numbers).**
+C3: one recital in 71 covenant turns, now caught. C5: labels in 2 of 251 answers since 09-21, one
+in this morning's live check -- the strip TASKS names is the next build. C6: 4 since 09-07. C7:
+the rack answer named all eleven models in 2 of 14 turns. C8: 1 of 251 since 09-21. C33: counsel
+wrote a ruling heading in 16 (Neiro) and 23 (Jesster) of 40 courts.
+
+**THE AFTERNOON'S PIECE (WHAT'S LEFT: C5 done).** The scaffold parrot's regex widened to the
+labels the record leaked (all seven sightings opened with one): "Router produced:" with its
+indented record, a bare turn label, "They asked:", and the heading spelled with "The". RESTART
+REQUIRED for the REPL; the door's next sitting carries it.
+
+**THE GUARD'S FALSE FIRE, CAUGHT LIVE (12:48).** The C4 guard read a Router's tool results as its
+words and discarded a covenant answer whose `ground_read` of `lawgate.py` carried the block; held
+to the seat's own words below the testimony boundary now, both shapes stroked. RESTART REQUIRED
+for the REPL.
+
 **Where the ground stands.** core `main@9d491a8` (the mark `v0.1.16` on `e8aa9b5`), atlas
 `main@efb00d2` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus the morning's four
 pieces and this record (unsaved as it is written, saved after). The glass is pid 111424, the
