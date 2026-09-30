@@ -2071,6 +2071,30 @@ def test_a_door_that_calls_a_tool_hands_it_to_the_router(reg, lib, book):
     check("... and the same sentences as the seat's own testimony below the boundary are discarded",
           any("Router recited the law block" in n for n in ctx11.notes)
           and "enforces what it can" not in (ctx11.output_of("Router") or ""), str(ctx11.notes)[-200:])
+    # ITS OWN INSTRUCTIONS (WHAT'S LEFT C6, 2026-09-30): the closing seat
+    # reading a sentence of its seat file back is the same recital.
+    steward_md = (ROOT / "agents" / "steward.md").read_text(encoding="utf-8")
+    # A whole paragraph, joined: the seat file wraps its lines short of a
+    # sentence, and the measure flattens whitespace anyway.
+    sentence = next((" ".join(para.split()) for para in steward_md.split("\n\n")
+                     if len(" ".join(para.split())) >= 80 and "`" not in para
+                     and not para.lstrip().startswith(("#", "-"))), "")
+    check("the seat file holds a sentence long enough to be read aloud", len(sentence) >= RECITAL_CHARS, sentence[:60])
+    def instruction_reader(a):
+        if a.key == "router":
+            return "<action>git_status</action>"
+        if a.key == "steward":
+            return sentence
+        return "x"
+    r12 = Stub(reply=instruction_reader)
+    ctx12 = RunContext(objective="git status", feed="")
+    run_pipeline(ctx12, reg, r12, lib, env_for(g, reg, r12),
+                 steps=book.get("default"), report=lambda s: None)
+    check("a seat that reads its own instructions back is discarded and named",
+          any("Steward recited its own instructions" in n for n in ctx12.notes)
+          and sentence not in (ctx12.last_output() or ""), str(ctx12.notes)[-200:])
+    check("   and a plain answer in the seat's own words stands (ctx8 above, not named)",
+          not any("recited its own instructions" in n for n in ctx8.notes))
     from manjuel.pipeline import _SCAFFOLD_RE
     check("ordinary prose mentioning a conversation is not a recital",
           not _SCAFFOLD_RE.search("we talked about this in the conversation so far, and it holds"))
@@ -2473,6 +2497,27 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
     check("the retry has thinking switched OFF",
           [t for n, t in r.think_seen if n == "Manjuel"] == [None, False],
           str([t for n, t in r.think_seen if n == "Manjuel"]))
+
+    # COUNSEL THAT WRITES THE RULING'S HEADING (WHAT'S LEFT C33, 2026-09-30):
+    # named in the record, never discarded -- counsel's words are counsel.
+    class Usurper(Court):
+        def chat(self, agent, prompt, stream_to=None, tools=None, think_to=None, think=None):
+            if agent.key == "neiro":
+                self.seen.append((agent.name, prompt))
+                return "## The Court's Ruling\n\nSUPPORTED -- one model can seat three."
+            return super().chat(agent, prompt, stream_to, tools, think_to, think)
+    ru = Usurper()
+    ctxu = RunContext(objective="should the court sit on one model?", review_only=True)
+    run_pipeline(ctxu, reg, ru, lib, e, steps=book.get("court"), report=lambda s: None)
+    check("counsel that writes the ruling's heading is named in the record",
+          any("Neiro wrote the ruling's heading" in n for n in ctxu.notes), str(ctxu.notes)[-240:])
+    check("   and its words stand as counsel, not discarded",
+          "one model can seat three" in (ctxu.output_of("Neiro") or ""), repr(ctxu.output_of("Neiro"))[:80])
+    check("   and the judge writing RULING is not named",
+          not any("wrote the ruling's heading" in n and "Manjuel" in n for n in ctx.notes), str(ctx.notes)[-160:])
+    from manjuel.pipeline import _RULING_HEAD_RE
+    check("counsel merely mentioning a ruling is not writing one",
+          not _RULING_HEAD_RE.search("the court's earlier ruling on this was narrow, and I would add a caution"))
     retry = [p for n, p in r.seen if n == "Manjuel"][1]
     check("the retry carries the seat's own deliberation, labelled as its own words",
           "Your own deliberation so far" in retry and "weighing counsel, turn 1" in retry
@@ -8687,12 +8732,18 @@ def test_sitting70_regressions(reg, lib, book):
     # 2. THE WRITE-CLAIM CHECK. "saved it as 'poem.txt'" with no writer.
     for said in ("Yesterday I saved it as 'poem.txt' in the Research folder.",
                  "I wrote the summary to notes.md for you.",
-                 "Created report.json with the findings."):
+                 "Created report.json with the findings.",
+                 # AN EDIT IS A WRITE (C8, 2026-09-30): the 09-28 shape
+                 "I have edited manjuel/skills.py and added the folder to the dict.",
+                 "I've updated `agents/steward.md` as asked.",
+                 "Modified manjuel/pipeline.py to widen the regex."):
         check(f"a claim to have written is seen: {said[:34]!r}",
               intent.claims_wrote_a_file(said), said)
     for said in ("I will write that to notes.md if you want.",
                  "write_file would put it in notes.md",
-                 "The rack holds five models."):
+                 "The rack holds five models.",
+                 "The tree is clean; nothing was changed this turn.",
+                 "You could edit manjuel/skills.py yourself, at the dict."):
         check(f"and a plan or a mention is not a claim: {said[:34]!r}",
               not intent.claims_wrote_a_file(said), said)
 
@@ -17637,10 +17688,12 @@ def test_the_maker(reg, lib, book):
           and maker.name_for("!!!") == "project",
           f"{maker.name_for('../../etc passwd game')} / {maker.name_for('!!!')}")
 
-    for said in ("make it faster", "ok, add a score", "let's add a score"):
+    for said in ("make it faster", "ok, add a score", "let's add a score",
+                 "i dont want it text based, i want a game i can play.", "I want it faster"):
         check(f"a change to the page in hand OPENS with a change: {said!r}",
               intent.wants_changing(said))
-    for said in ("the snake is too slow", "show me the code", "let me try it"):
+    for said in ("the snake is too slow", "show me the code", "let me try it",
+                 "i want a game i can play", "i want a list of the files"):
         check(f"and an observation is not a change to the page: {said!r}",
               not intent.wants_changing(said))
     for said, want in (("go back", 0), ("undo that", 0), ("go back to version 1", 1),
@@ -17832,6 +17885,16 @@ def test_the_maker(reg, lib, book):
         check("a python request with a project in hand is not the maker's; the page is left alone",
               not any(n.startswith("maker:") for n in ctx.notes)
               and len(maker.versions(project)) == 4, str(ctx.notes)[-300:])
+
+        # HER SECOND MESSAGE (D2, 2026-09-30): with a game in hand it is a
+        # change to it, not a second game -- "want it" opens the change, and a
+        # change in hand outranks the make phrase inside the same sentence.
+        coder["answer"] = answer(PAGE_TWO)
+        ctx, sat, r = turn("i dont want it text based, i want a game i can play.")
+        check("with a project in hand, her 'i dont want it text based, i want a game' changes it, not a second thing",
+              len(maker.versions(project)) == 5 and not (g2 / "projects" / "game").exists()
+              and ctx.last_output().startswith("Changed snake-game -- version 5:"),
+              ctx.last_output()[:120])
         e = env_for(g2, reg, Stub())
         check("a request that names a tool is never the maker's: git's words go to git",
               _maker_route(RunContext(objective="create a website, then git commit it"),

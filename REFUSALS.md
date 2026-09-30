@@ -1077,14 +1077,14 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 | line | says |
 |---|---|
-| 731 | `content` must be a |
+| 738 | `content` must be a |
 
 ### manjuel/pipeline.py — 2 sites
 
 | line | says |
 |---|---|
-| 3305 | a sub-task may not start another sub-task |
-| 3309 | {SUB_RUNS_MAX} sub-tasks have already run this |
+| 3343 | a sub-task may not start another sub-task |
+| 3347 | {SUB_RUNS_MAX} sub-tasks have already run this |
 
 ### manjuel/skills.py — 76 sites
 

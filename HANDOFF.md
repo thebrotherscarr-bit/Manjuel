@@ -791,6 +791,17 @@ pages -- the second a new project, not a version, since her words open with no c
 call). C21: the turn's overhead is 0.01 s inside a run, 0.1 s a turn outside it. RESTART REQUIRED
 for the REPL (`intent.py`).
 
+**ON HIS WORD, "CONTINUE UNTIL IT IS FINISHED" (13:40).** The three proposals built: the recital
+guard reads a seat's own instructions too (C6); counsel that writes the ruling's heading is
+named (C33); "want it ..." changes the thing in hand (D2's remainder). RESTART REQUIRED for the
+REPL (`pipeline.py`, `intent.py`).
+
+**THE LIVE CHECK, 14:46: 8 of 9, then 9 of 9 at 14:49.** The rack case: the Delivery Agent
+(phi4-mini) wrote "Total Models: 13" over a tool result that says 11 and the number stamp caught
+it -- B2's habit at a different seat, scored honestly; nothing of the day's pieces in it.
+
+**C8 (14:45):** the write-claim reader knows the edit verbs; the 09-28 claim would be refused now.
+
 **Where the ground stands (13:25).** core `main@af5da1a` (the mark `v0.1.16` on `e8aa9b5`; seven
 saves today, each sent and read green on GitHub -- the last, `af5da1a`, read after this line was
 written), atlas `main@efb00d2` (the mark `v0.1.9` on `b1059a1`), plus this record. The glass is

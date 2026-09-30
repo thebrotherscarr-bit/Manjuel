@@ -354,10 +354,17 @@ def asks_about_a_tool(objective: str, keywords) -> str:
     return ""
 
 
+# AN EDIT IS A WRITE (WHAT'S LEFT C8, 2026-09-30). The 09-28 coder-flow run
+# had the Steward claim an edit that never happened, and this reader knew
+# saved / wrote / created / stored / committed / added and not edited,
+# updated, modified, changed, rewrote or patched -- so a claimed edit to a
+# named file passed as speech. Same honest limit as before: a NAMED file.
 _WROTE_RES = tuple(re.compile(p, re.I) for p in (
-    r"\b(?:saved|wrote|created|stored|committed|added)\s+(?:it\s+)?"
+    r"\b(?:saved|wrote|created|stored|committed|added|edited|updated|modified|"
+    r"changed|rewrote|patched)\s+(?:it\s+)?"
     r"(?:as|to|into|in)?\s*[`'\"]?(?P<f>[\w./\\-]+\.\w{1,6})",
-    r"\bI\s+(?:have\s+)?(?:saved|wrote|written|created|stored)\s+"
+    r"\bI\s+(?:have\s+|'ve\s+)?(?:saved|wrote|written|created|stored|edited|updated|"
+    r"modified|changed|rewritten|patched)\s+"
     r"[^.\n]{0,40}?[`'\"]?(?P<g>[\w./\\-]+\.\w{1,6})",
 ))
 
@@ -1224,13 +1231,19 @@ def wants_making(objective: str) -> str:
 # "the snake is too slow" is an observation, and a person who wants it changed
 # says "make it faster". "let me try it" is not a change; "let's add a score"
 # and "let the snake wrap" are.
+# "I WANT IT ..." / "I DON'T WANT IT ..." OPENS A CHANGE TOO (D2, 2026-09-30):
+# her second message, verbatim in wife-test v1 -- "i dont want it text based,
+# i want a game i can play" -- is a change to the game in hand, and with the
+# make phrase inside the same sentence it made a second game instead. "it"
+# is the thing in hand; "want a ..." with no "it" stays a request to make.
 _CHANGE_RE = re.compile(
-    r"(?i)^\s*(?:(?:ok|okay|now|please|and|alright|also|then|cool|nice|great)"
+    r"(?i)^\s*(?:i\s+(?:don'?t\s+|do\s+not\s+)?want\s+(?:it|the|them|this)\b"
+    r"|(?:(?:ok|okay|now|please|and|alright|also|then|cool|nice|great)"
     r"[,!.]?\s+)*(?:(?:can|could|would|will)\s+you\s+)?(?:please\s+)?"
     r"(?:make\s+(?:it|the|them|everything|its|this)|change|add|remove|delete|"
     r"fix|slow|speed|increase|decrease|replace|turn|give\s+(?:it|the)|use|put|"
     r"rename|double|halve|swap|improve|tweak|update|set|let(?!\s+(?:me|us)\b)|"
-    r"hide|move|shrink|enlarge|center|centre|resize|recolou?r)\b")
+    r"hide|move|shrink|enlarge|center|centre|resize|recolou?r)\b)")
 
 
 def wants_changing(objective: str) -> bool:

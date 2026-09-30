@@ -129,6 +129,12 @@ _ACTION_BLOCK_RE = re.compile(
 # colon is NOT a label here -- "Summary: ..." is a way of answering, and a
 # seat naming itself ("Steward: ...") is the smoke's own fixture; only the
 # OPERATOR's turn label is the dialogue block's, and it was the one leaked.
+# A ruling's heading in counsel's mouth (C33): a heading or a bold label
+# that calls itself the court's ruling, or a bare RULING line.
+_RULING_HEAD_RE = re.compile(
+    r"(?im)^\s*(?:#{1,6}\s*|\*\*)?(?:the\s+)?(?:court'?s\s+)?ruling\b[^\n]{0,40}$"
+    r"|court'?s\s+ruling")
+
 _SCAFFOLD_RE = re.compile(
     r"^\s*(?:#{2,6}\s*(?:the )?conversation so far\b"
     r"|\(recalled(?:, [^)]*)?\) \w+:"
@@ -1664,7 +1670,14 @@ def _maker_route(ctx: RunContext, registry: AgentRegistry, skills: SkillLibrary,
         ctx.notes.append(note)
         report("  " + ink.dim(note))
         return "made"
-    what = intent.wants_making(ctx.objective)
+    # A CHANGE IN HAND OUTRANKS A MAKE PHRASE IN THE SAME SENTENCE (D2,
+    # 2026-09-30): "i dont want it text based, i want a game i can play" with
+    # a game in hand is a change to it, not a second game. With nothing in
+    # hand the same words are a request to make, as before.
+    if maker.current(ground) is not None and intent.wants_changing(ctx.objective):
+        what = ""
+    else:
+        what = intent.wants_making(ctx.objective)
     if what:
         ctx.make = {"kind": "new", "name": maker.name_for(what), "what": what}
         note = (f"maker: a request to MAKE something ({what!r}) -- the "
@@ -3008,14 +3021,39 @@ def run_pipeline(
             own = ""
         law_seen = "\n".join(b for b in (getattr(ctx, "law_full", ""), getattr(ctx, "law", "")) if b)
         lifted = recited(own, law_seen) if law_seen and own.strip() else ""
+        what_read = "the law block"
+        # ... AND ITS OWN INSTRUCTIONS (WHAT'S LEFT C6, 2026-09-30, on his
+        # word to finish). The closing seat read its own instructions back
+        # as the answer four times since 09-07 (its tool list on 09-23, its
+        # farewell rule on 09-28); the standup's greeting case catches it
+        # since 09-29 and the engine did not. The seat file is what a seat
+        # is handed to rule under, never to say -- the same measure, the
+        # same treatment.
+        if not lifted and own.strip() and (agent.system_prompt or "").strip():
+            lifted = recited(own, agent.system_prompt or "")
+            what_read = "its own instructions"
         if lifted:
             kept = " ".join((output or "").split())[:300]
-            note = (f"{agent.name} recited the law block instead of answering -- "
+            note = (f"{agent.name} recited {what_read} instead of answering -- "
                     f"discarded; it said: {kept!r}")
             if note not in ctx.notes:
                 ctx.notes.append(note)
             report("      " + ink.warn(note.split('; it said')[0]))
             output = ctx.last_output() if "worked" in ctx.flags else ""
+
+        # COUNSEL THAT WRITES THE RULING'S HEADING (WHAT'S LEFT C33, 2026-09-30).
+        # Forty courts on record: Neiro wrote a ruling heading of its own in 16,
+        # Jesster in 23 -- the rule, not the exception -- and the judge ruled
+        # after them every time. The ruling is Manjuel's (LAW_001 §2: counsel
+        # appends COUNSEL, the court writes RULING). Counsel's words are
+        # testimony either way, so nothing is discarded: the record names it.
+        if (_is_court(agent) and agent.key != "manjuel" and own.strip()
+                and _RULING_HEAD_RE.search(own)):
+            note = (f"{agent.name} wrote the ruling's heading; the ruling is the judge's "
+                    f"(LAW_001 §2) -- counsel's words stand as counsel")
+            if note not in ctx.notes:
+                ctx.notes.append(note)
+            report("      " + ink.warn(note))
 
         # Any seat may raise a flag; flags gate `When:` steps later in the run.
         raised = read_flags(output)

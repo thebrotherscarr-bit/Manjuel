@@ -34,6 +34,53 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### An edit is a write: the write-claim reader knows edited, updated, modified, changed (2026-09-30, WHAT'S LEFT C8)
+
+The claim that cost 09-28 -- the Steward saying it had edited a file when nothing had -- passed
+the write-claim check because that reader knew saved / wrote / created / stored / committed /
+added and not the edit verbs. It knows edited, updated, modified, changed, rewrote and patched
+now, in both of its shapes, with the same honest limit as before: a NAMED file, so a claim that
+names none still passes as speech (measured today at 1 in 251 answers since 09-21). The refusal
+that follows is the old one: no writing skill ran this turn, the claim is not shown, UNSUPPORTED
+not false.
+
+**Proved.** Three edit claims naming a file are seen; an honest "nothing was changed" and a "you
+could edit it yourself" are not. Reversal on a mirror: the verbs struck, the three claims pass
+as speech.
+
+`manjuel/intent.py` moved: **restart required** for the REPL. **What goes red if unplugged:** the
+three checks; the write-claim refusal in the live path (`test_...` sitting 70's).
+
+### Three lines on his word to finish: a seat's own instructions are a recital too, counsel that writes the ruling's heading is named, and "want it ..." changes the thing in hand (2026-09-30, WHAT'S LEFT C6, C33, D2)
+
+**C6.** The recital guard read the law block only; the closing seat had read its own
+instructions back four times since 09-07 (its tool list, its farewell rule). The seat file is
+what a seat is handed to rule under, never to say, so the same measure applies: a sentence of
+it in the seat's own words is discarded and named ("recited its own instructions"), a phrase
+stands. Proved: a Steward answering with a sentence of `agents/steward.md` is discarded and
+named; a plain answer is not.
+
+**C33.** Forty courts on record and counsel wrote a ruling heading in roughly half. Counsel's
+words are testimony either way, so nothing is discarded: a court seat that is not the judge
+writing "The Court's Ruling", a `## Ruling` heading or a bare RULING line is named in the record
+("wrote the ruling's heading; the ruling is the judge's, LAW_001 §2"). Proved: Neiro writing the
+heading is named and its counsel stands; the judge's RULING is not named; counsel mentioning an
+earlier ruling is not writing one.
+
+**D2, the remainder.** Her second message made a second game this morning. "i want it ..." and
+"i dont want it ..." open a change now, and with a project in hand a change outranks the make
+phrase inside the same sentence; with nothing in hand the words are a request to make, as
+before. Proved: the sentence is a change; "i want a game i can play" alone is not; in the
+maker's live turn with snake-game in hand it becomes version 5 and no `projects/game` appears.
+
+Reversals on a mirror: the instructions leg struck, the Steward's recital is delivered (one check
+red); the ruling regex emptied, Neiro's heading passes unnamed (one red); the change-in-hand line
+struck, her sentence makes a second project (one red).
+
+`manjuel/pipeline.py` and `manjuel/intent.py` moved: **restart required** for the REPL; the door's
+next sitting carries them. **What goes red if unplugged:** the six checks above; the live check's
+greeting case, which asks for own words.
+
 ### GitHub's Windows 3.13 leg lost a five-second race in a fixture (2026-09-30, read on the run for a70b111)
 
 One leg of four red, at `the proof: the suites and the standup, in the gate's own words` in

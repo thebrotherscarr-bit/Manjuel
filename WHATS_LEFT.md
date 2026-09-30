@@ -101,28 +101,11 @@ Nothing here gets built until you say which way.
   on 09-10), and 3 of 93 since 09-21 -- all three in one coder-flow run on 09-28, where the
   prompt's own instruction block was passed as the path. Gone from ordinary turns; three percent
   in the coder's. *(TASKS, in hand; CHANGELOG, "Three measurements the list asked for")*
-- **C6. The closing step once read its own instruction back as the answer.** Measured
-  2026-09-30: four times since 09-07 (a sentence of the front door's own instructions in the
-  answer), two of them since 09-21. The live check's greeting case catches it since 09-29; the
-  engine's new recital guard reads the law block only. *(TASKS; CHANGELOG, "Six more sightings
-  given their numbers")*
 - **C7. The model list answer dropped a model:** eleven installed, ten listed. Measured
   2026-09-30: of fourteen "what models are on the rack" turns, the answer named all eleven
   twice; today's eight named 3, 0, 11, 8, 4, 0, 0 and 3. The live check asks only that the tool
   ran and no number was invented. The model at the door is your B2. *(TASKS; CHANGELOG, "Six
   more sightings given their numbers")*
-- **C8. A model can say it used a tool when it did not.** The Steward claimed an edit that never
-  happened. No check catches it. Measured 2026-09-30: a claim with no tool call in the turn, 22
-  of 634 answers before 09-07, 3 of 480 after, 1 of 251 since 09-21. Rare now; still no check.
-  *(HANDOFF 09-28; CHANGELOG, "Six more sightings given their numbers")*
-- **C33. At the review panel, two seats did another seat's job.** On 2026-09-29 (sitting 301)
-  Neiro wrote "The Court's Ruling" itself, which is the judge's job, and the Router answered
-  "No skill is needed" when the engine had chosen a search for it. The engine stamped the
-  second one ("THE NAMED TOOL DID NOT RUN"); nothing catches the first. Measured 2026-09-30
-  over all forty court runs: Neiro wrote a ruling heading of its own in 16, Jesster in 23 -- the
-  rule, not the exception -- and the named-tool stamp fired in three. The judge still rules
-  after them. *(logs/2026-09-29_160817_should_a_court_of_three_seats_run_on_one.md; CHANGELOG,
-  "Six more sightings given their numbers")*
 
 ### The engine
 
@@ -202,14 +185,26 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **C8. A model can say it used a tool when it did not.** DONE 2026-09-30, as far as a claim
+  names a file: the check that refuses "I saved it as poem.txt" when nothing was saved now reads
+  "edited", "updated", "modified", "changed" too -- the 09-28 shape. A claim that names no file
+  is still speech (1 in 251 answers since 09-21). *(CHANGELOG, "An edit is a write")*
+- **C6. The closing step once read its own instruction back as the answer.** DONE 2026-09-30.
+  An answer that repeats a whole sentence of the seat's own instructions is thrown out and
+  named, the way one that repeats the law block is. *(CHANGELOG, "Three lines on his word to
+  finish")*
+- **C33. At the review panel, two seats did another seat's job.** DONE 2026-09-30. A counsel
+  seat that writes the ruling's heading is now named in the record (its words stand as
+  counsel); the Router's half was already stamped. *(CHANGELOG, "Three lines on his word to
+  finish")*
 - **D2. The "make me a game" test, run as a flow, makes nothing.** DONE 2026-09-30. The cause
   was the words: the maker knew "make me a game" and not her "try making me a little game" or
   "i want a game i can play" (the test's own recorded messages), so her turns went to the
   ordinary pipeline and talked. The maker reads those forms now. Fired live from the dashboard:
   the flow completed in 52 seconds and made two playable pages, `projects/game` and
-  `projects/game-2`. Her second message made a second game rather than changing the first,
-  because it opens with no change verb -- yours to say whether "want it ..." should count as
-  one. *(CHANGELOG, "The maker reads her own words")*
+  `projects/game-2`. Her second message made a second game rather than changing the first;
+  on your word to finish, "i want it ..." / "i dont want it ..." now change the thing in hand.
+  *(CHANGELOG, "The maker reads her own words"; "Three lines on his word to finish")*
 - **C21. Some work done every turn could be done once.** DONE 2026-09-30, by measurement: the
   engine's own time is a hundredth of a second inside a run and a tenth of a second a turn
   outside it. Nothing to make once. *(CHANGELOG, "The turn's overhead, measured")*

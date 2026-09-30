@@ -2700,6 +2700,9 @@ since; the REPL needs a restart for `pipeline.py` and `intent.py`). What is left
 his: A5, the seventeen B decisions, D3, D7, D9, D11, F3, F6, F7; a person who is not him for E1;
 and the model habits with their numbers (C1, C6, C7, C8, C33, C13).
 
+**Continued on his word (13:40, "DO NOT STOP, CONTINUE UNTIL IT IS FINISHED")** — C6, C33 and D2's
+remainder built, the three proposals above.
+
 **Next session** — open `What's left` on the webapp first (the list is WHATS_LEFT.md); B17 is his to
 word (what DONE means for the coder on the tree); the list's remaining lines are his to rule; three
 one-line proposals wait for his word and are not built: the recital guard extended to a seat's own
