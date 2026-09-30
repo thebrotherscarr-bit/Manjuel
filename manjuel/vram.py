@@ -155,30 +155,29 @@ def render(plan: ModelPlan, parallel: int = 1, budget: int | None = None,
                     f"{'s' if plan.switches - plan.ideal_switches != 1 else ''})"
                     if plan.switches > plan.ideal_switches else "   (at the floor)"))
 
-    if True:
-        res = plan.resident_bytes(parallel)
-        if not plan.sized:
-            lines.append(f"    (weights unknown -- assuming {gb(UNKNOWN_WEIGHT)} each, "
-                         f"deliberately high)")
-        pair = plan.peak_pair_bytes(parallel)
-        lines.append(f"    all resident    : ~{gb(res)}")
-        lines.append(f"    worst adjacent  : ~{gb(pair)}  (two models loaded at a swap)")
+    res = plan.resident_bytes(parallel)
+    if not plan.sized:
+        lines.append(f"    (weights unknown -- assuming {gb(UNKNOWN_WEIGHT)} each, "
+                     f"deliberately high)")
+    pair = plan.peak_pair_bytes(parallel)
+    lines.append(f"    all resident    : ~{gb(res)}")
+    lines.append(f"    worst adjacent  : ~{gb(pair)}  (two models loaded at a swap)")
 
-        others = foreign(resident or [], plan.distinct)
-        if others:
-            ob = sum(b for _, b in others)
-            lines.append(f"    NOT ours        : ~{gb(ob)}  "
-                         f"({', '.join(t for t, _ in others)})")
-            if budget:
-                free = budget - ob
-                lines.append(f"    left for us     : ~{gb(free)} of {gb(budget)}")
-                if res > free:
-                    lines.append("    ** warming ours would evict theirs. Share a tag, "
-                                 "or accept the reload on both sides. **")
-        elif budget:
-            verdict = ("fits with everything resident" if res <= budget else
-                       "will swap, but a swap fits" if pair <= budget else
-                       "WILL THRASH — even one swap overflows")
-            lines.append(f"    against {gb(budget)}   : {verdict}")
+    others = foreign(resident or [], plan.distinct)
+    if others:
+        ob = sum(b for _, b in others)
+        lines.append(f"    NOT ours        : ~{gb(ob)}  "
+                     f"({', '.join(t for t, _ in others)})")
+        if budget:
+            free = budget - ob
+            lines.append(f"    left for us     : ~{gb(free)} of {gb(budget)}")
+            if res > free:
+                lines.append("    ** warming ours would evict theirs. Share a tag, "
+                             "or accept the reload on both sides. **")
+    elif budget:
+        verdict = ("fits with everything resident" if res <= budget else
+                   "will swap, but a swap fits" if pair <= budget else
+                   "WILL THRASH — even one swap overflows")
+        lines.append(f"    against {gb(budget)}   : {verdict}")
     lines.append("    * = a model load")
     return "\n".join(lines)

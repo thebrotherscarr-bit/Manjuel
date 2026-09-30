@@ -344,7 +344,8 @@ partial read → `READ IN PART`; law that doesn't verify → no seat sits; rack
 down → the ground opens, runs refuse, the glass says so; index busy → the
 run queues. Retry is a human decision (`retry / skip / abort?` reaches the
 glass as `needs_answer`), except `On Fail: skip` seats, which the record
-names.
+names, and a turn sent as UNATTENDED (2026-09-29: a flow's node, the
+standup), which takes the prompt's own default, skip, and says so.
 
 ### 3.9 Caching
 

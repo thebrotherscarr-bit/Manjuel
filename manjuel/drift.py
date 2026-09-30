@@ -5,10 +5,16 @@ measurement. Embed the source material, embed what a stage produced, take the
 cosine. A low score means the stage wandered from, dropped, or invented
 material relative to what it was given.
 
-Why it matters here specifically: the Morning Reviewer is a 0.5b model running
-FIRST, compressing a noisy feed to two sentences. Everything downstream
-inherits whatever it discarded or made up, and no later seat can recover it.
-A cosine score cannot hallucinate, and it costs one embedding per stage.
+WHAT THE SOURCE IS. A pasted feed, primed once as the run starts; and, since
+2026-09-10, every tool result as it arrives -- the stages after a tool are
+speaking about what the tool said, so the checker is primed again with it. An
+objective alone arms nothing: a request is not a source (sitting 27).
+
+Why it matters: a small seat compressing a feed, or reading a tool's result,
+is where material is dropped or made up, and everything downstream inherits
+it. A cosine score cannot hallucinate, and it costs one embedding per stage.
+(This paragraph named the Morning Reviewer as "a 0.5b model running FIRST"
+until 2026-09-29; it is llama3.2 and sits second, in one pipeline.)
 
 It is ADVISORY. A low score is recorded and reported, never used to rewrite or
 silently discard a stage -- the same principle that keeps Manjuel and Jesster
@@ -46,7 +52,11 @@ MIN_SOURCE_CHARS = 12
 @dataclass
 class DriftScore:
     score: float
-    ok: bool
+    # True: measured and faithful. False: measured and DRIFTED. None: NOT
+    # MEASURED, and `reason` says why -- until 2026-09-29 a stage too short to
+    # score, or scored against an embedder that had gone, carried ok=True and
+    # a score of 0.0, which is a verdict nobody reached.
+    ok: bool | None
     reason: str = ""
 
     def stamp(self) -> str:
@@ -137,11 +147,11 @@ class DriftChecker:
             return None
         text = (output or "").strip()
         if len(text) < MIN_OUTPUT_CHARS:
-            return DriftScore(0.0, True, reason="output too short to score")
+            return DriftScore(0.0, None, reason="output too short to score")
         try:
             vec = self.runtime.embed(self.model, text)
         except Exception as exc:
-            return DriftScore(0.0, True, reason=f"embedder unavailable: {exc}")
+            return DriftScore(0.0, None, reason=f"embedder unavailable: {exc}")
 
         sim = mathkit.cosine(self._source, vec)
         # Against a SHORT source the expected similarity is genuinely lower;

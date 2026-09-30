@@ -11,7 +11,11 @@ Anything manjuel itself reads, because manjuel reads it at ITS startup:
     MANJUEL_KEEP_ALIVE=30m      how long Ollama holds a model (per-request)
     MANJUEL_NO_WARM=1           skip warming models on launch
     MANJUEL_GIT_REMOTE=1        allow git pull/push
-    MANJUEL_OLLAMA_HOST=...     where Ollama lives
+
+(`MANJUEL_OLLAMA_HOST` stood in this list until 2026-09-29. Nothing has ever
+read it: the runtime binds the rack on this machine's own loopback, and RULE 4
+keeps it there. A dial named in a docstring and read by nothing is a promise
+the code does not keep.)
 
 What it CANNOT change
 ---------------------
@@ -49,11 +53,23 @@ def _unquote(v: str) -> str:
     return v
 
 
-def load(path: Path) -> tuple[list[str], list[str], list[str]]:
+def load(path: Path) -> tuple[list[str], list[str], list[str], str]:
     """Read `path` into the environment.
 
-    Returns (applied, already_set, server_only) as lists of KEY NAMES only.
-    No value is returned, logged, or raised.
+    Returns (applied, already_set, server_only, unread): three lists of KEY
+    NAMES, and -- when the file is THERE AND COULD NOT BE READ -- the kind of
+    fault that stopped it, else "". No value is returned, logged, or raised.
+
+    A `.env` THAT CANNOT BE READ IS SAID SO (2026-09-29). This answered three
+    empty lists for a file it could not read, exactly what it answers for no
+    file at all, so the boot printed nothing and every dial in it stood at its
+    default with no word that it had. The likeliest cause on this machine is
+    the ordinary one: PowerShell's `>` writes UTF-16, which is not UTF-8 text.
+
+    AND A BYTE-ORDER MARK IS NOT PART OF A NAME. PowerShell's `-Encoding UTF8`
+    writes one; read as plain UTF-8 it became the first three bytes of the
+    first key, which was then set under a name nothing reads and REPORTED as
+    set. `utf-8-sig` reads both shapes.
     """
     applied: list[str] = []
     already: list[str] = []
@@ -61,12 +77,13 @@ def load(path: Path) -> tuple[list[str], list[str], list[str]]:
 
     path = Path(path)
     if not path.exists():
-        return applied, already, server
+        return applied, already, server, ""
 
     try:
-        text = path.read_text(encoding="utf-8")
-    except Exception:
-        return applied, already, server
+        text = path.read_text(encoding="utf-8-sig")
+    except Exception as exc:
+        # The KIND of fault only: a message can carry what was in the file.
+        return applied, already, server, type(exc).__name__
 
     for raw in text.splitlines():
         line = raw.strip()
@@ -91,12 +108,18 @@ def load(path: Path) -> tuple[list[str], list[str], list[str]]:
         os.environ[key] = _unquote(value)
         applied.append(key)
 
-    return applied, already, server
+    return applied, already, server, ""
 
 
-def report(applied: list[str], already: list[str], server: list[str]) -> list[str]:
+def report(applied: list[str], already: list[str], server: list[str],
+           unread: str = "") -> list[str]:
     """Lines to print. Key names only -- never a value (LAW 9)."""
     out: list[str] = []
+    if unread:
+        out.append(f"  .env: PRESENT BUT NOT READ ({unread}) -- nothing in it was "
+                   f"set, so every dial stands at")
+        out.append( "        its default or the shell's. It must be UTF-8 text; "
+                    "PowerShell's `>` writes UTF-16.")
     if applied:
         out.append(f"  .env: set {', '.join(sorted(applied))}")
     if already:

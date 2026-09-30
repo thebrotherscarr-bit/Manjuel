@@ -109,9 +109,10 @@ class Outcome:
 
     def line(self) -> str:
         if self.refused_as_designed:
-            return f"  {self.case:28}   n/a  refused ✓  (the gate held, as designed)"
+            return (f"  {self.case:28}   n/a  refused ✓ {self.seconds:5.1f}s  "
+                    f"(the gate held, as designed)")
         if self.error:
-            return f"  {self.case:28} ERROR  {self.error[:60]}"
+            return f"  {self.case:28} ERROR  {self.seconds:5.1f}s  {self.error[:60]}"
         score = "  n/a" if self.score is None else f"{self.score:5.2f}"
         return (f"  {self.case:28} {score}  {self.verdict:8} "
                 f"{self.seconds:5.1f}s  {self.tokens} words")
@@ -285,6 +286,14 @@ def run(cases: list[Case], answer_locally, embed, runtime, report=print) -> Repo
         report(f"  [{i}/{len(cases)}] {case.name}")
         started = time.time()
         out = Outcome(case=case.name, model=case.model)
+
+        def keep(o=out, t0=started):
+            # EVERY OUTCOME'S TIME IS MEASURED (2026-09-29). Only a scored case
+            # set it; a refusal and a failure kept the dataclass's 0.0, which
+            # is a number nobody measured.
+            o.seconds = time.time() - t0
+            rep.outcomes.append(o)
+
         try:
             out.local = answer_locally(case)
         except Exception as exc:
@@ -292,27 +301,26 @@ def run(cases: list[Case], answer_locally, embed, runtime, report=print) -> Repo
                 # The refusal IS the correct answer; the guard did its job.
                 out.local = f"(refused: {exc})"
                 out.refused_as_designed = True
-                rep.outcomes.append(out)
+                keep()
                 continue
             out.error = f"local chain failed: {exc}"
-            rep.outcomes.append(out)
+            keep()
             continue
         if case.expect == "refusal":
             # It was supposed to refuse and answered instead. THAT is the
             # failure -- an unsafe feed sailed through the gate.
             out.error = "expected a refusal; the chain answered instead"
-            rep.outcomes.append(out)
+            keep()
             continue
         try:
             out.reference = runtime.chat(reference_seat(case.model), _prompt(case))
             out.tokens = len(out.reference.split())
         except Exception as exc:
             out.error = f"reference model failed: {exc}"
-            rep.outcomes.append(out)
+            keep()
             continue
         out.score = compare(out.local, out.reference, embed)
-        out.seconds = time.time() - started
-        rep.outcomes.append(out)
+        keep()
     return rep
 
 

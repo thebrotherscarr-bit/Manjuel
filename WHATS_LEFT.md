@@ -108,18 +108,18 @@ Nothing here gets built until you say which way.
   working, and they are not enough by themselves: the next step is your decision B15.
   *(logs/standup_2026-09-29_162318.md)*
 - **C14. A failing seat asks "retry / skip / abort?"** An automated flow cannot answer, so the
-  run dies. *(HANDOFF 09-28)*
-- **C16. The workspace file reader cannot read the rest of the ground.** *(TASKS)*
-- **C17. An idle close is logged as a "Dashboard Close".** The log has no field for why, and the
-  idle warning does not mention the 30-minute close. *(TASKS)*
+  run dies. HALF DONE 2026-09-29: the engine no longer asks on a run nobody is attending (it
+  skips the seat, which is what the question's own default does, and says so), and the live
+  check runs that way now. Still open: the tool server does not yet tell the engine that a
+  flow's step is unattended, so a flow still stops at the question. That is a change to atlas
+  and a restart of the tool server. *(HANDOFF 09-28, CHANGELOG)*
+- **C17. The dashboard's idle warning does not mention the 30-minute close.** The other half
+  is done (2026-09-29): the session log and the session's closing note now say why a session
+  was closed (idle, closed from the dashboard, or the dashboard went away). *(TASKS, CHANGELOG)*
 - **C18. `run_start` cannot choose a model head.** `flow_run` can. *(HANDOFF 09-28)*
-- **C19. The live check's greeting case cannot tell a real answer from a recited one.**
-  *(HANDOFF 09-28)*
-- **C20. A dozen small honesty fixes:** an unreadable `.env` is not reported, `MANJUEL_OLLAMA_HOST`
-  is never read, dead code, and others. One is done (2026-09-29): the built-in order for the
-  `estate` pipeline seats the judge last, as `pipelines.md` does. *(TASKS, "small honesty")*
-- **C21. `history_block` has a limit nothing uses,** and some work done every turn could be done
-  once. *(TASKS)*
+- **C21. Some work done every turn could be done once.** The record says this and lists
+  nothing, so there is nothing measured to fix yet. The other half is done (2026-09-29): the
+  unused limit on `history_block` is gone. *(TASKS)*
 - **C31. Four old model processes from 7:52 this morning still hold about 4 GB of graphics
   memory.** The running Ollama does not list them. With them the card sits at 14.5 of 16 GB,
   and the second live check of the afternoon ran in 5 minutes against the usual 2 while the
@@ -202,8 +202,9 @@ Nothing here gets built until you say which way.
   "rack_report facts-only" (done) beside "the door at court" (open, B7); "the client token"
   (done, B5) beside "CRLF or LF" (open, B3). Only you tick a box. *(TASKS)*
 - **F7. TASKS.md boxes for work finished on 2026-09-29 are still unticked:** the false refusal
-  (C10), the card that cannot say "over" (C12), the drift note (C11) and the watcher's
-  re-index (C15). All four are under Done below. Only you tick a box. *(TASKS)*
+  (C10), the card that cannot say "over" (C12), the drift note (C11), the watcher's re-index
+  (C15), the workspace reader (C16), the small honesty list (C20) and the unused limit (C21).
+  All are under Done below or marked done on their line. Only you tick a box. *(TASKS)*
 
 ---
 
@@ -227,6 +228,23 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **C20. A dozen small honesty fixes.** DONE 2026-09-29, all of them. A settings file
+  (`.env`) that is there and cannot be read now says so at startup; three settings the
+  example file offered and nothing read are struck from it; a damaged line in the list of
+  proposed memories is kept and counted instead of destroyed; the law check notices a law
+  file that was deleted; a session's closing note says where the ground stood whenever it
+  moved; a model server that could not be reached is asked again instead of being written
+  off; a drift check that did not run has no verdict; a broken spelling dictionary says it is
+  broken; reading aloud has a time limit and cleans up after itself; four pieces of dead code
+  are gone; the three lists of "pointing" words share one core. The TASKS box is yours to
+  tick (F7). *(CHANGELOG, "The small honesty ...")*
+- **C16. The workspace file reader cannot read the rest of the ground.** DONE 2026-09-29. Asked
+  for a path that names the ground (`ground/pipelines.md`), it reads the file from the ground
+  by the ground reader's own rules and says which reader answered. A seat not allowed the
+  ground's reader is refused. The TASKS box is yours to tick (F7). *(CHANGELOG)*
+- **C19. The live check's greeting case cannot tell a real answer from a recited one.** DONE
+  2026-09-29. A reply that lifts a whole sentence (60 characters or more) from what the model
+  was handed is now a miss, and the report quotes it. Seen live (sitting 304): the greeting was answered "Good morning." and met. *(CHANGELOG)*
 - **D1. The time limits you ruled are not set.** DONE 2026-09-29. The front door's limit is 180
   seconds, no seat may take more than 600 (the judge's was 700), and one turn of the review
   panel may take 900 where every other turn takes 600. I read "the court ... 900" as the

@@ -24,6 +24,7 @@ import re
 import shutil
 import subprocess
 import sys
+import threading
 import time
 import tempfile
 from dataclasses import dataclass
@@ -32,6 +33,10 @@ from pathlib import Path
 # A delivery can be thousands of words. Reading all of it aloud is not useful
 # and cannot be interrupted cleanly, so speech is capped and says it was.
 MAX_SPOKEN_CHARS = 1200
+# The most one reading may take, whoever is waiting for it. 1200 characters
+# are a minute and a half aloud; a speech engine that has not finished in
+# three minutes has hung, and LAW 7 bounds everything.
+SPEAK_DEADLINE = 180
 SAMPLE_RATE = 16000
 
 # Voice-activity detection: the recorder runs until the SPEAKER stops, not for
@@ -312,10 +317,10 @@ def _speech_cmd(body: str, voice: str | None = None):
     else:
         path = ""
         env = dict(os.environ)
-        if kind == "say":
-            cmd = [exe] + (["-v", voice] if voice else []) + [body]
-        else:
-            cmd = [exe] + (["-v", voice] if voice else []) + ["--", body]
+        # `--` BEFORE THE TEXT, ON BOTH (2026-09-29). espeak always had it;
+        # `say` did not, so a delivery that opened with a dash was read by
+        # `say` as an option -- and the text is model output (LAW 5).
+        cmd = [exe] + (["-v", voice] if voice else []) + ["--", body]
 
     return cmd, env, path
 
@@ -326,21 +331,49 @@ def speak(text: str, blocking: bool = True, voice: str | None = None) -> str:
     if not body:
         return ""
     cmd, env, path = _speech_cmd(body, voice)
+    proc = None
     try:
         if blocking:
-            subprocess.run(cmd, env=env, capture_output=True, timeout=180)
+            subprocess.run(cmd, env=env, capture_output=True, timeout=SPEAK_DEADLINE)
         else:
-            subprocess.Popen(cmd, env=env,
-                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            proc = subprocess.Popen(cmd, env=env,
+                                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception as exc:
         raise VoiceError(f"speech failed: {exc}") from exc
     finally:
-        if path and blocking:
-            try:
-                os.unlink(path)
-            except OSError:
-                pass
+        if path and proc is None:
+            _remove(path)
+    if proc is not None:
+        # A READING NOBODY WAITS FOR STILL ENDS, AND ITS FILE STILL GOES
+        # (2026-09-29). The file holds the delivery, in the system's temp
+        # folder; this branch never removed it, so every `/say on` turn left
+        # one behind. The reaper waits for the engine, bounded, then removes.
+        threading.Thread(target=_reap, args=(proc, path), daemon=True,
+                         name="speech-reaper").start()
     return body
+
+
+def _remove(path: str) -> None:
+    if not path:
+        return
+    try:
+        os.unlink(path)
+    except OSError:
+        pass
+
+
+def _reap(proc, path: str, deadline: float | None = None) -> None:
+    """Wait for a reading to end -- at most the deadline, then end it -- and
+    remove the file it read from."""
+    try:
+        proc.wait(timeout=SPEAK_DEADLINE if deadline is None else deadline)
+    except Exception:
+        try:
+            proc.kill()
+        except Exception:
+            pass
+    finally:
+        _remove(path)
 
 
 def _key_pressed() -> bool:
@@ -380,6 +413,7 @@ def speak_interruptible(text: str, report=print,
         return True
     cmd, env, path = _speech_cmd(body, voice)
     proc = None
+    started = time.time()
     try:
         proc = subprocess.Popen(cmd, env=env,
                                 stdout=subprocess.DEVNULL,
@@ -388,6 +422,13 @@ def speak_interruptible(text: str, report=print,
             if _key_pressed():
                 proc.kill()
                 report("  (cut off)")
+                return False
+            # THE MACHINE MAY NOT HOLD THE FLOOR FOREVER EITHER (2026-09-29).
+            # This loop had no end of its own: a speech engine that hung held
+            # the voice chat until a key was pressed, and nobody was told why.
+            if time.time() - started > SPEAK_DEADLINE:
+                proc.kill()
+                report(f"  (cut off: the reading ran past {SPEAK_DEADLINE}s)")
                 return False
             time.sleep(0.05)
         return True
@@ -401,11 +442,7 @@ def speak_interruptible(text: str, report=print,
     finally:
         if proc is not None and proc.poll() is None:
             proc.kill()
-        if path:
-            try:
-                os.unlink(path)
-            except OSError:
-                pass
+        _remove(path)
 
 
 # ---------------------------------------------------------------------

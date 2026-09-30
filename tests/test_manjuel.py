@@ -988,8 +988,9 @@ def test_dotenv():
     os.environ["MANJUEL_TEST_TAKEN"] = "fromshell"
     os.environ.pop("OLLAMA_NUM_PARALLEL", None)
 
-    applied, already, server = dotenv.load(g / ".env")
+    applied, already, server, unread = dotenv.load(g / ".env")
 
+    check("a .env that was read says nothing of a fault", unread == "", unread)
     check("a .env sets what is missing", "MANJUEL_TEST_NEW" in applied
           and os.environ["MANJUEL_TEST_NEW"] == "abc")
     check("quotes and `export` are handled",
@@ -3924,6 +3925,29 @@ def test_the_headless_door(reg, lib, book):
     check("a close during a question aborts the run (EOF at the prompt) and then closes the sitting",
           any(r["event"] == "aborted" and "failure prompt" in r["text"] for r in rows)
           and rows[-1]["event"] == "closed" and sess.closed == 1, str([r["event"] for r in rows]))
+
+    # ---- a turn sent as UNATTENDED is not asked (2026-09-29) --------------
+    rows, sess, text, rc = drive([{"cmd": "objective", "text": "hello there", "unattended": True},
+                                  {"cmd": "objective", "text": "second question here"},
+                                  {"cmd": "answer", "text": "skip"},
+                                  {"cmd": "close"}], Falls(reply="[x]"))
+    kinds = [r["event"] for r in rows]
+    ds = [r for r in rows if r["event"] == "delivery"]
+    asks = [i for i, r in enumerate(rows) if r["event"] == "needs_answer"]
+    first = kinds.index("delivery") if "delivery" in kinds else -1
+    check("a turn sent as unattended is not asked: the seat is skipped and the delivery names it",
+          len(ds) == 2 and "SEATS THAT FAILED" in ds[0]["text"]
+          and any("nobody is at the prompt" in n for n in ds[0]["notes"])
+          and not any(i < first for i in asks), str(kinds))
+    check("... and the turn after it, sent with no such word, is asked as before",
+          len(asks) == 1 and asks[0] > first
+          and not any("nobody is at the prompt" in n for n in ds[1]["notes"]), str(kinds))
+    rows, sess, text, rc = drive([{"cmd": "objective", "text": "hello there", "unattended": "true"},
+                                  {"cmd": "answer", "text": "skip"},
+                                  {"cmd": "close"}], Falls(reply="[x]"))
+    check("only the literal `true` counts: a word that merely looks like it is an attended turn",
+          sum(1 for r in rows if r["event"] == "needs_answer") == 1,
+          str([r["event"] for r in rows]))
 
     # ---- the wire's own discipline --------------------------------------
     rows, sess, text, rc = drive(["not json at all",
@@ -10934,6 +10958,8 @@ def test_an_idle_engine_closes_its_own_sitting(reg, lib, book):
     serve(d, wire)
     check("   and hands that bound to the inbox between turns",
           d.inbox.waits == [_sv.IDLE_CLOSE], str(d.inbox.waits))
+    check("a close the client asked for is written on the sitting as that",
+          d.sess.sitting.closed_by == "closed by the client", repr(d.sess.sitting.closed_by))
     check("serve.main builds the door with the default bound",
           "Door(sess, wire, inbox, ground=ROOT)" in _inspect.getsource(_sv.main),
           "serve.main hands the door a bound of its own")
@@ -10950,6 +10976,12 @@ def test_an_idle_engine_closes_its_own_sitting(reg, lib, book):
           rc == 0 and len(closes) == 1 and last.get("event") == "closed", repr(rows[-2:]))
     check("   and `closed` says why, in the reason every close carries",
           "idle" in str(last.get("why")) and "30 minutes" in str(last.get("why")), repr(last))
+    check("   and the SITTING carries the same reason, so the ledger and the toll can say it",
+          d.sess.sitting.closed_by == str(last.get("why"))
+          and d.sess.sitting.closed_by.startswith("idle: no command in 30 minutes"),
+          repr(d.sess.sitting.closed_by))
+    check("   which is a field of the ledger's own line, written when the line is",
+          "closed_by" in _json.dumps(__import__("dataclasses").asdict(d.sess.sitting)))
     check("   and the screen says so before it goes",
           any(r["event"] == "text" and "closing the sitting" in r["text"] for r in rows),
           repr([r["text"] for r in rows if r["event"] == "text"]))
@@ -15312,6 +15344,600 @@ def test_every_root_document_is_in_the_index_list(reg, lib, book):
           "." not in listed and "./" not in listed)
 
 
+def test_the_small_honesty_of_the_record_keepers(reg, lib, book):
+    """THE MACHINE'S OWN HONESTY (SPEC 8.2 P2; TASKS "small honesty"; built
+    2026-09-29 on his word: "do the ... list top to bottom"). Each of these
+    answered a question it had not asked, or kept a number nobody measured.
+
+      dotenv     a `.env` that is there and cannot be read said nothing
+      memory     a pending line that could not be read was destroyed by the
+                 next land or drop
+      lawgate    the cached verdict was stamped by the NEWEST time in law/, so
+                 a law deleted moved nothing
+      seatlog    "At close" was written only for a new head or a clean/dirty
+                 flip; a toll never said why a sitting closed unattended
+      runtime    a rack that could not be ASKED was cached as "no tools"
+      parity     a refused or failed case kept a time of 0.0 nobody measured
+    """
+    import shutil
+    from manjuel import dotenv, lawgate, parity
+    from manjuel import runtime as _rt
+
+    # ---- dotenv -----------------------------------------------------------------
+    g = Path(tempfile.mkdtemp())
+    (g / ".env").write_bytes("MANJUEL_TEST_UNREAD=abc\r\n".encode("utf-16"))
+    os.environ.pop("MANJUEL_TEST_UNREAD", None)
+    applied, already, server, unread = dotenv.load(g / ".env")
+    check("a `.env` that cannot be read says so, by the kind of fault and nothing of its contents",
+          unread == "UnicodeDecodeError" and not applied
+          and "MANJUEL_TEST_UNREAD" not in os.environ, f"{unread!r} {applied}")
+    said = "\n".join(dotenv.report(applied, already, server, unread))
+    check("the boot says the file was there and was not read, and what that leaves standing",
+          "PRESENT BUT NOT READ (UnicodeDecodeError)" in said and "nothing in it was set" in said
+          and "abc" not in said, said)
+    check("a `.env` that is not there is not a fault",
+          dotenv.load(g / "absent.env") == ([], [], [], "")
+          and dotenv.report([], [], [], "") == [])
+    (g / "bom.env").write_bytes(b"\xef\xbb\xbfMANJUEL_TEST_BOM=1\nMANJUEL_TEST_TWO=2\n")
+    for k in ("MANJUEL_TEST_BOM", "MANJUEL_TEST_TWO"):
+        os.environ.pop(k, None)
+    applied2, _a, _s, unread2 = dotenv.load(g / "bom.env")
+    check("a byte-order mark is not part of the first key's name",
+          applied2 == ["MANJUEL_TEST_BOM", "MANJUEL_TEST_TWO"] and unread2 == ""
+          and os.environ.get("MANJUEL_TEST_BOM") == "1"
+          and not any(k.startswith("﻿") for k in os.environ), str(applied2))
+    for k in ("MANJUEL_TEST_BOM", "MANJUEL_TEST_TWO", "MANJUEL_TEST_UNREAD"):
+        os.environ.pop(k, None)
+    for name in ("cli.py", "serve.py"):
+        src = (ROOT / "manjuel" / name).read_text(encoding="utf-8")
+        check(f"{name} hands the reader's whole answer to the report, the fault with it",
+              'dotenv.report(*dotenv.load(ROOT / ".env"))' in src, name)
+
+    # ---- memory -----------------------------------------------------------------
+    mg = Path(tempfile.mkdtemp())
+    MEM.stage(mg, MEM.Entry(title="one", body="the first proposal"))
+    MEM.stage(mg, MEM.Entry(title="two", body="the second proposal"))
+    pend = mg / MEM.PENDING_FILE
+    with pend.open("a", encoding="utf-8", newline="\r\n") as fh:
+        fh.write('{"title": "three", "body": "cut off mid-wri\n')
+    check("a line that cannot be read is counted, and the proposals beside it still read",
+          MEM.unread_pending(mg) == 1 and [e.title for e in MEM.pending(mg)] == ["one", "two"])
+    MEM.drop_pending(mg, 0)
+    left = pend.read_text(encoding="utf-8")
+    check("a drop removes the proposal it names and KEEPS the line that could not be read",
+          [e.title for e in MEM.pending(mg)] == ["two"] and MEM.unread_pending(mg) == 1
+          and "cut off mid-wri" in left, left[-200:])
+    MEM.land_pending(mg, 0)
+    check("and so does a landing: the damaged line outlives every proposal around it",
+          MEM.pending(mg) == [] and MEM.unread_pending(mg) == 1
+          and "cut off mid-wri" in pend.read_text(encoding="utf-8")
+          and "the second proposal" in (mg / MEM.MEMORY_FILE).read_text(encoding="utf-8"))
+    cli_src = (ROOT / "manjuel" / "cli.py").read_text(encoding="utf-8")
+    check("/memory tells the operator how many lines it could not read",
+          "_mem.unread_pending(ROOT)" in cli_src.split("def _cmd_memory", 1)[1].split("\ndef ", 1)[0])
+
+    # ---- lawgate ----------------------------------------------------------------
+    lg = Path(tempfile.mkdtemp())
+    shutil.copytree(ROOT / "law", lg / "law", ignore=shutil.ignore_patterns("__pycache__"))
+    first = lawgate.run("hi", lg)
+    laws = sorted((lg / "law").glob("LAW_*.md"), key=lambda p: p.stat().st_mtime_ns)
+    newest = max((p.stat().st_mtime_ns for p in (lg / "law").iterdir() if p.is_file()))
+    gone = next((p for p in laws if p.stat().st_mtime_ns < newest), laws[0])
+    stamp_before = lawgate._law_stamp(lg)
+    gone.unlink()
+    after = lawgate.run("hi", lg)
+    check("the chain verified, so there is a cached verdict to test", first.ok, first.note())
+    check("a law DELETED is seen at the next run: the cache is stamped by every file, not the newest time",
+          not after.ok and any("missing law" in why for _l, why in after.refusals),
+          f"{gone.name}: {after.note()}")
+    check("the stamp names every file in law/, with its size and its time",
+          stamp_before and lawgate._law_stamp(lg) != stamp_before
+          and all(len(row) == 3 for row in stamp_before)
+          and gone.name in {row[0] for row in stamp_before})
+    check("a ground with no law/ has no stamp, and is not a broken chain",
+          lawgate._law_stamp(Path(tempfile.mkdtemp())) is None)
+
+    # ---- seatlog ----------------------------------------------------------------
+    def git(changed, head="abc1234def", branch="main", dirty=True):
+        return gitstate.GitState(is_repo=True, branch=branch, head=head, short=head[:9],
+                                 dirty=dirty, changed=changed, untracked=0).as_dict()
+
+    st = seatlog.Sitting(n=7, id="S-x", started="2026-09-29T10:00:00",
+                         ended="2026-09-29T10:30:00", git_start=git(3), git_end=git(30))
+    toll = seatlog.render_toll(st, attended=False)
+    check("a sitting that opened on 3 changed files and closed on 30 says where it closed",
+          "**At close:**" in toll and "30 changed" in toll, toll[:400])
+    same = seatlog.Sitting(n=8, id="S-y", started="2026-09-29T10:00:00",
+                           ended="2026-09-29T10:30:00", git_start=git(3), git_end=git(3))
+    check("and one that moved nothing says nothing of it",
+          "**At close:**" not in seatlog.render_toll(same, attended=False))
+    moved = seatlog.Sitting(n=9, id="S-z", started="2026-09-29T10:00:00",
+                            ended="2026-09-29T10:30:00", git_start=git(3),
+                            git_end=git(3, branch="tree-line"))
+    check("another line of work at the same commit is a move too",
+          "**At close:**" in seatlog.render_toll(moved, attended=False))
+    st.closed_by = "idle: no command in 30 minutes"
+    check("a toll says WHY the sitting was closed unattended, when the record knows",
+          "Closed unattended (idle: no command in 30 minutes)." in seatlog.render_toll(st, attended=False)
+          and "Closed unattended." in seatlog.render_toll(same, attended=False))
+    check("and never on a toll the operator paid himself",
+          "Operator present." in seatlog.render_toll(st, attended=True)
+          and "idle" not in seatlog.render_toll(st, attended=True).split("**Version:**")[0])
+
+    # ---- runtime ----------------------------------------------------------------
+    class Rack:
+        def __init__(self):
+            self.asked, self.up = 0, False
+
+        def show(self, model):
+            self.asked += 1
+            if not self.up:
+                raise ConnectionError("the rack is not answering")
+            return {"capabilities": ["completion", "tools"]}
+
+    rt = _rt.OllamaRuntime()
+    rt._client = Rack()
+    check("a rack that cannot be asked answers no tools, for this call",
+          rt.supports_tools("qwen3.5:4b") is False and rt._client.asked == 1)
+    rt._client.up = True
+    check("... and is asked AGAIN the next time, where it used to be False for the life of the process",
+          rt.supports_tools("qwen3.5:4b") is True and rt._client.asked == 2)
+    check("an answer the rack did give is kept, and the rack is not asked a third time",
+          rt.supports_tools("qwen3.5:4b") is True and rt._client.asked == 2)
+
+    # ---- parity -----------------------------------------------------------------
+    import time as _t
+
+    def answer(case):
+        _t.sleep(0.05)
+        if case.name != "scored":
+            raise RuntimeError("the gate held")
+        return "the ledger covenant seat refute " * 4
+
+    rep = parity.run(
+        [parity.Case(name="refused", objective="x", expect="refusal"),
+         parity.Case(name="failed", objective="x"),
+         parity.Case(name="scored", objective="x")],
+        answer, Stub().embed.__get__(Stub()) if False else (lambda t: Stub().embed("m", t)),
+        Stub(reply="the ledger covenant seat refute " * 4), report=lambda s: None)
+    times = {o.case: o.seconds for o in rep.outcomes}
+    check("every outcome's time is measured: the refused and the failed too",
+          len(times) == 3 and all(v >= 0.04 for v in times.values()), str(times))
+    lines = {o.case: o.line() for o in rep.outcomes}
+    check("and the refused and the failed lines carry it",
+          "s  " in lines["refused"].split("refused ✓", 1)[1][:12]
+          and "ERROR" in lines["failed"] and "0.0s" not in lines["failed"], str(lines))
+
+
+def test_the_example_offers_only_dials_the_code_reads(reg, lib, book):
+    """`.env.example` IS THE FILE A PERSON COPIES, so a dial it offers and
+    nothing reads is a setting he believes he made (2026-09-29). Three stood
+    in it: MANJUEL_OLLAMA_HOST (read nowhere, RUNBOOK had said so since
+    2026-09-08), and MANJUEL_SPEAK_VOICE and MANJUEL_SPEAK_FILE, which are the
+    names voice.py gives its OWN child process and overwrites on every call.
+
+    Held to the code now: every MANJUEL_ name the example assigns is a string
+    the engine reads the environment by."""
+    import re as _re
+    example = (ROOT / ".env.example").read_text(encoding="utf-8")
+    offered = sorted(set(_re.findall(r"^#?[ \t]*(MANJUEL_[A-Z0-9_]+)=", example, _re.MULTILINE)))
+    code = "\n".join(p.read_text(encoding="utf-8")
+                     for p in sorted((ROOT / "manjuel").glob("*.py")))
+    check("the example offers dials to hold to the code", len(offered) >= 12, str(offered))
+
+    def read_by_the_code(name: str) -> bool:
+        if name.startswith("MANJUEL_MCP_"):
+            return '"MANJUEL_MCP_"' in code          # one dial per server, by prefix
+        return f'"{name}"' in code or f"'{name}'" in code
+
+    unread = [n for n in offered if not read_by_the_code(n)]
+    check("every dial the example offers is one the code reads the environment by",
+          not unread, "offered and read by nothing: " + ", ".join(unread))
+    for gone in ("MANJUEL_OLLAMA_HOST", "MANJUEL_SPEAK_VOICE", "MANJUEL_SPEAK_FILE"):
+        check(f"{gone} is offered no longer", gone not in offered)
+    runbook = (ROOT / "RUNBOOK.md").read_text(encoding="utf-8")
+    table = runbook.split("## The dials, in one place", 1)[1].split("\n## ", 1)[0]
+    missing = [n for n in offered
+               if not n.startswith("MANJUEL_MCP_") and n not in table
+               and not (n.startswith("MANJUEL_WHISPER_") and "MANJUEL_WHISPER_MODEL" in table)]
+    check("and every one of them is in RUNBOOK's table of the dials",
+          not missing, "offered, not in the table: " + ", ".join(missing))
+
+
+def test_the_small_honesty_of_the_engine(reg, lib, book):
+    """THE REST OF THE MACHINE'S OWN HONESTY (SPEC 8.2 P2; TASKS "small
+    honesty"; built 2026-09-29).
+
+      drift      a stage that was not scored carried ok=True and a score of 0.0
+      spelling   a dictionary installed and broken read as a clean check
+      voice      a reading had no end of its own; a reading nobody waited for
+                 left the delivery in the temp folder; `say` took its text
+                 with no `--` in front of it
+      dead code  three functions nothing called and a branch that was always
+                 taken
+      the pointing words: three lists typed out whole, in three modules
+      context    a parameter nothing ever passed
+    """
+    import inspect
+    import subprocess
+    import time as _t
+    from manjuel import context as _ctx
+    from manjuel import drift as _drift
+    from manjuel import intent, spelling
+    from manjuel import voice as V
+    from manjuel.registry import Agent
+
+    # ---- drift: not measured is not a verdict -------------------------------------
+    d = DriftChecker(Stub(), "m")
+    d.prime("the ledger covenant seat refute " * 6)
+    short = d.score("too short")
+    check("a stage too short to score has NO verdict, and says why",
+          short is not None and short.ok is None and "too short" in short.reason
+          and short.stamp() == "drift: not scored (output too short to score)", repr(short))
+
+    class Gone(Stub):
+        calls = 0
+
+        def embed(self, model, text):
+            Gone.calls += 1
+            if Gone.calls > 1:
+                raise RuntimeError("embedder down")
+            return super().embed(model, text)
+
+    dg = DriftChecker(Gone(), "m")
+    dg.prime("the ledger covenant seat refute " * 6)
+    lost = dg.score("the ledger covenant seat refute " * 6)
+    check("nor has one scored against an embedder that had gone",
+          lost is not None and lost.ok is None and "embedder unavailable" in lost.reason,
+          repr(lost))
+    good = d.score("the ledger covenant seat refute " * 6)
+    check("a stage that WAS measured still carries its verdict",
+          good is not None and good.ok is True and not good.reason, repr(good))
+    check("the module says what arms the check today, and not what sat where in August",
+          "every tool result" in (_drift.__doc__ or "")
+          and "An\nobjective alone arms nothing" in (_drift.__doc__ or ""))
+
+    # ---- spelling: installed and broken is not absent ------------------------------
+    keep = (spelling._SPELLER[0], spelling._SPELLER_FAULT[0], spelling.importlib.util.find_spec)
+    try:
+        def broken(name, *a, **k):
+            if name == "spellchecker":
+                raise RuntimeError("a broken install")
+            return keep[2](name, *a, **k)
+
+        spelling._SPELLER[0], spelling._SPELLER_FAULT[0] = None, ""
+        spelling.importlib.util.find_spec = broken
+        r = spelling.check("this is fine")
+        check("a dictionary that is installed and will not load is said so",
+              r.fault == "RuntimeError" and "did not load (RuntimeError)" in r.note()
+              and not r.changed and r.text == "this is fine", f"{r.fault!r} {r.note()!r}")
+        check("... and the known misspellings are still corrected",
+              spelling.check("I recieved it").text == "I received it")
+        check("... but not when nobody asked for unknown words to be looked for",
+              spelling.check("this is fine", report_unknown=False).fault == "")
+
+        spelling._SPELLER[0], spelling._SPELLER_FAULT[0] = None, ""
+        spelling.importlib.util.find_spec = lambda name, *a, **k: (
+            None if name == "spellchecker" else keep[2](name, *a, **k))
+        absent = spelling.check("this is fine")
+        check("a dictionary that is simply not there is the ordinary case, and says nothing",
+              absent.fault == "" and absent.note() == "")
+    finally:
+        spelling._SPELLER[0], spelling._SPELLER_FAULT[0] = keep[0], keep[1]
+        spelling.importlib.util.find_spec = keep[2]
+    for name in ("cli.py", "serve.py"):
+        check(f"{name} carries the fault into the run's notes",
+              "if result.changed or result.fault:" in
+              (ROOT / "manjuel" / name).read_text(encoding="utf-8"), name)
+
+    # ---- voice ---------------------------------------------------------------------
+    check("one reading may take three minutes, whoever waits for it",
+          V.SPEAK_DEADLINE == 180)
+    old_backend = V._speech_backend
+    try:
+        for kind in ("say", "espeak-ng"):
+            V._speech_backend = lambda k=kind: (k, "/usr/bin/" + k)
+            cmd, _env, _path = V._speech_cmd("-v is how this delivery opens", voice="Zira")
+            check(f"`{kind}` is handed `--` before the text, so a delivery cannot be read as an option",
+                  cmd[-2:] == ["--", "-v is how this delivery opens"] and cmd[1:3] == ["-v", "Zira"],
+                  str(cmd))
+    finally:
+        V._speech_backend = old_backend
+
+    class Proc:
+        def __init__(self, hangs):
+            self.hangs, self.killed, self.waited = hangs, False, None
+
+        def wait(self, timeout=None):
+            self.waited = timeout
+            if self.hangs:
+                raise subprocess.TimeoutExpired("speech", timeout)
+            return 0
+
+        def kill(self):
+            self.killed = True
+
+    def temp():
+        fd, path = tempfile.mkstemp(suffix=".txt")
+        os.close(fd)
+        return path
+
+    done, path1 = Proc(hangs=False), temp()
+    V._reap(done, path1)
+    check("a reading that ended has its file removed, and is waited for no longer than the deadline",
+          not os.path.exists(path1) and not done.killed and done.waited == V.SPEAK_DEADLINE)
+    hung, path2 = Proc(hangs=True), temp()
+    V._reap(hung, path2, deadline=0.01)
+    check("a reading that did not end is ended, and its file removed all the same",
+          hung.killed and not os.path.exists(path2))
+
+    keep_cmd, keep_key, keep_dl = V._speech_cmd, V._key_pressed, V.SPEAK_DEADLINE
+    try:
+        path3 = temp()
+        V._speech_cmd = lambda body, voice=None: ([sys.executable, "-c", "pass"],
+                                                  dict(os.environ), path3)
+        said = V.speak("read this aloud", blocking=False)
+        for _ in range(100):
+            if not os.path.exists(path3):
+                break
+            _t.sleep(0.05)
+        check("a reading nobody waits for still has its file removed",
+              said == "read this aloud" and not os.path.exists(path3), path3)
+
+        path4 = temp()
+        V._speech_cmd = lambda body, voice=None: (
+            [sys.executable, "-c", "import time; time.sleep(30)"], dict(os.environ), path4)
+        V._key_pressed = lambda: False
+        V.SPEAK_DEADLINE = 0.3
+        heard: list = []
+        t0 = _t.time()
+        finished = V.speak_interruptible("a long answer", report=heard.append)
+        check("a reading that runs past the deadline is cut, and says it was the deadline",
+              finished is False and _t.time() - t0 < 10
+              and any("ran past" in h for h in heard), f"{_t.time() - t0:.1f}s {heard}")
+        check("... and its file is removed", not os.path.exists(path4))
+    finally:
+        V._speech_cmd, V._key_pressed, V.SPEAK_DEADLINE = keep_cmd, keep_key, keep_dl
+
+    # ---- dead code -----------------------------------------------------------------
+    check("the seat's unused clearance check is gone; the one that is used stays",
+          not hasattr(Agent, "can_call") and hasattr(Agent, "callable_set"))
+    check("the two functions of the math core nothing called are gone",
+          not hasattr(M, "normalize") and not hasattr(M, "zscore")
+          and hasattr(M, "cosine") and hasattr(M, "stdev"))
+    check("the branch that was always taken is gone",
+          "if True:" not in (ROOT / "manjuel" / "vram.py").read_text(encoding="utf-8"))
+    SZ = {SEAT: 2_700_000_000}
+    plan = vram.build_plan("default", book.get("default"), reg, sizes=SZ)
+    shown = vram.render(plan, budget=15_000_000_000)
+    check("and the plan it was in renders what it rendered",
+          "all resident" in shown and "worst adjacent" in shown and "against 15.0GB" in shown,
+          shown[-300:])
+
+    # ---- the pointing words ----------------------------------------------------------
+    core = frozenset({"that", "it", "this", "again"})
+    check("the words that point backward have one core, in the module that imports nothing of ours",
+          _ctx.POINTING_WORDS == core)
+    check("dispatch adds the plurals and the persons, and is what it was",
+          intent._ANAPHORA == core | {"those", "these", "them", "repeat", "he", "she", "they"})
+    src_pipe = (ROOT / "manjuel" / "pipeline.py").read_text(encoding="utf-8")
+    src_ctx = (ROOT / "manjuel" / "context.py").read_text(encoding="utf-8")
+    check("the door's follow-up adds `repeat`, and is what it was",
+          '_ANA = POINTING_WORDS | {"repeat"}' in src_pipe)
+    check("the topic boundary adds what was SAID a moment ago, and is what it was",
+          '_ANAPHORA = POINTING_WORDS | {"just", "earlier", "before", "said", "mean",' in src_ctx)
+    check("no module types the core out again",
+          not any('{"that", "it", "this"' in s for s in (
+              src_pipe, (ROOT / "manjuel" / "intent.py").read_text(encoding="utf-8"))))
+    check("a turn built on a pointing word still keeps the door",
+          intent.is_followup("what does that mean", [("operator", "hi", 0.0),
+                                                     ("steward", "hello", 0.0)]))
+
+    # ---- context -------------------------------------------------------------------
+    check("history_block takes nothing but the run it is asked of",
+          list(inspect.signature(RunContext.history_block).parameters) == ["self"])
+
+
+def test_an_unattended_turn_is_not_asked(reg, lib, book):
+    """"RETRY / SKIP / ABORT?", PUT TO NOBODY (HANDOFF 2026-09-28; built
+    2026-09-29). A seat marked `On Fail: prompt` that failed asked the
+    question of whoever was at the keyboard. A flow's `run` node has no
+    keyboard, and neither has the standup: the first stopped on a question it
+    could not answer, the second read an EOF and aborted the whole case.
+
+    On a turn nobody attends the engine takes the default the prompt itself
+    prints -- skip -- and says so. The failure is in the record either way and
+    the delivery names the seat, so going on hides nothing. A turn somebody
+    DOES attend is asked, as it always was, and `abort` still aborts."""
+    import builtins as _b
+    import dataclasses
+    from manjuel.pipeline import Aborted, _handle_failure
+    from manjuel.runtime import RuntimeError_
+
+    check("the door is a seat that asks when it fails, so there is a question to test",
+          reg.get("Steward").on_fail == "prompt")
+
+    class Falls(Stub):
+        def chat(self, agent, prompt, stream_to=None, tools=None, think_to=None, think=None):
+            if agent.name == "Steward":
+                raise RuntimeError_("[Steward] the stub fell over")
+            return super().chat(agent, prompt, stream_to, tools, think_to, think)
+
+    g = Path(tempfile.mkdtemp())
+    asked: list = []
+    keep = _b.input
+    _b.input = lambda prompt="": (asked.append(prompt), "s")[1]
+    try:
+        r = Falls(reply="[x]")
+        ctx = RunContext(objective="hello there", unattended=True)
+        run_pipeline(ctx, reg, r, lib, env_for(g, reg, r), steps=book.get("default"),
+                     report=lambda s: None)
+        check("on a turn nobody attends, the question is put to nobody", asked == [], str(asked))
+        check("... the seat is skipped, the prompt's own default, and the record says why",
+              any(n.startswith("Steward failed and is marked on-fail: prompt")
+                  and "nobody is at the prompt" in n for n in ctx.notes), str(ctx.notes))
+        check("... the failure is still in the record, and the delivery names the seat",
+              any(s.error for s in ctx.steps if s.agent == "Steward")
+              and "SEATS THAT FAILED" in ctx.last_output()
+              and "Steward" in ctx.last_output(), ctx.last_output()[-300:])
+
+        r2 = Falls(reply="[x]")
+        ctx2 = RunContext(objective="hello there")
+        run_pipeline(ctx2, reg, r2, lib, env_for(g, reg, r2), steps=book.get("default"),
+                     report=lambda s: None)
+        check("a turn somebody attends is asked, as it always was",
+              len(asked) == 1 and "retry / skip / abort" in asked[0]
+              and not any("nobody is at the prompt" in n for n in ctx2.notes), str(asked))
+
+        quiet = lambda s: None                                       # noqa: E731
+        nobody = RunContext(objective="x", unattended=True)
+        check("a seat marked on-fail: abort still aborts, attended or not",
+              refuses(lambda: _handle_failure(
+                  dataclasses.replace(reg.get("Steward"), on_fail="abort"),
+                  RuntimeError_("x"), quiet, nobody), Aborted))
+        before = len(asked)
+        _handle_failure(dataclasses.replace(reg.get("Steward"), on_fail="skip"),
+                        RuntimeError_("x"), quiet, nobody)
+        check("and one marked on-fail: skip is skipped without a word about who is there",
+              len(asked) == before and nobody.notes == [], str(nobody.notes))
+    finally:
+        _b.input = keep
+
+    check("a run starts attended: only a door that knows otherwise says so",
+          RunContext(objective="x").unattended is False)
+    standup_src = (ROOT / "tests" / "standup.py").read_text(encoding="utf-8")
+    check("every standup run is unattended, by the harness's own hand",
+          "unattended=True" in standup_src.split("def run_cases", 1)[1].split("\ndef ", 1)[0])
+    check("the REPL never says it of a run: he is at the keyboard",
+          "unattended=" not in (ROOT / "manjuel" / "cli.py").read_text(encoding="utf-8"))
+    serve_src = (ROOT / "manjuel" / "serve.py").read_text(encoding="utf-8")
+    check("the wire takes it per turn, and only the literal `true`",
+          'self.unattended = row.get("unattended") is True' in serve_src
+          and 'unattended=bool(getattr(self, "unattended", False))' in serve_src)
+
+
+def test_the_workspaces_reader_reads_the_ground_when_it_is_named(reg, lib, book):
+    """`ground/...` AT THE WORKSPACE'S READER (TASKS "unjail read_file"; SPEC
+    8.2 P1; built 2026-09-29). A seat that wanted a file of the ground and
+    reached for `read_file` wrote the ground's name in front of it and was
+    told "workspace file not found": true, and no way forward.
+
+    The path names the other jail, so the read goes through the ground
+    reader's own handler -- every refusal that door makes still made -- and
+    the reply says which reader answered."""
+    g = Path(tempfile.mkdtemp())
+    (g / "pipelines.md").write_text("# Pipelines\n\nthe order seats run in\n", encoding="utf-8")
+    (g / ".env").write_text("KEY=abc123secret\n", encoding="utf-8")
+    e = env_for(g, reg, Stub())
+    e.ground = g
+    (e.workspace / "note.md").write_text("a note in the workspace", encoding="utf-8")
+
+    out = lib.execute("read_file", {"filepath": "ground/pipelines.md"}, e)
+    check("`ground/...` at the workspace's reader is read from the ground",
+          "the order seats run in" in out, out[:200])
+    check("... and the reply says which reader answered",
+          out.startswith("(`ground/pipelines.md` names the ground")
+          and "read from the GROUND" in out.splitlines()[0], out[:200])
+    for spelled in ("Ground/pipelines.md", "research/pipelines.md", "ground\\pipelines.md",
+                    "'ground/pipelines.md'"):
+        check(f"however the ground is named: {spelled}",
+              "the order seats run in" in lib.execute("read_file", {"filepath": spelled}, e))
+
+    plain = lib.execute("read_file", {"filepath": "note.md"}, e)
+    check("a workspace file is read as it always was, with nothing said of the ground",
+          "a note in the workspace" in plain and "GROUND" not in plain, plain[:200])
+    missing = lib.execute("read_file", {"filepath": "nope.md"}, e)
+    check("a bare name that is not in the workspace is still the workspace's miss",
+          missing == "Error: workspace file 'nope.md' not found.", missing)
+
+    (e.workspace / "ground").mkdir()
+    (e.workspace / "ground" / "pipelines.md").write_text("the workspace's own copy",
+                                                        encoding="utf-8")
+    own = lib.execute("read_file", {"filepath": "ground/pipelines.md"}, e)
+    check("a workspace that really holds that path is read as the workspace",
+          "the workspace's own copy" in own and "read from the GROUND" not in own, own[:200])
+
+    secret = lib.execute("read_file", {"filepath": "ground/.env"}, e)
+    check("the ground reader's refusals are still made: a secret is never read",
+          "Refused" in secret and "LAW 9" in secret and "abc123secret" not in secret,
+          secret[:300])
+    out_of = lib.execute("read_file", {"filepath": "ground/../../x.md"}, e)
+    check("... and a path that climbs out of the ground is refused, by one gate or the other",
+          ("outside" in out_of or "Refused" in out_of) and "the order seats" not in out_of,
+          out_of[:300])
+    gone = lib.execute("read_file", {"filepath": "ground/not_there.md"}, e)
+    check("a file the ground does not hold is the GROUND's miss, said as the ground's",
+          "names the ground" in gone and "is not a file in the ground" in gone, gone[:300])
+
+    (g / "rack.md").write_text("# Rack\n\nwhat the rack holds\n", encoding="utf-8")
+    e2 = env_for(g, reg, Stub())
+    e2.ground = g
+    e2.caller, e2.caller_allowed = "A Seat", {"read_file", "list_directory"}
+    kept_out = lib.execute("read_file", {"filepath": "ground/rack.md"}, e2)
+    check("a seat cleared for the workspace's reader alone is not served the ground by it",
+          kept_out.startswith("Refused") and "cleared" in kept_out
+          and "what the rack holds" not in kept_out, kept_out[:300])
+    e2.caller_allowed = {"read_file", "ground_read"}
+    check("... and one cleared for both is",
+          "what the rack holds" in lib.execute("read_file", {"filepath": "ground/rack.md"}, e2))
+
+
+def test_the_greeting_case_asks_for_the_seats_own_words(reg, lib, book):
+    """THE STANDUP'S GREETING COULD NOT TELL AN ANSWER FROM A RECITAL
+    (CHANGELOG 2026-09-25; HANDOFF 2026-09-28; built 2026-09-29). The case
+    asked that no tool wake, and a Steward that recited its own instructions
+    back met it. It asks for the seat's own words now: a sentence lifted
+    whole from what the seat was handed is a miss, quoted. Arithmetic over
+    the two texts; no model judges it."""
+    sys.path.insert(0, str(ROOT / "tests"))
+    import standup as _su
+
+    greet = next(c for c in _su.CASES if c.name == "greeting")
+    check("the greeting asks for the seat's own words, and still that no tool wakes",
+          greet.expect_own_words and greet.expect_no_tools and greet.objective == "good morning")
+    check("no other case asks it: a tool's result read back is not a recital",
+          [c.name for c in _su.CASES if c.expect_own_words] == ["greeting"])
+
+    handed = (reg.get("Steward").system_prompt or steward_soul()) + (
+        "\n\nThe operator just said: good morning\n\nReply briefly, as yourself, in plain "
+        "words -- this is conversation, not a task.")
+    lifted = " ".join(handed.split())[40:160]
+
+    def judged(delivery, case=greet, live=True):
+        o = _su.Outcome(case=case)
+        o.seats, o.notes, o.delivery, o.handed = ["Steward"], ["law: ok"], delivery, handed
+        _su._judge(o, live=live)
+        return o, [f for f in o.faults if "recites" in f]
+
+    o1, f1 = judged("Good morning. " + lifted)
+    check("a delivery that recites what the seat was handed is a miss, and the recital is quoted",
+          len(f1) == 1 and not o1.ok and lifted[:30].lower() in f1[0].lower(), str(f1))
+    o2, f2 = judged("Good morning. Nothing is waiting on the board; where shall we start?")
+    check("a delivery in the seat's own words is met", o2.ok and not f2, str(o2.faults))
+    o3, f3 = judged("Good morning -- " + lifted.upper().replace(" ", "   "))
+    check("case and spacing are not words: the same sentence shouted and spread is still a recital",
+          len(f3) == 1, str(f3))
+    o4, f4 = judged("Good morning. " + lifted[:_su.RECITAL_CHARS - 5] + ". That is all.")
+    check("a phrase in common is speech, not a recital: under the floor it passes",
+          not f4, str(f4))
+    rack = next(c for c in _su.CASES if c.name == "the rack")
+    o5 = _su.Outcome(case=rack)
+    o5.seats, o5.notes, o5.tools = ["Router", "Steward"], ["law: ok"], ["rack_list"]
+    o5.delivery, o5.handed = "Here: " + lifted, handed
+    _su._judge(o5, live=True)
+    check("a case that does not ask it is not judged for it",
+          not any("recites" in f for f in o5.faults), str(o5.faults))
+    o6, f6 = judged("Good morning. " + lifted, live=False)
+    check("a dry run's stub is not judged for it either", not f6, str(f6))
+    check("the measure is one function over two texts",
+          _su.recited("x" * 10, handed) == "" and len(_su.recited(lifted, handed)) >= _su.RECITAL_CHARS
+          and _su.recited("entirely other words, about nothing the seat was ever handed at all, "
+                          "at some length", handed) == "")
+    src = (ROOT / "tests" / "standup.py").read_text(encoding="utf-8")
+    check("the harness keeps what each seat was handed, off the record and the seat files",
+          "o.handed = " in src.split("def run_cases", 1)[1].split("\ndef ", 1)[0])
+
+
 def test_the_status_page_is_read_off_the_record(reg, lib, book):
     """THE STATUS PAGE (2026-09-29, his word: "build it"). "What are we on as far
     as the overall build order and path, versus the docs? What is left for
@@ -18375,6 +19001,12 @@ def main() -> int:
     test_a_reply_the_rack_cut_is_said_so(reg, lib, book)
     test_the_watchers_reindex_waits_for_a_build(reg, lib, book)
     test_every_root_document_is_in_the_index_list(reg, lib, book)
+    test_the_small_honesty_of_the_record_keepers(reg, lib, book)
+    test_the_example_offers_only_dials_the_code_reads(reg, lib, book)
+    test_the_small_honesty_of_the_engine(reg, lib, book)
+    test_an_unattended_turn_is_not_asked(reg, lib, book)
+    test_the_workspaces_reader_reads_the_ground_when_it_is_named(reg, lib, book)
+    test_the_greeting_case_asks_for_the_seats_own_words(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)

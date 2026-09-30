@@ -789,11 +789,42 @@ REQUIRED, and every engine named here booted after the edit. WHAT GOES RED IF UN
 at what the TURN had left to raise its own `Timeout:`. The live court showed it (Manjuel, 289 s);
 fixed and stroked the same hour, before anything was saved.
 
-**Where the ground stands.** core `main@ca9a54c` (the mark `v0.1.16` on `e8aa9b5`), atlas
-`main@21fed12` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus the second batch and
+**THE SECOND BATCH IS SAVED AND SENT:** core `bcaa707`, 28 files, through Version control's own
+buttons on his standing word; origin level.
+
+**THE EVENING'S THIRD BATCH, THE ENGINE'S OWN HONESTY (WHAT'S LEFT: C16, C19, C20 done; C14, C17
+and C21 half done).** AN UNATTENDED TURN IS NOT ASKED: a seat marked `On Fail: prompt` that fails
+on a turn nobody attends is skipped, the prompt's own default, and the record says so
+(`RunContext.unattended`; the wire's `unattended: true`; every standup run). THE READING IS THE
+HAND'S: the record names the fault three times and rules on it nowhere, and the default the prompt
+prints is skip; if he would rather such a turn abort, it is one word in `_handle_failure`. THE
+DOOR DOES NOT SEND THE WORD YET -- a flow still stops at the question until atlas's
+`councilEngine.Turn` sends it (C14's open half, atlas's batch). `read_file` handed `ground/...`
+reads the ground through the ground reader's own handler, for a seat cleared for it. THE
+STANDUP'S GREETING asks for the seat's own words (`standup.recited`, sixty characters).
+A SITTING'S LINE SAYS WHY IT CLOSED (`Sitting.closed_by`, from `serve.Door._close`). AND THE
+SMALL HONESTY LIST, WHOLE: dotenv's unreadable `.env` and its byte-order mark; three dials struck
+from `.env.example` that nothing read; memory's damaged pending line kept; the law cache stamped by
+every file; "At close" whenever the stamp moved; the tools cache; parity's times; drift's verdict;
+spelling's fault; voice's deadline, file and `--`; four pieces of dead code; the pointing words'
+one core.
+
+**PROOF.** On a mirror: strokes 3358/3358, smoke 72/72, the standup's dry run 9/9, thirty-four
+reversals red by name. On the ground from the glass: strokes **3362/3362**, smoke **72/72**, after the last code edit; the standup
+**9/9** (sitting 304, 17:14:17-17:19:00), every run unattended, the greeting judged for its own words.
+`BUILDMAP.md` regenerated and matching. `manjuel/` moved (seventeen modules): RESTART REQUIRED, and
+every engine named here booted after the edit. WHAT GOES RED IF UNPLUGGED:
+`test_an_unattended_turn_is_not_asked`, `test_the_headless_door`,
+`test_the_workspaces_reader_reads_the_ground_when_it_is_named`,
+`test_the_greeting_case_asks_for_the_seats_own_words`,
+`test_an_idle_engine_closes_its_own_sitting`, `test_the_small_honesty_of_the_record_keepers`,
+`test_the_example_offers_only_dials_the_code_reads`, `test_the_small_honesty_of_the_engine`.
+
+**Where the ground stands.** core `main@bcaa707` (the mark `v0.1.16` on `e8aa9b5`), atlas
+`main@21fed12` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus the third batch and
 this record (unsaved as it is written, saved after). The glass is pid 27136, the 0.1.9 build placed
 2026-09-29 on his allowance, carrying the What's left page; the door is pid 276, the 08:55 build,
-unchanged. No sitting is open (303 closed 16:52). No line of work.
+unchanged. No sitting is open (304 closed 17:19). No line of work.
 
 ## HANDOFF FOR 2026-09-28 — read this before anything below it
 

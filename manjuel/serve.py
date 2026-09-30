@@ -49,7 +49,13 @@ skipped) -- read off the StepResults, never off a seat's words (LAW 5).
 THE WIRE (protocol 1). One JSON object per line, UTF-8.
 
   in   {"cmd":"objective","text":"...","feed":"...?","method":"...?",
-        "model":"...?","voices":{"seat":"tag"}?}
+        "model":"...?","voices":{"seat":"tag"}?,"unattended":true?}
+                                          `unattended` says NOBODY IS AT THE
+                                          PROMPT for this turn (a flow's node):
+                                          a seat marked On Fail: prompt that
+                                          fails is skipped, the prompt's own
+                                          default, and no needs_answer is sent
+                                          for it. Only the literal `true` counts
                                           `model` runs THIS TURN's seats on
                                           one head; `voices` names a head per
                                           SEAT and is applied over it, so a
@@ -433,6 +439,8 @@ class Door:
         # the sitting itself (IDLE_CLOSE). The suites hand in seconds.
         self.idle_close = IDLE_CLOSE if idle_close is None else float(idle_close)
         self.asked = 0
+        # Whether the turn in hand was sent as `unattended` (the wire, above).
+        self.unattended = False
         self._deferred: list[dict] = []
         if not isinstance(getattr(sess, "runtime", None), _Runtime):
             sess.runtime = _Runtime(sess.runtime, wire)
@@ -552,6 +560,9 @@ class Door:
                 objective = str(row.get("text") or "").strip()
                 feed = str(row.get("feed") or "")
                 method = str(row.get("method") or "")
+                # Per turn, and only the literal `true`: a turn that does not
+                # say so is attended, as every turn was before 2026-09-29.
+                self.unattended = row.get("unattended") is True
                 # THE HEAD IS A PROPERTY OF THE TURN (2026-09-23, his ruling:
                 # "let's do C first"). A caller may name the model this one
                 # turn runs on, which is what makes two runs of the same
@@ -692,6 +703,14 @@ class Door:
 
     def _close(self, why: str) -> None:
         st = self.sess.sitting
+        # WHY, ON THE LEDGER LINE AND IN THE TOLL (2026-09-29). The `closed`
+        # event has always carried the reason to the client; the record kept
+        # none, so an engine that closed itself after thirty idle minutes and
+        # one the operator closed from the Dashboard read the same afterwards.
+        try:
+            st.closed_by = str(why or "")
+        except Exception:
+            pass
         try:
             self.closer(self.sess)
         except Exception as exc:
@@ -763,7 +782,8 @@ class Door:
                          method=sess.pending_method,
                          review_only=sess.pipeline_name in ("court", "estate"),
                          standing=getattr(sess, "standing", ""),
-                         story=_log.story_block(sess.sitting))
+                         story=_log.story_block(sess.sitting),
+                         unattended=bool(getattr(self, "unattended", False)))
         sess.pending_feed = ""
         sess.pending_method = ""
         sess.last_run_ref = f"logs/{transcript.name_for(ctx)}"
@@ -832,7 +852,7 @@ class Door:
         body = ctx.last_output().strip()
         if body:
             result = spelling.check(body)
-            if result.changed:
+            if result.changed or result.fault:
                 body = result.text
                 ctx.notes.append(result.note())
         if not body:

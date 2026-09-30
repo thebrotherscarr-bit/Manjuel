@@ -115,7 +115,11 @@ class Sitting:
     # question answerable by the next sitting. Optional and defaulted, so the
     # 526 lines written before this parse exactly as they did.
     pid: int = 0
-    # How it closed, when it was not closed by its own hand: "reaped".
+    # How it closed, when it was not closed at its own prompt: "reaped" by
+    # the next sitting, or the headless door's own reason -- "idle: no command
+    # in 30 minutes", "closed by the client", "the client hung up" (serve.Door.
+    # _close, 2026-09-29). Until then an idle close and a Dashboard Close
+    # wrote the same line and the same toll, and nothing said which it was.
     closed_by: str = ""
 
     @property
@@ -447,7 +451,9 @@ def render_toll(
         "",
         f"**The seat:** manjuel REPL, session `{sitting.id}`, "
         f"{sitting.started[11:16]}–{(sitting.ended or sitting.started)[11:16]}. "
-        f"{'Operator present.' if attended else 'Closed unattended.'}",
+        + ("Operator present." if attended else
+           f"Closed unattended ({sitting.closed_by})." if sitting.closed_by else
+           "Closed unattended."),
         "",
     ]
     if retoll:
@@ -459,9 +465,12 @@ def render_toll(
     out += [
         f"**Version:** {g0.stamp()}",
     ]
-    if g1.head and g1.head != g0.head:
-        out.append(f"**At close:** {g1.stamp()}")
-    elif g1.dirty != g0.dirty:
+    # WHENEVER THE STAMP MOVED (2026-09-29). This was written only when the
+    # head changed or the ground went from clean to dirty or back -- so a
+    # sitting that opened on 3 changed files and closed on 30, or moved to
+    # another line of work at the same commit, was tolled as though nothing
+    # had moved. The stamp is what a reader compares; compare the stamp.
+    if g1.stamp() != g0.stamp():
         out.append(f"**At close:** {g1.stamp()}")
 
     out += ["", "**WHAT RAN** (observed)", "", summarize(sitting), ""]

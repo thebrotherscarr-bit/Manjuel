@@ -297,17 +297,35 @@ def laws_text(ground: Path) -> str:
 _CACHE: dict = {}
 
 
+def _law_stamp(ground: Path):
+    """What the cached verdict was walked OVER: every file in law/, by name,
+    size and time. None when there is no law/ to read.
+
+    THE NEWEST TIME ALONE WAS NOT A STAMP (2026-09-29). It was `max(mtime)`
+    over law/, and a law DELETED moves no file's time: any law but the newest
+    could be removed and the cached "whole" went on being handed to every
+    seat for the life of the process, over a chain with a link pointing at
+    nothing. A file put back OLDER than the newest, or changed within one
+    tick of the clock, passed the same way."""
+    try:
+        law = Path(ground) / LAW_DIR
+        rows = []
+        for n in sorted(os.listdir(law)):
+            p = law / n
+            if p.is_file():
+                st = p.stat()
+                rows.append((n, st.st_size, st.st_mtime_ns))
+        return tuple(rows) if rows else None
+    except OSError:
+        return None
+
+
 def run(objective: str, ground: Path, remote_allowed: bool = False) -> Verdict:
-    """The whole gate for one run. Cheap: the chain walk is four files and a
-    few hashes, cached per process per ledger mtime."""
+    """The whole gate for one run. Cheap: the chain walk is a few files and a
+    few hashes, cached per process against law/ as it stands (_law_stamp)."""
     ground = Path(ground)
     key = str(ground)
-    try:
-        stamp = max(os.path.getmtime(ground / LAW_DIR / n)
-                    for n in os.listdir(ground / LAW_DIR)
-                    if (ground / LAW_DIR / n).is_file())
-    except (OSError, ValueError):
-        stamp = None
+    stamp = _law_stamp(ground)
     cached = _CACHE.get(key)
     if cached and cached[0] == stamp:
         ok, detail, names = cached[1]

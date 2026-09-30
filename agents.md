@@ -37,7 +37,7 @@ One `## Seat Name` section per file. Adding a file adds a seat; no code change.
 - **Wakes On:** flag[, flag]          (optional - what summons this seat)
 - **Wakes:** first | last | after X   (optional - where it lands)
 - **Stage:** guard|transform|route|gate|deliver   (optional, default: transform)
-- **On Fail:** abort|skip|prompt      (optional, default: prompt)
+- **On Fail:** abort|skip|prompt      (optional, default: prompt; on a turn nobody attends, prompt is skip, said)
 - **When:** flag_name                 (optional - step only runs if flag is set)
 - **Max Tokens:** 600                 (optional - cap it, leave room to think)
 - **Context:** 8192                   (optional - num_ctx; dominates VRAM use)

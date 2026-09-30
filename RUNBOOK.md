@@ -15,8 +15,11 @@ off in TASKS.md.
 
     --court    the court alone: six seats, deepseek-r1 and gemma4, minutes.
                Out of the morning set on his ruling 2026-09-09 -- it was 73%
-               of the run, and the only case that could not finish without a
-               terminal (a failed seat there asks `retry / skip / abort?`).
+               of the run. (It was also the case that could stop at a question:
+               a failed seat asked `retry / skip / abort?` of a run with no
+               keyboard. Every standup run is UNATTENDED since 2026-09-29: such
+               a seat is skipped, the prompt's own default, and the report
+               names it.)
     --all      both sets.
     --only <name>   the cases whose name contains it, the court included --
                     naming one is asking for it.
@@ -672,9 +675,12 @@ boot report says which took effect) or the shell. Nothing else is a dial.
                                    `mcp_call` skill. Loopback only; anything else
                                    is refused by name and nothing is sent (skills.py)
 
-`MANJUEL_OLLAMA_HOST` is named in dotenv.py's docstring and READ NOWHERE
--- the runtime binds 127.0.0.1:11434 (runtime.py). Setting it does
-nothing; TASKS (the review of 2026-09-08) carries it.
+THREE NAMES THAT ARE NOT DIALS, struck from `.env.example` on 2026-09-29.
+`MANJUEL_OLLAMA_HOST` was read nowhere -- the runtime binds 127.0.0.1:11434
+(runtime.py), and RULE 4 keeps the rack on this machine. `MANJUEL_SPEAK_VOICE`
+and `MANJUEL_SPEAK_FILE` are the names voice.py hands its OWN child process,
+written over on every call; setting them did nothing. A stroke holds the
+example to the code now: a dial it offers is one the code reads.
 
 ---
 

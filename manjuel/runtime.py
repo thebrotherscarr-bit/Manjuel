@@ -467,20 +467,25 @@ class OllamaRuntime:
     def supports_tools(self, model: str) -> bool:
         """Whether Ollama reports the `tools` capability for this model.
 
-        Cached, and FAIL CLOSED: anything unreadable answers False, which
-        keeps the seat on the XML path that works today. A wrong `True` would
-        send tools= to a model that cannot take them and break the turn.
+        FAIL CLOSED: anything unreadable answers False, which keeps the seat
+        on the XML path that works today. A wrong `True` would send tools= to
+        a model that cannot take them and break the turn.
+
+        AN ANSWER IS CACHED; A FAILURE TO ASK IS NOT (2026-09-29). This cached
+        the False it answered when the rack could not be reached, so one
+        refused connection at the first turn left that model without native
+        tools for the life of the process -- a forever-False, earned by a
+        moment. The rack is asked again the next time.
         """
         model = _normalize(model)
         if model in self._tool_capable:
             return self._tool_capable[model]
-        ok = False
         try:
             info = self._client.show(model)
             caps = _field(info, "capabilities") or []
             ok = any(str(c).strip().lower() == "tools" for c in caps)
         except Exception:
-            ok = False
+            return False
         self._tool_capable[model] = ok
         return ok
 

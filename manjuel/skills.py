@@ -2026,6 +2026,24 @@ def _read_file(env: SkillExecutionEnv, args: dict) -> str:
     if not filename:
         return "Error: missing <filepath> parameter."
     path = env.safe_path(filename)
+    # `ground/...` AT THE WORKSPACE'S READER (TASKS "unjail read_file", built
+    # 2026-09-29). A seat that wants a file of the ground and reaches for this
+    # reader writes the ground's name in front of it -- `ground/pipelines.md`
+    # -- and was told "workspace file not found", which is true and sends it
+    # nowhere. The path NAMES the other jail, so the read goes through the
+    # ground reader's own handler, with every refusal that door makes (the
+    # jail, a secret, client data), and the reply says which reader answered.
+    # A workspace that really holds such a path is read as the workspace; and
+    # a seat not cleared for the ground's reader is told so, not served.
+    named = filename.strip("'\"`").replace("\\", "/").lower()
+    if not path.exists() and named.startswith(("ground/", "research/")):
+        allowed = getattr(env, "caller_allowed", None)
+        if allowed is not None and "ground_read" not in allowed:
+            return (f"Refused: '{filename}' names the GROUND, and this seat is cleared "
+                    f"for the workspace's reader only. Nothing was read.")
+        body = _ground_read(env, dict(args, filepath=filename))
+        return (f"(`{filename}` names the ground, so it was read from the GROUND, by "
+                f"ground_read's own rules; `read_file` reads the workspace.)\n\n{body}")
     from .vectors import is_protected as _prot
     if _prot(path):
         return ("Refused: that is CLIENT DATA — tagged protected, never read "

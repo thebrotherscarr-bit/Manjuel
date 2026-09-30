@@ -16,6 +16,8 @@ from __future__ import annotations
 
 import re
 
+from .context import POINTING_WORDS
+
 # Natural phrasings that map to a keyword the operator will not type verbatim.
 # Deliberately short: a wrong guess here costs one Router turn, but a missing
 # one costs the whole request.
@@ -897,12 +899,12 @@ sup yo dawg fam bruh homie buddy pal chief boss stew stewy
 # A question that opens with a greeting is a greeting. Sitting 48's law
 # (greetings stay at the door) survives its gate being dropped.
 # Words that point BACKWARD, at the conversation, rather than at anything
-# in the ground. Defined here because this module is where dispatch is
-# decided; pipeline.py keeps its own copy for the follow-up branch and
-# context.py a wider one for dialogue boundaries -- three sets for three
-# jobs, and worth collapsing the day a fourth appears.
-_ANAPHORA = {"that", "it", "this", "those", "these", "them", "again",
-             "repeat", "he", "she", "they"}
+# in the ground. The core is context.POINTING_WORDS, shared with the door's
+# follow-up (pipeline.py) and the topic boundary (context.py); dispatch adds
+# the plurals and the persons, because a question about "them" or "she" is
+# about somebody already named in the thread.
+_ANAPHORA = POINTING_WORDS | {"those", "these", "them", "repeat", "he", "she",
+                              "they"}
 
 _GREETING_LEADS = {"hey", "hi", "hello", "sup", "yo", "howdy", "morning",
                    "evening", "afternoon", "greetings", "good", "gday",

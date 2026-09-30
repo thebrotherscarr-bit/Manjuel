@@ -34,6 +34,171 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### An unattended turn is not asked "retry / skip / abort?" (operator, 2026-09-29: "do the ... list top to bottom")
+
+WHAT'S LEFT, C14, the core's half. A seat marked `On Fail: prompt` that failed asked its
+question of whoever was at the keyboard. A flow's `run` node has no keyboard and stopped on a
+question it could not answer; the standup has none either, read an EOF, and aborted the whole
+case -- "cancelled at the failure prompt", with the seats after it never asked.
+
+THE READING, SAID SO HE CAN CORRECT IT IN ONE LINE: the record names this fault three times and
+rules on it nowhere. The prompt prints its own default, `[s]`, and the code beneath it has
+always treated every answer but `abort` as skip. So on a turn NOBODY ATTENDS the engine takes
+that default and says so; it invents no answer of its own. If he would rather such a turn
+ABORT, it is one word in `pipeline._handle_failure`.
+
+- **`RunContext.unattended`**, False unless a door that knows otherwise says so.
+  `pipeline._handle_failure` is handed the run; on an unattended one it notes "<Seat> failed
+  and is marked on-fail: prompt, and nobody is at the prompt (an unattended turn) -- skipped,
+  the prompt's own default" and goes on. The failure is in the record (`StepResult.error`) and
+  the recompose names the seat under SEATS THAT FAILED, so nothing is hidden by going on.
+  `abort` still aborts; `skip` is unchanged; an attended turn is asked, as it always was.
+- **The wire takes it per turn:** `{"cmd":"objective", ..., "unattended": true}` (`serve.py`),
+  and only the literal `true` counts. No `needs_answer` is sent for that seat.
+- **Every standup run is unattended,** by the harness's own hand (`tests/standup.py`).
+- **The REPL never says it:** he is at the keyboard.
+
+NOT BUILT HERE, AND NAMED: the door does not SEND the word yet. A flow's `run` node goes through
+atlas's `councilEngine.Turn`, which is atlas's to change and needs the door rebuilt and
+restarted; until then a flow still stops at the question (WHAT'S LEFT, C14, open for that half).
+
+PROVED. `test_an_unattended_turn_is_not_asked` (11) and three checks in
+`test_the_headless_door` on a mirror; five reversals red by name.
+`manjuel/context.py`, `pipeline.py` and `serve.py` moved: RESTART REQUIRED. WHAT GOES RED IF
+UNPLUGGED: those two strokes.
+
+### `ground/...` at the workspace's reader is read from the ground (operator, 2026-09-29: "do the ... list top to bottom")
+
+WHAT'S LEFT, C16 (TASKS "`ground/` on the workspace reader (unjail read_file)"; SPEC 8.2 P1). A
+seat that wanted a file of the ground and reached for `read_file` wrote the ground's name in
+front of the path -- `ground/pipelines.md` -- and was told "workspace file not found": true,
+and no way forward. The path names the other jail, so the read goes through the ground reader's
+own handler, with every refusal that door makes (the jail, a secret, client data), and the
+reply's first line says which reader answered. A workspace that really holds such a path is
+read as the workspace. A seat cleared for `read_file` and not for `ground_read` is refused, not
+served. A bare name that is not in the workspace is still the workspace's miss.
+
+PROVED. `test_the_workspaces_reader_reads_the_ground_when_it_is_named` (14) on a mirror; three
+reversals red by name. `manjuel/skills.py` moved: RESTART REQUIRED. WHAT GOES RED IF UNPLUGGED:
+that stroke.
+
+### The standup's greeting asks for the seat's own words (operator, 2026-09-29: "do the ... list top to bottom")
+
+WHAT'S LEFT, C19 (CHANGELOG 2026-09-25: "the case cannot tell an answer from a recital of the
+prompt"). The greeting case asked that no tool wake, and a Steward that recited its own
+instructions back met it. `Case.expect_own_words`: a run of sixty characters or more of the
+delivery that stands, word for word, in what the seat was HANDED -- its prompt as the record
+keeps it, the law and the standing that rode beside it, its own instructions off the seat file
+-- is a recital, and a miss, quoted in the report. Case and spacing are flattened first.
+`standup.recited` is arithmetic over two texts (difflib); no model judges it. Judged live only,
+and only where a case asks it: a tool's result read back is not a recital.
+
+PROVED. `test_the_greeting_case_asks_for_the_seats_own_words` (10) on a mirror; three reversals
+red by name. SEEN LIVE, sitting 304: the greeting was answered "Good morning." in 7.2 s, no tool woke, nothing recited -- met. `tests/standup.py` moved; no engine code for this piece.
+WHAT GOES RED IF UNPLUGGED: that stroke, and live, the greeting case itself.
+
+### A sitting's line says why it closed, and its toll says it too (operator, 2026-09-29: "do the ... list top to bottom")
+
+WHAT'S LEFT, C17, the core's half (TASKS: "an idle close is recorded as a Dashboard Close -- the
+toll says 'Closed unattended.' and sessions.jsonl has no field for why"). The `closed` event
+has always carried the reason to the client; the record kept none. `serve.Door._close` writes
+it on the sitting before the sitting is closed (`Sitting.closed_by`, the field `reap_orphans`
+already used), so the ledger line carries "idle: no command in 30 minutes", "closed by the
+client", "the client hung up", and the toll reads "Closed unattended (idle: no command in 30
+minutes)." A toll the operator paid himself says nothing of it.
+
+Three checks in `test_an_idle_engine_closes_its_own_sitting`, two in
+`test_the_small_honesty_of_the_record_keepers`; two reversals red by name. STILL OPEN UNDER C17,
+and atlas's: the glass's amber idle line does not mention the thirty-minute close. `manjuel/
+seatlog.py` and `serve.py` moved: RESTART REQUIRED.
+
+### The small honesty of the record keepers (operator, 2026-09-29: "do the ... list top to bottom")
+
+WHAT'S LEFT, C20 (TASKS "small honesty"; SPEC 8.2 P2). Each answered a question it had not
+asked, or kept a number nobody measured.
+
+- **A `.env` that is there and cannot be read says so.** `dotenv.load` answered three empty
+  lists for a file it could not read -- what it answers for no file at all -- so the boot
+  printed nothing and every dial in it stood at its default. It answers a fourth thing, the
+  KIND of fault, and the boot prints ".env: PRESENT BUT NOT READ (UnicodeDecodeError)". The
+  likeliest cause here is the ordinary one: PowerShell's `>` writes UTF-16. AND A BYTE-ORDER MARK
+  IS NOT PART OF A NAME: a file saved with one had its first key set under a name nothing
+  reads, and reported as set. It is read as `utf-8-sig`.
+- **The example offers only dials the code reads.** `.env.example` offered three that nothing
+  read: `MANJUEL_OLLAMA_HOST` (RUNBOOK had said so since 2026-09-08), and `MANJUEL_SPEAK_VOICE`
+  and `MANJUEL_SPEAK_FILE`, which are the names `voice.py` hands its own child and writes over
+  on every call. Struck, and dotenv's docstring with them.
+- **A pending line that cannot be read is kept.** `memory.pending` skipped it in silence and the
+  next land or drop rewrote the file without it: a proposal a seat had staged, destroyed with
+  no word in any record. It is kept where it is, counted (`memory.unread_pending`), and
+  `/memory` says the count.
+- **The law's cache is stamped by every file.** It was stamped by the NEWEST time in `law/`, and
+  a law deleted moves no file's time: any law but the newest could go and the cached "whole"
+  was handed to every seat for the life of the process. `lawgate._law_stamp` is every file's
+  name, size and time.
+- **"At close" is written whenever the ground's stamp moved,** not only for a new head or a
+  clean/dirty flip: a sitting that opened on 3 changed files and closed on 30 was tolled as
+  though nothing had moved.
+- **A rack that could not be ASKED is asked again.** `supports_tools` cached the False it
+  answered when the rack was unreachable, so one refused connection left that model without
+  native tools for the life of the process.
+- **Every parity outcome's time is measured,** the refused and the failed too; they kept the
+  dataclass's 0.0.
+
+THE WIRE (RULE 11): `test_the_small_honesty_of_the_record_keepers` (24) and
+`test_the_example_offers_only_dials_the_code_reads` (6) -- every `MANJUEL_` name the example
+assigns is a string the engine reads the environment by, and is in RUNBOOK's table of the
+dials. Eleven reversals red by name. `manjuel/dotenv.py`, `memory.py`, `lawgate.py`,
+`seatlog.py`, `runtime.py`, `parity.py` and `cli.py` moved: RESTART REQUIRED.
+
+NAMED, NOT BUILT: the pending list is still addressed by POSITION (SPEC 8.2 P2's other word for
+it). Nothing in this estate stages a proposal while the operator is choosing one, and a line
+kept at the foot of the file moves no position above it.
+
+### The small honesty of the engine (operator, 2026-09-29: "do the ... list top to bottom")
+
+WHAT'S LEFT, C20, the rest of it, and C21's first half.
+
+- **A stage that was not scored has no verdict.** `DriftScore.ok` was True, beside a score of
+  0.0, for a stage too short to score and for one scored against an embedder that had gone.
+  It is None there, and `reason` says why. The module's docstring says what arms the check
+  today (a pasted feed; every tool result) and no longer names a seat that moved in August.
+- **A dictionary that is installed and will not load is said so.** An ABSENT `pyspellchecker`
+  is the ordinary case and says nothing. A broken one read exactly the same: no unknown words,
+  a clean note, over a check that had not run. `spelling.Result.fault` carries the kind of
+  fault and the run's notes carry it (`cli.py`, `serve.py`).
+- **A reading has a deadline, whoever waits for it** (`voice.SPEAK_DEADLINE`, 180 s).
+  `speak_interruptible` looped until the engine ended or a key was pressed, so a speech engine
+  that hung held the voice chat. **A reading nobody waits for still has its file removed:**
+  `/say on` left the delivery, as text, in the system's temp folder on every turn; a reaper
+  waits for the engine, bounded, and removes it. **`say` is handed `--` before the text,** as
+  espeak always was: the text is model output and may open with a dash.
+- **Dead code:** `Agent.can_call`, `mathkit.normalize`, `mathkit.zscore` (nothing called them)
+  and `vram.render`'s `if True:`.
+- **The words that point backward have one core.** Three lists were typed out whole in three
+  modules, and the comment beside one said they were "worth collapsing the day a fourth
+  appears". `context.POINTING_WORDS` is the four they share; dispatch (`intent.py`), the door's
+  short follow-up (`pipeline.py`) and the topic boundary (`context.py`) each add their own
+  words where they do their work. Every list holds exactly the words it held.
+- **`history_block` takes no `limit`:** nothing had ever passed one (C21).
+
+THE WIRE (RULE 11): `test_the_small_honesty_of_the_engine` (29). Twelve reversals red by name.
+`manjuel/drift.py`, `spelling.py`, `voice.py`, `registry.py`, `mathkit.py`, `vram.py`,
+`context.py`, `intent.py`, `pipeline.py`, `cli.py` and `serve.py` moved: RESTART REQUIRED.
+
+NAMED, NOT BUILT (C21's other half): "per-turn work that could be once" has no list anywhere in
+the record, so there is nothing measured to build against. It stays on the list as that.
+
+### Batch three on the ground: the suites, the standup, and the map (2026-09-29)
+
+On a mirror: strokes **3358/3358**, smoke **72/72**, the standup's dry run 9/9, thirty-four
+reversals red by name. On the ground, from the glass: strokes **3362/3362** and smoke **72/72** (`suite_run`, both green, exit 0), run
+after the last code edit. `BUILDMAP.md`
+regenerated and matching the code. THE STANDUP, LIVE, from the glass: sitting **304** (17:14:17 to
+17:19:00), **9/9**, `logs/standup_2026-09-29_171900.md`, every run of it unattended and the
+greeting judged for its own words. It took 283 s on a full card again (the Router's model
+71% on the processor; WHAT'S LEFT, C31).
+
 ### The limits he ruled are set: the door 180, no seat over 600, the court's turn 900 (operator, 2026-09-28: "180 for steward. 300 to route and 600 max per seat other than the court which requires a max of 900")
 
 WHAT'S LEFT, D1. His numbers of 2026-09-28, given the evening the court was measured cut at its

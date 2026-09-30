@@ -13,7 +13,7 @@ import re
 import time
 from dataclasses import replace
 
-from .context import FAILED_HEADS, RunContext, StepResult, now_block
+from .context import FAILED_HEADS, POINTING_WORDS, RunContext, StepResult, now_block
 from . import intent
 from . import seating
 from .registry import Agent, AgentRegistry
@@ -972,7 +972,7 @@ def _steward_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
     # Anaphora is conversation: "say that again", "what was that" point at
     # the dialogue, not at a mission. Sitting 46 sent "say that again?"
     # through the roster and a Router odyssey; the answer was in the thread.
-    _ANA = {"that", "it", "this", "again", "repeat"}
+    _ANA = POINTING_WORDS | {"repeat"}
     # ...but an ACTION beats anaphora: "commit it" is a task wearing a
     # pronoun, not a follow-up. Tool-naming and write-shapes disqualify.
     is_followup = (len(words) <= 5
@@ -2538,7 +2538,7 @@ def run_pipeline(
                 error=str(exc),
             )
             ctx.steps.append(step)
-            _handle_failure(agent, exc, report)
+            _handle_failure(agent, exc, report, ctx)
             continue
 
         # A gate that says PASS keeps the draft as it stands -- there is no
@@ -3554,7 +3554,7 @@ def recompose(ctx: RunContext, report=print) -> bool:
     return True
 
 
-def _handle_failure(agent: Agent, exc: Exception, report) -> None:
+def _handle_failure(agent: Agent, exc: Exception, report, ctx=None) -> None:
     report("      " + ink.bad(f"! {agent.name} failed: {exc}"))
 
     if agent.on_fail == "abort":
@@ -3562,6 +3562,22 @@ def _handle_failure(agent: Agent, exc: Exception, report) -> None:
 
     if agent.on_fail == "skip":
         report("      (on-fail: skip -- continuing with prior context)")
+        return
+
+    # ON A TURN NOBODY ATTENDS, THE PROMPT'S OWN DEFAULT (2026-09-29). The
+    # question below was put to a flow, which cannot answer, and to the
+    # standup, where there is no keyboard and input() is an EOF: both ended
+    # the whole run over one seat -- "cancelled at the failure prompt", with
+    # the seats after it never asked. The default the prompt prints is skip.
+    # It is taken here, by the engine, and SAID: the failure is already in the
+    # record (StepResult.error) and the recompose names the seat in the
+    # delivery, so nothing is hidden by going on.
+    if getattr(ctx, "unattended", False):
+        note = (f"{agent.name} failed and is marked on-fail: prompt, and nobody is at "
+                f"the prompt (an unattended turn) -- skipped, the prompt's own default")
+        if note not in ctx.notes:
+            ctx.notes.append(note)
+        report("      " + ink.warn(note))
         return
 
     try:

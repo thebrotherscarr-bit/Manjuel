@@ -56,11 +56,6 @@ def norm(a: Vector) -> float:
     return math.sqrt(math.fsum(x * x for x in a))
 
 
-def normalize(a: Vector) -> list[float]:
-    n = norm(a)
-    return [x / n for x in a] if n else list(a)
-
-
 def cosine(a: Vector, b: Vector) -> float:
     """Cosine similarity, clamped to [-1, 1].
 
@@ -117,11 +112,6 @@ def median(xs: Vector) -> float:
         raise MathError("median of an empty sequence is undefined")
     mid = n // 2
     return s[mid] if n % 2 else (s[mid - 1] + s[mid]) / 2.0
-
-
-def zscore(x: float, xs: Vector, ddof: int = 0) -> float:
-    sd = stdev(xs, ddof)
-    return 0.0 if sd == 0.0 else (x - mean(xs)) / sd
 
 
 # ---------------------------------------------------------------------

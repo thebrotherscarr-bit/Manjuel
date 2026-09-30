@@ -1006,3 +1006,41 @@ whole document handed, the window's-file wire unplugged, the root-document
 guard removed and the headings not read, each red (CHANGELOG, 2026-09-29).
 
 ---
+
+## 29. The workspace's reader serves the ground only to a seat cleared for it
+
+`read_file` reads the workspace. Handed a path that NAMES the ground
+(`ground/pipelines.md`, `research/...`) and is not in the workspace, it reads
+the file through the ground reader's own handler (2026-09-29) -- so every
+refusal that door makes is still made: a path that leaves the ground, a secret
+(LAW 9), client data (SITTING LAW 2). And one of its own:
+
+    Refused: 'ground/rack.md' names the GROUND, and this seat is cleared for
+    the workspace's reader only. Nothing was read.
+
+**Why.** Clearance is per skill (`May Call:`), and dispatch enforces it for
+the skill that was CALLED. A reader that passed a call on to another reader
+would hand a seat the second one's reach through the first one's clearance.
+
+Stroked: `test_the_workspaces_reader_reads_the_ground_when_it_is_named` (14).
+By reversal: the pass-on removed, the clearance check removed, the ground
+outranking a workspace that holds the path -- each red.
+
+## 30. A question put to nobody is not asked
+
+A seat marked `On Fail: prompt` that fails asks `retry / skip / abort?`. On a
+turn NOBODY ATTENDS -- the standup, a flow's node (the wire's `unattended`) --
+the engine does not ask: it takes the default the prompt itself prints, skip,
+and writes
+
+    <Seat> failed and is marked on-fail: prompt, and nobody is at the prompt
+    (an unattended turn) -- skipped, the prompt's own default
+
+The failure is in the record and the delivery names the seat (SEATS THAT
+FAILED). `On Fail: abort` still aborts. An attended turn is asked, as before,
+and the answer is never supplied for him (RULE 6).
+
+Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
+`test_the_headless_door`. By reversal: five, each red (CHANGELOG, 2026-09-29).
+
+---

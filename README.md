@@ -152,7 +152,10 @@ JSON lines (`manjuel/serve.py`): one `objective` per line in -- anything
 the prompt takes -- and the turn out as events (seat, token, tool,
 needs_answer, delivery). Every question the REPL would ask at the keyboard
 comes back as `needs_answer` and waits for an `answer`; nothing is
-decided for you. No socket: a front end runs the process and speaks on
+decided for you. (One turn is not asked: an objective sent with
+`"unattended": true` -- a flow's node, where nobody is there to answer --
+skips a failed seat marked `On Fail: prompt`, the prompt's own default,
+and the record says so.) No socket: a front end runs the process and speaks on
 its pipes. The control center (SPEC_CONTROL_CENTER.md) is built on it.
 
 `python manjuel.py --ground worlds\NAME` (with or without `--headless`) sits

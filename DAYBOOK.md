@@ -2541,6 +2541,14 @@ THE COURT, MEASURED ON HIS LIMITS (sitting 301): 0/1 at 900.0 s -- the judge sea
 time since 09-18 and cut at the 289 s the turn had left, Jesster cut at its own 600. Neither seat
 declares `Max Tokens`; a cap is his ruling (WHAT'S LEFT, B15), and nothing was built for it.
 
+**The evening, third batch** — the engine's own honesty. An unattended turn is not asked "retry /
+skip / abort?": it takes the prompt's own default and says so (the wire's `unattended`, every
+standup run; the door's half is atlas's). The workspace's reader reads the ground when the ground is
+named; the standup's greeting asks for the seat's own words; a sitting's line says why it closed;
+and the whole small-honesty list of 2026-09-08 is built. Thirty-four reversals red by name on a
+mirror. On the ground from the glass strokes 3362/3362, smoke 72/72, the standup 9/9
+(sitting 304).
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until

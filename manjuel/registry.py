@@ -89,14 +89,6 @@ class Agent:
     # confined the counsel table since sitting 39; this makes it per-seat.
     may_call: tuple = ()
 
-    def can_call(self, keyword: str, every: set[str] | None = None) -> bool:
-        """Whether this seat is cleared for one skill."""
-        if not self.may_call:
-            return False
-        if "all" in self.may_call:
-            return keyword in every if every is not None else True
-        return keyword.strip().lower() in self.may_call
-
     def callable_set(self, every: set[str]) -> set[str]:
         """What this seat may call, resolved against the live library."""
         if not self.may_call:

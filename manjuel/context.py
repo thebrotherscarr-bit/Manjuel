@@ -174,6 +174,17 @@ def _age(ts: float) -> str:
     return f"{sec / 86400:.0f}d ago"
 
 
+# THE WORDS THAT POINT BACKWARD, at the conversation rather than at anything
+# in the ground. ONE CORE, THREE JOBS (2026-09-29). Three sets had grown, each
+# typed out whole where it was used -- here for a topic's boundary, in
+# intent.py for dispatch, in pipeline.py for the door's short follow-up -- and
+# the comment beside one of them said they were "worth collapsing the day a
+# fourth appears". They share this core and differ on purpose; each job adds
+# its own words where it does its work, so the difference is one line a reader
+# can see, and a stroke holds all three to the core. It lives HERE because
+# this module imports nothing of ours.
+POINTING_WORDS = frozenset({"that", "it", "this", "again"})
+
 # Below this cosine, the past has nothing to say and silence is the honest
 # recall. Without a floor, top-k dragged the least-irrelevant noise into
 # every turn -- a score only means something above a threshold (same lesson
@@ -195,8 +206,9 @@ def detect_shift(thread: list, objective: str, embed=None,
     words = (objective or "").lower().split()
     if embed is None or len(words) < min_words:
         return False
-    _ANAPHORA = {"that", "it", "this", "just", "again", "earlier", "before",
-                 "said", "mean", "meant"}
+    # A boundary's own: the words that point at something SAID a moment ago.
+    _ANAPHORA = POINTING_WORDS | {"just", "earlier", "before", "said", "mean",
+                                  "meant"}
     if any(w.strip(".,!?") in _ANAPHORA for w in words):
         return False
     recent = thread[-4:]
@@ -386,6 +398,13 @@ class RunContext:
     # that becomes the delivery. Empty on every other turn.
     make: dict = field(default_factory=dict)
     review_only: bool = False  # counsel mode: the table reviews, never acts
+    # NOBODY IS AT THE PROMPT (2026-09-29). Set by a door that knows the turn
+    # has no hand behind it: the standup, and a flow's `run` node (the wire's
+    # `unattended`). A seat marked `On Fail: prompt` that fails on such a turn
+    # is SKIPPED -- the prompt's own default, the `[s]` it prints -- and the
+    # record says so. Asked of nobody, the question ended the whole run
+    # (pipeline._handle_failure). The REPL never sets it: he is there.
+    unattended: bool = False
     steps: list[StepResult] = field(default_factory=list)
     flags: set[str] = field(default_factory=set)
     artifacts: list[Path] = field(default_factory=list)
@@ -455,11 +474,10 @@ class RunContext:
                     "above IS the whole request, and is enough to act on.)")
         return f"{head}\n\n## Source Material\n{self.feed.strip()}"
 
-    def history_block(self, limit: int | None = None) -> str:
-        """Prior stage outputs, oldest first."""
+    def history_block(self) -> str:
+        """Prior stage outputs, oldest first. (It took a `limit` until
+        2026-09-29; nothing had ever passed one.)"""
         done = self.completed()
-        if limit is not None:
-            done = done[-limit:]
         if not done:
             return "(no prior stages)"
         return "\n\n".join(

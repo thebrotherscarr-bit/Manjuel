@@ -1960,6 +1960,12 @@ def _cmd_remember(sess: Session, arg: str) -> None:
 def _cmd_memory(sess: Session) -> None:
     """Review what seats proposed. Each is landed or dropped by hand."""
     items = _mem.pending(ROOT)
+    lost = _mem.unread_pending(ROOT)
+    if lost:
+        print(f"\n  {lost} line{'' if lost == 1 else 's'} of memory/pending.jsonl could "
+              f"not be read as a proposal. {'It is' if lost == 1 else 'They are'} kept "
+              f"where {'it is' if lost == 1 else 'they are'}; nothing here lands or drops "
+              f"{'it' if lost == 1 else 'them'}.")
     if not items:
         mem = ROOT / _mem.MEMORY_FILE
         n = len(_mem.split_entries(mem.read_text(encoding="utf-8"))) if mem.exists() else 0
@@ -2267,7 +2273,7 @@ def _loop(sess: Session) -> int:
             # Correct the DELIVERY only. The transcript keeps what each seat
             # actually said -- testimony is the record, and is not edited.
             result = spelling.check(body)
-            if result.changed:
+            if result.changed or result.fault:
                 body = result.text
                 ctx.notes.append(result.note())
         if not body:

@@ -126,11 +126,19 @@ def stage(ground: Path, entry: Entry) -> int:
     return len(pending(ground))
 
 
-def pending(ground: Path) -> list[Entry]:
+def _read_pending(ground: Path) -> tuple[list[Entry], list[str]]:
+    """(the proposals, the lines that could not be read), each in file order.
+
+    A LINE THAT CANNOT BE READ IS KEPT, NOT SWALLOWED (2026-09-29). `pending`
+    skipped one in silence, and `_write_pending` then rewrote the file from
+    what HAD parsed -- so the first land or drop after a damaged line
+    destroyed it, and a proposal a seat had staged was gone without a word
+    in any record."""
     p = Path(ground) / PENDING_FILE
     if not p.exists():
-        return []
-    out = []
+        return [], []
+    out: list[Entry] = []
+    lost: list[str] = []
     for line in p.read_text(encoding="utf-8").splitlines():
         line = line.strip()
         if not line:
@@ -138,15 +146,28 @@ def pending(ground: Path) -> list[Entry]:
         try:
             out.append(Entry(**json.loads(line)))
         except Exception:
-            continue
-    return out
+            lost.append(line)
+    return out, lost
+
+
+def pending(ground: Path) -> list[Entry]:
+    return _read_pending(ground)[0]
+
+
+def unread_pending(ground: Path) -> int:
+    """How many lines of the pending file could not be read as a proposal.
+    They are kept where they are; the operator is told the count."""
+    return len(_read_pending(ground)[1])
 
 
 def _write_pending(ground: Path, entries: list[Entry]) -> None:
     p = Path(ground) / PENDING_FILE
     p.parent.mkdir(parents=True, exist_ok=True)
+    # What could not be read goes back as it was, after what could.
+    lost = _read_pending(ground)[1]
     p.write_text(
-        "".join(json.dumps(asdict(e), ensure_ascii=False) + "\n" for e in entries),
+        "".join(json.dumps(asdict(e), ensure_ascii=False) + "\n" for e in entries)
+        + "".join(line + "\n" for line in lost),
         encoding="utf-8", newline="\r\n",
     )
 

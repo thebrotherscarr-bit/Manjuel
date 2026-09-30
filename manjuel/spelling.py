@@ -80,6 +80,9 @@ class Result:
     text: str
     fixed: list[tuple[str, str]] = field(default_factory=list)
     suspect: list[str] = field(default_factory=list)
+    # The kind of fault that stopped the wider dictionary from loading, when
+    # it is INSTALLED and would not load; "" when it loaded or is not there.
+    fault: str = ""
 
     @property
     def changed(self) -> bool:
@@ -94,6 +97,9 @@ class Result:
             bits.append(f"corrected {len(self.fixed)}: {shown}{more}")
         if self.suspect:
             bits.append("unrecognised: " + ", ".join(self.suspect[:4]))
+        if self.fault:
+            bits.append(f"the dictionary is installed and did not load ({self.fault}), "
+                        f"so unknown words were not looked for")
         return "spelling: " + "; ".join(bits) if bits else ""
 
 
@@ -106,6 +112,12 @@ def _match_case(original: str, replacement: str) -> str:
 
 
 _SPELLER: list = [None]
+# INSTALLED AND BROKEN IS NOT ABSENT (2026-09-29). An absent dictionary is
+# the ordinary case and says nothing: the list of known misspellings is the
+# whole check, by design. One that is installed and fails to load used to
+# read exactly the same -- no unknown words, a clean note -- over a check
+# that had not run. The kind of fault is kept and said.
+_SPELLER_FAULT: list = [""]
 
 
 def _dictionary():
@@ -117,8 +129,9 @@ def _dictionary():
             else:
                 from spellchecker import SpellChecker
                 _SPELLER[0] = SpellChecker()
-        except Exception:
+        except Exception as exc:
             _SPELLER[0] = False
+            _SPELLER_FAULT[0] = type(exc).__name__
     return _SPELLER[0] or None
 
 
@@ -154,4 +167,5 @@ def check(text: str, report_unknown: bool = True) -> Result:
         out.append(m.group(0))          # protected region, verbatim
         last = m.end()
     out.append(fix_segment(text[last:]))
-    return Result("".join(out), fixed, suspect)
+    return Result("".join(out), fixed, suspect,
+                  fault=_SPELLER_FAULT[0] if report_unknown else "")

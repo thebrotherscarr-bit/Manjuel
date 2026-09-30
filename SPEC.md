@@ -312,15 +312,18 @@ in the seats, is the Router calling a tool because a tool is there).
 **P1 -- deliveries that do not match the record (0.1.7):** the number
 check; the citation check's second half (a claim about a result with no
 citation); the door's label-parrot, previous-question and scaffold
-shapes, each a stroke; `ground/` on the workspace reader; a direct tool
-request with a subject that wakes nobody.
+shapes, each a stroke; `ground/` on the workspace reader (built
+2026-09-29); a direct tool request with a subject that wakes nobody.
 
 **P2 -- the machine's own honesty (0.1.6-0.1.8, a line or two each):**
 dotenv's silent unreadable `.env` and the unread `MANJUEL_OLLAMA_HOST`;
 memory's index-addressed pending list; lawgate's cache stamp; seatlog's
 conditional "At close"; runtime's forever-False tools cache; parity's
 0.0s; drift's ok=True on outage; spelling's "clean" on failure; voice's
-unbounded interruptible speak; the dead code named in TASKS.
+unbounded interruptible speak; the dead code named in TASKS. (ALL BUILT
+2026-09-29 but the pending list's addressing, which is named and left:
+CHANGELOG, "The small honesty of the record keepers" and "... of the
+engine".)
 
 ### 7.6 Open questions (the operator's)
 
