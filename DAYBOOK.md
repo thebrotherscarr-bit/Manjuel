@@ -2554,6 +2554,11 @@ leg: a stroke asked about `main` in a checkout that carries none) and the second
 Windows: a path handed back unresolved against a short-named temp folder). Reproduced here, fixed,
 reversed. The release check had passed 17 of 17 beside the first (WHAT'S LEFT, D9).
 
+**A cutter's words** — atlas, WHAT'S LEFT C32. Twenty-five scripts in atlas's `tools/` cut on any
+word that was not `--verify`; the record had counted nineteen. Each asks `cut_words.word` first
+now and refuses a word it does not know, and `cut_words.py --verify` is a leg of atlas's prove
+(22 held). GitHub's run on the two repairs (#174) green on all four legs.
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until

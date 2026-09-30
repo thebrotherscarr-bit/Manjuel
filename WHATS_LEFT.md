@@ -128,10 +128,6 @@ Nothing here gets built until you say which way.
   with the tool-picking model running 73% on the processor because the card had no room.
   Stopping those four processes, or restarting Ollama, is yours. *(measured 2026-09-29 15:06
   and 16:47)*
-- **C32. Eighteen of atlas's verifier scripts rewrite their test fixture on any word they do
-  not know.** Only `--verify` checks; anything else, a typo included, overwrites the fixture.
-  It happened today to the flow fixture (restored from the last save, nothing lost). The flow
-  script now refuses an unknown word; the other eighteen do not yet. *(found 2026-09-29)*
 
 ### The dashboard and the tool server (atlas)
 
@@ -147,6 +143,10 @@ Nothing here gets built until you say which way.
   *(TASKS)*
 - **C29. "The two banner literals".** Listed as open in HANDOFF 09-28 with no detail there.
   *(HANDOFF 09-28)*
+- **C35. One atlas script's "check only" mode also writes.** `seed_catalog.py --verify` never
+  reads that flag: it creates the catalog database if it is missing and fills it, and then
+  checks. Filling it twice adds nothing, so no harm has been measured. atlas's proof runs it
+  every time. *(found 2026-09-29, atlas CHANGELOG)*
 
 ---
 
@@ -222,7 +222,8 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 - [x] 5. Cut and send the tag v0.1.16 (core) from Version control (on `e8aa9b5`)
 - [x] 6. Cut and send the tag v0.1.9 (atlas) from Version control (on `b1059a1`)
 - [ ] 7. Publish the atlas drafts on GitHub, v0.1.8 and v0.1.9, or drop them (A5)
-- [x] 8. Look at GitHub's tests after the tag: green on both (A4)
+- [x] 8. Look at GitHub's tests after the tag: green on both main branches (A4). The core
+  tag's own run was red and was not read until later that day; fixed on main (C34)
 
 ---
 
@@ -230,6 +231,12 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **C32. atlas's verifier scripts rewrite their test fixture on any word they do not know.**
+  DONE 2026-09-29. It was twenty-four scripts, not eighteen: two of them are not named like
+  the rest and were found by reading every script in the folder. All twenty-five (the flow
+  script too) now refuse a word they do not know and write nothing. A new test runs each one
+  with a nonsense word and checks that no fixture moved; it picks the scripts by what they do,
+  not by their names. atlas's proof: 22 held, 14 absent, 0 broke. *(atlas CHANGELOG)*
 - **C34. GitHub's tests were red twice and nobody had read them.** DONE 2026-09-29, both. The
   run on the v0.1.16 tag failed on every machine (a test asked about the `main` branch, and a
   tag is checked out without one), and the run on this evening's first push failed on Windows

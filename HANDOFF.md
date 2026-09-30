@@ -832,9 +832,24 @@ alone). THE RELEASE CHECK PASSED 17 OF 17 BESIDE THE RED RUN ON THE MARK IT HAD 
 here reads GitHub's verdict (WHAT'S LEFT, D9, his to order). TESTING.md says how each is
 reproduced here before a save.
 
-**Where the ground stands.** core `main@a7fb750` (the mark `v0.1.16` on `e8aa9b5`), atlas
-`main@21fed12` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus the two repairs
-GitHub's runs asked for and this record (unsaved as it is written, saved after). The glass is pid 27136, the 0.1.9 build placed
+**THE TWO REPAIRS ARE SAVED AND SENT:** core `210dcbb`, 13 files; origin level. GITHUB'S RUN ON
+IT (#174) IS GREEN ON ALL FOUR LEGS, read off its job list, the Windows legs among them.
+
+**THE EVENING'S FOURTH PIECE, ATLAS: A CUTTER'S WORDS (WHAT'S LEFT, C32, done).** Every script in
+atlas's `tools/` that takes its word off `sys.argv` and knows `--verify` asks `cut_words.word`
+before it acts: twenty-five of them, two not named `cut_*_vectors.py` (`cut_chain_verdicts.py`,
+`fold_agents.py`). A word it does not know is refused, exit 2, nothing written.
+`tools/cut_words.py --verify` is the proof and a leg of atlas's prove: 22 held - 14 absent -
+0 broke on the ground (21 before). Six reversals red by name on a scratch copy, and a seventh
+that shows a pick by file name blind to `fold_agents`. THE v0.1.9
+ENTRY SAID EIGHTEEN OTHERS AND THERE WERE TWENTY-FOUR; the new entry says so. Nothing in the
+core's code moved and nothing running was touched: no restart. FOUND, NOT BUILT: atlas's
+`seed_catalog.py --verify` writes (WHAT'S LEFT, C35). SAVED AND SENT: atlas `70272af`, 30 files;
+origin level.
+
+**Where the ground stands.** core `main@210dcbb` (the mark `v0.1.16` on `e8aa9b5`), atlas
+`main@70272af` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus this record
+(unsaved as it is written, saved after). The glass is pid 27136, the 0.1.9 build placed
 2026-09-29 on his allowance, carrying the What's left page; the door is pid 276, the 08:55 build,
 unchanged. No sitting is open (305, the standup after the repairs, 9/9, closed 17:52). No line
 of work.
