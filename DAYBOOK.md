@@ -2606,6 +2606,11 @@ a recital, which moved into the engine.
 **The idle close, live (2026-09-30)** — E2: sitting 315 ran one turn and was left; the engine
 closed it at 09:50:33, why on the ledger line and the toll.
 
+**Three measurements (2026-09-30)** — C2: a failed tool is retried in the same turn 70% of the
+time since 09-07; C1: a sentence as a path, 3 of 93 calls since 09-21, one coder run; E3: the
+scratch listing predicts a failed call (45% vs 13%), not a thin answer. C2 and E3 closed by their
+own DONE lines; C1 keeps its numbers.
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until

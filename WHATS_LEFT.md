@@ -96,9 +96,11 @@ Nothing here gets built until you say which way.
 ### The models misbehaving
 
 - **C1. The Router passes whole sentences to file tools as if they were paths.** Partly fixed on
-  09-07. The habit remains. *(TASKS, in hand)*
-- **C2. When a tool fails, the Router writes about the next step instead of doing it.** Needs
-  measuring before anything is built. *(TASKS)*
+  09-07: the engine refuses the sentence by name. Measured 2026-09-30 over every transcript: 10
+  of 97 file-tool calls before the fix, 28 of 261 in the fortnight after (the last ordinary one
+  on 09-10), and 3 of 93 since 09-21 -- all three in one coder-flow run on 09-28, where the
+  prompt's own instruction block was passed as the path. Gone from ordinary turns; three percent
+  in the coder's. *(TASKS, in hand; CHANGELOG, "Three measurements the list asked for")*
 - **C3. The front door answers "what does the covenant say?" from the law text in its own
   prompt,** not from the file. This is the same question that fails in A1. *(TASKS)*
 - **C5. The front door copies internal labels into answers:** "Router produced:", "The operator
@@ -156,8 +158,6 @@ Nothing here gets built until you say which way.
 - **E1. The wife test.** Someone who is not you sits at the dashboard, asks it to make something
   in her own words, and uses the result with no help. All three pieces are built. The test has
   not been run. *(SPEC 4.8)*
-- **E3. Whether the Router listing the scratch folder means it is unsure.** Needs enough runs to
-  tell. *(TASKS)*
 
 ---
 
@@ -198,6 +198,17 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **C2. When a tool fails, the Router writes about the next step instead of doing it.** DONE
+  2026-09-30, by measurement: since 09-07, 56 of 80 failed tool calls were followed by another
+  call in the same turn, which is what the TASKS box asked to see. Of the seven since 09-21 that
+  were not, four could not be corrected by any retry (a mark that already exists), two were C1,
+  and one had already retried once. Nothing built. The box is yours to tick. *(CHANGELOG, "Three
+  measurements the list asked for")*
+- **E3. Whether the Router listing the scratch folder means it is unsure.** DONE 2026-09-30, by
+  measurement: it means a wrong call is coming, not a thin answer. Turns with the listing beside
+  another tool had a tool fail 45% of the time against 13% without it; their answers were thin no
+  more often (2% against 3%). The call stays, as the box says: it is the one visible tell.
+  *(CHANGELOG, "Three measurements the list asked for")*
 - **E2. An idle close of a session that actually ran something.** DONE 2026-09-30, for real:
   sitting 315 was opened from the dashboard, ran one turn at 09:20, and was left alone; at 09:50
   the engine closed it by itself, paid the toll, and wrote why on both the session record and

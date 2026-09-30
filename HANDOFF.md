@@ -754,6 +754,12 @@ carries it.
 glass, then left alone -- closed itself at 09:50:33 with `closed_by: "idle: no command in 30
 minutes"` and its toll paid; the first idle close of a sitting that had run something.
 
+**THE AFTERNOON'S MEASUREMENTS (WHAT'S LEFT: C2 and E3 done, C1 given its numbers).** Read off
+every transcript by the engine's own marks: a failed tool is followed by another call 70% of the
+time since 09-07 (the rest uncorrectable, or C1); a sentence as a path is gone from ordinary turns
+(3 of 93 since 09-21, one coder run); a folder listing beside another tool predicts a failed call
+(45% vs 13%), not a thin answer. Nothing built.
+
 **Where the ground stands.** core `main@9d491a8` (the mark `v0.1.16` on `e8aa9b5`), atlas
 `main@efb00d2` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus the morning's four
 pieces and this record (unsaved as it is written, saved after). The glass is pid 111424, the

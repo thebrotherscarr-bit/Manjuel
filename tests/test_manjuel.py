@@ -16328,9 +16328,12 @@ def test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book):
     already = [i for i, d, body in entries if not d and _re.search(r"\bDONE \d{4}-\d\d-\d\d", body)]
     check("no open line already says DONE with a date (finished and never moved)", not already, ", ".join(already))
     cited, missing = 0, []
-    for m in _re.finditer(r"\*\(CHANGELOG, ([^)]*)\)\*", text):
+    # Read off the JOINED lines, as the page reads them: a citation may break
+    # across a line (found the day the stroke landed, on a line of its own).
+    for m in _re.finditer(r"\*\(CHANGELOG, ([^)]*)\)\*", "\n".join(joined)):
         for t in _re.findall(r'"([^"]+)"', m.group(1)):
             cited += 1
+            t = " ".join(t.split())
             stem = t[:-3].rstrip() if t.endswith("...") else t
             if not any(h.startswith(stem) for h in heads):
                 missing.append(t)

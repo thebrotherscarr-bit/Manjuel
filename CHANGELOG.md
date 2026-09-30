@@ -34,6 +34,43 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### Three measurements the list asked for, read off the transcripts (2026-09-30, WHAT'S LEFT C1, C2, E3; TASKS "a MEASUREMENT, not a build")
+
+Each TASKS box said measure first and not build; each is measured now, over every run transcript
+in `logs/` (the standup reports left out), by the marks the engine itself writes: a stage's
+`Tool executed:` / `Tool attempted:` lines, its `skills:` head, and the `## Delivery` block.
+
+**C2 -- a failed tool, and what the Router did next.** DONE WHEN, in TASKS: "a transcript shows a
+refusal followed by the corrected call in the same turn." Since 2026-09-07, 80 tool calls failed
+inside a seat's loop; 56 of them (70%) were followed by another call in the same stage, 24 ended
+on the failure with prose after it (all time: 128, 83 and 45). Of the seven since 09-21 that
+ended on the failure, four were the door refusing to re-cut a mark that exists ("Cut the next
+number instead" -- no retry could correct it), two were C1's fault (the instruction sentence
+handed to `ground_read` as the path, 09-28 13:41), and one had already retried once (09-29
+15:04, a folder that is not there, then a file that is not there). The better refusal does
+produce the retry; the remainder is C1 and refusals with no correction to make. Closed by its
+own line.
+
+**C1 -- a sentence handed to a file tool as a path.** The 09-07 fix refuses it by name ("`content`
+must be a PATH, and '...' is a description of one"). Before 09-07: 10 of 97 file-tool calls.
+09-07 to 09-20: 28 of 261, the last ordinary one on 09-10. Since 09-21: 3 of 93, all three in one
+transcript (09-28 13:41, the Coder's window on the tree: the window's own instruction block
+passed as `<content>` by the Router and then the Proofreader). The habit is gone from ordinary
+turns and remains at three percent in the coder's, where the block it copies is the prompt's own.
+The line keeps its numbers and stays open: nothing was built.
+
+**E3 -- the scratch-folder listing as a tell.** DONE WHEN, in TASKS: "enough runs to say whether
+`list_directory` beside a correct tool predicts a wrong or thin answer." It predicts a WRONG CALL,
+not a thin answer: of the 70 turns in which the Router listed a folder beside another tool, 32
+(45%) had a tool fail in the same turn, against 103 of 751 (13%) without the listing; since 09-07,
+37% against 15%. The delivery was thin (short, refused, or admitting a failure) in 2% of the
+hedged turns and 3% of the rest -- the Router recovers by the end of the turn. Since 09-21 the
+hedge is rare: 9 turns. The call is not suppressed, as the box says; it stays the one visible
+tell. Closed by its own line.
+
+No code moved. **What goes red if unplugged:** nothing -- these are numbers on the record, and
+the boxes they close are his to tick (F6, F7).
+
 ### An idle close of a sitting that ran something, fired live (2026-09-30, WHAT'S LEFT E2; TASKS "not been fired live")
 
 The engine has closed its own sitting after thirty idle minutes since 2026-09-16, and the reason
@@ -100,7 +137,9 @@ under C, a number used twice, an open line marked DONE, a citation of an entry t
 and a checklist version of 0.1.17 each redden their own check by name.
 
 **What goes red if unplugged:** the stroke, on every push, the next time a line is written that
-the page could not name or that the record does not bear out.
+the page could not name or that the record does not bear out. It went red on its first afternoon,
+on a line of the hand's own: a citation broken across two lines, which the page joins and the
+stroke had read raw. The stroke reads the joined lines now, as the page does.
 
 ### GitHub's 3.10 legs died at import on the refusals script: a backslash inside an f-string (2026-09-30, read on the run for bb293be)
 
