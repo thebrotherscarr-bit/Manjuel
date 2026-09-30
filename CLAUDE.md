@@ -18,8 +18,9 @@ rule below before noon.
 
 The REPL watches the ground (manjuel/watch.py). Any edit to agents/,
 skills/, pipelines.md or commands.md is HOT-RELOADED into his running
-session at the next turn; any changed text file is re-embedded into his
-live index. manjuel/*.py is NOT reloaded -- a code edit sits on disk
+session at the next turn; any changed text file under the roots in
+index_roots.txt is re-embedded into his live index (his word, 2026-09-30,
+B9; the watcher feeds only those roots since 2026-09-17). manjuel/*.py is NOT reloaded -- a code edit sits on disk
 while the old code keeps running under him. Either way the ground moves
 under his hands without his say.
 
@@ -77,9 +78,14 @@ Two mechanical traps, both earned 2026-09-04:
       leave `.git/index.lock` that the mount will not let you remove. Use
       `git log`, `git show`, `git ls-files`, `git diff <sha> <sha>` only. The
       operator deletes a lock; you do not create one.
-    - Files you write from a sandbox come out LF. The ruling is CRLF
-      everywhere; the chain's own writers emit \r\n. Preserve whatever
-      terminator the file already has, and never leave a file MIXED.
+    - Files you write from a sandbox come out LF. THE RULING FOLLOWS THE
+      DISK (his word, 2026-09-30, B3): the root documents -- every .md at
+      the root, agents.md, commands.md, pipelines.md, rack.md, parity.md,
+      pyproject.toml -- the chain (law/chain.jsonl), manjuel/skills.py,
+      four skill files and the suites' stamps are CRLF, as the chain's own
+      writers emit; the rest of the code, the seats, the tests and atlas/
+      are LF (35 and 151 on the day). Preserve whatever terminator the file
+      already has, and never leave a file MIXED -- a stroke holds both.
     - THE SUITES ARE THE OPERATOR'S TERMINAL. tests/test_manjuel.py and
       smoke_cli.py call gitstate.read() on the real ground, which runs
       `git status` -- from a sandbox that is the same lock as above (it

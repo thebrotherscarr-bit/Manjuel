@@ -154,7 +154,7 @@ CASES: list[Case] = [
     # and takes the prompt's own default, skip, saying so.)
     Case("the court", "should a court of three seats run on one model?",
          pipeline="court", heavy=True,
-         expect_seats=("Steward", "Neiro", "Jesster", "Manjuel")),
+         expect_seats=("Neiro", "Jesster", "Manjuel")),  # the door off the court, his ruling 2026-09-30 (B7)
 ]
 
 

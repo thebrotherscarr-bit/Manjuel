@@ -802,6 +802,20 @@ it -- B2's habit at a different seat, scored honestly; nothing of the day's piec
 
 **C8 (14:45):** the write-claim reader knows the edit verbs; the 09-28 claim would be refused now.
 
+**HIS RULINGS BY CARD (15:05), the record-only ones landed:** A5 published (v0.1.7 still a
+draft, unnamed), B2 stays, B3 the rule follows the disk (stroke), B5 MET, B9 CLAUDE.md's sentence,
+B11 said under v0.1.11, B12 ticked, B17 confirmed, twenty-three boxes ticked and dated. The
+built ones follow: B1, B4, B6, B7, B8, B10, B13, B14, B15, B16, F3.
+
+**THE COURT FITS (15:58, sitting 326):** 561 s of 900, Jesster 207 s under its cap, the judge 317 s
+and ruled; 1 of 1, the first since 09-18 (C13 done). A second court follows for SPEC 8.2's "twice".
+
+**HIS RULINGS BY CARD, THE BUILT ONES (15:40):** B4 worlds/ refused at the path gate (SPEC 4.4
+MET; the seal's theme done), B1 the coder on the 14b, B15 Jesster at 4,500 tokens, B7 the door
+off the court, B6 held off the table, B8 the .env comment, B10 the Router told who chose. RESTART
+REQUIRED for the REPL; the door's next sitting carries it. Still to build: B13 (the toll index),
+B14 (the Rust folded), B16 (`land`), F3 (two daybook days).
+
 **Where the ground stands (13:25).** core `main@af5da1a` (the mark `v0.1.16` on `e8aa9b5`; seven
 saves today, each sent and read green on GitHub -- the last, `af5da1a`, read after this line was
 written), atlas `main@efb00d2` (the mark `v0.1.9` on `b1059a1`), plus this record. The glass is

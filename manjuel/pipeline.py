@@ -812,8 +812,24 @@ def _router_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
     # Sitting 24: intent named `semantic_search`; the Router spent 73s calling
     # classify_sentiment instead. What the objective names outright is not a
     # suggestion to weigh -- it is the call, unless it is plainly wrong.
-    named_line = (f"\nThe objective names the skill `{ctx.named_tool}`. "
-                  f"Call `{ctx.named_tool}` unless it is plainly wrong for "
+    # WHO CHOSE IT, SAID TRULY (his ruling 2026-09-30, WHAT'S LEFT B10). This
+    # read "The objective names the skill X" whatever had chosen X; when the
+    # engine's arithmetic picked it, the operator never named it. The same
+    # words the delivery stamp uses (named_by): empty or "the words" means
+    # the objective named it; anything else is who chose.
+    by = (getattr(ctx, "named_by", "") or "").strip()
+    chose = (f"The objective names the skill `{ctx.named_tool}`."
+             if by in ("", "the words")
+             else f"`{ctx.named_tool}` was chosen for this objective by the engine ({by}), "
+                  f"not named by the operator -- and the choice stands: an objective the "
+                  f"engine read this way is answered by running it, not by asking for "
+                  f"context.")
+    # THE CALL STAYS FIRM (found live 15:42 the same day): the first wording
+    # ended "the operator did not name it", and a 4B Router read that as leave
+    # to decline -- "I don't have enough context" over the covenant question,
+    # which had searched in every run before it. Who chose is said; the call
+    # is still the call.
+    named_line = (f"\n{chose} Call `{ctx.named_tool}` unless it is plainly wrong for "
                   f"the request." if ctx.named_tool else "")
     # THE NAMED FILE, CHECKED (sitting 88). The engine looked: the file the
     # operator named either IS in the ground -- then it is the argument,

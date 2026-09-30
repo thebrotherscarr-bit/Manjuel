@@ -714,6 +714,19 @@ def gate_paths(spec, args: dict, env) -> str:
         if cand != base and base not in cand.parents:
             return (f"Refused {GATE_MARK}: <{name}> '{raw}' resolves outside the {jail}. "
                     f"Nothing was done.")
+        # ESTATE LAW 2 AS A GATE (his ruling 2026-09-30, WHAT'S LEFT B4; SPEC
+        # 4.4). The ground jail contains `worlds/`, and until today the law
+        # that keeps a world closed was a comment for readers and a refusal
+        # for writers only. Now every declared path -- read or write -- that
+        # resolves under `worlds/`, or through any `vault/`, is refused here,
+        # at the one gate every call passes, by the law's name.
+        if jail == "ground":
+            parts = [p.lower() for p in cand.relative_to(base).parts] if cand != base else []
+            if (parts and parts[0] == "worlds") or "vault" in parts:
+                return (f"Refused [ESTATE LAW 2]: <{name}> '{raw}' is under "
+                        f"{'worlds/' if parts[0] == 'worlds' else 'a vault/'}, another world's, "
+                        f"closed until the operator points at it (ESTATE LAW 2, SITTING LAW 2). "
+                        f"Nothing was done.")
     return ""
 
 

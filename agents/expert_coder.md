@@ -1,5 +1,5 @@
 ## Expert Coder
-- **Model Target:** qwen2.5-coder:7b
+- **Model Target:** qwen2.5-coder:14b
 - **Wakes On:** technical
 - **Wakes:** after Router
 - **Stage:** transform

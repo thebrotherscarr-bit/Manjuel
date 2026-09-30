@@ -474,7 +474,7 @@ other (LAW 5); now a record that lies is a finding.
   "covenant": "1512741580b7239b",
   "id": "lint_code",
   "kind": "skill",
-  "model": "qwen2.5-coder:7b",
+  "model": "qwen2.5-coder:14b",
   "office": "MANJUEL",
   "reports_to": "manjuel",
   "source": "skills/syntax_lint.md",

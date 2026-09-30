@@ -18,9 +18,6 @@ the lines, finds words in them, and names any line it cannot number.
 The release is core **v0.1.16** and atlas **v0.1.9**. Both tags are cut and on GitHub
 (2026-09-29). One thing is left, and it needs your GitHub sign-in.
 
-- **A5. The atlas releases on GitHub are drafts.** v0.1.8 has waited since 09-25, and the
-  v0.1.9 tag has started the workflow that drafts its release. Publishing a draft is done
-  signed in to GitHub, which this hand is not. *(HANDOFF 09-28, GitHub)*
 
 ---
 
@@ -28,51 +25,12 @@ The release is core **v0.1.16** and atlas **v0.1.9**. Both tags are cut and on G
 
 Nothing here gets built until you say which way.
 
-- **B1. The coding model.** qwen2.5-coder:7b was shown "this was refused, do not answer it again"
-  and gave the same refused code again, 3 times out of 3 (runs seven and eight). Move the coding
-  seat to another model, or leave it? *(HANDOFF 09-29)*
-- **B2. The front-door model.** llama3.2 makes up numbers, repeats the question back as its
-  opinion at the review panel, and once read its own instructions out as the answer. Wrong
-  numbers get stamped now, but the model still does it. Replace it, or leave it? *(SPEC 4.7)*
-- **B3. Line endings.** The rule says CRLF everywhere. The disk is mostly LF (143 LF, 32 CRLF,
-  counted 09-14). Convert the files, or change the rule to LF? *(SPEC 4.5)*
-- **B4. Laws with nothing enforcing them.** ESTATE LAW 2 (originals are read-only) is only a
-  comment: the tools can still reach `worlds/`. ESTATE LAWS 3 and 4 have no mechanism at all.
-  Build the enforcement, or accept it as is? *(SPEC 4.4)*
-- **B5. The client-name scrub.** Done everywhere except the local branch `pre-strip-master`,
-  which you ruled to keep. SPEC still marks the line OPEN. Mark it done? *(SPEC 4.5)*
-- **B6. Should the rack report tool be allowed at the review panel?** It is read-only, but it
-  wakes a model each time, and `rack_list` already gives the same numbers. *(TASKS)*
-- **B7. Should the front door speak at the review panel at all?** Four panels running, its
-  opinion was the question repeated back in 0.4 seconds, and the panel ruled on that. *(TASKS)*
-- **B8. The `.env` reader keeps a comment after a value as part of the value.** Strip it, or
-  leave it? *(TASKS)*
-- **B9. RULE 9's wording is out of date.** It says every changed text file is re-indexed. The
-  watcher now re-indexes only the listed folders. The new wording is yours. *(TASKS)*
-- **B10. The Router's prompt says "the objective names the skill X"** even when the engine picked
-  the tool and you never named it. The new wording is yours. *(TASKS)*
-- **B11. The hardening work has no version number.** Six things were pushed from 0.1.9 to 0.1.10
-  and never shipped. Which version carries them? *(TASKS)*
-- **B12. The two sitting laws (5 and 6).** TASKS still lists them open. SPEC says they were
-  sealed on 2026-09-21. It looks done and needs your tick. *(TASKS, SPEC 4.4)*
 - **B13. SEAT_LOG numbering.** 14 gaps and 10 duplicate numbers. You asked for "sorted and
   numbered", but the log is append-only. The proposal was a generated sorted index beside it.
   Which did you mean? *(SPEC 4.5)*
 - **B14. Simplifying the system.** Proposed today, nothing decided: retire the unused atlas code
   (the Rust part is 35 files, 8,887 lines), one table for reading intent instead of several,
   fewer seats, a shorter record. *(today's conversation)*
-- **B15. The review panel's two thinking seats have no limit on how long an answer may be.**
-  Jesster (deepseek-r1:8b) and the judge (gemma4:12b) each think until they stop by
-  themselves or the clock cuts them. When Jesster finishes it takes 72 to 500 seconds; four
-  times it never finished and was cut (760, 577, 552 and 600 seconds). The judge takes 100 to
-  380 seconds when it finishes. With your limits set, the run of 2026-09-29 seated the judge
-  with 289 seconds left and cut it there: 0 of 1 (C13). On 09-07 you ruled to give the judge
-  room to think and to limit its turns, not its length, so a cap is yours to order.
-  RECOMMENDED: give Jesster a maximum answer length, so the model server stops it and the
-  engine asks once more for the ruling with thinking off (the mechanism built on 09-07), and
-  leave the judge as it is. The other ways: a shorter time limit for Jesster alone (400 would
-  leave the judge 490), or a smaller model in Jesster's seat.
-  *(logs/standup_2026-09-29_162318.md, every court transcript in logs/)*
 - **B16. A merge button on Version control (was D6).** Merging a work branch into main is
   still done in the terminal. The tool server refuses the word `merge` by its own founding
   law: the eight forbidden verbs (approve, ascend, merge, commit, push, delete, reject,
@@ -82,12 +40,6 @@ Nothing here gets built until you say which way.
   (fast-forward only, refused over unsaved work, like the others), or keep merging in the
   terminal. RECOMMENDED: allow it as a `git_branch` action named `land`, since it is a button
   you press yourself, like Save and Send. *(HANDOFF 09-28, tools.go)*
-- **B17. What DONE means for the coder changing the system's own files (SPEC 4.9).** The
-  section is written from the record with three MET lines; its OPEN line proposes the finish
-  from your words of 09-28 and the loop law: a change asked for in one sentence from the
-  dashboard, made on a work branch, proved green by the tests through the tool server, saved by
-  the council, and landed on main by your click alone -- twice running, every step in the
-  record. Confirm it, reword it, or strike it. *(SPEC 4.9, 2026-09-30)*
 
 ---
 
@@ -109,11 +61,6 @@ Nothing here gets built until you say which way.
 
 ### The engine
 
-- **C13. The review panel does not fit its time limit.** Measured again on 2026-09-29 with your
-  limits set (900 for the panel, 600 a seat): 0 of 1. The judge got a turn this time, with 289
-  seconds left, and was cut; Jesster ran its whole 600 and was cut. Your numbers are in and
-  working, and they are not enough by themselves: the next step is your decision B15.
-  *(logs/standup_2026-09-29_162318.md)*
 
 ### The dashboard and the tool server (atlas)
 
@@ -154,13 +101,6 @@ Nothing here gets built until you say which way.
   Session 8's "next session" line is in the form the reader parses. The two missing days are
   in the CHANGELOG (0.1.9 and the hardening that followed it) and could be written from it;
   say so if you want them written. *(TASKS)*
-- **F6. TASKS.md has boxes that are half done and still open:** the sitting laws (B12);
-  "rack_report facts-only" (done) beside "the door at court" (open, B7); "the client token"
-  (done, B5) beside "CRLF or LF" (open, B3). Only you tick a box. *(TASKS)*
-- **F7. TASKS.md boxes for work finished on 2026-09-29 are still unticked:** the false refusal
-  (C10), the card that cannot say "over" (C12), the drift note (C11), the watcher's re-index
-  (C15), the workspace reader (C16), the small honesty list (C20) and the unused limit (C21).
-  All are under Done below or marked done on their line. Only you tick a box. *(TASKS)*
 
 ---
 
@@ -175,7 +115,7 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 - [x] 4. Run atlas's proof (21 held, 14 absent, 0 broke, 2026-09-29)
 - [x] 5. Cut and send the tag v0.1.16 (core) from Version control (on `e8aa9b5`)
 - [x] 6. Cut and send the tag v0.1.9 (atlas) from Version control (on `b1059a1`)
-- [ ] 7. Publish the atlas drafts on GitHub, v0.1.8 and v0.1.9, or drop them (A5)
+- [x] 7. Publish the atlas drafts on GitHub, v0.1.8 and v0.1.9, or drop them (A5): published 2026-09-30 on your word; v0.1.7 is a draft too, unnamed, still one
 - [x] 8. Look at GitHub's tests after the tag: green on both main branches (A4). The core
   tag's own run was red and was not read until later that day; fixed on main (C34)
 
@@ -185,6 +125,50 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **C13. The review panel does not fit its time limit.** DONE 2026-09-30, measured: with Jesster
+  capped (B15) and the front door off the panel (B7), the court ran 561 seconds of its 900 --
+  Jesster 207, the judge 317 and ruled inside the turn. 1 of 1, the first since 09-18.
+  *(logs/standup_2026-09-30_155756.md)*
+- **B15. The review panel's two thinking seats have no limit.** RULED and BUILT 2026-09-30:
+  Jesster capped at 4,500 tokens, the measured middle of its finished answers; the judge as it
+  was. *(CHANGELOG, "His rulings of the afternoon, built")*
+- **B10. The Router's prompt says "the objective names the skill X".** RULED and BUILT
+  2026-09-30: the prompt now says who chose the tool. *(CHANGELOG, "His rulings of the
+  afternoon, built")*
+- **B8. The `.env` reader keeps a comment after a value.** RULED and BUILT 2026-09-30: a trailing
+  ` #` comment is dropped. *(CHANGELOG, "His rulings of the afternoon, built")*
+- **B7. Should the front door speak at the review panel?** RULED 2026-09-30: no; the court is the
+  three counsel and the judge. *(CHANGELOG, "His rulings of the afternoon, built")*
+- **B6. Should the rack report tool be allowed at the review panel?** RULED 2026-09-30: no; it
+  was never on the list and a test keeps it off. *(CHANGELOG, "His rulings of the afternoon,
+  built")*
+- **B4. Laws with nothing enforcing them.** RULED and BUILT 2026-09-30: every tool that reads or
+  writes a path refuses `worlds/` and any `vault/` by name; LAWS 3 and 4 stay principles.
+  *(CHANGELOG, "His rulings of the afternoon, built"; SPEC 4.4)*
+- **B1. The coding model.** RULED 2026-09-30: the coding seat moves to qwen2.5-coder:14b; the
+  coder flow is the measure. *(CHANGELOG, "His rulings of the afternoon, built")*
+- **F6. TASKS.md has boxes that are half done and still open.** DONE 2026-09-30: every half
+  ruled or built today (B12, B7, B5, B3) and the boxes ticked on your word. *(TASKS)*
+- **A5. The atlas releases on GitHub are drafts.** DONE 2026-09-30: v0.1.8 and v0.1.9 published
+  through your signed-in gh on your word. v0.1.7 is a draft too and was not named; it stays one
+  until you say. *(CHANGELOG, "His rulings of the afternoon")*
+- **B17. What DONE means for the coder changing the system's own files.** RULED 2026-09-30:
+  confirmed as proposed; SPEC 4.9's line says so. Run six was the first of the two it asks for.
+  *(SPEC 4.9)*
+- **B12. The two sitting laws (5 and 6).** RULED 2026-09-30: ticked, entered in the law ledger
+  on 09-21. *(TASKS)*
+- **B11. The hardening work has no version number.** RULED 2026-09-30: v0.1.11 carries it, said
+  under its heading. *(CHANGELOG, v0.1.11)*
+- **B9. RULE 9's wording is out of date.** RULED 2026-09-30: the sentence now names the roots in
+  index_roots.txt. *(CLAUDE.md)*
+- **B5. The client-name scrub.** RULED 2026-09-30: SPEC 4.5's line is MET; `pre-strip-master`
+  kept, never pushed. *(SPEC 4.5)*
+- **B3. Line endings.** RULED 2026-09-30: the rule follows the disk -- root documents CRLF, code
+  LF, nothing mixed -- and a test holds it. *(CLAUDE.md; CHANGELOG, "His rulings of the
+  afternoon")*
+- **B2. The front-door model.** RULED 2026-09-30: llama3.2 stays, with the guards on. *(SPEC 4.7)*
+- **F7. TASKS.md boxes for work finished on 2026-09-29 are still unticked.** DONE 2026-09-30:
+  ticked on your word, each with its date and entry. *(TASKS)*
 - **C8. A model can say it used a tool when it did not.** DONE 2026-09-30, as far as a claim
   names a file: the check that refuses "I saved it as poem.txt" when nothing was saved now reads
   "edited", "updated", "modified", "changed" too -- the 09-28 shape. A claim that names no file

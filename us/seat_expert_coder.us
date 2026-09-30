@@ -1,6 +1,6 @@
 # Expert Coder - manjuel stage
 
-Stage `transform` on model `qwen2.5-coder:7b`. Prompt of record: `agents/expert_coder.md`.
+Stage `transform` on model `qwen2.5-coder:14b` (his ruling 2026-09-30, B1; 7b before). Prompt of record: `agents/expert_coder.md`.
 
 RECONCILED 2026-09-03 (TASKS 8.1). `permission` is DERIVED from this
 seat's `May Call` clearance and the declared wall of every skill it may
@@ -22,7 +22,7 @@ reason the estate can say a seat never touches the filesystem.
   "kind": "agent",
   "may_call": [],
   "mode": "racked",
-  "model": "qwen2.5-coder:7b",
+  "model": "qwen2.5-coder:14b",
   "office": "MANJUEL",
   "permission": {
     "bash": "deny",

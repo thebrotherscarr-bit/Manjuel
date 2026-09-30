@@ -34,6 +34,81 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### His rulings of the afternoon, built (2026-09-30, by card: B1, B4, B6, B7, B8, B10, B15)
+
+- **B4, ESTATE LAW 2 as a gate.** Every declared path, read or write, that resolves under
+  `worlds/` or through any `vault/` in the ground jail is refused at `gate_paths` -- the one gate
+  every call passes -- by the law's name. Writers refused it already; readers could walk in.
+  SPEC 4.4's OPEN line is MET; with B3 and B5 the seal's theme (8.2) is done. Stroked: a read
+  under worlds/, worlds/ itself, a path through a vault/, a write under worlds/; a path in the
+  ground's own folders passes.
+- **B1, the coder on the 14b.** `agents/expert_coder.md` and its `.us` record name
+  `qwen2.5-coder:14b` (7b before: the same refused code three times of three on 09-29, SITTING
+  LAW 3's measured failure). The timeout table knows it. The coder-tree flow is the measure,
+  fired once after the restart.
+- **B15, Jesster capped.** `Max Tokens: 4500` on the seat -- the measured median of its fourteen
+  finished answers on record (thought and speech, ~4,400 tokens; the 90th at ~5,300; the 200 s
+  one at ~6,900) -- which the runtime hands Ollama as `num_predict`; a budget spent inside
+  thinking is salvaged, never silence. The judge is left as it is. The court case is the
+  measure.
+- **B7, the door off the court.** `pipelines.md`'s court is Guardian, Router, Neiro, Jesster,
+  Manjuel; the Steward still closes and delivers. The standup's court case expects the three
+  counsel and the judge. 4.7 holds no OPEN line now (B2 ruled the door kept, RULED OUT).
+- **B6, rack_report off the table.** It was never on `REVIEW_ONLY_SKILLS`; his ruling keeps it
+  so, and a check holds it (with `rack_list` on).
+- **B8, the .env reader.** `KEY=value # note` reads as `value`: only ` #` after whitespace, only
+  on an unquoted value; `a#b` and `'x # y'` are taken whole. Stroked three ways.
+- **B10, the Router is told who chose.** "The objective names the skill X" only when the words
+  did; when the engine's arithmetic chose (`named_by`), the prompt says "`X` was chosen for
+  this objective by the engine (names_a_file), not named by the operator -- and the choice
+  stands" -- the delivery stamp's own account. Stroked both ways. FOUND LIVE at 15:42, the first
+  wording ("the operator did not name it") read to the 4B Router as leave to decline: the
+  covenant case asked for context instead of searching, the first time today. The call is said
+  to stand now; the next live check is the measure.
+
+**THE COURT, MEASURED ON THE CAP (15:48, sitting 326, the court set from the glass):** 1 of 1 -- 561 s
+of the turn's 900; Jesster 207 s under its cap (23,042 characters of thought, finished), the judge
+317 s and RULED inside the turn (HOLDING: three SUPPORTED, each with its FACT); all five seats sat,
+`rack_report` and `semantic_search` ran at the table, no counsel wrote the ruling's heading. The
+first court to fit since 09-18 (C13). A second, for the theme's "twice running", follows.
+
+Reversals on a mirror: the worlds/ clause struck (four checks red); Jesster's cap struck (one);
+the court list with the Steward back (two); the comment strip struck (one); the wording back
+(one). `manjuel/skills.py`, `dotenv.py`, `pipeline.py`, two seat files and `pipelines.md`
+moved: **restart required** for the REPL (the seats and the pipeline hot-reload; the code does
+not). **What goes red if unplugged:** the fourteen checks above; the live check's court case.
+
+### His rulings of the afternoon, the record-only ones (2026-09-30, by card: A5, B2, B3, B5, B9, B11, B12, B17, F7)
+
+On his word "continue until it is finished", the decisions the list held for him were put to him
+as cards and answered; these are the ones the record alone carries.
+
+- **A5.** The atlas drafts v0.1.8 and v0.1.9 PUBLISHED through his signed-in `gh`; v0.1.7 is a
+  draft too and was not named, so it stays one.
+- **B2.** The front door stays llama3.2 with the guards on: its numbers are stamped, its labels
+  and recitals discarded; the line closes as his ruling.
+- **B3.** The terminator rule follows the disk: the root documents, the chain, `skills.py`, four
+  skill files and the suites' stamps CRLF (35); the rest LF (151); none MIXED. CLAUDE.md's trap
+  paragraph says so, and `test_no_file_is_mixed_and_the_root_documents_are_crlf` holds it -- for
+  the core's tree: atlas/ is its own repository (69 CRLF, 473 LF, and four MIXED: its SEAT_LOG.md
+  and three golden-master chain fixtures cut byte-faithfully from live ledgers, whose bytes are
+  the point), so the stroke does not walk it. The first run on the ground found those four,
+  which is how the exclusion was earned.
+- **B5.** SPEC 4.5's client-token line is MET: the one place left is `pre-strip-master`, kept on
+  his word and never pushed.
+- **B9.** CLAUDE.md's RULE 9 sentence now says the roots in `index_roots.txt`; the law ledger's
+  copy stands as sealed.
+- **B11.** v0.1.11 carries the 0.1.10 work, said under its heading with the six seal pieces and
+  where each closed.
+- **B12.** The two sitting laws' TASKS box ticked: entered in the law ledger 2026-09-21.
+- **B17.** SPEC 4.9's DONE line confirmed as proposed; run six was the first of the two.
+- **F7 (and the rest of the done boxes).** Twenty-three TASKS boxes whose work is under Done
+  ticked, each with the date and the entry that did it -- the gate's `tasks` check reads the
+  date on every tick since the last mark.
+
+**What goes red if unplugged:** the B3 stroke; the gate's `spec` check (4.5 and 4.9 changed,
+named here) and its `tasks` check (every tick dated).
+
 ### An edit is a write: the write-claim reader knows edited, updated, modified, changed (2026-09-30, WHAT'S LEFT C8)
 
 The claim that cost 09-28 -- the Steward saying it had edited a file when nothing had -- passed
@@ -4246,6 +4321,12 @@ so everything from the 0.1.9 tag to this one ships inside v0.1.11, the way
 0.1.8 shipped inside 0.1.9. Everything below this heading down to 0.1.9 is what
 the tag contains. The heading read "Unreleased — since 0.1.9" until 2026-09-14,
 two days after the tag was cut; the words under it are unchanged.
+
+*His ruling of 2026-09-30 (WHAT'S LEFT B11): this number carries the 0.1.10 work, as this
+heading has said since 09-14; and the seal's six pieces that 0.1.10 named and this tag did not
+build each closed by its own line since -- the gate in CI (2026-09-24), the small-honesty list
+(09-29), SITTING LAWS 5 and 6 (the law ledger's entries 1 and 2, 09-21), the terminator ruling and
+the client token (09-30, B3 and B5), and ESTATE LAW 2's gate on `worlds/` (09-30, B4).*
 
 ### 0.1.11 — THE CODING UPDATE
 

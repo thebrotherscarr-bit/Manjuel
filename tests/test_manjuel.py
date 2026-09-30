@@ -981,7 +981,12 @@ def test_dotenv():
         "export MANJUEL_TEST_QUOTED='shh'\n"
         "MANJUEL_TEST_TAKEN=fromfile\n"
         "OLLAMA_NUM_PARALLEL=4\n"
-        "OLLAMA_MAX_LOADED_MODELS=3\n", encoding="utf-8")
+        "OLLAMA_MAX_LOADED_MODELS=3\n"
+        "MANJUEL_TEST_COMMENT=abc # a note beside it\n"
+        "MANJUEL_TEST_HASH=a#b\n"
+        "MANJUEL_TEST_QUOTED_HASH='x # y'\n", encoding="utf-8")
+    for k in ("MANJUEL_TEST_COMMENT", "MANJUEL_TEST_HASH", "MANJUEL_TEST_QUOTED_HASH"):
+        os.environ.pop(k, None)
 
     os.environ.pop("MANJUEL_TEST_NEW", None)
     os.environ.pop("MANJUEL_TEST_QUOTED", None)
@@ -998,6 +1003,13 @@ def test_dotenv():
     check("the shell wins over the file",
           os.environ["MANJUEL_TEST_TAKEN"] == "fromshell"
           and "MANJUEL_TEST_TAKEN" in already)
+    # A TRAILING COMMENT IS NOT PART OF THE VALUE (his ruling 2026-09-30, B8)
+    check("a trailing ` # comment` is stripped from an unquoted value",
+          os.environ.get("MANJUEL_TEST_COMMENT") == "abc", repr(os.environ.get("MANJUEL_TEST_COMMENT")))
+    check("   a `#` inside a value with no space before it stays",
+          os.environ.get("MANJUEL_TEST_HASH") == "a#b", repr(os.environ.get("MANJUEL_TEST_HASH")))
+    check("   and a quoted value is taken whole",
+          os.environ.get("MANJUEL_TEST_QUOTED_HASH") == "x # y", repr(os.environ.get("MANJUEL_TEST_QUOTED_HASH")))
 
     check("server-only vars are REFUSED, not silently set",
           set(server) == {"OLLAMA_NUM_PARALLEL", "OLLAMA_MAX_LOADED_MODELS"}
@@ -2748,8 +2760,8 @@ def test_the_seat_bound(reg, lib, book):
           _rt.SEAT_TIMEOUT == 600.0 or os.environ.get("MANJUEL_SEAT_TIMEOUT"))
     # BY THE MODEL'S SIZE (2026-09-08), and the door BY NAME (2026-09-28).
     sizes = {"llama3.2:latest": 150, "phi4-mini:latest": 300, "qwen3.5:4b": 300,
-             "qwen3.5:9b": 600, "qwen2.5-coder:7b": 600, "deepseek-r1:8b": 600,
-             "gemma4:12b": 600}
+             "qwen3.5:9b": 600, "qwen2.5-coder:7b": 600, "qwen2.5-coder:14b": 600,
+             "deepseek-r1:8b": 600, "gemma4:12b": 600}
     by_name = {"Steward": 180}
 
     def ruled(a):
@@ -2758,6 +2770,12 @@ def test_the_seat_bound(reg, lib, book):
     check("every seat carries the operator's number: its model's size, or its own by name",
           all(a.timeout == ruled(a) for a in reg.all()),
           repr([(a.name, a.model, a.timeout) for a in reg.all() if a.timeout != ruled(a)]))
+    # HIS RULINGS OF 2026-09-30: the coder seat on the 14b (B1); Jesster capped
+    # at 4,500 tokens, the measured median of its finished answers (B15).
+    check("the Expert Coder sits on qwen2.5-coder:14b (B1)", reg.get("Expert Coder").model == "qwen2.5-coder:14b",
+          reg.get("Expert Coder").model)
+    check("Jesster carries a 4,500-token cap, which the runtime hands Ollama as num_predict (B15)",
+          reg.get("Jesster").max_tokens == 4500, str(reg.get("Jesster").max_tokens))
     check("the door is bound at his 180", reg.get("Steward").timeout == 180.0)
     check("and the judge at his 600, the most any seat is given",
           reg.get("Manjuel").timeout == 600.0 == max(a.timeout or 0 for a in reg.all()))
@@ -2930,7 +2948,7 @@ def test_the_turn_deadline(reg, lib, book):
           and getattr(court, "name", "") == "court",
           f"{type(court).__name__} {declared_of(court)}")
     check("... as a list still: the declaration is never read as a seat",
-          [str(s) for s in court] == ["Security Guardian", "Steward", "Router", "Neiro",
+          [str(s) for s in court] == ["Security Guardian", "Router", "Neiro",
                                       "Jesster", "Manjuel"], str([str(s) for s in court]))
     check("every other pipeline declares none, and takes the dial",
           all(isinstance(book.get(n), Steps) and declared_of(book.get(n)) is None
@@ -6279,6 +6297,16 @@ def test_sitting24_regressions(reg, lib, book):
           "names the skill" not in
           build_prompt(reg.get("Router"),
                        RunContext(objective="do something useful for me"), lib))
+    # WHO CHOSE IT, SAID TRULY (his ruling 2026-09-30, B10)
+    ctx_by = RunContext(objective="read rack.md")
+    ctx_by.named_tool = "ground_read"
+    ctx_by.named_by = "names_a_file"
+    ctx_by.flags.add("needs_tool")
+    rp_by = build_prompt(reg.get("Router"), ctx_by, lib)
+    check("a tool the engine chose is said to be the engine's choice, not the objective's",
+          "was chosen for this objective by the engine (names_a_file)" in rp_by
+          and "The objective names the skill" not in rp_by, rp_by[-300:])
+    check("   and the call is still asked for", "Call `ground_read` unless it is plainly wrong" in rp_by)
 
     # the closer's record is not an imitable template
     done_ctx = RunContext(objective="alright, git status")
@@ -7400,6 +7428,12 @@ def test_the_table_has_eyes_not_hands(reg, lib, book):
           any(str(x) == "Router" and x.when == "needs_tool" for x in steps),
           str([str(x) for x in steps]))
     check("Manjuel still rules last", str(steps[-1]) == "Manjuel")
+    # HIS RULINGS OF 2026-09-30: rack_report stays off the table (B6); the
+    # front door does not sit at it (B7).
+    check("rack_report is not on the table's list -- it wakes a model, and rack_list has the numbers (B6)",
+          "rack_report" not in REVIEW_ONLY_SKILLS and "rack_list" in REVIEW_ONLY_SKILLS)
+    check("the front door does not sit at the table (B7)",
+          not any(str(x) == "Steward" for x in steps), str([str(x) for x in steps]))
 
     g = Path(tempfile.mkdtemp())
     r = Stub()
@@ -8083,11 +8117,11 @@ def test_client_data_is_shielded(reg, lib, book):
     env.ground = g
     out = lib.execute("ground_read",
                       {"content": "worlds/example/vault/sealed.md"}, env)
-    check("ground_read refuses vault files as CLIENT DATA",
-          "CLIENT DATA" in out, out[:60])
+    check("ground_read refuses a vault file by ESTATE LAW 2 at the gate (his ruling 2026-09-30, B4; CLIENT DATA before)",
+          "ESTATE LAW 2" in out and "private" not in out, out[:80])
     listing = lib.execute("ground_list", {"content": "worlds/example"}, env)
-    check("ground_list shows the vault exists but never its contents",
-          "protected items" in listing and "sealed.md" not in listing,
+    check("ground_list under worlds/ is refused at the gate too, never its contents",
+          "ESTATE LAW 2" in listing and "sealed.md" not in listing,
           listing[:120])
 
     # the watcher ignores a touched client file
@@ -14692,7 +14726,7 @@ def test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name(reg, lib, boo
 
     # NEVER WRITTEN, BY NAME: each refused, nothing created, nothing changed.
     never = {
-        ".env": "RULE 7", "vault/x.md": "CLIENT DATA", "worlds/w/x.md": "ESTATE LAW 2",
+        ".env": "RULE 7", "vault/x.md": "ESTATE LAW 2", "worlds/w/x.md": "ESTATE LAW 2",
         ".git/config": "history", "law/LAW.md": "sealed", "CLAUDE.md": "standing rules",
         "agents/steward.md": "hot-reloaded", "skills/x.md": "hot-reloaded",
         "pipelines.md": "hot-reloaded", "commands.md": "hot-reloaded",
@@ -16473,6 +16507,41 @@ def test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book):
           f"checklist {v.group(1) if v else '-'}, pin {pin.group(1) if pin else '-'}")
 
 
+def test_no_file_is_mixed_and_the_root_documents_are_crlf(reg, lib, book):
+    """THE TERMINATOR RULING FOLLOWS THE DISK (his word 2026-09-30, B3).
+    CLAUDE.md said CRLF everywhere while the disk was 35 CRLF to 151 LF; now
+    the rule states the disk and this holds it: no text file in the tree is
+    MIXED, and every .md at the root is CRLF, as the chain's own writers
+    emit. Kinds elsewhere follow the file (a hand preserves what it finds)."""
+    # atlas/ is its own repository with its own rule, and it holds golden
+    # masters cut byte-faithfully from live chains (tests/fixtures/chains,
+    # sha256 in their MANIFEST), whose terminators are their sources' and
+    # must stay so; the ruling and this stroke are the core's.
+    skip = {".git", "logs", "index", "worlds", "projects", "__pycache__", "agent_workspace",
+            "node_modules", "target", "bin", "build", "dist", "atlas"}
+    exts = {".md", ".py", ".json", ".jsonl", ".toml", ".yml", ".yaml", ".txt", ".go", ".js",
+            ".css", ".html", ".us", ".mod", ".sum"}
+    mixed, roots_lf, seen = [], [], 0
+    for p in ROOT.rglob("*"):
+        if any(part in skip for part in p.relative_to(ROOT).parts) or not p.is_file():
+            continue
+        if p.suffix.lower() not in exts:
+            continue
+        b = p.read_bytes()
+        if not b or b"\0" in b[:4096]:
+            continue
+        seen += 1
+        crlf = b.count(b"\r\n")
+        lf = b.count(b"\n") - crlf
+        if crlf and lf:
+            mixed.append(str(p.relative_to(ROOT)))
+        if p.parent == ROOT and p.suffix.lower() == ".md" and lf:
+            roots_lf.append(p.name)
+    check("the tree was read (hundreds of text files)", seen >= 100, str(seen))
+    check("no text file in the tree is MIXED", not mixed, ", ".join(mixed[:6]) or f"{seen} files, none mixed")
+    check("every .md at the root is CRLF, as the chain's own writers emit", not roots_lf, ", ".join(roots_lf))
+
+
 def test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book):
     """"sandbox the python" (the operator, 2026-09-22).
 
@@ -17507,6 +17576,18 @@ def test_path_gate(reg, lib, book):
           "outside the ground" in gate_paths(gr, {"content": "../Archive/x.md"}, env))
     check("a posix-rooted path refuses before it is joined",
           "outside the ground" in gate_paths(gr, {"content": "/etc/passwd"}, env))
+    # ESTATE LAW 2 AS A GATE (his ruling 2026-09-30, B4; SPEC 4.4)
+    check("a read under worlds/ is refused by the law's name",
+          "ESTATE LAW 2" in gate_paths(gr, {"content": "worlds/someone/notes.md"}, env),
+          gate_paths(gr, {"content": "worlds/someone/notes.md"}, env)[:80])
+    check("   and worlds/ itself", "ESTATE LAW 2" in gate_paths(gr, {"content": "worlds"}, env))
+    check("   and a path through any vault/", "ESTATE LAW 2" in gate_paths(gr, {"content": "foundation/vault/x.md"}, env))
+    check("   while a path in the ground's own folders passes the gate",
+          gate_paths(gr, {"content": "manjuel/intent.py"}, env) == "",
+          gate_paths(gr, {"content": "manjuel/intent.py"}, env)[:60])
+    check("   and a write under worlds/ is refused at the same gate",
+          "ESTATE LAW 2" in gate_paths(lib.spec("ground_write"), {"filepath": "worlds/x/y.md", "content": "x"}, env),
+          gate_paths(lib.spec("ground_write"), {"filepath": "worlds/x/y.md", "content": "x"}, env)[:80])
     check("a drive letter refuses before it is joined",
           "outside the ground" in gate_paths(gr, {"content": "C:/Windows/system.ini"}, env))
     check("a backslash-rooted path refuses too",
@@ -19418,6 +19499,7 @@ def main() -> int:
     test_the_refusals_document_lists_every_site_in_the_code(reg, lib, book)
     test_the_plan_names_every_mark_where_it_sits(reg, lib, book)
     test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book)
+    test_no_file_is_mixed_and_the_root_documents_are_crlf(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)

@@ -2703,6 +2703,12 @@ and the model habits with their numbers (C1, C6, C7, C8, C33, C13).
 **Continued on his word (13:40, "DO NOT STOP, CONTINUE UNTIL IT IS FINISHED")** — C6, C33 and D2's
 remainder built, the three proposals above.
 
+**His rulings by card (15:05)** — nineteen decisions answered; the record-only ones landed in one
+save (A5, B2, B3, B5, B9, B11, B12, B17, F7 and the done boxes); the built ones follow.
+
+**His rulings, built (15:40)** — B1, B4, B6, B7, B8, B10, B15 in one engine batch; SPEC 4.4 and
+4.7 hold no OPEN line; the seal's theme is done.
+
 **Next session** — open `What's left` on the webapp first (the list is WHATS_LEFT.md); B17 is his to
 word (what DONE means for the coder on the tree); the list's remaining lines are his to rule; three
 one-line proposals wait for his word and are not built: the recital guard extended to a seat's own

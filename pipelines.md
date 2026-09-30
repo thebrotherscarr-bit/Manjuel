@@ -111,12 +111,16 @@ His ruling, 2026-09-28, the evening the court was measured cut at its turn
 per seat other than the court which requires a max of 900". No seat here may
 take more than 600 of them by itself.
 
+The front door does not sit at the table (his ruling 2026-09-30, WHAT'S LEFT
+B7): four panels running, its counsel was the question repeated back in 0.4 s,
+and the table ruled on it. It still closes and delivers, as every pipeline's
+closer.
+
 1. Security Guardian
-2. Steward
-3. Router      (when: needs_tool)
-4. Neiro
-5. Jesster
-6. Manjuel
+2. Router      (when: needs_tool)
+3. Neiro
+4. Jesster
+5. Manjuel
 
 ## Pipeline: quick
 

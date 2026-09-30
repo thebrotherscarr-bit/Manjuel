@@ -276,7 +276,8 @@ when a seat says so.
          one question when it needed one more. Here it was the STROKES
          doing it, and an `or` was how they got away with it.
 
-    [ ]  A REFUSAL THAT NAMES A REASON IT DID NOT CHECK.  Sitting 82,
+    [x]  A REFUSAL THAT NAMES A REASON IT DID NOT CHECK.  Sitting 82,
+         DONE 2026-09-29 (WHAT'S LEFT C10, the false refusal); ticked 2026-09-30 on his word.
          twice in one sitting, at the table:
 
              Refused: the table reviews; it does not act.
@@ -308,7 +309,8 @@ when a seat says so.
          DONE WHEN: a refusal of a non-writing skill does not call it a
          writer, and a stroke reads the message for both cases.
 
-    [ ]  SHOULD `rack_report` SIT AT THE TABLE?  THE OPERATOR'S CALL, not
+    [x]  SHOULD `rack_report` SIT AT THE TABLE?  THE OPERATOR'S CALL, not
+         RULED 2026-09-30 (B6): not at the table; it stays off REVIEW_ONLY_SKILLS and a stroke holds it there. Ticked on his word.
          an agent's. It is a reader, so the allowlist would take it. But it
          WAKES THE QUARTERMASTER -- one model call per invocation -- and
          `rack_list` is already cleared and returns the same observed
@@ -324,7 +326,8 @@ when a seat says so.
          the Quartermaster only when the question asks for a judgement
          (SPEC 4.3). Still his question.
 
-    [ ]  THE DRIFT METRIC HAS PRODUCED NO NUMBER SINCE THE SPINE MOVED.
+    [x]  THE DRIFT METRIC HAS PRODUCED NO NUMBER SINCE THE SPINE MOVED.
+         DONE 2026-09-29 (WHAT'S LEFT C11, the drift note); ticked 2026-09-30 on his word.
          (First written "never" -- wrong: 41 transcripts of 2026-08-29
          carry scores, when runs had a feed. Corrected 2026-09-04.)
          502 transcripts since: 463 say "not scored this run (no usable
@@ -368,7 +371,8 @@ when a seat says so.
          after `ground_read` and `semantic_search` had run
          (logs/standup_2026-09-14_091729.md, _153828.md).
 
-    [ ]  THE CARD REPORT CANNOT SAY "OVER".  skills.py:1665:
+    [x]  THE CARD REPORT CANNOT SAY "OVER".  skills.py:1665:
+         DONE 2026-09-29 (WHAT'S LEFT C12); ticked 2026-09-30 on his word.
 
              ~{_vram.gb(max(0, budget - used))} headroom.
 
@@ -473,7 +477,8 @@ when a seat says so.
          a claim about that file carries the coverage note; a turn that
          reads the whole file does not.
 
-    [ ]  A FAILED TOOL SHOULD PUSH THE LOOP, NOT END IT.  Sitting 77 run 3:
+    [x]  A FAILED TOOL SHOULD PUSH THE LOOP, NOT END IT.  Sitting 77 run 3:
+         MEASURED 2026-09-30 as this box asked: 56 of 80 failed calls since 09-07 were followed by another call in the same turn (CHANGELOG, "Three measurements the list asked for"); ticked on his word.
          `ground_list` failed, the Router had THREE of five hops left, had
          already written down the correct next call — "listing subfolders
          explicitly using ground_list with a specific content argument like
@@ -485,7 +490,8 @@ when a seat says so.
          call in the same turn. This is a MEASUREMENT, not a build — do not
          reach for a loop change until the record says the message failed.
 
-    [ ]  `list_directory` IS THE ROUTER'S HEDGE, NOT A GIT READER. The
+    [x]  `list_directory` IS THE ROUTER'S HEDGE, NOT A GIT READER. The
+         MEASURED 2026-09-30: the hedge foretells a failed call (45% against 13%), not a thin answer; the call stays (CHANGELOG, "Three measurements the list asked for"); ticked on his word.
          operator asked whether it was gathering before/after state for the
          git commands. Tested against every git run in the record:
 
@@ -859,7 +865,8 @@ Kept so nobody re-derives them and starts.
 
     Each of these is a measurement, not a guess: the transcript is named.
 
-    [ ]  THE DOOR QUOTES THE FURNITURE. "what does the covenant say?" was
+    [x]  THE DOOR QUOTES THE FURNITURE. "what does the covenant say?" was
+         MEASURED 2026-09-30 (one recital in 71 covenant turns) and GUARDED the same day (CHANGELOG, "A seat that reads the law block aloud is discarded"); ticked on his word.
          answered with nine numbered laws sourced from the `## The law`
          block in the seat's own prompt (which names four), after both
          reads were refused. logs/2026-09-04_153441_what_does_the_covenant_say.md
@@ -972,7 +979,8 @@ Kept so nobody re-derives them and starts.
          saying so. BUILT as THE PARTIAL-READ STAMP (see Layer 2's item).
          logs/2026-09-04_223934_*.md
 
-    [ ]  THE DOOR COPIES THE RECORD'S LABELS. Run 13: "Router produced:",
+    [x]  THE DOOR COPIES THE RECORD'S LABELS. Run 13: "Router produced:",
+         DONE 2026-09-30 (CHANGELOG, "The scaffold parrot knows the labels the record actually leaked"); ticked on his word.
          "The operator asked:" in the delivery. The closing prompt says not
          to; a 3B does anyway. Mechanism: strip lines that are the
          record's own labels. logs/2026-09-04_225023_*.md
@@ -1042,7 +1050,8 @@ Kept so nobody re-derives them and starts.
          87 record"). `rack_sync`'s Says: rack rebuild, rebuild the rack,
          resync the rack. logs/2026-09-07_095053_rack_rebuild.md, _095109_*.md
 
-    [ ]  THE CLOSER RECITES ITS OWN INSTRUCTION. Sitting 89 run 6: the
+    [x]  THE CLOSER RECITES ITS OWN INSTRUCTION. Sitting 89 run 6: the
+         DONE 2026-09-30 (CHANGELOG, "Three lines on his word to finish", C6); ticked on his word.
          closing Steward delivered "The operator's words were a description
          or an opinion, and I should not have put them in the past tense as
          though they were accomplished" -- the closing prompt's NO TOOL RAN
@@ -1053,7 +1062,8 @@ Kept so nobody re-derives them and starts.
          2026-09-17: the previous-question half was declined by ruling in
          0.1.9 (below). The recital is not recorded as fixed.
 
-    [ ]  THE DOOR AT THE COURT RESTATES THE QUESTION. Sittings 88, 90, 91,
+    [x]  THE DOOR AT THE COURT RESTATES THE QUESTION. Sittings 88, 90, 91,
+         RULED 2026-09-30 (B7): the door is off the court (pipelines.md); it still closes and delivers. Ticked on his word.
          92: the Steward's counsel on "should a court of three seats run on
          one model?" was one sentence in 0.4s -- the question as a claim.
          The court then ruled on a parrot. A door with nothing to say should
@@ -1077,7 +1087,8 @@ Kept so nobody re-derives them and starts.
     The findings behind these are in CHANGELOG (Unreleased) and DAYBOOK
     Session 6; this is the list, one line each, nothing ticked kept.
 
-    [ ]  the two sitting laws (5: nothing edited while a sitting is open;
+    [x]  the two sitting laws (5: nothing edited while a sitting is open;
+         TICKED 2026-09-30 on his word (B12): entered in the law ledger 2026-09-21 as entries 1 and 2; the seal of SITTING_LAWS_2.md stays his.
          6: the rules and every law, directive and context file read, and
          law/SITTING_LAWS_2.md; his seal: python law\law.py direct
     [x]  the door invents numbers (35 for 37; 34 for 37) -- stamp or reseat
@@ -1091,12 +1102,15 @@ Kept so nobody re-derives them and starts.
          CLOSED 2026-09-10 in 0.1.9 as read, not built (its section below):
          two shapes already guarded, the third declined by ruling. Ticked
          2026-09-17 on his word.
-    [ ]  `ground/` on the workspace reader (unjail read_file)
+    [x]  `ground/` on the workspace reader (unjail read_file)
+         DONE 2026-09-29 (WHAT'S LEFT C16); ticked 2026-09-30 on his word.
     [x]  the tool-loop dedup is per Router sitting, not per run
          BUILT 2026-09-10, in 0.1.9 (CHANGELOG "THE TOOL-LOOP DEDUP COVERS
          THE RUN"), 9 strokes. Ticked 2026-09-17 on his word.
-    [ ]  history_block's unused limit; per-turn work that could be once
-    [ ]  small honesty: dotenv unreadable .env; MANJUEL_OLLAMA_HOST unread;
+    [x]  history_block's unused limit; per-turn work that could be once
+         DONE: the limit gone 2026-09-29 (C21); per-turn work measured 2026-09-30 at nothing (CHANGELOG, "The turn's overhead, measured"); ticked on his word.
+    [x]  small honesty: dotenv unreadable .env; MANJUEL_OLLAMA_HOST unread;
+         DONE 2026-09-29, all of them (WHAT'S LEFT C20; CHANGELOG, "The small honesty of the record keepers" and "... of the engine"); ticked 2026-09-30 on his word.
          memory.pending swallows; lawgate cache stamp; seatlog "At close";
          supports_tools cache; parity 0.0s; drift docstring; spelling;
          voice deadline / temp file / `say --`; dead code (can_call,
@@ -1116,12 +1130,15 @@ Kept so nobody re-derives them and starts.
          `--record-only` leaves those three unrun and NAMES them, and the
          list lives in release.py so the workflow declares no subset of its
          own. Fifteen strokes, four reversals.
-    [ ]  CRLF or LF (his call); the client token in old filenames (his call)
+    [x]  CRLF or LF (his call); the client token in old filenames (his call)
+         RULED 2026-09-30: the rule follows the disk (B3, CLAUDE.md's trap paragraph, a stroke holds it); the client token's last place is `pre-strip-master`, kept, SPEC 4.5 MET (B5). Ticked on his word.
          2026-09-17: the client token is in 0 log filenames and 0 indexed
          documents since 2026-09-09 (SPEC 4.5); it still sits in
          sessions.jsonl and the git pack. The terminator ruling is his.
-    [ ]  ESTATE LAW 2 as a gate on worlds/; LAWS 3 and 4 (his call)
-    [ ]  rack_report facts-only; the door at court (his call)
+    [x]  ESTATE LAW 2 as a gate on worlds/; LAWS 3 and 4 (his call)
+         BUILT 2026-09-30 on his ruling (B4): `gate_paths` refuses worlds/ and any vault/ by the law's name, reads and writes; LAWS 3 and 4 stay principles. SPEC 4.4 MET. Ticked on his word.
+    [x]  rack_report facts-only; the door at court (his call)
+         DONE: facts-only built 2026-09-10; the door off the court on his ruling 2026-09-30 (B7). Ticked on his word.
          2026-09-17: rack_report facts-only is DONE -- built 2026-09-10,
          SPEC 4.3 MET. The door at court stays open.
     [x]  0.1.5 / 0.1.6: restart, measure live, tag when he says
@@ -1227,7 +1244,8 @@ Kept so nobody re-derives them and starts.
     list. No box above closed with it: its CRLF work enacted his 2026-09-03
     ruling on the root docs, and the terminator line stays open (SPEC 4.5).
 
-    [ ]  THE SEAL DID NOT SHIP. The 0.1.9 section sent six things to 0.1.10
+    [x]  THE SEAL DID NOT SHIP. The 0.1.9 section sent six things to 0.1.10
+         RULED 2026-09-30 (B11): v0.1.11 carries the 0.1.10 work, said under its heading; the six pieces each closed by their own line (the last, ESTATE LAW 2's gate, built the same day). Ticked on his word.
          -- the gate in CI, ESTATE LAW 2 as a gate, SITTING LAW 5 sealed,
          the terminator ruling, the client token, the small-honesty list.
          v0.1.11 carried none of them; each is still its own open line in
@@ -1281,40 +1299,52 @@ Kept so nobody re-derives them and starts.
          `0.1.4` sits on c6dd158 (the records pass, 2026-09-17). CLOSED the
          same day: the two strays were among the six deleted, and the `0.1.7`
          sha is recorded beside its own heading, the heading kept
-    [ ]  the court does not fit its turn: both 2026-09-14 courts cut Manjuel
+    [x]  the court does not fit its turn: both 2026-09-14 courts cut Manjuel
+         RULED 2026-09-30 (B15): Jesster capped at 4,500 tokens, the measured median of its finished answers; the court case is the measure. Ticked on his word.
          at the seconds left, 179 and 34 (logs/standup_2026-09-14_091729.md,
          _153828.md)
-    [ ]  an idle close is recorded as a Dashboard Close -- the toll says
+    [x]  an idle close is recorded as a Dashboard Close -- the toll says
+         DONE: why on the ledger line and the toll since 2026-09-29; the amber line names the thirty minutes since 09-30; fired live 2026-09-30, sitting 315 (WHAT'S LEFT E2). Ticked 2026-09-30 on his word.
          "Closed unattended." and sessions.jsonl has no field for why; the
          amber idle line does not mention the thirty-minute close; and an
          idle close of a sitting that RAN something has not been fired live
          (CHANGELOG, D2)
-    [ ]  the watcher's turn-boundary re-index (cli._apply_ground_changes)
+    [x]  the watcher's turn-boundary re-index (cli._apply_ground_changes)
+         DONE 2026-09-29 (WHAT'S LEFT C15); ticked 2026-09-30 on his word.
          builds the index without skills._INDEX_BUSY, so it can overlap a
          build still running behind a refused index_ground (the records
          pass, 2026-09-17)
-    [ ]  the glass listens on every address (`:8091`) and its auth gate has
+    [x]  the glass listens on every address (`:8091`) and its auth gate has
+         DONE: the glass on 127.0.0.1 with a PIN since 2026-09-21, the door's holds ARMED since 09-26, Ollama on 127.0.0.1 (measured 2026-09-29, WHAT'S LEFT C22). Ticked 2026-09-30 on his word.
          no caller; Ollama listens on every address too; the door's holds
          are off without --auth (the live test, 2026-09-17; DAYBOOK
          Session 9)
-    [ ]  dotenv keeps a comment after a value as part of it (his call;
+    [x]  dotenv keeps a comment after a value as part of it (his call;
+         BUILT 2026-09-30 on his ruling (B8): a trailing ` #` comment is stripped from an unquoted value. Ticked on his word.
          CHANGELOG, piece 8)
-    [ ]  RULE 9 and SITTING LAW 5 say "any changed text file is
+    [x]  RULE 9 and SITTING LAW 5 say "any changed text file is
+         RULED 2026-09-30 (B9): CLAUDE.md's sentence now says the roots in index_roots.txt; the ledger's copy stands as sealed. Ticked on his word.
          re-embedded"; the watcher now feeds only the index roots (his
          words; CHANGELOG, piece 7)
-    [ ]  the Router's prompt says "The objective names the skill X" for a
+    [x]  the Router's prompt says "The objective names the skill X" for a
+         BUILT 2026-09-30 on his ruling (B10): the prompt says who chose it, the delivery stamp's own words. Ticked on his word.
          branch's pick (his call; CHANGELOG, 2026-09-14)
-    [ ]  atlas: GetAgent hands back a pointer into the agents slice, which
+    [x]  atlas: GetAgent hands back a pointer into the agents slice, which
+         DONE 2026-09-30 (the glass's batch, WHAT'S LEFT C23 and C27); ticked on his word.
          races UpsertAgent; Run.check reads a 502 as "no engine open"
          (atlas, piece 6)
-    [ ]  atlas: /run/listen has the stall piece 5 fixed in /run/stream, and
+    [x]  atlas: /run/listen has the stall piece 5 fixed in /run/stream, and
+         DONE 2026-09-30 (the door's batch, WHAT'S LEFT C24); ticked on his word.
          /chat/stream writes on after its browser leaves (atlas, piece 5)
-    [ ]  atlas: the Dashboard still says closing always pays its toll -- the
+    [x]  atlas: the Dashboard still says closing always pays its toll -- the
+         DONE 2026-09-30 (the glass's batch: closing says when no toll is owed); ticked on his word.
          hero, Close's progress line, the sidebar tooltip (CHANGELOG,
          2026-09-14)
-    [ ]  atlas: a watched turn's bubble stays marked live after it lands
+    [x]  atlas: a watched turn's bubble stays marked live after it lands
+         DONE 2026-09-30 (the glass's batch, WHAT'S LEFT C25); ticked on his word.
          (atlas, 2026-09-14)
-    [ ]  atlas: the next number carries the release.yml fix; no draft
+    [x]  atlas: the next number carries the release.yml fix; no draft
+         DONE: the fix rode with v0.1.8 (D12); `version-tag` fired five times (D3); the drafts v0.1.8 and v0.1.9 published 2026-09-30 on his word (A5). Ticked on his word.
          release was made for v0.1.5; `version-tag` has never been fired
          (HANDOFF 2026-09-14)
     [ ]  DAYBOOK has no entry for 2026-09-10 or 09-11, and Session 8's

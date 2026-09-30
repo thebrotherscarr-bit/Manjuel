@@ -32,6 +32,7 @@ more deliberate act than a file you wrote once.
 from __future__ import annotations
 
 import os
+import re
 from pathlib import Path
 
 # Set by the ollama server at its own startup. We can read these to compare
@@ -105,7 +106,15 @@ def load(path: Path) -> tuple[list[str], list[str], list[str], str]:
             already.append(key)
             continue
 
-        os.environ[key] = _unquote(value)
+        # A TRAILING COMMENT IS NOT PART OF THE VALUE (his ruling 2026-09-30,
+        # WHAT'S LEFT B8): `KEY=value # note` reads as `value`. Only ` #`
+        # after whitespace, and only on an unquoted value -- a `#` inside a
+        # value with no space before it stays (keys can hold one), and a
+        # quoted value is taken whole.
+        v = value.strip()
+        if not (len(v) >= 2 and v[0] == v[-1] and v[0] in "\"'"):
+            v = re.split(r"\s+#", v, 1)[0].rstrip()
+        os.environ[key] = _unquote(v)
         applied.append(key)
 
     return applied, already, server, ""
