@@ -2559,6 +2559,13 @@ word that was not `--verify`; the record had counted nineteen. Each asks `cut_wo
 now and refuses a word it does not know, and `cut_words.py --verify` is a leg of atlas's prove
 (22 held). GitHub's run on the two repairs (#174) green on all four legs.
 
+**The door's batch** — WHAT'S LEFT C14 (the door's half), C18, C24. A flow's turn crosses the
+wire as unattended, so the core skips a failing seat instead of asking a runner that cannot
+answer; `run_start` takes `voice` and `voices` as `flow_run` does; `/run/listen` no longer
+stalls the engine behind a closed tab and `/chat/stream` has one writer. Five strokes on a
+stand-in engine, eight reversals red, the battery 142 legs. The door rebuilt and restarted on
+his standing word (pid 106660); sitting 306 ran one turn through it.
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until

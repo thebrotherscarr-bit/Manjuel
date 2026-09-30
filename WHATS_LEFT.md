@@ -107,16 +107,9 @@ Nothing here gets built until you say which way.
   seconds left, and was cut; Jesster ran its whole 600 and was cut. Your numbers are in and
   working, and they are not enough by themselves: the next step is your decision B15.
   *(logs/standup_2026-09-29_162318.md)*
-- **C14. A failing seat asks "retry / skip / abort?"** An automated flow cannot answer, so the
-  run dies. HALF DONE 2026-09-29: the engine no longer asks on a run nobody is attending (it
-  skips the seat, which is what the question's own default does, and says so), and the live
-  check runs that way now. Still open: the tool server does not yet tell the engine that a
-  flow's step is unattended, so a flow still stops at the question. That is a change to atlas
-  and a restart of the tool server. *(HANDOFF 09-28, CHANGELOG)*
 - **C17. The dashboard's idle warning does not mention the 30-minute close.** The other half
   is done (2026-09-29): the session log and the session's closing note now say why a session
   was closed (idle, closed from the dashboard, or the dashboard went away). *(TASKS, CHANGELOG)*
-- **C18. `run_start` cannot choose a model head.** `flow_run` can. *(HANDOFF 09-28)*
 - **C21. Some work done every turn could be done once.** The record says this and lists
   nothing, so there is nothing measured to fix yet. The other half is done (2026-09-29): the
   unused limit on `history_block` is gone. *(TASKS)*
@@ -133,8 +126,6 @@ Nothing here gets built until you say which way.
 
 - **C23. `GetAgent` hands back a pointer that can race with `UpsertAgent`.** And `Run.check` reads
   a 502 error as "no engine open". *(TASKS)*
-- **C24. `/run/listen` can stall** (the same bug was fixed in `/run/stream`), and `/chat/stream`
-  keeps writing after the browser has gone. *(TASKS)*
 - **C25. The dashboard forgets a paused flow when the page reloads.** *(HANDOFF 09-28)*
 - **C26. The Tools page's Call button uses a pop-up** that the desktop app's browser dismisses.
   *(HANDOFF 09-28)*
@@ -231,6 +222,21 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **C14. A failing seat asks "retry / skip / abort?"** DONE 2026-09-29, both halves. The
+  engine does not ask on a turn nobody attends (the morning's half), and the tool server now
+  tells it so for every step of a flow, so a flow no longer dies at that question: the seat is
+  skipped, the question's own default, and the run says so. Any other question a flow's step
+  raises still stops it, because that gate is yours. The tool server was rebuilt and
+  restarted. *(atlas CHANGELOG, "The door's batch")*
+- **C18. `run_start` cannot choose a model head.** DONE 2026-09-29. It takes `voice` (every
+  seat on one model for the turn) and `voices` (a model per seat), the same two words as
+  `flow_run`; a head it cannot read is refused in its own name and nothing runs. Tried live:
+  one turn with the front door pinned to its own model, delivered in 6.4 s. *(atlas CHANGELOG)*
+- **C24. `/run/listen` can stall, and `/chat/stream` keeps writing after the browser has
+  gone.** DONE 2026-09-29, both. A capture now ends even when the tab that started it has
+  closed, and the chat stream's tokens are written by the one goroutine that owns the socket,
+  none of them after the browser has left. Two tests, each red with the old code. *(atlas
+  CHANGELOG)*
 - **C32. atlas's verifier scripts rewrite their test fixture on any word they do not know.**
   DONE 2026-09-29. It was twenty-four scripts, not eighteen: two of them are not named like
   the rest and were found by reading every script in the folder. All twenty-five (the flow

@@ -847,12 +847,28 @@ core's code moved and nothing running was touched: no restart. FOUND, NOT BUILT:
 `seed_catalog.py --verify` writes (WHAT'S LEFT, C35). SAVED AND SENT: atlas `70272af`, 30 files;
 origin level.
 
-**Where the ground stands.** core `main@210dcbb` (the mark `v0.1.16` on `e8aa9b5`), atlas
-`main@70272af` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus this record
-(unsaved as it is written, saved after). The glass is pid 27136, the 0.1.9 build placed
-2026-09-29 on his allowance, carrying the What's left page; the door is pid 276, the 08:55 build,
-unchanged. No sitting is open (305, the standup after the repairs, 9/9, closed 17:52). No line
-of work.
+**THE LIST'S RECORD FOR THE CUTTERS IS SAVED AND SENT:** core `3a71a3b`, 4 files; origin level.
+
+**THE EVENING'S FIFTH PIECE, THE DOOR'S BATCH (WHAT'S LEFT: C14 whole, C18, C24; C23 moved to
+the glass's batch).** A FLOW'S TURN IS SENT UNATTENDED: `engine.RunUnattended` alone puts
+`"unattended": true` on the wire, and the council's `Turn` uses it, so a flow no longer dies at
+"retry / skip / abort?"; run_start and the glass's stream, his own turns, say nothing. `run_start`
+TAKES A HEAD, flow_run's `voice`/`voices` through flow_run's reader, refused in its own name.
+`/run/listen` drops an event a departed browser would never read instead of stalling the engine;
+`/chat/stream` writes tokens from the one goroutine that owns the socket and none after the
+browser has gone. Five strokes on the far end of the pipe (a stand-in engine that hands every
+row back), eight reversals red on a scratch copy, the battery 142 legs, prove --check 22 held.
+THE DOOR REBUILT AND RESTARTED on his standing word: pid 276 stopped by pid and path, the build
+placed hashing as built, pid 106660 (18:30:28). Live after it: sitting 306, one
+`run_start` with the Steward pinned by `voices`, 6.4 s, closed with its toll. SAVED AND SENT:
+atlas `bcb25c3`, 12 files; origin level.
+
+**Where the ground stands.** core `main@3a71a3b` (the mark `v0.1.16` on `e8aa9b5`), atlas
+`main@bcb25c3` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus this record
+(unsaved as it is written, saved after). The glass is pid 27136, the
+0.1.9 build placed 2026-09-29 on his allowance, carrying the What's left page; the door is pid
+106660, the 18:30 build, carrying the door's batch. No sitting is open (306, the live
+turn after the door's restart, closed 18:32). No line of work.
 
 ## HANDOFF FOR 2026-09-28 — read this before anything below it
 
