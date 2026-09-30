@@ -670,6 +670,33 @@ dropped by operator ruling 2026-09-01 — see the fix log.
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
 
+## HANDOFF FOR 2026-09-30 — read this before anything below it
+
+**THE DAY SO FAR.** One conversation carried over from 2026-09-29 on his standing word
+("do the list top to bottom"); the rules and the laws re-read at its start; the ground level
+with GitHub and green there on every leg (core runs 174-176, atlas 62-64).
+
+**THE MORNING'S PIECE, THE GLASS'S BATCH (WHAT'S LEFT: C17 whole, C23, C25, C26,
+C27, C28, C29, D4, D5; D6 put to him as B16).** Nine lines in one rebuild: the idle line says
+the engine closes itself at thirty minutes idle and how long is left; `Run.check` calls a 502
+"Door silent" and the store hands back a copy; a paused run is read back from the record on
+arrival; the Tools page and the eval scorer ask in the page's own window and a stroke refuses a
+pop-up in any script; a watched turn ends on 'end'; closing says when no toll is owed; the
+covenant is read off `agents/operator.us` for the sidebar and the TUI's banner; the builder has
+a loops box on the five kinds that do work; "Run the live check" stands beside Boot. Ten strokes,
+fourteen reversals red on a scratch copy, prove --check 22 held. THE GLASS REBUILT AND RESTARTED
+on his standing word: pid 27136 stopped by pid and path, the build placed hashing as built, pid
+111424 (07:29:38, "service wire held"). The restart signed the pane out; he unlocked it himself. SAVED AND SENT: atlas `efc2165`, 14 files;
+origin level.
+Live after it, in the pane: the sidebar's covenant read through the door; "Run the live check" beside Boot; the hero saying when the toll is owed; the Tools page's Call for `muster` asked in the modal and answered inside it; the Workflows page reading 4,045 characters of runs on arrival -- no run was paused in the record, so the card had nothing to list -- and the loops box on `coder`'s work steps and not on its check or its gate.
+
+**Where the ground stands.** core `main@6384805` (the mark `v0.1.16` on `e8aa9b5`), atlas
+`main@efc2165` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus this record
+(unsaved as it is written, saved after). The glass is pid 111424, the
+07:29 build of 2026-09-30, carrying the glass's batch; the door is pid 106660, the 18:30 build
+of 2026-09-29, carrying the door's batch. No sitting is open (306, the live turn after the
+door's restart, closed 2026-09-29 18:32). No line of work.
+
 ## HANDOFF FOR 2026-09-29 — read this before anything below it
 
 **THE DAY.** Sittings 292 to 295, all booted, run and closed from the glass. The pieces are written
@@ -863,12 +890,13 @@ placed hashing as built, pid 106660 (18:30:28). Live after it: sitting 306, one
 `run_start` with the Steward pinned by `voices`, 6.4 s, closed with its toll. SAVED AND SENT:
 atlas `bcb25c3`, 12 files; origin level.
 
-**Where the ground stands.** core `main@3a71a3b` (the mark `v0.1.16` on `e8aa9b5`), atlas
-`main@bcb25c3` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus this record
-(unsaved as it is written, saved after). The glass is pid 27136, the
-0.1.9 build placed 2026-09-29 on his allowance, carrying the What's left page; the door is pid
-106660, the 18:30 build, carrying the door's batch. No sitting is open (306, the live
-turn after the door's restart, closed 18:32). No line of work.
+**THE DOOR'S BATCH IS SAVED AND SENT:** atlas `bcb25c3`, core `6384805`; GitHub green on every
+leg for both (runs 64 and 176).
+
+**Where the ground stood at the end of the day.** core `main@6384805` (the mark `v0.1.16` on
+`e8aa9b5`), atlas `main@bcb25c3` (the mark `v0.1.9` on `b1059a1`), both level with GitHub and
+green there. The glass pid 27136 (the 0.1.9 build, placed 14:36); the door pid 106660 (the 18:30
+build, carrying the door's batch). No sitting open (306, closed 18:32). No line of work.
 
 ## HANDOFF FOR 2026-09-28 — read this before anything below it
 

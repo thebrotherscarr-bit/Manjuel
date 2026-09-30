@@ -2566,6 +2566,14 @@ stalls the engine behind a closed tab and `/chat/stream` has one writer. Five st
 stand-in engine, eight reversals red, the battery 142 legs. The door rebuilt and restarted on
 his standing word (pid 106660); sitting 306 ran one turn through it.
 
+**The glass's batch (2026-09-30 morning)** — WHAT'S LEFT C17, C23, C25, C26, C27, C28, C29, D4,
+D5 in one rebuild of the dashboard: what idle costs; a silent door told from no engine, and the
+store handing back copies; paused runs read back from the record; no pop-up on any page; a
+watched turn's end; the toll said truly; the covenant read off the record for the sidebar and the
+TUI; a loops box; a live-check button. Ten strokes, fourteen reversals red. D6 (a merge button)
+put to him as B16: `merge` is a forbidden verb by the door's founding law. The glass restarted
+(pid 111424); the pane locked and he unlocked it.
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until

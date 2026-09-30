@@ -73,6 +73,15 @@ Nothing here gets built until you say which way.
   leave the judge as it is. The other ways: a shorter time limit for Jesster alone (400 would
   leave the judge 490), or a smaller model in Jesster's seat.
   *(logs/standup_2026-09-29_162318.md, every court transcript in logs/)*
+- **B16. A merge button on Version control (was D6).** Merging a work branch into main is
+  still done in the terminal. The tool server refuses the word `merge` by its own founding
+  law: the eight forbidden verbs (approve, ascend, merge, commit, push, delete, reject,
+  promote) are absent from its table by construction, and a button needs a tool behind it.
+  Saving and sending already exist under other names (`git_commit`, `git_push`), so this is
+  your call, not the code's: allow a `git_branch` action that lands a line of work into main
+  (fast-forward only, refused over unsaved work, like the others), or keep merging in the
+  terminal. RECOMMENDED: allow it as a `git_branch` action named `land`, since it is a button
+  you press yourself, like Save and Send. *(HANDOFF 09-28, tools.go)*
 
 ---
 
@@ -107,9 +116,6 @@ Nothing here gets built until you say which way.
   seconds left, and was cut; Jesster ran its whole 600 and was cut. Your numbers are in and
   working, and they are not enough by themselves: the next step is your decision B15.
   *(logs/standup_2026-09-29_162318.md)*
-- **C17. The dashboard's idle warning does not mention the 30-minute close.** The other half
-  is done (2026-09-29): the session log and the session's closing note now say why a session
-  was closed (idle, closed from the dashboard, or the dashboard went away). *(TASKS, CHANGELOG)*
 - **C21. Some work done every turn could be done once.** The record says this and lists
   nothing, so there is nothing measured to fix yet. The other half is done (2026-09-29): the
   unused limit on `history_block` is gone. *(TASKS)*
@@ -124,16 +130,6 @@ Nothing here gets built until you say which way.
 
 ### The dashboard and the tool server (atlas)
 
-- **C23. `GetAgent` hands back a pointer that can race with `UpsertAgent`.** And `Run.check` reads
-  a 502 error as "no engine open". *(TASKS)*
-- **C25. The dashboard forgets a paused flow when the page reloads.** *(HANDOFF 09-28)*
-- **C26. The Tools page's Call button uses a pop-up** that the desktop app's browser dismisses.
-  *(HANDOFF 09-28)*
-- **C27. A finished turn's bubble stays marked "live".** *(TASKS)*
-- **C28. The dashboard says closing always pays its toll,** in three places. It does not.
-  *(TASKS)*
-- **C29. "The two banner literals".** Listed as open in HANDOFF 09-28 with no detail there.
-  *(HANDOFF 09-28)*
 - **C35. One atlas script's "check only" mode also writes.** `seed_catalog.py --verify` never
   reads that flag: it creates the catalog database if it is missing and fills it, and then
   checks. Filling it twice adds nothing, so no harm has been measured. atlas's proof runs it
@@ -147,11 +143,6 @@ Nothing here gets built until you say which way.
   times the make step read files and talked. *(HANDOFF 09-28)*
 - **D3. The flows `coder` and `version-tag` have been fired and have never finished
   successfully.** *(STATUS)*
-- **D4. The flow builder has no box for loops.** A looping flow has to be saved as JSON.
-  *(HANDOFF 09-28)*
-- **D5. The dashboard has no button for the live check.** *(DAYBOOK s18)*
-- **D6. Version control has no merge button.** Merging a work branch into main is done in the
-  terminal. *(HANDOFF 09-28)*
 - **D7. The tool server's 85 tools have no permission records.** *(HANDOFF 09-28)*
 - **D8. REFUSALS.md documents 28 refusals. The code has 66.** They are not linked.
   *(HANDOFF 09-28)*
@@ -222,6 +213,31 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **C17. The dashboard's idle warning does not mention the 30-minute close.** DONE 2026-09-30,
+  both halves. The idle line now says the engine closes itself at 30 minutes idle and how many
+  minutes are left. *(atlas CHANGELOG, "The glass's batch")*
+- **C23. `GetAgent` hands back a pointer that can race with `UpsertAgent`; `Run.check` reads a
+  502 as "no engine open".** DONE 2026-09-30, both. The store hands back a copy, and the
+  dashboard now says "Door silent" when the tool server does not answer instead of offering
+  to boot an engine. *(atlas CHANGELOG)*
+- **C25. The dashboard forgets a paused flow when the page reloads.** DONE 2026-09-30. The
+  Workflows page reads every run from the record on arrival and lists the paused ones under
+  "Waiting on you", each one click from its waterfall and its two buttons. *(atlas CHANGELOG)*
+- **C26. The Tools page's Call button uses a pop-up.** DONE 2026-09-30. Call asks in the page's
+  own window now, with the tool's arguments listed; the eval scorer's three pop-ups went the
+  same way, and a test refuses any pop-up in any script. *(atlas CHANGELOG)*
+- **C27. A finished turn's bubble stays marked "live".** DONE 2026-09-30. A turn watched from
+  another window ended on a word the pages did not listen for. *(atlas CHANGELOG)*
+- **C28. The dashboard says closing always pays its toll.** DONE 2026-09-30, all three places:
+  they say "no toll is owed" when no turn ran, which is what the engine does. *(atlas CHANGELOG)*
+- **C29. "The two banner literals".** DONE 2026-09-30. They were the covenant hash typed by
+  hand in the dashboard's sidebar and the TUI's banner; both read it from the operator's own
+  declaration now. *(atlas CHANGELOG)*
+- **D4. The flow builder has no box for loops.** DONE 2026-09-30. Every step that does work
+  has one (0 to 5); checks and gates do not, because the engine refuses it there. *(atlas
+  CHANGELOG)*
+- **D5. The dashboard has no button for the live check.** DONE 2026-09-30. "Run the live check"
+  stands beside "Boot an engine" when no engine is open. *(atlas CHANGELOG)*
 - **C14. A failing seat asks "retry / skip / abort?"** DONE 2026-09-29, both halves. The
   engine does not ask on a turn nobody attends (the morning's half), and the tool server now
   tells it so for every step of a flow, so a flow no longer dies at that question: the seat is
