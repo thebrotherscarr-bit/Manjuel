@@ -2647,3 +2647,61 @@ runs seven and eight show qwen2.5-coder:7b not acting on a refusal it was shown,
 beside it: a SPEC 8.2 theme for the coder on the tree; the map's how-to-ask; the headless "retry / skip / abort?"; the claim check on a seat that
 says a tool was used; the court's two thinking seats (WHAT'S LEFT, B15); a Dashboard button for the standup and
 a `loops` box in the builder; the front-end agent handoff plan.
+
+## Session 19 — 2026-09-30 (Wednesday), sittings 307 to 321: the list worked top to bottom, from the glass
+
+**Standing** — follows session 18 on his standing word of 09-29 ("do the list top to bottom and
+ONLY STOP if NECESSARY FOR LIFE"; "if you need to restart, restart it"; "NEVER MAKE ME WAIT 3
+MINUTES for a RESPONSE"). The day's pieces were written into session 18's list before this
+entry was opened, and stand there, each dated 2026-09-30: the glass's batch, the door's batch,
+the cutters, the map's how-to-ask, the refusals tail, the plan caught up, the list's wire, the
+law recital, the idle close, the measurements, the record's labels, the maker's words.
+
+**Version** — at open: core `main@9d491a8`, atlas `main@efb00d2`, both level with GitHub, the
+marks v0.1.16 and v0.1.9 cut and sent the day before. At close: core `main@af5da1a` (seven saves
+today, each sent and read on GitHub), atlas `main@efb00d2`, level.
+
+**The plan** — his, standing: WHAT'S LEFT top to bottom, every line read in full, fixed or
+measured, proved on a mirror with its reversal, applied, run through both suites and the live
+check from the glass, gated, saved and sent from Version control, the GitHub run read on every
+leg; a card only for what the record never ruled (two: the C31 orphans by pid, the PIN).
+
+**What was built** — F1 and F4 (SPEC 8.2 dated under every theme, BUILDPATH's ladder of the nine
+marks with a stroke holding it to them, SPEC 4.9 with its DONE line put to him as B17); D15 (the
+list's own wire, five reversals); C4 (the law recital, measured then built under the standup's
+own sixty characters, one definition moved into the engine -- and held to the seat's own words
+after it fired on a tool result in the 12:48 check); C5 (the scaffold parrot's rule widened to
+the labels the record leaked, a seat naming itself left alone after the smoke went 71 of 72);
+D2 (the maker reads "making me a ..." and "want a ..."; the wife-test flow fired from the glass
+made two playable pages in 52 s). Three CI reds of the hand's own, each reproduced and fixed the
+same hour: an f-string's backslash on 3.10, a fixture's five-second clock on a slow runner, and
+the D8 tail gone stale under moved lines (its own wire).
+
+**What was measured** — E2 (sitting 315 closed itself at 09:50:33, the first idle close of a
+sitting that had run something); C2 (a failed tool retried in the same turn 70% of the time
+since 09-07); C1 (a sentence as a path: 3 of 93 calls since 09-21, one coder run); E3 (the
+scratch listing foretells a failed call, 45% against 13%, not a thin answer); C3 (one recital in
+71 covenant turns, now caught); C5, C6, C7, C8, C33 given their numbers; C21 (the turn's
+overhead: 0.01 s inside a run, 0.1 s a turn outside it).
+
+**Faults of the hand's, in the record** — a send read as green before its run finished (5ae6fd4
+fixed it); a reversal script's relative path through .NET rewrote the ground's BUILDPATH.md with
+identical bytes (09:00, no sitting open); one command line carried `git status` (13:11, no lock
+left); a test file edited under a running suite (13:12, the meta-stroke read a moved `main`).
+
+**Rulings** — none asked today beyond the two cards; B17 waits on him.
+
+**At close** — sittings 307 to 321, fifteen, every one opened, run, tolled and closed through
+the door from the glass (the live checks by the tool that opened them; 312 and 320 by the
+glass's Close; 315 by the engine's own idle clock); the ground on `main` at `af5da1a`, level with
+GitHub and green there on every leg; no line of work; the door and the glass as the morning left
+them (the door boots an engine per sitting, so every engine change of the day is in every sitting
+since; the REPL needs a restart for `pipeline.py` and `intent.py`). What is left on the list is
+his: A5, the seventeen B decisions, D3, D7, D9, D11, F3, F6, F7; a person who is not him for E1;
+and the model habits with their numbers (C1, C6, C7, C8, C33, C13).
+
+**Next session** — open `What's left` on the webapp first (the list is WHATS_LEFT.md); B17 is his to
+word (what DONE means for the coder on the tree); the list's remaining lines are his to rule; three
+one-line proposals wait for his word and are not built: the recital guard extended to a seat's own
+instructions (C6), a note when counsel writes a ruling heading (C33), and "want it ..." read as a
+change to the thing in hand (D2's second message).

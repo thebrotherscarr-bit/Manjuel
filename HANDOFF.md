@@ -791,7 +791,15 @@ pages -- the second a new project, not a version, since her words open with no c
 call). C21: the turn's overhead is 0.01 s inside a run, 0.1 s a turn outside it. RESTART REQUIRED
 for the REPL (`intent.py`).
 
-**Where the ground stands.** core `main@9d491a8` (the mark `v0.1.16` on `e8aa9b5`), atlas
+**Where the ground stands (13:25).** core `main@af5da1a` (the mark `v0.1.16` on `e8aa9b5`; seven
+saves today, each sent and read green on GitHub -- the last, `af5da1a`, read after this line was
+written), atlas `main@efb00d2` (the mark `v0.1.9` on `b1059a1`), plus this record. The glass is
+pid 111424, the 07:29 build of 2026-09-30; the door is pid 106660, the 18:30 build of 2026-09-29;
+neither moved today. No sitting is open (321, the last live check, closed 13:20:15). No line of
+work. The REPL needs a restart for `pipeline.py` and `intent.py`; the door's sittings carry both.
+DAYBOOK has Session 19 for this day.
+
+*As the morning wrote it:* core `main@9d491a8` (the mark `v0.1.16` on `e8aa9b5`), atlas
 `main@efb00d2` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus the morning's four
 pieces and this record (unsaved as it is written, saved after). The glass is pid 111424, the
 07:29 build of 2026-09-30, carrying the glass's batch; the door is pid 106660, the 18:30 build
