@@ -74,7 +74,11 @@ def tail(text: str) -> str:
         out += [f"### manjuel/{module} — {len(rows)} site{'s' if len(rows) != 1 else ''}", "",
                 "| line | says |", "|---|---|"]
         for n, words in rows:
-            out.append(f"| {n} | {words.replace('|', '\\\\|')} |")
+            # The escape is hoisted out of the f-string: a backslash inside an
+            # f-string's braces is a SyntaxError before 3.12, and CI's 3.10 legs
+            # died on it at import (read 2026-09-30 on the run for bb293be).
+            cell = words.replace("|", "\\|")
+            out.append(f"| {n} | {cell} |")
         out.append("")
     out.append(CLOSE)
     return "\n".join(out) + "\n"

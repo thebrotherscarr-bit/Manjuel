@@ -225,7 +225,9 @@ Finished lines, newest first. A number is never used again.
   2026-09-30. The document now ends with a generated list of every refusal site in the code
   (module, line, words) with the two counts side by side (32 written up, 89 sites), kept
   current by a check the tests and GitHub both run. The hand-written part is untouched.
-  *(CHANGELOG, "REFUSALS.md and the code are joined")*
+  GitHub's two older-Python legs then failed on one line of that script (a backslash in an
+  f-string, which Python 3.10 refuses); fixed the same morning, the output unchanged.
+  *(CHANGELOG, "REFUSALS.md and the code are joined"; "GitHub's 3.10 legs died at import")*
 - **D14. "The map's how-to-ask".** DONE 2026-09-30. BUILDMAP.md opens with HOW TO ASK: the
   words that put a change to a named definition in front of the coding seat, with an example
   the engine itself is held to. *(CHANGELOG, "The map says how to ask")*

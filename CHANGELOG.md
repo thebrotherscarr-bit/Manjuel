@@ -34,6 +34,23 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### GitHub's 3.10 legs died at import on the refusals script: a backslash inside an f-string (2026-09-30, read on the run for bb293be)
+
+The run on `bb293be` was red on both 3.10 legs and green on both 3.13 legs, and the reason was
+one line of `tests/refusals.py` (D8, the same morning): a backslash inside an f-string's braces,
+which 3.12 allows and 3.10 and 3.11 refuse with a SyntaxError -- so the suites died at the
+import in `test_the_refusals_document_lists_every_site_in_the_code` and every stroke after it
+went unproven there, while this machine's 3.14 saw nothing. The escape is hoisted into a local
+(`cell = words.replace("|", "\\|")`); no site's words carry a `|`, so the generated tail is byte
+for byte what it was (`--check` matches under 3.14 and 3.11). Every `.py` under `tests/`,
+`manjuel/` and `law/` parses under the 3.11 on this machine; the strokes cannot run there (that
+interpreter has no `ollama` package, and installing one is outside the ground), so the run on
+this send is the proof of the rest. The hand's fault: a send read as green from the summary line
+before the run had finished.
+
+**What goes red if unplugged:** the two 3.10 legs of `prove.yml`, at the next f-string of that
+shape.
+
 ### The plan caught up to the record, and the coder on the tree has its section (2026-09-30, WHAT'S LEFT F1 and F4; SPEC 4.9 and 8.2)
 
 The plan stopped at 2026-09-17: SPEC 8.2's themes and BUILDPATH's ladder did not know that five

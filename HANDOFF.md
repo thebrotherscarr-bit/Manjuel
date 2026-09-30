@@ -731,6 +731,14 @@ and SPEC 4.9, THE CODER ON THE TREE, is written from the changelog with its DONE
 to him (B17). A stroke holds the ladder to the marks. Sitting 312 was closed by the glass's own
 Close, the second such (306 was the first) -- the front-door theme's "twice running".
 
+**A RED ON GITHUB, MINE, READ LATE.** The run on `bb293be` (the C31/D8 send) failed both 3.10
+legs at import: `tests/refusals.py` line 77 carried a backslash inside an f-string's braces,
+legal on 3.12+ and a SyntaxError below it; the 3.13 legs and this machine's 3.14 were green, and
+the send was read as green before the run finished. Hoisted into a local; the tail byte for byte
+the same; every core `.py` parses under the 3.11 here (CHANGELOG, "GitHub's 3.10 legs died at
+import"). The run on `3233795` (the F1/F4 send) will show the same red; the send after it is the
+proof.
+
 **Where the ground stands.** core `main@9d491a8` (the mark `v0.1.16` on `e8aa9b5`), atlas
 `main@efb00d2` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus the morning's four
 pieces and this record (unsaved as it is written, saved after). The glass is pid 111424, the
