@@ -2590,6 +2590,11 @@ C31 seen a third time: the Router's model server crashed mid-turn with the card 
 **C31 closed (2026-09-30 08:36)** — he restarted Ollama; the four orphan model servers survived
 it and were stopped by pid on his word by card; the live check fell from 505-613 s to 131 s.
 
+**The plan caught up (2026-09-30)** — F1: SPEC 8.2 and BUILDPATH's ladder know the nine marks
+cut since 09-17 (five core, four atlas) and where each theme stands, with a stroke holding the
+ladder to the marks; F4: SPEC 4.9, the coder on the tree -- three MET lines and a DONE line put
+to him (B17).
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until

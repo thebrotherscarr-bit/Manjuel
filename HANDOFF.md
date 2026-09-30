@@ -724,6 +724,13 @@ orphans of 2026-09-29 07:52 survived it, and on his allowance by card the hand s
 those four by pid (80252, 73948, 14820, 74884), refusing anything that was not one of them. The
 live check after: 9/9 in 131 s (sitting 311), against 505-613 s in the hour before.
 
+**THE MORNING'S FIFTH PIECE (WHAT'S LEFT: F1 and F4 done; B17 put to him).** The plan caught up
+to the record: SPEC 8.2's themes carry dated lines (two met by the record, two his), BUILDPATH
+has the ladder of the nine marks cut since 09-17 and where every mark sits since the rewrite,
+and SPEC 4.9, THE CODER ON THE TREE, is written from the changelog with its DONE line proposed
+to him (B17). A stroke holds the ladder to the marks. Sitting 312 was closed by the glass's own
+Close, the second such (306 was the first) -- the front-door theme's "twice running".
+
 **Where the ground stands.** core `main@9d491a8` (the mark `v0.1.16` on `e8aa9b5`), atlas
 `main@efb00d2` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus the morning's four
 pieces and this record (unsaved as it is written, saved after). The glass is pid 111424, the

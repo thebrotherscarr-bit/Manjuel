@@ -16186,6 +16186,51 @@ def test_the_refusals_document_lists_every_site_in_the_code(reg, lib, book):
           and f"refuses at {len(found)} sites" in text[at:])
 
 
+def test_the_plan_names_every_mark_where_it_sits(reg, lib, book):
+    """THE PLAN KNOWS EVERY MARK (WHAT'S LEFT F1, 2026-09-30: SPEC 8.2 and
+    BUILDPATH's ladder stopped at 2026-09-17 while five core marks and four
+    atlas marks were cut after it, and nothing went red). BUILDPATH names
+    every mark by the COMMIT it sits on -- a number alone cannot tell the
+    core's 0.1.6 from atlas's. Two legs: every changelog heading that says
+    where its mark sits (the gate's TAG_ON_RE; "on <sha> since" where the
+    rewrite of 2026-09-21 moved it) is named by that commit -- asked
+    everywhere, git or no git; and every mark git holds here, by the commit
+    it sits on today -- asked where git can answer (a checkout with no tags
+    cannot, and says so)."""
+    import subprocess
+    sys.path.insert(0, str(ROOT / "tests"))
+    import release as _rel
+    plan = (ROOT / "BUILDPATH.md").read_text(encoding="utf-8")
+    placed: dict[str, str] = {}
+    for name, log in (("core", ROOT / "CHANGELOG.md"), ("atlas", ROOT / "atlas" / "CHANGELOG.md")):
+        if not log.exists():
+            continue
+        for line in log.read_text(encoding="utf-8").splitlines():
+            m = _rel.TAG_ON_RE.search(line) if line.startswith("## ") else None
+            if m:
+                placed[f"{name} {line[3:].split(' ')[0].strip('[]')}"] = (m.group(2) or m.group(1))[:7]
+    check("the changelogs place their marks (a heading says where its tag sits)", len(placed) >= 12,
+          str(len(placed)))
+    missing = [f"{k} ({v})" for k, v in placed.items() if v not in plan]
+    check("every mark a changelog heading places is named in BUILDPATH by that commit",
+          not missing, ", ".join(missing) or f"{len(placed)} marks placed, every commit named")
+    held: dict[str, str] = {}
+    for root, name in ((ROOT, "core"), (ROOT / "atlas", "atlas")):
+        if not (root / ".git").exists():
+            continue
+        for t in sorted(_rel.held_marks(root)):
+            q = subprocess.run(["git", "rev-parse", "--short=7", f"{t}^{{commit}}"], capture_output=True,
+                               text=True, cwd=str(root), timeout=30, stdin=subprocess.DEVNULL)
+            if q.returncode == 0:
+                held[f"{name} {t}"] = q.stdout.strip()
+    if held:
+        unnamed = [f"{k} ({v})" for k, v in held.items() if v not in plan]
+        check("every mark git holds here is named in BUILDPATH by the commit it sits on today",
+              not unnamed, ", ".join(unnamed) or f"{len(held)} marks held, every one named")
+    else:
+        check("(git holds no marks here -- the held-marks leg is not asked, and says so)", True)
+
+
 def test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book):
     """"sandbox the python" (the operator, 2026-09-22).
 
@@ -19112,6 +19157,7 @@ def main() -> int:
     test_the_greeting_case_asks_for_the_seats_own_words(reg, lib, book)
     test_the_map_says_how_to_ask(reg, lib, book)
     test_the_refusals_document_lists_every_site_in_the_code(reg, lib, book)
+    test_the_plan_names_every_mark_where_it_sits(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)

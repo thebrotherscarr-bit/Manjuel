@@ -205,6 +205,15 @@ Why it exists: sitting 257 put his own test through the estate -- "Make me a sim
 - MET (2026-09-22) — AND IT IS THE ESTATE'S FIRST LAWFUL LOOP UNDER LAW_003, which was sealed 2026-09-17 and which nothing had used. Its three bounds, all three and each stroked: a DECLARED CEILING (`maker.REPAIRS`, and the loop in `pipeline._maker_prove` reads it — moving the number moves the behaviour, which a stroke holds, so the declaration can never become decoration); a STOP CONDITION A MACHINE CHECKS (the browser's own error events, machine-emitted, never a seat's account of its own work); and EVERY PASS IN THE RECORD (each check a note, each repair a step carrying the seat's answer). LAW_003 §4 holds too: the work is RE-DONE after a fail, never re-scored until the score agrees.
 - OPEN — THE WIFE TEST, his words and this section's DONE: "if my wife can sit down at the PC, ask the system to make a type of software, game, etc. and she can see the result, play the game, try the software". A person who is not the operator asks the glass in her own words and plays or uses the result -- no terminal, no path typed, no help -- and every step is in the record. All three pieces are built (1 and 2 on 2026-09-21, 3 on 2026-09-22); what stands between today and this line is running it -- a person who is not him, at the glass, with nobody helping.
 
+### 4.9 The coder on the tree (his word 2026-09-28: "the whole idea of the coder, I want to actually be able to write/read/modify files within the harness"; written 2026-09-30, WHAT'S LEFT F4)
+
+Why it exists: the maker (4.8) writes pages in `projects/`; the coder on the tree changes THE ESTATE'S OWN FILES. The pieces and their runs are CHANGELOG's entries of 2026-09-28 and -29 ("The Coder lands an edit on the tree" through "coder-tree fired an eighth time"); the law it runs under is LAW_003, and REFUSALS §27 and §28 say what it refuses.
+
+- MET (2026-09-28) — the tree doors: `ground_edit` and `ground_write` write the ground's own files on a line of work only -- the main line, a name that is never written (`.env`, the law, the ledger, a governing file, a proof stamp, a binary), a MIXED file, and a file that would no longer parse are refused by name, and the refusal names the rule it stands on (REFUSALS §27). An edit is held to what it ADDS, never to the file's older faults (2026-09-29). Strokes both ways.
+- MET (2026-09-28) — the window: an objective that asks for a change to a file in the ground and names a definition in backticks seats the Expert Coder alone on that passage, fetched by name off the map; a name not on the map, or a file that cannot be read, is answered by the engine and no seat sits (REFUSALS §28; BUILDMAP, HOW TO ASK). The Coder answers with an `@@ OLD` / `@@ NEW` edit or the passage rewritten whole, and the door lands it on the window's file or nowhere.
+- MET (2026-09-29) — the loop closed end to end: `coder-tree` run six changed a file under `manjuel/` on a line of work, the suites ran green through the door (`suite_run`), the council saved it on the line, and he merged it by his hand (`3631498`). A pass that fails rides as the feed on the retry, never in the objective (runs seven and eight); the gate before the land carries his hand past the holds to what it granted.
+- OPEN — what DONE means here is his to word. Proposed from his words of 2026-09-28 and LAW_003 clause 3, standing until he confirms or rewords it (WHAT'S LEFT B17): a change to the estate's own code asked for in one sentence from the glass, made on a line of work, proved green by the suites through the door, saved on the line by the council, and landed on the main line by his click alone (the merge button is B16) -- twice running, with every step in the record.
+
 ---
 
 ## 5. Out of scope until DONE (RULE 5)
@@ -433,6 +442,15 @@ BUILDPATH, "The order it goes next".
                    newest edit; `tests/release.py --check` PASSED 9 of 9;
                    the pins moved; CHANGELOG's Unreleased folded under the
                    number; the mark cut on main and sent (8.3)
+      2026-09-30   DONE, five times over: v0.1.12 (2026-09-18, THE POINTING),
+                   v0.1.13 (09-18, THE WORLD AND THE MESSAGE), v0.1.14
+                   (09-23, THE HANDOFF AND THE FIRST LOOP), v0.1.15 (09-25,
+                   the gate reads the record, the flows and the workflows),
+                   v0.1.16 (09-29, the coder changes the harness on a line of
+                   work) -- each after the gate, cut on main and sent by
+                   name. The gate grew from 9 checks to 17 on the way (8.3;
+                   17 of 17 after the cut of 09-29). BUILDPATH, "The ladder,
+                   2026-09-30", has the commits
 
     THE GLASS'S OWN PASSES -- atlas, unreleased today
       what it is   the trace ledger, pieces 1 to 6, D1, the release.yml fix,
@@ -444,6 +462,15 @@ BUILDPATH, "The order it goes next".
                    `release.yml` fires on it and leaves a DRAFT release for
                    his hand, which is the first time that workflow will have
                    finished
+      2026-09-30   DONE, four times over: v0.1.6 (2026-09-18, THE DOOR'S OWN
+                   QUARTER; "atlas needs its own number too"), v0.1.7 (09-23,
+                   EVERY PIN IN STEP), v0.1.8 (09-25, the engine hides
+                   nothing, and the issuer is the record's own covenant),
+                   v0.1.9 (09-29, the bounded return, the crossed gate, the
+                   withheld secret, the feed, the What's left page).
+                   `release.yml` has fired on v0.1.8 (its draft has waited
+                   since 09-25) and on v0.1.9; publishing a draft is his
+                   sign-in (WHAT'S LEFT A5)
 
     THE SEAL -- what 0.1.9 sent to 0.1.10 and v0.1.11 never carried
       what it is   the release gate in CI (BUILT 2026-09-24: it fires on a
@@ -454,6 +481,10 @@ BUILDPATH, "The order it goes next".
                    the terminator ruling (his); the client token's last two
                    places (his); the small-honesty list
       DONE when    4.4 and 4.5 hold no OPEN line
+      2026-09-30   the gate in CI since 09-24; the small-honesty list built
+                   whole 2026-09-29 (WHAT'S LEFT C20). What keeps 4.4 and
+                   4.5 open is his to rule: ESTATE LAW 2 as a gate (B4), the
+                   terminator ruling (B3), the client token's last place (B5)
 
     THE DOOR AND THE COURT
       what it is   the court fits its turn -- both 2026-09-14 courts cut
@@ -464,6 +495,13 @@ BUILDPATH, "The order it goes next".
                    cannot say "over"
       DONE when    4.7 holds no OPEN line, and two live courts running seat
                    all six with Manjuel ruling inside the turn
+      2026-09-30   his limits are set (the front door 180 s, no seat over 600,
+                   the court's turn 900; WHAT'S LEFT D1) and the court is
+                   measured on them (2026-09-29, sitting 301): the judge
+                   seated for the first time since 09-18, with 289 s left,
+                   and was cut there -- 0 of 1 (C13). A cap on the two
+                   thinking seats is his (B15); 4.7's OPEN line, the door's
+                   prose, stands as written
 
     THE LOOP -- his workflow direction of 2026-09-04, still unbuilt here
       what it is   the standup and the court as flows fired from the glass;
@@ -485,6 +523,10 @@ BUILDPATH, "The order it goes next".
                    the first line of "what it is" above, done
       DONE when    a day's work is one fired flow and a report he reads,
                    with no typed command in it
+      2026-09-30   the suites run from the glass too (`suite_run`, 09-28),
+                   the live check has its button on the Dashboard (09-30,
+                   D5), and `coder-tree` ran end to end on 09-29 (4.9). A run
+                   measured against the last one is still not built
 
     THE GLASS AS THE FRONT DOOR -- atlas H3 then H7, its own spec governs
       what it is   the Run, Traces, Waterfall, Seats, Rack, Record, Alerts
@@ -493,6 +535,16 @@ BUILDPATH, "The order it goes next".
       DONE when    a full sitting -- open, run, toll, close -- runs from the
                    glass with no terminal, twice running, and the REPL still
                    proves under the same suites
+      2026-09-30   MET BY THE RECORD, twice running: sittings 306 (2026-09-29
+                   18:31) and 312 (2026-09-30 08:40) were each opened from
+                   the glass, ran a turn, paid the toll and were closed by
+                   the glass's own Close (the ledger: `closed by the
+                   client`); the live checks fired from the glass (307 to 311
+                   today, nine turns each) open, run, toll and close through
+                   the door the same way; and the REPL proves under the same
+                   suites, both green from the glass today. H7 as a stone is
+                   atlas's own spec's (`atlas/docs/SPEC_CONTROL_CENTER.md`
+                   §10)
 
     THE REACH -- atlas, and a decision before it is a build
       what it is   the glass listens on every address with its auth gate
@@ -509,6 +561,12 @@ BUILDPATH, "The order it goes next".
       DONE when    nothing on the network can call a writing tool through the
                    glass, and the holds are armed or he has ruled they stay
                    off
+      2026-09-30   MET BY THE RECORD: the glass, the door and Ollama all
+                   listen on 127.0.0.1 alone (measured 2026-09-29, WHAT'S
+                   LEFT C22) and the glass opens with a PIN since 09-21, so
+                   nothing on the network reaches a tool through it; and the
+                   door has run with `--auth` and its holds ARMED since its
+                   2026-09-26 boot (HANDOFF 09-26: `auth=true, holds ARMED`)
 
     THE MAKER -- his vision of 2026-09-21; pieces 1 and 2 built the same day
       what it is   "make me a snake game" made, versioned and reported by the
@@ -525,6 +583,23 @@ BUILDPATH, "The order it goes next".
                    glass for a game or a tool in her own words, and plays or
                    uses it -- no terminal, no path typed, no help -- with
                    every step of it in the record
+
+    THE CODER ON THE TREE -- his word of 2026-09-28: "the whole idea of the
+    coder, I want to actually be able to write/read/modify files within the
+    harness"; DAYBOOK Session 18; this theme written 2026-09-30
+      what it is   the Expert Coder changes the estate's own files -- on a
+                   LINE OF WORK, never the main line -- through the tree
+                   doors (`ground_edit`, `ground_write`; REFUSALS §27), with
+                   the window on one named definition (§28; BUILDMAP says
+                   how to ask), the suites run through the door as the
+                   review, the land gate at the end (LAW_003 clause 3: the
+                   gate stands at the end, not inside the loop), and the
+                   council saving the line. Built 2026-09-28 and -29 over
+                   eight `coder-tree` runs; run six COMPLETE: the first
+                   change to the harness made by the estate end to end,
+                   merged by his hand (`3631498`). Section 4.9
+      DONE when    his to word; the OPEN line of 4.9 proposes it from his
+                   words and LAW_003
 
     NOT IN THIS PLAN, and named so it is not mistaken for forgotten: the
     appliance and the business (`SYSTEM_DESIGN.md`, `atlas/LAUNCH_PLAN.md`

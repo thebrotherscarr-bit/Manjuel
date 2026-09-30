@@ -473,6 +473,61 @@ lightweight -- a name and a commit, no message and no tagger -- and their
 commits still stand on `pre-strip-master`, so any of them can be put back from
 the shas above. No mark now reaches a commit that touches `worlds/`.
 
+## The ladder, 2026-09-30 (WHAT'S LEFT F1: the plan was three weeks old)
+
+What was cut after the 2026-09-17 ladder -- each after the gate, on main,
+sent by name (SPEC 8.2 carries the same, under its themes):
+
+    core   v0.1.12  2026-09-18  THE POINTING
+           v0.1.13  2026-09-18  THE WORLD AND THE MESSAGE
+           v0.1.14  2026-09-23  THE HANDOFF AND THE FIRST LOOP
+           v0.1.15  2026-09-25  the gate reads the record, the flows and the
+                                workflows; the manifest reads every field it
+                                carries; the engine hides nothing
+           v0.1.16  2026-09-29  the coder changes the harness on a line of
+                                work; the release gate reads the fold and the
+                                loop; the Router has room to answer; what is
+                                left is a page on the webapp
+    atlas  v0.1.6   2026-09-18  THE DOOR'S OWN QUARTER ("atlas needs its own
+                                number too")
+           v0.1.7   2026-09-23  EVERY PIN IN STEP
+           v0.1.8   2026-09-25  the engine hides nothing, and the issuer is
+                                the record's own covenant (`release.yml`
+                                fired and left a draft; publishing it is his,
+                                WHAT'S LEFT A5)
+           v0.1.9   2026-09-29  the bounded return, the crossed gate, the
+                                withheld secret, the feed, the What's left
+                                page, and a flow verifier that knows the
+                                return (a draft too)
+
+THE MARKS AS GIT HOLDS THEM, read 2026-09-30. The rewrite of 2026-09-21 moved
+every mark that stood before it (CHANGELOG's headings say "on <sha> since"),
+so the 2026-09-17 list above is history (LAW 1) and this is where they sit:
+
+    core   0.1.7   00d2e56    0.1.9   6d3e6b1    v0.1.11 b4b6593
+           v0.1.12 084fe33    v0.1.13 4e04378    v0.1.14 de2420e
+           v0.1.15 af50522    v0.1.16 e8aa9b5
+    atlas  v0.1.5  3dacdbc    v0.1.6  0c65afc    v0.1.7  063a152
+           v0.1.8  56a3078    v0.1.9  b1059a1
+
+The six removed on 2026-09-17 are still removed. A stroke holds this list to
+the marks (`test_the_plan_names_every_mark_where_it_sits`): every changelog
+heading that places a mark, and every mark git holds, must be named here by
+its commit -- so the next cut reddens the suites until this ladder moves.
+
+Where the seven steps below stood on 2026-09-30: 1 kept at every cut -- the
+suites and a live standup after the newest edit, then the gate (15 of 15 on
+his stamps on 09-25; 16 of 16 before the cut of 09-29 and 17 of 17 after it);
+2 done, five times and four times over; 3 the gate in CI since 09-24 and the
+small-honesty list built 09-29 (C20), its three rulings still his (B3, B4,
+B5); 4 measured on his limits 09-29 (SPEC 8.2, THE DOOR AND THE COURT) and
+waiting on B15; 5 the door's holds ARMED with `--auth` since its 09-26 boot,
+the glass on 127.0.0.1 with a PIN since 09-21; 6 the standup and the suites
+fired from the glass since 09-28, a run measured against the last still
+unbuilt; 7 met by the record (SPEC 8.2, THE GLASS AS THE FRONT DOOR). And an
+eighth, named 2026-09-28 and built the same days: THE CODER ON THE TREE (SPEC
+4.9 and 8.2).
+
 ## The order it goes next (2026-09-17, his word: "set a spec plan and a build path for the vision going forward")
 
 SPEC §8 says what each number MEANS and when it is DONE. This is the order,

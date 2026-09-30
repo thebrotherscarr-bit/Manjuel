@@ -82,6 +82,12 @@ Nothing here gets built until you say which way.
   (fast-forward only, refused over unsaved work, like the others), or keep merging in the
   terminal. RECOMMENDED: allow it as a `git_branch` action named `land`, since it is a button
   you press yourself, like Save and Send. *(HANDOFF 09-28, tools.go)*
+- **B17. What DONE means for the coder changing the system's own files (SPEC 4.9).** The
+  section is written from the record with three MET lines; its OPEN line proposes the finish
+  from your words of 09-28 and the loop law: a change asked for in one sentence from the
+  dashboard, made on a work branch, proved green by the tests through the tool server, saved by
+  the council, and landed on main by your click alone -- twice running, every step in the
+  record. Confirm it, reword it, or strike it. *(SPEC 4.9, 2026-09-30)*
 
 ---
 
@@ -162,13 +168,10 @@ Nothing here gets built until you say which way.
 
 ## F. Paperwork that is out of date
 
-- **F1. The plan is three weeks old.** SPEC section 8.2 and BUILDPATH's version ladder stop at
-  2026-09-17. Four core versions and three atlas versions were cut after that. *(CHANGELOG)*
 - **F3. DAYBOOK has no entry for 09-10 or 09-11.** The other half is done (2026-09-30):
   Session 8's "next session" line is in the form the reader parses. The two missing days are
   in the CHANGELOG (0.1.9 and the hardening that followed it) and could be written from it;
   say so if you want them written. *(TASKS)*
-- **F4. SPEC has no section for the coder changing the system's own files.** *(DAYBOOK s18)*
 - **F6. TASKS.md has boxes that are half done and still open:** the sitting laws (B12);
   "rack_report facts-only" (done) beside "the door at court" (open, B7); "the client token"
   (done, B5) beside "CRLF or LF" (open, B3). Only you tick a box. *(TASKS)*
@@ -200,6 +203,15 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **F1. The plan is three weeks old.** DONE 2026-09-30. Every theme in SPEC 8.2 carries a dated
+  line saying where it stands today (two are met by the record, two wait on you), and BUILDPATH
+  has the ladder of the versions cut since 09-17 -- five core and four atlas, one more of each
+  than this line had counted -- with their dates, their words and the commit each mark sits on
+  now. Nothing was rewritten. A test now fails the suites at the next version cut until the
+  ladder names it. *(CHANGELOG, "The plan caught up to the record")*
+- **F4. SPEC has no section for the coder changing the system's own files.** DONE 2026-09-30,
+  with one line left to you: section 4.9 has three MET lines from the record and one OPEN line
+  proposing what DONE means, from your words of 09-28 -- confirm or reword it (B17). *(SPEC 4.9)*
 - **C31. Four old model processes from 2026-09-29 07:52 held about 4 GB of graphics memory.**
   DONE 2026-09-30 08:36. You restarted the Ollama app (its new process 31652); the four
   survived that, because they were nobody's children by then, and on your word I stopped

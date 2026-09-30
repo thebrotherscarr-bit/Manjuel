@@ -34,6 +34,38 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The plan caught up to the record, and the coder on the tree has its section (2026-09-30, WHAT'S LEFT F1 and F4; SPEC 4.9 and 8.2)
+
+The plan stopped at 2026-09-17: SPEC 8.2's themes and BUILDPATH's ladder did not know that five
+core marks (v0.1.12 to v0.1.16) and four atlas marks (v0.1.6 to v0.1.9) were cut after it -- the
+list line had counted four and three -- that the door's holds have been armed since the 09-26
+boot, that sittings run whole from the glass, or that the coder now changes the estate's own
+files. Nothing is rewritten (LAW 1): each theme in 8.2 gains a dated line saying where it stands,
+BUILDPATH gains "The ladder, 2026-09-30" -- every mark with its date and its words, and THE MARKS
+AS GIT HOLDS THEM read today, since the rewrite of 09-21 moved every older one -- and a paragraph
+on where the seven-step order stands. Two themes are MET BY THE RECORD and say which sittings met
+them (the glass as the front door: 306 and 312, each opened, run, tolled and closed by the glass's
+own Close; the reach: three listeners on 127.0.0.1, the holds ARMED); two wait on him (the seal's
+three rulings; the court's cap, B15); the loop names the half still unbuilt.
+
+**Section 4.9, THE CODER ON THE TREE** (his word of 2026-09-28), written from CHANGELOG's own
+entries of 09-28 and 09-29: three MET lines (the tree doors, the window, the loop closed end to
+end by run six) and ONE OPEN LINE THAT IS HIS TO WORD -- what DONE means, proposed from his words
+and LAW_003 clause 3, put to him as WHAT'S LEFT B17. 8.2 gains the theme that points at it. The
+release gate's `spec` check reads 4.9's lines against the last mark's copy of SPEC and wants an
+entry naming 4.9 -- this one.
+
+**Proved.** `test_the_plan_names_every_mark_where_it_sits`: every changelog heading that places a
+mark (`tag on <sha>`, or `on <sha> since` where the rewrite moved it) is named in BUILDPATH by
+that commit, in both repositories; and where git can answer, every mark it holds is named by the
+commit it sits on today. Reversal on a mirror: one commit misspelled in the ladder reddens the
+first leg by name. On the ground: 17 marks placed by the changelogs and 13 held by git, every one
+named. The gate: `spec` reads "changed since v0.1.16: 4.9 -- each in CHANGELOG".
+
+No code moved; nothing to restart. **What goes red if unplugged:** the stroke, at the next cut,
+until the ladder names the new mark's commit; and the gate's `spec` check, the next time a 4.9
+line changes status without an entry naming it.
+
 ### REFUSALS.md and the code are joined: the document's tail lists every `Refused:` site, read off the code (2026-09-30, WHAT'S LEFT D8)
 
 Found in the review of 2026-09-28: REFUSALS.md wrote up 28 refusals by hand and the code refused
