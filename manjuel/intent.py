@@ -1182,8 +1182,21 @@ def wants_out(objective: str) -> bool:
 # thing asked for in a language the maker does not write -- python, a script, a
 # function -- is the Expert Coder's ordinary path, not a project; and a question
 # ABOUT making ("how do I make a game?") is a question.
+#
+# HER OWN WORDS (2026-09-30, WHAT'S LEFT D2). The wife test's spec carries her
+# three messages verbatim, and its two runs of 09-28 made nothing: "If you can
+# code, try MAKING me a little game" and "i WANT a game i can play" open no
+# maker, because the verb here had to stand in its base form and "want" was
+# not one. The 2026-09-21 test sentence was his ("Make me a simple snake game")
+# and it matched; hers did not, and the flow's make step fell through to the
+# ordinary pipeline, which read files and talked. So: the verb in its -ing
+# form too (spelled out -- "making" is not "make" + "ing"), and "want" /
+# "would like" / "need" before the thing, with the same five-word window and
+# the same list of things people use.
 _MAKE_RE = re.compile(
-    r"(?i)\b(?:make|build|create|write|code|program|design)\s+(?:me\s+|us\s+)?"
+    r"(?i)\b(?:make|making|build|building|create|creating|write|writing|"
+    r"code|coding|program|programming|design|designing|"
+    r"want|would\s+like|need)\s+(?:me\s+|us\s+)?"
     r"(?:a|an)\s+(?P<what>(?:[\w'-]+\s+){0,5}?"
     r"(?:game|app|application|program|website|web\s*site|web\s*page|webpage|"
     r"web\s*app|site|tool|calculator|timer|stopwatch|clock|quiz|planner|"

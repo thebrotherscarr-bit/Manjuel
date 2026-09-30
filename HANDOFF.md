@@ -776,6 +776,21 @@ words and discarded a covenant answer whose `ground_read` of `lawgate.py` carrie
 to the seat's own words below the testimony boundary now, both shapes stroked. RESTART REQUIRED
 for the REPL.
 
+**A RED ON GITHUB, A FIXTURE'S CLOCK (a70b111, Windows 3.13 only):** the scratch STATUS stroke
+stamped its suites five seconds ahead and a slow runner took longer than that to reach the
+edit; five minutes now (CHANGELOG, "GitHub's Windows 3.13 leg lost a five-second race").
+
+**A FAULT OF THE HAND'S, 13:11:** one command line carried `git status` (its output thrown away)
+-- the act CLAUDE.md forbids from here. Checked at once: no `.git/index.lock` was left and the
+index's time is the last save's. Nothing to undo; written down so it is counted.
+
+**THE MAKER READS HER WORDS (WHAT'S LEFT: D2 done, C21 measured).** `wants_making` now reads
+"making me a ..." and "want / would like / need a ..."; the wife-test flow fired from the glass
+(sitting 320) completed in 52 s and made `projects/game` and `projects/game-2`, both playable
+pages -- the second a new project, not a version, since her words open with no change verb (his
+call). C21: the turn's overhead is 0.01 s inside a run, 0.1 s a turn outside it. RESTART REQUIRED
+for the REPL (`intent.py`).
+
 **Where the ground stands.** core `main@9d491a8` (the mark `v0.1.16` on `e8aa9b5`), atlas
 `main@efb00d2` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus the morning's four
 pieces and this record (unsaved as it is written, saved after). The glass is pid 111424, the

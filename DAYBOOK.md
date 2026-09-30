@@ -2619,6 +2619,10 @@ the courts.
 **The record's labels (2026-09-30)** — C5: measured (seven since 09-07, all opening with a label),
 then the scaffold parrot's rule widened to them.
 
+**The maker reads her words (2026-09-30)** — D2: her recorded messages did not match the maker's
+verb forms; widened, and the wife-test flow made two playable pages in 52 s from the glass. C21:
+the turn's overhead measured at nothing.
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until

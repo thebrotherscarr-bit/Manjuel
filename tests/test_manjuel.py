@@ -16129,13 +16129,19 @@ def test_the_status_page_is_read_off_the_record(reg, lib, book):
         (g / "skills" / f"{n}.md").write_text(f"# {n}\n", encoding="utf-8")
     (g / "pipelines.md").write_text("## Pipeline: default\n1. Steward\n\n## Pipeline: quick\n1. Steward\n",
                                     encoding="utf-8")
+    # STAMPED WELL AHEAD OF THE EDITS BELOW (2026-09-30). Five seconds ahead
+    # lost the race on GitHub's Windows 3.13 leg (run on a70b111): four git
+    # commands run between this stamp and the "newest edit" this stroke
+    # makes, and on a slow runner they took longer than five seconds, so the
+    # green read as older than the code -- which is the gate's rule working
+    # on a fixture's timing. Five minutes ahead is what the rule needs here.
     now = _t.time()
     (g / "tests" / "last_run.json").write_text(_json.dumps(
-        {"strokes": {"green": True, "passed": 5, "total": 5, "state": "finished", "at": now + 5},
-         "smoke": {"green": True, "passed": 2, "total": 2, "state": "finished", "at": now + 5}}),
+        {"strokes": {"green": True, "passed": 5, "total": 5, "state": "finished", "at": now + 300},
+         "smoke": {"green": True, "passed": 2, "total": 2, "state": "finished", "at": now + 300}}),
         encoding="utf-8")
     (g / "tests" / "run_history.jsonl").write_text(_json.dumps(
-        {"suite": "standup", "at": now + 9, "green": True, "passed": 10, "total": 10,
+        {"suite": "standup", "at": now + 309, "green": True, "passed": 10, "total": 10,
          "report": "logs/standup_x.md"}) + "\n", encoding="utf-8")
     (g / "SPEC.md").write_text(
         "# SPEC\n\n### 4.1 First\n- MET — a thing proved\n- MET (later) — another\n"
@@ -17610,12 +17616,17 @@ def test_the_maker(reg, lib, book):
     # ---- THE WORDS: a request to make, to change, to go back ----------------
     for said, want in (("Make me a simple snake game I can play.", "simple snake game"),
                        ("build a tip calculator", "tip calculator"),
-                       ("can you create a website for my bakery", "website")):
+                       ("can you create a website for my bakery", "website"),
+                       # HER OWN WORDS, verbatim from wife-test v1 (D2, 2026-09-30)
+                       ("If you can code, try making me a little game. something simple like a "
+                        "little sandbox miecrafty thing.", "little game"),
+                       ("i dont want it text based, i want a game i can play.", "game")):
         check(f"a request to MAKE is read by arithmetic: {said!r}",
               intent.wants_making(said) == want, repr(intent.wants_making(said)))
     for said in ("write a poem about the sea", "make a note of that", "make a commit",
                  "create a file called notes.md", "write a python script that counts words",
-                 "how do I make a game?", "write a cosine helper for the toolkit please"):
+                 "how do I make a game?", "write a cosine helper for the toolkit please",
+                 "i want a list of the files", "we need a commit before the tag", "making a note of it"):
         check(f"and this is not one, so it falls through untouched: {said!r}",
               intent.wants_making(said) == "", repr(intent.wants_making(said)))
     check("a project's folder is named by the thing's own words, filler dropped",

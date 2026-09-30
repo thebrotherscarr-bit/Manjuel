@@ -131,9 +131,6 @@ Nothing here gets built until you say which way.
   seconds left, and was cut; Jesster ran its whole 600 and was cut. Your numbers are in and
   working, and they are not enough by themselves: the next step is your decision B15.
   *(logs/standup_2026-09-29_162318.md)*
-- **C21. Some work done every turn could be done once.** The record says this and lists
-  nothing, so there is nothing measured to fix yet. The other half is done (2026-09-29): the
-  unused limit on `history_block` is gone. *(TASKS)*
 
 ### The dashboard and the tool server (atlas)
 
@@ -142,8 +139,6 @@ Nothing here gets built until you say which way.
 
 ## D. Built but not finished, or not hooked up
 
-- **D2. The "make me a game" test, run as a flow, makes nothing.** Two runs on 09-28: both
-  times the make step read files and talked. *(HANDOFF 09-28)*
 - **D3. The flows `coder` and `version-tag` have been fired and have never finished
   successfully.** Read off the record 2026-09-30: `coder` (19 runs, none finished, last
   2026-09-21) was superseded by `coder-tree`, which finished on 2026-09-29 (run six, COMPLETE).
@@ -207,6 +202,17 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **D2. The "make me a game" test, run as a flow, makes nothing.** DONE 2026-09-30. The cause
+  was the words: the maker knew "make me a game" and not her "try making me a little game" or
+  "i want a game i can play" (the test's own recorded messages), so her turns went to the
+  ordinary pipeline and talked. The maker reads those forms now. Fired live from the dashboard:
+  the flow completed in 52 seconds and made two playable pages, `projects/game` and
+  `projects/game-2`. Her second message made a second game rather than changing the first,
+  because it opens with no change verb -- yours to say whether "want it ..." should count as
+  one. *(CHANGELOG, "The maker reads her own words")*
+- **C21. Some work done every turn could be done once.** DONE 2026-09-30, by measurement: the
+  engine's own time is a hundredth of a second inside a run and a tenth of a second a turn
+  outside it. Nothing to make once. *(CHANGELOG, "The turn's overhead, measured")*
 - **C5. The front door copies internal labels into answers.** DONE 2026-09-30. Measured first
   (seven answers since 09-07, every one opening with a label -- one in this morning's live
   check), then fixed with the rule that already threw out a copied conversation: an answer that

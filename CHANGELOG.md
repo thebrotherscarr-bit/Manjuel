@@ -34,6 +34,58 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### GitHub's Windows 3.13 leg lost a five-second race in a fixture (2026-09-30, read on the run for a70b111)
+
+One leg of four red, at `the proof: the suites and the standup, in the gate's own words` in
+`test_the_status_page_is_read_off_the_record`. The stroke builds a scratch ground, stamps its
+suites five seconds ahead, then runs four git commands and writes the "newest edit" -- and on that
+runner (its rack probes were resetting three seconds apart) the git commands took longer than
+five seconds, so the stamp read as older than the code: the gate's own rule, applied to a
+fixture's clock. The stamps sit five minutes ahead now. Nothing on the ground was wrong; the
+other three legs and this machine were green. The hand's fault, from 09-29: a margin sized to
+this machine.
+
+**What goes red if unplugged:** that leg, on the next slow runner.
+
+### The maker reads her own words (2026-09-30, WHAT'S LEFT D2; SPEC 4.8 "in her own words")
+
+The wife-test flow's two runs of 09-28 made nothing: "both times the make step read files and
+talked". The cause was arithmetic, not a seat: `intent.wants_making` wanted the verb in its base
+form ("make me a game") and did not know "want", and her messages -- recorded verbatim in the
+flow's spec -- are "If you can code, try MAKING me a little game" and "i WANT a game i can play".
+His 2026-09-21 test sentence matched; hers fell through to the ordinary pipeline. The regex now
+reads the verb in its -ing form and "want" / "would like" / "need" before the thing, with the
+same five-word window and the same list of things people use.
+
+**Proved.** Her two sentences are read as requests to make ("little game", "game"); "i want a list
+of the files", "we need a commit before the tag" and "making a note of it" still fall through.
+Reversal on a mirror: the old regex back, her two sentences reddden their checks.
+
+**FIRED LIVE from the glass (13:09, sitting 320, an engine opened first as the door asks):**
+`wife-test` run `f-20260930-200902-4d75b7fa` COMPLETE in 52 s -- `make` 27 s, `made` passed,
+`want` 13 s, `played` passed, `talk` 12 s. Two pages made: `projects/game` ("Mini Minecraft", a
+canvas with key handling, 72 lines) from her first message, and `projects/game-2` ("Keyboard
+Adventure", 73 lines) from her second. The second is a second project, not a version 2 of the
+first: her words ("i dont want it text based, i want a game i can play") open with no change
+verb, and the maker's rule -- a change opens with one -- stands as SPEC 4.8 has it. Whether
+"want it ..." should count as a change is his to say. The 09-28 runs, for comparison: COMPLETE
+with nothing made, because every node's `RAN:` check passes on any turn that ran.
+
+`manjuel/intent.py` moved: **restart required** for the REPL. **What goes red if unplugged:** the
+two checks on her sentences; and the wife-test flow's `made` check, which is where this was
+found -- though that check reads `RAN:` and passed on 09-28 with nothing made, so the stroke is
+the wire and the flow is the witness.
+
+### The turn's overhead, measured (2026-09-30, WHAT'S LEFT C21; TASKS "nothing measured to fix yet")
+
+Two numbers off the record. Inside a run: `elapsed` on the ledger's run line minus the stages'
+own seconds in the transcript, over the 177 runs since sitting 296 -- median 0.01 s, mean 0.01 s,
+worst 0.1 s. Outside the runs: a nine-turn standup sitting's length minus its runs' sum, over the
+eleven since 307 -- 0.1 to 1.3 s a sitting, a tenth of a second a turn at most. Work done every
+turn that could be done once costs nothing a person could feel on this ground; closed by its
+numbers, nothing built.
+
+
 ### The scaffold parrot knows the labels the record actually leaked (2026-09-30, WHAT'S LEFT C5; TASKS "strip lines that are the record's own labels")
 
 Measured first (the entry before this one): seven deliveries since 09-07 carried the record's
