@@ -111,6 +111,27 @@ def render() -> str:
            "this file (where each thing is) -> REFUSALS.md (what each guard refuses)",
            "-> the module's own docstring.", ""]
 
+    # HOW TO ASK (2026-09-30, WHAT'S LEFT D14; named 2026-09-28 beside the
+    # Coder's window on the tree: "the map should say how to ask by name"). The
+    # example below is held to the engine by test_the_map_says_how_to_ask:
+    # intent.wants_a_tree_change must read it as that file and that name.
+    out += ["## HOW TO ASK — a change to a named thing, off this map", "",
+            "An objective that asks for a CHANGE to a file in the ground and names one of",
+            "this map's definitions in backticks opens the Expert Coder's window on that",
+            "passage alone: the engine fetches the definition by name, hands it over as it",
+            "stands, the Coder answers with an edit, and the tree doors land it on the line",
+            "of work -- never on the main line. The words the engine reads",
+            "(manjuel/intent.py, `wants_a_tree_change`):", "",
+            "    change `inspect_code` in manjuel/pipeline.py so that it names the line", "",
+            "- THE FILE: a path with a folder in it (`manjuel/pipeline.py`), or a root",
+            "  document's bare name (`RUNBOOK.md`). A bare `.py` with no folder is the",
+            "  workspace's, as before.",
+            "- THE NAME: a `name` cell of the MODULES table below, in backticks, exactly",
+            "  -- `Class.method` for a method. A backticked filename is not a name.",
+            "- THE VERB: a change verb -- change, fix, add, rename, make.", "",
+            "A name that is not on the map is answered by the engine (\"none of the names",
+            "... is on the map of ...\") and no seat sits. What the doors refuse: REFUSALS.md.", ""]
+
     modules = sorted(p for p in PKG.glob("*.py"))
     out += ["## MODULES", ""]
     total = 0

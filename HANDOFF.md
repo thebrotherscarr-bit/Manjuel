@@ -690,9 +690,43 @@ on his standing word: pid 27136 stopped by pid and path, the build placed hashin
 origin level.
 Live after it, in the pane: the sidebar's covenant read through the door; "Run the live check" beside Boot; the hero saying when the toll is owed; the Tools page's Call for `muster` asked in the modal and answered inside it; the Workflows page reading 4,045 characters of runs on arrival -- no run was paused in the record, so the card had nothing to list -- and the loops box on `coder`'s work steps and not on its check or its gate.
 
-**Where the ground stands.** core `main@6384805` (the mark `v0.1.16` on `e8aa9b5`), atlas
-`main@efc2165` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus this record
-(unsaved as it is written, saved after). The glass is pid 111424, the
+**THE MORNING'S SECOND PIECE, THE PAPERWORK AND ONE SMALL TOOL (WHAT'S LEFT: F2, F5, C35 done;
+F3 half).** The four CHANGELOG headings from before the rewrite of 2026-09-21 fold the number
+the mark sits on since beside the one they had, the 0.1.9 heading names its commit, and the
+gate's `marks` check reads the folded number (two checks, one reversal red): STATUS says "8 sit
+where they say". The 09-28 handoff's "Still open" paragraph carries a dated note of what was
+built since. Session 8's next-session line parses. atlas's `seed_catalog.py --verify` checks
+only, with a leg in `cut_words --verify` that reddens the old script. THE GLASS'S BATCH IS SAVED
+AND SENT: atlas `efc2165`, core `9d491a8`.
+
+**THE MORNING'S THIRD PIECE (WHAT'S LEFT: D14 done, D13 already written).** BUILDMAP.md opens
+with HOW TO ASK -- the words that open the Coder's window on a named definition, with an example
+the engine is held to (`test_the_map_says_how_to_ask`; the example spelled with a bare file
+reddens it). D13's plan is the HANDOFF block of 2026-09-22; the list line was stale. THE LIVE
+CHECK, run from the glass after the record moved: 8/9 at 08:01 (the Router's model server
+crashed mid-turn, `0xc0000409`, the full card -- C31, its third sighting), then 9/9 at 08:06
+(sitting 308, 86 s). The suites from the glass: strokes 3368/3368, smoke 72/72.
+
+**THE MORNING'S FOURTH PIECE (WHAT'S LEFT: D8 done).** REFUSALS.md's tail, THE SITES, is written
+off the code by `tests/refusals.py`: 89 `Refused:` sites by module and line, beside the 32
+written up; markers keep the hand-written part byte for byte; a stroke and a `prove.yml` step
+hold it current (a site added on the mirror reddened three checks).
+
+**THE LIVE CHECK, FOUR TIMES THIS MORNING, FROM THE GLASS:** 8/9 at 08:01 (the Router's model
+server crashed, C31), 9/9 at 08:06 (86 s), 9/9 at 08:19 (613 s) and 9/9 at 08:32 (505 s, sitting
+310) -- the last two slow because a 9b model this ground does not use sat on the card beside its
+own. The suites after the last edit to tests/: strokes 3379/3379, smoke 72/72. D3 read off the
+record: `coder` was superseded by `coder-tree` (COMPLETE 09-29); `version-tag` can only finish at
+the next version. D11's part 3 is true by another road; D12 was done by events.
+
+**C31 CLOSED, ON HIS WORD.** He restarted the Ollama app at 08:33; the four `llama-server`
+orphans of 2026-09-29 07:52 survived it, and on his allowance by card the hand stopped exactly
+those four by pid (80252, 73948, 14820, 74884), refusing anything that was not one of them. The
+live check after: 9/9 in 131 s (sitting 311), against 505-613 s in the hour before.
+
+**Where the ground stands.** core `main@9d491a8` (the mark `v0.1.16` on `e8aa9b5`), atlas
+`main@efb00d2` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus the morning's four
+pieces and this record (unsaved as it is written, saved after). The glass is pid 111424, the
 07:29 build of 2026-09-30, carrying the glass's batch; the door is pid 106660, the 18:30 build
 of 2026-09-29, carrying the door's batch. No sitting is open (306, the live turn after the
 door's restart, closed 2026-09-29 18:32). No line of work.
@@ -1215,6 +1249,14 @@ door's 84 tools (its own battery's count, 2026-09-28; the record said 88, unmeas
 the glass forgets a paused run on reload and its Tools page's `prompt()`; a `ci` check so the
 ground reads origin's verdict; the two banner literals; the standup's greeting case cannot tell an
 answer from a recital; the Router's window (7,526 of 8,192 tokens).
+
+*Annotated 2026-09-30 (WHAT'S LEFT F5), nothing above changed: the key withheld where a hold is
+shown and the crossed gate were built later on 2026-09-28 (atlas CHANGELOG, "a secret parked in
+the holds is withheld" and "a gate declares what its crossing grants"); the Router's window,
+`run_start`'s head, the paused run, the Tools
+page's `prompt()`, the two banner literals and the greeting case were done on 2026-09-29 and -30
+(WHAT'S LEFT, Done). Still open from this paragraph: the `key` in the hold queue's own words, the
+door's tools' `.us` records (D7), REFUSALS.md against the code (D8), and a `ci` check (D9).*
 
 **Proof.** `go test ./...` on a scratch copy of `atlas/line` green but the seven "Filename too
 long" strokes that path always reds, unchanged across every run today; `gofmt -l` and `go vet`

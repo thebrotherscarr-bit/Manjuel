@@ -586,7 +586,10 @@ AFTER THE GATE, SENT BY NAME -- and never moved.
     2  fold the record: CHANGELOG's Unreleased entries move under
        `## vX.Y.Z -- <date> (tag on <commit sha>)`, naming the COMMIT the mark
        sits on and never the mark's own object; a bare `## Unreleased` stays
-       on top, because `tests/release.py` reads that heading.
+       on top, because `tests/release.py` reads that heading. A heading from
+       before his rewrite of 2026-09-21 keeps its number and folds the one the
+       mark sits on since beside it -- `(tag on 453fa0f before the rewrite of
+       2026-09-21; on 4e04378 since)` -- and the gate reads the second.
        Then print STATUS.md (`python tests\status.py`, 2026-09-29): the
        gate's `status` check refuses a page older than the record it reads.
     3  the gate: `python tests\release.py --check vX.Y.Z` on HIS terminal,

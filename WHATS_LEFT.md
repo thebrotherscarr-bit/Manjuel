@@ -119,21 +119,9 @@ Nothing here gets built until you say which way.
 - **C21. Some work done every turn could be done once.** The record says this and lists
   nothing, so there is nothing measured to fix yet. The other half is done (2026-09-29): the
   unused limit on `history_block` is gone. *(TASKS)*
-- **C31. Four old model processes from 7:52 this morning still hold about 4 GB of graphics
-  memory.** The running Ollama does not list them. With them the card sits at 14.5 of 16 GB,
-  and the second live check of the afternoon ran in 5 minutes against the usual 2 while the
-  rack reloaded all three models. They are processes this hand did not start, so they were not
-  stopped. Seen again at 16:47: a live check took eight and a half minutes instead of two,
-  with the tool-picking model running 73% on the processor because the card had no room.
-  Stopping those four processes, or restarting Ollama, is yours. *(measured 2026-09-29 15:06
-  and 16:47)*
 
 ### The dashboard and the tool server (atlas)
 
-- **C35. One atlas script's "check only" mode also writes.** `seed_catalog.py --verify` never
-  reads that flag: it creates the catalog database if it is missing and fills it, and then
-  checks. Filling it twice adds nothing, so no harm has been measured. atlas's proof runs it
-  every time. *(found 2026-09-29, atlas CHANGELOG)*
 
 ---
 
@@ -142,19 +130,20 @@ Nothing here gets built until you say which way.
 - **D2. The "make me a game" test, run as a flow, makes nothing.** Two runs on 09-28: both
   times the make step read files and talked. *(HANDOFF 09-28)*
 - **D3. The flows `coder` and `version-tag` have been fired and have never finished
-  successfully.** *(STATUS)*
+  successfully.** Read off the record 2026-09-30: `coder` (19 runs, none finished, last
+  2026-09-21) was superseded by `coder-tree`, which finished on 2026-09-29 (run six, COMPLETE).
+  `version-tag` (5 runs) last failed on 2026-09-28 because the mark it was told to cut,
+  v0.1.15, already existed, so its check for "Cut v0.1.15 at" could not pass; the two before
+  were stopped by hand. It can only finish at the next version, which is yours to cut. *(STATUS,
+  flows/runs.jsonl)*
 - **D7. The tool server's 85 tools have no permission records.** *(HANDOFF 09-28)*
-- **D8. REFUSALS.md documents 28 refusals. The code has 66.** They are not linked.
-  *(HANDOFF 09-28)*
 - **D9. The release check does not read GitHub's test result.** It cost something on
   2026-09-29: the check passed 17 of 17 and the v0.1.16 tag was cut while GitHub's own run on
   that tag was red on every machine (C34, under Done). *(HANDOFF 09-28, GitHub run 170)*
 - **D11. The self-test suite is one third done.** Part 1 landed. Part 2 (a test-case generator)
-  and part 3 (REFUSALS.md findable by search) are not scheduled. *(TASKS, in hand)*
-- **D12. atlas: the `release.yml` fix rides with the next version,** and no draft release was
-  made for v0.1.5. *(TASKS)*
-- **D13. The front-end agent handoff plan** is named and not written. *(DAYBOOK s18)*
-- **D14. "The map's how-to-ask"** is named and not written. *(DAYBOOK s18)*
+  is not scheduled: yours to order. Part 3 (REFUSALS.md findable by search) is true by another
+  road since 2026-09-29: every root document is in the index list, held by a test, and the
+  document now ends with every refusal site in the code (D8). *(TASKS, in hand)*
 - **D15. This list is kept by hand.** The webapp's page names a line with no number or a
   number used twice. Nothing warns anyone when the list is simply out of date.
 
@@ -175,13 +164,11 @@ Nothing here gets built until you say which way.
 
 - **F1. The plan is three weeks old.** SPEC section 8.2 and BUILDPATH's version ladder stop at
   2026-09-17. Four core versions and three atlas versions were cut after that. *(CHANGELOG)*
-- **F2. Four version headings in CHANGELOG name old commit numbers,** from before the history
-  rewrite of 09-21: v0.1.13, v0.1.12, v0.1.11, 0.1.7. The 0.1.9 heading names none. *(STATUS)*
-- **F3. DAYBOOK has no entry for 09-10 or 09-11,** and Session 8's "next session" line is in a
-  form the reader cannot parse. *(TASKS)*
+- **F3. DAYBOOK has no entry for 09-10 or 09-11.** The other half is done (2026-09-30):
+  Session 8's "next session" line is in the form the reader parses. The two missing days are
+  in the CHANGELOG (0.1.9 and the hardening that followed it) and could be written from it;
+  say so if you want them written. *(TASKS)*
 - **F4. SPEC has no section for the coder changing the system's own files.** *(DAYBOOK s18)*
-- **F5. HANDOFF 09-28's "Still open" paragraph lists two things that were built later the same
-  day:** the key shown in the hold queue, and the crossed gate. *(HANDOFF 09-28)*
 - **F6. TASKS.md has boxes that are half done and still open:** the sitting laws (B12);
   "rack_report facts-only" (done) beside "the door at court" (open, B7); "the client token"
   (done, B5) beside "CRLF or LF" (open, B3). Only you tick a box. *(TASKS)*
@@ -213,6 +200,37 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **C31. Four old model processes from 2026-09-29 07:52 held about 4 GB of graphics memory.**
+  DONE 2026-09-30 08:36. You restarted the Ollama app (its new process 31652); the four
+  survived that, because they were nobody's children by then, and on your word I stopped
+  exactly those four by pid (80252, 73948, 14820, 74884). The live check right after: 9 of 9
+  in 131 seconds, against 505 to 613 seconds in the hour before. *(measured)*
+- **D12. atlas: the `release.yml` fix rides with the next version, and no draft release was
+  made for v0.1.5.** DONE by events, noted 2026-09-30: the fix rode with v0.1.7 (2026-09-23),
+  and v0.1.8 and v0.1.9 both have drafts on GitHub waiting on you (A5). v0.1.5 never will; it
+  is superseded. *(atlas CHANGELOG, GitHub)*
+- **D8. REFUSALS.md documents 28 refusals. The code has 66. They are not linked.** DONE
+  2026-09-30. The document now ends with a generated list of every refusal site in the code
+  (module, line, words) with the two counts side by side (32 written up, 89 sites), kept
+  current by a check the tests and GitHub both run. The hand-written part is untouched.
+  *(CHANGELOG, "REFUSALS.md and the code are joined")*
+- **D14. "The map's how-to-ask".** DONE 2026-09-30. BUILDMAP.md opens with HOW TO ASK: the
+  words that put a change to a named definition in front of the coding seat, with an example
+  the engine itself is held to. *(CHANGELOG, "The map says how to ask")*
+- **D13. The front-end agent handoff plan.** DONE, and it already was: it is the HANDOFF block
+  of 2026-09-22, "THE HANDOFF — running this without a hand at the front" (what runs, the day's
+  four acts, what only you can do, what a hand owes you, where the record is, the traps). The
+  list line was stale. Its pids and counts are of that day; the day's own block is the
+  current state. *(HANDOFF 09-22)*
+- **F2. Four version headings in CHANGELOG name old commit numbers.** DONE 2026-09-30. Each
+  keeps its old number and carries the one the version sits on since the history rewrite
+  beside it; the 0.1.9 heading names its commit; the release check reads the new number and
+  the status page now says all eight sit where they say. *(CHANGELOG, "The four headings")*
+- **F5. HANDOFF 09-28's "Still open" paragraph lists two things built later that day.** DONE
+  2026-09-30: a note under it says what was built when, and nothing above it changed.
+  *(HANDOFF 09-28)*
+- **C35. One atlas script's "check only" mode also writes.** DONE 2026-09-30. A verify with no
+  database says so and writes nothing; the cutters' proof has a leg for it. *(atlas CHANGELOG)*
 - **C17. The dashboard's idle warning does not mention the 30-minute close.** DONE 2026-09-30,
   both halves. The idle line now says the engine closes itself at 30 minutes idle and how many
   minutes are left. *(atlas CHANGELOG, "The glass's batch")*

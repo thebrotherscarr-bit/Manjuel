@@ -87,6 +87,12 @@ jobs:
         # A stale map is a map that lies about where things are.
         run: python tests/buildmap.py --check
 
+      - name: The refusals document lists every site in the code
+        # REFUSALS.md's tail is generated from the code (tests/refusals.py):
+        # every `Refused:` site by module and line. A stale tail is a document
+        # that says the code refuses where it does not, or not where it does.
+        run: python tests/refusals.py --check
+
       - name: The standup harness runs (dry, stub models)
         # The live standup is the operator's terminal; this proves the
         # harness itself and the two arithmetic gates it exercises.

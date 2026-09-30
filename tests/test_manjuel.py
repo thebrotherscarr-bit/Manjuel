@@ -12339,6 +12339,20 @@ def test_version_control_matches_the_record(reg, lib, book):
           "the sha is REPORTED, because it is written in the commit AFTER the cut and "
           "older ones are history (LAW 1)",
           c.ok and "as it stood before" in c.why and "0000000" in c.why, c.why)
+    # THE FOLD (2026-09-30): the heading keeps its old number and carries the one the
+    # mark sits on since the rewrite; the gate reads the second and stops reporting.
+    sits = run("rev-parse", "--short=7", "v1.0.0^{commit}").stdout.strip()
+    commit(run, g, "folded", **{"CHANGELOG.md": "# C\n\n## Unreleased\n\n## v1.0.0 -- x (tag on 0000000 "
+                                                "before the rewrite of 2026-09-21; on " + sits + " since)\n"})
+    c = _rel.marks(g)
+    check("a heading that folds the number it had beside the one the mark sits on now is "
+          "read at the second: it sits where it says, and nothing is reported as before the rewrite",
+          c.ok and "1 sit where they say" in c.why and "as it stood before" not in c.why, c.why)
+    commit(run, g, "misfolded", **{"CHANGELOG.md": "# C\n\n## Unreleased\n\n## v1.0.0 -- x (tag on 0000000 "
+                                                   "before the rewrite of 2026-09-21; on 1111111 since)\n"})
+    c = _rel.marks(g)
+    check("   and a fold whose second number is wrong is reported at THAT number",
+          c.ok and "says 1111111" in c.why, c.why)
     run("tag", "-a", "v1.1.0", "-m", "two")
     c = _rel.marks(g)
     check("a mark with NO heading at all is refused, by name",
@@ -16117,6 +16131,61 @@ def test_the_status_page_is_read_off_the_record(reg, lib, book):
           and any(c.name == "status" and not c.ran for c in _rel.checks(g, record_only=True)))
 
 
+def test_the_map_says_how_to_ask(reg, lib, book):
+    """THE MAP SAYS HOW TO ASK (WHAT'S LEFT D14; named 2026-09-28 beside the
+    Coder's window on the tree: "the map should say how to ask by name"). An
+    objective that asks for a change to a file in the ground and names one of
+    the map's definitions in backticks opens the Coder's window on that passage
+    alone (intent.wants_a_tree_change, pipeline._maker_route), and nothing on
+    the disk said so where a person would look. BUILDMAP.md's HOW TO ASK section
+    says it with an example, and the example is held to the engine: the words
+    the map offers are read as a tree change naming that file and that
+    definition, and the definition is on the map."""
+    import re as _re
+    from manjuel import intent
+    text = (ROOT / "BUILDMAP.md").read_text(encoding="utf-8")
+    check("the map has a HOW TO ASK section", "## HOW TO ASK" in text)
+    m = _re.search(r"^    (change `[^`]+` in \S+ so that [^\n]+)$", text, _re.M)
+    check("it carries an example objective", bool(m))
+    example = m.group(1) if m else ""
+    rel, names = intent.wants_a_tree_change(example)
+    check("the engine reads the example as a change to that file, at that definition",
+          rel == "manjuel/pipeline.py" and names == ["inspect_code"], f"{rel!r} {names!r} <- {example!r}")
+    check("the definition the example names is on the map", "| def | `inspect_code` |" in text)
+    check("and a bare name with no folder is not the tree's, as the section says",
+          intent.wants_a_tree_change("change `inspect_code` in pipeline.py so that it names the line") == ("", []))
+
+
+def test_the_refusals_document_lists_every_site_in_the_code(reg, lib, book):
+    """REFUSALS.md AND THE CODE ARE JOINED (WHAT'S LEFT D8; found in the review
+    of 2026-09-28: 28 written up, 66 `Refused:` sites, nothing between them).
+    tests/refusals.py writes the document's tail from the code -- every site by
+    module and line with the words it says, and the two counts side by side --
+    between two markers, and never touches the hand-written part. This holds
+    the tail to the code: every site listed, none invented, the tail current,
+    the hand-written part untouched by a regeneration."""
+    import importlib.util
+    import re as _re
+    spec = importlib.util.spec_from_file_location("refusals_tail", ROOT / "tests" / "refusals.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    text = (ROOT / "REFUSALS.md").read_text(encoding="utf-8").replace("\r\n", "\n")
+    found = mod.sites()
+    check("the code refuses somewhere (sixty sites and more)", len(found) >= 60, str(len(found)))
+    check("REFUSALS.md carries the generated tail between its markers",
+          mod.OPEN in text and mod.CLOSE in text and text.find(mod.OPEN) < text.find(mod.CLOSE))
+    at = text.find(mod.OPEN)
+    listed = _re.findall(r"^\| (\d+) \| ", text[at:], _re.M)
+    check("every site in the code is listed in the tail, and nothing else is",
+          len(listed) == len(found), f"listed {len(listed)}, in the code {len(found)}")
+    check("the tail is current: a regeneration changes nothing", mod.render(text) == text)
+    check("the hand-written part is above the markers and a regeneration leaves it byte for byte",
+          mod.render(text)[:at] == text[:at] and "## 1. Noise never wakes a seat" in text[:at])
+    check("the tail says how many are written up beside how many sites",
+          f"{mod.documented(text)} refusals are written up" in text[at:]
+          and f"refuses at {len(found)} sites" in text[at:])
+
+
 def test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book):
     """"sandbox the python" (the operator, 2026-09-22).
 
@@ -19041,6 +19110,8 @@ def main() -> int:
     test_an_unattended_turn_is_not_asked(reg, lib, book)
     test_the_workspaces_reader_reads_the_ground_when_it_is_named(reg, lib, book)
     test_the_greeting_case_asks_for_the_seats_own_words(reg, lib, book)
+    test_the_map_says_how_to_ask(reg, lib, book)
+    test_the_refusals_document_lists_every_site_in_the_code(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)

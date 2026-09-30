@@ -34,6 +34,72 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### REFUSALS.md and the code are joined: the document's tail lists every `Refused:` site, read off the code (2026-09-30, WHAT'S LEFT D8)
+
+Found in the review of 2026-09-28: REFUSALS.md wrote up 28 refusals by hand and the code refused
+at 66 sites, and nothing joined the two -- a reader of the document could not find the line of
+code, a reader of the code could not find the account. Today the counts are 32 and 89.
+`tests/refusals.py` writes the document's tail the way `buildmap.py` writes the map: THE SITES,
+every `Refused:` in `manjuel/` by module and line with the words it says (placeholders left as
+`{...}`), and the two counts side by side so the gap is a number on the page. The tail sits
+between two markers; the hand-written part above them is never touched (a regeneration returns it
+byte for byte). `--check` refuses a stale tail, and the header's "Verify any of it yourself" names
+it. The sections keep their sittings; the sites keep their lines; where a site names a law, a rule
+or a gate, the section that names the same is the account of it.
+
+**Proved.** `test_the_refusals_document_lists_every_site_in_the_code`: sixty sites and more; the
+markers; every site listed and nothing else; the tail current; the hand-written part byte for byte
+across a regeneration; the counts said. Reversal on a mirror: one more `Refused:` in a module
+reddens three checks ("listed 89, in the code 90") and `--check` refuses. On the ground: 89 sites,
+32 written up, the tail regenerated and matching.
+
+**What goes red if unplugged:** the stroke; `python tests/refusals.py --check` in `prove.yml`,
+beside the map's, on every push.
+
+### The map says how to ask (2026-09-30, WHAT'S LEFT D14; named 2026-09-28 beside the Coder's window on the tree)
+
+An objective that asks for a change to a file in the ground and names one of the map's
+definitions in backticks opens the Expert Coder's window on that passage alone
+(`intent.wants_a_tree_change`, `pipeline._maker_route`), and nothing on the disk said so where a
+person would look. `tests/buildmap.py` now writes a HOW TO ASK section at the top of BUILDMAP.md:
+the shape of the words (a change verb; a path with a folder in it or a root document's bare
+name; the definition as the MODULES table lists it, `Class.method` for a method), an example,
+and what the engine answers when the name is not on the map.
+
+**Proved.** `test_the_map_says_how_to_ask`: the section is there; its example is READ BY THE
+ENGINE as a tree change to `manjuel/pipeline.py` at `inspect_code`; that definition is on the
+map; and a bare `.py` with no folder is not the tree's, as the section says. Reversal on a
+mirror: the example spelled with a bare file reddens the stroke ('' []). The map regenerated and
+`buildmap --check` matching.
+
+**What goes red if unplugged:** the stroke, and `buildmap --check` in CI if the map is not
+regenerated.
+
+### The four headings from before the rewrite fold the number the mark sits on now, and the gate reads it (2026-09-30, WHAT'S LEFT F2)
+
+Four version headings named a commit as it stood before his rewrite of 2026-09-21 (v0.1.13,
+v0.1.12, v0.1.11, 0.1.7) and the 0.1.9 heading named none; the gate's `marks` check reported all
+five on every print of STATUS.md, and its own docstring said LAW 1 forbade rewriting them to
+agree. It does: nothing is deleted. Each heading KEEPS the number it had and folds beside it the
+one the mark sits on since -- `(tag on 453fa0f before the rewrite of 2026-09-21; on 4e04378
+since)` -- and 0.1.9's heading names its commit (`6d3e6b1`). `release.TAG_ON_RE` reads the
+folded form and `marks` judges the second number; a heading with one number is read as before.
+BUILDPATH's fold step carries the form. STATUS now prints "8 marks, each with a heading; 8 sit
+where they say".
+
+**Proved.** Two checks in `test_version_control_matches_the_record`: a folded heading is read at
+its second number and reported as sitting where it says; a fold whose second number is wrong is
+reported at THAT number. Reversal on a mirror: the reader put back to the one-number form reddens
+both ("1 name no commit"). `release` and `marks` strokes green on the mirror.
+
+**What goes red if unplugged:** the two checks; and STATUS's marks line, which is where this
+was found.
+
+**Also in the record, no code (F5, F3 half):** the 2026-09-28 handoff's "Still open, all his"
+paragraph is annotated with what was built later that day and since, nothing above it changed;
+DAYBOOK Session 8's next-session line is in the form the reader parses (`**Next session** —`).
+Sessions for 2026-09-10 and -11 are still unwritten (F3's other half).
+
 ### What GitHub's runs found, and the hand had not read: two reds, both its own (2026-09-29)
 
 THE HAND CALLED CI GREEN AND HAD READ HALF OF IT. It read the runs on `main` (#168, #169, #171,
@@ -2792,7 +2858,7 @@ Cut button, which filled `v0.1.13` itself from what the ground declares at HEAD.
 
 ---
 
-## v0.1.13 — 2026-09-18 16:54 (tag on 453fa0f)
+## v0.1.13 — 2026-09-18 16:54 (tag on 453fa0f before the rewrite of 2026-09-21; on 4e04378 since)
 
 ### 0.1.13 — THE WORLD AND THE MESSAGE, and the number is his: "cut 0.1.13"
 
@@ -2981,7 +3047,7 @@ glass still cannot do stand as written above.
 
 ---
 
-## v0.1.12 — 2026-09-18 06:39 (tag on 15e83d5)
+## v0.1.12 — 2026-09-18 06:39 (tag on 15e83d5 before the rewrite of 2026-09-21; on 084fe33 since)
 
 ### 0.1.12 — THE POINTING, and the number is his: "0.1.12, prep it all up to the gate"
 
@@ -3833,7 +3899,7 @@ against v0.1.11 finds no section-4 status changed.
 
 ---
 
-## v0.1.11 — 2026-09-12 15:34 (tag on c766ce7)
+## v0.1.11 — 2026-09-12 15:34 (tag on c766ce7 before the rewrite of 2026-09-21; on b4b6593 since)
 
 **THIS TAG CARRIES 0.1.10 TOO.** 0.1.10 was a version string and never a tag,
 so everything from the 0.1.9 tag to this one ships inside v0.1.11, the way
@@ -5822,7 +5888,7 @@ another PC.
 
 
 
-## 0.1.9 — 2026-09-10 — THE GLASS, THE GATE, THE DOOR AND THE ROUTE
+## 0.1.9 — 2026-09-10 — THE GLASS, THE GATE, THE DOOR AND THE ROUTE (tag on 6d3e6b1)
 
 **THIS TAG CARRIES 0.1.8 TOO.** 0.1.8 was built and never tagged — the
 glass (atlas as the control plane, Records, the release gate read at every
@@ -6870,7 +6936,7 @@ Cut on the operator's word (RULE 6) with the release gate at 9 of 9.
 
 ---
 
-## 0.1.7 — 2026-09-09 13:22 (tag on b22bf81)
+## 0.1.7 — 2026-09-09 13:22 (tag on b22bf81 before the rewrite of 2026-09-21; on 00d2e56 since)
 
 **CORRECTED 2026-09-17, the heading kept as written.** The `0.1.7` tag in git is on
 a6f7851 (13:29, "The live standup for 0.1.7: 10/10, the gate passes 9 of 9"), the

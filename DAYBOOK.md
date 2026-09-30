@@ -1375,7 +1375,7 @@ five binaries and the glass all asked and all answering 0.1.5. Sittings 203–21
 closed; 203 was closed by hand after its engine was KILLED rather than exited,
 and its line says `toll_paid: false` because none was.
 
-**Next session:** the auth gate cannot be turned on — `ConfigureAuth` has no
+**Next session** — the auth gate cannot be turned on — `ConfigureAuth` has no
 caller anywhere in the webapp, so `authOn` is false for every process's life
 and `ATLAS_AUTH=1` is documented in two comments and read nowhere. The gate
 itself is correct and stroked both ways; only the wiring is missing, and the
@@ -2573,6 +2573,22 @@ watched turn's end; the toll said truly; the covenant read off the record for th
 TUI; a loops box; a live-check button. Ten strokes, fourteen reversals red. D6 (a merge button)
 put to him as B16: `merge` is a forbidden verb by the door's founding law. The glass restarted
 (pid 111424); the pane locked and he unlocked it.
+
+**Paperwork and one small tool (2026-09-30)** — F2: the four headings from before the rewrite
+fold the number the mark sits on since, the gate reads it, STATUS says all eight sit where they
+say; F5: the 09-28 "Still open" paragraph annotated; F3, half: Session 8's next-session line
+parses; C35: `seed_catalog.py --verify` writes nothing, with a leg in the cutters' proof.
+
+**The map says how to ask (2026-09-30)** — D14: a HOW TO ASK section at the top of the map, its
+example held to the engine by a stroke; D13 found already written (the 09-22 handoff block).
+C31 seen a third time: the Router's model server crashed mid-turn with the card full, 8/9, then
+9/9 four minutes later.
+
+**REFUSALS.md and the code joined (2026-09-30)** — D8: the document's generated tail lists every
+`Refused:` site in the code (89) beside the sections written up (32); stroke and CI step.
+
+**C31 closed (2026-09-30 08:36)** — he restarted Ollama; the four orphan model servers survived
+it and were stopped by pid on his word by card; the live check fell from 505-613 s to 131 s.
 
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,

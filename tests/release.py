@@ -541,7 +541,12 @@ def handoff(root: Path = ROOT, today: str | None = None, tag: str = "") -> Check
 TASK_LINE = re.compile(r"^(\s+)\[([ x-])\]\s+(.*)$")
 DATE_RE = re.compile(r"\b(20\d{2}-\d{2}-\d{2})\b")
 HEADING_RE = re.compile(r"^## (v?\d+\.\d+\.\d+)\b[^\n]*", re.M)
-TAG_ON_RE = re.compile(r"\(tag on ([0-9a-f]{7,})\)")
+# A heading names the commit its mark sits on, and may FOLD the number it had
+# before his rewrite of 2026-09-21 beside the one it sits on since (2026-09-30):
+#   (tag on 453fa0f before the rewrite of 2026-09-21; on 4e04378 since)
+# Nothing is deleted (LAW 1), and the gate reads where the mark sits NOW.
+TAG_ON_RE = re.compile(r"\(tag on ([0-9a-f]{7,})"
+                       r"(?: before the rewrite of \d{4}-\d{2}-\d{2}; on ([0-9a-f]{7,}) since)?\)")
 
 
 def task_blocks(text: str) -> dict[str, tuple[str, str]]:
@@ -652,6 +657,12 @@ def marks(root: Path = ROOT, cutting: str = "") -> Check:
     mark has a heading at all; what it REPORTS is where each heading says the
     mark sits against where it does -- the check BUILDPATH's "THE MARKS AS GIT
     HOLDS THEM" pass did by hand once, made automatic.
+
+    THE FOLD (2026-09-30, WHAT'S LEFT F2). Those four headings keep the number
+    they had and carry beside it the one the mark sits on since the rewrite
+    ("tag on 453fa0f before the rewrite of 2026-09-21; on 4e04378 since") --
+    nothing deleted, and this reads the second. A heading that names one number
+    is read as before.
     """
     try:
         log = (root / "CHANGELOG.md").read_text(encoding="utf-8")
@@ -682,12 +693,13 @@ def marks(root: Path = ROOT, cutting: str = "") -> Check:
         head = headed.get(t) or headed.get(t.lstrip("v"), "")
         m = TAG_ON_RE.search(head)
         real = sits_on(t)
+        said = (m.group(2) or m.group(1)) if m else ""
         if not m:
             unsaid.append(t)
-        elif real and real.startswith(m.group(1)[:7]):
+        elif real and real.startswith(said[:7]):
             agree.append(t)
         else:
-            disagree.append(f"{t} (says {m.group(1)[:7]}, sits on {real or '?'})")
+            disagree.append(f"{t} (says {said[:7]}, sits on {real or '?'})")
     parts = [f"{len(held)} marks, each with a heading"]
     if agree:
         parts.append(f"{len(agree)} sit where they say")
