@@ -449,3 +449,8 @@
 {"suite": "strokes", "at": 1790784897.0087516, "state": "finished", "passed": 3382, "total": 3382, "green": true, "failed": []}
 {"suite": "smoke", "at": 1790784902.2015975, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "standup", "at": 1790785078.338168, "state": "finished", "passed": 9, "total": 9, "green": true, "failed": [], "report": "logs/standup_2026-09-30_091758.md"}
+{"suite": "strokes", "at": 1790795775.8982182, "state": "finished", "passed": 3391, "total": 3392, "green": false, "failed": ["the tail is current: a regeneration changes nothing"]}
+{"suite": "smoke", "at": 1790795781.339454, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1790795943.5956616, "state": "finished", "passed": 3392, "total": 3392, "green": true, "failed": []}
+{"suite": "smoke", "at": 1790795948.8849301, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "standup", "at": 1790796048.2517023, "state": "finished", "passed": 9, "total": 9, "green": true, "failed": [], "report": "logs/standup_2026-09-30_122048.md"}

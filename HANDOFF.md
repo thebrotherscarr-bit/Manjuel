@@ -739,6 +739,21 @@ the same; every core `.py` parses under the 3.11 here (CHANGELOG, "GitHub's 3.10
 import"). The run on `3233795` (the F1/F4 send) will show the same red; the send after it is the
 proof.
 
+**THE MORNING'S SIXTH PIECE (WHAT'S LEFT: D15 done).** The list has a wire: a stroke reads
+WHATS_LEFT.md the way the page does and reddens the suites on a line nobody can name, an open
+line already marked DONE, a citation of a CHANGELOG entry that is not there, or a release
+checklist whose version is not the pin (five reversals red by name on the mirror).
+
+**THE MORNING'S SEVENTH PIECE (WHAT'S LEFT: C4 done).** Measured over 910 turns, then built: a
+seat that reads the law block aloud (a sentence in common, the standup's own sixty characters) is
+discarded and named, the words kept; a phrase in common stands. One definition of a recital now,
+in `pipeline.py`, imported by the standup. RESTART REQUIRED for the REPL; the door's next sitting
+carries it.
+
+**THE MORNING'S EIGHTH PIECE (WHAT'S LEFT: E2 measured).** Sitting 315 -- one turn from the
+glass, then left alone -- closed itself at 09:50:33 with `closed_by: "idle: no command in 30
+minutes"` and its toll paid; the first idle close of a sitting that had run something.
+
 **Where the ground stands.** core `main@9d491a8` (the mark `v0.1.16` on `e8aa9b5`), atlas
 `main@efb00d2` (the mark `v0.1.9` on `b1059a1`), both level with GitHub, plus the morning's four
 pieces and this record (unsaved as it is written, saved after). The glass is pid 111424, the

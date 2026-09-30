@@ -59,6 +59,7 @@ sys.path.insert(0, str(ROOT))
 from manjuel import cli, transcript, seatlog, gitstate           # noqa: E402
 from manjuel.context import RunContext                           # noqa: E402
 from manjuel.pipeline import Refused, Aborted, run_pipeline       # noqa: E402
+from manjuel.pipeline import RECITAL_CHARS, recited               # noqa: E402  one definition of a recital (2026-09-30)
 from manjuel.drift import DriftChecker                           # noqa: E402
 from manjuel.skills import EMBED_MODEL                           # noqa: E402
 
@@ -160,27 +161,9 @@ CASES: list[Case] = [
 _NUM_RE = re.compile(r"(?<![\w.])(\d[\d,]*\.?\d*)(?![\w.])")
 
 # How long a run of the delivery, lifted whole from what the seat was handed,
-# is a recital. Sixty characters is a sentence: a phrase in common is speech,
-# a sentence in common is reading aloud.
-RECITAL_CHARS = 60
-
-
-def _flat(text: str) -> str:
-    return " ".join((text or "").lower().split())
-
-
-def recited(delivery: str, handed: str, floor: int = RECITAL_CHARS) -> str:
-    """The longest run of the delivery that stands, word for word, in what
-    the seat was handed -- when it is `floor` characters or more; else "".
-
-    Case and spacing are not words, so they are flattened first. Arithmetic
-    over two texts; no model is asked whether it sounds like a recital."""
-    from difflib import SequenceMatcher
-    a, b = _flat(delivery), _flat(handed)
-    if len(a) < floor or len(b) < floor:
-        return ""
-    m = SequenceMatcher(None, a, b, autojunk=False).find_longest_match(0, len(a), 0, len(b))
-    return a[m.a:m.a + m.size] if m.size >= floor else ""
+# is a recital: RECITAL_CHARS and recited() are the engine's own now
+# (manjuel/pipeline.py, 2026-09-30), so the check and the guard that discards
+# a law recital mean one thing by the word.
 
 
 def numbers_in(text: str) -> set[str]:

@@ -2595,6 +2595,17 @@ cut since 09-17 (five core, four atlas) and where each theme stands, with a stro
 ladder to the marks; F4: SPEC 4.9, the coder on the tree -- three MET lines and a DONE line put
 to him (B17).
 
+**The list has a wire (2026-09-30)** — D15: a stroke holds WHATS_LEFT.md to the page's three
+faults and to the record (an open line marked DONE, a citation with no entry, a stale checklist
+version).
+
+**The law recital guard (2026-09-30)** — C4: measured (2 deliveries and 1 Router recital in 910
+turns since 09-07), then built beside the scaffold parrot under the standup's own definition of
+a recital, which moved into the engine.
+
+**The idle close, live (2026-09-30)** — E2: sitting 315 ran one turn and was left; the engine
+closed it at 09:50:33, why on the ledger line and the toll.
+
 **Found** — "the founding documents" names `semantic_search`, so an objective for the flow must be
 typed without a tool's words; a carried failed pass quotes the door's name and would shut the window,
 so v4 carries none; skills.py's loopback `urllib` made the gate refuse every edit to skills.py until

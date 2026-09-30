@@ -101,8 +101,6 @@ Nothing here gets built until you say which way.
   measuring before anything is built. *(TASKS)*
 - **C3. The front door answers "what does the covenant say?" from the law text in its own
   prompt,** not from the file. This is the same question that fails in A1. *(TASKS)*
-- **C4. The law text leaks into answers.** First fix built (it rides in the system role). A guard
-  that refuses an answer reciting it is not built. *(TASKS, in hand)*
 - **C5. The front door copies internal labels into answers:** "Router produced:", "The operator
   asked:". *(TASKS)*
 - **C6. The closing step once read its own instruction back as the answer.** *(TASKS)*
@@ -150,8 +148,6 @@ Nothing here gets built until you say which way.
   is not scheduled: yours to order. Part 3 (REFUSALS.md findable by search) is true by another
   road since 2026-09-29: every root document is in the index list, held by a test, and the
   document now ends with every refusal site in the code (D8). *(TASKS, in hand)*
-- **D15. This list is kept by hand.** The webapp's page names a line with no number or a
-  number used twice. Nothing warns anyone when the list is simply out of date.
 
 ---
 
@@ -160,7 +156,6 @@ Nothing here gets built until you say which way.
 - **E1. The wife test.** Someone who is not you sits at the dashboard, asks it to make something
   in her own words, and uses the result with no help. All three pieces are built. The test has
   not been run. *(SPEC 4.8)*
-- **E2. An idle close of a session that actually ran something.** *(TASKS)*
 - **E3. Whether the Router listing the scratch folder means it is unsure.** Needs enough runs to
   tell. *(TASKS)*
 
@@ -203,6 +198,23 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **E2. An idle close of a session that actually ran something.** DONE 2026-09-30, for real:
+  sitting 315 was opened from the dashboard, ran one turn at 09:20, and was left alone; at 09:50
+  the engine closed it by itself, paid the toll, and wrote why on both the session record and
+  the toll ("idle: no command in 30 minutes"). The TASKS box that names this is yours to tick.
+  *(CHANGELOG, "An idle close of a sitting that ran something, fired live")*
+- **C4. The law text leaks into answers.** DONE 2026-09-30. Measured first, as the task line
+  asked: in the 910 turns since the first fix, two answers read the law block aloud (09-10, and
+  the covenant question at 09:06 today) and the Router once; ten other sightings were tool
+  results, not answers. Now an answer that repeats a whole sentence of the block is thrown out
+  and named in the record, the way an answer that repeats the conversation scaffold is; an
+  answer that merely mentions the law stands. The engine and the live check use one definition
+  of "repeats". *(CHANGELOG, "A seat that reads the law block aloud is discarded")*
+- **D15. This list is kept by hand.** DONE 2026-09-30, as far as a machine can help. A test
+  now fails the suites, here and on GitHub, when a line has no number, a number is used twice or
+  sits under the wrong letter, an open line already says DONE with a date, a line cites a
+  CHANGELOG entry that is not there, or the release checklist's version is not the one set. The
+  page still names its own faults in red. *(CHANGELOG, "The list of what is left has a wire")*
 - **F1. The plan is three weeks old.** DONE 2026-09-30. Every theme in SPEC 8.2 carries a dated
   line saying where it stands today (two are met by the record, two wait on you), and BUILDPATH
   has the ladder of the versions cut since 09-17 -- five core and four atlas, one more of each
@@ -392,3 +404,8 @@ Finished lines, newest first. A number is never used again.
 By hand, in this one file. Whoever finishes something moves its line to a section named
 `## Done` at the foot of this file, with the date, in the same pass. Whoever finds something new
 adds it under its letter, with the next number, in plain words. Numbers are never reused.
+
+A test reads this file the way the page does and fails the suites -- here and on GitHub -- on a
+line with no number, a number used twice or under the wrong letter, an open line that already
+says DONE with a date, a line that cites a CHANGELOG entry that is not there, or a release
+checklist whose version is not the one set (2026-09-30, D15).

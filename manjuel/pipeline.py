@@ -123,6 +123,30 @@ _SCAFFOLD_RE = re.compile(
     r"^\s*(?:#{2,6}\s*Conversation so far\b|\(recalled(?:, [^)]*)?\) \w+:)",
     re.IGNORECASE)
 
+# WHAT A RECITAL IS (tests/standup.py, 2026-09-29; moved here 2026-09-30 so
+# the engine and the check mean one thing by it). A run of RECITAL_CHARS or
+# more of a seat's words standing, word for word, in what the seat was
+# handed. Sixty characters is a sentence: a phrase in common is speech, a
+# sentence in common is reading aloud. Arithmetic over two texts; no model
+# is asked whether it sounds like a recital.
+RECITAL_CHARS = 60
+
+
+def _flat(text: str) -> str:
+    return " ".join((text or "").lower().split())
+
+
+def recited(delivery: str, handed: str, floor: int = RECITAL_CHARS) -> str:
+    """The longest run of `delivery` that stands, word for word, in `handed`
+    -- when it is `floor` characters or more; else "". Case and spacing are
+    not words, so both are flattened first."""
+    from difflib import SequenceMatcher
+    a, b = _flat(delivery), _flat(handed)
+    if len(a) < floor or len(b) < floor:
+        return ""
+    m = SequenceMatcher(None, a, b, autojunk=False).find_longest_match(0, len(a), 0, len(b))
+    return a[m.a:m.a + m.size] if m.size >= floor else ""
+
 # The router may call more than one skill before it is done, but never
 # unboundedly -- a small model given an open loop will spin (design doc section 4).
 # Five hops, not four (operator's ruling, sitting 63). The cap was doing the
@@ -2935,6 +2959,31 @@ def run_pipeline(
             kept = " ".join((output or "").split())[:300]
             note = (f"{agent.name} recited the conversation scaffold instead "
                     f"of answering -- discarded; it said: {kept!r}")
+            if note not in ctx.notes:
+                ctx.notes.append(note)
+            report("      " + ink.warn(note.split('; it said')[0]))
+            output = ctx.last_output() if "worked" in ctx.flags else ""
+
+        # THE LAW RECITAL (WHAT'S LEFT C4; TASKS 2026-09-07: "measure the next
+        # sittings first"). The first layer moved `## The law` into the
+        # system role and labelled it "not material, not counsel"; a 3B still
+        # reads it aloud. MEASURED 2026-09-30 over the 910 turns since that
+        # layer: two deliveries recited the block (09-10 07:17, "what's on the
+        # board"; 09-30 09:06, "what does the covenant say?", scored MET by
+        # the standup that morning), the Router once (09-17 20:56), and ten
+        # more transcripts carry its sentences only as tool results -- code
+        # reads of lawgate.py, which no guard should touch. So the guard reads
+        # the SEAT'S OWN WORDS against the block that rode in its system
+        # role, by the standup's definition (recited, above): a sentence of it
+        # in common is reading aloud, and is discarded the way the scaffold
+        # parrot is, the words kept in a note. A phrase in common ("bound by
+        # the ten estate laws") is speech about the law, and stands.
+        law_seen = "\n".join(b for b in (getattr(ctx, "law_full", ""), getattr(ctx, "law", "")) if b)
+        lifted = recited(output or "", law_seen) if law_seen else ""
+        if lifted:
+            kept = " ".join((output or "").split())[:300]
+            note = (f"{agent.name} recited the law block instead of answering -- "
+                    f"discarded; it said: {kept!r}")
             if note not in ctx.notes:
                 ctx.notes.append(note)
             report("      " + ink.warn(note.split('; it said')[0]))

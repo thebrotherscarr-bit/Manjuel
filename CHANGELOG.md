@@ -34,6 +34,74 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### An idle close of a sitting that ran something, fired live (2026-09-30, WHAT'S LEFT E2; TASKS "not been fired live")
+
+The engine has closed its own sitting after thirty idle minutes since 2026-09-16, and the reason
+has ridden on the ledger line and in the toll since 09-29 -- but no sitting that had RUN a turn
+had ever been left to it: every one was closed by the tool that opened it or by the glass. Sitting
+315: opened from the glass at 09:20:25, one turn ("good morning", 3 stages, 1.6 s) delivered at
+09:20:36, then nothing. At 09:50:33 the engine closed it unasked. The ledger line: `ended`
+09:50:33, `toll_paid: true`, `closed_by: "idle: no command in 30 minutes"`. The toll on SEAT_LOG:
+"Closed unattended (idle: no command in 30 minutes)", with the turn under WHAT RAN. Nothing was
+edited on the ground for the thirty minutes (SITTING LAW 5); the Dashboard's own polling reads
+the door's `/run/state`, never the engine, and did not reset the clock. Measured, not built:
+nothing moved but the record.
+
+**What goes red if unplugged:** `test_an_idle_engine_closes_its_own_sitting` (the same close, in
+seconds); this line is the live proof of it.
+
+### A seat that reads the law block aloud is discarded, under the one definition of a recital (2026-09-30, WHAT'S LEFT C4; TASKS 2026-09-07 "measure the next sittings first")
+
+The first layer (2026-09-07) moved `## The law` into the system role and labelled it "not
+material, not counsel"; the guard that refuses a recital of it waited on measurement. MEASURED
+over the 910 turns since: two deliveries recited the block (09-10 07:17, "what's on the board";
+09-30 09:06, "what does the covenant say?" -- scored MET by that morning's standup, which asks the
+covenant case only for a search), the Router once (09-17 20:56), and ten more transcripts carry
+its sentences only inside tool results, code reads of `lawgate.py`, which no guard should touch.
+
+BUILT, the way the scaffold parrot is refused: a seat's own words are read against the block that
+rode in its system role, and a sentence of it in common is discarded -- the last real output
+stands after work, or the seat is recorded as having said nothing -- with the words kept in a note
+(`<seat> recited the law block instead of answering -- discarded; it said: ...`). The measure is
+the standup's own (2026-09-29): sixty characters lifted whole is reading aloud, a phrase in common
+is speech. `RECITAL_CHARS` and `recited()` move from `tests/standup.py` into `manjuel/pipeline.py`
+and the standup imports them, so the engine and the check mean one thing by the word; a stroke
+holds them to the same object. The 09-10 delivery was a paraphrase (twenty-eight characters in
+common) and would stand under this definition; the 09-30 one, eighty-five, would not.
+
+**Proved.** In `test_a_door_that_calls_a_tool_hands_it_to_the_router`, beside the scaffold parrot: a Steward reading the short block aloud is discarded
+and named, with its words kept; a Steward saying "bound by the ten estate laws" inside its own
+sentence stands and is not named; the block rode in the seat's system role (something to recite);
+the standup's `recited` is the engine's. Reversal on a mirror: the guard struck, the recital is
+delivered whole and the record is silent (two checks red).
+
+`manjuel/pipeline.py` moved: **restart required** (the door boots an engine per sitting, so the
+next sitting carries it; the REPL needs its own). The guard moved the `Refused:` sites below it, and
+REFUSALS.md's generated tail went stale -- the D8 stroke reddened the suites from the glass (3391 of
+3392) until `tests/refusals.py` regenerated it, which is that wire working on its first day. **What goes red if unplugged:** the two checks
+above; and the live check's own-words case, which would go on scoring a recital as met -- the
+covenant case does not ask for own words, and says so in `standup.py`.
+
+### The list of what is left has a wire (2026-09-30, WHAT'S LEFT D15)
+
+WHATS_LEFT.md is kept by hand and read by the glass's What's-left page, which names in red a
+line with no number, a number used twice or a number under the wrong letter -- at render time, to
+whoever is looking. Nothing held the file when nobody was looking, and nothing at all said when
+a line was simply stale. `test_the_list_of_what_is_left_reads_whole_and_is_not_stale` reads the
+file the way the page does (a list line runs on through every line indented beneath it) and
+holds it in the suites and in CI: the page's three faults; an open line that already says DONE
+with a date (finished, never moved); a line that cites a CHANGELOG entry that is not there (an
+ellipsis in a citation is read as a prefix); and a release checklist whose version is not the
+core's pin. "How this page is kept" says so.
+
+**Proved.** On the ground: 41 open and 40 done lines, 80 numbers each once, 9 citations each
+found, the checklist at 0.1.16 with the pin. Reversal on a mirror, one at a time: a bare line
+under C, a number used twice, an open line marked DONE, a citation of an entry that is not there,
+and a checklist version of 0.1.17 each redden their own check by name.
+
+**What goes red if unplugged:** the stroke, on every push, the next time a line is written that
+the page could not name or that the record does not bear out.
+
 ### GitHub's 3.10 legs died at import on the refusals script: a backslash inside an f-string (2026-09-30, read on the run for bb293be)
 
 The run on `bb293be` was red on both 3.10 legs and green on both 3.13 legs, and the reason was

@@ -1993,6 +1993,47 @@ def test_a_door_that_calls_a_tool_hands_it_to_the_router(reg, lib, book):
           any("recited the conversation scaffold" in n for n in ctx6.notes), str(ctx6.notes))
     check("a door that recites it with no work behind it delivers nothing rather than the scaffold",
           True)  # covered by the branch: output = "" when not worked
+
+    # THE LAW RECITAL (WHAT'S LEFT C4, 2026-09-30). The block rides in the
+    # system role since 09-07 and a 3B still reads it aloud: two deliveries
+    # in the 910 turns since. A sentence of it in common is discarded the way
+    # the scaffold is; a phrase in common is speech about the law and stands.
+    from manjuel.pipeline import RECITAL_CHARS, recited
+    def reader(a):
+        if a.key == "router":
+            return "<action>git_status</action>"
+        if a.key == "steward":
+            return ("You are bound by the ten estate laws; the engine enforces what it "
+                    "can and refuses what it must. Testimony is never fact (LAW 5).")
+        return "x"
+    r7 = Stub(reply=reader)
+    ctx7 = RunContext(objective="git status", feed="")
+    run_pipeline(ctx7, reg, r7, lib, env_for(g, reg, r7),
+                 steps=book.get("default"), report=lambda s: None)
+    check("the law block rode in the seat's system role, so there was something to recite",
+          len(recited(reader(reg.get("steward")), ctx7.law or "")) >= RECITAL_CHARS,
+          repr((ctx7.law or "")[:80]))
+    check("a seat that reads the law block aloud is discarded",
+          "enforces what it can" not in (ctx7.last_output() or ""), repr(ctx7.last_output())[:80])
+    check("and the record names the recital and keeps the words",
+          any("recited the law block" in n and "bound by the ten" in n for n in ctx7.notes), str(ctx7.notes)[:200])
+    def speaker(a):
+        if a.key == "router":
+            return "<action>git_status</action>"
+        if a.key == "steward":
+            return "The tree is clean on main. Every seat here is bound by the ten estate laws, and that is all."
+        return "x"
+    r8 = Stub(reply=speaker)
+    ctx8 = RunContext(objective="git status", feed="")
+    run_pipeline(ctx8, reg, r8, lib, env_for(g, reg, r8),
+                 steps=book.get("default"), report=lambda s: None)
+    check("a phrase of the law in common is speech about the law, and stands",
+          "bound by the ten estate laws" in (ctx8.last_output() or "")
+          and not any("recited the law block" in n for n in ctx8.notes), repr(ctx8.last_output())[:80])
+    sys.path.insert(0, str(ROOT / "tests"))
+    import standup as _su_recital
+    check("the standup and the engine mean one thing by a recital",
+          _su_recital.recited is recited and _su_recital.RECITAL_CHARS == RECITAL_CHARS)
     from manjuel.pipeline import _SCAFFOLD_RE
     check("ordinary prose mentioning a conversation is not a recital",
           not _SCAFFOLD_RE.search("we talked about this in the conversation so far, and it holds"))
@@ -16231,6 +16272,77 @@ def test_the_plan_names_every_mark_where_it_sits(reg, lib, book):
         check("(git holds no marks here -- the held-marks leg is not asked, and says so)", True)
 
 
+def test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book):
+    """THE LIST HAS A WIRE (WHAT'S LEFT D15, 2026-09-30). WHATS_LEFT.md is kept
+    by hand and read by the glass's What's-left page, which names in red a
+    line with no number, a number used twice or a number under the wrong
+    letter -- at render time, to whoever is looking. Nothing held the file
+    when nobody was, and nothing at all said when a line was simply stale.
+    This reads the file the way the page does (a list line runs on through
+    every line indented beneath it) and holds it in the suites and in CI:
+    the page's three faults; an open line that already says DONE with a
+    date (finished, never moved); a line that cites a CHANGELOG entry that
+    is not there; and a release checklist whose version is not the pin."""
+    import re as _re
+    text = (ROOT / "WHATS_LEFT.md").read_text(encoding="utf-8").replace("\r\n", "\n")
+    heads = [l[4:] for l in (ROOT / "CHANGELOG.md").read_text(encoding="utf-8").splitlines()
+             if l.startswith("### ")]
+    joined: list[str] = []
+    for line in text.splitlines():
+        if line.startswith("  ") and joined and joined[-1].startswith("- "):
+            joined[-1] += " " + line.strip()
+        else:
+            joined.append(line)
+    faults: list[str] = []
+    seen: dict[str, bool] = {}
+    entries: list[tuple[str, bool, str]] = []
+    letter, done = "", False
+    for line in joined:
+        h = _re.match(r"^## ([A-Z])\. ", line)
+        if h:
+            letter, done = h.group(1), False
+            continue
+        if line.startswith("## "):
+            letter, done = "", line.strip() == "## Done"
+            continue
+        if not line.startswith("- ") or _re.match(r"^\[( |x|X)\] ", line[2:]):
+            continue
+        m = _re.match(r"^\*\*([A-Z]\d+)\. (.+?)\*\*\s*(.*)$", line[2:])
+        if not m:
+            if letter:
+                faults.append(f"a line under {letter} has no number: {line[2:62]!r}")
+            continue
+        i = m.group(1)
+        if i in seen:
+            faults.append(f"{i} is used twice")
+        seen[i] = True
+        if letter and i[0] != letter:
+            faults.append(f"{i} sits under {letter}")
+        entries.append((i, done, line[2:]))
+    n_open = sum(1 for _, d, _ in entries if not d)
+    n_done = sum(1 for _, d, _ in entries if d)
+    check("the list reads whole: numbered lines open and under Done", n_open >= 10 and n_done >= 10,
+          f"open {n_open}, done {n_done}")
+    check("every line under a letter carries a number, used once, under its own letter (the page's three faults)",
+          not faults, "; ".join(faults) or f"{len(seen)} numbers, each once")
+    already = [i for i, d, body in entries if not d and _re.search(r"\bDONE \d{4}-\d\d-\d\d", body)]
+    check("no open line already says DONE with a date (finished and never moved)", not already, ", ".join(already))
+    cited, missing = 0, []
+    for m in _re.finditer(r"\*\(CHANGELOG, ([^)]*)\)\*", text):
+        for t in _re.findall(r'"([^"]+)"', m.group(1)):
+            cited += 1
+            stem = t[:-3].rstrip() if t.endswith("...") else t
+            if not any(h.startswith(stem) for h in heads):
+                missing.append(t)
+    check("every CHANGELOG entry a line cites is a heading in CHANGELOG.md", cited >= 1 and not missing,
+          ", ".join(missing) or f"{cited} citations, each found")
+    v = _re.search(r"version numbers set \((\d+\.\d+\.\d+) and", text)
+    pin = _re.search(r'__version__ = "([^"]+)"', (ROOT / "manjuel" / "__init__.py").read_text(encoding="utf-8"))
+    check("the release checklist's version is the pin's, or the checklist names none",
+          v is None or (pin is not None and v.group(1) == pin.group(1)),
+          f"checklist {v.group(1) if v else '-'}, pin {pin.group(1) if pin else '-'}")
+
+
 def test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book):
     """"sandbox the python" (the operator, 2026-09-22).
 
@@ -19158,6 +19270,7 @@ def main() -> int:
     test_the_map_says_how_to_ask(reg, lib, book)
     test_the_refusals_document_lists_every_site_in_the_code(reg, lib, book)
     test_the_plan_names_every_mark_where_it_sits(reg, lib, book)
+    test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)
