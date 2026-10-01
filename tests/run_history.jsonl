@@ -487,3 +487,9 @@
 {"suite": "smoke", "at": 1790808412.071519, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "standup", "at": 1790808488.677668, "state": "finished", "passed": 9, "total": 9, "green": true, "failed": [], "report": "logs/standup_2026-09-30_154808.md"}
 {"suite": "court", "at": 1790809076.2819474, "state": "finished", "passed": 1, "total": 1, "green": true, "failed": [], "report": "logs/standup_2026-09-30_155756.md"}
+{"suite": "court", "at": 1790867960.137198, "state": "finished", "passed": 0, "total": 1, "green": false, "failed": ["the court"], "report": "logs/standup_2026-10-01_081919.md"}
+{"suite": "strokes", "at": 1790868794.0070376, "state": "finished", "passed": 3454, "total": 3454, "green": true, "failed": []}
+{"suite": "smoke", "at": 1790868800.183712, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "standup", "at": 1790868937.56545, "state": "finished", "passed": 9, "total": 9, "green": true, "failed": [], "report": "logs/standup_2026-10-01_083537.md"}
+{"suite": "court", "at": 1790869345.777239, "state": "finished", "passed": 1, "total": 1, "green": true, "failed": [], "report": "logs/standup_2026-10-01_084225.md"}
+{"suite": "standup", "at": 1790870730.7595575, "state": "finished", "passed": 9, "total": 9, "green": true, "failed": [], "report": "logs/standup_2026-10-01_090530.md"}

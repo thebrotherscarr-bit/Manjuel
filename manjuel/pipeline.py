@@ -3258,9 +3258,28 @@ def run_pipeline(
         # A flag raised now may call a racked seat. Summoning happens HERE,
         # after the step that raised it, so the seat lands in the same run
         # rather than the next one.
-        for who in seats.summon(ctx.flags):
-            ctx.notes.append(f"rack: {who}")
-            report("      " + ink.dim(f"rack: summoning {who}"))
+        #
+        # THE RULING IS THE LAST WORD (2026-10-01, the second live court on
+        # his limits). Jesster's counsel raised `drifted` against the search
+        # material; at the judge's step this summons placed the Quality
+        # Evaluator in the next slot -- after the ruling -- and the court case
+        # missed on "the last word was Quality Evaluator's". THE LAW's order
+        # is counsel, then the ruling, and nothing after it (LAW_001 §2): at
+        # the judge's step of a court no seat is summoned, and the record
+        # says which seat was not.
+        if _is_court(agent) and agent.key == "manjuel":
+            late = sorted({a.name for a in seats.rack for f in seating.wake_flags(a)
+                           if f in ctx.flags and (a.key, f) not in seats.summoned})
+            if late:
+                note = (f"the ruling is the last word: {', '.join(late)} not seated after it "
+                        f"(THE LAW's order: counsel, then the ruling)")
+                if note not in ctx.notes:
+                    ctx.notes.append(note)
+                report("      " + ink.dim(note))
+        else:
+            for who in seats.summon(ctx.flags):
+                ctx.notes.append(f"rack: {who}")
+                report("      " + ink.dim(f"rack: summoning {who}"))
 
         # Advisory measurement: did this stage wander from the source?
         d_score = d_flag = None

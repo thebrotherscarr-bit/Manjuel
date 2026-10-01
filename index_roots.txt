@@ -35,6 +35,7 @@ index_roots.txt
 logs
 memory.md
 SEAT_LOG.md
+SEAT_LOG_INDEX.md
 rack.md
 agent_workspace
 

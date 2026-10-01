@@ -1280,6 +1280,109 @@ Still his: sealing SITTING LAW 5 onto the chain (it is written in
 law/SITTING_LAWS_2.md, but the chain seals four files and that is not one of
 them), the terminator ruling, and the client token's last two places.
 
+## Session 7a — 2026-09-10 (Thursday), sittings 126–196: 0.1.9 cut, CI green for the first time, the core and atlas split — WRITTEN AFTER THE FACT
+
+**Standing** — WRITTEN 2026-10-01 on his ruling of 2026-09-30 (WHAT'S LEFT F3), from CHANGELOG's
+entries of the day, the sitting ledger (`sessions/sessions.jsonl`) and git's own log; the day's
+own Standing was never written, and no line here is a memory. Follows session 7 (2026-09-09, the
+glass and the gate). The night before had handed off with the doubled line endings repaired —
+the day's first sitting opened on that save.
+
+**Version** — at open: core `main@ebfbf4b` ("The night handed off, and the doubled line endings
+repaired"), sitting 126 at 05:39. THE MARK: **0.1.9 — THE GLASS, THE GATE, THE DOOR AND THE
+ROUTE**, cut at 07:46 on `6d3e6b1`. At close: core `main@0588ede` ("A skill is offered only the
+arguments it declares"), sitting 196 closed 21:46, the tree clean. Seventy-one sittings, 225
+turns, 49 tolls paid — the busiest day on the ledger.
+
+**The plan** — his words, as CHANGELOG keeps them, in the order they came: "c with d folded in, i
+like that" and "write up the plan" (0.1.9 opens: the ladder rewritten, the corpus split); "4.2
+next, phrases for the door"; "now do 4.3 rack_report facts only"; "citation check next" ("i think
+that was part of the drift"); "the door inventing numbers next"; "the door parroting next";
+"finish the tool loop dedup"; "review all the docs so i have the proper information for starting
+and running it"; then, after the mark, "fix the numpy CI first"; "the live standup is the issue
+... whats the deal?"; "add the line"; "two smaller repos, one for the core and one for atlas";
+"you have too many knobs"; "ive noticed that for a while. how do we fix it?"; "write the whole doc
+pass workflow into a skill"; "the full git workflow cycle for version control"; "fix the push
+reporting delivered when it didn't".
+
+**What was built, before the mark (05:48–07:46)** — how he starts and runs it, written down
+(`721a7e1`); SPEC 4.3, rack_report facts only (`da16ea8`); SPEC 4.2, phrases for the door and
+keywords for the Router (`8b5299c`); 0.1.9 opened, the ladder rewritten and the corpus split
+(`8ff1875`); the citation check — a tool result is source material (`fb00d93`); a number no tool
+returned stamped on the delivery (`a593391`); the door parrots, read not built (`2926317`); the
+tool-loop dedup covers the run (`9bb65a6`); the mark (`6d3e6b1`).
+
+**What was built, after the mark (08:00–20:06)** — CI green on all four legs for the first time:
+the strokes needed numpy (`f8e79fc`), two more reasons found in a clean-clone mirror (`a646d12`),
+the LAW 6 stroke that needed 3.11 (`a090b2d`), the jail answering in two spellings that only
+Windows could see (`b4d29ec`), the workflow saying what it installs (`29e305d`), a staleness
+stroke racing the clock on one leg (`38f1e25`); a push that reported success without pushing
+(`0d9fa44`); git_cycle, the whole version-control turn as one skill (`fcf5d4f`, `4727213`); two
+read-only passes over the record as arithmetic (`294a59f`); one rule for a stale ground, a phrase
+list that ends, two reports out of the roster (`0ee8a9d`); THE CORE AND ATLAS ARE TWO REPOSITORIES
+(`06dbd5c`), the control-center spec moved to atlas (`e71bdb9`); an engine open and doing nothing
+named the most expensive thing in the record (`6e1f421`); a commit is not a tag (`b22473d`); the
+CHANGELOG carrying the gate split (`89810b1`); a root under an ignored directory not shipped
+(`fe1d41b`); the clean clone proving it before CI does (`c110877`); the docs stop describing the
+machine that built them (`9c8a7fd`); sources are what is, the record what happened (`6464816`); a
+child inside the engine must close stdin or boot deadlocks (`5f72c6f`); the build map caught up
+(`4e54360`); the REPL stops asking atlas about its own repository (`ba3a8e3`); a skill is offered
+only the arguments it declares (`6736808`).
+
+**Found** — HANDOFF's block for the day carries the correctness arc: the morning's faults were a
+flow not doing the work; the afternoon's were a flow SAYING it had, each found by firing it and
+refusing to believe the green. The ladder had named versions nobody shipped (BUILDPATH rewritten
+to what actually went); four of 0.1.9's five pieces were one fault in different clothes — a seat
+saying something it did not get from a tool.
+
+**Rulings** — the quoted orders above; the version's name, his.
+
+**At close** — sitting 196 at 21:46, `main@0588ede` clean; the mark 0.1.9 on `6d3e6b1`; CI green
+on every leg; two repositories where there had been one.
+
+**Next session** — 2026-09-11, session 7b below: the Archive ruling, the second machine, 0.1.10
+and the coding loop's first pieces.
+
+## Session 7b — 2026-09-11 (Friday), sittings 197–202: the Archive ruling, the second machine, 0.1.10, and the coding loop's first pieces — WRITTEN AFTER THE FACT
+
+**Standing** — WRITTEN 2026-10-01 on his ruling of 2026-09-30 (WHAT'S LEFT F3), from CHANGELOG,
+the ledger and git's log, as session 7a was. Follows 7a. Before any sitting opened, two saves at
+dawn (06:57, 07:38) carried his ruling of the day and the second machine's audit.
+
+**Version** — the dawn saves: `a34ec17` ("The Archive never goes on GitHub, and the four blockers
+are closed"), `73372f2` ("A stale bundle and a stray store stop being tracked"). At open: sitting
+197 at 11:12 on `d8edbe8` ("A pass over the living docs, measured against the disk"). At close:
+sitting 202 at 14:19 on `4170a54` ("mcp_call declared two arguments the Router has no way to
+send"); three saves followed with no sitting open (14:31, 17:20, 18:34). Six sittings, 14 turns,
+5 tolls paid. 0.1.10 named at 12:18 (`e06c932`) — a version string, never a tag, which shipped
+inside v0.1.11 (his ruling of 2026-09-30, B11, says so under that heading).
+
+**The plan** — his words: "the ARCHIVE never goes on github, EVER" (written into RULE 1 that
+morning); "manjuel is 0.1.10"; "make the documents true to the build".
+
+**What was built** — THE ARCHIVE NEVER GOES ON GITHUB, written into RULE 1, and the four things a
+second machine stops on, closed after three audits of a clean clone that was then built and run
+(`a34ec17`); a stale bundle and a stray store untracked (`73372f2`); the build map caught up and a
+gate red for four runs went green (`abdb158`); the runbook stopped promising a red that was an
+absence (`7d12371`); a pass over the living docs measured against the disk — the doctrine check's
+four dead paths in SYSTEM_DESIGN.md (`62b8b69`); two runtime stores, `flows/` and `state/`,
+stopped being commit fodder (`027b6c8`); every local MCP server became a skill, `mcp_call`
+(`c281692`); 0.1.10, and a flow that checks a bump rather than making one (`e06c932`); the last
+mixed files and the writer making one of them (`cf3a8fe`); the last three suite writers, so the
+whole record is one terminator (`dd12ade`); the guard for the suites' own writers pinned
+(`34cbba4`); the build map caught up with the stroke just added (`43f0cd9`); mcp_call's two
+arguments the Router has no way to send (`e2b41fb`); then, with no sitting open: hooks and the
+interrupt that was always there and never pinned (`25c427a`), the coding loop's edit that is not
+a whole file and a verdict it can steer on (`eb6d694`), piece 3 — the coder flow (`0ba01c8`).
+Session 8 (09-12) is the day that work was FIRED.
+
+**Rulings** — the Archive, absolute (RULE 1); 0.1.10 as the number; the docs true to the build.
+
+**At close** — the last sitting, 202, at 14:19 on `4170a54`; the evening's three saves after it;
+the record one terminator; two repositories, each clean.
+
+**Next session** — Session 8, 2026-09-12: the flow confirmation, and v0.1.11 THE CODING UPDATE.
+
 ## Session 8 — 2026-09-12 (Friday), sittings 203–216, the flow confirmation
 
 **Standing** — follows session 7 (2026-09-09), which closed at `main@031b62e`

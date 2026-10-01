@@ -118,6 +118,9 @@ widen a window, only cover more ground with each one.
     logs/          every run transcribed; prompts kept apart
     memory.md      rulings that outlive a session (operator-landed)
     SEAT_LOG.md    the sittings and their tolls
+    SEAT_LOG_INDEX.md  the same tolls in the order they were paid, with the
+                   numbering's gaps and duplicates counted -- generated from the
+                   log (tests/seatindex.py); untracked, as the log is
     law/           THE LAW as a hash-chained ledger (`python law/law.py verify`)
     SPEC.md        what this IS and when it is DONE, line by line; the words
     TASKS.md       what the record owes, by the sitting that found it

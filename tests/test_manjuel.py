@@ -2530,6 +2530,38 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
     from manjuel.pipeline import _RULING_HEAD_RE
     check("counsel merely mentioning a ruling is not writing one",
           not _RULING_HEAD_RE.search("the court's earlier ruling on this was narrow, and I would add a caution"))
+
+    # THE RULING IS THE LAST WORD (2026-10-01, the second live court): a flag
+    # that would summon a racked seat at the judge's step summons nobody,
+    # and the record names the seat that was not seated.
+    class Flagging(Court):
+        def chat(self, agent, prompt, stream_to=None, tools=None, think_to=None, think=None):
+            if agent.key == "manjuel":
+                self.seen.append((agent.name, prompt))
+                return "RULING: SUPPORTED -- the counsel holds. FACT. <flags>review</flags>"
+            return super().chat(agent, prompt, stream_to, tools, think_to, think)
+    rf = Flagging()
+    ctxf = RunContext(objective="should the court sit on one model?", review_only=True)
+    run_pipeline(ctxf, reg, rf, lib, e, steps=book.get("court"), report=lambda s: None)
+    sat = [s.agent for s in ctxf.steps]
+    check("a flag raised at the judge's step seats nobody after the ruling",
+          sat and sat[-1] == "Manjuel" and "Quality Evaluator" not in sat, str(sat))
+    check("   and the record names the seat that was not seated, and why",
+          any("the ruling is the last word: Quality Evaluator not seated after it" in n for n in ctxf.notes),
+          str(ctxf.notes)[-200:])
+    class Counsel(Court):
+        def chat(self, agent, prompt, stream_to=None, tools=None, think_to=None, think=None):
+            if agent.key == "neiro":
+                self.seen.append((agent.name, prompt))
+                return "[Neiro] counsel, and a doubt worth a second look <flags>review</flags>"
+            return super().chat(agent, prompt, stream_to, tools, think_to, think)
+    rg = Counsel()
+    ctxg = RunContext(objective="should the court sit on one model?", review_only=True)
+    run_pipeline(ctxg, reg, rg, lib, e, steps=book.get("court"), report=lambda s: None)
+    satg = [s.agent for s in ctxg.steps]
+    check("   while the same flag raised by counsel still summons, before the judge (the rack is not disarmed)",
+          "Quality Evaluator" in satg and satg[-1] == "Manjuel"
+          and satg.index("Quality Evaluator") < satg.index("Manjuel"), str(satg))
     retry = [p for n, p in r.seen if n == "Manjuel"][1]
     check("the retry carries the seat's own deliberation, labelled as its own words",
           "Your own deliberation so far" in retry and "weighing counsel, turn 1" in retry
@@ -16542,6 +16574,48 @@ def test_no_file_is_mixed_and_the_root_documents_are_crlf(reg, lib, book):
     check("every .md at the root is CRLF, as the chain's own writers emit", not roots_lf, ", ".join(roots_lf))
 
 
+def test_the_toll_index_is_read_off_the_log(reg, lib, book):
+    """THE TOLL INDEX (his ruling 2026-09-30, WHAT'S LEFT B13; built 2026-10-01).
+    SEAT_LOG.md is append-only and written by more than one hand, so its
+    numbers carry gaps and duplicates and its order is the order of writing.
+    He asked for it sorted and numbered; the law forbids rewriting it. So
+    `tests/seatindex.py` writes SEAT_LOG_INDEX.md beside it: every toll by its
+    session's own timestamp, the gaps and the duplicates as arithmetic. This
+    holds the index to the log -- every heading a row, the order the order
+    paid, the arithmetic the headings', the copy current -- and the log
+    untouched by it. Where the log is absent (a fresh checkout: the record is
+    untracked), nothing is asked, and it says so."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("seatindex_", ROOT / "tests" / "seatindex.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    check("the index never writes the log it reads",
+          "LOG.write" not in (ROOT / "tests" / "seatindex.py").read_text(encoding="utf-8"))
+    log = ROOT / "SEAT_LOG.md"
+    if not log.exists():
+        check("(no SEAT_LOG.md here -- the record is untracked; the index is not asked, and says so)", True)
+        return
+    text = log.read_text(encoding="utf-8", errors="replace").replace("\r\n", "\n")
+    rows = mod.tolls(text)
+    heads = sum(1 for l in text.splitlines() if l.startswith("## "))
+    check("every toll heading in the log is a row of the index", len(rows) == heads and heads >= 100,
+          f"{len(rows)} rows, {heads} headings")
+    with_session = sum(1 for r in rows if r["session"])
+    check("the rows carry the session's own timestamp where the toll names one (nearly all do)",
+          with_session >= 0.9 * len(rows), f"{with_session} of {len(rows)}")
+    order = mod.ordered(rows)
+    stamped = [r["session"] for r in order if r["session"]]
+    check("the index is in the order the tolls were paid", stamped == sorted(stamped))
+    gaps, dups = mod.arithmetic(rows)
+    nums = [r["n"] for r in rows if r["n"] is not None]
+    check("the gaps and the duplicates are arithmetic over the headings",
+          all(g not in nums for g in gaps) and all(nums.count(n) > 1 for n in dups)
+          and all(nums.count(n) == 1 for n in set(nums) if n not in dups), f"{len(gaps)} gaps, {len(dups)} duplicates")
+    idx = ROOT / "SEAT_LOG_INDEX.md"
+    check("SEAT_LOG_INDEX.md is current: a regeneration changes nothing",
+          idx.exists() and idx.read_text(encoding="utf-8", errors="replace").replace("\r\n", "\n") == mod.render(text))
+
+
 def test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book):
     """"sandbox the python" (the operator, 2026-09-22).
 
@@ -19500,6 +19574,7 @@ def main() -> int:
     test_the_plan_names_every_mark_where_it_sits(reg, lib, book)
     test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book)
     test_no_file_is_mixed_and_the_root_documents_are_crlf(reg, lib, book)
+    test_the_toll_index_is_read_off_the_log(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)

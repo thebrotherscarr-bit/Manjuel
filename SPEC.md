@@ -512,6 +512,12 @@ BUILDPATH, "The order it goes next".
                    4.7 holds no OPEN line now). What is left of this theme is
                    the measure -- two live courts seating all five with the
                    judge ruling inside the turn
+      2026-10-01   DONE, by the measure: courts of 2026-09-30 15:48 (561 s)
+                   and 2026-10-01 08:35 (399 s), all five seats, the judge
+                   ruling inside the turn and last -- after a third court
+                   that fit but seated the evaluator after the ruling,
+                   which the engine refuses now (CHANGELOG, "The ruling is
+                   the last word")
 
     THE LOOP -- his workflow direction of 2026-09-04, still unbuilt here
       what it is   the standup and the court as flows fired from the glass;

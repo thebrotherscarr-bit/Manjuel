@@ -670,6 +670,36 @@ dropped by operator ruling 2026-09-01 — see the fix log.
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
 
+## HANDOFF FOR 2026-10-01 — read this before anything below it
+
+**THE DAY SO FAR.** The same conversation, carried over from 2026-09-30 on his word of 14:35
+yesterday ("DO NOT STOP, CONTINUE UNTIL IT IS FINISHED") and again this morning ("keep going");
+the laws re-read at its start; the ground level with GitHub at `d609ef8`, green there on every
+leg. The glass had locked with the pane; he gave the PIN in chat for one entry, as before.
+
+**THE MORNING'S FIRST ACTS.** The second live court fired from the glass at 08:10 (SPEC 8.2's
+"twice running", after yesterday's 561 s court); B13 built while it sat: SEAT_LOG_INDEX.md, every
+toll in the order it was paid, read off the log by `tests/seatindex.py`, untracked beside the log.
+
+**B16 BUILT (08:40):** `land` on `git_branch` and the "Land onto main" button; proved on a scratch
+copy of `atlas/line` and the glass; the door and the glass rebuilt from it, placing on his
+allowance. **B14's premise corrected:** the Rust backs `verify_chain` and the 21 goldens; his
+ruling, the Python verifier first, then the fold.
+
+**Still to build from his rulings of 2026-09-30:** B14 (the unused Rust folded to an attic in
+atlas), B16 (`git_branch land` and its button on Version control -- an atlas build, and placing
+the binaries needs his allowance), F3 (DAYBOOK's 09-10 and 09-11 from CHANGELOG). Then D3, D7, D9,
+D11 are his to order and E1 needs a person who is not him.
+
+**PLACED ON HIS ALLOWANCE (08:58):** the door pid 108440 (the 08:36 build, `land` in its table) and
+the glass pid 35444 (the 08:36 build, the Land button), both hashing as built, the old binaries kept
+in scratch, started with the runbook's lines; the live check through them 9/9 (sitting 330).
+
+**Where the ground stands (08:15).** core `main@d609ef8` (the mark `v0.1.16` on `e8aa9b5`), atlas
+`main@efb00d2` (the mark `v0.1.9` on `b1059a1`), both level with GitHub. The glass pid 111424 (the
+07:29 build of 09-30), the door pid 106660 (the 18:30 build of 09-29); the REPL needs a restart
+for yesterday's engine changes; the door's sittings carry them.
+
 ## HANDOFF FOR 2026-09-30 — read this before anything below it
 
 **THE DAY SO FAR.** One conversation carried over from 2026-09-29 on his standing word

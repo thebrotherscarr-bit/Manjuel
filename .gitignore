@@ -62,6 +62,8 @@ dist/
 # (RULE 6), as it was for worlds/ on 2026-09-02.
 sessions/*.jsonl
 SEAT_LOG.md
+# its index, read off it (tests/seatindex.py); a derivative of an untracked record stays untracked
+SEAT_LOG_INDEX.md
 memory.md
 
 # Build leavings. whisper.cpp's binaries live under bin/ above; these catch

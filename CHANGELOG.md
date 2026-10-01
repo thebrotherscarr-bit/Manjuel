@@ -34,6 +34,53 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### atlas: `land` on Version control (2026-10-01, WHAT'S LEFT B16; the entry is atlas's)
+
+The core's list line closes; the piece and its proof are in atlas's CHANGELOG under the same
+date. B14's premise measured on the way: the Rust backs `verify_chain` and the golden masters;
+his ruling, the verifier in Python first, then the fold.
+
+### The ruling is the last word: no seat is summoned at the judge's step (2026-10-01, the second live court)
+
+The second court on his limits (sitting 327, 08:10, the court set from the glass) fit its turn --
+515 s of 900; Jesster 235 s under its cap, the judge 129 s and RULED -- and missed on shape: "the
+last word was Quality Evaluator's, not Manjuel's". Jesster's counsel had raised `drifted` against
+the search material (0.425), and at the judge's step the summons placed the evaluator, anchored
+"after Router" with the Router long past, in the next slot: after the ruling. THE LAW's order is
+counsel, then the ruling, and nothing after it (LAW_001 §2; pipeline.py: "Manjuel last"). So at
+the judge's step of a court no seat is summoned; the record says which seat was not and why. The
+rack is not disarmed: the same flag at any other seat still summons.
+
+**Proved.** A judge whose ruling raises `review` seats nobody after it; Manjuel is the last step;
+the note names the Quality Evaluator. Reversal on a mirror: the guard struck, the evaluator sits
+sixth (one check red).
+
+**THE THIRD COURT (08:35, sitting 329), on the guard:** 1 of 1 -- 399 s of 900, Jesster 206 s, the judge
+170 s and ruled last; no seat after it. With yesterday's 561 s court that is SPEC 8.2's "two live
+courts running", seating all five with the judge ruling inside the turn.
+
+`manjuel/pipeline.py` moved: **restart required** for the REPL. **What goes red if unplugged:**
+the two checks; the live check's court case, on "the last word".
+
+### The toll index: every sitting in the order it was paid, read off the log (2026-10-01; his ruling of 2026-09-30, WHAT'S LEFT B13)
+
+He asked for SEAT_LOG.md "sorted and numbered"; it is append-only (ESTATE LAW 8), written by more
+than one hand, and its numbers carry gaps and duplicates. `tests/seatindex.py` writes
+SEAT_LOG_INDEX.md beside it: every toll by its session's own timestamp (`S20260930-154834`), its
+sitting number, its clock and its line in the log; and the numbering as arithmetic over the
+headings -- on the day, 290 tolls (276 numbered, 14 unnumbered: the builder's and the outside
+hands'), numbers 3 to 326, 53 never tolled, 5 tolled more than once. The log is never touched.
+The index is untracked, as the log is (his ruling 2026-09-08), and listed in the index roots
+beside it; `--check` passes where the log is absent, saying so. TESTING and README name it.
+
+**Proved.** `test_the_toll_index_is_read_off_the_log`: every heading a row; the session timestamp
+on nearly every row; the order the order paid; the gaps and duplicates the headings' own; the copy
+current; the log never written by it. Reversal on a mirror: a toll appended to the log reddens
+"current" until the index is regenerated.
+
+**What goes red if unplugged:** the stroke, the next time a toll is paid and the index is not
+regenerated -- and `python tests/seatindex.py --check` where the log is.
+
 ### His rulings of the afternoon, built (2026-09-30, by card: B1, B4, B6, B7, B8, B10, B15)
 
 - **B4, ESTATE LAW 2 as a gate.** Every declared path, read or write, that resolves under
