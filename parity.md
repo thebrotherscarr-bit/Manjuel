@@ -3,13 +3,23 @@
 What the local Manjuel is measured against. Each case is run twice — once
 through this machine's seats, once as a single bare call to a reference
 model on the same rack — and the two answers are compared with the embedder
-already resident. Nothing leaves the machine.
+already resident. Nothing leaves the machine, except in the one set marked below.
 
 **The score is topical agreement, not correctness.** Two answers can agree and
 both be wrong. A low score means *go read that pair*, never "the local answer
 is bad". Nothing here decides anything on its own.
 
 Add a case by adding a `## Case:` block. No code changes.
+
+**Since 2026-10-02 there is a SECOND SET, on a hosted route** (the operator: "set up a second set for
+parity, why not? I'm not scared of it"). A case carries `- **Set:** hosted` and a `**Model:**` of the
+form `route://model`. The cases at the foot of this file are the first set's cases again, word for
+word, asked of a hosted head instead of a local one, so the question changes to where the small
+seats fall short of a strong model. `/parity` runs the cases with no set, and none of those leaves
+the machine. `/parity hosted` runs the hosted set: it says first exactly what would leave (the
+objective and feed of each case, nothing else), and asks. The route is on only while its key is in
+`.env`; without it nothing is sent. The provider bills the operator for a hosted run. The model each
+case names is what the route is asked for: change the line to any model the route serves.
 
 **Since 2026-09-04 the cases are TIERED.** The operator's ruling: the seats
 no longer run one model in fourteen hats, and parity must pit *different*
@@ -81,7 +91,8 @@ is only a snapshot of when the cases last matched it.
 SEAT MAP that produced them. A mean without a history is a number; the pair
 is what shows whether quality moved when the seats did.
 
-Nothing leaves the machine and nothing is billed. The costs are time and VRAM.
+Nothing leaves the machine and nothing is billed, except in the hosted set. The costs are time and
+VRAM; a hosted run costs what the provider charges.
 
 ## Case: front door tier — llama3.2 against phi4-mini
 
@@ -174,3 +185,63 @@ called once. HIGH here means the machinery changed nothing on this case.
 
 - **Objective:** A commit message reads "git_commit". Say in two sentences what is wrong with it and what it should say instead.
 - **Model:** deepseek-r1:8b
+
+## Case: hosted: front door tier
+
+- **Set:** hosted
+- **Objective:** Someone opens with "rough morning, what's on the board?" Answer in three sentences: warm, plain, and end with one concrete question back.
+- **Model:** anthropic://claude-sonnet-5-5
+
+## Case: hosted: the court's ruling seat
+
+- **Set:** hosted
+- **Objective:** Counsel disagree: one says a court of three seats on one model is a court because the prompts differ; the other says it is one voice in three hats. Rule in three sentences, and name what evidence would overturn the ruling.
+- **Model:** anthropic://claude-sonnet-5-5
+
+## Case: hosted: a plain explanation at the front door
+
+- **Set:** hosted
+- **Objective:** Explain in four sentences what a semantic index is for, and one thing it cannot do.
+- **Model:** anthropic://claude-sonnet-5-5
+
+## Case: hosted: spine tier, the warden
+
+- **Set:** hosted
+- **Objective:** In three sentences: what does a warden do that a steward does not, and what must a warden never do?
+- **Model:** anthropic://claude-sonnet-5-5
+
+## Case: hosted: thinking tier, the Router
+
+- **Set:** hosted
+- **Objective:** What is the difference between a process and a thread?
+- **Model:** anthropic://claude-sonnet-5-5
+
+## Case: hosted: thinking tier, the Reasoner
+
+- **Set:** hosted
+- **Objective:** This is hard: explain in three sentences why a KV cache makes a language model's memory use grow with context length, and name the one term that grows.
+- **Model:** anthropic://claude-sonnet-5-5
+
+## Case: hosted: code tier
+
+- **Set:** hosted
+- **Objective:** Write a Python function that returns the cosine similarity of two lists of floats, returning 0.0 when either has zero magnitude.
+- **Model:** anthropic://claude-sonnet-5-5
+
+## Case: hosted: reasoning tier, the fool
+
+- **Set:** hosted
+- **Objective:** Argue against this in three sentences: "a court of three seats on one model is still a court, because the prompts differ." Then say what would settle it.
+- **Model:** anthropic://claude-sonnet-5-5
+
+## Case: hosted: the court as a whole
+
+- **Set:** hosted
+- **Objective:** A tool ran, failed, and the seat that read the result reported success. Say in three sentences why that is worse than reporting nothing, and what would prevent it.
+- **Model:** anthropic://claude-sonnet-5-5
+
+## Case: hosted: a plain judgement
+
+- **Set:** hosted
+- **Objective:** A commit message reads "git_commit". Say in two sentences what is wrong with it and what it should say instead.
+- **Model:** anthropic://claude-sonnet-5-5

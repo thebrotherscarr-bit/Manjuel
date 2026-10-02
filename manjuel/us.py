@@ -62,6 +62,8 @@ CHECKED_FIELDS = {
     "may_call", "permission",
     # 2026-09-25, his rulings on the six the check above found in itself:
     "covenant", "reports_to", "lands", "mode", "stage",
+    # 2026-10-02, a route record's own; route_findings reads both:
+    "adapter", "base_url",
 }
 
 # READ ON THE FAR SIDE OF THE SEAM (2026-09-25, his ruling). A field this
@@ -143,6 +145,65 @@ def load(ground) -> tuple[list[dict], list[Finding]]:
             rec["_file"] = path.name
             records.append(rec)
     return records, broken
+
+
+def route_findings(ground, records, registry) -> list[Finding]:
+    """THE ROUTES (2026-10-02, WHAT'S LEFT B18). A route is the one place this ground may reach a
+    model that is not on the rack, so its record is checked harder than any other: against the code
+    that speaks it, against its own address, and against the files that name it.
+
+    `remote` IS NOT TAKEN ON FAITH. The git skills' `remote` is checked against a list in code
+    (REMOTE_SKILLS); a route's is DERIVED from its address, so a record that says it stays on the
+    machine while pointing across it is a DRIFT, and so is the reverse. A key that would cross in the
+    clear (another machine over plain http) is a DRIFT in the record before it is ever a refusal in
+    the call. And the two files that can NAME a route are read back against the records: parity.md (a
+    case on a route nobody declared is a GAP) and agents/ (a seat on a route is not built, WHAT'S
+    LEFT H8, and is reported rather than left to find no model on the rack)."""
+    from . import routes as _routes
+    out: list[Finding] = []
+    route_recs = [r for r in records if r.get("kind") == "route"]
+    declared = {str(r.get("id", "")).removeprefix("route_") for r in route_recs}
+    example = Path(ground) / ".env.example"
+    example_text = example.read_text(encoding="utf-8", errors="replace") if example.is_file() else None
+    for r in route_recs:
+        where = f"us/{r.get('id')}"
+        name = str(r.get("id", "")).removeprefix("route_")
+        if not re.fullmatch(r"[a-z][a-z0-9]*", name):
+            out.append(Finding("DRIFT", where, "id", str(r.get("id")),
+                               "route_<name>, the name lower case letters and digits"))
+        if str(r.get("adapter") or "") not in _routes.ADAPTERS:
+            out.append(Finding("DRIFT", where, "adapter", str(r.get("adapter")),
+                               "routes.ADAPTERS has " + ", ".join(_routes.ADAPTERS)))
+        url = str(r.get("base_url") or "")
+        loop = _routes.is_loopback(url)
+        if bool(r.get("remote")) == loop:
+            out.append(Finding("DRIFT", where, "remote", str(bool(r.get("remote"))),
+                               f"base_url {'is' if loop else 'is not'} loopback"))
+        if not loop and not url.lower().startswith("https://"):
+            out.append(Finding("DRIFT", where, "base_url", url,
+                               "another machine over plain http: the key would cross in the clear"))
+        if r.get("writes"):
+            out.append(Finding("DRIFT", where, "writes", "true", "a route sends text and writes nothing"))
+        if r.get("source") and not (Path(ground) / r["source"]).exists():
+            out.append(Finding("DRIFT", where, "source", str(r["source"]), "no such file"))
+        if example_text is not None and _routes.key_env(name) not in example_text:
+            out.append(Finding("GAP", where, "key dial", _routes.key_env(name),
+                               ".env.example does not offer it"))
+    try:
+        from . import parity as _parity
+        cases = _parity.load_cases(Path(ground) / "parity.md")
+    except Exception:
+        cases = []
+    for c in cases:
+        route, _bare = _routes.split(c.model)
+        if route and route not in declared:
+            out.append(Finding("GAP", f"parity.md/{c.name}", "route", route,
+                               "no us/route_<name>.us record declares it"))
+    for a in registry.all():
+        if _routes.is_routed(a.model):
+            out.append(Finding("DRIFT", f"agents/{a.name.lower().replace(' ', '_')}", "model", a.model,
+                               "a seat on a hosted route is not built (WHAT'S LEFT H8)"))
+    return out
 
 
 def reconcile(ground, registry, library, installed: set | None = None
@@ -305,6 +366,9 @@ def reconcile(ground, registry, library, installed: set | None = None
         if r.get("lands"):
             findings.append(Finding("DRIFT", f"us/{r['id']}", "lands", "true",
                                     "false everywhere except the operator's path"))
+
+    # --- 4c. THE ROUTES (2026-10-02, WHAT'S LEFT B18): route_findings, above ---------
+    findings += route_findings(ground, records, registry)
 
     # --- 6. THE FLAGS: a channel nobody feeds is a promise, not a wire ---
     #

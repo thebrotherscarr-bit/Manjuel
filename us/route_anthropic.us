@@ -1,0 +1,46 @@
+# Route anthropic - a hosted model, reached only on the operator's terms
+
+DECLARED 2026-10-02 (WHAT'S LEFT B18), on the operator's word: "backed by ollama as a first route
+then secondarily through additional API as added" and "let's do what I said then, set up a second
+set for parity, why not? I'm not scared of it." RULE 4 is amended for it, narrowly (CLAUDE.md), and
+this record is the one place that says what the amendment reaches.
+
+A route is a model reached somewhere other than the rack. A model with no route in its name is
+Ollama's, as it always was; a model named `anthropic://<model>` is asked of the host below, in
+Anthropic's messages form, by `manjuel/routes.py` and by nothing else.
+
+WHAT LEAVES THIS MACHINE: the objective and the feed of a parity case the operator ran by name
+(`/parity hosted`), after the run said what would leave and he said yes. Nothing else is sent: not a
+seat's answer, not a file, not the record. Text the law gate would refuse as an objective, the client
+tag, and the value of any secret in the environment are refused by name and never sent.
+
+WHAT IT COSTS: the provider bills the operator, at its own prices (RULE 6: the operator authorises
+the spend; no hand ever makes a hosted call).
+
+WHAT TURNS IT ON: the key, `MANJUEL_ROUTE_ANTHROPIC_KEY`, in `.env`, put there by the operator. Without
+it the route is OFF and nothing is sent. The key is read at the call, sent in one header, and never
+printed, logged, stored or returned (RULE 7).
+
+WHAT IT DOES NOT REACH: no seat sits on it (`us.py` reports one that names it), and it does not embed
+or stream. It is https to another machine; a redirect is never followed.
+
+`remote` is not taken on faith: `us.py` derives it from `base_url` and reports a record that says
+otherwise. `can_approve` is false here as everywhere (RULE 6).
+
+```json
+{
+  "adapter": "anthropic",
+  "base_url": "https://api.anthropic.com",
+  "can_approve": false,
+  "covenant": "1512741580b7239b",
+  "id": "route_anthropic",
+  "kind": "route",
+  "office": "MANJUEL",
+  "remote": true,
+  "reports_to": "manjuel",
+  "source": "manjuel/routes.py",
+  "us": 1,
+  "wall": "https://api.anthropic.com, only while MANJUEL_ROUTE_ANTHROPIC_KEY is set; sends the objective and feed of a parity case the operator ran by name, and nothing else",
+  "writes": false
+}
+```

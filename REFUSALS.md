@@ -1057,7 +1057,7 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 | line | says |
 |---|---|
-| 1748 | {exc}\n |
+| 1752 | {exc}\n |
 
 ### manjuel/gitstate.py — 9 sites
 

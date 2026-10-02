@@ -25,14 +25,11 @@ The release is core **v0.1.16** and atlas **v0.1.9**. Both tags are cut and on G
 
 Nothing here gets built until you say which way.
 
-- **B18. Hosted models: your rule says no, your words of 10-02 say yes.** RULE 4 (no cloud service, no
-  API key, no hosted model) and SPEC section 1 ("not an API client") are written the other way from
-  "backed by ollama as a first route then secondarily through additional API as added". Say which: (a)
-  amend RULE 4 and that line, so a hosted route can be added behind a `.us` record that declares
-  `remote: true`, off by default, one key per provider kept only in `.env`, switched on seat by seat,
-  and never used for a turn that names client material or a secret; or (b) keep it local, and the route
-  list takes only servers on this machine. Until you say, nothing hosted is built. The local part (H8)
-  goes ahead either way. *(CLAUDE.md RULE 4; SPEC 1; your word 2026-10-02)*
+- **B20. Aider on the glass: three things only you can give.** (1) Your yes to download it: the package
+  `aider-chat` from PyPI, whose size is not known until it is resolved. (2) Where its environment lives:
+  inside the ground (RULE 1), in a folder you name (RULE 8). (3) Which model drives it first: a local
+  one, or the hosted route (the key is yours to place). Until you give them, H12 waits. *(your word
+  2026-10-02)*
 - **B19. Where do plugins live?** A plugin is a folder, and a hand makes no folder (RULE 8). Name the
   place, or say to put them under a folder that exists. Until you do, H9 waits. *(CLAUDE.md RULE 8;
   your word 2026-10-02)*
@@ -124,11 +121,14 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   `law.py verify` calls the law whole. The pen's links carry no `body_v` and the checker assumes the
   other form. Needed: teach it the pen's form, with the law's chain as a golden, so two independent
   walks agree. *(`atlas/tools/chain_verify.py`; CHANGELOG, "The memory has a chain")*
-- **H8. Ollama is the only model route.** The transport is `manjuel/runtime.py`, but the rack, the
-  card monitor, the `.env` reader, the `.us` records, the server, the REPL and the boot all name
-  Ollama. Needed: one route interface (chat, embed, list, what is loaded), Ollama the first and
-  default, an ordered route list per seat with a fall-back, and a loopback-only adapter for a local
-  OpenAI-compatible server. A hosted adapter waits on B18. *(SPEC 1)*
+- **H8. A seat has one route: Ollama.** A hosted route exists (B18, 2026-10-02) and only parity uses it.
+  The transport a seat uses is still `manjuel/runtime.py`, and the rack, the card monitor, the `.env`
+  reader, the `.us` records, the server, the REPL and the boot all name Ollama. Needed before a seat can
+  sit on a route: one route interface for seats (chat, list, what is loaded), an ordered route list per
+  seat with a fall-back, and the preflight, the card monitor and the rack's report taught that a routed
+  seat holds no VRAM. Built on a measured need (SITTING LAW 3) and your word, seat by seat; today a
+  seat that names a route is reported by `us.py` and finds no model on the rack. *(the CLAUDE.md RULE 4
+  amendment; SPEC 4.6)*
 - **H9. There is no module or plugin system.** Seats, skills and flows are files, but a new tool that
   has code must be written into `manjuel/skills.py`, and the word "plugin" is in no code or doc of
   the core. Needed: a plugin is one folder with a manifest (name, version, what it reads and writes,
@@ -146,6 +146,21 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   file (never opening a secret or client file), summarises it, and stages a proposal citing it, which
   you land or drop. No new folder: the workspace is the inbox. *(SPEC 1, "the workspace";
   `manjuel/boot.py`)*
+- **H12. Aider as a bounded editor behind the glass.** Your idea (10-02): a page on the glass that drives
+  Aider, open source and proven at search-and-replace edits. The ground already has that loop: `ground_edit`
+  (an `@@ OLD` / `@@ NEW` edit on a line of work only) and the `coder-tree` flow (a line of work, the
+  strokes, the smoke, your Land click). So the question is whether Aider edits better with the models this
+  machine has, and that is measured, not argued: the same coding tasks through `coder-tree` and through
+  Aider on a scratch clone, auto-commit off, its update checks and analytics off, a local model first,
+  scored by the same suites. If it wins, it becomes the flow's `attempt` engine and the page is a thin
+  view over a door tool; every gate stays (the line of work, the suites, your click). A page costs a glass
+  rebuild and your card to place the binary. Waits on B20. *(SPEC 4.9; `flows/coder-tree.json`)*
+- **H13. Claude in the loop.** Your idea (10-02): a reasoning, planning and review agent beside the council.
+  Two shapes, and the first needs nothing built: the door already lets an outside agent connect, with reads
+  free and every write held for your decision on Version control, so Claude can be in the loop today through
+  it (it needs a key minted for that connection). The second is the system calling Claude: the hosted route
+  above, used by a counsel seat that reads, advises and never acts. That one waits on H8 and your word, seat
+  by seat. *(RUNBOOK, "`--auth` and the service wire"; B18)*
 
 ---
 
@@ -153,6 +168,13 @@ disk says is missing, in the order it is worth building. H1 is done (below).
 
 Finished lines, newest first. A number is never used again.
 
+- **B18. Hosted models: your rule says no, your words of 10-02 say yes.** RULED 2026-10-02 in chat ("let's do
+  what I said then, set up a second set for parity, why not? I'm not scared of it") and BUILT the same day:
+  RULE 4 is amended narrowly in CLAUDE.md (the paragraph stands; an AMENDED section under it says what is now
+  allowed), one hosted route exists (`anthropic`, `us/route_anthropic.us`, off until its key is in `.env`),
+  and `/parity hosted` is the second parity set, ten cases asked of a hosted head, saying first what would
+  leave. No seat sits on it. It was proved on a real server on this machine; NOT yet against the real host,
+  which needs your key and your command. *(CHANGELOG, "A second route")*
 - **H1. The memory has no chain.** DONE 2026-10-02: every landing now seals itself on a hash chain
   beside memory.md, on the pen the law uses, and `memory.verify` names a changed byte, a cut, or a
   write that did not come through `land`. The memory already there was sealed once as "found", so the

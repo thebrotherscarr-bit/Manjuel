@@ -674,6 +674,10 @@ boot report says which took effect) or the shell. Nothing else is a dial.
     MANJUEL_MCP_<NAME>      --     a LOCAL MCP server, callable as <NAME> by the
                                    `mcp_call` skill. Loopback only; anything else
                                    is refused by name and nothing is sent (skills.py)
+    MANJUEL_ROUTE_ANTHROPIC_KEY  --  the key of the hosted route in us/route_anthropic.us (a later
+                                   route's is MANJUEL_ROUTE_<NAME>_KEY). OFF without it: nothing is
+                                   sent. With it, only `/parity hosted` uses the route, and it says
+                                   what leaves and asks first (routes.py)
 
 THREE NAMES THAT ARE NOT DIALS, struck from `.env.example` on 2026-09-29.
 `MANJUEL_OLLAMA_HOST` was read nowhere -- the runtime binds 127.0.0.1:11434
@@ -681,6 +685,28 @@ THREE NAMES THAT ARE NOT DIALS, struck from `.env.example` on 2026-09-29.
 and `MANJUEL_SPEAK_FILE` are the names voice.py hands its OWN child process,
 written over on every call; setting them did nothing. A stroke holds the
 example to the code now: a dial it offers is one the code reads.
+
+---
+
+## A hosted route (2026-10-02)
+
+RULE 4 was amended on the operator's word so that a model may be reached on a hosted route, on terms
+that keep the rest of it whole. One route exists, `anthropic`, declared in `us/route_anthropic.us`.
+
+    TO TURN IT ON   put MANJUEL_ROUTE_ANTHROPIC_KEY=<the key> in .env yourself, as a line of its
+                    own, and restart. A hand never places a key, and nothing prints it.
+    TO USE IT       `/parity hosted` in the REPL. It lists the cases, says exactly what will leave
+                    this machine (the objective and feed of each, to the host named, and nothing
+                    else), says the provider bills it, and asks. `/parity` alone never uses it.
+    TO TURN IT OFF  take the line out of .env and restart. Without the key nothing is sent.
+    WHAT IT WILL NOT DO   no seat sits on it; it refuses text the law would refuse as an
+                    objective, the client tag and the value of any secret in the environment, by
+                    name and without sending; a route on another machine must be https; a
+                    redirect is never followed; one call, no retry, a time limit.
+
+The model each hosted case names is what the route is asked for. If the provider refuses it (a model
+your key does not reach, or one that was retired), the case reports the status and the kind of
+error, and the run goes on; change the `**Model:**` line in parity.md to one the route serves.
 
 ---
 

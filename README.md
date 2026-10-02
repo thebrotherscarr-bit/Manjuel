@@ -3,7 +3,9 @@
 A local multi-agent CLI. One REPL, a rack of seats that rest until called,
 markdown as the source of truth, and a git-versioned ground. Everything runs
 on this machine: no cloud service, no API key, no download at runtime. Unplug
-the router and it still works — that property is the point.
+the router and it still works — that property is the point. (One optional exception,
+off by default: a hosted model route for a parity measurement run by name; RULE 4,
+amended 2026-10-02.)
 
     python manjuel.py
 

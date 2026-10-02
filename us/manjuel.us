@@ -30,6 +30,10 @@ them would let an append-only file be read as a tamper-evident one.
 The rack is reached at 127.0.0.1:11434 by the harness, not by a seat. `net` is
 declared deny on every seat because no seat holds that reach itself.
 
+OBSERVED 2026-10-02: ONE hosted route exists, `us/route_anthropic.us`, reached by
+`manjuel/routes.py` for a parity set the operator runs by name and by nothing else; no seat
+holds that reach either, and it is off until its key is in `.env`.
+
 ## Skills
 
 RECONCILED 2026-09-03. The old line here said "most skills run inside

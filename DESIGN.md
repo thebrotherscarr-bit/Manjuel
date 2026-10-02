@@ -7,6 +7,10 @@ source of truth** and Python is only the engine that runs them.
 of this build. It runs with the router unplugged. A dependency that needs
 someone else's server does not go in, whatever it offers — that property is
 the point of the estate and is the hardest one to get back once given up.
+ONE exception, ruled 2026-10-02 (RULE 4, amended): a hosted model may be reached on
+a route the operator turned on by putting its key in `.env`, for a parity
+measurement run by name. It is off by default, and with the router unplugged
+everything above still holds.
 
 > **Status.** §§1–2 are current. Sections 3–12 describe the original design
 > and are kept as the record of intent; §13 is what sessions 5–13 built, and
@@ -73,6 +77,7 @@ manjuel/
   intent.py      # deterministic pre-routing: does the objective name a tool?
 
   runtime.py     # Ollama client: health, chat, embed, warm, resident
+  routes.py      # a hosted model on a route: off until its key is in .env; parity's second set
   vram.py        # footprint planning, foreign-model detection
   rack.py        # model rack survey -> rack.md
   watch.py       # the ground watches itself (watchdog, optional; no-ops without it)
@@ -97,8 +102,8 @@ manjuel.py         # thin entrypoint -> manjuel.cli:main
 ```
 
 **The containment rule, and it has held.** `registry.py` and `skills.py` know
-about markdown, nothing else does. `runtime.py` knows about Ollama, nothing
-else does. That is why the parser is testable with no model running, the
+about markdown, nothing else does. `runtime.py` knows about Ollama, and `routes.py`
+about a hosted route (since 2026-10-02); nothing else knows either. That is why the parser is testable with no model running, the
 pipeline is testable with a fake runtime, and the whole stroke suite runs
 offline in about a second.
 

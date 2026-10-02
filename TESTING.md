@@ -37,6 +37,7 @@ a suite ends up testing the room instead of the code.
 
     PARITY    /parity in the REPL      does Manjuel earn its keep?
               Real models. Measures, never rules. See parity.md.
+              `/parity hosted` asks a hosted model, only when named.
 
     SITTINGS  running manjuel.py         the E2E tier. Real models, real
               disk, real voice; `logs/` is the assertion record.

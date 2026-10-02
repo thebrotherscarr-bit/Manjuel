@@ -3,7 +3,7 @@
 The modules, what each one owns, and the order the estate actually grew.
 The containment rule has held since the first rewrite and is the reason the
 suite runs offline: **`registry.py` and `skills.py` know markdown; `runtime.py`
-knows Ollama; nothing else knows either.**
+knows Ollama; `routes.py` knows a hosted route exists (since 2026-10-02); nothing else knows any of it.**
 
 ## Layer 0 — words on disk (the sources of truth)
 
@@ -70,6 +70,11 @@ knows Ollama; nothing else knows either.**
     runtime.py    the only Ollama client: chat, embed, warm, resident.
                   Reads dict AND object response shapes; falls back to a
                   thinking model's reasoning when content is empty.
+    routes.py     a hosted model on a route (2026-10-02, RULE 4 amended):
+                  `route://model`, one `us/route_<name>.us` record each,
+                  OFF until its key is in .env, and only parity.run calls
+                  it. Refuses what the law would refuse, never prints the
+                  key, follows no redirect, https to another machine.
     maker.py      THE MAKER (2026-09-21): "make me a snake game" as a
                   project. The pipeline routes a make request to the Expert
                   Coder alone (intent.wants_making); this module checks the
@@ -94,7 +99,9 @@ knows Ollama; nothing else knows either.**
     drift.py      each stage scored against the source; a low score is a
                   flag to read, never a verdict.
     parity.py     Manjuel vs one bare call to the same local model;
-                  grouped by reference, expected refusals honored.
+                  grouped by reference, expected refusals honored. A
+                  second set (`**Set:** hosted`) asks a hosted head through
+                  routes.py, says first what would leave, and after what did.
     vram.py       footprint planning, foreign-model detection, budget.
     rack.py       rack.md -- what is on this machine, written down with the
                   time it was taken. DERIVED from Ollama, regenerated whole,
@@ -305,9 +312,11 @@ knows Ollama; nothing else knows either.**
                       has none, binds nothing, and serves nothing. That
                       is not a gap to close; it is the position.
     always-on daemon  same surface, same answer.
-    external APIs     later, deliberately, and behind `.us` records that
-                      declare `remote: true` -- the shape git_push
-                      already uses.
+    external APIs     ONE, since 2026-10-02: a hosted model on a route,
+                      behind a `.us` record that declares `remote: true`
+                      (us/route_anthropic.us, read by routes.py). Off until
+                      its key is in .env; only /parity hosted uses it. RULE 4
+                      is amended for it, narrowly (CLAUDE.md). Nothing else.
 
 ## The order it actually grew (and why)
 

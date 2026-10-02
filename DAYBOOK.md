@@ -2937,7 +2937,16 @@ sealed once as "found"). `memory.py`, `boot.py` and `cli.py` moved: the REPL nee
 core `main@ceb4558`, GitHub's run green; the ground's suites from the glass 3553 of 3553 strokes and 72 of 72
 smoke; eleven reversals red.
 
-**Next session** — open `What's left` first: E1, the two decisions B18 and B19, and the second brain's builds H2 to H11, in that order. THE RUST STAYS (his ruling 10-02, B14
+**Then (15:26) — the operator's word, again.** "let's do what I said then, set up a second set for parity, why not? I'm
+not scared of it." Read against the record: parity here is each case run through the seats and once as a bare call to a
+reference, scored by the embedder; a second set is the same cases with references on a hosted route. **R1 built:** RULE 4
+amended narrowly (CLAUDE.md); `routes.py` and `us/route_anthropic.us`; ten hosted cases in `parity.md`; `/parity hosted`
+says what would leave and asks; off until the operator's key is in `.env`; proved on a real server on loopback and by a
+stroke with twenty-two reversals. Not yet run against the real host: that is the operator's key and command. The operator's mid-turn
+idea of Aider on a glass page and Claude in the loop is B20, H12 and H13 on the list, with the harm answered in the reply.
+The REPL needs a restart for `routes.py`, `parity.py`, `cli.py` and `us.py`.
+
+**Next session** — open `What's left` first: E1, the decisions B19 (where plugins live) and B20 (Aider), and the second brain's builds H2 to H13 (H8 narrowed), in that order. THE RUST STAYS (his ruling 10-02, B14
 closed): do not fold it; `atlas-door` and `atlas.exe` depend on it. The next marks (core and atlas) are
 to be cut THROUGH the `version-tag` flow, whose first COMPLETE closes D3's report; the gate on his terminal
 asks GitHub with a named mark or `--ci`. SPEC 4.9's one OPEN line is a second `coder-tree` run landed by

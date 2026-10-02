@@ -27,7 +27,8 @@ is the only one allowed to run tools. The engine, not the models, decides
 what is a fact: it records what tools returned, refuses a model that claims
 to have read or written something it did not, appends every failure to the
 answer whether the model mentioned it or not, and stamps every run with
-which laws it checked. Nothing leaves the machine.
+which laws it checked. Nothing leaves the machine unless a hosted route is on and the operator
+runs it by name (RULE 4, amended 2026-10-02).
 
 ### Who it is for
 
@@ -43,7 +44,10 @@ prose. Every guard in it is named after a failure that actually happened.
 
 ### What it is not (RULED OUT)
 
-- Not a cloud product, not an API client, not a model host. RULE 4.
+- Not a cloud product and not a model host. It is an API client in ONE way, on the operator's
+  terms (RULE 4, amended 2026-10-02): a model may be reached on a hosted route, which is off
+  until its key is in `.env`, carries only what a parity case run by name puts there, and is
+  used by nothing else.
 - Not a second executor. One seat runs tools. Option A declined 2026-09-04.
 - Not a bigger-model project. SITTING LAW 3: move up only on a measured
   failure.
@@ -121,6 +125,7 @@ A proposal that needs a word uses the nearest one below.
 | **The record** | every run is a transcript; every sitting is a numbered line and a toll; memory is landed by hand and sealed on a hash chain beside it, so a changed byte is named; nothing is deleted | `transcript.py`, `seatlog.py`, `memory.py`; `test_the_memory_is_chained`; LAW 1, LAW 8, LAW 10 |
 | **The index** | chunked, incremental, bounded, embedder-stamped; client material and secrets never enter it; transcripts age out of retrieval at 45 days | `vectors.py`; REFUSALS §5, §6, §16 |
 | **The rack** | seven models seat fourteen seats; the everyday pipelines fit resident; the court evicts on purpose; `rack.md` is derived from Ollama, never edited | `vram.py`, `rack.py`; `test_vram` |
+| **The routes** | a model with no route in its name is Ollama's; a routed model is reached only through one declared record, off until its key is in `.env`, carrying only a parity case the operator ran by name, refusing what the law would refuse, sending the key in one header and nowhere else, https to another machine, no redirect followed; no seat sits on one | `routes.py`, `us/route_anthropic.us`, `us.py` (`route_findings`); `test_a_hosted_route_is_opened_on_his_terms`; RULE 4 as amended |
 | **The suites** | the engine proves offline with every model stubbed; the REPL proves the same way; the standup runs the seats live and writes a report; the map is generated from the code | `tests/test_manjuel.py`, `smoke_cli.py`, `standup.py`, `buildmap.py` |
 | **The maker** | "make me a snake game" seats the Expert Coder alone; what it answers is saved only if it is a WHOLE page that loads nothing from the network; each save is a numbered version in the project's OWN history; "go back" is git's job, not a model's; the ground's history is never written to; a project is picked up and put down by words the engine answers with no seat; the glass lists each project from its own history and shows its page sandboxed; and before a version is kept the page is LOADED in a browser with no window, its errors sent back to the Coder for one bounded try, and kept either way with the truth said (2026-09-22) | `maker.py`, `intent.wants_making`, `intent.wants_picking_up`, `pipeline._maker_prove`; §4.8; `test_the_maker`, `test_the_maker_picks_up_and_puts_down`, `test_the_maker_runs_the_page_before_it_keeps_it`; atlas `projects_test.go` (door and glass) |
 | **The loop** (LAW_003) | a node may be returned to, and only with all three bounds: a ceiling declared where a reader meets it and read BY the loop, a stop condition checked by a machine over evidence the machine emitted, and every pass in the record including the failed ones. The maker's check was the first (2026-09-22); the flow engine's bounded return is the second (2026-09-28): a check's fail-edge back to a node that declares `loops`, the ceiling on that node and read by the runner, the work between re-done, every pass and every return on the record | `maker.REPAIRS`, `pipeline._maker_prove`; `flow.Node.Loops`, `flow.Validate`, `flow.runFrom` (atlas); `law/LAW_003_THE_LOOP.md`; `test_the_maker_runs_the_page_before_it_keeps_it` |
@@ -144,6 +149,7 @@ is ever observed false, that is the bug, before anything else.
 9. No failure is omitted from a delivery. (`recompose`)
 10. No count is written into a doc; every number is read from what a run produced. (`proved`, `suite_tally`)
 11. Nothing in the record is deleted; a correction is appended. (LAW 1)
+12. Nothing leaves the machine except on a route the operator turned on, by a run the operator named, carrying only what the operator's own parity file put there; a key is never printed, logged or sent anywhere but its header. (`routes.py`; `test_a_hosted_route_is_opened_on_his_terms`)
 
 ---
 
@@ -188,6 +194,7 @@ are the whole remaining distance.
 - MET — the strokes and the smoke checks, offline, every model stubbed; their counts are READ from `tests/last_run.json` (invariant 10 -- this line carried "1685" until 2026-09-08 and was wrong the same day); `law.py --prove` 17/17 (the seal's eight since 2026-09-21); `us.py` reconciles 51 records; the standup harness proves dry 10/10.
 - MET — the standup has run LIVE six times (sittings 86, 88, 90, 91, 92, 96): 8, 9, 9, 9, 10, 10 of 10. MET (2026-09-04 16:42, `sessions/parity_history.jsonl` line 2) — the parity has run on the tiered seats, 12 cases, every tier against its reference head. MET (2026-09-08, afternoon) — the standup judges seats sat, failed stages, OUT OF TIME, the judge's last word, and the numbers in the delivery (`test_the_p0_of_the_review`).
 - MET (2026-09-08) — THE RELEASE GATE: `python tests/release.py --check` refuses a tag by name unless the suites are green after the newest edit, buildmap is clean, the standup ran live and green, the law proves, the manifest agrees, every section-4 status change since the last tag has an Unreleased CHANGELOG line, DAYBOOK is closed, HANDOFF has today. Reads only. `test_the_release_gate`.
+- MET (2026-10-02, WHAT'S LEFT B18; the operator's word: "set up a second set for parity, why not?") — THE SECOND PARITY SET, ON A HOSTED ROUTE. `parity.md` carries ten hosted cases, each a first-set case again word for word, asked of a hosted head (`anthropic://claude-sonnet-5-5`). `/parity` runs the cases with no set and none of them leaves the machine; `/parity hosted` first says exactly what would leave (the objective and feed of each case, to the host, and that the provider bills it) and asks. The route (`manjuel/routes.py`, `us/route_anthropic.us`) is off until its key is in `.env`; it refuses by name what the law would refuse as an objective, the client tag and any secret's value; it sends the key in one header only, follows no redirect and needs https to another machine; its one caller is `parity.run`, and no seat sits on a route. The report says what left and what the provider counted, and a route on this machine says nothing left. Proved against a real server on loopback (Ollama's own Anthropic-compatible endpoint, a dummy key) and by `test_a_hosted_route_is_opened_on_his_terms`. NOT YET: a call to the real host, which needs the operator's key and is the operator's act.
 
 ### 4.7 The rack
 - MET — seven models, tiered; everyday pipelines fit 15 GB resident; the court evicts on purpose; parity cases pit each head against the other in its tier.
@@ -278,8 +285,9 @@ index without the engine having checked it against what ran.
 
 ### 7.3 Non-goals (RULED OUT, and why)
 
-- A bigger model, a cloud model, or a second executor -- SITTING LAW 3,
-  RULE 4, the 2026-09-04 ruling. The rack moves on a parity number only.
+- A bigger model seated without a measurement, or a second executor -- SITTING LAW 3, the
+  2026-09-04 ruling. A hosted model is a measuring stick, reached on a route the operator turned
+  on (RULE 4, amended 2026-10-02); no seat sits on one. The rack moves on a parity number only.
 - Making the seats write better prose by prompt. Eleven of the fourteen
   faults today were shapes the engine can stamp; a prompt is a request.
 - A listening socket, a daemon, an API -- BUILDPATH: the position.

@@ -34,6 +34,61 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### A second route, and the second parity set that uses it: a hosted model on the operator's terms (2026-10-02, WHAT'S LEFT B18 and H8's first half; RULE 4 amended)
+
+The operator's word, 2026-10-02: "backed by ollama as a first route then secondarily through additional API as
+added", and, asked whether RULE 4 should give way for it: "let's do what I said then, set up a second set for
+parity, why not? I'm not scared of it." RULE 4 is amended on that word, narrowly: CLAUDE.md keeps the paragraph as
+written and an AMENDED section under it says what is now allowed and no wider, each term the operator's to strike.
+SPEC 1 and 7.3, the README and DESIGN headlines, SYSTEM_DESIGN's network row and BUILDPATH's "external APIs:
+later" line say the same now. atlas's refusal of an LLM bridge (2026-09-09) stands for atlas; this is the core's, and
+it is one route. The sealed copy of RULE 4 in law/LAW_LEDGER.md is not amended: the ledger says CLAUDE.md is the copy
+the harness reads and the two may drift, and an entry there is the operator's to direct.
+
+**What was built.** `manjuel/routes.py` is the one module that knows a hosted model exists, as runtime.py is for the
+rack. A model with no route in its name is Ollama's; `anthropic://model` is reached through `us/route_anthropic.us`,
+which declares the address, the adapter and `remote: true`, and which `us.py` checks (the remote flag is DERIVED from
+the address, not trusted). The adapter speaks Anthropic's messages form. The route is OFF until
+`MANJUEL_ROUTE_ANTHROPIC_KEY` is in `.env`, put there by the operator; without it nothing is sent, and the message names
+the dial and never a value.
+
+**The second set.** `parity.md` carries ten hosted cases (`**Set:** hosted`), each a case of the first set again, word
+for word, asked of `anthropic://claude-sonnet-5-5` (the line to change for any model the route serves). `/parity` runs
+the cases with no set, and none of those can leave the machine. `/parity hosted` first prints exactly what would leave
+(the objective and feed of each case, the host, that the provider bills it), and asks. A word that happens to match a
+hosted case's name never selects it: a set is reached by its own name or not at all. The report says what left and what
+the provider counted in tokens (no price is printed: a price table is a second thing to keep true), a route on THIS
+machine says nothing left, and `sessions/parity_history.jsonl` keeps what left beside the seats' map.
+
+**What holds it shut.** Only what the operator's own parity file put there is sent, and `routes.refusal` refuses, by
+name and without repeating what it matched, whatever the law gate would refuse as an objective, the client tag, the
+value of any secret in the environment, and anything past a cap. The key goes in one header and is scrubbed from every
+message, even one a server echoes back. A route on another machine must be https; a redirect is never followed, because
+it would carry the key to wherever it points. One call, no retry, a time limit, a cap on the answer. The one caller is
+`parity.run`; no seat sits on a route (`us.py` reports one that names it).
+
+**Proved on a real server, with no cloud and no key.** Ollama 0.35 on this machine answers the same messages form on
+loopback, so the adapter was run against it with a dummy key: off without the key; a real call, the provider's token counts
+read back; and `parity.run` through the route, scored with the real embedder (about 0.8 against the rack's own head's 0.9
+on the same question). That run found the report's one dishonest word, "LEFT THIS MACHINE" for a loopback call; it is read
+off the address now. **NOT proved: a call to the real host.** That needs the operator's key and the operator's command
+(RULE 6); the first real run is the operator's.
+
+**Proved offline.** `test_a_hosted_route_is_opened_on_his_terms`, every call to a server on loopback it starts: the names
+and the shipped record; off without the key; the request's form and its one header; the key in no error, a 401 that echoes
+it included; a redirect not followed; plain http to another machine refused; the client tag, an outside path, a secret by
+name, a secret's value, the key itself, a push and an oversize text each refused with nothing sent; a time limit; a cap;
+parity reaching the route and not the rack, and saying where the call went; the preamble; set selection; every hosted case
+a local case's twin; one caller; no network import in parity.py; no seat on a route; the dial offered in `.env.example` and
+in RUNBOOK's table; `us.py` reading the record and the files that name it. Twenty-two source-level reversals on a mirror,
+each safeguard struck, the stroke red, restored byte for byte (one went green the first time, a RUNBOOK check that read the
+whole file instead of the table of dials; the stroke was fixed and it went red). The mirror: 3599 of 3599 strokes and 72 of 72 smoke.
+
+`manjuel/` moved (routes.py, parity.py, cli.py, us.py, and runtime.py's docstring): **restart required** for the REPL.
+**What goes red if unplugged:** the stroke above, each reversal naming the check that catches it; `us.py` (a route record
+that lies, a case on a route nobody declared, a seat on a route); and the REPL's `/parity hosted`, which refuses without the
+key and prints what leaves before it asks. SPEC 4.6 gained a MET line, section 2 a row and section 3 an invariant (12).
+
 ### The memory has a chain (2026-10-02, WHAT'S LEFT H1; the operator's word: "an autonomous second brain with hash chain verification")
 
 The operator asked what is missing from a second brain that keeps its own memory, proves it, and

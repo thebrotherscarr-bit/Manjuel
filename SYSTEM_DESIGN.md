@@ -91,7 +91,7 @@ GPU; the software is what this estate already is, finished and joined.
 | Availability | one box; restart is seconds; the ground opens with the rack down | Manjuel boot, "RACK UNREACHABLE — the ground is open" |
 | Durability | append-only files + hash chain + a copy of the folder; no database is the truth | atlas `SPEC_SQLITE` rule 1–4 |
 | Cost | **$0 / month.** Hardware ≤ $1k one-off (any gaming PC with a 12–16 GB GPU + disks) | his word |
-| Network | **home LAN only**; loopback for the engine; no WAN, no cloud, no key | Manjuel RULE 4; atlas loopback doctrine |
+| Network | **home LAN only**; loopback for the engine; no WAN, no cloud, no key (one optional hosted model route since 2026-10-02, off by default; the product does not use it) | Manjuel RULE 4 as amended; atlas loopback doctrine |
 | Dependencies | Manjuel: `ollama` only; atlas: none; nothing that downloads weights at first use | both charters |
 | Honesty | every claim checked; every failure delivered; every number read, never written | Manjuel SPEC §3 |
 

@@ -791,6 +791,26 @@ own suites from the glass: 3553 of 3553 strokes and 72 of 72 smoke. The door pid
 needs a restart for `memory.py`, `boot.py` and `cli.py`, and for the four modules the paragraph above
 names (`intent.py`, `pipeline.py`, `seatlog.py`, `lawgate.py`).
 
+**THE OPERATOR'S WORD, (15:26): "let's do what I said then, set up a second set for parity, why not? I'm not
+scared of it."** Then, while it was being built: "what is the harm in tying a new route/page onto the atlas glass?
+... Aider is 100% proven and open-source ... And then additionally, We could tie you into the system as well as
+another agent within the loop". The first is B18, ruled and built; the second is three new lines (B20, H12, H13), and
+the reply answers the harm: a page on the glass costs a rebuild and a placed binary, and what costs more is a second
+executor that writes and commits on its own, a dependency tree, and defaults that reach out, each met by the shape
+the lines name.
+
+**R1 BUILT (15:26): A SECOND ROUTE, AND THE SECOND PARITY SET.** RULE 4 is amended narrowly on the operator's word
+(CLAUDE.md: the paragraph stands, an AMENDED section under it says what is now allowed). `manjuel/routes.py` is the
+one module that knows a hosted model exists; `us/route_anthropic.us` declares the route; `parity.md` carries ten
+hosted cases (`**Set:** hosted`), the first set's cases again, asked of `anthropic://claude-sonnet-5-5`. `/parity`
+never leaves the machine; `/parity hosted` says what would leave and asks. OFF until `MANJUEL_ROUTE_ANTHROPIC_KEY` is
+in `.env`, which only the operator puts there. `manjuel/` moved: **RESTART REQUIRED** for the REPL. Proved against a
+real server on loopback (Ollama's own Anthropic-compatible endpoint, a dummy key) and by a stroke with twenty-two
+reversals red; the mirror The mirror: 3599 of 3599 strokes and 72 of 72 smoke.. **NOT PROVED: a call to the real host.** That needs the operator's key and the
+operator's command; nothing here has called it. Two read-only commands were refused by the harness's permission layer
+in this stretch, labelled "Traffic Redirection", a label that fits neither: the 3.11 syntax check was run through
+PowerShell instead, and the git read was not retried.
+
 ## HANDOFF FOR 2026-10-01 — read this before anything below it
 
 **THE DAY SO FAR.** The same conversation, carried over from 2026-09-30 on his word of 14:35

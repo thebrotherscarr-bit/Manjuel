@@ -168,6 +168,37 @@ No cloud service, no API key, no hosted model, no package that downloads
 weights at first use. If it needs someone else's server, it does not go in.
 This holds even when the remote thing is better, free, or open source.
 
+### RULE 4, AMENDED 2026-10-02 — on the operator's word, recorded by the hand
+
+The operator's words, 2026-10-02: "backed by ollama as a first route then
+secondarily through additional API as added", and, asked whether RULE 4 should
+give way for it: "let's do what I said then, set up a second set for parity,
+why not? I'm not scared of it." The paragraph above stands as written. This is
+the one thing it now allows, on these terms and no wider; the operator may
+strike any of it.
+
+    - A HOSTED MODEL ON A ROUTE, and nothing else. Ollama is the first route
+      and the default: a model with no route in its name is Ollama's. A route
+      is a `us/route_<name>.us` record declaring `remote: true`, read by
+      manjuel/routes.py and by nothing else. No other cloud service, no
+      telemetry, no package that downloads at first use, no server the
+      operator did not name.
+    - OFF UNTIL THE OPERATOR TURNS IT ON. A route is on only while its key is
+      in `.env`, put there by the operator. RULE 7 holds in full: the key is
+      never printed, copied, logged, committed or passed on a command line,
+      and a hand never places one.
+    - ONLY WHAT THE OPERATOR'S OWN FILE PUT THERE LEAVES, and only when it is
+      run by name. Today that is the objective and feed of a parity case
+      (`/parity hosted`), after the run has said what will leave and the
+      operator has said yes. Client material, a secret, and anything RULE 1 or
+      SITTING LAW 2 keeps from a seat never leave: the route refuses by name
+      and sends nothing.
+    - NO SEAT SITS ON A ROUTE YET. A seat on one is a piece of its own (WHAT'S
+      LEFT H8), built on the operator's word and given seat by seat on a
+      measured need (SITTING LAW 3: the rack moves on a parity number only).
+    - THE SPEND IS THE OPERATOR'S (RULE 6). A hosted call is billed by the
+      provider. A hand never makes one and never runs `/parity hosted`.
+
 ## RULE 5 — DO WHAT WAS ASKED. NOT WHAT OCCURRED TO YOU.
 
 Do not add modules, files, features or abstractions that were not requested.

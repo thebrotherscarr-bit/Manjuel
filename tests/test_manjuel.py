@@ -993,6 +993,418 @@ def test_the_memory_is_chained(reg, lib, book):
         check("this ground's own memory verifies against its own chain", vv.ok is True, vv.say())
 
 
+def test_a_hosted_route_is_opened_on_his_terms(reg, lib, book):
+    """A SECOND ROUTE, AND THE SECOND PARITY SET THAT USES IT (WHAT'S LEFT B18, 2026-10-02; the
+    operator's word: "backed by ollama as a first route then secondarily through additional API as
+    added", and, asked whether RULE 4 should give way: "let's do what I said then, set up a second set
+    for parity, why not? I'm not scared of it").
+
+    RULE 4 gave way for this, narrowly, and this is what holds the narrowness: a route is OFF until its
+    key is in the environment; only text his own parity file put there leaves, and what the law would
+    refuse never does; the key goes in one header and appears nowhere else; a redirect is not followed;
+    a route on another machine is https; one call, bounded; and nothing but parity.run can reach it.
+    Every call here is to a server on loopback that this stroke starts. (The adapter was proved once
+    against a real server, Ollama's own messages endpoint, in the sitting that built it.)"""
+    import http.server
+    import json as _json
+    import os as _os
+    import shutil
+    import threading
+    import time as _t
+    from manjuel import parity, routes
+    from manjuel import us as _us
+    from manjuel.registry import Agent
+
+    KEY = "sk-ant-test-0123456789abcdef-NOT-A-REAL-KEY"
+    seen: list = []            # what the loopback server received: (path, headers, body)
+    stolen: list = []          # what a redirect's target received
+    mode = {"kind": "ok", "delay": 0.0, "to": ""}
+    ANSWER = {"id": "msg_1", "type": "message", "role": "assistant", "model": "m",
+              "content": [{"type": "text", "text": "The ledger covenant seat refutes the claim. " * 3}],
+              "stop_reason": "end_turn", "usage": {"input_tokens": 41, "output_tokens": 19}}
+
+    class Server(http.server.BaseHTTPRequestHandler):
+        def log_message(self, *a):
+            pass
+
+        def do_POST(self):
+            try:
+                size = int(self.headers.get("content-length") or 0)
+                raw = self.rfile.read(size)
+                seen.append((self.path, {k.lower(): v for k, v in self.headers.items()},
+                             _json.loads(raw or b"{}")))
+                if mode["delay"]:
+                    _t.sleep(mode["delay"])
+                kind = mode["kind"]
+                if kind == "redirect":
+                    self.send_response(302)
+                    self.send_header("Location", mode["to"])
+                    self.end_headers()
+                    return
+                if kind == "401":
+                    body, code = _json.dumps({"type": "error", "error": {
+                        "type": "authentication_error",
+                        "message": "invalid x-api-key " + self.headers.get("x-api-key", "")}}).encode(), 401
+                elif kind == "500":
+                    body, code = b"boom", 500
+                elif kind == "nojson":
+                    body, code = b"<html>not json</html>", 200
+                elif kind == "nocontent":
+                    body, code = _json.dumps({"type": "message"}).encode(), 200
+                elif kind == "big":
+                    body, code = _json.dumps(dict(ANSWER, content=[{"type": "text", "text": "x" * 5000}])).encode(), 200
+                else:
+                    body, code = _json.dumps(ANSWER).encode(), 200
+                self.send_response(code)
+                self.send_header("content-type", "application/json")
+                self.send_header("content-length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+            except OSError:
+                pass
+
+    class Target(http.server.BaseHTTPRequestHandler):
+        def log_message(self, *a):
+            pass
+
+        def do_POST(self):
+            try:
+                self.rfile.read(int(self.headers.get("content-length") or 0))
+                stolen.append({k.lower(): v for k, v in self.headers.items()})
+                self.send_response(200)
+                self.end_headers()
+            except OSError:
+                pass
+        do_GET = do_POST
+
+    def start(handler):
+        srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+        threading.Thread(target=srv.serve_forever, daemon=True).start()
+        return srv, srv.server_address[1]
+
+    srv, port = start(Server)
+    tgt, tport = start(Target)
+    base = f"http://127.0.0.1:{port}"
+    g = Path(tempfile.mkdtemp())
+    (g / "us").mkdir()
+    env_set: list = []
+
+    def setenv(name, value):
+        _os.environ[name] = value
+        env_set.append(name)
+
+    def declare(name, **kw):
+        rec = {"id": f"route_{name}", "kind": "route", "adapter": "anthropic", "base_url": base,
+               "remote": False, "writes": False, "can_approve": False, "covenant": "1512741580b7239b",
+               "office": "MANJUEL", "reports_to": "manjuel", "source": "manjuel/routes.py", "us": 1,
+               "wall": "loopback, for this stroke"}
+        rec.update(kw)
+        (g / "us" / f"route_{name}.us").write_text(
+            "# Route\n\n```json\n" + _json.dumps(rec, indent=2) + "\n```\n", encoding="utf-8")
+
+    def attempt(model="probe://claude-x", system="s", user="hello", **kw):
+        try:
+            return routes.chat(model, system, user, ground=g, **kw), None
+        except routes.RouteError as exc:
+            return None, exc
+
+    try:
+        # ---- 1. names ------------------------------------------------------------------------
+        check("a model with no route is the rack's, whatever its tag looks like",
+              all(routes.split(m) == ("", m) and not routes.is_routed(m)
+                  for m in ("llama3.2:latest", "qwen3.5:9b", "hf.co/org/model:tag", "phi4-mini")))
+        check("route://model names a route and a model",
+              routes.split("Anthropic://claude-x") == ("anthropic", "claude-x")
+              and routes.is_routed("anthropic://claude-x"))
+        check("the key's name is derived in one place",
+              routes.key_env("anthropic") == "MANJUEL_ROUTE_ANTHROPIC_KEY"
+              and routes.key_env("my-route") == "MANJUEL_ROUTE_MY_ROUTE_KEY")
+        check("loopback is told from another machine, and a lookalike host is another machine",
+              routes.is_loopback("http://127.0.0.1:1/") and routes.is_loopback("http://localhost:2")
+              and routes.is_loopback("http://[::1]:3") and not routes.is_loopback("https://api.anthropic.com")
+              and not routes.is_loopback("http://127.0.0.1.evil.example/"))
+        real = routes.load(ROOT)
+        check("the ground declares its hosted route, and the record says it leaves the machine, over https",
+              "anthropic" in real and real["anthropic"].adapter == "anthropic" and real["anthropic"].remote
+              and real["anthropic"].base_url.startswith("https://")
+              and not routes.is_loopback(real["anthropic"].base_url)
+              and routes.leaves(real["anthropic"]), str(real))
+
+        # ---- 2. off until the key is in the environment -----------------------------------------
+        declare("probe")
+        probe_key = routes.key_env("probe")
+        _os.environ.pop(probe_key, None)
+        n0 = len(seen)
+        _, off = attempt()
+        check("a route with no key is OFF: nothing is sent, and the message names the dial, no value",
+              isinstance(off, routes.RouteOff) and probe_key in str(off) and len(seen) == n0, str(off))
+
+        # ---- 3. a call ------------------------------------------------------------------------------
+        setenv(probe_key, KEY)
+        r, e = attempt(system="be brief", user="What is a ledger?", max_tokens=77)
+        path, hdr, body = seen[-1]
+        check("a call is POST /v1/messages, in the form the provider speaks",
+              e is None and path == "/v1/messages" and body["model"] == "claude-x"
+              and body["max_tokens"] == 77 and body["system"] == "be brief"
+              and body["messages"] == [{"role": "user", "content": "What is a ledger?"}], str(body))
+        check("the key goes in one header, with the version, and nowhere else the request carries",
+              hdr.get("x-api-key") == KEY and hdr.get("anthropic-version") == routes.ANTHROPIC_VERSION
+              and "authorization" not in hdr and KEY not in _json.dumps(body) and KEY not in path)
+        check("the reply is the text, the provider's own token counts, and how much was sent",
+              r is not None and r.text.startswith("The ledger covenant seat") and r.tokens_in == 41
+              and r.tokens_out == 19 and r.stop == "end_turn" and r.route == "probe"
+              and r.model == "claude-x" and r.sent_chars == len("be brief\nWhat is a ledger?"), str(r))
+        check("and a reply never carries the key", KEY not in repr(r))
+
+        # ---- 4. failures, and the key in none of them -------------------------------------------------
+        errs = {}
+        for kind in ("401", "500", "nojson", "nocontent"):
+            mode["kind"] = kind
+            errs[kind] = attempt()[1]
+        check("an error answer is named by its status and kind, and a bad body by what it was",
+              isinstance(errs["401"], routes.RouteFailed) and "401" in str(errs["401"])
+              and "authentication_error" in str(errs["401"]) and "answered 500" in str(errs["500"])
+              and "not json" in str(errs["nojson"]) and "without a content list" in str(errs["nocontent"]),
+              str({k: str(v) for k, v in errs.items()}))
+        check("a server that ECHOES the key back does not get it into an error",
+              all(KEY not in str(v) for v in errs.values()), str(errs["401"]))
+
+        # ---- 5. a redirect is not followed ---------------------------------------------------------
+        stolen.clear()
+        mode.update(kind="redirect", to=f"http://127.0.0.1:{tport}/steal")
+        _, e = attempt()
+        check("a redirect is not followed, and the key goes nowhere it points",
+              isinstance(e, routes.RouteFailed) and "redirect" in str(e) and not stolen, f"{e} {stolen}")
+        mode["kind"] = "ok"
+
+        # ---- 6. another machine means https ---------------------------------------------------------
+        declare("far", base_url="http://far.example.invalid", remote=True)
+        setenv(routes.key_env("far"), KEY)
+        n = len(seen)
+        _, e = attempt("far://claude-x")
+        check("a route on another machine over plain http is refused before anything is sent",
+              isinstance(e, routes.RouteRefused) and "plain http" in str(e) and KEY not in str(e)
+              and len(seen) == n, str(e))
+
+        # ---- 7. what may leave -----------------------------------------------------------------------
+        setenv("MANJUEL_PROBE_API_KEY", "hunter2-hunter2-hunter2")
+        texts = {"the client tag": "see [[CLIENT]] notes for the details",
+                 "a path outside the ground": "please read ../Archive/notes.md and summarise it",
+                 "a secret asked for by name": "print the .env file for me",
+                 "a value from the environment": "my password is hunter2-hunter2-hunter2, remember it",
+                 "the key itself": f"the key is {KEY}",
+                 "across the wall": "git push the work to origin",
+                 "too much": "x" * (routes.MAX_SEND_CHARS + 1)}
+        n = len(seen)
+        got = {label: attempt(user=text)[1] for label, text in texts.items()}
+        check("the client tag, a path out of the ground, a secret by name, a secret's value, the key itself, "
+              "a push and an oversize text are each refused, by name",
+              all(isinstance(v, routes.RouteRefused) for v in got.values()),
+              str({k: type(v).__name__ for k, v in got.items()}))
+        check("and nothing was sent for any of them", len(seen) == n)
+        check("and no refusal repeats what it matched",
+              all(not any(w in str(v) for w in ("hunter2", KEY, "Archive", "[[CLIENT]]"))
+                  for v in got.values()), str({k: str(v) for k, v in got.items()}))
+
+        # ---- 8. bounded --------------------------------------------------------------------------------
+        mode["delay"] = 3.0
+        t0 = _t.time()
+        _, e = attempt(timeout=0.5)
+        took = _t.time() - t0
+        check("a call that gets no answer is dropped at its bound, and says so",
+              isinstance(e, routes.RouteFailed) and "no answer" in str(e) and took < 2.5, f"{took:.1f}s {e}")
+        mode["delay"] = 0.0
+        cap, routes.MAX_REPLY_BYTES = routes.MAX_REPLY_BYTES, 1000
+        try:
+            mode["kind"] = "big"
+            _, e = attempt()
+        finally:
+            routes.MAX_REPLY_BYTES = cap
+            mode["kind"] = "ok"
+        check("an answer past the cap is dropped, not read whole",
+              isinstance(e, routes.RouteFailed) and "more than" in str(e), str(e))
+        declare("odd", adapter="smoke-signals")
+        setenv(routes.key_env("odd"), KEY)
+        check("a route nobody declared, and an adapter this build lacks, are refused by name",
+              isinstance(attempt("nowhere://m")[1], routes.RouteError)
+              and "no us/route_nowhere.us" in str(attempt("nowhere://m")[1])
+              and "smoke-signals" in str(attempt("odd://m")[1]))
+
+        # ---- 9. parity reaches it, and says so ---------------------------------------------------------
+        class Rack:                     # a runtime that must NOT be asked for a routed reference
+            asked = 0
+
+            def chat(self, *a, **k):
+                Rack.asked += 1
+                return "a local reference answer, long enough to be scored. " * 3
+
+        embed = lambda t: Stub().embed("m", t)           # noqa: E731
+        ask = "Explain what a ledger is, in three sentences."
+        local_case = parity.Case(name="l", objective=ask, model="phi4-mini:latest")
+        hosted_case = parity.Case(name="h", objective=ask, model="probe://claude-x", set_name="hosted")
+        answer = lambda c: "The ledger covenant seat refutes the claim. " * 3     # noqa: E731
+
+        def run_both(cases=None):
+            return parity.run(cases or [local_case, hosted_case], answer, embed, Rack(),
+                              report=lambda s: None, ground=g)
+
+        def last_row():
+            return _json.loads((g / "sessions" / "parity_history.jsonl").read_text(encoding="utf-8").splitlines()[-1])
+
+        mode["kind"] = "ok"
+        rep = run_both()
+        lo, ho = rep.outcomes
+        check("a routed reference is answered by its route and not by the rack, and a local one by the rack",
+              ho.route == "probe" and ho.reference.startswith("The ledger covenant") and lo.route == ""
+              and Rack.asked == 1, f"{ho} {Rack.asked}")
+        check("the outcome carries what was sent and what the provider counted",
+              ho.sent_chars > len(ask) and ho.billed_in == 41 and ho.billed_out == 19 and ho.score is not None)
+        said = rep.where()
+        rep.stamp(g)
+        check("a route on THIS machine is said to be one: nothing LEFT, and the history keeps no such entry",
+              ho.remote is False and "went through a route on this machine" in said
+              and "LEFT THIS MACHINE" not in said and "(this machine)" in ho.line()
+              and "left_the_machine" not in last_row(), said)
+        check("a run with nothing hosted still says all of it stayed",
+              "all of it on this machine" in run_both([local_case]).render()
+              and "LEFT THIS MACHINE" not in run_both([local_case]).render())
+        local_pre = "\n".join(parity.preamble([local_case, hosted_case], g))
+        check("and a route on this machine does not claim to leave it, before or after",
+              "a route on this machine (probe): nothing leaves" in local_pre
+              and "WHAT LEAVES" not in local_pre and "Nothing leaves the box" in local_pre, local_pre)
+
+        # AS IF THE ROUTE WERE ANOTHER MACHINE: the loopback server stands in for it
+        real_leaves = routes.leaves
+        routes.leaves = lambda r: True
+        try:
+            rep = run_both()
+            lo, ho = rep.outcomes
+            body_text = rep.render({"Steward": "phi4-mini:latest"})
+            check("a call to another machine is said to have LEFT THIS MACHINE: how many, how much, who bills it",
+                  ho.remote is True and "LEFT THIS MACHINE" in body_text and "1 of 2 reference call(s)" in body_text
+                  and "41 tokens in and 19 out" in body_text and "bills the operator" in body_text
+                  and "via probe" in ho.line() and "all of it on this machine" not in body_text, body_text)
+            rep.stamp(g)
+            check("the history records what left, and no key",
+                  last_row().get("left_the_machine") == {"calls": 1, "routes": ["probe"], "sent_chars": ho.sent_chars}
+                  and KEY not in _json.dumps(last_row()), str(last_row()))
+            mode["kind"] = "500"
+            bad = run_both([hosted_case]).outcomes[0]
+            mode["kind"] = "ok"
+            check("a hosted call that failed is an ERROR, and still says a call was made, to another machine",
+                  bad.score is None and bad.verdict == "ERROR" and bad.route == "probe" and bad.remote is True
+                  and "answered 500" in bad.error and KEY not in bad.error, bad.error)
+            _os.environ.pop(probe_key, None)
+            off_case = run_both([hosted_case]).outcomes[0]
+            check("and a call that never went (the route is off) says NO call was made",
+                  off_case.route == "" and "OFF" in off_case.error, off_case.error)
+            setenv(probe_key, KEY)
+
+            # ---- 10. what the operator reads before he says yes ---------------------------------------
+            plain = "\n".join(parity.preamble([local_case], g))
+            check("a run with nothing hosted says nothing leaves, and offers no hosted warning",
+                  "Nothing leaves the box" in plain and "LEAVES" not in plain, plain)
+            pre = "\n".join(parity.preamble([local_case, hosted_case], g))
+            check("a run with a case on another machine says what leaves, to whom, and that the provider bills it",
+                  "LEAVES THIS MACHINE via probe" in pre and "WHAT LEAVES THIS MACHINE" in pre
+                  and f"{len(ask)} characters" in pre and "127.0.0.1" in pre and "bills the operator" in pre
+                  and "Nothing leaves the box" not in pre and KEY not in pre, pre)
+        finally:
+            routes.leaves = real_leaves
+        _os.environ.pop(probe_key, None)
+        ghost = parity.Case(name="x", objective=ask, model="nowhere://m", set_name="hosted")
+        offs = parity.routes_off([hosted_case, ghost, local_case], g)
+        check("a route with no key is named with its dial, one with no record is named, and neither prints a value",
+              any(probe_key in m and "OFF" in m for m in offs) and any("no us/route_nowhere.us" in m for m in offs)
+              and KEY not in " ".join(offs), str(offs))
+        setenv(probe_key, KEY)
+        check("with the key set and the record there, nothing stands in the way",
+              parity.routes_off([hosted_case, local_case], g) == [])
+        pool = [parity.Case("front door", "o1"),
+                parity.Case("hosted: front door", "o1", model="probe://m", set_name="hosted"),
+                parity.Case("court", "o2")]
+        check("with no argument only the default set runs: nothing leaves",
+              [c.name for c in parity.select(pool)[0]] == ["front door", "court"])
+        check("a word that matches a hosted case's name still reaches only the default set",
+              [c.name for c in parity.select(pool, "front")[0]] == ["front door"])
+        check("a set is reached by its own name, and narrowed by the words after it",
+              [c.name for c in parity.select(pool, "hosted")[0]] == ["hosted: front door"]
+              and parity.select(pool, "hosted court")[0] == [])
+        check("a word that matches nothing says so, and runs nothing",
+              parity.select(pool, "zzz") == ([], "no case matching 'zzz'"))
+
+        # ---- 11. the files that name a route are held to the records ----------------------------------------
+        real_cases = parity.load_cases(ROOT / "parity.md")
+        hosted_set = [c for c in real_cases if c.set_name == "hosted"]
+        default_set = [c for c in real_cases if not c.set_name]
+        check("parity.md carries a hosted set, every case on a declared route",
+              len(hosted_set) >= 5 and all(routes.is_routed(c.model) and routes.split(c.model)[0] in real
+                                           for c in hosted_set), str([c.model for c in hosted_set]))
+        twins = {(c.objective, c.feed) for c in default_set}
+        check("every hosted case is a local case again, word for word: the second set is the first, asked of a hosted head",
+              all((c.objective, c.feed) in twins for c in hosted_set))
+        check("no case in the default set names a route: the default run cannot leave the machine",
+              not any(routes.is_routed(c.model) for c in default_set))
+        check("the hosted set needs nothing from the rack and one route",
+              parity.models_needed(hosted_set) == set() and parity.routes_needed(hosted_set) == {"anthropic"})
+        srcs = {p.name: p.read_text(encoding="utf-8") for p in (ROOT / "manjuel").glob("*.py")}
+        callers = sorted(n for n, s in srcs.items() if "routes.chat(" in s and n != "routes.py")
+        check("nothing but parity reaches a route: one caller, which is the whole of the rule's reach",
+              callers == ["parity.py"], str(callers))
+        check("parity opens no socket and imports no network module",
+              not any(w in srcs["parity.py"] for w in ("import urllib", "import socket", "import http",
+                                                       "import requests", "urllib.", "socket.")))
+        check("no seat sits on a route",
+              not any(routes.is_routed(a.model) for a in reg.all()), str([a.model for a in reg.all()]))
+        example = (ROOT / ".env.example").read_text(encoding="utf-8")
+        runbook = (ROOT / "RUNBOOK.md").read_text(encoding="utf-8")
+        table = runbook.split("## The dials, in one place", 1)[1].split("\n## ", 1)[0]
+        check("every declared route's key dial is offered in .env.example and in RUNBOOK's table of the dials",
+              all(routes.key_env(n) in example and routes.key_env(n) in table for n in real), str(list(real)))
+
+        # ---- 12. us.py reads the routes ---------------------------------------------------------------------
+        records, _broken = _us.load(ROOT)
+        check("the shipped route record agrees with the code, the files that name it and the example",
+              _us.route_findings(ROOT, records, reg) == [],
+              "; ".join(f.line() for f in _us.route_findings(ROOT, records, reg)))
+
+        class Seats:
+            def all(self):
+                return [Agent(name="Probe Seat", model="anthropic://claude-x", system_prompt="x")]
+        lies = _us.route_findings(g, [
+            {"id": "route_lying", "kind": "route", "adapter": "carrier-pigeon",
+             "base_url": "http://api.example.invalid", "remote": False, "writes": True,
+             "source": "manjuel/nowhere.py"}], Seats())
+        said = "\n".join(f.line() for f in lies)
+        check("a route record that lies about its adapter, its reach, its address, its writes or its source is reported",
+              all(w in said for w in ("routes.ADAPTERS", "is not loopback", "plain http",
+                                      "a route sends text and writes nothing", "no such file")), said)
+        check("and a seat that names a route is reported, rather than left to find no model on the rack",
+              "a seat on a hosted route is not built" in said, said)
+        empty = Path(tempfile.mkdtemp())
+        shutil.copy(ROOT / "parity.md", empty / "parity.md")
+        check("a parity case on an undeclared route is a GAP",
+              any(f.level == "GAP" and f.field == "route" for f in _us.route_findings(empty, [], reg)))
+        # reconcile itself carries it: a ground whose only record is a lying route
+        lying = Path(tempfile.mkdtemp())
+        (lying / "us").mkdir()
+        (lying / "us" / "route_anthropic.us").write_text(
+            "# R\n\n```json\n" + _json.dumps({"id": "route_anthropic", "kind": "route", "adapter": "x",
+                                              "base_url": "http://a.example.invalid", "remote": True,
+                                              "writes": False, "source": "manjuel/routes.py"}) + "\n```\n",
+            encoding="utf-8")
+        shutil.copy(ROOT / "parity.md", lying / "parity.md")
+        found = "\n".join(f.line() for f in _us.reconcile(lying, reg, lib, installed=set()))
+        check("us.reconcile reports a lying route record through its own walk, not only through the helper",
+              "routes.ADAPTERS" in found and "plain http" in found, found[-300:])
+    finally:
+        for name in env_set:
+            _os.environ.pop(name, None)
+        for s in (srv, tgt):
+            s.shutdown()
+            s.server_close()
+
+
 def test_index(reg, lib):
     g = Path(tempfile.mkdtemp())
     r = Stub()
@@ -6050,8 +6462,10 @@ def test_parity_measures_without_deciding(reg, lib, book):
     check("the reference seat carries no persona to measure instead of the model",
           "directly and completely" in
           parity.reference_seat("m").system_prompt)
-    check("nothing in parity reaches for the network",
-          "antcli" not in (ROOT / "manjuel" / "parity.py").read_text(encoding="utf-8"))
+    pysrc = (ROOT / "manjuel" / "parity.py").read_text(encoding="utf-8")
+    check("nothing in parity reaches for the network itself: a hosted reference goes through routes.py alone",
+          "antcli" not in pysrc
+          and not any(w in pysrc for w in ("import urllib", "import socket", "import http", "import requests")))
 
     same = "vram ctx model " * 8
     check("identical answers score at the top",
@@ -16173,6 +16587,8 @@ def test_the_example_offers_only_dials_the_code_reads(reg, lib, book):
     def read_by_the_code(name: str) -> bool:
         if name.startswith("MANJUEL_MCP_"):
             return '"MANJUEL_MCP_"' in code          # one dial per server, by prefix
+        if name.startswith("MANJUEL_ROUTE_"):
+            return '"MANJUEL_ROUTE_"' in code        # one key per route, by prefix (routes.key_env)
         return f'"{name}"' in code or f"'{name}'" in code
 
     unread = [n for n in offered if not read_by_the_code(n)]
@@ -20033,6 +20449,7 @@ def main() -> int:
     test_prompt_skills(reg, lib)
     test_memory_gate(reg, lib)
     test_the_memory_is_chained(reg, lib, book)
+    test_a_hosted_route_is_opened_on_his_terms(reg, lib, book)
     test_index(reg, lib)
     test_drift(reg, lib, book)
     test_session4_regressions(reg, lib, book)

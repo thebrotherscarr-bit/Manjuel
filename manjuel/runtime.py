@@ -1,4 +1,4 @@
-"""Ollama transport. The only module that knows the model backend exists."""
+"""Ollama transport. The only module that knows the rack exists (routes.py knows a hosted route does)."""
 
 from __future__ import annotations
 

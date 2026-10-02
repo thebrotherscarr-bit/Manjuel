@@ -547,7 +547,7 @@ COMMANDS = [
     ("status",    "ground",    "boot report: ground, rack, record, gate, voice"),
     ("index",     "ground",    "refresh the semantic index"),
     ("find",      "ground",    "search the ground by meaning: /find <q>"),
-    ("parity",    "ground",    "chain vs bare calls; references set per case"),
+    ("parity",    "ground",    "chain vs bare calls; /parity hosted asks a hosted head, saying first what leaves"),
     ("models",    "rack",      "VRAM plan for this pipeline"),
     ("model",     "rack",      "one model for all or one seat: /model <tag> | <seat> <tag> | reset"),
     ("warm",      "rack",      "load this pipeline's models now"),
@@ -1494,15 +1494,14 @@ def _cmd_parity(sess: Session, arg: str = "") -> None:
         print(f"\n  {exc}\n")
         return
 
-    if arg.strip():
-        want = arg.strip().lower()
-        cases = [c for c in cases if want in c.name.lower()]
-        if not cases:
-            print(f"\n  no case matching '{arg.strip()}'\n")
-            return
+    cases, why = parity.select(cases, arg)
+    if why:
+        print(f"\n  {why}\n")
+        return
 
-    # A reference call is a paid API call. The operator authorises the spend,
-    # not the chain -- the gate is final, and that includes his wallet.
+    # A HOSTED reference is a paid API call that LEAVES THE MACHINE (a case on a route; the default
+    # set has none). The operator authorises the spend, not the chain -- the gate is final, and
+    # that includes his wallet -- and `preamble` says what leaves before he is asked.
     needed = parity.models_needed(cases)
     missing = sess.runtime.missing(needed)
     if missing:
@@ -1512,13 +1511,16 @@ def _cmd_parity(sess: Session, arg: str = "") -> None:
         print()
         return
 
-    print(f"\n  {len(cases)} case(s), each answered twice on THIS machine: "
-          f"once by the seats, once by a larger local model.\n")
-    for c in cases:
-        print(f"    · {c.name:30} -> {c.model}")
-    print(f"\n  reference models: {', '.join(sorted(needed))}")
-    print("  Nothing leaves the box and nothing is billed. Costs time and VRAM —")
-    print("  a big reference will spill to CPU on a 16GB card and run slowly.")
+    off = parity.routes_off(cases, ROOT)
+    if off:
+        print()
+        for line in off:
+            print(f"  {line}")
+        print()
+        return
+
+    for line in parity.preamble(cases, ROOT):
+        print(line)
     try:
         go = input("\n  run them? [y/N] ").strip().lower()
     except EOFError:
@@ -1537,7 +1539,7 @@ def _cmd_parity(sess: Session, arg: str = "") -> None:
         return sess.runtime.embed(EMBED_MODEL, text)
 
     print()
-    rep = parity.run(cases, answer_locally, embed, sess.runtime, report=print)
+    rep = parity.run(cases, answer_locally, embed, sess.runtime, report=print, ground=ROOT)
 
     # THE SEAT MAP FIRST, because render() needs it to read the scores the
     # right way round (sitting 81). It used to be gathered after printing.
@@ -1563,6 +1565,8 @@ def _cmd_parity(sess: Session, arg: str = "") -> None:
         for o in rep.outcomes:
             body += [f"### {o.case}", "",
                      f"score: {o.score if o.score is not None else 'n/a'}", "",
+                     *([f"left the machine: route {o.route}, {o.sent_chars} characters sent", ""]
+                       if o.route else []),
                      "**local**", "", o.local or f"(none: {o.error})", "",
                      "**reference**", "", o.reference or "(none)", ""]
         out.write_text("\n".join(body), encoding="utf-8", newline="\r\n")
