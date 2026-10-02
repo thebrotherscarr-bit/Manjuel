@@ -2905,7 +2905,9 @@ toll (`seatlog.pay`), C1 closed on a recount. The REPL needs a restart for `inte
 and `seatlog.py`. **Then, 11:14:** D9 (the release check reads GitHub's verdict: `ci`, at a mark or with
 `--ci`, no key sent, `not here` when unreachable; seen live green on both repositories), **then 11:25:** D7 (the
 door's 85 tools have permission records: `atlas/docs/TOOL_PERMISSIONS.md`, read off the table and the policy,
-held current by a test).
+held current by a test), **then 11:42:** D11 part 2 (the phrasing matrix, and the five gaps in the first wall
+it found, closed) and D3 ruled. The list is down to E1, a person who is not him; the REPL needs a restart
+for `lawgate.py` as well.
 
 **Faults of the hand's, in the record** — the toll index was built on 10-01 to be "kept current by a
 test", which turns the suite red after every sitting that pays a toll until a generator is run by

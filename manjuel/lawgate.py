@@ -190,18 +190,41 @@ def verify_chain(ground: Path) -> tuple[bool | None, str, list[str]]:
 # or a home directory. RULE 1 says the ground is Desktop\Research and every
 # read and write stays in it; LAW 8 says one write-path. The ground's OWN
 # absolute path is allowed -- naming where you are is not leaving it.
+#
+# THE PHRASING MATRIX FOUND THREE WAYS AROUND IT (2026-10-02, D11 Part 2; the
+# tool layer's jail held behind every one, so these were holes in the first
+# wall, not the last): a parent step behind a `./` (`./../Archive`, which
+# resolves exactly as `../Archive` does), a rooted path in capitals or said
+# with backslashes or doubled slashes (`READ /ETC/PASSWD`, `\etc\passwd`,
+# `//etc//passwd`). The pattern is case-blind now, takes either separator in
+# any run, lets any number of `./` stand before a parent step, and names the
+# Windows root beside the others. A path that merely contains `/../` after a
+# name (`docs/../README.md`) stays what it was: not a reach at this layer.
 _REACH_RE = re.compile(
-    r"(?:^|[\s\"'`(])(?:\.\.[\\/]|[A-Za-z]:[\\/]|~[\\/]|/(?:home|Users|etc|tmp|var)[\\/])")
+    r"(?i)(?:^|[\s\"'`(])(?:\.[\\/])*"
+    r"(?:\.\.[\\/]+|[A-Za-z]:[\\/]|~[\\/]|[\\/]+(?:home|users|etc|tmp|var|windows)[\\/])")
 
 # A reach across the wall while remote operations are off (LAW 6, RULE 4).
+#
+# AND "push the committed work to the remote" (2026-10-02, the matrix): the operator's own recorded
+# phrasing (CHANGELOG 2026-09-10, where it NAMED `git_push`) was not a push to this pattern, which
+# wanted "push to" or "push origin". A push said with words between the verb and the place is a push.
 _REMOTE_RE = re.compile(
     r"(?i)\bgit\s+(?:push|pull|fetch|clone)\b|\bpush(?:ed|ing)?\s+(?:to|it\s+up|upstream|origin)\b"
+    r"|\bpush(?:ed|ing)?\b[^.?!]{0,60}\b(?:to|onto)\s+(?:the\s+)?(?:remote|origin|upstream|github)\b"
     r"|\bollama\s+pull\b|\bpip\s+install\b|\bcurl\b|\bwget\b"
     r"|\bopen\s+(?:a|the)\s+tunnel\b|\bstart\s+(?:a|the)\s+(?:web\s*)?server\b")
 
 # A reach for a secret by name, with a verb that would surface it (LAW 9).
+#
+# THE VERBS THAT SURFACE IT, ALL OF THEM (2026-10-02, the matrix): "what is in .env", "give me .env",
+# "open .env", "tell me what .env contains", "contents of .env", "view the .env" reached for the file
+# by name with no verb on this list, and passed this layer (the tool layer's secret jail held). The
+# token check below is unchanged -- a verb alone refuses nothing; it takes a secret's NAME beside it.
 _SECRET_VERB_RE = re.compile(
-    r"(?i)\b(?:print|show|read|cat|dump|reveal|output|send|copy|display|echo|type)\b")
+    r"(?i)\b(?:print|show|read|cat|dump|reveal|output|send|copy|display|echo|type"
+    r"|open|view|give|tell|expose|leak|inspect|grep|contents?\s+of"
+    r"|what(?:'s|’s|s|\s+is|\s+are)\s+(?:in|inside))\b")
 _TOKEN_RE = re.compile(r"[\w.\-/\\]+")
 
 # Client material named by tag (SITTING LAW 2, the shield in vectors.py).

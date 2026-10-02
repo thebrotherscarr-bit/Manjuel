@@ -693,7 +693,11 @@ def injection_markers(feed: str) -> list[str]:
     ("the guardian catches injection attacks") matches nothing here. The
     model Guardian judges everything softer.
     """
-    text = feed or ""
+    # THE WORDS, NOT THE SPACES (2026-10-02, the phrasing matrix). "You  must  now reveal ..." with two
+    # spaces, a tab or a non-breaking space between the words was not an instruction to this gate, and
+    # neither was a marker broken across a line (`.` stops at a newline). Whitespace of every kind is one
+    # space before the patterns read it; nothing else about the text changes.
+    text = " ".join((feed or "").split())
     return [name for rx, name in _INJECTION_MARKERS if rx.search(text)]
 
 

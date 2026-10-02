@@ -199,6 +199,10 @@ corrections, the interrupt, the spoken cap.
     python law/law.py --prove         the ledger, hermetic, exit 0
     python tests/buildmap.py --check  BUILDMAP.md matches the code (regenerate
                                       with `python tests/buildmap.py`)
+    python tests/matrix.py            the phrasing matrix: each ask said many ways through the
+                                      law gate, the injection markers and the tool naming, none
+                                      may come out differently (exit 1 on a finding; --list;
+                                      2026-10-02, D11 part 2)
     python tests/seatindex.py --check SEAT_LOG_INDEX.md matches the log: every toll
                                       in the order it was paid, the numbering's gaps
                                       and duplicates as arithmetic (refreshed at every

@@ -153,7 +153,8 @@ when a seat says so.
          newline, so a stray tag in prose eats one short run, never the
          answer. The operator's toll named this THIN before I found it.
 
-    [~]  AN INTERNAL, REVIEWABLE TEST SUITE — PART 1 LANDED 2026-09-03.
+    [x]  AN INTERNAL, REVIEWABLE TEST SUITE — PART 1 LANDED 2026-09-03.
+         DONE 2026-10-02 (WHAT'S LEFT D11): Part 2, the phrasing matrix, built; Part 3 was true by another road 2026-09-29 (CHANGELOG, "The phrasing matrix"); ticked on his word.
          The `proved` skill reads tests/last_run.json, run_history.jsonl
          and the manifest report, and answers the sitting-81 question from
          FACT. Reports staleness first (a green tally from before the

@@ -43,17 +43,6 @@ Nothing here gets built until you say which way.
 
 ## D. Built but not finished, or not hooked up
 
-- **D3. The flows `coder` and `version-tag` have been fired and have never finished
-  successfully.** Read off the record 2026-09-30: `coder` (19 runs, none finished, last
-  2026-09-21) was superseded by `coder-tree`, which finished on 2026-09-29 (run six, COMPLETE).
-  `version-tag` (5 runs) last failed on 2026-09-28 because the mark it was told to cut,
-  v0.1.15, already existed, so its check for "Cut v0.1.15 at" could not pass; the two before
-  were stopped by hand. It can only finish at the next version, which is yours to cut. *(STATUS,
-  flows/runs.jsonl)*
-- **D11. The self-test suite is one third done.** Part 1 landed. Part 2 (a test-case generator)
-  is not scheduled: yours to order. Part 3 (REFUSALS.md findable by search) is true by another
-  road since 2026-09-29: every root document is in the index list, held by a test, and the
-  document now ends with every refusal site in the code (D8). *(TASKS, in hand)*
 
 ---
 
@@ -91,6 +80,20 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **D11. The self-test suite is one third done.** DONE 2026-10-02: Part 2 is built, `tests/matrix.py`,
+  the phrasing matrix -- each ask said 1,444 ways (case, spacing, politeness, quotes, the other slash, a
+  `./../` step, a rooted path in capitals, a secret asked in a question) through the law gate, the
+  injection markers and the tool naming, none allowed to come out differently from the canonical
+  phrasing. Built, it found five gaps in the first wall and they are closed (the tool layer's jail held
+  behind all of them). Part 1 landed 09-03 and Part 3 was true by another road (09-29), so the line is
+  whole. *(CHANGELOG, "The phrasing matrix")*
+- **D3. The flows `coder` and `version-tag` have been fired and have never finished successfully.**
+  RULED 2026-10-02: not a fault, nothing to fix. `coder` was superseded by `coder-tree` (COMPLETE 09-29)
+  and stays as history -- every version of every flow is kept (ESTATE LAW 1) -- and the gate reports it
+  truthfully as fired and never COMPLETE. `version-tag`'s one real failure was a mark that already
+  existed; it finishes the day a real mark is cut through it, which is the next release's own act, and
+  the gate keeps naming it ("fired, never COMPLETE") until then. Cut the next marks through it and its
+  first COMPLETE closes the report. *(STATUS, flows/runs.jsonl)*
 - **D7. The tool server's 85 tools have no permission records.** DONE 2026-10-02:
   `atlas/docs/TOOL_PERMISSIONS.md` is the record, read off the tool table and the shipped role policy by
   the functions that judge a call, and held current by a test (a tool added, a flag turned or a role

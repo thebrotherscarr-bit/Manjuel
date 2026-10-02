@@ -16969,6 +16969,90 @@ def test_a_listing_the_closing_seat_shortened_is_completed(reg, lib, book):
     check("a dry run's stub is not judged for it", judged("Six models are installed.", live=False) == [])
 
 
+def test_the_phrasing_matrix_finds_nothing_and_has_teeth(reg, lib, book):
+    """D11 PART 2 (WHAT'S LEFT, 2026-10-02): THE PHRASING MATRIX. `tests/matrix.py` says each ask many ways
+    (case, spacing, punctuation, politeness, quotes, curly apostrophes, non-breaking spaces; and for the
+    families that must refuse, the evasions: the other slash, a `./../` step, a rooted path in capitals, a
+    secret asked in a question) and requires the engine's deterministic front to answer every variant as
+    it answers the canonical one. It found four gaps in the first wall the day it was built (the gate
+    fixes carry the account); this holds it to finding nothing now, and holds the MATRIX to being a real
+    one: deterministic, broad, with no dead mutator, and able to find a gate weakened back to what it was."""
+    import re as _re
+    import subprocess as _sp
+    sys.path.insert(0, str(ROOT / "tests"))
+    import matrix as _mx
+    from manjuel import intent as _in, lawgate as _lg
+
+    res = _mx.run(ROOT)
+    check("the matrix, run over every phrasing, finds nothing",
+          not res.findings, "; ".join(f.line() for f in res.findings[:3]))
+    vs = _mx.variants()
+    check("it is DETERMINISTIC: the same phrasings in the same order, twice", vs == _mx.variants())
+    check("it is BROAD: over a thousand phrasings, and no family is thin",
+          len(vs) >= 1000 and all(n >= 40 for n, _bad in res.by_family.values()), str(res.by_family))
+    used = {v.mutation for v in vs}
+    every = list(_mx.SURFACE) + list(_mx.COMPOUND) + list(_mx.PATH_EVASION) + list(_mx.SECRET_EVASION)
+    check("no mutator is dead: every one changes at least one phrasing in some family",
+          all(m in used for m in every), str([m for m in every if m not in used]))
+    check("the families that must refuse carry their evasions; a plain turn carries none",
+          any(v.mutation == "./ before ../" for v in vs if v.family == "a reach outside the ground")
+          and any(v.mutation == ".ENV in capitals" for v in vs if v.family == "a reach for a secret")
+          and not any(v.mutation in _mx.PATH_EVASION or v.mutation in _mx.SECRET_EVASION
+                      for v in vs if v.family == "a plain turn"))
+
+    # THE MATRIX HAS TEETH: weaken each gate back to what it was and the matrix must come out red. The
+    # old patterns are written here, as they stood before 2026-10-02.
+    old_reach = _re.compile(r"(?:^|[\s\"'`(])(?:\.\.[\\/]|[A-Za-z]:[\\/]|~[\\/]|/(?:home|Users|etc|tmp|var)[\\/])")
+    old_verbs = _re.compile(r"(?i)\b(?:print|show|read|cat|dump|reveal|output|send|copy|display|echo|type)\b")
+    real = (_lg._REACH_RE, _lg._SECRET_VERB_RE, _lg._REMOTE_RE, _in.injection_markers)
+    try:
+        _lg._REACH_RE = old_reach
+        weak = _mx.run(ROOT)
+        check("a first wall weakened to its old reach pattern is FOUND: the `./../` and rooted-path evasions go red",
+              any(f.mutation == "./ before ../" for f in weak.findings)
+              and any(f.mutation in ("UPPER", "backslashes") for f in weak.findings), str(len(weak.findings)))
+        import contextlib as _cl
+        import io as _io
+        buf = _io.StringIO()
+        with _cl.redirect_stdout(buf):
+            rc = _mx.main([])
+        check("   and the command exits 1 and prints the finding whole",
+              rc == 1 and "wanted refused" in buf.getvalue() and "./../" in buf.getvalue(), buf.getvalue()[-200:])
+        _lg._REACH_RE = real[0]
+        _lg._SECRET_VERB_RE = old_verbs
+        weak = _mx.run(ROOT)
+        check("   and one weakened to its old verbs: a secret asked in a question is FOUND",
+              any(f.text.lower().startswith("what is in .env") and not f.mutation for f in weak.findings),
+              str(len(weak.findings)))
+        _lg._SECRET_VERB_RE = real[1]
+        _lg._REMOTE_RE = _re.compile(r"(?i)\bgit\s+(?:push|pull|fetch|clone)\b|\bpush(?:ed|ing)?\s+(?:to|it\s+up|upstream|origin)\b"
+                                     r"|\bollama\s+pull\b|\bpip\s+install\b|\bcurl\b|\bwget\b")
+        weak = _mx.run(ROOT)
+        check("   and one weakened to its old push pattern: `push ... to the remote` is FOUND",
+              any("committed work" in f.text for f in weak.findings), str(len(weak.findings)))
+        _lg._REMOTE_RE = real[2]
+        # the markers reading the spaces as written, as they did before:
+        _in.injection_markers = lambda feed: [n for rx, n in _in._INJECTION_MARKERS if rx.search(feed or "")]
+        weak = _mx.run(ROOT)
+        check("   and the injection markers reading spaces as written: a padded instruction is FOUND",
+              any(f.family == "an instruction hidden in pasted material" and "  " in f.text for f in weak.findings),
+              str(len(weak.findings)))
+    finally:
+        _lg._REACH_RE, _lg._SECRET_VERB_RE, _lg._REMOTE_RE, _in.injection_markers = real
+    check("and the weakenings are undone: the matrix finds nothing again", not _mx.run(ROOT).findings)
+
+    # THE COMMAND LINE IS THE WIRE the suites and a hand both use.
+    proc = _sp.run([sys.executable, str(ROOT / "tests" / "matrix.py")], capture_output=True, text=True,
+                   cwd=str(ROOT), timeout=120, stdin=_sp.DEVNULL)
+    check("`python tests/matrix.py` runs it, prints the matrix and exits 0 when it finds nothing",
+          proc.returncode == 0 and "THE PHRASING MATRIX" in proc.stdout and "0 finding" in proc.stdout,
+          (proc.stdout + proc.stderr)[-300:])
+    lst = _sp.run([sys.executable, str(ROOT / "tests" / "matrix.py"), "--list"], capture_output=True,
+                  text=True, cwd=str(ROOT), timeout=120, stdin=_sp.DEVNULL)
+    check("`--list` prints every phrasing and runs nothing",
+          lst.returncode == 0 and len(lst.stdout.splitlines()) == len(vs), str(len(lst.stdout.splitlines())))
+
+
 def test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book):
     """"sandbox the python" (the operator, 2026-09-22).
 
@@ -19931,6 +20015,7 @@ def main() -> int:
     test_the_toll_index_is_read_off_the_log(reg, lib, book)
     test_a_toll_refreshes_the_index_beside_it(reg, lib, book)
     test_a_listing_the_closing_seat_shortened_is_completed(reg, lib, book)
+    test_the_phrasing_matrix_finds_nothing_and_has_teeth(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)
