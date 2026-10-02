@@ -51,9 +51,6 @@ Nothing here gets built until you say which way.
   were stopped by hand. It can only finish at the next version, which is yours to cut. *(STATUS,
   flows/runs.jsonl)*
 - **D7. The tool server's 85 tools have no permission records.** *(HANDOFF 09-28)*
-- **D9. The release check does not read GitHub's test result.** It cost something on
-  2026-09-29: the check passed 17 of 17 and the v0.1.16 tag was cut while GitHub's own run on
-  that tag was red on every machine (C34, under Done). *(HANDOFF 09-28, GitHub run 170)*
 - **D11. The self-test suite is one third done.** Part 1 landed. Part 2 (a test-case generator)
   is not scheduled: yours to order. Part 3 (REFUSALS.md findable by search) is true by another
   road since 2026-09-29: every root document is in the index list, held by a test, and the
@@ -95,6 +92,11 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **D9. The release check does not read GitHub's test result.** DONE 2026-10-02: a new check, `ci`,
+  asks GitHub for the newest run of each workflow on HEAD, for core and atlas, and refuses a run
+  still going, a missing one, or a red one (naming the legs). Asked at a mark or with `--ci`; no key
+  sent; `not here` when GitHub cannot be asked. Seen live: both repositories green.
+  *(CHANGELOG, "The release check reads GitHub's verdict")*
 - **C7. The model list answer dropped a model.** DONE 2026-10-02, and fixed rather than measured: the
   closing seat paraphrased the rack's listing and dropped the names (3, 0, 11, 8, 4, 0, 0 and 3 of
   eleven on 09-30; none at 09:48 today). When the objective names the listing tool and the closing

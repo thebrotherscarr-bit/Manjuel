@@ -12202,8 +12202,10 @@ def test_the_release_gate_runs_on_a_mark(reg, lib, book):
     # workflow still names no subset of its own.
     # AND A FIFTH (2026-09-29, the STATUS page): `status` compares the page's
     # mtime against the record's, and a checkout has neither.
+    # AND A SIXTH (2026-10-02, D9): `ci` asks GitHub whether the run on this commit is green, and on
+    # a runner that run is the runner's own, still going -- the question cannot be put there.
     check("the checks that need the ground are named in one place",
-          _rel.TERMINAL_ONLY == ("strokes", "smoke", "standup", "flows", "status"),
+          _rel.TERMINAL_ONLY == ("strokes", "smoke", "standup", "flows", "status", "ci"),
           str(_rel.TERMINAL_ONLY))
     # TWO REASONS A CHECK GOES UNRUN, and they are not the same fact. The three
     # above cannot be ASKED of a checkout (no mtimes). `mark` has nothing to
@@ -12606,9 +12608,174 @@ def test_version_control_matches_the_record(reg, lib, book):
 
     # ---- and all four are in the gate -------------------------------------
     names = [c.name for c in _rel.checks(ROOT, record_only=True)]
-    # `status` is the seventh, last, since 2026-09-29 (the STATUS page).
-    check("the gate runs tasks, pins, marks, remotes, flows, workflows and status, after the record checks",
-          names[-7:] == ["tasks", "pins", "marks", "remotes", "flows", "workflows", "status"], str(names))
+    # `status` is the last, since 2026-09-29 (the STATUS page); `ci` sits after `remotes` since 2026-10-02.
+    check("the gate runs tasks, pins, marks, remotes, ci, flows, workflows and status, after the record checks",
+          names[-8:] == ["tasks", "pins", "marks", "remotes", "ci", "flows", "workflows", "status"], str(names))
+
+
+def test_the_gate_asks_githubs_verdict(reg, lib, book):
+    """D9 (WHAT'S LEFT, 2026-10-02). THE RELEASE CHECK PASSED 17 OF 17 BESIDE A RED RUN ON THE MARK IT
+    HAD JUST CUT (2026-09-29): GitHub's run on v0.1.16 was red on every machine and nothing on this
+    ground read it, so a rule kept by a hand was the only guard. The gate asks now: the newest run of
+    each workflow GitHub holds for the commit HEAD points at, for core and for atlas, must be completed
+    and green. The asker is handed in, so the stroke is offline; the default asker is held to sending
+    no key and to a bound."""
+    import subprocess as _sp
+    import urllib.error as _ue
+    import urllib.request as _ur
+    sys.path.insert(0, str(ROOT / "tests"))
+    import release as _rel
+
+    def repo(origin="https://github.com/acme/widgets.git"):
+        g = Path(tempfile.mkdtemp())
+
+        def run(*a):
+            return _sp.run(["git"] + list(a), cwd=g, capture_output=True, text=True,
+                           encoding="utf-8", stdin=_sp.DEVNULL)
+        run("init", "-q", "-b", "main")
+        run("config", "user.email", "stroke@local")
+        run("config", "user.name", "stroke")
+        (g / "a.txt").write_text("a\n", encoding="utf-8")
+        run("add", "-A")
+        run("commit", "-q", "-m", "one")
+        if origin:
+            run("remote", "add", "origin", origin)
+        return g, run("rev-parse", "HEAD").stdout.strip()
+
+    def wf(name, status="completed", conclusion="success", at="2026-10-02T10:00:00Z", n=1):
+        return {"name": name, "status": status, "conclusion": conclusion, "created_at": at,
+                "jobs_url": f"https://api.github.test/jobs/{name}/{n}"}
+
+    def asker(runs, jobs=None, seen=None):
+        def fetch(url):
+            if seen is not None:
+                seen.append(url)
+            if "/actions/runs?" in url:
+                return {"workflow_runs": runs}, ""
+            return (jobs or {"jobs": []}), ""
+        return fetch
+
+    g, sha = repo()
+    seen = []
+    c = _rel.ci(g, ask=True, fetch=asker([wf("prove")], seen=seen))
+    check("a commit whose run is complete and green passes, and says GitHub was asked just now",
+          c.ok and c.ran and "green" in c.why and "just now" in c.why and "core" in c.why, c.why)
+    check("it asked for THIS commit of THIS repository, whole sha and all",
+          len(seen) == 1 and "/repos/acme/widgets/actions/runs?" in seen[0] and f"head_sha={sha}" in seen[0],
+          str(seen))
+    check("a folder that is no repository is not asked about (atlas has no .git here)",
+          "atlas" not in c.why)
+
+    c = _rel.ci(g, ask=True, fetch=asker([wf("prove", conclusion="failure")],
+                                         jobs={"jobs": [{"name": "prove (windows-latest, 3.10)", "conclusion": "failure"},
+                                                        {"name": "prove (ubuntu-latest, 3.13)", "conclusion": "success"}]}))
+    check("a red run is refused, and the legs that failed are named",
+          not c.ok and c.ran and "prove was failure" in c.why and "windows-latest, 3.10" in c.why
+          and "ubuntu" not in c.why, c.why)
+    c = _rel.ci(g, ask=True, fetch=asker([wf("prove", status="in_progress", conclusion=None)]))
+    check("a run still going is refused: read it when it is done, never a green nobody earned",
+          not c.ok and "still in_progress" in c.why and "read it when it is done" in c.why, c.why)
+    c = _rel.ci(g, ask=True, fetch=asker([]))
+    check("a commit GitHub holds no run for is refused: not sent, or CI is off",
+          not c.ok and "no run for this commit" in c.why, c.why)
+    c = _rel.ci(g, ask=True, fetch=asker([wf("prove", conclusion="cancelled", at="2026-10-02T10:00:00Z"),
+                                          wf("prove", conclusion="success", at="2026-10-02T10:05:00Z", n=2)]))
+    check("a newer run of the same workflow supersedes an older one: a cancelled run is what a later push leaves",
+          c.ok and "green" in c.why, c.why)
+    c = _rel.ci(g, ask=True, fetch=asker([wf("prove", conclusion="success", at="2026-10-02T10:00:00Z"),
+                                          wf("prove", conclusion="failure", at="2026-10-02T10:05:00Z", n=2)]))
+    check("   and the newer one decides the other way too: a green older run is not the verdict",
+          not c.ok and "prove was failure" in c.why, c.why)
+    c = _rel.ci(g, ask=True, fetch=asker([wf("prove"), wf("release", conclusion="failure")]))
+    check("every workflow's newest run is read, not just the first: one red among greens refuses, and only it is named",
+          not c.ok and "release was failure" in c.why and "prove was" not in c.why, c.why)
+
+    c = _rel.ci(g, ask=True, fetch=lambda url: (None, "URLError"))
+    check("when GitHub cannot be asked the gate says `not here` and why -- never a pass, never a refusal",
+          c.ok and not c.ran and "could not be asked" in c.why and "URLError" in c.why, c.why)
+    c = _rel.ci(g, ask=True, fetch=lambda url: (None, "HTTP 404"))
+    check("   a private repository (404) is the same: not asked, said so",
+          c.ok and not c.ran and "HTTP 404" in c.why, c.why)
+    g2, _ = repo(origin="file:///somewhere/else.git")
+    c = _rel.ci(g2, ask=True, fetch=lambda url: (_ for _ in ()).throw(AssertionError("asked a non-GitHub remote")))
+    check("an origin that is not on GitHub is not asked about",
+          c.ok and not c.ran and "origin is not on GitHub" in c.why, c.why)
+    g3, _ = repo(origin=None)
+    c = _rel.ci(g3, ask=True, fetch=lambda url: (_ for _ in ()).throw(AssertionError("asked with no origin")))
+    check("   nor is a repository with no origin at all",
+          c.ok and not c.ran and "origin is not on GitHub" in c.why, c.why)
+    c = _rel.ci(Path(tempfile.mkdtemp()), ask=True, fetch=lambda url: (_ for _ in ()).throw(AssertionError("asked")))
+    check("a ground with no repository has nothing to ask, and says so",
+          c.ok and not c.ran and "no GitHub repository here" in c.why, c.why)
+    c = _rel.ci(g, ask=False, fetch=lambda url: (_ for _ in ()).throw(AssertionError("a routine run asked GitHub")))
+    check("a routine run, no mark named and no --ci, does not touch the network at all",
+          c.ok and not c.ran and "not asked" in c.why, c.why)
+
+    # THE DEFAULT ASKER: no key, a bound, and an HTTP error is a reason, not a crash.
+    real = _ur.urlopen
+    caught = {}
+
+    class _Resp:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def read(self):
+            return b'{"workflow_runs": []}'
+
+    def fake(req, timeout=None):
+        caught["headers"] = {k.lower(): v for k, v in req.header_items()}
+        caught["url"], caught["timeout"] = req.full_url, timeout
+        return _Resp()
+    _ur.urlopen = fake
+    try:
+        data, why = _rel._github_get("https://api.github.com/repos/acme/widgets/actions/runs?head_sha=abc")
+    finally:
+        _ur.urlopen = real
+    check("the default asker reads the public API and sends NO KEY (RULE 7): no authorization header at all",
+          data == {"workflow_runs": []} and why == "" and "authorization" not in caught["headers"]
+          and not any("token" in k or "key" in k for k in caught["headers"]), str(caught))
+    check("   and it is bounded at ten seconds (ESTATE LAW 7)",
+          caught["timeout"] is not None and 0 < caught["timeout"] <= 10, str(caught))
+
+    def refuse(req, timeout=None):
+        raise _ue.HTTPError(req.full_url, 403, "rate limited", {}, None)
+    _ur.urlopen = refuse
+    try:
+        data, why = _rel._github_get("https://api.github.com/x")
+    finally:
+        _ur.urlopen = real
+    check("   an HTTP refusal is a reason, not a crash", data is None and why == "HTTP 403", why)
+
+    # IT IS THE TERMINAL'S, AND IT IS IN THE GATE.
+    names = {c.name: c for c in _rel.checks(ROOT, record_only=True)}
+    check("`ci` is in the terminal's list, and under --record-only it is `not here` and says why",
+          "ci" in _rel.TERMINAL_ONLY and "ci" in names and not names["ci"].ran
+          and "the run IS this one" in names["ci"].why, str(sorted(names)))
+    # THE PLUMBING, RECORDED NOT ASSUMED: what `checks` hands `ci` for each way the gate is run. `ci` is
+    # replaced by a recorder that answers `not asked` itself, so nothing here reaches the network (or
+    # needs a repository: the mirror has none).
+    asks = []
+    real_ci = _rel.ci
+
+    def recorder(root=ROOT, ask=False, fetch=None):
+        asks.append(ask)
+        return real_ci(root, ask=False)
+    _rel.ci = recorder
+    try:
+        _rel.checks(ROOT, ask_ci=True)
+        _rel.checks(ROOT, cutting="v9.9.9")
+        _rel.checks(ROOT)
+        _rel.checks(ROOT, record_only=True, ask_ci=True)
+    finally:
+        _rel.ci = real_ci
+    check("--ci asks GitHub, and so does a named mark; a routine run does not; a runner never does",
+          asks == [True, True, False], str(asks))
+    src = (ROOT / "tests" / "release.py").read_text(encoding="utf-8")
+    check("the flag the command line sends is the flag `main` reads",
+          '"--ci" in argv' in src and "ask_ci=" in src.split("def main", 1)[1])
 
 
 def test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book):
@@ -19718,6 +19885,7 @@ def main() -> int:
     test_the_flags_are_a_closed_set(reg, lib, book)
     test_loose_is_declared_and_read_by_nothing(reg, lib, book)
     test_the_release_gate_runs_on_a_mark(reg, lib, book)
+    test_the_gate_asks_githubs_verdict(reg, lib, book)
     test_version_control_matches_the_record(reg, lib, book)
     test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book)
     test_every_manifest_field_is_read_by_something(reg, lib, book)

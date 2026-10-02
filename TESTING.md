@@ -229,8 +229,10 @@ corrections, the interrupt, the spoken cap.
     and green -- a green 1/1 from one case would satisfy a gate that never
     measured it.
 
-    python tests/release.py --check   the nine-check release gate. Six of the
-                                      nine are also read at every boot and
+    python tests/release.py --check   the release gate (`--ci`, or a named mark,
+                                      also asks GitHub's own verdict on HEAD,
+                                      no key sent; 2026-10-02). Six of its
+                                      checks are also read at every boot and
                                       printed under GATE in the boot report;
                                       buildmap, law and manifest are not
                                       asked there (they spawn a process or

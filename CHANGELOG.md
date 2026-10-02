@@ -34,6 +34,42 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The release check reads GitHub's verdict (2026-10-02, WHAT'S LEFT D9)
+
+On 2026-09-29 the release check passed 17 of 17 beside a red run on the mark it had just cut: GitHub's
+run on v0.1.16 was red on every machine and nothing on this ground read it (C34). TESTING.md has said
+since that every run is read; a rule kept by a hand is a habit that has not failed yet. So the gate
+asks. A new check, `ci`, asks GitHub for the workflow runs on the commit HEAD points at, for core and for
+atlas, and requires the NEWEST run of each workflow to be completed and green: a run still going is
+refused ("read it when it is done"), a commit with no run is refused (not sent, or CI is off), a red one
+is refused with the legs that failed, by name; a newer run supersedes an older one on the same commit (a
+cancelled run is what a later push leaves behind). It is asked at a mark (a version named) or with
+`python tests/release.py --check --ci`; on a routine run it says `not here` and asks nothing, so it costs
+no network call on an ordinary day; and it is the terminal's (`TERMINAL_ONLY`, the sixth): on a runner the
+run in question is the runner's own.
+
+RULE 4, read honestly and said so he can correct it: the estate's runtime is local and this does not
+touch it. The gate asks the one remote the mark is about to be published to, over GitHub's public API,
+with no key sent, bounded at ten seconds; and when GitHub cannot be asked (offline, rate-limited, a
+private repository) it says `not here` and why -- never a pass, never a refusal -- so a machine with no
+network still runs every other check. It is one function and one line in `checks()`; striking either
+puts the gate back as it was.
+
+**Proved.** Twenty-one checks in `test_the_gate_asks_githubs_verdict`, offline (the asker is handed in):
+a green commit passes and the asker is given THIS repository and THIS sha; red is refused with the legs
+named; a run still going is refused; no run is refused; a newer run decides over an older one either way;
+one red workflow among greens refuses and only it is named; GitHub unreachable, a 404, a non-GitHub
+origin, no origin and no repository are each `not here`; a routine run touches no network; the default
+asker sends no authorization header at all and is bounded at ten seconds; `--ci`, a named mark, a
+routine run and a runner are recorded against what `checks` hands `ci`. Nine reversals on a mirror, each
+red and restored. Two pinned strokes moved with the list (the terminal's six; `ci` after `remotes`). The
+mirror: 3501 of 3501. **Live, on the real ground:** `python tests/release.py --check --ci` read
+`core 908cf90 green (prove); atlas 3c7f42f green (prove)`, and the routine run said `not here ci`.
+
+`tests/release.py` moved (no restart: it is read on each run). **What goes red if unplugged:** that
+stroke (21 checks), and the existing workflow stroke, which runs the release-gate workflow's own command
+and requires `ci` among the checks a runner leaves unrun.
+
 ### A rack answer is whole: the engine completes a listing the closing seat shortened (2026-10-02, WHAT'S LEFT C7; TASKS "THE RACK DELIVERY DROPPED A MODEL")
 
 "What models are on the rack?" is answered by `rack_list`, which returns every installed model by

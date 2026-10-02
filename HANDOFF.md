@@ -718,11 +718,17 @@ own defect: its stroke went red after every sitting), C1 closed on a recount (on
 none since 09-29). `intent.py`, `pipeline.py`, `seatlog.py` moved: **RESTART REQUIRED** for the REPL;
 the door's sittings carry them. Mirror 3480/3480 and smoke 72/72, seven reversals red.
 
-**Where the ground stands (10:58).** core `main@be8ad21` and atlas `main@3c7f42f`, level with GitHub and
-green there on every leg. The door pid 20992 and the glass pid 23524 (both started 09:38), Ollama up
-with its eleven models; no sitting open (332 closed 10:56). The working tree carries this batch (the
-three engine files, the standup, the strokes, the record), to be saved and sent. The REPL needs a
-restart for `intent.py`, `pipeline.py` and `seatlog.py`.
+**D9 BUILT (11:14):** the release check reads GitHub's own verdict. A new check, `ci`, asks the public
+API for the newest run of each workflow on HEAD, core and atlas, and refuses a run still going, a missing
+one or a red one (legs named). Asked at a mark or with `--ci`; no key sent; ten seconds; `not here` when
+GitHub cannot be asked (RULE 4 read honestly; CHANGELOG says so he can correct it). The terminal's, like
+`flows`: a runner is the run. Seen live: `core 908cf90 green; atlas 3c7f42f green`. Nine reversals red.
+
+**Where the ground stands (11:14).** core `main@908cf90` (the engine batch; GitHub's run on it read, four
+legs green) and atlas `main@3c7f42f`, level with GitHub. The door pid 20992 and the glass pid 23524 (both
+started 09:38), Ollama up with its eleven models; no sitting open (332 closed 10:56). The working tree
+carries D9 (`tests/release.py`, its stroke, TESTING.md, the record), to be saved and sent. The REPL needs
+a restart for `intent.py`, `pipeline.py` and `seatlog.py`.
 
 ## HANDOFF FOR 2026-10-01 — read this before anything below it
 
