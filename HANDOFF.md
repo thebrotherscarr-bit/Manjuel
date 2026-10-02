@@ -811,6 +811,14 @@ operator's command; nothing here has called it. Two read-only commands were refu
 in this stretch, labelled "Traffic Redirection", a label that fits neither: the 3.11 syntax check was run through
 PowerShell instead, and the git read was not retried.
 
+**Where the ground stands (15:37).** core `main@36bf8c3` (R1 and the list, saved and sent) and atlas
+`main@4d12b53`, level with GitHub; both runs green on every leg, read through the gate's own `ci` check. The
+ground's own suites from the glass: 3603 of 3603 strokes and 72 of 72 smoke. The door pid 20992 and the glass
+pid 23524, Ollama up; no sitting open (333 closed 11:41). Nothing has been sent to a hosted host, by anyone:
+every call made in building this went to a loopback server. Nothing is unsaved but this paragraph. The REPL
+needs a restart for `routes.py`, `parity.py`, `cli.py`, `us.py` and `runtime.py`, and for the modules the
+earlier paragraphs name.
+
 ## HANDOFF FOR 2026-10-01 — read this before anything below it
 
 **THE DAY SO FAR.** The same conversation, carried over from 2026-09-30 on his word of 14:35

@@ -2944,7 +2944,9 @@ amended narrowly (CLAUDE.md); `routes.py` and `us/route_anthropic.us`; ten hoste
 says what would leave and asks; off until the operator's key is in `.env`; proved on a real server on loopback and by a
 stroke with twenty-two reversals. Not yet run against the real host: that is the operator's key and command. The operator's mid-turn
 idea of Aider on a glass page and Claude in the loop is B20, H12 and H13 on the list, with the harm answered in the reply.
-The REPL needs a restart for `routes.py`, `parity.py`, `cli.py` and `us.py`.
+The REPL needs a restart for `routes.py`, `parity.py`, `cli.py` and `us.py`. Saved and sent as core
+`main@36bf8c3`, GitHub's run green on every leg; the ground's suites from the glass 3603 of 3603 strokes and
+72 of 72 smoke. Nothing has been sent to a hosted host: every call went to a loopback server.
 
 **Next session** — open `What's left` first: E1, the decisions B19 (where plugins live) and B20 (Aider), and the second brain's builds H2 to H13 (H8 narrowed), in that order. THE RUST STAYS (his ruling 10-02, B14
 closed): do not fold it; `atlas-door` and `atlas.exe` depend on it. The next marks (core and atlas) are
