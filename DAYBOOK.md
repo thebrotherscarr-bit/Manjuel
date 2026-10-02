@@ -2917,14 +2917,16 @@ refreshes it at every toll).
 **Rulings** — B14, in chat at 10:25: "keep the Rust, close B14". The fold is not done and the line
 is closed on the list; the card on it had been dismissed.
 
-**At close** — (10:10, the day open) sitting 331 opened, run, tolled and closed through the glass;
-core `main@fd25ae6` and atlas `main@0e8eb8d` sent at 10:02; GitHub's runs read: atlas green on both
-jobs (the verifier's own leg passed there, 29 of 29), core green on all four legs, the list stroke's
-red gone; the REPL still needs a restart for `pipeline.py`. What is left on the list is his, as at the last
-close; B14 is closed (the Rust stays).
+**At close** — (11:51) sittings 331 to 333, three live standups, each opened, run, tolled and closed
+through the glass; core `main@582c0ad` and atlas `main@4d12b53` sent, level with GitHub and green on
+every leg, read through the gate's own `ci` check. Built today, each proved and recorded: B14 closed
+(the Rust stays), C7, the toll index's wire, C1 closed on a recount, D9, D7, D11 part 2 with the five
+gaps it found, D3 ruled. The list is down to E1, a person who is not him. The REPL needs a restart for
+`intent.py`, `pipeline.py`, `seatlog.py` and `lawgate.py`.
 
-**Next session** — open `What's left` first. THE RUST STAYS (his ruling 10-02, B14
-closed): do not fold it; `atlas-door` and `atlas.exe` depend on it, and no defect was found. The toll writer
-now regenerates SEAT_LOG_INDEX.md at every toll (built 10-02; the REPL needs a restart). For his eye: atlas's 21 golden chains (tests/fixtures/chains,
-committed 09-09, before the Archive ruling) were cut from the estate's ledgers and sit in the public
-repository's history; whether that history is purged is his.
+**Next session** — open `What's left` first: one line, E1. THE RUST STAYS (his ruling 10-02, B14
+closed): do not fold it; `atlas-door` and `atlas.exe` depend on it. The next marks (core and atlas) are
+to be cut THROUGH the `version-tag` flow, whose first COMPLETE closes D3's report; the gate on his terminal
+asks GitHub with a named mark or `--ci`. SPEC 4.9's one OPEN line is a second `coder-tree` run landed by
+his click. For his eye only: atlas's public history holds Archive-derived fixtures (HANDOFF names them);
+purging it is his word.

@@ -741,16 +741,22 @@ the mirror 3513/3513. **D3 RULED:** not a fault; `coder` stays as history, and `
 the next real mark, which should be cut through it.
 
 **THE LIST IS DOWN TO ONE LINE, E1** (the wife test: a person who is not him). Everything it needs is
-built; the flow that stands in for her ran in 52 s on 09-30. **For his eye, unchanged:** atlas's 21
-golden chains (committed 09-09, before the Archive ruling) came from the estate's ledgers and sit in the
-public repository's history; purging it rewrites public history and breaks the v0.1.7-9 marks, so it is
-his word, not the hand's.
+built; the flow that stands in for her ran in 52 s on 09-30. SPEC 4.9 has one OPEN line besides: the
+second run of a change to the estate's own code through `coder-tree`, landed by HIS click on Land onto
+main (run six was the first); that click is his by the line's own words.
 
-**Where the ground stands (11:42).** core `main@9fe1eab` and atlas `main@4d12b53`, level with GitHub and
-green there (read through `release.py --check --ci`). The door pid 20992 and the glass pid 23524 (both
-started 09:38), Ollama up with its eleven models; no sitting open (333 closed 11:41). The working tree
-carries D11 and the D3 ruling, to be saved and sent. The REPL needs a restart for `intent.py`,
-`pipeline.py`, `seatlog.py` and `lawgate.py`.
+**FOR HIS EYE, AND ONLY HIS (the Archive rule):** atlas's public repository holds, since 09-09 (before the
+09-11 ruling), 21 chain files cut from the estate's ledgers (676,769 bytes: agent and steward seat logs,
+the commons board, custody, ops_gate, the jesster and neiro archives, kimi's harvest, the trade
+ledgers) and other vector fixtures cut from the same oracles (`digest_catalog.jsonl`, `faces_ground/`).
+Purging it rewrites public history and moves the v0.1.7-9 marks, so it is not the hand's act. Nothing was
+opened for this: names and sizes only (SITTING LAW 2).
+
+**Where the ground stands (11:51).** core `main@582c0ad` and atlas `main@4d12b53`, level with GitHub and
+green on every leg, read through `release.py --check --ci`. The door pid 20992 and the glass pid 23524
+(both started 09:38), Ollama up with its eleven models; no sitting open (333 closed 11:41). Nothing is
+unsaved but this block. The REPL needs a restart for `intent.py`, `pipeline.py`, `seatlog.py` and
+`lawgate.py`. The gate on his terminal: 16 of 16 on a routine run; `--ci` or a named mark asks GitHub too.
 
 ## HANDOFF FOR 2026-10-01 — read this before anything below it
 
