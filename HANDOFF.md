@@ -724,11 +724,18 @@ one or a red one (legs named). Asked at a mark or with `--ci`; no key sent; ten 
 GitHub cannot be asked (RULE 4 read honestly; CHANGELOG says so he can correct it). The terminal's, like
 `flows`: a runner is the run. Seen live: `core 908cf90 green; atlas 3c7f42f green`. Nine reversals red.
 
-**Where the ground stands (11:14).** core `main@908cf90` (the engine batch; GitHub's run on it read, four
-legs green) and atlas `main@3c7f42f`, level with GitHub. The door pid 20992 and the glass pid 23524 (both
-started 09:38), Ollama up with its eleven models; no sitting open (332 closed 10:56). The working tree
-carries D9 (`tests/release.py`, its stroke, TESTING.md, the record), to be saved and sent. The REPL needs
-a restart for `intent.py`, `pipeline.py` and `seatlog.py`.
+**D7 BUILT (11:25):** the door's tools have permission records. `atlas/docs/TOOL_PERMISSIONS.md`, read off
+the tool table and the shipped role policy by the functions that judge a call (`rbac.Can`, `Tool.Writes`,
+`HeldExempt`), held current by `TestEveryToolHasAPermissionRecord`: per tool its tier, writes or reads,
+reading actions, secret arguments, held or not, and what operator, steward, agent and guest are told
+(85 tools: 48 read, 37 write). Six reversals red. A test and a document only: no binary moved. Regenerate
+with `go test ./internal/tools -run TestEveryToolHasAPermissionRecord -update` from `atlas/line`.
+
+**Where the ground stands (11:25).** core `main@2d8042d` (D9; GitHub's run on it read through the new
+`ci` check: green) and atlas `main@3c7f42f`, level with GitHub. The door pid 20992 and the glass pid 23524
+(both started 09:38), Ollama up with its eleven models; no sitting open (332 closed 10:56). The working
+tree carries D7 (atlas: the test, the record, its CHANGELOG and docs index; core: the record's line), to
+be saved and sent. The REPL needs a restart for `intent.py`, `pipeline.py` and `seatlog.py`.
 
 ## HANDOFF FOR 2026-10-01 — read this before anything below it
 

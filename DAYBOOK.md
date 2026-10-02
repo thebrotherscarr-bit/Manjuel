@@ -2903,7 +2903,9 @@ record. **Built, 10:58:** C7 (a rack answer is whole: `recompose` appends the li
 shortened; the standup's rack case held to it; seen live in 332), the toll index refreshed at every
 toll (`seatlog.pay`), C1 closed on a recount. The REPL needs a restart for `intent.py`, `pipeline.py`
 and `seatlog.py`. **Then, 11:14:** D9 (the release check reads GitHub's verdict: `ci`, at a mark or with
-`--ci`, no key sent, `not here` when unreachable; seen live green on both repositories).
+`--ci`, no key sent, `not here` when unreachable; seen live green on both repositories), **then 11:25:** D7 (the
+door's 85 tools have permission records: `atlas/docs/TOOL_PERMISSIONS.md`, read off the table and the policy,
+held current by a test).
 
 **Faults of the hand's, in the record** — the toll index was built on 10-01 to be "kept current by a
 test", which turns the suite red after every sitting that pays a toll until a generator is run by

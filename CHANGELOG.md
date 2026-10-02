@@ -34,6 +34,14 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### atlas: the door's tools have permission records (2026-10-02, WHAT'S LEFT D7; the entry is atlas's)
+
+`atlas/docs/TOOL_PERMISSIONS.md`: every tool the door offers (85: 48 read, 37 write), what it declares
+and what each shipped role is told, read off the tool table and the role policy by the functions that
+judge a call, and held current by a test that fails when a tool, a flag or a role changes and the record
+does not. The piece, its proof (four tests, six reversals) and its limit are in atlas's CHANGELOG under
+the same date; this is the core's list line closing.
+
 ### The release check reads GitHub's verdict (2026-10-02, WHAT'S LEFT D9)
 
 On 2026-09-29 the release check passed 17 of 17 beside a red run on the mark it had just cut: GitHub's
