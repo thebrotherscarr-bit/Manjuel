@@ -2817,3 +2817,101 @@ word (what DONE means for the coder on the tree); the list's remaining lines are
 one-line proposals wait for his word and are not built: the recital guard extended to a seat's own
 instructions (C6), a note when counsel writes a ruling heading (C33), and "want it ..." read as a
 change to the thing in hand (D2's second message).
+
+## Session 20 — 2026-10-01 (Thursday), sittings 327 to 330: the ruling made the court's last word, the toll index, `land`, and the chain verdict in Python
+
+**Standing** — follows session 19 on the same standing word ("DO NOT STOP, CONTINUE UNTIL IT IS
+FINISHED"; "Why did you stop? keep going" after the usage pause), the laws re-read at the start of
+every turn. The day's pieces are dated 2026-10-01 in CHANGELOG.md, WHAT'S LEFT and HANDOFF's block
+of the day, and stand there.
+
+**Version** — at open: core `main@d609ef8`, atlas `main@efb00d2`, both level with GitHub and green
+there on every leg. At close (09:50): core `main@05274c2` and atlas `main@44f8409`, sent at 09:07
+and 09:06; the working trees carried B14's first half, unsaved. The machine rebooted at 15:56 and the
+door, the glass and Ollama stayed down until the next morning.
+
+**The plan** — his, standing: WHAT'S LEFT top to bottom, each line read in full, proved on a mirror,
+applied, run through both suites and the live check from the glass, gated, saved and sent from
+Version control, the GitHub run read on every leg; a card only for what the record never ruled
+(three: the glass's PIN at its lock screen, placing the door and the glass, placing the door again).
+
+**What was built** — the ruling is the last word: the second live court (sitting 327) fit its turn,
+515 s of 900, and missed on shape, the Quality Evaluator seated after the judge; the summons at the
+judge's step is refused and named now; the third court (329, 399 s) was 1 of 1 and closed SPEC 8.2's
+court theme. B13: `tests/seatindex.py` and SEAT_LOG_INDEX.md, every toll in the order it was paid,
+the gaps (53) and the duplicates (5) counted, the log itself untouched. B16: `land` on `git_branch`
+and its button on Version control (fast-forward only, over saved work), the door and the glass
+rebuilt and placed on his allowance at 08:58, 9 of 9 through them (330). B14's first half:
+`atlas/tools/chain_verify.py`, the chain verdict in Python, 29 of 29 goldens, 356 of 356 canon
+vectors, 18 of 21 lines identical to the Rust CLI's and the other three skipped as the oracle
+skipped them; `verify_chain` rewired to it; a leg for it in atlas's proof; the door placed again at
+09:47. F3: Sessions 7a and 7b written after the fact from the CHANGELOG and the ledger.
+
+**What was measured** — the court's two timings, 561 s on 09-30 and 399 s on 10-01, the judge ruling
+last in both; B14's premise, first reading: the Rust is not unused, it backs `verify_chain` and the
+golden masters (the second reading is the next day's).
+
+**Faults of the hand's, in the record** — GitHub's red read 43 minutes after the send: core `05274c2`
+was red on all four legs at 09:12 on one stroke, the list's floor of ten open lines, a floor from the
+day the list had 41; read at 09:50. The B14 measurement was incomplete: it named `verify_chain` and
+the goldens and missed `atlas-door`'s `atlas trade` and the shipped `atlas.exe`, and "no tool shells
+the Rust" went into three records before that door was read (corrected the next day). The verifier's
+own file carried the cutters' marker word, so the proof read it as a cutter and went red on
+`cut_words`; found by the proof, fixed the same hour.
+
+**Rulings** — B14, by card: the verifier in Python first, then the fold (the second half was later
+held, see the next day's block); placing the door and the glass, and the door again, each a yes.
+
+**At close** — sittings 327 to 330, four: 327 the second court (0 of 1, the shape), 328 the morning
+set 9 of 9 on the guard, 329 the third court 1 of 1, 330 the morning set 9 of 9 through the placed
+door and glass; each opened, run, tolled and closed through the door from the glass. The ground on
+`main` at `05274c2` (core) and `44f8409` (atlas), level with GitHub as sent; the door pid 125656 and
+the glass pid 35444 until the reboot; the REPL needs a restart for `pipeline.py` (the ruling is the
+last word). What is left on the list is his: A5's v0.1.7 draft, C1 and C7's numbers, D3, D7, D9,
+D11, a person who is not him for E1; and B14's second half.
+
+**Next session** — bring the door, the glass and Ollama back after the reboot; read GitHub's red on
+core `05274c2` (the list's floor, fixed in the tree and not yet saved); then open `What's left` first.
+
+## Session 21 — 2026-10-02 (Friday), sittings 331 on: the machine brought back, B14's first half sent, the fold held
+
+**Standing** — the same conversation, carried across a model switch (his "Try again" at 09:35); the
+laws re-read in full at its start. His standing word of 09-29 and 09-30 stands ("do the list top to
+bottom", "restart it", "never make me wait").
+
+**Version** — at open: core `main@05274c2` (GitHub red on one stroke), atlas `main@44f8409` (green).
+At 10:02: core `main@fd25ae6` and atlas `main@0e8eb8d`, sent from Version control, level with GitHub.
+
+**The plan** — unchanged; one card asked and dismissed (the fold), one answered (the PIN: he opened
+the glass himself).
+
+**What was done** — the door (pid 20992), the glass (pid 23524) and Ollama (eleven models) started
+again after yesterday's reboot, on his standing "restart it"; suites 3454 of 3454 and smoke 72 of 72
+from the glass (the toll index regenerated twice: the stroke goes red after any sitting that pays a
+toll), the live morning set 9 of 9 (331); BUILDMAP and STATUS reprinted; the gate 16 of 16. B14's
+second reading, from reading what the fold touches: the Rust is the engine of `atlas-door` (the D2
+trade-ops page, the Go cutover of the Python `door.py`: every write is `atlas trade`) and ships as
+`atlas.exe` in every release. He dismissed the card and asked "Fold Rust into an attic for what
+reason? Is there something wrong with it? does it need to be removed?": no defect and no need; the
+fold was the hand's own tidiness proposal. The fold is HELD. The rewire's stale statements were
+corrected (the `TierSpine` comment, the CLI reference's line, three "no tool shells the Rust"
+sentences) and what it left behind was named, not fixed.
+
+**Faults of the hand's, in the record** — the toll index was built on 10-01 to be "kept current by a
+test", which turns the suite red after every sitting that pays a toll until a generator is run by
+hand: a wire that fires on routine, found twice in one morning, flagged and not built.
+
+**Rulings** — none; the card dismissed.
+
+**At close** — (10:10, the day open) sitting 331 opened, run, tolled and closed through the glass;
+core `main@fd25ae6` and atlas `main@0e8eb8d` sent at 10:02; GitHub's runs read: atlas green on both
+jobs (the verifier's own leg passed there, 29 of 29), core green on all four legs, the list stroke's
+red gone; the REPL still needs a restart for `pipeline.py`. What is left on the list is his, as at the last
+close, and B14's second half is held for his word.
+
+**Next session** — open `What's left` first. DO NOT fold the Rust without his word: no defect was
+found, the recommendation is to keep it, and `atlas-door` and `atlas.exe` depend on it. One proposal
+waits for his word and is not built: the toll writer regenerates SEAT_LOG_INDEX.md at every toll, so
+its stroke is never red after a sitting. For his eye: atlas's 21 golden chains (tests/fixtures/chains,
+committed 09-09, before the Archive ruling) were cut from the estate's ledgers and sit in the public
+repository's history; whether that history is purged is his.

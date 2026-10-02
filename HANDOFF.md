@@ -704,9 +704,12 @@ own tidiness proposal of 09-29, which called the Rust "unused"; it is not (above
 THE FOLD IS HELD: DO NOT MOVE THE RUST WITHOUT HIS WORD, whatever the 10-01 block's "still to build"
 says. The Python verifier (B14's first half) stands either way.
 
-**Where the ground stands (09:55).** core `main@05274c2` and atlas `main@44f8409`, both level with GitHub
-as last fetched, the working trees ahead of them by B14's first half, the list stroke's floor, the toll
-index, BUILDMAP and this block -- to be saved and sent through the glass.
+**Where the ground stands (10:10).** core `main@fd25ae6` and atlas `main@0e8eb8d`, sent at 10:02 and level
+with GitHub; GitHub's runs read: atlas green on both jobs (the verifier's leg there, 29 of 29), core green
+on all four legs (the list stroke fixed). The door pid 20992 (the 10-01 09:47 build) and the glass pid 23524
+(the 10-01 08:36 build), Ollama up with its eleven models; no sitting open (331 closed 09:49). The working
+tree carries only this block, the daybook's Sessions 20 and 21 and STATUS, to be saved and sent. The REPL
+needs a restart for `pipeline.py` (the ruling is the last word).
 
 ## HANDOFF FOR 2026-10-01 — read this before anything below it
 
