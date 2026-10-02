@@ -62,6 +62,7 @@ from manjuel.pipeline import Refused, Aborted, run_pipeline       # noqa: E402
 from manjuel.pipeline import RECITAL_CHARS, recited               # noqa: E402  one definition of a recital (2026-09-30)
 from manjuel.drift import DriftChecker                           # noqa: E402
 from manjuel.skills import EMBED_MODEL                           # noqa: E402
+from manjuel.intent import LISTING_TOOLS, dropped_items, listing_items  # noqa: E402  the engine's own roll call (2026-10-02)
 
 LOGS = ROOT / "logs"
 HISTORY = ROOT / "tests" / "run_history.jsonl"
@@ -112,6 +113,9 @@ class Case:
     # more lifted whole from what the seat was HANDED -- its instructions, the
     # law, the standing, its prompt -- is a recital, and a miss.
     expect_own_words: bool = False
+    # THE LISTING MUST BE WHOLE (2026-10-02, WHAT'S LEFT C7): every item a listing tool returned (the
+    # rack's models) is named in the delivery -- by the closing seat, or by the engine's completion.
+    expect_whole_listing: bool = False
 
 
 # THE STANDUP SET. Small, fixed, and the same every morning -- a changing
@@ -130,7 +134,11 @@ CASES: list[Case] = [
     # met it (2026-09-25, the run that was "met" while it recited).
     Case("greeting", "good morning", expect_no_tools=True, expect_own_words=True),
     Case("git status", "git status", expect_tools=("git_status",)),
-    Case("the rack", "what models are on the rack?", expect_tools=("rack_list",)),
+    # AND IT ASKS THAT EVERY MODEL BE NAMED (2026-10-02, C7). The case asked only that the tool ran and
+    # that no number was invented, so a closing seat that paraphrased the listing and named three of
+    # eleven models (the eight turns of 09-30: 3, 0, 11, 8, 4, 0, 0, 3) met it every morning.
+    Case("the rack", "what models are on the rack?", expect_tools=("rack_list",),
+         expect_whole_listing=True),
     Case("a folder", "what is in the skills dir", expect_tools=("ground_list",)),
     # A SMALL FILE, READ WHOLE (2026-09-25, his ruling). This read pipelines.md
     # -- 24.5 KB, over the 12 KB read window, so the front seat got "part 1 of
@@ -280,6 +288,22 @@ def _judge(o: Outcome, live: bool = True) -> None:
         if lifted:
             o.faults.append(f"the delivery recites {len(lifted)} characters of what the "
                             f"seat was handed: {lifted[:90]!r}")
+    # THE LISTING WHOLE (2026-10-02, WHAT'S LEFT C7). "What models are on the rack?" is answered by a
+    # tool that returns every installed model, and the closing seat paraphrased it and dropped the
+    # names. The engine completes a shortened listing now (pipeline.recompose); this holds the live
+    # turn to it by the engine's own function over the tool's result and the delivery, so the check
+    # and the guard cannot disagree. Judged live only: a stub names nothing.
+    if live and c.expect_whole_listing and not o.refused:
+        for skill in LISTING_TOOLS:
+            if skill not in o.tools:
+                continue
+            for r in o.results:
+                everything = listing_items(skill, r)
+                gone = dropped_items(skill, r, o.delivery) if everything else []
+                if gone:
+                    o.faults.append(f"the {LISTING_TOOLS[skill][0]}'s listing is not whole in the "
+                                    f"delivery: it leaves out {len(gone)} of {len(everything)} -- "
+                                    f"{', '.join(gone[:6])}")
     # THE SEATS (2026-09-08). A seat that failed is a miss whatever the
     # words say; a seat out of time is a miss; a seat the case names that
     # did not sit and speak is a miss -- Manjuel last, with the ruling.

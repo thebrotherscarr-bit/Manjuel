@@ -3595,8 +3595,32 @@ def recompose(ctx: RunContext, report=print) -> bool:
     # nowhere in the delivery -- sitting 96's court said OUT OF TIME for
     # Manjuel and nothing about Jesster's 577s. Same arithmetic.
     cut = [(s.agent, s.error) for s in ctx.steps if s.error]
+
+    # THE LISTING THE CLOSING SEAT SHORTENED (WHAT'S LEFT C7, 2026-10-02; intent.LISTING_TOOLS).
+    # The seat read a result that listed every item and spoke about it without the names: nothing
+    # was invented, the names were OMITTED, which no number check sees. Arithmetic, like the failures
+    # below: where the OBJECTIVE named a listing tool -- not where a Router reached for it while
+    # answering something else, which owes no roll call -- and the closing words leave out items the
+    # tool returned, the listing travels with the answer. The result is read from `ran_calls`, where
+    # the run keeps every tool's own words.
+    abridged: list[dict] = []
+    listing_skill = (getattr(ctx, "named_tool", "") or "").strip()
+    closing = next((s.output for s in reversed(ctx.steps)
+                    if s.ok and (s.output or "").strip()), "")
+    if listing_skill and closing.strip():
+        from .intent import LISTING_TOOLS, dropped_items, listing_items, listing_lines
+        if listing_skill in LISTING_TOOLS:
+            for (action, _sig), result in list((getattr(ctx, "ran_calls", None) or {}).items()):
+                if action != listing_skill:
+                    continue
+                gone = dropped_items(action, str(result), closing)
+                if gone:
+                    abridged.append({"of": LISTING_TOOLS[action][0], "one": LISTING_TOOLS[action][1],
+                                     "tool": action, "gone": gone,
+                                     "total": len(listing_items(action, str(result))),
+                                     "lines": listing_lines(action, str(result))})
     if (not fails and not partial and not late and not cut and not made_up
-            and not missed and not nothing_ran):
+            and not missed and not nothing_ran and not abridged):
         return False
     last = next((s for s in reversed(ctx.steps)
                  if s.ok and (s.output or "").strip()), None)
@@ -3611,6 +3635,14 @@ def recompose(ctx: RunContext, report=print) -> bool:
         ctx.steps.append(last)
 
     blocks: list[str] = []
+    for a in abridged:
+        noun = a["one"] if a["total"] == 1 else a["one"] + "s"
+        blocks.append(
+            f"{a['of'].upper()}, WHOLE. `{a['tool']}` returned {a['total']} {noun}; the words "
+            f"above name {a['total'] - len(a['gone'])} of them. All {a['total']}, as the tool "
+            f"listed them:\n" + "\n".join(f"  {ln}" for ln in a["lines"]) +
+            "\nMachine-emitted by comparing the tool's result with the words above, not a "
+            "seat's account of it.")
     if missed:
         # WHO CHOSE IT, SAID TRULY (2026-09-14). This read "This objective
         # named `X`" whatever had chosen X, and the day's court delivery said
@@ -3696,6 +3728,8 @@ def recompose(ctx: RunContext, report=print) -> bool:
         what.append(f"{len(late)} seat(s) out of time")
     if cut:
         what.append(f"{len(cut)} seat(s) failed")
+    if abridged:
+        what.append(f"{len(abridged)} shortened listing(s)")
     note = (f"recompose: {' and '.join(what)} appended to the delivery; "
             f"the closing seat's words were not the whole record")
     if note not in ctx.notes:

@@ -3,143 +3,51 @@
     python tests/seatindex.py            rewrites SEAT_LOG_INDEX.md
     python tests/seatindex.py --check    exit 1 if the index is stale
 
-WHY (2026-10-01, his ruling of 2026-09-30, WHAT'S LEFT B13). SEAT_LOG.md is
-append-only (ESTATE LAW 8) and is written by more than one hand, so its
-sitting numbers carry gaps and duplicates and its order is the order of
-writing, not of sitting. He asked for it "sorted and numbered"; the log
-itself cannot be sorted without rewriting it, which the law forbids. This
-is the index beside it: every toll's heading, its sitting number, its
-session id and the clock it was paid on, sorted by the session's own
-timestamp, with the gaps and the duplicates counted as arithmetic over the
-headings -- regenerated from the log so it cannot drift, the way BUILDMAP.md
-is read off the code. The log is never touched.
+WHY (2026-10-01, his ruling of 2026-09-30, WHAT'S LEFT B13). SEAT_LOG.md is append-only (ESTATE LAW 8)
+and is written by more than one hand, so its sitting numbers carry gaps and duplicates and its order
+is the order of writing. He asked for it "sorted and numbered"; the log itself cannot be sorted
+without rewriting it, which the law forbids. This is the index beside it, regenerated from the log so
+it cannot drift, the way BUILDMAP.md is read off the code. The log is never touched.
 
-SEAT_LOG.md is the record and is untracked (his ruling 2026-09-08); so is
-this index. Where the log is absent -- a fresh checkout -- `--check` says so
-and passes: there is nothing to be stale.
+THE GENERATOR LIVES IN manjuel/seatlog.py SINCE 2026-10-02 and runs at every toll (`seatlog.pay`), so
+a sitting that pays a toll never leaves the index stale. This script is the hand's way to run it and
+the check the suites hold, for a log written any other way. The names below are the stroke's.
+
+SEAT_LOG.md is the record and is untracked (his ruling 2026-09-08); so is this index. Where the log is
+absent -- a fresh checkout -- `--check` says so and passes: there is nothing to be stale.
 """
 
 from __future__ import annotations
 
-import re
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LOG = ROOT / "SEAT_LOG.md"
-OUT = ROOT / "SEAT_LOG_INDEX.md"
+sys.path.insert(0, str(ROOT))
 
-_HEAD = re.compile(r"^## (?P<title>.+)$")
-_SITTING = re.compile(r"^(?P<date>\d{4}-\d{2}-\d{2}) — sitting (?P<n>\d+) — (?P<what>.*)$")
-_SESSION = re.compile(r"session `S(?P<ymd>\d{8})-(?P<hms>\d{6})`")
-_CLOCK = re.compile(r"(\d{2}:\d{2})[–-](\d{2}:\d{2})")
+from manjuel import seatlog  # noqa: E402
 
+LOG = ROOT / seatlog.SEAT_LOG
+OUT = ROOT / seatlog.SEAT_LOG_INDEX
 
-def tolls(text: str) -> list[dict]:
-    """One row per `## ` heading in the log, in the order written."""
-    rows: list[dict] = []
-    lines = text.splitlines()
-    for i, line in enumerate(lines, 1):
-        m = _HEAD.match(line)
-        if not m:
-            continue
-        title = m.group("title").strip()
-        s = _SITTING.match(title)
-        # an unnumbered toll (the builder's, an outside hand's) carries its date in the heading
-        in_title = re.search(r"\d{4}-\d{2}-\d{2}", title)
-        row = {"line": i, "title": title, "date": s.group("date") if s else (in_title.group(0) if in_title else ""),
-               "n": int(s.group("n")) if s else None, "what": s.group("what").strip() if s else title,
-               "session": "", "clock": ""}
-        # the seat line follows within a few lines: the session id and the clock
-        for look in lines[i:i + 6]:
-            ms = _SESSION.search(look)
-            if ms:
-                row["session"] = f"{ms.group('ymd')[:4]}-{ms.group('ymd')[4:6]}-{ms.group('ymd')[6:]}T{ms.group('hms')[:2]}:{ms.group('hms')[2:4]}:{ms.group('hms')[4:]}"
-            mc = _CLOCK.search(look)
-            if mc:
-                row["clock"] = f"{mc.group(1)}–{mc.group(2)}"
-            if ms or mc:
-                break
-        rows.append(row)
-    return rows
-
-
-def ordered(rows: list[dict]) -> list[dict]:
-    """By the session's own timestamp, then the heading's date, then the line."""
-    return sorted(rows, key=lambda r: (r["session"] or r["date"] or "0000", r["date"], r["line"]))
-
-
-def arithmetic(rows: list[dict]) -> tuple[list[int], dict[int, list[str]]]:
-    """(the sitting numbers never tolled between the first and the last,
-    {number: [dates]} for every number tolled more than once)."""
-    seen: dict[int, list[str]] = {}
-    for r in rows:
-        if r["n"] is not None:
-            seen.setdefault(r["n"], []).append(r["date"])
-    if not seen:
-        return [], {}
-    lo, hi = min(seen), max(seen)
-    gaps = [n for n in range(lo, hi + 1) if n not in seen]
-    dups = {n: d for n, d in seen.items() if len(d) > 1}
-    return gaps, dups
-
-
-def render(text: str) -> str:
-    rows = tolls(text)
-    order = ordered(rows)
-    gaps, dups = arithmetic(rows)
-    numbered = [r for r in rows if r["n"] is not None]
-    out = ["# SEAT_LOG_INDEX — every toll, in the order it was paid",
-           "",
-           "GENERATED by `python tests/seatindex.py` from SEAT_LOG.md; never hand-edited, never a",
-           "substitute for the log. The log is append-only and in the order of writing; this is the",
-           "same tolls sorted by each sitting's own session timestamp, with the numbering's gaps and",
-           "duplicates counted as arithmetic over the headings. `--check` refuses a stale copy.",
-           "",
-           f"{len(rows)} tolls ({len(numbered)} numbered sittings, {len(rows) - len(numbered)} unnumbered); "
-           f"numbers {min(r['n'] for r in numbered) if numbered else '-'} to "
-           f"{max(r['n'] for r in numbered) if numbered else '-'}; "
-           f"{len(gaps)} number{'s' if len(gaps) != 1 else ''} never tolled; "
-           f"{len(dups)} number{'s' if len(dups) != 1 else ''} tolled more than once.",
-           "",
-           "## In order",
-           "",
-           "| # | paid | sitting | what | log line |",
-           "|---|---|---|---|---|"]
-    for k, r in enumerate(order, 1):
-        paid = (r["session"] or r["date"] or "?") + (f" ({r['clock']})" if r["clock"] else "")
-        n = str(r["n"]) if r["n"] is not None else "—"
-        what = r["what"].replace("|", "\\|")
-        out.append(f"| {k} | {paid} | {n} | {what} | {r['line']} |")
-    out += ["", "## The numbering, as arithmetic", ""]
-    out.append("Never tolled: " + (", ".join(str(g) for g in gaps) if gaps else "none") + ".")
-    out.append("")
-    if dups:
-        out.append("Tolled more than once:")
-        out.append("")
-        for n in sorted(dups):
-            out.append(f"- {n}: " + ", ".join(dups[n]))
-    else:
-        out.append("Tolled more than once: none.")
-    return "\n".join(out) + "\n"
+tolls = seatlog.toll_rows
+ordered = seatlog.ordered_tolls
+arithmetic = seatlog.numbering
+render = seatlog.index_text
 
 
 def main() -> int:
     if not LOG.exists():
         print("no SEAT_LOG.md here (the record is untracked); nothing to index, nothing stale.")
         return 0
-    raw = LOG.read_bytes()
-    text = raw.decode("utf-8", errors="replace").replace("\r\n", "\n")
-    new = render(text)
-    crlf = b"\r\n" in raw
+    text = LOG.read_bytes().decode("utf-8", errors="replace").replace("\r\n", "\n")
     if "--check" in sys.argv:
-        have = OUT.read_bytes().decode("utf-8", errors="replace").replace("\r\n", "\n") if OUT.exists() else ""
-        if have != new:
+        if not seatlog.index_is_current(ROOT):
             print("SEAT_LOG_INDEX.md is STALE (or absent): regenerate with `python tests/seatindex.py`")
             return 1
         print(f"SEAT_LOG_INDEX.md matches the log: {len(tolls(text))} tolls.")
         return 0
-    OUT.write_bytes((new.replace("\n", "\r\n") if crlf else new).encode("utf-8"))
+    seatlog.write_index(ROOT)
     rows = tolls(text)
     gaps, dups = arithmetic(rows)
     print(f"wrote SEAT_LOG_INDEX.md: {len(rows)} tolls, {len(gaps)} never tolled, {len(dups)} tolled more than once")

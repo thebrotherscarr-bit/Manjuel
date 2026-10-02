@@ -898,7 +898,8 @@ Kept so nobody re-derives them and starts.
          -> ground_list with content=<folder> closes it at the cheapest
          layer. logs/2026-09-04_153415_what_is_in_the_skills_dir.md
 
-    [~]  THE ROUTER FEEDS SENTENCES TO PATH TOOLS, STILL. Two refusals in
+    [x]  THE ROUTER FEEDS SENTENCES TO PATH TOOLS, STILL. Two refusals in
+         DONE 2026-10-02 (WHAT'S LEFT C1): one transcript of 416 since 09-21, none of the 272 since 09-29 (CHANGELOG, "C1 closed on a recount"); ticked on his word.
          one run ("'what files are in the ground' is a description of one")
          and semantic_search -- the named tool -- never called. The refusal
          text is right; the Router does not learn from it inside a turn.
@@ -925,7 +926,8 @@ Kept so nobody re-derives them and starts.
          exposes it; or SITTING LAW 3 -- back to qwen3.5:9b, which ruled
          fine on 09-03. logs/ (the court transcript of sitting 86)
 
-    [ ]  THE RACK DELIVERY DROPPED A MODEL. Eleven installed, ten listed
+    [x]  THE RACK DELIVERY DROPPED A MODEL. Eleven installed, ten listed
+         DONE 2026-10-02 (WHAT'S LEFT C7): the engine appends the whole listing when the closing seat shortens it, held by a stroke and by the live check (CHANGELOG, "A rack answer is whole"); ticked on his word.
          (qwen3.5:9b missing) -- the door abridging a tool result. Class
          (a), small; the rack_report reading fault (sitting 85) is the big
          one and stands open above.

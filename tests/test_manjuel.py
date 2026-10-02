@@ -16619,6 +16619,189 @@ def test_the_toll_index_is_read_off_the_log(reg, lib, book):
           idx.exists() and idx.read_text(encoding="utf-8", errors="replace").replace("\r\n", "\n") == mod.render(text))
 
 
+def test_a_toll_refreshes_the_index_beside_it(reg, lib, book):
+    """THE WIRE ON THE TOLL INDEX (2026-10-02). B13's index was a generator beside the suites with a
+    stroke holding the copy current, and that stroke went red after EVERY sitting that paid a toll,
+    until a hand ran the generator: the staleness was made at `pay` and caught a day later (twice on
+    the morning of 2026-10-02). The wire belongs where the staleness is made. `seatlog.pay` is the one
+    writer of a toll and it refreshes the index after the append: a toll that is paid is never why the
+    index is stale, and an index that cannot be written is never why a toll is not paid."""
+    import contextlib
+    import io
+    from manjuel import seatlog as _sl
+
+    def toll(n, stamp):
+        return (f"\n## 2026-10-02 — sitting {n} — a test toll {n}\n\n"
+                f"**The seat:** manjuel REPL, session `S20261002-{stamp}`, 10:00–10:05. Operator present.\n")
+
+    g = Path(tempfile.mkdtemp())
+    idx = g / "SEAT_LOG_INDEX.md"
+    check("with no log there is nothing to index, and nothing is written",
+          _sl.write_index(g) is None and not idx.exists() and _sl.index_is_current(g))
+    p = _sl.pay(g, toll(9001, "100000"))
+    check("paying a toll writes the index beside the log", idx.exists())
+    raw = idx.read_bytes() if idx.exists() else b""
+    check("it is current the moment the toll is paid: a regeneration changes nothing",
+          _sl.index_is_current(g) and raw.decode("utf-8").replace("\r\n", "\n")
+          == _sl.index_text(p.read_bytes().decode("utf-8").replace("\r\n", "\n")))
+    check("it names the toll just paid, in the log's own line endings, nothing mixed",
+          b"a test toll 9001" in raw and raw.count(b"\n") == raw.count(b"\r\n") > 0)
+    _sl.pay(g, toll(9002, "110000"))
+    now = idx.read_text(encoding="utf-8") if idx.exists() else ""
+    check("a second toll is a second row, in the same breath",
+          "a test toll 9002" in now and "2 tolls" in now and _sl.index_is_current(g))
+
+    real = _sl.write_index
+
+    def broken(ground):
+        raise OSError("disk full, said the stub")
+
+    _sl.write_index = broken
+    err = io.StringIO()
+    paid = True
+    try:
+        with contextlib.redirect_stderr(err):
+            p3 = _sl.pay(g, toll(9003, "120000"))
+    except Exception:
+        paid, p3 = False, g / "SEAT_LOG.md"
+    finally:
+        _sl.write_index = real
+    check("an index that cannot be written never stops a toll being paid",
+          paid and p3.exists() and "a test toll 9003" in p3.read_text(encoding="utf-8"))
+    check("and the failure is said, not swallowed",
+          "SEAT_LOG_INDEX.md was not refreshed" in err.getvalue() and "disk full" in err.getvalue(),
+          err.getvalue())
+    check("and the stale copy is then what the suites' reconciler catches", not _sl.index_is_current(g))
+    _sl.pay(g, toll(9004, "130000"))
+    check("the next toll heals it", _sl.index_is_current(g) and idx.exists()
+          and "a test toll 9003" in idx.read_text(encoding="utf-8"))
+
+
+def test_a_listing_the_closing_seat_shortened_is_completed(reg, lib, book):
+    """THE RACK ROLL CALL (WHAT'S LEFT C7, 2026-10-02). "What models are on the rack?" is answered by
+    `rack_list`, which returns every installed model by name, and the closing seat paraphrased it and
+    dropped the names: of fourteen such turns the answer named all eleven twice, the eight of 09-30
+    named 3, 0, 11, 8, 4, 0, 0 and 3, and 10-02's named none. Nothing was invented, so the number
+    check cannot see it; the names were OMITTED. So `recompose` does it by arithmetic, as it does the
+    failures: where the objective NAMED the listing tool and the closing words leave out items the
+    tool returned, the whole listing travels with the answer. And the live check holds the turn to the
+    same function."""
+    from manjuel import intent as _in, vram as _vram
+    from manjuel.pipeline import recompose
+
+    SZ = {"llama3.2:latest": 2_000_000_000, "qwen3.5:4b": 3_400_000_000, "qwen3.5:9b": 6_600_000_000,
+          "qwen2.5-coder:14b": 9_000_000_000, "nomic-embed-text-v2-moe:latest": 1_000_000_000,
+          "gemma4:e4b": 9_600_000_000, "mystery:1b": 0}
+    old = _vram.installed_sizes
+    _vram.installed_sizes = lambda rt: dict(SZ)
+    try:
+        class Rack:
+            def __init__(self, res):
+                self.res = res
+
+            def installed_models(self, refresh=False):
+                return set(SZ)
+
+            def resident(self):
+                return list(self.res)
+
+        g = Path(tempfile.mkdtemp())
+        rack = Rack([("llama3.2:latest", SZ["llama3.2:latest"]), ("qwen3.5:4b", SZ["qwen3.5:4b"])])
+        env = env_for(g, reg, rack)
+        env.runtime = rack
+        out = lib.execute("rack_list", {}, env)
+    finally:
+        _vram.installed_sizes = old
+
+    # THE WIRE BETWEEN THE HANDLER'S LAYOUT AND THE GUARD'S PATTERN. A convention until this holds
+    # it: the real handler's output, read by the guard's own pattern, finds every model it printed
+    # (an unknown size included) and none of the seats' lines or the card's.
+    items = _in.listing_items("rack_list", out)
+    check("the guard reads every model the real rack_list printed, and nothing else",
+          sorted(items) == sorted(SZ), f"{sorted(items)} vs {sorted(SZ)}")
+    check("a tool that is not a listing, or a result with none, has no items",
+          _in.listing_items("git_status", out) == [] and _in.listing_items("rack_list", "") == [])
+    lines = _in.listing_lines("rack_list", out)
+    check("the listing's own lines are kept as the tool wrote them, the loaded ones marked",
+          len(lines) == len(SZ) and any(l.startswith("LOADED  llama3.2:latest") for l in lines)
+          and any(l.startswith("mystery:1b") and "?" in l for l in lines), "\n".join(lines))
+
+    check("a delivery that names every model drops none",
+          _in.dropped_items("rack_list", out, ", ".join(SZ)) == [])
+    check("a model's default tag is not said aloud: `llama3.2` names `llama3.2:latest`",
+          "llama3.2:latest" not in _in.dropped_items("rack_list", out, "llama3.2 is warm"))
+    check("but a different tag is a different model: `qwen3.5:9b` is not named by `qwen3.5:4b`",
+          "qwen3.5:9b" in _in.dropped_items("rack_list", out, "qwen3.5:4b is warm"))
+    check("case is not words: `Gemma4:E4B` names `gemma4:e4b`",
+          "gemma4:e4b" not in _in.dropped_items("rack_list", out, "Gemma4:E4B"))
+
+    def turn(said, named="rack_list", steward=True):
+        c = RunContext(objective="what models are on the rack?")
+        c.named_tool = named
+        c.ran_calls[("rack_list", "[]")] = out
+        c.steps.append(StepResult(agent="Router", model="qwen3.5:4b", elapsed=1.0,
+                                  output="Tool executed: rack_list\n\nResult:\n" + out,
+                                  tool_calls=["rack_list"], tool_results=[out]))
+        if steward:
+            c.steps.append(StepResult(agent="Steward", model="llama3.2", elapsed=1.0, output=said))
+        return c
+
+    c = turn("Six models are installed, two are loaded and four are ready.")
+    check("a closing seat that names none of the models is completed",
+          recompose(c, report=lambda *a, **k: None) is True)
+    said = c.steps[-1].output
+    check("the delivery says the whole rack and how many the words named",
+          "THE RACK, WHOLE." in said and f"returned {len(SZ)} models; the words above name 0 of them" in said, said[-300:])
+    check("and carries EVERY model, as the tool listed it",
+          all(t in said for t in SZ) and "LOADED  llama3.2:latest" in said, said)
+    check("the seat's own words stand above the listing, untouched",
+          said.startswith("Six models are installed, two are loaded and four are ready."))
+    check("the record says so", any("shortened listing" in n for n in c.notes), str(c.notes))
+
+    c = turn("Installed: llama3.2, qwen3.5:4b and gemma4:e4b.")
+    check("a closing seat that named three is completed too, and the block counts the three",
+          recompose(c, report=lambda *a, **k: None) is True
+          and f"the words above name 3 of them" in c.steps[-1].output, c.steps[-1].output[-260:])
+
+    c = turn("All of them: " + ", ".join(SZ) + ".")
+    check("a closing seat that names every model is left alone",
+          recompose(c, report=lambda *a, **k: None) is False and "WHOLE" not in c.steps[-1].output,
+          c.steps[-1].output[-200:])
+
+    c = turn("Six models are installed.", named="")
+    check("a turn whose objective named no listing tool owes no roll call",
+          recompose(c, report=lambda *a, **k: None) is False, c.steps[-1].output[-120:])
+    c = turn("Six models are installed.", named="git_status")
+    recompose(c, report=lambda *a, **k: None)
+    check("nor one that named some other tool (the named-tool guard speaks there, not this one)",
+          "THE RACK, WHOLE" not in c.steps[-1].output
+          and not any("shortened listing" in n for n in c.notes), c.steps[-1].output[-160:])
+    c = turn("", steward=False)
+    check("a Router's words, which carry the tool's result whole, are not shortened",
+          recompose(c, report=lambda *a, **k: None) is False)
+
+    # THE LIVE CHECK HOLDS THE TURN TO THE SAME FUNCTION.
+    sys.path.insert(0, str(ROOT / "tests"))
+    import standup as _su
+    rack_case = next(cs for cs in _su.CASES if cs.name == "the rack")
+    check("the standup's rack case asks for the whole listing, and no other case does",
+          rack_case.expect_whole_listing
+          and [cs.name for cs in _su.CASES if cs.expect_whole_listing] == ["the rack"])
+
+    def judged(delivery, live=True):
+        o = _su.Outcome(case=rack_case)
+        o.seats, o.notes, o.tools, o.results, o.delivery = (["Router", "Steward"], ["law: ok"],
+                                                            ["rack_list"], [out], delivery)
+        _su._judge(o, live=live)
+        return [f for f in o.faults if "listing" in f]
+
+    f1 = judged("Six models are installed.")
+    check("a delivery that leaves models out of the rack is a miss, and the first of them is named",
+          len(f1) == 1 and "leaves out 7 of 7" in f1[0] and "llama3.2:latest" in f1[0], str(f1))
+    check("a delivery naming every model is met", judged("All: " + ", ".join(SZ)) == [])
+    check("a dry run's stub is not judged for it", judged("Six models are installed.", live=False) == [])
+
+
 def test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book):
     """"sandbox the python" (the operator, 2026-09-22).
 
@@ -19578,6 +19761,8 @@ def main() -> int:
     test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book)
     test_no_file_is_mixed_and_the_root_documents_are_crlf(reg, lib, book)
     test_the_toll_index_is_read_off_the_log(reg, lib, book)
+    test_a_toll_refreshes_the_index_beside_it(reg, lib, book)
+    test_a_listing_the_closing_seat_shortened_is_completed(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)

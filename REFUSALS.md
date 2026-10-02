@@ -1077,7 +1077,7 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 | line | says |
 |---|---|
-| 738 | `content` must be a |
+| 795 | `content` must be a |
 
 ### manjuel/pipeline.py — 2 sites
 

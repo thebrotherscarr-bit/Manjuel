@@ -201,8 +201,9 @@ corrections, the interrupt, the spoken cap.
                                       with `python tests/buildmap.py`)
     python tests/seatindex.py --check SEAT_LOG_INDEX.md matches the log: every toll
                                       in the order it was paid, the numbering's gaps
-                                      and duplicates as arithmetic (regenerate with
-                                      `python tests/seatindex.py`; 2026-10-01)
+                                      and duplicates as arithmetic (refreshed at every
+                                      toll by `seatlog.pay`; `python tests/seatindex.py`
+                                      runs it by hand; 2026-10-01, wired 2026-10-02)
     python tests/status.py            STATUS.md, where the ground stands, printed
                                       from the record (`--print` to read it;
                                       `--no-gate` leaves the gate's lines out)

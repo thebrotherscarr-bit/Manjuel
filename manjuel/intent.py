@@ -269,6 +269,63 @@ def unsourced_numbers(said: str, facts: str) -> list[str]:
     return out
 
 
+# A LISTING THE CLOSING SEAT MUST NOT SHORTEN (WHAT'S LEFT C7, 2026-10-02). "What models are on the
+# rack?" is answered by `rack_list`, which returns every installed model by name; the closing seat
+# (llama3.2) then PARAPHRASES the result and drops the names. Measured over every such turn on record:
+# of fourteen the answer named all eleven twice; the eight of 2026-09-30 named 3, 0, 11, 8, 4, 0, 0
+# and 3, and the one of 2026-10-02 named none ("eleven installed, three loaded, eight ready"). Nothing
+# was invented, so the number check cannot see it: the names were OMITTED. So it is arithmetic, like
+# the failures `recompose` appends (pipeline.py): where the objective NAMED a listing tool and the
+# closing words leave out items the tool returned, the listing travels with the answer.
+#
+# Only a tool whose result is a LIST OF NAMED THINGS belongs here, and only the rack's is (the measured
+# fault); a tool is added by adding a line, not by a model's guess. The pattern's `item` group is the
+# name; a line that does not open with one is not an item, so the seats' lines and the card's are not
+# read. THE FORMAT IS A CONVENTION UNTIL A STROKE HOLDS IT: one calls the real `rack_list` and
+# requires this pattern to find every model it printed, so a changed layout is red, not silence.
+LISTING_TOOLS = {
+    # tool: (what the operator calls it, what one item is, the pattern)
+    "rack_list": ("the rack", "model", re.compile(
+        r"^[ \t]*(?:LOADED[ \t]+)?(?P<item>[A-Za-z0-9][\w.\-]*:[\w.\-]+)[ \t]+[\d?]", re.M)),
+}
+
+
+def listing_items(skill: str, result: str) -> list[str]:
+    """The items a listing tool's result names, in its order and once each; [] for a tool that is not
+    a listing, or a result with none."""
+    spec = LISTING_TOOLS.get(skill)
+    if spec is None:
+        return []
+    out: list[str] = []
+    for m in spec[2].finditer(result or ""):
+        if m.group("item") not in out:
+            out.append(m.group("item"))
+    return out
+
+
+def _is_named(item: str, said_l: str) -> bool:
+    """An item is named when its words are in `said_l` (already lower-cased); a model's `:latest` is
+    its default tag and is not said aloud ("llama3.2")."""
+    low = item.lower()
+    return low in said_l or (low.endswith(":latest") and low[:-len(":latest")] in said_l)
+
+
+def dropped_items(skill: str, result: str, said: str) -> list[str]:
+    """The items of a listing that `said` does not name, in the listing's order."""
+    said_l = (said or "").lower()
+    return [i for i in listing_items(skill, result) if not _is_named(i, said_l)]
+
+
+def listing_lines(skill: str, result: str) -> list[str]:
+    """The listing's own item lines, as the tool wrote them (the indent trimmed, runs of spaces
+    closed up), in its order."""
+    spec = LISTING_TOOLS.get(skill)
+    if spec is None:
+        return []
+    return [re.sub(r"\s{2,}", "  ", line.strip())
+            for line in (result or "").splitlines() if spec[2].match(line)]
+
+
 # Asking to be ADVISED, not to be told. `rack_report` gives facts only
 # unless a judgement is asked for (the operator, 2026-09-09: "4.3 facts
 # only"), and this is the test.

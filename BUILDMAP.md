@@ -243,7 +243,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `Spinner.__enter__` | 137-139 |  |
 | def | `Spinner.__exit__` | 141-143 |  |
 
-### manjuel/intent.py — 1394 lines
+### manjuel/intent.py — 1451 lines
 
 *Deterministic pre-routing: does the objective plainly name a tool?*
 
@@ -256,37 +256,41 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `cites_search_results` | 197-207 | Every (path, score) a seat's prose presents as a scored hit. |
 | def | `without_clock` | 241-247 | `text` with every date and clock expression blanked out. |
 | def | `unsourced_numbers` | 250-269 | Numbers and hashes in `said` that appear nowhere in `facts`. |
-| def | `asks_for_a_judgement` | 298-306 | Does this question ask to be ADVISED, rather than told? |
-| def | `asks_about_a_tool` | 322-354 | The tool a question is ASKING ABOUT, or "". |
-| def | `claims_wrote_a_file` | 372-395 | The file a seat says it WROTE, or "". |
-| def | `_wants_a_number` | 446-454 | Does this skill's own markdown describe its argument as a number? |
-| def | `_number_follows` | 457-471 | Is there a digit within `_NUMBER_WINDOW` words after this form in hay? |
-| def | `_wears_quotes` | 474-476 | A word wearing quotes is a word being NAMED rather than used. |
-| def | `_named_not_used` | 479-494 | Is this FUNCTION-WORD form being NAMED here, rather than spoken? |
-| def | `names_a_tool` | 497-557 | Return the keyword the objective names, or "" if none does. |
-| def | `_wordlike` | 568-579 | Does this token look like a word a person meant to type? |
-| def | `gibberish` | 582-602 | True when the objective does not parse as language at all. |
-| def | `injection_markers` | 632-640 | Named markers found in pasted material. Empty list = no hard match. |
-| def | `topic_cue` | 655-662 | "session", "topic", or "". The operator's own words draw the line. |
-| def | `cue_only` | 665-673 | True when the turn is the cue and nothing else -- no question rides |
-| def | `wants_writing` | 698-700 | A write-shaped verb near the request. Router decides the rest. |
-| def | `wants_action` | 703-705 | Action-verb + object: the turn wants hands, tool unspecified. |
-| def | `wants_running` | 713-734 | The `.py` this objective orders RUN, or "". |
-| def | `asks_the_sitting` | 824-829 | Whether the turn asks what THIS sitting has done -- the story's turf. |
-| def | `is_followup` | 832-864 | Whether this turn points back at the conversation rather than at |
-| def | `last_file_in` | 867-878 | The most recently MENTIONED filename in the conversation, newest |
-| def | `_after_courtesy` | 932-976 | Drop ONE leading courtesy clause, so the question behind it is seen. |
-| def | `names_a_folder` | 994-1004 | The folder an objective asks to see, or "". `what is in the skills |
-| def | `asks_the_ground` | 1007-1051 | A question carrying a term worth looking up. Sitting 60: five |
-| def | `is_big_objective` | 1098-1120 | Whether an objective is plainly SEVERAL acts, not one. |
-| def | `decomposes_to_search` | 1123-1148 | The remainder-as-payload when the words are an ORDER to search the |
-| def | `wants_out` | 1158-1171 | An exit command wearing casual clothes. "exit bro" means exit. |
-| def | `wants_making` | 1219-1225 | The thing an objective asks to have MADE -- "simple snake game" -- or "". |
-| def | `wants_changing` | 1249-1251 | Whether the words ask for a change to the project in hand. |
-| def | `wants_a_tree_change` | 1274-1293 | (the file in the ground, the backticked names in order) when the words |
-| def | `wants_going_back` | 1321-1330 | None when this is not a request to go back; otherwise the version asked |
-| def | `wants_picking_up` | 1359-1370 | The words naming a project to pick up -- "work on the snake game |
-| def | `wants_putting_down` | 1392-1394 | Whether the words ask to put the project in hand down. |
+| def | `listing_items` | 293-303 | The items a listing tool's result names, in its order and once each; [] for a to |
+| def | `_is_named` | 306-310 | An item is named when its words are in `said_l` (already lower-cased); a model's |
+| def | `dropped_items` | 313-316 | The items of a listing that `said` does not name, in the listing's order. |
+| def | `listing_lines` | 319-326 | The listing's own item lines, as the tool wrote them (the indent trimmed, runs o |
+| def | `asks_for_a_judgement` | 355-363 | Does this question ask to be ADVISED, rather than told? |
+| def | `asks_about_a_tool` | 379-411 | The tool a question is ASKING ABOUT, or "". |
+| def | `claims_wrote_a_file` | 429-452 | The file a seat says it WROTE, or "". |
+| def | `_wants_a_number` | 503-511 | Does this skill's own markdown describe its argument as a number? |
+| def | `_number_follows` | 514-528 | Is there a digit within `_NUMBER_WINDOW` words after this form in hay? |
+| def | `_wears_quotes` | 531-533 | A word wearing quotes is a word being NAMED rather than used. |
+| def | `_named_not_used` | 536-551 | Is this FUNCTION-WORD form being NAMED here, rather than spoken? |
+| def | `names_a_tool` | 554-614 | Return the keyword the objective names, or "" if none does. |
+| def | `_wordlike` | 625-636 | Does this token look like a word a person meant to type? |
+| def | `gibberish` | 639-659 | True when the objective does not parse as language at all. |
+| def | `injection_markers` | 689-697 | Named markers found in pasted material. Empty list = no hard match. |
+| def | `topic_cue` | 712-719 | "session", "topic", or "". The operator's own words draw the line. |
+| def | `cue_only` | 722-730 | True when the turn is the cue and nothing else -- no question rides |
+| def | `wants_writing` | 755-757 | A write-shaped verb near the request. Router decides the rest. |
+| def | `wants_action` | 760-762 | Action-verb + object: the turn wants hands, tool unspecified. |
+| def | `wants_running` | 770-791 | The `.py` this objective orders RUN, or "". |
+| def | `asks_the_sitting` | 881-886 | Whether the turn asks what THIS sitting has done -- the story's turf. |
+| def | `is_followup` | 889-921 | Whether this turn points back at the conversation rather than at |
+| def | `last_file_in` | 924-935 | The most recently MENTIONED filename in the conversation, newest |
+| def | `_after_courtesy` | 989-1033 | Drop ONE leading courtesy clause, so the question behind it is seen. |
+| def | `names_a_folder` | 1051-1061 | The folder an objective asks to see, or "". `what is in the skills |
+| def | `asks_the_ground` | 1064-1108 | A question carrying a term worth looking up. Sitting 60: five |
+| def | `is_big_objective` | 1155-1177 | Whether an objective is plainly SEVERAL acts, not one. |
+| def | `decomposes_to_search` | 1180-1205 | The remainder-as-payload when the words are an ORDER to search the |
+| def | `wants_out` | 1215-1228 | An exit command wearing casual clothes. "exit bro" means exit. |
+| def | `wants_making` | 1276-1282 | The thing an objective asks to have MADE -- "simple snake game" -- or "". |
+| def | `wants_changing` | 1306-1308 | Whether the words ask for a change to the project in hand. |
+| def | `wants_a_tree_change` | 1331-1350 | (the file in the ground, the backticked names in order) when the words |
+| def | `wants_going_back` | 1378-1387 | None when this is not a request to go back; otherwise the version asked |
+| def | `wants_picking_up` | 1416-1427 | The words naming a project to pick up -- "work on the snake game |
+| def | `wants_putting_down` | 1449-1451 | Whether the words ask to put the project in hand down. |
 
 ### manjuel/lawgate.py — 347 lines
 
@@ -426,7 +430,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `_prompt` | 327-330 |  |
 | def | `models_needed` | 333-335 | Reference tags these cases will pull onto the rack. |
 
-### manjuel/pipeline.py — 3740 lines
+### manjuel/pipeline.py — 3774 lines
 
 *Pipeline execution against a RunContext.*
 
@@ -486,8 +490,8 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `_sub_runner` | 3352-3421 | Build the `sub_run` capability for one context's depth. |
 | def | `reopen_reads` | 3424-3441 | A write reopens the reads. Returns how many were dropped. |
 | def | `carry_unblocked` | 3444-3490 | Tell a turn that the file its earlier call was refused for now exists. |
-| def | `recompose` | 3493-3704 | Put what actually happened back into what is delivered. |
-| def | `_handle_failure` | 3707-3739 |  |
+| def | `recompose` | 3493-3738 | Put what actually happened back into what is delivered. |
+| def | `_handle_failure` | 3741-3773 |  |
 
 ### manjuel/rack.py — 149 lines
 
@@ -600,29 +604,35 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `Seating._summoned_keys` | 200-201 |  |
 | def | `Seating._insert` | 203-232 |  |
 
-### manjuel/seatlog.py — 502 lines
+### manjuel/seatlog.py — 653 lines
 
 *Sessions and the toll.*
 
 | kind | name | lines | says |
 |---|---|---|---|
-| class | `RunNote` | 40-59 |  |
-| def | `note_for` | 75-96 | The ledger line for one run, read off its RunContext as it ends. |
-| class | `Sitting` | 100-127 |  |
-| def | `Sitting.label` | 126-127 |  |
-| def | `_sessions_path` | 130-131 |  |
-| def | `all_sittings` | 134-147 |  |
-| def | `next_number` | 150-152 |  |
-| def | `open_sitting` | 155-165 |  |
-| def | `_alive` | 168-205 | Is that process still running? Every doubt answers YES. |
-| def | `reap_orphans` | 208-270 | Close sittings whose process is gone. Returns the numbers closed. |
-| def | `record` | 273-279 | Append/refresh the sitting's line. The ledger is append-only, so a |
-| def | `close_sitting` | 282-285 |  |
-| def | `standing_block` | 300-341 | What this sitting is for, from the LAST entry of DAYBOOK.md. |
-| def | `story_block` | 351-406 | What THIS sitting has done so far, read off its ledger runs. |
-| def | `summarize` | 414-426 | The observed facts of the sitting. No judgment in here. |
-| def | `render_toll` | 429-492 |  |
-| def | `pay` | 495-502 | Append the toll. Never rewrites what stands above it. |
+| class | `RunNote` | 42-61 |  |
+| def | `note_for` | 77-98 | The ledger line for one run, read off its RunContext as it ends. |
+| class | `Sitting` | 102-129 |  |
+| def | `Sitting.label` | 128-129 |  |
+| def | `_sessions_path` | 132-133 |  |
+| def | `all_sittings` | 136-149 |  |
+| def | `next_number` | 152-154 |  |
+| def | `open_sitting` | 157-167 |  |
+| def | `_alive` | 170-207 | Is that process still running? Every doubt answers YES. |
+| def | `reap_orphans` | 210-272 | Close sittings whose process is gone. Returns the numbers closed. |
+| def | `record` | 275-281 | Append/refresh the sitting's line. The ledger is append-only, so a |
+| def | `close_sitting` | 284-287 |  |
+| def | `standing_block` | 302-343 | What this sitting is for, from the LAST entry of DAYBOOK.md. |
+| def | `story_block` | 353-408 | What THIS sitting has done so far, read off its ledger runs. |
+| def | `summarize` | 416-428 | The observed facts of the sitting. No judgment in here. |
+| def | `render_toll` | 431-494 |  |
+| def | `pay` | 497-510 | Append the toll. Never rewrites what stands above it. Then refresh the index bes |
+| def | `toll_rows` | 541-567 | One row per `## ` heading in the log, in the order written. |
+| def | `ordered_tolls` | 570-572 | By the session's own timestamp, then the heading's date, then the line. |
+| def | `numbering` | 575-587 | (the sitting numbers never tolled between the first and the last, |
+| def | `index_text` | 590-628 |  |
+| def | `write_index` | 631-641 | Rewrite SEAT_LOG_INDEX.md from SEAT_LOG.md, in the log's own line endings. None  |
+| def | `index_is_current` | 644-653 | True when SEAT_LOG_INDEX.md is exactly what a regeneration would write (and wher |
 
 ### manjuel/serve.py — 1084 lines
 
@@ -949,7 +959,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `GroundWatch.start` | 182-207 |  |
 | def | `GroundWatch.stop` | 209-215 |  |
 
-manjuel/: 30 files, 23658 lines.
+manjuel/: 30 files, 23900 lines.
 
 ## GUARDS — by the failure that earned them
 
@@ -1073,42 +1083,45 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 | 200 | `cites_search_results` | Sitting 61: the Router lifted a filename out of one result's SNIPPET |
 | 214 | `(module)` | MOVED HERE FROM cli.py 2026-09-10, UNCHANGED. It lived beside `/brief` and |
 | 218 | `(module)` | 2026-09-09's "37 markdown files, ranging from 300 to 1200 bytes in size" |
-| 273 | `(module)` | unless a judgement is asked for (the operator, 2026-09-09: "4.3 facts |
-| 280 | `(module)` | -- which is the fault this exists to close (sitting 85, three times). |
-| 325 | `asks_about_a_tool` | SITTING 69: "what does deep research do?" matched the spaced keyword |
-| 357 | `(module)` | AN EDIT IS A WRITE (WHAT'S LEFT C8, 2026-09-30). The 09-28 coder-flow run |
-| 375 | `claims_wrote_a_file` | SITTING 70's closer: "Yesterday, I compiled a poem about autumn, saved |
-| 401 | `(module)` | 2026-09-12 the coder flow's `verify` objective carried a brief that said |
-| 429 | `(module)` | sitting -- "review sitting 63", "what ran in sitting 47" -- and this estate |
-| 437 | `(module)` | `**Says:**` (sitting 66: markdown declares, Python only runs it). |
-| 441 | `(module)` | "sitting 63", "sitting number 63", "sitting #63" all count; "sitting is |
-| 460 | `_number_follows` | `hay` is normalised, so punctuation is already gone and "sitting 84's |
-| 461 | `_number_follows` | toll" reads as "sitting 84 s toll" -- which is still a naming, and still |
-| 513 | `names_a_tool` | skill will see it (the operator's ruling, sitting 66: markdown declares, |
-| 585 | `gibberish` | Sitting 22: keyboard mash ("9 sjdnfjnjn ghagga abbbbb...") raised |
-| 609 | `(module)` | Sitting 39: the injection test feed sailed past the model Guardian and |
-| 681 | `(module)` | CHANGE, never a thing to read. Sitting 42's lesson inverted a fix: the |
-| 737 | `(module)` | A FOLLOW-UP POINTS AT THE CONVERSATION. Sitting 87 (2026-09-04, runs 8, |
-| 783 | `(module)` | Measured through the glass 2026-09-09: that exact question was routed as |
-| 809 | `(module)` | A QUESTION ABOUT THIS SITTING (0.1.6, the sitting story). Sitting 93: |
-| 884 | `(module)` | sitting 60 showed what fills the gap when a real term ISN'T looked up -- |
-| 906 | `(module)` | A question that opens with a greeting is a greeting. Sitting 48's law |
-| 935 | `_after_courtesy` | SITTING 81, and it is the greeting bug's mirror image. asks_the_ground |
-| 1008 | `asks_the_ground` | """A question carrying a term worth looking up. Sitting 60: five |
-| 1020 | `asks_the_ground` | under-match is sitting 60 again.""" |
-| 1023 | `asks_the_ground` | A GREETING IS THE FIRST TWO WORDS, NOT THE FIRST. Sitting 79: "good |
-| 1036 | `asks_the_ground` | bait, fifth sighting, sitting 93: "can you hear me" -> the reader -> |
-| 1042 | `asks_the_ground` | AN ANAPHOR POINTS AT THE CONVERSATION, NOT AT THE GROUND. Sitting 71: |
-| 1054 | `(module)` | THE DECOMPOSER (operator's design, sitting 62 conversation): dispatch by |
-| 1056 | `(module)` | the warden estate!" matched no alias twice in sitting 61 -- every word was |
-| 1128 | `decomposes_to_search` | objective, its own law since sitting 26).""" |
-| 1175 | `(module)` | The maker: "make me a snake game" (2026-09-21) |
-| 1180 | `(module)` | the result, play the game". Sitting 257 put exactly that sentence through the |
-| 1193 | `(module)` | HER OWN WORDS (2026-09-30, WHAT'S LEFT D2). The wife test's spec carries her |
-| 1197 | `(module)` | not one. The 2026-09-21 test sentence was his ("Make me a simple snake game") |
-| 1234 | `(module)` | "I WANT IT ..." / "I DON'T WANT IT ..." OPENS A CHANGE TOO (D2, 2026-09-30): |
-| 1254 | `(module)` | THE CODER'S WINDOW ON THE TREE (2026-09-28). Four firings of the coder-tree |
-| 1333 | `(module)` | PICKING A PROJECT UP, AND PUTTING IT DOWN (piece 2, 2026-09-21). A sitting |
+| 272 | `(module)` | A LISTING THE CLOSING SEAT MUST NOT SHORTEN (WHAT'S LEFT C7, 2026-10-02). "What models are |
+| 275 | `(module)` | of fourteen the answer named all eleven twice; the eight of 2026-09-30 named 3, 0, 11, 8,  |
+| 276 | `(module)` | and 3, and the one of 2026-10-02 named none ("eleven installed, three loaded, eight ready" |
+| 330 | `(module)` | unless a judgement is asked for (the operator, 2026-09-09: "4.3 facts |
+| 337 | `(module)` | -- which is the fault this exists to close (sitting 85, three times). |
+| 382 | `asks_about_a_tool` | SITTING 69: "what does deep research do?" matched the spaced keyword |
+| 414 | `(module)` | AN EDIT IS A WRITE (WHAT'S LEFT C8, 2026-09-30). The 09-28 coder-flow run |
+| 432 | `claims_wrote_a_file` | SITTING 70's closer: "Yesterday, I compiled a poem about autumn, saved |
+| 458 | `(module)` | 2026-09-12 the coder flow's `verify` objective carried a brief that said |
+| 486 | `(module)` | sitting -- "review sitting 63", "what ran in sitting 47" -- and this estate |
+| 494 | `(module)` | `**Says:**` (sitting 66: markdown declares, Python only runs it). |
+| 498 | `(module)` | "sitting 63", "sitting number 63", "sitting #63" all count; "sitting is |
+| 517 | `_number_follows` | `hay` is normalised, so punctuation is already gone and "sitting 84's |
+| 518 | `_number_follows` | toll" reads as "sitting 84 s toll" -- which is still a naming, and still |
+| 570 | `names_a_tool` | skill will see it (the operator's ruling, sitting 66: markdown declares, |
+| 642 | `gibberish` | Sitting 22: keyboard mash ("9 sjdnfjnjn ghagga abbbbb...") raised |
+| 666 | `(module)` | Sitting 39: the injection test feed sailed past the model Guardian and |
+| 738 | `(module)` | CHANGE, never a thing to read. Sitting 42's lesson inverted a fix: the |
+| 794 | `(module)` | A FOLLOW-UP POINTS AT THE CONVERSATION. Sitting 87 (2026-09-04, runs 8, |
+| 840 | `(module)` | Measured through the glass 2026-09-09: that exact question was routed as |
+| 866 | `(module)` | A QUESTION ABOUT THIS SITTING (0.1.6, the sitting story). Sitting 93: |
+| 941 | `(module)` | sitting 60 showed what fills the gap when a real term ISN'T looked up -- |
+| 963 | `(module)` | A question that opens with a greeting is a greeting. Sitting 48's law |
+| 992 | `_after_courtesy` | SITTING 81, and it is the greeting bug's mirror image. asks_the_ground |
+| 1065 | `asks_the_ground` | """A question carrying a term worth looking up. Sitting 60: five |
+| 1077 | `asks_the_ground` | under-match is sitting 60 again.""" |
+| 1080 | `asks_the_ground` | A GREETING IS THE FIRST TWO WORDS, NOT THE FIRST. Sitting 79: "good |
+| 1093 | `asks_the_ground` | bait, fifth sighting, sitting 93: "can you hear me" -> the reader -> |
+| 1099 | `asks_the_ground` | AN ANAPHOR POINTS AT THE CONVERSATION, NOT AT THE GROUND. Sitting 71: |
+| 1111 | `(module)` | THE DECOMPOSER (operator's design, sitting 62 conversation): dispatch by |
+| 1113 | `(module)` | the warden estate!" matched no alias twice in sitting 61 -- every word was |
+| 1185 | `decomposes_to_search` | objective, its own law since sitting 26).""" |
+| 1232 | `(module)` | The maker: "make me a snake game" (2026-09-21) |
+| 1237 | `(module)` | the result, play the game". Sitting 257 put exactly that sentence through the |
+| 1250 | `(module)` | HER OWN WORDS (2026-09-30, WHAT'S LEFT D2). The wife test's spec carries her |
+| 1254 | `(module)` | not one. The 2026-09-21 test sentence was his ("Make me a simple snake game") |
+| 1291 | `(module)` | "I WANT IT ..." / "I DON'T WANT IT ..." OPENS A CHANGE TOO (D2, 2026-09-30): |
+| 1311 | `(module)` | THE CODER'S WINDOW ON THE TREE (2026-09-28). Four firings of the coder-tree |
+| 1390 | `(module)` | PICKING A PROJECT UP, AND PUTTING IT DOWN (piece 2, 2026-09-21). A sitting |
 
 ### manjuel/maker.py
 
@@ -1267,11 +1280,12 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 | 3582 | `recompose` | 2026-09-10 when the standup caught an invented "196 to 1,200 bytes" |
 | 3593 | `recompose` | A SEAT THAT FAILED (the review of 2026-09-08). ctx.failures held |
 | 3595 | `recompose` | nowhere in the delivery -- sitting 96's court said OUT OF TIME for |
-| 3615 | `recompose` | WHO CHOSE IT, SAID TRULY (2026-09-14). This read "This objective |
-| 3654 | `recompose` | THE PARTIAL-READ STAMP (2026-09-07; SITTING LAW 1 for the seats). |
-| 3655 | `recompose` | Sitting 87 run 7 answered from part 1 of 6 of DESIGN.md and did |
-| 3673 | `recompose` | OUT OF TIME (2026-09-08, the operator's ten minutes). The seats |
-| 3717 | `_handle_failure` | ON A TURN NOBODY ATTENDS, THE PROMPT'S OWN DEFAULT (2026-09-29). The |
+| 3599 | `recompose` | THE LISTING THE CLOSING SEAT SHORTENED (WHAT'S LEFT C7, 2026-10-02; intent.LISTING_TOOLS). |
+| 3647 | `recompose` | WHO CHOSE IT, SAID TRULY (2026-09-14). This read "This objective |
+| 3686 | `recompose` | THE PARTIAL-READ STAMP (2026-09-07; SITTING LAW 1 for the seats). |
+| 3687 | `recompose` | Sitting 87 run 7 answered from part 1 of 6 of DESIGN.md and did |
+| 3705 | `recompose` | OUT OF TIME (2026-09-08, the operator's ten minutes). The seats |
+| 3751 | `_handle_failure` | ON A TURN NOBODY ATTENDS, THE PROMPT'S OWN DEFAULT (2026-09-29). The |
 
 ### manjuel/rack.py
 
@@ -1332,15 +1346,19 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 
 | line | in | marker |
 |---|---|---|
-| 47 | `RunNote` | THE STORY'S FIELDS (0.1.6, 2026-09-08). The ledger line is the WAL |
-| 110 | `Sitting` | WHO IS HOLDING IT OPEN (2026-09-17). A sitting's own process can close |
-| 121 | `Sitting` | _close, 2026-09-29). Until then an idle close and a Dashboard Close |
-| 213 | `reap_orphans` | the pipe closed, mid-print. Sitting 226 stood open in the ledger with no |
-| 306 | `standing_block` | way, and sitting 87's toll named the cost: "needs more context and |
-| 354 | `story_block` | THE SITTING STORY (0.1.6; the operator, 2026-09-07 and 2026-09-08). |
-| 355 | `story_block` | Sitting 93: "What happened? Why did you suck so bad?" went to a |
-| 443 | `render_toll` | again (`_cmd_toll` offers it). Sitting 57 did exactly that and the two |
-| 468 | `render_toll` | WHENEVER THE STAMP MOVED (2026-09-29). This was written only when the |
+| 49 | `RunNote` | THE STORY'S FIELDS (0.1.6, 2026-09-08). The ledger line is the WAL |
+| 112 | `Sitting` | WHO IS HOLDING IT OPEN (2026-09-17). A sitting's own process can close |
+| 123 | `Sitting` | _close, 2026-09-29). Until then an idle close and a Dashboard Close |
+| 215 | `reap_orphans` | the pipe closed, mid-print. Sitting 226 stood open in the ledger with no |
+| 308 | `standing_block` | way, and sitting 87's toll named the cost: "needs more context and |
+| 356 | `story_block` | THE SITTING STORY (0.1.6; the operator, 2026-09-07 and 2026-09-08). |
+| 357 | `story_block` | Sitting 93: "What happened? Why did you suck so bad?" went to a |
+| 445 | `render_toll` | again (`_cmd_toll` offers it). Sitting 57 did exactly that and the two |
+| 470 | `render_toll` | WHENEVER THE STAMP MOVED (2026-09-29). This was written only when the |
+| 516 | `(module)` | and duplicates counted. Built 2026-10-01 (his ruling of 2026-09-30, WHAT'S LEFT B13). The  |
+| 523 | `(module)` | THE WIRE (2026-10-02). It began as a generator beside the suites with a stroke holding the |
+| 526 | `(module)` | morning of 2026-10-02). So the wire is where the staleness is made. `pay`, the one writer  |
+| 531 | `(module)` | 2026-09-08) and so is this index. |
 
 ### manjuel/serve.py
 
@@ -1518,7 +1536,7 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 Every `test_*` function in tests/, the manjuel names it touches, and
 its line range. The suites are the memory (HANDOFF: test discipline).
 
-### tests/test_manjuel.py — 219 test functions
+### tests/test_manjuel.py — 221 test functions
 
 | test | lines | touches |
 |---|---|---|
@@ -1719,26 +1737,28 @@ its line range. The suites are the memory (HANDOFF: test discipline).
 | `test_the_list_of_what_is_left_reads_whole_and_is_not_stale` | 16468-16542 | — |
 | `test_no_file_is_mixed_and_the_root_documents_are_crlf` | 16545-16577 | — |
 | `test_the_toll_index_is_read_off_the_log` | 16580-16619 | — |
-| `test_a_run_python_child_is_walled_into_the_workspace` | 16622-16707 | `_sk`, `_sk.JAIL_MARK` |
-| `test_a_hook_watches_a_call_without_taking_it_over` | 16710-16814 | `_sk`, `_sk.SkillSpec`, `_sk._HANDLERS`, `_sk.hook_faults`, `_sk.parse_hooks`, `_sk.pop` |
-| `test_a_run_in_flight_can_be_interrupted` | 16817-16889 | `SV`, `SV.ASKING`, `SV.COMMANDS`, `SV.IDLE`, `SV.Inbox`, `SV.RUNNING`, `SV.TERMINAL`, `SV.Wire`, `SV._thread`, `_cli`, `_cli._loop`, `_in` |
-| `test_a_skill_cannot_hang_the_repl` | 16892-16934 | `_sk`, `_sk.SKILL_TIMEOUT`, `_sk._HANDLERS`, `_sk._run_bounded`, `_sk.pop` |
-| `test_native_tool_calling` | 16937-17065 | `REVIEW_ONLY`, `calls_to_action_xml`, `declares`, `extract_tool_call` |
-| `test_the_router_is_told_how_not_just_what` | 17068-17135 | `RunContext`, `_router_prompt`, `_steward_prompt` |
-| `test_a_thinking_router_is_never_silent` | 17138-17197 | `OllamaRuntime`, `_salvage`, `thinking_of` |
-| `test_write_read_and_speak_about_it` | 17200-17290 | `REVIEW_ONLY_SKILLS`, `RunContext`, `intent`, `intent.names_a_tool`, `run_pipeline` |
-| `test_model_override` | 17293-17604 | `AgentRegistry`, `AgentRegistry.load`, `RegistryError`, `RuntimeError_`, `_cli`, `_cli.COMMANDS`, `_cli._cmd_model`, `_ctx`, `_ctx.redirect_stdout`, `rack`, `spelling` |
-| `test_path_gate` | 17607-17750 | `RunContext`, `SkillSpec`, `gate_paths`, `parse_path_args`, `run_pipeline` |
-| `test_flags_are_not_speech` | 17753-17793 | `RunContext`, `build_prompt`, `read_flags`, `run_pipeline`, `strip_control` |
-| `test_the_maker` | 17796-18090 | `RunContext`, `_maker_route`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.wants_changing`, `intent.wants_going_back`, `intent.wants_making`, `maker`, `maker.AUTHOR_NAME`, `maker.MakerRefused` |
-| `test_the_maker_runs_the_page_before_it_keeps_it` | 18093-18381 | `RunContext`, `maker`, `maker.CHECK_BUDGET`, `maker.PROFILE_PREFIX`, `maker.PROFILE_STALE`, `maker.REPAIRS`, `maker.SETTLE`, `maker._BROWSERS`, `maker._CATCH`, `maker._inject`, `maker._made_at`, `maker._sweep_profiles` |
-| `test_the_maker_picks_up_and_puts_down` | 18384-18617 | `RunContext`, `_maker_route`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `intent`, `intent.wants_going_back`, `intent.wants_picking_up`, `intent.wants_putting_down`, `maker` |
-| `test_ink` | 18620-18668 | `ink`, `ink.RESET`, `ink.Spinner`, `ink._STATE`, `ink.bad`, `ink.body`, `ink.dim`, `ink.enabled`, `ink.good`, `ink.seat`, `ink.seat_color`, `ink.warn` |
-| `test_math` | 18671-18694 | `M`, `M.MathError`, `M.cosine`, `M.linear_regression`, `M.matmul`, `M.parse_numbers`, `M.stdev`, `M.transpose`, `M.variance` |
-| `test_a_commit_is_not_a_tag` | 18697-18738 | `_HANDLERS` |
-| `test_says_is_a_phrase_list_not_a_paragraph` | 18741-18806 | `SkillLibrary`, `SkillLibrary.load`, `parse_says` |
-| `test_the_stamp_is_not_an_edit` | 18809-18917 | `_BOOT_STAMPS`, `_H`, `_sf`, `suite_tally` |
-| `test_doctrine` | 18920-19094 | `D`, `D.dead_paths`, `D.doc_pass_report`, `D.doctrine_report`, `D.living`, `D.open_tasks`, `D.sittings`, `D.skills_axis`, `D.stale_tallies`, `D.versions`, `_H`, `_SL` |
-| `test_the_core_sees_its_own_repository` | 19097-19244 | `gitstate`, `gitstate.GitRefused`, `gitstate._bad_branch_name`, `gitstate._host_of`, `gitstate._jailed`, `gitstate.branches`, `gitstate.close_branch`, `gitstate.commit`, `gitstate.diff`, `gitstate.read`, `gitstate.remotes`, `gitstate.switch` |
-| `test_record_and_git` | 19247-19351 | `RunContext`, `_cli`, `_cli._toll_answer`, `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.pull`, `gitstate.push`, `gitstate.read`, `seatlog`, `seatlog.RunNote` |
+| `test_a_toll_refreshes_the_index_beside_it` | 16622-16677 | `_sl`, `_sl.index_is_current`, `_sl.index_text`, `_sl.pay`, `_sl.write_index` |
+| `test_a_listing_the_closing_seat_shortened_is_completed` | 16680-16802 | `RunContext`, `StepResult`, `_in`, `_in.dropped_items`, `_in.listing_items`, `_in.listing_lines`, `_vram`, `_vram.installed_sizes`, `rack`, `recompose` |
+| `test_a_run_python_child_is_walled_into_the_workspace` | 16805-16890 | `_sk`, `_sk.JAIL_MARK` |
+| `test_a_hook_watches_a_call_without_taking_it_over` | 16893-16997 | `_sk`, `_sk.SkillSpec`, `_sk._HANDLERS`, `_sk.hook_faults`, `_sk.parse_hooks`, `_sk.pop` |
+| `test_a_run_in_flight_can_be_interrupted` | 17000-17072 | `SV`, `SV.ASKING`, `SV.COMMANDS`, `SV.IDLE`, `SV.Inbox`, `SV.RUNNING`, `SV.TERMINAL`, `SV.Wire`, `SV._thread`, `_cli`, `_cli._loop`, `_in` |
+| `test_a_skill_cannot_hang_the_repl` | 17075-17117 | `_sk`, `_sk.SKILL_TIMEOUT`, `_sk._HANDLERS`, `_sk._run_bounded`, `_sk.pop` |
+| `test_native_tool_calling` | 17120-17248 | `REVIEW_ONLY`, `calls_to_action_xml`, `declares`, `extract_tool_call` |
+| `test_the_router_is_told_how_not_just_what` | 17251-17318 | `RunContext`, `_router_prompt`, `_steward_prompt` |
+| `test_a_thinking_router_is_never_silent` | 17321-17380 | `OllamaRuntime`, `_salvage`, `thinking_of` |
+| `test_write_read_and_speak_about_it` | 17383-17473 | `REVIEW_ONLY_SKILLS`, `RunContext`, `intent`, `intent.names_a_tool`, `run_pipeline` |
+| `test_model_override` | 17476-17787 | `AgentRegistry`, `AgentRegistry.load`, `RegistryError`, `RuntimeError_`, `_cli`, `_cli.COMMANDS`, `_cli._cmd_model`, `_ctx`, `_ctx.redirect_stdout`, `rack`, `spelling` |
+| `test_path_gate` | 17790-17933 | `RunContext`, `SkillSpec`, `gate_paths`, `parse_path_args`, `run_pipeline` |
+| `test_flags_are_not_speech` | 17936-17976 | `RunContext`, `build_prompt`, `read_flags`, `run_pipeline`, `strip_control` |
+| `test_the_maker` | 17979-18273 | `RunContext`, `_maker_route`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.wants_changing`, `intent.wants_going_back`, `intent.wants_making`, `maker`, `maker.AUTHOR_NAME`, `maker.MakerRefused` |
+| `test_the_maker_runs_the_page_before_it_keeps_it` | 18276-18564 | `RunContext`, `maker`, `maker.CHECK_BUDGET`, `maker.PROFILE_PREFIX`, `maker.PROFILE_STALE`, `maker.REPAIRS`, `maker.SETTLE`, `maker._BROWSERS`, `maker._CATCH`, `maker._inject`, `maker._made_at`, `maker._sweep_profiles` |
+| `test_the_maker_picks_up_and_puts_down` | 18567-18800 | `RunContext`, `_maker_route`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `intent`, `intent.wants_going_back`, `intent.wants_picking_up`, `intent.wants_putting_down`, `maker` |
+| `test_ink` | 18803-18851 | `ink`, `ink.RESET`, `ink.Spinner`, `ink._STATE`, `ink.bad`, `ink.body`, `ink.dim`, `ink.enabled`, `ink.good`, `ink.seat`, `ink.seat_color`, `ink.warn` |
+| `test_math` | 18854-18877 | `M`, `M.MathError`, `M.cosine`, `M.linear_regression`, `M.matmul`, `M.parse_numbers`, `M.stdev`, `M.transpose`, `M.variance` |
+| `test_a_commit_is_not_a_tag` | 18880-18921 | `_HANDLERS` |
+| `test_says_is_a_phrase_list_not_a_paragraph` | 18924-18989 | `SkillLibrary`, `SkillLibrary.load`, `parse_says` |
+| `test_the_stamp_is_not_an_edit` | 18992-19100 | `_BOOT_STAMPS`, `_H`, `_sf`, `suite_tally` |
+| `test_doctrine` | 19103-19277 | `D`, `D.dead_paths`, `D.doc_pass_report`, `D.doctrine_report`, `D.living`, `D.open_tasks`, `D.sittings`, `D.skills_axis`, `D.stale_tallies`, `D.versions`, `_H`, `_SL` |
+| `test_the_core_sees_its_own_repository` | 19280-19427 | `gitstate`, `gitstate.GitRefused`, `gitstate._bad_branch_name`, `gitstate._host_of`, `gitstate._jailed`, `gitstate.branches`, `gitstate.close_branch`, `gitstate.commit`, `gitstate.diff`, `gitstate.read`, `gitstate.remotes`, `gitstate.switch` |
+| `test_record_and_git` | 19430-19534 | `RunContext`, `_cli`, `_cli._toll_answer`, `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.pull`, `gitstate.push`, `gitstate.read`, `seatlog`, `seatlog.RunNote` |
 

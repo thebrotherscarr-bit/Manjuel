@@ -34,6 +34,74 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### A rack answer is whole: the engine completes a listing the closing seat shortened (2026-10-02, WHAT'S LEFT C7; TASKS "THE RACK DELIVERY DROPPED A MODEL")
+
+"What models are on the rack?" is answered by `rack_list`, which returns every installed model by
+name, and the closing seat (llama3.2) then paraphrases the result and drops the names. Measured over
+every such turn on record: of fourteen the answer named all eleven twice; the eight of 09-30 named 3,
+0, 11, 8, 4, 0, 0 and 3; the one at 09:48 this morning named none ("11 installed, three loaded, eight
+ready"). Nothing was invented, so the number check cannot see it: the names were omitted. The fix is
+not a model (SITTING LAW 3; B2 ruled that llama3.2 stays, with the guards on) but arithmetic, where
+`recompose` already does the failures: when the objective NAMED a listing tool (`intent.LISTING_TOOLS`,
+the rack's alone, a line to add another) and the closing words leave out items the tool returned, the
+whole listing, as the tool wrote it, travels with the answer: "THE RACK, WHOLE. `rack_list` returned 11
+models; the words above name 3 of them. All 11, as the tool listed them: ..." The seat's own words
+stand above it. Only where the objective named the tool: a Router that reached for `rack_list` while
+answering something else owes no roll call.
+
+**Proved.** Twenty-one checks in `test_a_listing_the_closing_seat_shortened_is_completed`. The guard
+reads every model the REAL `rack_list` printed (an unknown size included) and nothing of the seats'
+lines or the card's -- the format was a convention, and this holds it; a model's default tag is not
+said aloud ("llama3.2" names `llama3.2:latest`) but a different tag is a different model; a closing
+seat that names none, or three, is completed; one that names all is left alone; a turn that named no
+listing tool, or another tool, is not; and the live check's rack case is held to the same function
+(`expect_whole_listing`, judged by the engine's own `dropped_items`), so the check and the guard cannot
+disagree. Seven reversals on a mirror, each red and restored byte for byte: recompose striking the
+completion, the pattern losing the loaded rows, the live check not judging, the case not asking, the
+default tag no longer shorthand. The mirror: 3480 of 3480 and the smoke 72 of 72. **Live, from the
+glass (sitting 332, 10:54):** the Steward named 3 of 11 again and the delivery carries the whole
+listing; the standup 9 of 9.
+
+`manjuel/intent.py` and `manjuel/pipeline.py` moved: **restart required** for the REPL (the door boots
+an engine per sitting, so every sitting since carries them). **What goes red if unplugged:** that stroke,
+and the live check's rack case, which fails when the closing seat drops names and nothing completes them.
+
+### The toll index is refreshed at every toll (2026-10-02; the defect in B13's own piece, found twice that morning)
+
+B13's index (2026-10-01) was a generator beside the suites with a stroke holding the copy current, and
+the stroke went red after EVERY sitting that paid a toll until a hand ran the generator: 3453 of 3454
+on 10-01 after the court's tolls, and again on 10-02 after the morning standup's. The staleness was made
+at `seatlog.pay` and caught at the suites, a day later, so the wire moves to where it is made: `pay`,
+the one writer of a toll, refreshes SEAT_LOG_INDEX.md after the append. A toll that is paid is never why
+the index is stale, and an index that cannot be written is never why a toll is not paid (the failure is
+said on stderr; the toll stands). The generator moved from `tests/seatindex.py` into `manjuel/seatlog.py`
+(`toll_rows`, `ordered_tolls`, `numbering`, `index_text`, `write_index`, `index_is_current`); the script
+is the hand's way to run it and the check the suites hold for a log written any other way (the builder's
+entries are appended by hand).
+
+**Proved.** Nine checks in `test_a_toll_refreshes_the_index_beside_it`: paying a toll writes the index,
+current the same moment, in the log's own line endings; a second toll is a second row; an index that
+cannot be written does not stop the toll and the failure is said; the stale copy is what the suites'
+reconciler catches; the next toll heals it. Two reversals red (the call struck; the failure no longer
+caught), restored. **Live:** sitting 332's toll at 10:56:13 rewrote the index in the same second, and
+`python tests/seatindex.py --check` read "matches the log: 296 tolls" with nobody running the generator.
+
+`manjuel/seatlog.py` moved: **restart required** for the REPL. **What goes red if unplugged:** that stroke;
+and the suites' reconciler, as before.
+
+### C1 closed on a recount: the sentence handed to a file tool as a path, since 09-21 (2026-10-02, WHAT'S LEFT C1)
+
+The 09-30 measurement left C1 open on three percent in the coder's flow. Recounted over every run
+transcript since 09-21 (the standup reports left out) by the refusal's own words, `Refused [LAW 8]:
+<content> '...`: 416 transcripts, and the refusal appears in ONE of them, 09-28 13:41:43, five times --
+the Coder's window's own instruction block ("Read the file first with ground_read, then change it with
+ground_edit ...") handed to `ground_read` as the path; and in none of the 272 since 09-29, the
+coder-tree's finished runs among them (run six, 09-29, COMPLETE). The law gate refuses the sentence by
+name and the Router retries (C2: 70%); nothing reached the disk in any of the five. RULED: no further
+build; reopen the line if the shape recurs in an ordinary turn. The TASKS box is ticked on his word
+("fix the open lines ... make the rulings"). No code moved. **What goes red if unplugged:** nothing --
+these are numbers on the record.
+
 ### B14 closed: the Rust stays (2026-10-02, his word: "keep the Rust, close B14")
 
 The second half of B14, folding the Rust to an attic, was put to him by card on 2026-10-02 and

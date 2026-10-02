@@ -2897,9 +2897,17 @@ fold was the hand's own tidiness proposal. The fold is HELD. The rewire's stale 
 corrected (the `TierSpine` comment, the CLI reference's line, three "no tool shells the Rust"
 sentences) and what it left behind was named, not fixed.
 
+**His order (10:35)** — "fix the open lines, read the record, make the rulings, what is the hold up?":
+the remaining lines had been filed as his to rule; they are the hand's to work now, each by its own
+record. **Built, 10:58:** C7 (a rack answer is whole: `recompose` appends the listing the closing seat
+shortened; the standup's rack case held to it; seen live in 332), the toll index refreshed at every
+toll (`seatlog.pay`), C1 closed on a recount. The REPL needs a restart for `intent.py`, `pipeline.py`
+and `seatlog.py`.
+
 **Faults of the hand's, in the record** — the toll index was built on 10-01 to be "kept current by a
 test", which turns the suite red after every sitting that pays a toll until a generator is run by
-hand: a wire that fires on routine, found twice in one morning, flagged and not built.
+hand: a wire that fires on routine, found twice in one morning, built the same morning (`seatlog.pay`
+refreshes it at every toll).
 
 **Rulings** — B14, in chat at 10:25: "keep the Rust, close B14". The fold is not done and the line
 is closed on the list; the card on it had been dismissed.
@@ -2911,8 +2919,7 @@ red gone; the REPL still needs a restart for `pipeline.py`. What is left on the 
 close; B14 is closed (the Rust stays).
 
 **Next session** — open `What's left` first. THE RUST STAYS (his ruling 10-02, B14
-closed): do not fold it; `atlas-door` and `atlas.exe` depend on it, and no defect was found. One proposal
-waits for his word and is not built: the toll writer regenerates SEAT_LOG_INDEX.md at every toll, so
-its stroke is never red after a sitting. For his eye: atlas's 21 golden chains (tests/fixtures/chains,
+closed): do not fold it; `atlas-door` and `atlas.exe` depend on it, and no defect was found. The toll writer
+now regenerates SEAT_LOG_INDEX.md at every toll (built 10-02; the REPL needs a restart). For his eye: atlas's 21 golden chains (tests/fixtures/chains,
 committed 09-09, before the Archive ruling) were cut from the estate's ledgers and sit in the public
 repository's history; whether that history is purged is his.

@@ -709,12 +709,20 @@ where it is, and the hold above is now his ruling: do not fold it. The first hal
 leftovers the rewire made (the door's `--atlas-bin` flag, `Options.AtlasBin`, `findAtlas`, the e2e
 starter's check for a Rust build) stay as they are, named in atlas's CHANGELOG, until he says otherwise.
 
-**Where the ground stands (10:25).** core `main@92014ba` and atlas `main@0e8eb8d`, level with GitHub and
-green there on every leg (core's run for `92014ba` read complete, four legs; atlas's two jobs). The door
-pid 20992 (the 10-01 09:47 build) and the glass pid 23524 (the 10-01 08:36 build), Ollama up with its
-eleven models; no sitting open (331 closed 09:49). The working tree carries this ruling's record (the
-list, both changelogs, this block, the daybook, STATUS), to be saved and sent. The REPL needs a restart
-for `pipeline.py` (the ruling is the last word).
+**HIS ORDER, 10:35: "fix the open lines, read the record, make the rulings, what is the hold up?"** The
+hold-up was mine: I had filed the list's remaining lines as his to rule. They are worked now, each by
+its own record. **THE ENGINE BATCH (10:58):** C7 (the closing seat's paraphrase of the rack dropped the
+names; `recompose` now appends the whole listing when the objective named the tool, the live check
+held to it; seen live in sitting 332), the toll index refreshed at every toll by `seatlog.pay` (B13's
+own defect: its stroke went red after every sitting), C1 closed on a recount (one transcript of 416,
+none since 09-29). `intent.py`, `pipeline.py`, `seatlog.py` moved: **RESTART REQUIRED** for the REPL;
+the door's sittings carry them. Mirror 3480/3480 and smoke 72/72, seven reversals red.
+
+**Where the ground stands (10:58).** core `main@be8ad21` and atlas `main@3c7f42f`, level with GitHub and
+green there on every leg. The door pid 20992 and the glass pid 23524 (both started 09:38), Ollama up
+with its eleven models; no sitting open (332 closed 10:56). The working tree carries this batch (the
+three engine files, the standup, the strokes, the record), to be saved and sent. The REPL needs a
+restart for `intent.py`, `pipeline.py` and `seatlog.py`.
 
 ## HANDOFF FOR 2026-10-01 — read this before anything below it
 
