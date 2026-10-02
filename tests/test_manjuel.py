@@ -791,6 +791,208 @@ def test_memory_gate(reg, lib):
           "first proposal" in (g / "memory.md").read_text(encoding="utf-8"))
 
 
+def test_the_memory_is_chained(reg, lib, book):
+    """THE MEMORY HAS A CHAIN (WHAT'S LEFT H1, 2026-10-02; his word: "an
+    autonomous second brain with hash chain verification"). memory.md was
+    append-only by custom, and the law's own ledger was the one record on this
+    ground that was chained. `land` is the one place a landing is written, so
+    it is the one place a link is laid -- on the pen the law uses -- and
+    `verify` walks the chain and memory.md's own bytes against it. The links
+    carry the hash and the place of what they sealed, never the words.
+
+    What goes red if it comes unplugged: the landing that lays no link (the
+    first group), a verify that stops reading the bytes (the second and
+    third), a chain that stops being walked (the fourth), a landing that lets
+    the chain's trouble go unsaid (the fifth), and the readers -- the boot's
+    memory line and the REPL's /memory -- that say the verdict (the sixth)."""
+    import contextlib
+    import hashlib
+    import io
+    from manjuel import boot
+
+    def said(fn, *a):
+        buf = io.StringIO()
+        with contextlib.redirect_stderr(buf):
+            out = fn(*a)
+        return out, buf.getvalue()
+
+    def chain_seals(ground):
+        return MEM._seals(MEM._open_chain(ground))[0]
+
+    # ---- 1. a memory with no chain yet, and the first landing -------------------------------
+    g = Path(tempfile.mkdtemp())
+    v = MEM.verify(g)
+    check("a ground with no memory has nothing to verify, and verifying wrote nothing",
+          v.ok is None and not (g / "memory").exists(), v.detail)
+    legacy = ("# Memory\r\n\r\nAppend-only.\r\n\r\n## 2026-08-29T20:10:31+00:00 — Always start small\r\n"
+              "- provenance: OPERATOR\r\n- kind: ruling\r\n\r\nstart with the smallest model.\r\n"
+              ).encode("utf-8")
+    (g / "memory.md").write_bytes(legacy)
+    v = MEM.verify(g)
+    check("a memory that predates its chain is unsealed, not broken, and verifying wrote nothing",
+          v.ok is None and "never been sealed" in v.detail and not (g / MEM.CHAIN_FILE).exists(), v.detail)
+
+    _, err = said(MEM.land, g, MEM.Entry(title="Ledger Alpha", body="the first landing", provenance=MEM.OPERATOR,
+                                         session="S-1", kind="ruling"))
+    v, seals = MEM.verify(g), chain_seals(g)
+    check("the first landing adopts what was there, seals itself beside it, and the chain is whole",
+          v.ok is True and v.links == 2 and [s.verb for s in seals] == ["ADOPT", "LAND"], v.say())
+    if len(seals) != 2:
+        return        # nothing below can be read without those two seals; the check above has said why
+    check("the adoption is by `memory`, over the whole old file, and holds that file's hash",
+          seals[0].actor == "memory" and (seals[0].start, seals[0].end) == (0, len(legacy))
+          and seals[0].sha == hashlib.sha256(legacy).hexdigest(), str(seals[0]))
+    now = (g / "memory.md").read_bytes()
+    check("the landing is by `operator`, over exactly the bytes it appended, and meets the adoption",
+          seals[1].actor == "operator" and seals[1].start == len(legacy) == seals[0].end
+          and seals[1].end == len(now) and seals[1].sha == hashlib.sha256(now[len(legacy):]).hexdigest(),
+          str(seals[1]))
+    check("a memory that began before its chain is not a warning, and not a stray",
+          err == "" and v.strays == 0, err)
+
+    MEM.stage(g, MEM.Entry(title="Ledger Beta", body="a seat's testimony"))
+    MEM.land_pending(g, 0)
+    MEM.land(g, MEM.Entry(title="Ledger Gamma", body="the operator's own word", provenance=MEM.OPERATOR, session="S-1"))
+    v, seals = MEM.verify(g), chain_seals(g)
+    check("a staged proposal the operator lands is sealed like any landing, and every landing is his",
+          v.ok is True and v.links == 4
+          and [s.actor for s in seals] == ["memory", "operator", "operator", "operator"], v.say())
+    check("every byte of memory.md belongs to exactly one link: each begins where the last ended",
+          seals[0].start == 0 and all(seals[i].start == seals[i - 1].end for i in range(1, len(seals)))
+          and seals[-1].end == (g / "memory.md").stat().st_size)
+    chain_text = (g / MEM.CHAIN_FILE).read_text(encoding="utf-8")
+    check("the chain carries no words of the memory: no title, no body",
+          not any(w in chain_text for w in ("first landing", "a seat's testimony", "operator's own",
+                                            "Always start small", "smallest model",
+                                            "Ledger Alpha", "Ledger Beta", "Ledger Gamma")))
+    pen = MEM._pen()
+    check("the links are the pen's own: its walk passes them, and each is named and says what it is",
+          pen.Chain(str(g / MEM.CHAIN_FILE)).verify()[0]
+          and all(e["actor"] and e["payload"]["says"].strip()
+                  for e in pen.Chain(str(g / MEM.CHAIN_FILE)).entries("link")))
+
+    # ---- 2. the memory changes under the chain -------------------------------------------------
+    mem = g / "memory.md"
+    whole = mem.read_bytes()
+    at = whole.index(b"the first landing")
+    mem.write_bytes(whole[:at] + b"T" + whole[at + 1:])
+    v = MEM.verify(g)
+    check("one changed byte of a landing is red, and names the link it sits in",
+          v.ok is False and "link #2" in v.detail and "MISMATCH" in v.detail, v.detail)
+    mem.write_bytes(whole)
+    check("restored byte for byte, the chain is whole again", MEM.verify(g).ok is True)
+    at = whole.index(b"smallest model")
+    mem.write_bytes(whole[:at] + b"S" + whole[at + 1:])
+    v = MEM.verify(g)
+    check("a changed byte of the adopted memory is red too, and names the adoption",
+          v.ok is False and "link #1" in v.detail and "ADOPT" in v.detail, v.detail)
+    mem.write_bytes(whole)
+
+    # ---- 3. the memory is cut, or grows without a landing ------------------------------------
+    mem.write_bytes(whole[:-10])
+    v = MEM.verify(g)
+    check("a memory cut short is red, and names the link it no longer reaches",
+          v.ok is False and "cut" in v.detail and "link #4" in v.detail, v.detail)
+    mem.write_bytes(whole)
+    stray = "\r\n## 2026-10-02T09:00:00+00:00 — smuggled\r\n- provenance: OPERATOR\r\n\r\nnot landed.\r\n".encode("utf-8")
+    mem.write_bytes(whole + stray)
+    v = MEM.verify(g)
+    check("bytes written without a landing are red, counted, and say where they begin",
+          v.ok is False and f"{len(stray)} bytes (from byte {len(whole)})" in v.detail
+          and "no link has sealed" in v.detail, v.detail)
+    _, err = said(MEM.land, g, MEM.Entry(title="after the stray", body="landed on top", provenance=MEM.OPERATOR))
+    v, seals = MEM.verify(g), chain_seals(g)
+    check("the next landing adopts the stray bytes, SAYS SO OUT LOUD, and the chain goes on whole",
+          v.ok is True and v.strays == 1 and "no landing wrote" in err and f"{len(stray)} bytes" in err,
+          v.say() + " | " + err)
+    check("they are sealed as ADOPT by `memory`, never as a landing by the operator",
+          [(s.verb, s.actor) for s in seals[-2:]] == [("ADOPT", "memory"), ("LAND", "operator")]
+          and seals[-2].start == len(whole), str(seals[-2:]))
+    check("and the boot still says a stray was adopted, for as long as the chain stands",
+          "1 stray region adopted" in v.say(), v.say())
+
+    # ---- 4. the chain itself is tampered with ----------------------------------------------------
+    cpath = g / MEM.CHAIN_FILE
+    orig = cpath.read_bytes()
+    lines = orig.decode("utf-8").splitlines(keepends=True)
+    cpath.write_bytes("".join([lines[0], lines[1].replace("LAND:ruling", "LAND:note")] + lines[2:]).encode("utf-8"))
+    v = MEM.verify(g)
+    check("a link edited in place is red, and the pen's walk names it",
+          v.ok is False and "the pen's walk" in v.detail, v.detail)
+    cpath.write_bytes("".join(lines[:1] + lines[2:]).encode("utf-8"))
+    v = MEM.verify(g)
+    check("a link removed from the middle is red", v.ok is False and "the pen's walk" in v.detail, v.detail)
+    cpath.write_bytes(orig)
+    check("the chain restored, memory.md and the chain agree again", MEM.verify(g).ok is True)
+
+    ch = MEM._open_chain(g)
+    ch.deposit(f"LAND by operator -> memory.md range:0-5 sha256:{'0' * 64}", MEM._pen().OPEN, "LAND:forged", "operator")
+    v = MEM.verify(g)
+    check("a link the pen accepts, whose range does not meet the one before it, is red",
+          v.ok is False and "do not meet" in v.detail, v.detail)
+    cpath.write_bytes(orig)
+    MEM._open_chain(g).deposit("some other words on this chain", MEM._pen().OPEN, "note", "steward")
+    v = MEM.verify(g)
+    check("words deposited on this chain are red: it carries seals and nothing else",
+          v.ok is False and "not a seal of memory.md" in v.detail, v.detail)
+    cpath.write_bytes(orig)
+    MEM._open_chain(g).deposit(f"LAND by operator -> memory.md range:0-5 sha256:{'0' * 64}", MEM._pen().OPEN,
+                               "LAND:x", "steward")
+    v = MEM.verify(g)
+    check("a seal in the operator's name, deposited by another actor, is red",
+          v.ok is False and "names 'operator'" in v.detail and "'steward'" in v.detail, v.detail)
+    cpath.write_bytes(orig)
+    check("each forgery undone, the chain is whole", MEM.verify(g).ok is True)
+
+    # ---- 5. the chain is the landing's trouble, never its stop ---------------------------------
+    real_open, size0 = MEM._open_chain, mem.stat().st_size
+
+    def _down(ground):
+        raise OSError("the disk says no")
+    MEM._open_chain = _down
+    try:
+        _, err = said(MEM.land, g, MEM.Entry(title="while the chain is down", body="still landed",
+                                             provenance=MEM.OPERATOR))
+    finally:
+        MEM._open_chain = real_open
+    check("a chain that cannot be opened does not stop the landing, and the landing says so",
+          mem.stat().st_size > size0 and "could not be opened" in err and "behind" in err, err)
+    v = MEM.verify(g)
+    check("and the landing it could not seal is red until the chain catches up",
+          v.ok is False and "no link has sealed" in v.detail, v.detail)
+    n_adopted = MEM.adopt(g)
+    v = MEM.verify(g)
+    check("`adopt` catches it up, by `memory`, and counts what it took",
+          n_adopted > 0 and v.ok is True and v.strays == 2 and MEM.adopt(g) == 0, f"{n_adopted} bytes; {v.say()}")
+
+    # ---- 6. the readers say the verdict ------------------------------------------------------------
+    lines = boot._record(None, g, "test-embed")
+    mem_line = next(l for l in lines if l.lstrip().startswith("memory "))
+    check("the boot's memory line says the chain is whole, and how long",
+          "chain whole" in mem_line and f"{MEM.verify(g).links} links" in mem_line, mem_line)
+    whole = mem.read_bytes()
+    at = whole.index(b"smallest model")
+    mem.write_bytes(whole[:at] + b"S" + whole[at + 1:])
+    lines = boot._record(None, g, "test-embed")
+    check("and when memory.md is changed it says so in a line of its own, in capitals",
+          any("THE CHAIN IS BROKEN" in l and "MISMATCH" in l for l in lines), "\n".join(lines))
+    mem.write_bytes(whole)
+    cli_src = (ROOT / "manjuel" / "cli.py").read_text(encoding="utf-8")
+    for fn in ("_cmd_remember_that", "_cmd_remember", "_cmd_memory"):
+        body = cli_src.split(f"def {fn}(", 1)[1].split("\ndef ", 1)[0]
+        check(f"the REPL's {fn} says the chain's verdict where it acknowledges", "_chain_line()" in body, fn)
+    # ---- 7. past forty links a wrap closes, and the memory chain walks through it -----------------
+    w = Path(tempfile.mkdtemp())
+    for i in range(41):
+        MEM.land(w, MEM.Entry(title=f"entry {i}", body=f"body {i}", provenance=MEM.OPERATOR))
+    v, wraps = MEM.verify(w), len(MEM._open_chain(w).wraps())
+    check("past forty links a wrap closes, and the memory chain still verifies through it",
+          wraps == 1 and v.ok is True and v.links == 42, f"{v.say()}; {wraps} wrap(s)")
+    if (ROOT / MEM.MEMORY_FILE).is_file() and (ROOT / MEM.CHAIN_FILE).is_file():
+        vv = MEM.verify(ROOT)
+        check("this ground's own memory verifies against its own chain", vv.ok is True, vv.say())
+
+
 def test_index(reg, lib):
     g = Path(tempfile.mkdtemp())
     r = Stub()
@@ -19830,6 +20032,7 @@ def main() -> int:
     test_manifest_size(reg, lib)
     test_prompt_skills(reg, lib)
     test_memory_gate(reg, lib)
+    test_the_memory_is_chained(reg, lib, book)
     test_index(reg, lib)
     test_drift(reg, lib, book)
     test_session4_regressions(reg, lib, book)

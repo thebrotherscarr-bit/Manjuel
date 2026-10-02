@@ -84,7 +84,7 @@ manjuel/
 
   us.py          # the capability manifest, parsed and RECONCILED to code
   lawgate.py     # the law gate: the sealed Manjuel walked, the objective checked, every run stamped (§14.13)
-  memory.py      # memory.md, append-only + pending staging
+  memory.py      # memory.md, append-only + pending staging + the chain that seals each landing
   seatlog.py     # sittings and the toll
   transcript.py  # logs/<timestamp>_<slug>.md; demotes seat headings
   gitstate.py    # read-only git + local init/commit; stale-lock detection

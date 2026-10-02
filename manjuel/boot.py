@@ -203,10 +203,17 @@ def _record(sess, ROOT: Path, EMBED_MODEL: str) -> list[str]:
     mem = ROOT / _mem.MEMORY_FILE
     n = len(_mem.split_entries(mem.read_text(encoding='utf-8'))) if mem.exists() else 0
     pending = len(_mem.pending(ROOT))
+    chain = _mem.verify(ROOT)
     line = f"    memory   {n} entr{'y' if n == 1 else 'ies'}"
+    if chain.ok:
+        line += f"   chain {chain.say()}"
+    elif chain.ok is None and mem.exists():
+        line += "   chain not started"
     if pending:
         line += f"   ** {pending} proposed, awaiting you — /memory **"
     out.append(line)
+    if chain.ok is False:
+        out.append(f"    memory   ** THE CHAIN IS BROKEN: {chain.detail[:200]} **")
 
     logs = list((ROOT / "logs").glob("*.md")) if (ROOT / "logs").exists() else []
     out.append(f"    logs     {len(logs)} transcript{'' if len(logs) == 1 else 's'}")

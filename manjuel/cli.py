@@ -1870,6 +1870,12 @@ def remember_cue(objective: str) -> tuple[bool, str]:
     return True, m.group("text").strip().strip("!.?")
 
 
+def _chain_line() -> str:
+    """The memory chain's verdict, said where a landing is acknowledged and where /memory
+    is read (WHAT'S LEFT H1): a seal that failed must show in the sitting that did it."""
+    return f"  memory chain: {_mem.verify(ROOT).say()}"
+
+
 def _ask_kind() -> str:
     """One word from the list. Sitting 94 typed "outcome failed due to
     timeout, as stated." and the whole sentence became the kind; the entry
@@ -1926,6 +1932,7 @@ def _cmd_remember_that(sess: Session, text: str) -> None:
     else:
         _mem.land(ROOT, entry)
     print(f"  remembered in memory.md as {entry.kind} ({entry.stamp}).")
+    print(_chain_line())
     print("  run index_ground to make it searchable.\n")
 
 
@@ -1954,6 +1961,7 @@ def _cmd_remember(sess: Session, arg: str) -> None:
         return
     _mem.land(ROOT, entry)
     print(f"  remembered in memory.md as {entry.kind} ({entry.stamp}, session {sess.session}).")
+    print(_chain_line())
     print("  run index_ground to make it searchable.\n")
 
 
@@ -1969,7 +1977,8 @@ def _cmd_memory(sess: Session) -> None:
     if not items:
         mem = ROOT / _mem.MEMORY_FILE
         n = len(_mem.split_entries(mem.read_text(encoding="utf-8"))) if mem.exists() else 0
-        print(f"\n  nothing pending. memory.md holds {n} entr{'y' if n == 1 else 'ies'}.\n")
+        print(f"\n  nothing pending. memory.md holds {n} entr{'y' if n == 1 else 'ies'}.")
+        print(_chain_line() + "\n")
         return
 
     print(f"\n  {len(items)} proposed by seats, none remembered yet:\n")
@@ -1986,7 +1995,8 @@ def _cmd_memory(sess: Session) -> None:
         if choice.startswith("l"):
             _mem.land_pending(ROOT, 0, kind=_ask_kind())
             landed += 1
-            print("  landed.\n")
+            print("  landed.")
+            print(_chain_line() + "\n")
         elif choice.startswith("d"):
             _mem.drop_pending(ROOT, 0)
             dropped += 1

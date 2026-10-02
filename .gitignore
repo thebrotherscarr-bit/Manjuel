@@ -65,6 +65,8 @@ SEAT_LOG.md
 # its index, read off it (tests/seatindex.py); a derivative of an untracked record stays untracked
 SEAT_LOG_INDEX.md
 memory.md
+# its seals: one link per landing, written beside it by `land` alone (no word of it rides on the chain)
+memory/chain.jsonl
 
 # Build leavings. whisper.cpp's binaries live under bin/ above; these catch
 # anything a compiler drops in the ground itself.

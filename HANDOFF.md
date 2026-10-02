@@ -136,6 +136,7 @@ Ten estate laws are cited across the engine. The ones with mechanism today
                               is 2 lines after a one-turn sitting and that is
                               correct. History is logs/.
     memory.md + memory/pending.jsonl           SEAT_LOG.md      tolls
+    memory/chain.jsonl        the seals on memory.md: memory.land and memory.adopt ONLY (one link per landing)
     index/vectors.db          rebuildable      agent_workspace/ only seat-writable
     law/chain.jsonl           append-only via law.py ONLY
     rack.md · .git (local; remotes gated by CHAINKIT_GIT_REMOTE=1)
@@ -757,6 +758,36 @@ green on every leg, read through `release.py --check --ci`. The door pid 20992 a
 (both started 09:38), Ollama up with its eleven models; no sitting open (333 closed 11:41). Nothing is
 unsaved but this block. The REPL needs a restart for `intent.py`, `pipeline.py`, `seatlog.py` and
 `lawgate.py`. The gate on his terminal: 16 of 16 on a routine run; `--ci` or a named mark asks GitHub too.
+
+**THE OPERATOR'S WORD, (12:47):** "BRUH, finish the system, its an autonomous second brain with hash chain
+verification and agentic workflows. backed by ollama as a first route then secondarily through additional
+API as added. All with a modules and plugin system. whats missing to make it that? think of a
+conversational assistant that evolves over time." **THE PARAGRAPH ABOVE THAT SAYS THE LIST IS DOWN TO E1
+IS SUPERSEDED.** It was true of the list as it stood, and the list was not the system. Measured against
+that sentence, from the disk (the evidence is in WHATS_LEFT, B18, B19 and H1 to H11): only the law's ledger was
+chained; nothing carries what was said last week into a turn, notices what is worth remembering, or
+consolidates it; Ollama is the only route, and a hosted one is ruled out in writing (RULE 4 and SPEC 1
+are written the other way, B18); there is no plugin concept anywhere in the core; and nothing runs unless
+the operator opens a sitting or fires a flow. Thirteen lines went on the page: two decisions that are the
+operator's (B18, the hosted route; B19, where plugins live), ten open builds (H2 to H11) and the one just
+done (H1).
+
+**H1 BUILT (12:47): THE MEMORY HAS A CHAIN.** `memory.land`, the memory's one write-path, lays one link
+per landing in `memory/chain.jsonl`, on the law's own pen (`law/pen/links.py`, loaded read-only); the
+link is one line, the hash and the place of the bytes sealed, no word of the memory. `memory.verify`
+walks the chain and memory.md against it; the boot's memory line and the REPL's `/memory`, `remember`
+and `remember that` say the verdict. The memory already there (10,693 bytes) was sealed once as
+`ADOPT by memory` (head 6fb898001a1d): the chain says nobody vouched for it. Bytes that arrive without a
+landing are adopted by the next landing, out loud. `manjuel/memory.py`, `boot.py` and `cli.py` moved:
+**RESTART REQUIRED** for the REPL; a landing made in the old REPL leaves a tail verify names, and the
+next landing adopts it. Eleven reversals red; the mirror 3549 of 3549 strokes and 72 of 72 smoke. **NAMED, NOT FIXED:** the door's
+`verify_chain` reads the pen's links as FLIP, the law's own chain too (H7). `.gitignore` gained one line,
+`memory/chain.jsonl`, untracked like the record it seals.
+
+**Where the ground stands (12:47).** core `main@0202a51` and atlas `main@4d12b53` as sent; the
+working tree carries H1 and the list, to be saved and sent. The door pid 20992 and the glass pid 23524,
+Ollama up; no sitting open (333 closed 11:41). The REPL needs a restart for `memory.py`, `boot.py`,
+`cli.py` and the four modules named above.
 
 ## HANDOFF FOR 2026-10-01 — read this before anything below it
 

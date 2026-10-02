@@ -123,7 +123,9 @@ knows Ollama; nothing else knows either.**
 
     transcript.py logs/ per run; recorded text demoted below stage level so
                   output cannot forge the record.
-    memory.py     memory.md append-only; seats propose, the operator lands.
+    memory.py     memory.md append-only; seats propose, the operator lands. Each landing is
+                  sealed on a hash chain beside it, on the law's own pen; verify names a
+                  changed byte, a cut, or a write that did not come through land.
     seatlog.py    sittings and the toll; the standing (DAYBOOK's last entry,
                   handed to the door and the court).
     gitstate.py   read-only git + local init/commit; stale locks named with

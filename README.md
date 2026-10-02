@@ -116,7 +116,8 @@ widen a window, only cover more ground with each one.
                    They also write `tests/last_run.md`: the failures, with
                    their detail, and nothing about the ones that passed
     logs/          every run transcribed; prompts kept apart
-    memory.md      rulings that outlive a session (operator-landed)
+    memory.md      rulings that outlive a session (operator-landed); each landing sealed
+                   on a hash chain beside it, untracked like it
     SEAT_LOG.md    the sittings and their tolls
     SEAT_LOG_INDEX.md  the same tolls in the order they were paid, with the
                    numbering's gaps and duplicates counted -- generated from the

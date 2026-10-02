@@ -25,6 +25,18 @@ The release is core **v0.1.16** and atlas **v0.1.9**. Both tags are cut and on G
 
 Nothing here gets built until you say which way.
 
+- **B18. Hosted models: your rule says no, your words of 10-02 say yes.** RULE 4 (no cloud service, no
+  API key, no hosted model) and SPEC section 1 ("not an API client") are written the other way from
+  "backed by ollama as a first route then secondarily through additional API as added". Say which: (a)
+  amend RULE 4 and that line, so a hosted route can be added behind a `.us` record that declares
+  `remote: true`, off by default, one key per provider kept only in `.env`, switched on seat by seat,
+  and never used for a turn that names client material or a secret; or (b) keep it local, and the route
+  list takes only servers on this machine. Until you say, nothing hosted is built. The local part (H8)
+  goes ahead either way. *(CLAUDE.md RULE 4; SPEC 1; your word 2026-10-02)*
+- **B19. Where do plugins live?** A plugin is a folder, and a hand makes no folder (RULE 8). Name the
+  place, or say to put them under a folder that exists. Until you do, H9 waits. *(CLAUDE.md RULE 8;
+  your word 2026-10-02)*
+
 
 ---
 
@@ -76,10 +88,76 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 ---
 
+## H. Not built yet: the second brain
+
+Your word, 2026-10-02: "an autonomous second brain with hash chain verification and agentic
+workflows, backed by ollama as a first route then secondarily through additional API as added, all
+with a modules and plugin system ... a conversational assistant that evolves over time." What the
+disk says is missing, in the order it is worth building. H1 is done (below).
+
+- **H2. The assistant does not remember across sittings.** Each sitting starts from the DAYBOOK's
+  standing block and its own story. What you said last week reaches a seat only if a seat thinks to
+  search for it. Needed: at the start of a turn the engine reads the verified memory and hands the
+  seats what bears on the turn, a ruling above a seat's testimony, each marked for what it is. A test
+  holds it: a landed ruling shows in the next turn's context, and testimony arrives marked as
+  testimony. *(SPEC 1; `manjuel/seatlog.py`)*
+- **H3. Nothing notices what is worth remembering.** A seat stages a memory proposal only if it
+  chooses to call `remember`. Needed: a bounded pass at the close of a sitting reads what was said and
+  done and stages proposals (a correction, a preference, a decision), each citing the run it came
+  from. You land or drop them with `/memory`; nothing lands by itself (ESTATE LAW 5 and 6).
+  *(`skills/remember.md`)*
+- **H4. Nothing consolidates what it remembers.** Memory only grows. Nothing merges two entries that
+  say the same thing, marks a ruling as replaced by a later one, or summarises a month. Needed: a
+  bounded pass (LAW_003) that proposes consolidations as new entries citing what they replace; nothing
+  is deleted (ESTATE LAW 1). *(`law/LAW_003_THE_LOOP.md`)*
+- **H5. It cannot change itself where you can check it.** Flows change the estate's own code on your
+  click (`coder-tree`), but nothing turns a repeated correction into a proposed change to a seat's
+  prompt or a skill, scores it before and after on the live check's cases, and brings it to you with
+  the numbers. *(SPEC 4.9; `tests/standup.py`)*
+- **H6. Only the law's ledger and now the memory are chained.** The sitting ledger, the flow runs, the
+  proof history and the tolls are append-only by custom, not by a chain; and a chain deleted whole
+  looks like a chain never begun. Needed: the same seal for each, the tolls first and one at a time,
+  and the head of each witnessed outside the ground (a law link, or git) so a deletion is loud.
+  *(measured 2026-10-02)*
+- **H7. The door's chain checker cannot read the pen's chains.** `verify_chain` calls every entry of
+  the law's own chain, and of the memory's, a FLIP (does not hash to its stored value), while
+  `law.py verify` calls the law whole. The pen's links carry no `body_v` and the checker assumes the
+  other form. Needed: teach it the pen's form, with the law's chain as a golden, so two independent
+  walks agree. *(`atlas/tools/chain_verify.py`; CHANGELOG, "The memory has a chain")*
+- **H8. Ollama is the only model route.** The transport is `manjuel/runtime.py`, but the rack, the
+  card monitor, the `.env` reader, the `.us` records, the server, the REPL and the boot all name
+  Ollama. Needed: one route interface (chat, embed, list, what is loaded), Ollama the first and
+  default, an ordered route list per seat with a fall-back, and a loopback-only adapter for a local
+  OpenAI-compatible server. A hosted adapter waits on B18. *(SPEC 1)*
+- **H9. There is no module or plugin system.** Seats, skills and flows are files, but a new tool that
+  has code must be written into `manjuel/skills.py`, and the word "plugin" is in no code or doc of
+  the core. Needed: a plugin is one folder with a manifest (name, version, what it reads and writes,
+  whether it reaches out) holding its tools, seats and flows; installed by your landing, which lays a
+  chain link pinning its bytes; the loader refuses a plugin whose bytes no longer match; removal
+  folds, never deletes. Waits on B19 for the place. *(SPEC 1, "not a general agent framework")*
+- **H10. Nothing runs unless you open a sitting or fire a flow.** The engine has no daemon, and a
+  search of the tool server finds no scheduler or ticker. Needed: a scheduler in the tool server that
+  fires named flows at stated times or on a trigger, each bounded by LAW_003, each outcome a proposal
+  you land from the dashboard; the engine stays daemonless. A tool-server change: it needs a restart
+  and your card to place the binary. *(BUILDPATH, "the position"; `law/LAW_003_THE_LOOP.md`)*
+- **H11. Arrivals are listed, never taken in.** A file you drop in the workspace shows in the next
+  sitting's brief and can be inspected and read. Nothing summarises it on arrival, links it to what is
+  already remembered, or proposes a memory from it. Needed: an arrival pass that inspects each new
+  file (never opening a secret or client file), summarises it, and stages a proposal citing it, which
+  you land or drop. No new folder: the workspace is the inbox. *(SPEC 1, "the workspace";
+  `manjuel/boot.py`)*
+
+---
+
 ## Done
 
 Finished lines, newest first. A number is never used again.
 
+- **H1. The memory has no chain.** DONE 2026-10-02: every landing now seals itself on a hash chain
+  beside memory.md, on the pen the law uses, and `memory.verify` names a changed byte, a cut, or a
+  write that did not come through `land`. The memory already there was sealed once as "found", so the
+  chain says plainly that nobody vouched for it. The boot and the REPL say the verdict.
+  *(CHANGELOG, "The memory has a chain")*
 - **D11. The self-test suite is one third done.** DONE 2026-10-02: Part 2 is built, `tests/matrix.py`,
   the phrasing matrix -- each ask said 1,444 ways (case, spacing, politeness, quotes, the other slash, a
   `./../` step, a rooted path in capitals, a secret asked in a question) through the law gate, the

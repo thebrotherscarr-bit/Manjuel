@@ -34,6 +34,57 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### The memory has a chain (2026-10-02, WHAT'S LEFT H1; the operator's word: "an autonomous second brain with hash chain verification")
+
+The operator asked what is missing from a second brain that keeps its own memory, proves it, and
+evolves. The first thing named was the chain, and of the records on this ground only the law's own
+ledger had one. `memory.md` was append-only by custom. ESTATE LAW 8 says one write-path per chain, and
+`memory.land` is the memory's one write-path, so that is where the link is laid: every landing now
+seals itself in `memory/chain.jsonl`, on the pen the law uses (`law/pen/links.py`, loaded read-only
+and never imitated).
+
+A link's whole document is one line, `LAND by operator -> memory.md range:A-B sha256:H`: the hash of
+the exact bytes that landing appended, and where they sit. No word of the memory rides on the chain,
+so it sits beside a record ruled untracked (2026-09-08) and is untracked the same way, in
+`.gitignore`. `memory.verify` walks the pen's own check over the chain and then memory.md's bytes
+against every seal in order. Every byte belongs to exactly one link, so a changed byte is named by
+the link it sits in, a cut file by the link it no longer reaches, and a write that did not come
+through `land` by the bytes no link has sealed.
+
+**What it says, and what it does not.** The memory already there (10,693 bytes, sealed today) went
+on the chain as ONE link, `ADOPT by memory`: a different verb and a different actor inside the hash,
+so the chain says plainly that nobody vouched for those bytes, only that it found them so and watches
+them from now on. Bytes that arrive without a landing are adopted the same way by the next landing,
+which says so out loud, and the boot says "stray region adopted" for as long as the chain stands. A
+chain that cannot be written does not stop a landing, because the entry is the operator's act: the
+landing says so on stderr and verify is red until `memory.adopt` catches the chain up. It cannot tell a
+deleted chain from one never begun; a head witnessed outside the ground is a line of its own (H6).
+
+**Who reads it.** The boot's memory line says `chain whole (N links, head ...)`, or, in a line of its
+own and in capitals, that the chain is broken and where. `/memory`, `remember` and `remember that`
+say the verdict where they acknowledge, so a seal that failed shows in the sitting that did it.
+
+**Measured, not asserted, and not fixed.** The door's independent verifier
+(`atlas/tools/chain_verify.py`, the `verify_chain` tool) calls every entry of this chain a FLIP, and
+every entry of the law's own chain too, which `law.py verify` calls whole. The pen's links carry no
+`body_v`, and the verifier reads an unstamped entry as the oracle's JCS form, which hashes with other
+separators. So `verify_chain` cannot vouch for either chain yet (H7).
+
+**Proved.** `test_the_memory_is_chained`: the first landing adopts what was there and seals itself;
+every landing is the operator's and no word of the memory rides on the chain; one changed byte, a
+cut, a stray append, a link edited, a link removed, a forged seal, words deposited on the chain, and a
+seal in the operator's name by another actor are each red and each named; the chain's trouble never
+stops a landing and is always said; a wrap closing at forty links is walked through; and the boot and
+the REPL say the verdict. Eleven source-level reversals on a mirror, each wire struck, the stroke red,
+restored byte for byte. The mirror: 3549 of 3549 strokes and 72 of 72 smoke. SPEC 4.5 gained a MET line, and the record's row in
+SPEC section 2 says the chain.
+
+`manjuel/memory.py`, `boot.py` and `cli.py` moved: **restart required** for the REPL. A landing made in
+the old REPL leaves a tail no link has sealed, which verify reports and the next landing adopts and
+says so; the door's sittings carry the new code. **What goes red if unplugged:**
+`test_the_memory_is_chained` (each reversal names the check that catches it); the boot's memory line;
+and, on this ground, that stroke's last check, that the memory verifies against its own chain.
+
 ### The phrasing matrix, and the five gaps in the first wall it found (2026-10-02, WHAT'S LEFT D11 part 2; TASKS "AN INTERNAL, REVIEWABLE TEST SUITE")
 
 TASKS asked for a generator on 2026-09-03 (sitting 81): vary the PHRASING of an ask through the engine
