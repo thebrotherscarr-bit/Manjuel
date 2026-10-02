@@ -784,10 +784,12 @@ next landing adopts it. Eleven reversals red; the mirror 3549 of 3549 strokes an
 `verify_chain` reads the pen's links as FLIP, the law's own chain too (H7). `.gitignore` gained one line,
 `memory/chain.jsonl`, untracked like the record it seals.
 
-**Where the ground stands (12:47).** core `main@0202a51` and atlas `main@4d12b53` as sent; the
-working tree carries H1 and the list, to be saved and sent. The door pid 20992 and the glass pid 23524,
-Ollama up; no sitting open (333 closed 11:41). The REPL needs a restart for `memory.py`, `boot.py`,
-`cli.py` and the four modules named above.
+**Where the ground stands (12:56).** core `main@ceb4558` (H1 and the list, saved and sent) and atlas
+`main@4d12b53`, level with GitHub; both runs green, read through the gate's own `ci` check. The ground's
+own suites from the glass: 3553 of 3553 strokes and 72 of 72 smoke. The door pid 20992 and the glass pid
+23524, Ollama up; no sitting open (333 closed 11:41). Nothing is unsaved but this paragraph. The REPL
+needs a restart for `memory.py`, `boot.py` and `cli.py`, and for the four modules the paragraph above
+names (`intent.py`, `pipeline.py`, `seatlog.py`, `lawgate.py`).
 
 ## HANDOFF FOR 2026-10-01 — read this before anything below it
 

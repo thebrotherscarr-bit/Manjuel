@@ -2933,7 +2933,9 @@ which RULE 4 and SPEC 1 forbid in writing; where plugins live), ten open builds 
 **H1 built:** the memory has a chain
 (`memory.land` lays a link per landing on the law's pen; `memory.verify` names a changed byte, a cut or a
 write that did not come through land; the boot and the REPL say the verdict; the memory already there was
-sealed once as "found"). `memory.py`, `boot.py` and `cli.py` moved: the REPL needs a restart.
+sealed once as "found"). `memory.py`, `boot.py` and `cli.py` moved: the REPL needs a restart. Saved and sent as
+core `main@ceb4558`, GitHub's run green; the ground's suites from the glass 3553 of 3553 strokes and 72 of 72
+smoke; eleven reversals red.
 
 **Next session** — open `What's left` first: E1, the two decisions B18 and B19, and the second brain's builds H2 to H11, in that order. THE RUST STAYS (his ruling 10-02, B14
 closed): do not fold it; `atlas-door` and `atlas.exe` depend on it. The next marks (core and atlas) are
