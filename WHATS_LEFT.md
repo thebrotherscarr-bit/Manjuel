@@ -30,8 +30,16 @@ Nothing here gets built until you say which way.
   (the chain verdict), and the canon that `cargo test` proves over 21 golden-master chain
   fixtures; GitHub builds it on every push. Your ruling the same morning: rewrite the chain
   verdict in Python first, proved against the 21 goldens, then fold the Rust to an attic in
-  atlas. The rest of the proposal (one intent table, fewer seats, a shorter record) stays a
-  discussion. *(the conversation of 09-29 and 10-01)*
+  atlas. FIRST HALF BUILT 2026-10-01 (09:35): the verdict is `atlas/tools/chain_verify.py` -- 29 of
+  29 goldens, 356 of 356 canon vectors, its line identical to the Rust's on every chain the
+  oracle verified -- and `verify_chain` runs it; no tool in the door's table shells the Rust now.
+  SECOND HALF OPEN, AND NOW A DECISION: measured again 2026-10-02, the Rust is also the engine of
+  `atlas-door` (the D2 trade-ops page: every write is `atlas trade`) and ships as `atlas.exe` in
+  every release, so folding it takes those two with it. Put to you by card (dismissed); you then
+  asked what is wrong with it. Nothing: no defect was found and it does not need to go. HELD, and
+  my recommendation is to keep it: nothing is folded, and nothing will be without your word. The
+  rest of the proposal (one intent table, fewer seats, a shorter record) stays a discussion.
+  *(atlas CHANGELOG, "The chain verdict in Python")*
 
 ---
 
@@ -89,10 +97,6 @@ Nothing here gets built until you say which way.
 
 ## F. Paperwork that is out of date
 
-- **F3. DAYBOOK has no entry for 09-10 or 09-11.** The other half is done (2026-09-30):
-  Session 8's "next session" line is in the form the reader parses. The two missing days are
-  in the CHANGELOG (0.1.9 and the hardening that followed it) and could be written from it;
-  say so if you want them written. *(TASKS)*
 
 ---
 
@@ -117,6 +121,10 @@ both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 Finished lines, newest first. A number is never used again.
 
+- **F3. DAYBOOK has no entry for 09-10 or 09-11.** DONE 2026-10-01: Sessions 7a (09-10) and 7b
+  (09-11) written from the CHANGELOG and the sitting ledger on your word of 09-30, each headed
+  "written after the fact"; the other half, Session 8's "next session" line, was done 09-30. The
+  line stayed open on this page until 09:35; moved now. *(DAYBOOK; the save `05274c2`)*
 - **B16. A merge button on Version control (was D6).** RULED 2026-09-30 and BUILT 2026-10-01: a
   "Land onto main" button in the Lines-of-work box, behind a `land` action on the tool server --
   fast-forward only, from the main line, over saved work; everything else refused by name.

@@ -670,6 +670,44 @@ dropped by operator ruling 2026-09-01 — see the fix log.
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
 
+## HANDOFF FOR 2026-10-02 — read this before anything below it
+
+**THE DAY SO FAR.** The same conversation, carried over from 2026-10-01 (the model was switched at 09:35
+and he said "Try again"); the laws re-read in full at its start. The machine had rebooted at 15:56
+yesterday and nothing had come back: the door, the glass and Ollama were all down, and no sitting was
+open (ledger n 330, closed 09:05 on 10-01).
+
+**BROUGHT BACK (09:38-09:50).** The door pid 20992 (the 10-01 09:47 build, hashing as placed, the Python
+verifier behind `verify_chain`) and the glass pid 23524 (the 10-01 08:36 build), both with the runbook's
+lines; Ollama through its own app (eleven models answered in 4 s). The glass sat on its PIN lock screen and
+he opened it himself, by card. From the glass: suites 3454/3454, smoke 72/72, the live morning standup 9/9
+(sitting 331, closed 09:49:49).
+
+**WHAT GITHUB HAD FOUND, READ THIS MORNING.** core's run for `05274c2` was red on all four legs on ONE
+stroke, "the list reads whole: open 9, done 72" -- a floor of ten open lines on a list that is being
+finished. Fixed in the tree yesterday (the floor is on the whole list); on GitHub with this morning's save.
+atlas `44f8409` green. Also regenerated: SEAT_LOG_INDEX.md (294 tolls; yesterday's courts and checks had
+landed after it) and BUILDMAP.md.
+
+**B14's SECOND HALF IS A DECISION, NOT A BUILD.** Reading what the fold touches found what the first
+measurement missed: `line/cmd/atlas-door` (the D2 trade-ops page, the Go cutover of the Python `door.py`)
+reads and writes through `atlas trade ...`, the Rust `store` crate, and every atlas release ships
+`atlas.exe` and `atlas-door.exe`. With the verdict in Python nothing in the tool server needs the Rust any
+more; two shipped products do. Nothing is folded. Put to him as a card. Left behind by the rewire and
+named in atlas's CHANGELOG, not fixed: the door's `--atlas-bin` / `Options.AtlasBin` / `findAtlas` (read
+by nothing now) and `tests/e2e/_start_mcp.ps1` (still insists on a Rust build); the `TierSpine` comment
+and the CLI reference's `verify_chain` line, which said "Rust", are corrected.
+
+**HE ASKED, 09:58 (the card dismissed):** "Fold Rust into an attic for what reason? Is there something
+wrong with it? does it need to be removed?" Answered: no defect and no need -- the fold was the hand's
+own tidiness proposal of 09-29, which called the Rust "unused"; it is not (above). Recommended: keep it.
+THE FOLD IS HELD: DO NOT MOVE THE RUST WITHOUT HIS WORD, whatever the 10-01 block's "still to build"
+says. The Python verifier (B14's first half) stands either way.
+
+**Where the ground stands (09:55).** core `main@05274c2` and atlas `main@44f8409`, both level with GitHub
+as last fetched, the working trees ahead of them by B14's first half, the list stroke's floor, the toll
+index, BUILDMAP and this block -- to be saved and sent through the glass.
+
 ## HANDOFF FOR 2026-10-01 — read this before anything below it
 
 **THE DAY SO FAR.** The same conversation, carried over from 2026-09-30 on his word of 14:35
@@ -686,10 +724,21 @@ copy of `atlas/line` and the glass; the door and the glass rebuilt from it, plac
 allowance. **B14's premise corrected:** the Rust backs `verify_chain` and the 21 goldens; his
 ruling, the Python verifier first, then the fold.
 
-**Still to build from his rulings of 2026-09-30:** B14 (the unused Rust folded to an attic in
-atlas), B16 (`git_branch land` and its button on Version control -- an atlas build, and placing
-the binaries needs his allowance), F3 (DAYBOOK's 09-10 and 09-11 from CHANGELOG). Then D3, D7, D9,
-D11 are his to order and E1 needs a person who is not him.
+**B14's FIRST HALF BUILT (09:35):** `atlas/tools/chain_verify.py`, the chain verdict in Python --
+29/29 goldens, 356/356 canon vectors, 18 of 21 lines identical to the Rust CLI's and the other 3
+SKIPPED where the oracle skipped them -- and the door's `verify_chain` spawns it (found beside the
+door, bounded, the words kept whole); `tests/prove.py` has the leg `chain_verify (python spine)`,
+23 held, 14 absent, 0 broke (one run of three showed a broke that the next two did not; not read,
+noted). **PLACED ON HIS ALLOWANCE (09:47):** the door rebuilt from the ground's own `line/` (every
+.go file byte-equal to the proved scratch copy), pid 125656, hashing as built, the 08:36 binary
+kept in scratch; through it, from the glass, a golden reads INTACT in the spine's shape and a file
+that is not a chain errs with `verdict=TAMPER ... broke_at=Some(0)`. The second half is the
+fold: `core/`, `store/`, `apps/atlas/`, `Cargo.*` to an attic in atlas (his named place), the
+cargo legs out of `tests/prove.py`, `prove.ps1`, `.github/workflows/prove.yml` and `release.yml`,
+`sbom.json` and the docs; `chain recognize` leaves with the Rust; the goldens stay as data.
+
+**Still to build from his rulings of 2026-09-30:** B14's second half (above). B16 and F3 are
+built and placed. Then D3, D7, D9, D11 are his to order and E1 needs a person who is not him.
 
 **PLACED ON HIS ALLOWANCE (08:58):** the door pid 108440 (the 08:36 build, `land` in its table) and
 the glass pid 35444 (the 08:36 build, the Land button), both hashing as built, the old binaries kept

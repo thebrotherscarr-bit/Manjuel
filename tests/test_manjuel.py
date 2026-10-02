@@ -16514,7 +16514,10 @@ def test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book):
         entries.append((i, done, line[2:]))
     n_open = sum(1 for _, d, _ in entries if not d)
     n_done = sum(1 for _, d, _ in entries if d)
-    check("the list reads whole: numbered lines open and under Done", n_open >= 10 and n_done >= 10,
+    # The floor is on the WHOLE list, not the open half: the open half shrinks
+    # to nothing as the work is done (8 open on 2026-10-01, from 41 on 09-29),
+    # and a list that reads whole is one the parser found, not one still long.
+    check("the list reads whole: numbered lines found, open or under Done", n_open + n_done >= 20 and n_done >= 10,
           f"open {n_open}, done {n_done}")
     check("every line under a letter carries a number, used once, under its own letter (the page's three faults)",
           not faults, "; ".join(faults) or f"{len(seen)} numbers, each once")

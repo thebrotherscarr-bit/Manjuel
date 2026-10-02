@@ -34,6 +34,20 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### atlas: the chain verdict in Python, `verify_chain` rewired to it (2026-10-01, WHAT'S LEFT B14's first half; the entry is atlas's)
+
+The verdict EMPTY | INTACT | FLIP | TAMPER written in Python in atlas's `tools/`, proved against the
+21 goldens and 8 injections (29 of 29), the 356 canon vectors, and the Rust CLI's own line (18
+identical, 3 the oracle skipped, 0 differ); the door's `verify_chain` runs it, so no tool in the door's
+table shells the Rust binary (`atlas-door` still does, for `atlas trade`). The fold of the Rust to an
+attic is the second half, and is a decision put to him, not a build: see atlas's entry. On the
+list too: F3 moves to Done -- the daybook's 09-10 and 09-11 were written this morning (`05274c2`)
+and the line had not moved. The list's stroke asked for ten open lines, a floor from the day the
+list had 41; with 8 open it went red for the right reason, so the floor is on the whole list now
+(twenty numbered lines, ten under Done): a list that reads whole is one the parser found, not one
+still long. GitHub had found it first: the run for `05274c2` (sent 09:07, read 09:50) was red on
+all four legs on that one stroke, "open 9, done 72", the moment B16 moved to Done.
+
 ### atlas: `land` on Version control (2026-10-01, WHAT'S LEFT B16; the entry is atlas's)
 
 The core's list line closes; the piece and its proof are in atlas's CHANGELOG under the same

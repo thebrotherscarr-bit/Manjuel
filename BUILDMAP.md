@@ -1716,29 +1716,29 @@ its line range. The suites are the memory (HANDOFF: test discipline).
 | `test_the_map_says_how_to_ask` | 16368-16390 | `intent`, `intent.wants_a_tree_change` |
 | `test_the_refusals_document_lists_every_site_in_the_code` | 16393-16420 | — |
 | `test_the_plan_names_every_mark_where_it_sits` | 16423-16465 | — |
-| `test_the_list_of_what_is_left_reads_whole_and_is_not_stale` | 16468-16539 | — |
-| `test_no_file_is_mixed_and_the_root_documents_are_crlf` | 16542-16574 | — |
-| `test_the_toll_index_is_read_off_the_log` | 16577-16616 | — |
-| `test_a_run_python_child_is_walled_into_the_workspace` | 16619-16704 | `_sk`, `_sk.JAIL_MARK` |
-| `test_a_hook_watches_a_call_without_taking_it_over` | 16707-16811 | `_sk`, `_sk.SkillSpec`, `_sk._HANDLERS`, `_sk.hook_faults`, `_sk.parse_hooks`, `_sk.pop` |
-| `test_a_run_in_flight_can_be_interrupted` | 16814-16886 | `SV`, `SV.ASKING`, `SV.COMMANDS`, `SV.IDLE`, `SV.Inbox`, `SV.RUNNING`, `SV.TERMINAL`, `SV.Wire`, `SV._thread`, `_cli`, `_cli._loop`, `_in` |
-| `test_a_skill_cannot_hang_the_repl` | 16889-16931 | `_sk`, `_sk.SKILL_TIMEOUT`, `_sk._HANDLERS`, `_sk._run_bounded`, `_sk.pop` |
-| `test_native_tool_calling` | 16934-17062 | `REVIEW_ONLY`, `calls_to_action_xml`, `declares`, `extract_tool_call` |
-| `test_the_router_is_told_how_not_just_what` | 17065-17132 | `RunContext`, `_router_prompt`, `_steward_prompt` |
-| `test_a_thinking_router_is_never_silent` | 17135-17194 | `OllamaRuntime`, `_salvage`, `thinking_of` |
-| `test_write_read_and_speak_about_it` | 17197-17287 | `REVIEW_ONLY_SKILLS`, `RunContext`, `intent`, `intent.names_a_tool`, `run_pipeline` |
-| `test_model_override` | 17290-17601 | `AgentRegistry`, `AgentRegistry.load`, `RegistryError`, `RuntimeError_`, `_cli`, `_cli.COMMANDS`, `_cli._cmd_model`, `_ctx`, `_ctx.redirect_stdout`, `rack`, `spelling` |
-| `test_path_gate` | 17604-17747 | `RunContext`, `SkillSpec`, `gate_paths`, `parse_path_args`, `run_pipeline` |
-| `test_flags_are_not_speech` | 17750-17790 | `RunContext`, `build_prompt`, `read_flags`, `run_pipeline`, `strip_control` |
-| `test_the_maker` | 17793-18087 | `RunContext`, `_maker_route`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.wants_changing`, `intent.wants_going_back`, `intent.wants_making`, `maker`, `maker.AUTHOR_NAME`, `maker.MakerRefused` |
-| `test_the_maker_runs_the_page_before_it_keeps_it` | 18090-18378 | `RunContext`, `maker`, `maker.CHECK_BUDGET`, `maker.PROFILE_PREFIX`, `maker.PROFILE_STALE`, `maker.REPAIRS`, `maker.SETTLE`, `maker._BROWSERS`, `maker._CATCH`, `maker._inject`, `maker._made_at`, `maker._sweep_profiles` |
-| `test_the_maker_picks_up_and_puts_down` | 18381-18614 | `RunContext`, `_maker_route`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `intent`, `intent.wants_going_back`, `intent.wants_picking_up`, `intent.wants_putting_down`, `maker` |
-| `test_ink` | 18617-18665 | `ink`, `ink.RESET`, `ink.Spinner`, `ink._STATE`, `ink.bad`, `ink.body`, `ink.dim`, `ink.enabled`, `ink.good`, `ink.seat`, `ink.seat_color`, `ink.warn` |
-| `test_math` | 18668-18691 | `M`, `M.MathError`, `M.cosine`, `M.linear_regression`, `M.matmul`, `M.parse_numbers`, `M.stdev`, `M.transpose`, `M.variance` |
-| `test_a_commit_is_not_a_tag` | 18694-18735 | `_HANDLERS` |
-| `test_says_is_a_phrase_list_not_a_paragraph` | 18738-18803 | `SkillLibrary`, `SkillLibrary.load`, `parse_says` |
-| `test_the_stamp_is_not_an_edit` | 18806-18914 | `_BOOT_STAMPS`, `_H`, `_sf`, `suite_tally` |
-| `test_doctrine` | 18917-19091 | `D`, `D.dead_paths`, `D.doc_pass_report`, `D.doctrine_report`, `D.living`, `D.open_tasks`, `D.sittings`, `D.skills_axis`, `D.stale_tallies`, `D.versions`, `_H`, `_SL` |
-| `test_the_core_sees_its_own_repository` | 19094-19241 | `gitstate`, `gitstate.GitRefused`, `gitstate._bad_branch_name`, `gitstate._host_of`, `gitstate._jailed`, `gitstate.branches`, `gitstate.close_branch`, `gitstate.commit`, `gitstate.diff`, `gitstate.read`, `gitstate.remotes`, `gitstate.switch` |
-| `test_record_and_git` | 19244-19348 | `RunContext`, `_cli`, `_cli._toll_answer`, `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.pull`, `gitstate.push`, `gitstate.read`, `seatlog`, `seatlog.RunNote` |
+| `test_the_list_of_what_is_left_reads_whole_and_is_not_stale` | 16468-16542 | — |
+| `test_no_file_is_mixed_and_the_root_documents_are_crlf` | 16545-16577 | — |
+| `test_the_toll_index_is_read_off_the_log` | 16580-16619 | — |
+| `test_a_run_python_child_is_walled_into_the_workspace` | 16622-16707 | `_sk`, `_sk.JAIL_MARK` |
+| `test_a_hook_watches_a_call_without_taking_it_over` | 16710-16814 | `_sk`, `_sk.SkillSpec`, `_sk._HANDLERS`, `_sk.hook_faults`, `_sk.parse_hooks`, `_sk.pop` |
+| `test_a_run_in_flight_can_be_interrupted` | 16817-16889 | `SV`, `SV.ASKING`, `SV.COMMANDS`, `SV.IDLE`, `SV.Inbox`, `SV.RUNNING`, `SV.TERMINAL`, `SV.Wire`, `SV._thread`, `_cli`, `_cli._loop`, `_in` |
+| `test_a_skill_cannot_hang_the_repl` | 16892-16934 | `_sk`, `_sk.SKILL_TIMEOUT`, `_sk._HANDLERS`, `_sk._run_bounded`, `_sk.pop` |
+| `test_native_tool_calling` | 16937-17065 | `REVIEW_ONLY`, `calls_to_action_xml`, `declares`, `extract_tool_call` |
+| `test_the_router_is_told_how_not_just_what` | 17068-17135 | `RunContext`, `_router_prompt`, `_steward_prompt` |
+| `test_a_thinking_router_is_never_silent` | 17138-17197 | `OllamaRuntime`, `_salvage`, `thinking_of` |
+| `test_write_read_and_speak_about_it` | 17200-17290 | `REVIEW_ONLY_SKILLS`, `RunContext`, `intent`, `intent.names_a_tool`, `run_pipeline` |
+| `test_model_override` | 17293-17604 | `AgentRegistry`, `AgentRegistry.load`, `RegistryError`, `RuntimeError_`, `_cli`, `_cli.COMMANDS`, `_cli._cmd_model`, `_ctx`, `_ctx.redirect_stdout`, `rack`, `spelling` |
+| `test_path_gate` | 17607-17750 | `RunContext`, `SkillSpec`, `gate_paths`, `parse_path_args`, `run_pipeline` |
+| `test_flags_are_not_speech` | 17753-17793 | `RunContext`, `build_prompt`, `read_flags`, `run_pipeline`, `strip_control` |
+| `test_the_maker` | 17796-18090 | `RunContext`, `_maker_route`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.wants_changing`, `intent.wants_going_back`, `intent.wants_making`, `maker`, `maker.AUTHOR_NAME`, `maker.MakerRefused` |
+| `test_the_maker_runs_the_page_before_it_keeps_it` | 18093-18381 | `RunContext`, `maker`, `maker.CHECK_BUDGET`, `maker.PROFILE_PREFIX`, `maker.PROFILE_STALE`, `maker.REPAIRS`, `maker.SETTLE`, `maker._BROWSERS`, `maker._CATCH`, `maker._inject`, `maker._made_at`, `maker._sweep_profiles` |
+| `test_the_maker_picks_up_and_puts_down` | 18384-18617 | `RunContext`, `_maker_route`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `intent`, `intent.wants_going_back`, `intent.wants_picking_up`, `intent.wants_putting_down`, `maker` |
+| `test_ink` | 18620-18668 | `ink`, `ink.RESET`, `ink.Spinner`, `ink._STATE`, `ink.bad`, `ink.body`, `ink.dim`, `ink.enabled`, `ink.good`, `ink.seat`, `ink.seat_color`, `ink.warn` |
+| `test_math` | 18671-18694 | `M`, `M.MathError`, `M.cosine`, `M.linear_regression`, `M.matmul`, `M.parse_numbers`, `M.stdev`, `M.transpose`, `M.variance` |
+| `test_a_commit_is_not_a_tag` | 18697-18738 | `_HANDLERS` |
+| `test_says_is_a_phrase_list_not_a_paragraph` | 18741-18806 | `SkillLibrary`, `SkillLibrary.load`, `parse_says` |
+| `test_the_stamp_is_not_an_edit` | 18809-18917 | `_BOOT_STAMPS`, `_H`, `_sf`, `suite_tally` |
+| `test_doctrine` | 18920-19094 | `D`, `D.dead_paths`, `D.doc_pass_report`, `D.doctrine_report`, `D.living`, `D.open_tasks`, `D.sittings`, `D.skills_axis`, `D.stale_tallies`, `D.versions`, `_H`, `_SL` |
+| `test_the_core_sees_its_own_repository` | 19097-19244 | `gitstate`, `gitstate.GitRefused`, `gitstate._bad_branch_name`, `gitstate._host_of`, `gitstate._jailed`, `gitstate.branches`, `gitstate.close_branch`, `gitstate.commit`, `gitstate.diff`, `gitstate.read`, `gitstate.remotes`, `gitstate.switch` |
+| `test_record_and_git` | 19247-19351 | `RunContext`, `_cli`, `_cli._toll_answer`, `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.pull`, `gitstate.push`, `gitstate.read`, `seatlog`, `seatlog.RunNote` |
 
