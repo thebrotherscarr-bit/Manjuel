@@ -704,12 +704,17 @@ own tidiness proposal of 09-29, which called the Rust "unused"; it is not (above
 THE FOLD IS HELD: DO NOT MOVE THE RUST WITHOUT HIS WORD, whatever the 10-01 block's "still to build"
 says. The Python verifier (B14's first half) stands either way.
 
-**Where the ground stands (10:10).** core `main@fd25ae6` and atlas `main@0e8eb8d`, sent at 10:02 and level
-with GitHub; GitHub's runs read: atlas green on both jobs (the verifier's leg there, 29 of 29), core green
-on all four legs (the list stroke fixed). The door pid 20992 (the 10-01 09:47 build) and the glass pid 23524
-(the 10-01 08:36 build), Ollama up with its eleven models; no sitting open (331 closed 09:49). The working
-tree carries only this block, the daybook's Sessions 20 and 21 and STATUS, to be saved and sent. The REPL
-needs a restart for `pipeline.py` (the ruling is the last word).
+**RULED, 10:25: "keep the Rust, close B14".** B14 is closed on the list (moved to Done). The Rust stays
+where it is, and the hold above is now his ruling: do not fold it. The first half stands. The dead
+leftovers the rewire made (the door's `--atlas-bin` flag, `Options.AtlasBin`, `findAtlas`, the e2e
+starter's check for a Rust build) stay as they are, named in atlas's CHANGELOG, until he says otherwise.
+
+**Where the ground stands (10:25).** core `main@92014ba` and atlas `main@0e8eb8d`, level with GitHub and
+green there on every leg (core's run for `92014ba` read complete, four legs; atlas's two jobs). The door
+pid 20992 (the 10-01 09:47 build) and the glass pid 23524 (the 10-01 08:36 build), Ollama up with its
+eleven models; no sitting open (331 closed 09:49). The working tree carries this ruling's record (the
+list, both changelogs, this block, the daybook, STATUS), to be saved and sent. The REPL needs a restart
+for `pipeline.py` (the ruling is the last word).
 
 ## HANDOFF FOR 2026-10-01 — read this before anything below it
 

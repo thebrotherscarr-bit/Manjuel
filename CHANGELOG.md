@@ -34,6 +34,26 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### B14 closed: the Rust stays (2026-10-02, his word: "keep the Rust, close B14")
+
+The second half of B14, folding the Rust to an attic, was put to him by card on 2026-10-02 and
+dismissed; he asked in its place why, whether anything was wrong with the Rust, and whether it
+needed to be removed. Nothing is wrong with it and it does not: it is the engine of `atlas-door`
+(the D2 trade-ops page, whose every write is `atlas trade`), it ships as `atlas.exe` in every
+release, it is the golden-master parity proof, and its source has changed only by the one-line
+version pin since 09-22. The fold was the hand's own tidiness proposal of 09-29, which called it
+unused; it is not. He ruled: keep the Rust, close B14.
+
+The line moves to Done on the list. The first half stands (the chain verdict in Python,
+`verify_chain` rewired to it, 29 of 29 against the goldens and green on GitHub). The dead
+leftovers the rewire made (the door's `--atlas-bin` flag, `Options.AtlasBin` and `findAtlas`; the
+e2e starter's check for a Rust build) are named in atlas's CHANGELOG and stay as harmless dead
+code until he says otherwise. No code moved: this entry, the list, atlas's entry, the handoff and
+the daybook are the whole change.
+
+**What goes red if unplugged:** the list's own stroke -- the Done line cites this heading, and
+renaming it fails "every CHANGELOG entry a line cites is a heading in CHANGELOG.md".
+
 ### atlas: the chain verdict in Python, `verify_chain` rewired to it (2026-10-01, WHAT'S LEFT B14's first half; the entry is atlas's)
 
 The verdict EMPTY | INTACT | FLIP | TAMPER written in Python in atlas's `tools/`, proved against the

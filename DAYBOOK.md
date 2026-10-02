@@ -2901,16 +2901,17 @@ sentences) and what it left behind was named, not fixed.
 test", which turns the suite red after every sitting that pays a toll until a generator is run by
 hand: a wire that fires on routine, found twice in one morning, flagged and not built.
 
-**Rulings** — none; the card dismissed.
+**Rulings** — B14, in chat at 10:25: "keep the Rust, close B14". The fold is not done and the line
+is closed on the list; the card on it had been dismissed.
 
 **At close** — (10:10, the day open) sitting 331 opened, run, tolled and closed through the glass;
 core `main@fd25ae6` and atlas `main@0e8eb8d` sent at 10:02; GitHub's runs read: atlas green on both
 jobs (the verifier's own leg passed there, 29 of 29), core green on all four legs, the list stroke's
 red gone; the REPL still needs a restart for `pipeline.py`. What is left on the list is his, as at the last
-close, and B14's second half is held for his word.
+close; B14 is closed (the Rust stays).
 
-**Next session** — open `What's left` first. DO NOT fold the Rust without his word: no defect was
-found, the recommendation is to keep it, and `atlas-door` and `atlas.exe` depend on it. One proposal
+**Next session** — open `What's left` first. THE RUST STAYS (his ruling 10-02, B14
+closed): do not fold it; `atlas-door` and `atlas.exe` depend on it, and no defect was found. One proposal
 waits for his word and is not built: the toll writer regenerates SEAT_LOG_INDEX.md at every toll, so
 its stroke is never red after a sitting. For his eye: atlas's 21 golden chains (tests/fixtures/chains,
 committed 09-09, before the Archive ruling) were cut from the estate's ledgers and sit in the public
