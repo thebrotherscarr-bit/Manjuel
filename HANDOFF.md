@@ -671,6 +671,64 @@ dropped by operator ruling 2026-09-01 — see the fix log.
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
 
+## HANDOFF FOR 2026-10-03 — read this before anything below it
+
+**THE DAY SO FAR.** The same conversation, carried across a context reset; the laws and the record re-read in full at
+each turn. Sitting 335, which he opened at 09:12 from my scratch page, CLOSED ITSELF at 09:42:28 (idle thirty minutes,
+no turn ran, no toll), so no sitting has been open since and the ground was edited freely. Yesterday's front page (H14)
+was saved and sent as core `main@e4d7c2a` and atlas `main@d1b78c2`, and GitHub's run was green on both.
+
+**HIS WORD (about 09:55): "close the sitting, and then go on the move."** The sitting had closed itself; "on the move" was
+read as the next line on the page, H15. And, mid-turn: "the ollama host is always the same served from the desktop app,
+so whatever we need to do to rectify that, get it while you are at it" -- C36.
+
+**C36 BUILT: THE RACK'S PORTLESS HOST.** This machine sets `OLLAMA_HOST=127.0.0.1` (a user variable); `rack.Host()` made it
+`http://127.0.0.1`, port 80, and the front page said "rack silent" while Ollama stood on 11434. A host with no port is
+Ollama's own port now, in the one function every caller goes through. The core's engine never read the variable. Four
+reversals red. Live: "rack 11 voices".
+
+**H15 BUILT: THE OPERATOR'S TYPED SHELL.** `shell_run` on the door, `ServiceOnly` (a new declaration `Registry.Call`
+enforces before RBAC and the holds: no seat, agent or role is ever given it); Bash is Git Bash, Python is one session per
+world that keeps its names; a plain look runs at once, anything else is a card on the existing hold queue, a secret or a
+path outside the ground is refused by name; the law is walked before every run, the child holds none of the door's keys,
+what it prints is scrubbed of the ground's secret values, and every run, hold and refusal is a line in `state/holds.jsonl`.
+The two tabs on the front page draw what the door answers and judge nothing. His two cards: Git Bash (not PowerShell) and
+a session that remembers (not each entry alone). Proved by a matrix of 309 commands said 11 ways, 87 Python entries, the
+tool run for real against Git Bash and Python, 45 reversals (4 + 28 + 13) all red, the whole door and glass suites green,
+and a live run of the built pair with real clicks. The wire list is in atlas's CHANGELOG and the core's.
+
+**A SLIP OF MINE, FOUND ONLY BY RUNNING THE PAGE.** A new method called `shell` replaced the page's own `shell()` template
+(a later key in an object literal wins) and the page drew "[object Promise]"; every stroke that reads the source as text
+stayed green. Renamed `shellRun`; `TestNoMethodOfTheFrontPageIsDefinedTwice` now reads every method name of the page.
+
+**PLACED (13:23), AND A SECOND SLIP.** On his card ("Place and restart, hold the save and send") the door and the glass
+were placed (door pid 17064, glass pid 22816; the old binaries are in this session's scratch folder, outside the ground),
+a fresh build of the tree is byte for byte the placed binary. The door did not start the first time: PowerShell split the
+quoted `--manjuel "python ..."` into two arguments and the door refused it by name, so the glass said "door silent" for
+about two minutes until it was started again with the value quoted as the runbook has it (RUNBOOK now says so). Checked on
+his own page, read-only.
+
+**A HOLE IN MY OWN DOOR, FOUND AN HOUR AFTER IT WAS PLACED, AND MENDED (about 14:30).** Git Bash's runtime HALVES a doubled
+backslash outside double quotes on its command line, so the gate lexed `cat .\\env` as a file called `.\env` and bash was
+handed `cat .\env` -- which it reads as `.env`. The name refusal for `.env` could be walked round for about an hour; the
+secret values were still scrubbed from what it printed. The entry travels in the environment variable
+`ATLAS_SHELL_COMMAND` and runs under `eval` now, which arrives unchanged; `TestTheLexerSeesTheWordsBashSees` (33 quotings
+through the real route) and `TestADoubledBackslashIsNotASecretName` hold it, with two more reversals red. On a second card
+("Place the fixed door and restart it") the fixed door was placed: pid 9248, 12,596,224 bytes, sha256 `e4392bb39683...`, a
+fresh build of the tree the same. His real glass had gone to its LOCK SCREEN by then, and its PIN is his, so the last look at
+the fixed door on his own page was not made; the same binary was run on the scratch pair. Unlock it and the Bash and Python
+tabs are there.
+
+**Where the ground stands (14:55).** Until his "go" (about 14:45) core `main@e4d7c2a` and atlas `main@d1b78c2` were what GitHub
+had, and both ground trees carried C36 and H15 unsaved by his word ("hold the save and send"): atlas `rack.go`,
+`rack_test.go`, `spawn.go`, `tools.go`, `holds.go`, `shell.go`, `shellgate.go`, `shellpy.go` and their tests,
+`docs/TOOL_PERMISSIONS.md`, `agent.js`, `glass_test.go` and its CHANGELOG; core: CHANGELOG, WHATS_LEFT, RUNBOOK, HANDOFF,
+DAYBOOK and the suites' stamps. The ground's own suites ran from his glass at 14:51: strokes 3603 of 3603, smoke 72 of 72
+(416 s); the hand's mirror on the final documents (14:36) was 3599 and 72. Both trees are saved and sent after this block
+(`git log` has the hashes; GitHub's runs are read after the send). The REPL needs no restart (`manjuel/` did not move). No
+sitting open at writing (335 closed 09:42:28). The door pid 9248 (the fixed one) and the glass pid 22816 are the new
+binaries; the glass had gone to its lock screen at 14:30 and he unlocked it.
+
 ## HANDOFF FOR 2026-10-02 — read this before anything below it
 
 **THE DAY SO FAR.** The same conversation, carried over from 2026-10-01 (the model was switched at 09:35

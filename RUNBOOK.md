@@ -106,7 +106,7 @@ Rebuild after any Go change. The webapp EMBEDS its own HTML, CSS and
 JavaScript (`go:embed`), so a change to a page is not live until you rebuild
 and restart it -- editing the file on disk does nothing to a running server.
 
-**Start the door.** `atlas-mcp` is the MCP door: it serves the 85 tools and it
+**Start the door.** `atlas-mcp` is the MCP door: it serves the 86 tools and it
 is the only thing that spawns a Manjuel engine. It holds `127.0.0.1:8090`.
 
     cd atlas\line
@@ -157,7 +157,8 @@ to the door at `127.0.0.1:8090`.
     ATLAS_SERVICE=<wire> the door's service wire, from .env as above; the boot
                          line then says "service wire held"
     ATLAS_WEB_PORT=<n>   serve on another port
-    OLLAMA_HOST=<url>    if the rack is not on the default loopback
+    OLLAMA_HOST=<url>    if the rack is not on the default loopback; a host with no port means
+                         Ollama's own, 11434 (since 2026-10-03)
 
 **Open it.** `http://127.0.0.1:8091`
 
@@ -166,6 +167,17 @@ it opens on a lock screen, and the sidebar's Lock button locks it again. It
 answers this computer only (127.0.0.1) and keeps its door shut at every start
 -- since 2026-09-21; before that it listened on every address with no gate at
 all. The PIN is never stored, only a hash of it in `atlas\webapp\data\user.json`.
+
+**The shell tabs (since 2026-10-03).** The front page's Bash and Python tabs run what you type through the door's
+`shell_run`, which only the glass may call: the door has to run with `--auth`, or it cannot tell your glass from a
+seat and answers the tool to no one. Bash is Git Bash, found by the `git` on the door's PATH (never the bare word
+`bash`, which on this machine is the WSL stub); Python is the python the door runs the engine with, one session per
+world that keeps its names until `/reset`, a runaway entry, or a door restart. A plain look runs at once; anything
+that writes shows a card and waits for your click; a secret or a path outside the ground is refused by name. Every
+run, hold and refusal is a line in that world's `state/holds.jsonl`. The command gets a built environment with none of
+the door's keys, so one that needs a variable has to be told it. When starting the door from PowerShell, quote the
+value of `--manjuel` as ONE argument (`--manjuel "python <ground>/manjuel.py"`): passed as an array element it is split
+in two and the door refuses to start.
 
 **Stop them.** They are servers; they run until stopped. Nothing is lost --
 the engine already exits with every sitting, and both processes keep no state

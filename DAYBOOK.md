@@ -2965,3 +2965,45 @@ to be cut THROUGH the `version-tag` flow, whose first COMPLETE closes D3's repor
 asks GitHub with a named mark or `--ci`. SPEC 4.9's one OPEN line is a second `coder-tree` run landed by
 his click. For his eye only: atlas's public history holds Archive-derived fixtures (HANDOFF names them);
 purging it is his word.
+
+## Session 22 — 2026-10-03 (Saturday), no sitting opened by the hand: the front page sent and green, the rack's portless host, and the operator's typed shell
+
+**Standing** — the same conversation, carried across a context reset; the laws re-read in full at the start of every turn. His
+standing word of 09-29 stands ("do the list top to bottom", "restart it", "never make me wait"); RULE 9 held, because
+sitting 335, which he opened at 09:12 from my scratch page, closed itself at 09:42:28 (idle) before anything was edited.
+
+**Version** — at open: core `main@e4d7c2a`, atlas `main@d1b78c2`, level with GitHub and green on `prove` (the front page, H14).
+At close: both trees carried C36 and H15 unsaved by his word until his "go" (about 14:45), and are saved and sent after this entry.
+
+**The plan** — his: "close the sitting, and then go on the move" -- the next line on the page, H15 (Bash and Python behind
+the law gate) -- and, mid-turn, "the ollama host is always the same served from the desktop app, so whatever we need to do to
+rectify that, get it while you are at it" -- C36.
+
+**What was done** — C36: `rack.Host()` adds Ollama's port to a bare host (four reversals red). H15: `shell_run`, a door tool
+only his glass may call (`Tool.ServiceOnly`, a typed `Caller.Hold` for an approval, the hold queue as the card, the law
+walked before every run, a built environment, output scrubbed of the ground's secrets, every run recorded), Git Bash and a
+Python session that keeps its names, and the two tabs on the front page. A matrix of 309 commands said 11 ways, 87 Python
+entries, the tool run for real, 45 reversals red, then the built pair driven in the browser with real clicks; then placed,
+restarted and checked read-only on his own page. The ground's suites ran green from his glass at 14:51 (strokes 3603 of 3603, smoke 72 of 72); the mirror on the final documents was 3599 and 72.
+
+**Rulings** — three cards, all his: the Bash tab runs **Git Bash** (not PowerShell: a gate cannot read PowerShell soundly);
+the Python tab **remembers its names** (not each entry alone); placement: **"Place and restart, hold the save and send"**; and a second card the same hour, after a hole the hand found
+in its own work: **"Place the fixed door and restart it"**.
+
+**Faults of the hand's, in the record** — (1) a new method named `shell` replaced the page's own `shell()` and the page drew
+"[object Promise]"; every stroke that reads the source as text stayed green and only a run of the page showed it. It is a
+stroke now (no method of the page is defined twice). (2) The door's start line, passed from PowerShell as an array, split the
+quoted `--manjuel` value in two and the door refused to start; the glass said "door silent" for about two minutes. The
+runbook says so now. (3) My own click missed on his page once (a different viewport from the scratch tab); the card was
+denied by the card's own button, and nothing ran. (4) I handed a command to `bash -c` on the Windows command line, where Git
+Bash's runtime halves a doubled backslash: the gate and bash read different commands, and the name refusal for `.env` could
+be walked round for about an hour after the first placement. Found by a differential test I wrote to compare the gate's
+words with bash's; mended by carrying the entry in an environment variable under `eval`; a second placement, on a second card.
+
+**At close** — (14:55) the door (pid 9248, the fixed one) and the glass (pid 22816) run the new binaries; C36 and H15 are built,
+proved, documented and, on his "go", saved and sent after this entry. No sitting is open. The REPL needs no restart.
+
+**Next session** — open `What's left` first: E1, the decisions B19 (where plugins live) and B20 (Aider), and the second brain's
+builds H2 to H13, with H16 (retire the sidebar) waiting on him having lived on the front page. THE RUST STAYS (his ruling
+10-02, B14). The next marks (core and atlas) are to be cut THROUGH the `version-tag` flow. H15 and C36 are saved and sent on his "go";
+GitHub's runs for them are the first thing to read.

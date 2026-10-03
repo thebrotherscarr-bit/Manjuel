@@ -47,12 +47,6 @@ Nothing here gets built until you say which way.
 
 ### The dashboard and the tool server (atlas)
 
-- **C36. The door's rack reads a portless `OLLAMA_HOST` as port 80.** This machine sets `OLLAMA_HOST=127.0.0.1`.
-  `rack_list` then dials `http://127.0.0.1:80/api/tags` and reports "the rack is silent" while Ollama stands on
-  11434 and the engine reaches it, and Ollama's own convention is that a host with no port means 11434. Seen on
-  the front page's status line, which quotes the tool. Needed: `rack.Host()` adds `:11434` when the address has no
-  port, with a test beside the ones it already has. A door change: it needs a rebuild, your card to place the
-  binary, and a restart. *(`atlas/line/internal/rack/rack.go`; measured 2026-10-02)*
 
 
 ---
@@ -169,12 +163,6 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   it (it needs a key minted for that connection). The second is the system calling Claude: the hosted route
   above, used by a counsel seat that reads, advises and never acts. That one waits on H8 and your word, seat
   by seat. *(RUNBOOK, "`--auth` and the service wire"; B18)*
-- **H15. Bash and Python on the front page, behind the law gate.** RULED 2026-10-02: typed by you, gated. What you
-  type runs as you; a read (list, cat, git status, log, diff) runs at once; anything that writes, deletes, installs,
-  reaches the network or runs a commit or a push shows an approve card first; `.env` and paths outside the ground are
-  refused by name; every run goes through the door and the law gate and is recorded; no agent is ever given the
-  shell. Needs a tool on the door (a door change: rebuild, your card, restart), a classifier held by a matrix the way
-  D11's is, and the two tabs wired. *(your word 2026-10-02)*
 - **H16. The move onto the front page.** The front page replaced the Dashboard at `/` on 2026-10-02 and the sidebar
   stays on every other page. When you have lived on it: move what the other pages show into the Inspector or the
   Pages menu, retire the sidebar and the old Dashboard (kept whole at `/dashboard`), and remove what nothing reads
@@ -187,6 +175,19 @@ disk says is missing, in the order it is worth building. H1 is done (below).
 
 Finished lines, newest first. A number is never used again.
 
+- **H15. Bash and Python on the front page, behind the law gate.** DONE 2026-10-03: the two tabs are wired to a new
+  door tool, `shell_run`, which only your glass may call. Bash is Git Bash; Python is one session per world that keeps
+  its names. A plain look runs at once; anything that writes, deletes, installs, reaches the network, or saves or
+  sends work shows a card in the thread and waits for your click; `.env`, client material, a key typed into a command
+  and paths outside the ground are refused by name, and no click lifts a refusal. The law is walked before every run,
+  the child holds none of the door's keys, what it prints is scrubbed of every secret the ground holds, and every run,
+  hold and refusal is a line in the world's holds log. Judged by a matrix of 309 commands said 11 ways, run for real
+  against Git Bash and Python, with 45 reversals and a live run of the built pair; the door and the glass placed and
+  restarted on your card (the door twice, for a hole the hand found in its own work). Aider is the only tab left unwired. *(CHANGELOG, "atlas: the operator's typed shell")*
+- **C36. The door's rack reads a portless `OLLAMA_HOST` as port 80.** DONE 2026-10-03: a host with no port means
+  Ollama's own, 11434, in the one function every caller of the rack goes through; a named port is never changed and an
+  outward host is still refused. Live on the placed door, the front page says "rack 11 voices" where it said "rack
+  silent". *(CHANGELOG, "atlas: the operator's typed shell")*
 - **H14. A front page that is one terminal, not a dashboard.** DONE 2026-10-03 (built and proved the day
   before): `/` is one terminal with four tabs (Agent, Bash, Python, Aider), five doors in a top bar and an
   Inspector with seven tabs, in the glass's own JavaScript, from the page in your own AI Studio project. The

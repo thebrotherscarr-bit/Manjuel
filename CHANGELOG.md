@@ -34,6 +34,26 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### atlas: the operator's typed shell on the front page, and the rack's portless host mended (2026-10-03, WHAT'S LEFT H15 and C36; the entry is atlas's)
+
+The front page's Bash and Python tabs are wired to a new door tool, `shell_run`, which only his glass may call, and the
+door's rack reads a bare `OLLAMA_HOST` as Ollama's own port. The operator ruled "typed by you, gated" on 2026-10-02; on
+2026-10-03 he chose Git Bash and a Python session that keeps its names, and said, of the rack, "the ollama host is always
+the same served from the desktop app, so whatever we need to do to rectify that, get it while you are at it". The piece,
+its proof and what it did not take are in atlas's CHANGELOG under the same date. In this ground: WHATS_LEFT moved H15 and
+C36 to Done; RUNBOOK says what the shell tabs need (`--auth`, Git for Windows, the door's python) and that the door
+serves 86 tools; nothing in `manjuel/` moved, so the REPL needs no restart. The door and the glass were restarted on his
+card ("Place and restart, hold the save and send"); the save and send waited for his "go" and followed it. The door as first placed had one hole, found by the hand an hour later and mended (atlas's
+entry says which). **What goes red if unplugged:** in atlas,
+`TestNoAgentIsEverGivenTheShell` and `TestEveryServiceOnlyToolRefusesEveryOtherCaller` (no other caller is given the
+shell), `TestAWriteWaitsForHisApprovalAndRunsExactlyWhatWasParked` and `TestApprovalCannotLiftARefusal` (a card runs
+exactly what was parked, and a refusal stays one), `TestTheChildInheritsNoKeys` and
+`TestWhatItPrintsIsScrubbedOfEverySecretValue` (keys are silent), `TestEveryTypedCommandIsJudgedTheSameHoweverItIsSaid`
+(the gate reads a command however it is said), `TestTheShellTabsAreTheDoorsShellAndNothingElse` (the page draws what the
+door answers and judges nothing), `TestNoMethodOfTheFrontPageIsDefinedTwice`, `TestTheLexerSeesTheWordsBashSees` and
+`TestADoubledBackslashIsNotASecretName` (the gate and bash read the same command), and
+`TestPortlessHostMeansOllamasPort` (the rack).
+
 ### atlas: the front page replaces the Dashboard at / (2026-10-02, WHAT'S LEFT H14; the entry is atlas's)
 
 `/` on the glass is now one terminal with four tabs, five doors in a top bar and an Inspector, from a page in the
