@@ -2948,7 +2948,18 @@ The REPL needs a restart for `routes.py`, `parity.py`, `cli.py` and `us.py`. Sav
 `main@36bf8c3`, GitHub's run green on every leg; the ground's suites from the glass 3603 of 3603 strokes and
 72 of 72 smoke. Nothing has been sent to a hosted host: every call went to a loopback server.
 
-**Next session** — open `What's left` first: E1, the decisions B19 (where plugins live) and B20 (Aider), and the second brain's builds H2 to H13 (H8 narrowed), in that order. THE RUST STAYS (his ruling 10-02, B14
+**Then (23:30) — the operator's word, three times.** "Read through it, look at the interface, the codebase, the way its all
+routed and modular, this is what I am wanting, not some uber-complicated dashboard thing that I need a degree to figure
+out." Then a screenshot of a page from his own AI Studio project ("that's what I am looking for"), its fresh zip, and
+"boot that page up in a new browser tab and test it out". I did: it is a good face on a scripted engine (agent, Aider,
+repair, telemetry and approvals are scripted or random; its Bash endpoint is open), so the face was rebuilt on ours.
+His cards: Bash and Python "typed by you, gated"; "replace the Dashboard now". **H14 built:** `/` is one terminal with
+four tabs, five doors and an Inspector, in the glass's own JavaScript, the council real behind it; the old Dashboard
+is at `/dashboard`. Three new tests, fifteen reversals, the glass suite green, and the built page run against the real
+door (a council turn, a gate answered and declined, a cancel, the close). Placed on his word ("go", 10-03, with his own sitting 335 open) and the live glass restarted; the old binary is kept
+outside the ground. Found and not fixed: the door's rack reads a portless `OLLAMA_HOST` as port 80 (C36).
+
+**Next session** — open `What's left` first: E1, the decisions B19 (where plugins live) and B20 (Aider), and the second brain's builds H2 to H13 (H8 narrowed), in that order, once C36 is mended. THE RUST STAYS (his ruling 10-02, B14
 closed): do not fold it; `atlas-door` and `atlas.exe` depend on it. The next marks (core and atlas) are
 to be cut THROUGH the `version-tag` flow, whose first COMPLETE closes D3's report; the gate on his terminal
 asks GitHub with a named mark or `--ci`. SPEC 4.9's one OPEN line is a second `coder-tree` run landed by

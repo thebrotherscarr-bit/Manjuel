@@ -47,6 +47,13 @@ Nothing here gets built until you say which way.
 
 ### The dashboard and the tool server (atlas)
 
+- **C36. The door's rack reads a portless `OLLAMA_HOST` as port 80.** This machine sets `OLLAMA_HOST=127.0.0.1`.
+  `rack_list` then dials `http://127.0.0.1:80/api/tags` and reports "the rack is silent" while Ollama stands on
+  11434 and the engine reaches it, and Ollama's own convention is that a host with no port means 11434. Seen on
+  the front page's status line, which quotes the tool. Needed: `rack.Host()` adds `:11434` when the address has no
+  port, with a test beside the ones it already has. A door change: it needs a rebuild, your card to place the
+  binary, and a restart. *(`atlas/line/internal/rack/rack.go`; measured 2026-10-02)*
+
 
 ---
 
@@ -154,13 +161,25 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   Aider on a scratch clone, auto-commit off, its update checks and analytics off, a local model first,
   scored by the same suites. If it wins, it becomes the flow's `attempt` engine and the page is a thin
   view over a door tool; every gate stays (the line of work, the suites, your click). A page costs a glass
-  rebuild and your card to place the binary. Waits on B20. *(SPEC 4.9; `flows/coder-tree.json`)*
+  rebuild and your card to place the binary; the front page's Aider tab (H14) is where it would appear, and today it
+  says it is not wired. Waits on B20. *(SPEC 4.9; `flows/coder-tree.json`)*
 - **H13. Claude in the loop.** Your idea (10-02): a reasoning, planning and review agent beside the council.
   Two shapes, and the first needs nothing built: the door already lets an outside agent connect, with reads
   free and every write held for your decision on Version control, so Claude can be in the loop today through
   it (it needs a key minted for that connection). The second is the system calling Claude: the hosted route
   above, used by a counsel seat that reads, advises and never acts. That one waits on H8 and your word, seat
   by seat. *(RUNBOOK, "`--auth` and the service wire"; B18)*
+- **H15. Bash and Python on the front page, behind the law gate.** RULED 2026-10-02: typed by you, gated. What you
+  type runs as you; a read (list, cat, git status, log, diff) runs at once; anything that writes, deletes, installs,
+  reaches the network or runs a commit or a push shows an approve card first; `.env` and paths outside the ground are
+  refused by name; every run goes through the door and the law gate and is recorded; no agent is ever given the
+  shell. Needs a tool on the door (a door change: rebuild, your card, restart), a classifier held by a matrix the way
+  D11's is, and the two tabs wired. *(your word 2026-10-02)*
+- **H16. The move onto the front page.** The front page replaced the Dashboard at `/` on 2026-10-02 and the sidebar
+  stays on every other page. When you have lived on it: move what the other pages show into the Inspector or the
+  Pages menu, retire the sidebar and the old Dashboard (kept whole at `/dashboard`), and remove what nothing reads
+  afterwards (`home.js` and the tests that pin it). Waits on you using it. *(your word
+  2026-10-02: "then transition over")*
 
 ---
 
@@ -168,6 +187,13 @@ disk says is missing, in the order it is worth building. H1 is done (below).
 
 Finished lines, newest first. A number is never used again.
 
+- **H14. A front page that is one terminal, not a dashboard.** DONE 2026-10-03 (built and proved the day
+  before): `/` is one terminal with four tabs (Agent, Bash, Python, Aider), five doors in a top bar and an
+  Inspector with seven tabs, in the glass's own JavaScript, from the page in your own AI Studio project. The
+  Agent tab is the council (failures on the face of the answer, the gate in the thread, cancel, boot and close
+  from the page); Bash, Python and Aider are in the bar and say they are not wired. The old Dashboard is at
+  `/dashboard`. Proved by three new tests with fifteen reversals and by a live run on a scratch copy against
+  the real door; placed and the glass restarted on your word ("go"). *(CHANGELOG, "atlas: the front page")*
 - **B18. Hosted models: your rule says no, your words of 10-02 say yes.** RULED 2026-10-02 in chat ("let's do
   what I said then, set up a second set for parity, why not? I'm not scared of it") and BUILT the same day:
   RULE 4 is amended narrowly in CLAUDE.md (the paragraph stands; an AMENDED section under it says what is now

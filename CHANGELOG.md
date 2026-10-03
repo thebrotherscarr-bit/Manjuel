@@ -34,6 +34,21 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### atlas: the front page replaces the Dashboard at / (2026-10-02, WHAT'S LEFT H14; the entry is atlas's)
+
+`/` on the glass is now one terminal with four tabs, five doors in a top bar and an Inspector, from a page in the
+operator's own AI Studio project that he pointed at ("that's what I am looking for"; "replace the Dashboard now").
+Built in the glass's own JavaScript, proved by three new tests with fifteen reversals, and by a live run of the built
+page on a scratch copy against the real door: it booted sitting 334, ran a council turn, answered and declined a
+council question, cancelled a turn and closed. The piece, its proof and what it did not take are in atlas's CHANGELOG
+under the same date. In this ground: the prototype is unpacked and installed, untracked, at `worlds/agentos`
+(gitignored; npm needed `--legacy-peer-deps` and ran with scripts off; its Bash endpoint runs anything with no login,
+so its server was only ever bound to loopback and is stopped); sitting 334 paid its toll in `SEAT_LOG.md` and the toll
+index was refreshed; WHATS_LEFT gained H14 to H16 and C36. The glass was placed and restarted on 2026-10-03 on his word
+("go", with his sitting 335 open); its pages are embedded in the binary, so the next change to them needs the same. **What goes red if unplugged:** the three strokes in
+`atlas/webapp/server/glass_test.go` (routed, fakes nothing, asks only what the door carries) and the quiet-read tests in
+`atlas/webapp/handlers/trace_test.go`.
+
 ### A second route, and the second parity set that uses it: a hosted model on the operator's terms (2026-10-02, WHAT'S LEFT B18 and H8's first half; RULE 4 amended)
 
 The operator's word, 2026-10-02: "backed by ollama as a first route then secondarily through additional API as

@@ -819,6 +819,28 @@ every call made in building this went to a loopback server. Nothing is unsaved b
 needs a restart for `routes.py`, `parity.py`, `cli.py`, `us.py` and `runtime.py`, and for the modules the
 earlier paragraphs name.
 
+**H14 BUILT (23:30): THE FRONT PAGE.** The operator said a prototype from Google AI Studio was "10x closer" to his vision than the
+glass, then showed its front page ("that's what I am looking for") and, from a fresh download, its zip. I read all of it
+and booted it from `worlds/agentos` (untracked, his word: "just keep it local for now"): the page is what he wants; behind
+it the agent matches words and reports tool calls that never ran, Aider appends a stub and commits, "repair" reports a
+repair that did not happen, the telemetry is random, and its Bash endpoint runs anything. His two cards: Bash and Python
+"typed by you, gated", and "replace the Dashboard now". `/` is now that page in the glass's own JavaScript, with the
+council real behind it (`atlas/webapp/static/js/agent.js`, `css/agent.css`); the old Dashboard is at `/dashboard`. Proved
+by three new tests with fifteen reversals, the whole glass suite, and a live run of the built page on a scratch copy
+(port 8191, its own lock) against the real door: boot (sitting 334), one council turn, a typed command, a question from
+the council answered and declined in the thread, a cancel, every Inspector tab, and the close. **PLACED (09:22, 2026-10-03):** on his word ("go", with his sitting
+335 open) the rebuilt glass is in `atlas/webapp/` and the live glass on 8091 was restarted (pid 8488); the old binary is
+kept outside the ground; his first tab shows the front page signed in. **Seen and not fixed:** the door's rack reads a portless `OLLAMA_HOST` as port 80 (C36), so
+the status line says "rack silent" while Ollama stands. Sitting 334 paid its toll and the toll index was refreshed.
+The prototype's server is stopped (its Bash endpoint has no login).
+
+**Where the ground stands (23:30).** core `main@a7353ea` and atlas `main@4d12b53` are what GitHub has; both ground
+trees carried the front page uncommitted when this was written, and are saved and sent after it (atlas: `agent.js`, `agent.css`, `index.html`, `icons.css`, `app.js`, `palette.js`,
+`handlers.go`, `trace_test.go`, `glass_test.go`, its CHANGELOG; core: CHANGELOG, WHATS_LEFT, HANDOFF, DAYBOOK,
+SEAT_LOG.md and its index). The door pid 20992 is the old binary and the live glass pid 8488 is the new one; the scratch glass on
+8191 is mine and is stopped when the work ends. Sitting 335 is HIS, opened 09:12 on 10-03 from the scratch page, and
+was open when this was written (334 closed 23:24 on 10-02).
+
 ## HANDOFF FOR 2026-10-01 — read this before anything below it
 
 **THE DAY SO FAR.** The same conversation, carried over from 2026-09-30 on his word of 14:35
