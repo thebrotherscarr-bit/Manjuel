@@ -234,6 +234,27 @@ corrections, the interrupt, the spoken cap.
     and green -- a green 1/1 from one case would satisfy a gate that never
     measured it.
 
+    THE TEST PACK (2026-10-03): the wife test mocked, and sittings of the record replayed on today's
+    engine. RUN LIVE through the operator's glass (his word: "run everything live so its all recorded
+    through the system itself as sessions"), then judged from the record:
+      1. Boot on the front page; paste `python tests/pack.py --runner` into the page
+      2. window.__case(<`python tests/pack.py --lines W2`>)  -- one case, one sitting; /close after
+      3. python tests/pack.py --record 336=W1,337=W2,...     judges those sittings from the ledger,
+         the transcripts and projects/, READ-ONLY; report to logs/pack_<stamp>.md, only while no
+         sitting is open (--to DIR writes there and only there)
+    python tests/pack.py --check      its wires, offline, no models (the stroke
+                                      `test_the_pack_is_wired` reads this)
+    python tests/pack.py --list       every case and turn, and the route the
+                                      engine's own arithmetic reads for each
+    python tests/pack.py --sandbox DIR    the same cases in CLONES of the ground made under DIR
+                                      (the first version; about forty minutes, the wife cases
+                                      three times with --repeat 3; --keep leaves the clones)
+    python tests/pack.py --rejudge DIR    kept outcomes judged again, no models
+    python tests/pack.py --probe FILE     one page played in the maker's headless browser
+    A report is a debug pass, not a gate: nothing reads it but the person, and a
+    fault is a mechanical miss that wants a look. Not run live: commits, git_cycle,
+    index rebuilds, anything that speaks (NOT_LIVE in pack.py says which, and why).
+
     python tests/release.py --check   the release gate (`--ci`, or a named mark,
                                       also asks GitHub's own verdict on HEAD,
                                       no key sent; 2026-10-02). Six of its

@@ -34,6 +34,66 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### atlas: the front page's window keeps the size it starts at, and the terminal scrolls inside it (2026-10-03, WHAT'S LEFT C37; the entry is atlas's)
+
+His word, watching the app's browser pane: "the window should be locked to that scale it starts at and just scroll the terminal
+instead of the whole page." Below 1024 px wide the window's height was set by its content, so the page grew with every line (3,696 px
+at the pane's 888, 4,042 by the end of a session) and the terminal never scrolled; one rule in `agent.css` hands the height back,
+proved in a browser at 888, 1280 and 600 px wide. Atlas's CHANGELOG has the measurements and the reversals. In this ground: WHATS_LEFT
+carries it as C37, done; nothing in `manjuel/` moved. **What goes red if unplugged:**
+`TestTheWindowIsNotSizedByItsContentOnANarrowScreen`. Placed on his card (the glass restarted, the door untouched) and measured on
+his own page: 717 px tall at his 888 x 717, the terminal scrolling inside its 592-px window.
+
+### core: the test pack -- the wife test mocked and three eras of the record replayed, run LIVE through the glass and judged from the system's own record (2026-10-03; one new file in tests/, nothing in manjuel/ moved)
+
+His word, 2026-10-03: "make a full mockup of the wife test, run the system under an early session or sitting, say around 60-90
+range and then again at 150-180 and again in the 220-250 range. try to get a session with at least a few turns involved. make it
+like a test pack or debug pass." The first version ran its cases in CLONES of the ground, off to the side. At his next word --
+"boot up the glass and run everything live so its all recorded through the system itself as sessions, don't just work on the side
+without being transparent about what is happening, there is enough functionality to perform what you need" -- they were run again
+LIVE, and that run is the one that counts. `tests/pack.py` is the piece. **The live way (`--record`):** Boot on his glass in the
+Browser pane, each line handed to the front page's own `go()` (the code a keystroke reaches; `--runner` prints the JS and
+`--lines CASE` the lines), the wife-test flow fired through the Workflows wire, `/close` after each case so the toll is paid: six
+sittings, 336 to 341, 40 turns. The pack then reads the system's own record -- the ledger, the transcripts in `logs/`, `projects/`
+-- WITHOUT writing to it and judges it, so every claim in the report traces to a sitting number. Not run live, by line and with the
+reason in the report: sitting 79's two index rebuilds (they re-embed his live index), every `git commit` and `git_cycle` (RULE 6: a
+commit is his, and `git_cycle` pushes), anything that speaks through his speakers. **The sandbox way (`--sandbox DIR`, the first
+version, kept):** the same cases in a clone of the ground under a folder the pack owns (its own `.git`, its own ledger cut so the
+engine opens as the replayed sitting, no `.env`, no route, one edit in the clone's code so a replayed `speak` makes no sound); three
+full passes (the wife cases three times each in the last two) were the repeats, and the live run contradicted none of them. The cases: the wife test
+as `flows/wife-test.json` carries it (three lines, verbatim); a fuller mock, thirteen turns in her own words; and sittings 79, 70
+(September 2-3), 170 (September 10) and 221 (September 14), each with the old record's facts beside the turn. The judge is
+mechanical, in the standup's tradition and with its constants: the terminal, markup, seats, tools, a recital of what a seat was
+handed, numbers no tool returned, the route the engine's own arithmetic reads against the route its notes took, the machinery showing
+in a delivery, a reply to small talk that speaks ABOUT "the operator", the engine's own "THE NAMED TOOL DID NOT RUN", text borrowed
+from another project, and what moved on disk against what she wanted. The page a make or a change saves is PLAYED in the maker's own
+headless browser by a probe that delivers input the way a browser does. The raw outcomes are kept so the judge can be changed and run
+again with no models (`--rejudge`); the report is `logs/pack_<stamp>.md`, the pack's only write into the ground, and only while no
+sitting is open.
+
+**What it found** (the live report's "Reviewer's notes" has the evidence and the counts): she is understood and handed a game in about 30 seconds and then cannot see or play it from the front page (the answer is a
+file path, and the new page never reads the delivery's `project`; the game plays on the old Dashboard's Projects card); her own
+second line, "i dont want it text based, i want a game i can play", dead-ends in "Nothing was saved" in 9 of 10 runs; 2 of 14 first
+games draw nothing (a loop that returns before it schedules a frame; a body rewritten after the canvas was fetched) and the
+maker's check calls both "loaded, no errors"; no game puts anything where she clicks; small talk, thanks and goodnight come back
+as narration about "the operator" with the machinery showing (an empty pair of backticks, the clock block, "Tool executed:"),
+once telling her to finish a code review in `manjuel/`; her ordinary ways of asking for a change, a go-back or another project
+are not read as requests, and "the game" picks up the OLDEST project of that name. The engine is steady where it runs tools and
+holds gates (sittings 339 and 340 clean; 341's two refusals within a second).
+
+**A correction of mine.** The probe first sampled only the top-left 400x400 pixels of a canvas, so a game that draws lower down was
+marked blank; the live `game-4` showed it. Every first game was re-probed with the corrected instrument (2 of 14 draw nothing, not
+the 4 first counted), and the three older sandbox reports in `logs/` carry an erratum saying so. NOTHING WAS FIXED by this piece: the pack is
+the instrument, what to take up is his to choose, and the report ends with four one-line options. The wife test itself (SPEC 4.8)
+stays OPEN: a mock is not a person at the glass. Saved and sent on his word ("go, run the suites, save and send"), after the ground's suites ran from his glass. **What goes red if unplugged:**
+`test_the_pack_is_wired` -- the pack's `--check` holds it to the door's wire (`serve.COMMANDS`, `EVENTS`, `TERMINAL`), to the maker's
+grammar (every persona line is declared the route the engine's arithmetic reads), to the transcript's shape, to the standup's
+constants, to the ledger's picked sittings and the lines NOT run live, to the engine's own writers of the maker's notes
+(`pipeline.py`, which `--record` reads to know what moved), to the glass page's names the live runner hands lines to, and to its own
+refusals (it will not run an engine without a sandbox of its own); ten strokes in the suite and eight reversals on a mirror, each red and
+named and restored byte for byte. The suites on the mirror, on these documents: strokes 3609 of 3609, smoke 72 of 72; on the ground, from his glass at 19:23:
+strokes 3613 of 3613, smoke 72 of 72 (the ground counts four more strokes than the mirror, as it did before this piece: 3603 against 3599).
+
 ### atlas: the operator's typed shell on the front page, and the rack's portless host mended (2026-10-03, WHAT'S LEFT H15 and C36; the entry is atlas's)
 
 The front page's Bash and Python tabs are wired to a new door tool, `shell_run`, which only his glass may call, and the

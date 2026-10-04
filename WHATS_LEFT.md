@@ -59,8 +59,10 @@ Nothing here gets built until you say which way.
 ## E. Never tested for real
 
 - **E1. The wife test.** Someone who is not you sits at the dashboard, asks it to make something
-  in her own words, and uses the result with no help. All three pieces are built. The test has
-  not been run. *(SPEC 4.8)*
+  in her own words, and uses the result with no help. All three pieces are built. The test with a
+  person has not been run. A MOCK of it has, live on your glass (2026-10-03, sittings 336 to 341; read the "Reviewer's notes" in
+  `logs/pack_2026-10-03_181226.md` first): she is understood and handed a game in about 30 seconds, and then cannot see or play
+  it from the front page; her second line gets "Nothing was saved". Nothing is fixed; which of it to take up is yours. *(SPEC 4.8)*
 
 ---
 
@@ -175,6 +177,12 @@ disk says is missing, in the order it is worth building. H1 is done (below).
 
 Finished lines, newest first. A number is never used again.
 
+- **C37. The front page's window grew with the terminal, so the whole page scrolled.** DONE 2026-10-03: you saw it in the
+  app's browser pane. Below 1024 px wide (the pane is 888) the window's height was set by its content instead of staying the
+  size it starts at, so every line made the page taller (3,696 px at the pane's width, more as a session went on) and the
+  terminal itself never scrolled. One rule in the page's stylesheet hands the height back. Proved in a browser at 888, 1280 and
+  600 px wide, then placed on your glass on your card and measured on your own page: it stays one screen tall (717 px) and the
+  terminal scrolls inside its window. *(CHANGELOG, "atlas: the front page's window keeps the size it starts at")*
 - **H15. Bash and Python on the front page, behind the law gate.** DONE 2026-10-03: the two tabs are wired to a new
   door tool, `shell_run`, which only your glass may call. Bash is Git Bash; Python is one session per world that keeps
   its names. A plain look runs at once; anything that writes, deletes, installs, reaches the network, or saves or

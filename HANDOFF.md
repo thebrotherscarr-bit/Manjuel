@@ -719,15 +719,56 @@ fresh build of the tree the same. His real glass had gone to its LOCK SCREEN by 
 the fixed door on his own page was not made; the same binary was run on the scratch pair. Unlock it and the Bash and Python
 tabs are there.
 
-**Where the ground stands (14:55).** Until his "go" (about 14:45) core `main@e4d7c2a` and atlas `main@d1b78c2` were what GitHub
-had, and both ground trees carried C36 and H15 unsaved by his word ("hold the save and send"): atlas `rack.go`,
-`rack_test.go`, `spawn.go`, `tools.go`, `holds.go`, `shell.go`, `shellgate.go`, `shellpy.go` and their tests,
-`docs/TOOL_PERMISSIONS.md`, `agent.js`, `glass_test.go` and its CHANGELOG; core: CHANGELOG, WHATS_LEFT, RUNBOOK, HANDOFF,
-DAYBOOK and the suites' stamps. The ground's own suites ran from his glass at 14:51: strokes 3603 of 3603, smoke 72 of 72
-(416 s); the hand's mirror on the final documents (14:36) was 3599 and 72. Both trees are saved and sent after this block
-(`git log` has the hashes; GitHub's runs are read after the send). The REPL needs no restart (`manjuel/` did not move). No
-sitting open at writing (335 closed 09:42:28). The door pid 9248 (the fixed one) and the glass pid 22816 are the new
-binaries; the glass had gone to its lock screen at 14:30 and he unlocked it.
+**HIS WORD AFTER THE SAVE, AND A CORRECTION OF MY METHOD.** First: "make a full mockup of the wife test, run the system under an early
+session or sitting, say around 60-90 range and then again at 150-180 and again in the 220-250 range. try to get a session with at
+least a few turns involved. make it like a test pack or debug pass." I built `tests/pack.py` and ran it in CLONES of the ground, off to the
+side (three full passes, the wife cases three times each in the last two). Then, mid-work: **"boot up the glass and run everything live so its all
+recorded through the system itself as sessions, don't just work on the side without being transparent about what is happening, there is
+enough functionality to perform what you need."** He was right. I redid it LIVE: his glass in the Browser pane, Boot on the front page,
+each line handed to the page's own `go()`, the wife-test flow fired through the Workflows wire, `/close` after each case. **Sittings 336 to
+341 are on the ledger** (336 the flow, 337 her thirteen lines, 338 sitting 79's ten safe lines, 339 sitting 70's two, 340 sitting 170's four,
+341 sitting 221's eight), all closed with their tolls paid, 40 turns. `python tests/pack.py --record 336=W1,337=W2,338=A79,339=A70,340=B170,341=C221`
+then judged them from the ledger, the transcripts and `projects/`, READ-ONLY: **`logs/pack_2026-10-03_181226.md`, and its "REVIEWER'S NOTES" are the
+reading.** Not run live: sitting 79's two index rebuilds (they re-embed his live index), every `git commit` and `git_cycle` (RULE 6),
+anything that speaks. The live run wrote nothing into the tracked tree. The ground's `projects/` gained `game-3`, `game-4` and `recipe-tool`
+(gitignored), the workspace one file (`agent_workspace/long_term_tasks.txt`, the poem), and the ledger, `logs/` and SEAT_LOG the
+usual lines of six sittings.
+**WHAT IT FOUND:** she is understood and handed a game in about 30 seconds and then cannot see or play it from the front page (the answer is a
+file path, and the new page never reads the delivery's `project`; the game plays on the old Dashboard's Projects card); her own
+second line, "i dont want it text based, i want a game i can play", dead-ends in "Nothing was saved" in 9 of 10 runs; 2 of 14 first
+games draw nothing (a loop that returns before it schedules a frame; a body rewritten after the canvas was fetched) and the
+maker's check calls both "loaded, no errors"; no game puts anything where she clicks; small talk, thanks and goodnight come back
+as narration about "the operator" with the machinery showing (an empty pair of backticks, the clock block, "Tool executed:"),
+once telling her to finish a code review in `manjuel/`; her ordinary ways of asking for a change, a go-back or another project
+are not read as requests, and "the game" picks up the OLDEST project of that name. The engine is steady where it runs tools and
+holds gates (sittings 339 and 340 clean; 341's two refusals within a second).
+SPEC 4.8 stays OPEN (a mock is not a person). NOTHING WAS FIXED and nothing was put on a list: four one-line options end the report.
+**WHAT I GOT WRONG, in the record:** the first cut of the pack's probe sampled one corner of a canvas and called games blank that draw (the
+live `game-4` showed it; every first game was re-probed, 2 of 14 draw nothing, and the three older sandbox reports carry an erratum);
+the Bash tool halves a doubled backslash, which put control characters into two of the pack's regexes (found by scanning; every patch
+now asserts there are none); the probe first called a game with dead arrow keys playable; a replayed `speak` really spoke through his
+speakers in the first sandbox pass (the clones now carry a no-voice edit); and I worked on the side before he told me not to.
+**HIS WORD, MID-WORK, ON THE PAGE:** "i was watching the window just keep growing, that doesnt make sense. the window should be locked to that
+scale it starts at and just scroll the terminal instead of the whole page." Measured on his live page: at the pane's 888 px the document was
+3696 px tall (4042 by the end); below 1024 px `agent.css` turns `.ag-main` into a column and `.ag-win { flex: 1 }` then sizes the window's HEIGHT
+by its content, overriding `height: calc(100vh - 125px)`; `#ag-out` has `overflow-y: auto` but no cap, so it never scrolls. That fix is C37: BUILT,
+PROVED, PLACED (one rule in `agent.css`; `TestTheWindowIsNotSizedByItsContentOnANarrowScreen` with three reversals red; measured in a browser at
+888, 1280 and 600 px wide, the same 150-line flood before and after: document 15,186 px -> 717 px, window 15,068 -> 592, the output box
+scrolling inside itself), PLACED on his card (18:38: the glass restarted on the proved build, now pid 18916, the door untouched; the old glass is kept
+outside the ground) and MEASURED on his own page after he unlocked it: 717 px tall, the window 592, the terminal scrolling inside it.
+
+**Where the ground stands (19:24).** C36 and H15 are SAVED AND SENT (his "go", about 14:45): core `main@876da73` and atlas
+`main@060da14`; the ground's suites ran from his glass at 14:51 (strokes 3603 of 3603, smoke 72 of 72) and GitHub's own runs
+for both are green (read about 15:00). The ground then carried, uncommitted when this was written and saved and sent after it on his
+word ("go, run the suites, save and send"): `tests/pack.py` (new), the stroke `test_the_pack_is_wired` in `tests/test_manjuel.py`,
+BUILDMAP.md regenerated, the suites' stamps, and these documents (CHANGELOG, TESTING, RUNBOOK, WHATS_LEFT, HANDOFF, DAYBOOK) and, in
+atlas, the scroll fix: `webapp/static/css/agent.css`, `webapp/server/glass_test.go`, its CHANGELOG. Before that save the ground's own
+suites ran from his glass at 19:23: strokes 3613 of 3613, smoke 72 of 72 (the mirror, on these documents, said 3609 and 72: it counts four
+fewer than the ground, as it did before this piece). The hashes of the two commits and GitHub's runs on them are the next block's to
+state. `manjuel/` did not move, so the REPL needs no restart. `logs/` holds six `pack_*.md` reports from this work: the live one,
+`pack_2026-10-03_181226.md`, is the one to read; the other five are the hand's earlier ones (two smoke runs and three sandbox passes, the
+three bigger ones carrying an erratum), his to keep or remove. No sitting open (341 closed 18:11:25). The door pid 9248 and the glass
+pid 18916 (placed 18:38, for the scroll fix) are the live binaries. The scratch pairs I used (8190/8191) are stopped.
 
 ## HANDOFF FOR 2026-10-02 — read this before anything below it
 

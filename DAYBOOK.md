@@ -2973,18 +2973,28 @@ standing word of 09-29 stands ("do the list top to bottom", "restart it", "never
 sitting 335, which he opened at 09:12 from my scratch page, closed itself at 09:42:28 (idle) before anything was edited.
 
 **Version** — at open: core `main@e4d7c2a`, atlas `main@d1b78c2`, level with GitHub and green on `prove` (the front page, H14).
-At close: both trees carried C36 and H15 unsaved by his word until his "go" (about 14:45), and are saved and sent after this entry.
+At close of the first half: both trees were saved and sent on his "go" (about 14:45) as core `main@876da73` and atlas `main@060da14`, green on GitHub's `prove` (read about 15:00). The second half, the test pack and the scroll fix, was uncommitted when this was written and is saved and sent after it, on his word
+("go, run the suites, save and send"), once the ground's suites had run from his glass (strokes 3613 of 3613, smoke 72 of 72, at 19:23).
 
 **The plan** — his: "close the sitting, and then go on the move" -- the next line on the page, H15 (Bash and Python behind
 the law gate) -- and, mid-turn, "the ollama host is always the same served from the desktop app, so whatever we need to do to
-rectify that, get it while you are at it" -- C36.
+rectify that, get it while you are at it" -- C36. And, after the save: "make a full mockup of the wife test, run the system
+under an early session or sitting, say around 60-90 range and then again at 150-180 and again in the 220-250 range. try to get
+a session with at least a few turns involved. make it like a test pack or debug pass." Then, mid-work: "boot up the glass and run
+everything live so its all recorded through the system itself as sessions, don't just work on the side without being transparent
+about what is happening, there is enough functionality to perform what you need." And, watching the pane: "the window should be
+locked to that scale it starts at and just scroll the terminal instead of the whole page."
 
 **What was done** — C36: `rack.Host()` adds Ollama's port to a bare host (four reversals red). H15: `shell_run`, a door tool
 only his glass may call (`Tool.ServiceOnly`, a typed `Caller.Hold` for an approval, the hold queue as the card, the law
 walked before every run, a built environment, output scrubbed of the ground's secrets, every run recorded), Git Bash and a
 Python session that keeps its names, and the two tabs on the front page. A matrix of 309 commands said 11 ways, 87 Python
 entries, the tool run for real, 45 reversals red, then the built pair driven in the browser with real clicks; then placed,
-restarted and checked read-only on his own page. The ground's suites ran green from his glass at 14:51 (strokes 3603 of 3603, smoke 72 of 72); the mirror on the final documents was 3599 and 72.
+restarted and checked read-only on his own page. The ground's suites ran green from his glass at 14:51 (strokes 3603 of 3603, smoke 72 of 72); the mirror on the final documents was 3599 and 72. The second half: `tests/pack.py`, the test pack, first run in clones of the ground
+(three full passes), then -- at his word -- LIVE: his glass in the Browser pane, sittings 336 to 341 on the ledger (the wife-test flow, her
+thirteen lines, and the safe lines of sittings 79, 70, 170 and 221), every one closed with its toll, judged read-only from the system's own record
+by `--record`; the report is `logs/pack_2026-10-03_181226.md` and its "Reviewer's notes" are the reading. The stroke `test_the_pack_is_wired`
+(ten strokes, eight reversals red on a mirror), BUILDMAP regenerated, the documents. Nothing was fixed.
 
 **Rulings** — three cards, all his: the Bash tab runs **Git Bash** (not PowerShell: a gate cannot read PowerShell soundly);
 the Python tab **remembers its names** (not each entry alone); placement: **"Place and restart, hold the save and send"**; and a second card the same hour, after a hole the hand found
@@ -2999,11 +3009,28 @@ denied by the card's own button, and nothing ran. (4) I handed a command to `bas
 Bash's runtime halves a doubled backslash: the gate and bash read different commands, and the name refusal for `.env` could
 be walked round for about an hour after the first placement. Found by a differential test I wrote to compare the gate's
 words with bash's; mended by carrying the entry in an environment variable under `eval`; a second placement, on a second card.
+(5) The Bash tool halves a doubled backslash, so a patch I fed it through a heredoc put control characters into two of the
+pack's own regexes; found by reading the output, rewritten through a file, and every later patch asserts there are none.
+(6) The pack's first probe dispatched keys straight onto the canvas and called a game with dead arrow keys playable; found by
+reading that game's page. (7) The probe then sampled one corner of a canvas and called games blank that draw; found by reading the
+live `game-4`'s code, every first game re-probed (2 of 14 draw nothing, not the 4 first counted), an erratum on the older reports.
+(8) A replayed `speak` really spoke through his speakers in the first sandbox pass; the clones carry a no-voice edit now. (9) I worked
+on the side, in clones, and ran long stretches without saying what I was doing; he told me to run it live through the glass and be
+transparent, and I did. (10) The scratch copy of the glass I walked the front page on had an empty door address, which it resolves to a default I could
+not see, so for a minute it may have been talking to his real door; I pressed nothing until I had set it to the scratch door.
 
-**At close** — (14:55) the door (pid 9248, the fixed one) and the glass (pid 22816) run the new binaries; C36 and H15 are built,
-proved, documented and, on his "go", saved and sent after this entry. No sitting is open. The REPL needs no restart.
+**At close** — (19:24) the door (pid 9248, the fixed one) runs the new binary and was not touched by the second half; the glass was
+restarted once, for the scroll fix, and is pid 18916. C36 and H15 are saved and sent and green. The test pack is built, run LIVE (sittings
+336 to 341, all closed) and documented; it was uncommitted when this was written and is saved and sent after it: `tests/pack.py` (new), the
+stroke in `tests/test_manjuel.py`, BUILDMAP.md, the suites' stamps, and the documents. The ground's suites ran from his glass at 19:23:
+strokes 3613 of 3613, smoke 72 of 72 (the mirror had said 3609 and 72). No sitting is open. The REPL needs no restart. His scroll complaint (the
+front page's window grows with the terminal) is built, proved and placed on his glass on his card (C37), measured on his own page, and
+saved and sent with the pack.
 
 **Next session** — open `What's left` first: E1, the decisions B19 (where plugins live) and B20 (Aider), and the second brain's
 builds H2 to H13, with H16 (retire the sidebar) waiting on him having lived on the front page. THE RUST STAYS (his ruling
-10-02, B14). The next marks (core and atlas) are to be cut THROUGH the `version-tag` flow. H15 and C36 are saved and sent on his "go";
-GitHub's runs for them are the first thing to read.
+10-02, B14). The next marks (core and atlas) are to be cut THROUGH the `version-tag` flow. H15 and C36 are saved and sent and
+green. The front page's scroll (C37: the window locked to its starting size, the terminal scrolling inside it) is done and on his
+glass (placed on his card), saved and sent with the pack (atlas: `agent.css`, `glass_test.go`, its CHANGELOG). The test pack's
+live report (`logs/pack_2026-10-03_181226.md`, "Reviewer's notes" first) is the thing to read: which of what it found to take up is his,
+and `python tests/pack.py --runner`, `--lines` and `--record` are the way to measure any fix.

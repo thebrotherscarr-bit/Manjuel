@@ -41,6 +41,15 @@ Only a run of the WHOLE morning set is written to the record as suite
 "standup"; anything less is "court" or "partial", so a one-case run cannot
 satisfy the release gate. Where to look for anything it names: BUILDMAP.md.
 
+**The wife test, mocked, and the record replayed -- run live.** Open the glass in the Browser pane, Boot on the front page, then
+paste `python tests\pack.py --runner` into the page and call `window.__case(<python tests\pack.py --lines W2>)`: the page hands each
+line to its own `go()`, waits for the answer, and stops at any question put to the person. `/close` pays the toll. Every case is a
+sitting on the ledger. Then `python tests\pack.py --record 336=W1,337=W2,...` (sitting=case) judges those sittings from the
+ledger, the transcripts and `projects\`, read-only, and writes `logs\pack_<stamp>.md` while no sitting is open. Read the
+"Reviewer's notes" first (written by hand after a run), then the scorecards, then the turns. Commits, `git_cycle`, index rebuilds and
+anything that speaks are not run live (`NOT_LIVE` in the pack). The same cases run in clones of the ground with
+`--sandbox <a folder outside the ground>`; `--list` shows the cases, `--check` is the wire.
+
 ---
 
 ## Starting the system

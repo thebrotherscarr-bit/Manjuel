@@ -20415,6 +20415,56 @@ def _refused_by(mod, argv):
     return ''
 
 
+def test_the_pack_is_wired(reg, lib, book):
+    """The test pack (tests/pack.py: the wife test mocked, three eras of the record replayed on a sandbox clone)
+    stands on the headless door's wire, the maker's grammar, the transcript's shape, the standup's constants and
+    the ledger; `pack.check()` names every cut wire. Held both ways (2026-10-03): green as it stands, and red
+    when each thing it stands on is moved, so the pack cannot come unplugged without a stroke saying so."""
+    import contextlib
+    import importlib
+    import io
+    import re as _re
+    tests_dir = str(ROOT / "tests")
+    if tests_dir not in sys.path:
+        sys.path.insert(0, tests_dir)
+    pack = importlib.import_module("pack")
+
+    bad = pack.check()
+    check("the test pack is connected: the door's wire, the maker's grammar, the record's shape, the ledger",
+          not bad, "; ".join(bad[:4]))
+
+    def red(owner, name, value, needle):
+        was = getattr(owner, name)
+        setattr(owner, name, value)
+        try:
+            return any(needle in b for b in pack.check())
+        finally:
+            setattr(owner, name, was)
+
+    check("the pack goes red when it reads an event the door does not send",
+          red(pack, "USED_EVENTS", pack.USED_EVENTS + ("not_an_event",), "not_an_event"))
+    check("the pack goes red when it sends a command the door does not take",
+          red(pack, "USED_COMMANDS", pack.USED_COMMANDS + ("not_a_command",), "not_a_command"))
+    check("the pack goes red when the engine stops reading a change as a change",
+          red(pack.intent, "wants_changing", lambda s: False, "declared `change`"))
+    check("the pack goes red when the engine stops reading a make as a make",
+          red(pack.intent, "wants_making", lambda s: "", "declared `make`"))
+    check("the pack goes red when the transcript's delivery shape moves",
+          red(pack.transcript, "_DELIVERY_RE", _re.compile(r"^NOT A DELIVERY$", _re.M), "_DELIVERY_RE"))
+    check("the pack goes red when the sandbox would accept the ground",
+          red(pack, "sandbox_refusal", lambda d: "", "does not refuse"))
+    check("the pack goes red when the door stops taking `cancel`",
+          red(pack.serve, "COMMANDS", tuple(c for c in pack.serve.COMMANDS if c != "cancel"), "`cancel`"))
+
+    # the pack never runs an engine on the ground: with no sandbox it refuses, and the ground is no sandbox
+    for argv in ([], ["--sandbox", str(ROOT)]):
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = pack.main(argv)
+        check(f"the pack refuses to run an engine without a sandbox of its own ({' '.join(argv) or 'no flags'})",
+              rc == 2 and "refused" in buf.getvalue(), f"rc {rc}: {buf.getvalue()[:120]!r}")
+
+
 def main() -> int:
     if not SELECT:
         begin_run(ROOT, "strokes")   # so a crash cannot leave a green stamp
@@ -20653,6 +20703,7 @@ def main() -> int:
     test_the_maker(reg, lib, book)
     test_the_maker_runs_the_page_before_it_keeps_it(reg, lib, book)
     test_the_maker_picks_up_and_puts_down(reg, lib, book)
+    test_the_pack_is_wired(reg, lib, book)
     test_ink()
     test_math()
     test_a_commit_is_not_a_tag()
