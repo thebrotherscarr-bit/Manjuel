@@ -233,7 +233,11 @@ def persona() -> list[Turn]:
 
 
 def flow_turns() -> list[Turn]:
-    """The wife test's own three lines, verbatim, from the flow that carries them."""
+    """The wife test's own three lines, verbatim, from the flow that carries them. The flow is the GROUND'S: flows/ is
+    gitignored, so a clean checkout (CI's) has none, and that is a ValueError -- what a caller that can do without it
+    catches -- not an OSError that walks out of `check()` (it did, and GitHub's first run of the pack was red on every leg)."""
+    if not FLOW.is_file():
+        raise ValueError(f"{FLOW.name} is not on this disk (flows/ is the ground's own and is not in a checkout)")
     flow = json.loads(FLOW.read_text(encoding="utf-8"))
     lines = [n["question"] for n in flow.get("nodes", []) if n.get("kind") == "run" and n.get("question")]
     if len(lines) != 3:

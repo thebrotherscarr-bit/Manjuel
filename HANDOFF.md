@@ -757,15 +757,16 @@ PROVED, PLACED (one rule in `agent.css`; `TestTheWindowIsNotSizedByItsContentOnA
 scrolling inside itself), PLACED on his card (18:38: the glass restarted on the proved build, now pid 18916, the door untouched; the old glass is kept
 outside the ground) and MEASURED on his own page after he unlocked it: 717 px tall, the window 592, the terminal scrolling inside it.
 
-**Where the ground stands (19:24).** C36 and H15 are SAVED AND SENT (his "go", about 14:45): core `main@876da73` and atlas
-`main@060da14`; the ground's suites ran from his glass at 14:51 (strokes 3603 of 3603, smoke 72 of 72) and GitHub's own runs
-for both are green (read about 15:00). The ground then carried, uncommitted when this was written and saved and sent after it on his
-word ("go, run the suites, save and send"): `tests/pack.py` (new), the stroke `test_the_pack_is_wired` in `tests/test_manjuel.py`,
-BUILDMAP.md regenerated, the suites' stamps, and these documents (CHANGELOG, TESTING, RUNBOOK, WHATS_LEFT, HANDOFF, DAYBOOK) and, in
-atlas, the scroll fix: `webapp/static/css/agent.css`, `webapp/server/glass_test.go`, its CHANGELOG. Before that save the ground's own
-suites ran from his glass at 19:23: strokes 3613 of 3613, smoke 72 of 72 (the mirror, on these documents, said 3609 and 72: it counts four
-fewer than the ground, as it did before this piece). The hashes of the two commits and GitHub's runs on them are the next block's to
-state. `manjuel/` did not move, so the REPL needs no restart. `logs/` holds six `pack_*.md` reports from this work: the live one,
+**Where the ground stands (19:43).** C36 and H15 are SAVED AND SENT (his "go", about 14:45): core `main@876da73` and atlas
+`main@060da14`, green on GitHub. The test pack and the scroll fix (C37) were SAVED AND SENT on his second "go" ("go, run the suites, save and
+send", about 19:28), after the ground's suites ran from his glass at 19:23 (strokes 3613 of 3613, smoke 72 of 72): core `main@f820d03` and atlas
+`main@aee457a`. GitHub's run on atlas was GREEN. On core it was RED on all four legs, and the fault was the pack's own: its wire check read
+`flows/wife-test.json`, which is gitignored and so is in no checkout (CHANGELOG: "the test pack stands on a clean checkout"). The mend
+(`flow_turns()` raises a `ValueError` when the flow is not on the disk; one more check in `test_the_pack_is_wired` holds the pack to a clean
+checkout) was proved in a clean clone of `f820d03` with TEMP in 8.3 short form (strokes 3589 of 3589, smoke 72 of 72), reversed red on a mirror
+(that one check red, the other thirteen green), and run on the ground from his glass at 19:42 (strokes 3614 of 3614, smoke 72 of 72). It was
+uncommitted when this was written and is saved and sent after it, so the hash of that save and GitHub's run on it are the next block's to state:
+READ THAT RUN FIRST. `manjuel/` did not move, so the REPL needs no restart. `logs/` holds six `pack_*.md` reports from this work: the live one,
 `pack_2026-10-03_181226.md`, is the one to read; the other five are the hand's earlier ones (two smoke runs and three sandbox passes, the
 three bigger ones carrying an erratum), his to keep or remove. No sitting open (341 closed 18:11:25). The door pid 9248 and the glass
 pid 18916 (placed 18:38, for the scroll fix) are the live binaries. The scratch pairs I used (8190/8191) are stopped.

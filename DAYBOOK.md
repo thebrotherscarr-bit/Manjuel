@@ -2973,8 +2973,9 @@ standing word of 09-29 stands ("do the list top to bottom", "restart it", "never
 sitting 335, which he opened at 09:12 from my scratch page, closed itself at 09:42:28 (idle) before anything was edited.
 
 **Version** — at open: core `main@e4d7c2a`, atlas `main@d1b78c2`, level with GitHub and green on `prove` (the front page, H14).
-At close of the first half: both trees were saved and sent on his "go" (about 14:45) as core `main@876da73` and atlas `main@060da14`, green on GitHub's `prove` (read about 15:00). The second half, the test pack and the scroll fix, was uncommitted when this was written and is saved and sent after it, on his word
-("go, run the suites, save and send"), once the ground's suites had run from his glass (strokes 3613 of 3613, smoke 72 of 72, at 19:23).
+At close of the first half: both trees were saved and sent on his "go" (about 14:45) as core `main@876da73` and atlas `main@060da14`, green on GitHub's `prove` (read about 15:00). The second half, the test pack and the scroll fix, was saved and sent on his word ("go, run the suites, save and send") as core
+`main@f820d03` and atlas `main@aee457a`, after the ground's suites ran from his glass (strokes 3613 of 3613, smoke 72 of 72, at 19:23). Atlas's
+run on GitHub was green; core's was RED, on the pack's own fault (11 below), and the mend is saved and sent after this entry.
 
 **The plan** — his: "close the sitting, and then go on the move" -- the next line on the page, H15 (Bash and Python behind
 the law gate) -- and, mid-turn, "the ollama host is always the same served from the desktop app, so whatever we need to do to
@@ -3017,15 +3018,20 @@ live `game-4`'s code, every first game re-probed (2 of 14 draw nothing, not the 
 (8) A replayed `speak` really spoke through his speakers in the first sandbox pass; the clones carry a no-voice edit now. (9) I worked
 on the side, in clones, and ran long stretches without saying what I was doing; he told me to run it live through the glass and be
 transparent, and I did. (10) The scratch copy of the glass I walked the front page on had an empty door address, which it resolves to a default I could
-not see, so for a minute it may have been talking to his real door; I pressed nothing until I had set it to the scratch door.
+not see, so for a minute it may have been talking to his real door; I pressed nothing until I had set it to the scratch door. (11) The pack's wire check read `flows/wife-test.json` with nothing to catch it
+missing, and `flows/` is gitignored, so GitHub's first run of the pack was red on all four legs of core (atlas's was green); my mirror is a copy
+of the working tree and carries the gitignored files, so it could not show it. Found by reading the run, reproduced in a clean shallow clone of
+the commit, mended (`flow_turns()` raises a `ValueError`; one more check in the stroke holds the pack to a clean checkout), reversed red on a
+mirror, and proved in a clone of the commit (strokes 3589 of 3589, smoke 72 of 72). TESTING.md says how to prove a send that way before it goes.
 
-**At close** — (19:24) the door (pid 9248, the fixed one) runs the new binary and was not touched by the second half; the glass was
+**At close** — (19:43) the door (pid 9248, the fixed one) runs the new binary and was not touched by the second half; the glass was
 restarted once, for the scroll fix, and is pid 18916. C36 and H15 are saved and sent and green. The test pack is built, run LIVE (sittings
-336 to 341, all closed) and documented; it was uncommitted when this was written and is saved and sent after it: `tests/pack.py` (new), the
-stroke in `tests/test_manjuel.py`, BUILDMAP.md, the suites' stamps, and the documents. The ground's suites ran from his glass at 19:23:
-strokes 3613 of 3613, smoke 72 of 72 (the mirror had said 3609 and 72). No sitting is open. The REPL needs no restart. His scroll complaint (the
-front page's window grows with the terminal) is built, proved and placed on his glass on his card (C37), measured on his own page, and
-saved and sent with the pack.
+336 to 341, all closed) and documented, and was saved and sent as core `f820d03` (atlas `aee457a`, the scroll fix) after the ground's suites ran
+from his glass at 19:23 (strokes 3613 of 3613, smoke 72 of 72); atlas's run on GitHub was green and core's RED on the pack's own fault (11
+above). The mend is saved and sent after this entry: the ground's suites ran from his glass again at 19:42 (strokes 3614 of 3614, smoke 72 of
+72), and in a clean clone of `f820d03` with the mend copied in: 3589 of 3589 and 72 of 72. No sitting is open. The REPL needs no restart. His
+scroll complaint (the front page's window grows with the terminal) is built, proved and placed on his glass on his card (C37), measured on his
+own page, and saved and sent with the pack.
 
 **Next session** — open `What's left` first: E1, the decisions B19 (where plugins live) and B20 (Aider), and the second brain's
 builds H2 to H13, with H16 (retire the sidebar) waiting on him having lived on the front page. THE RUST STAYS (his ruling

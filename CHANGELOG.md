@@ -34,6 +34,25 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: the test pack stands on a clean checkout; GitHub's first run of it was red (2026-10-03)
+
+The pack was saved and sent as `f820d03` on his "go, run the suites, save and send", after the ground's suites ran green from his glass.
+GitHub's `prove` on that commit was RED on all four legs (ubuntu and windows, Python 3.10 and 3.13); atlas's run on `aee457a` was green.
+**The fault was the pack's own.** `check()` ends with a loop over each case's live lines that catches `ValueError`, with a comment saying why: the
+ledger or the flow "is not on this disk (CI)". For the wife flow nothing raised a `ValueError`: `flow_turns()` read `flows/wife-test.json` straight
+off the disk and raised `FileNotFoundError`, an `OSError`, which walked out of `check()` and out of `test_the_pack_is_wired` and ended the strokes
+there. `flows/` is gitignored, so no checkout has that file. The comment described the behaviour and nothing made it so: a convention doing a
+type's job (RULE 11). **Why nothing here showed it.** The hand's mirror is a copy of the working tree, so it carries every gitignored file the
+ground has (`flows/`, `sessions/`, `memory/`); only a clone of the commit has what a checkout has. Found by reading GitHub's run, then reproduced
+in a clean shallow clone of `f820d03`: `pack.py --check` raised the same `FileNotFoundError` there and the strokes ended at that stroke.
+
+**The fix.** `flow_turns()` raises a `ValueError` when the flow is not on the disk, and the stroke now holds the pack to a clean checkout: one more
+check in `test_the_pack_is_wired` points `pack.FLOW` at no file and `pack.ledger` at an empty ledger and asks `check()` to be connected and not to
+raise (the stroke is eleven checks, not ten). **What goes red if unplugged:** that check, proved by reversal on a mirror (the guard taken out of
+`flow_turns()`: that one check red, the other thirteen green, restored byte for byte). **Proved as GitHub checks out:** a clean shallow clone of
+`f820d03` with the fix copied in, `TEMP` in 8.3 short form: strokes 3589 of 3589, smoke 72 of 72 (that clone has no `atlas/`, so it runs fewer
+strokes than the ground). The suites on the ground, from his glass at 19:42: strokes 3614 of 3614, smoke 72 of 72. `manjuel/` did not move.
+
 ### atlas: the front page's window keeps the size it starts at, and the terminal scrolls inside it (2026-10-03, WHAT'S LEFT C37; the entry is atlas's)
 
 His word, watching the app's browser pane: "the window should be locked to that scale it starts at and just scroll the terminal
@@ -90,8 +109,8 @@ stays OPEN: a mock is not a person at the glass. Saved and sent on his word ("go
 grammar (every persona line is declared the route the engine's arithmetic reads), to the transcript's shape, to the standup's
 constants, to the ledger's picked sittings and the lines NOT run live, to the engine's own writers of the maker's notes
 (`pipeline.py`, which `--record` reads to know what moved), to the glass page's names the live runner hands lines to, and to its own
-refusals (it will not run an engine without a sandbox of its own); ten strokes in the suite and eight reversals on a mirror, each red and
-named and restored byte for byte. The suites on the mirror, on these documents: strokes 3609 of 3609, smoke 72 of 72; on the ground, from his glass at 19:23:
+refusals (it will not run an engine without a sandbox of its own); eleven strokes in the suite (the eleventh, for a clean checkout, is in the entry above this one) and eight reversals on a mirror, each red and
+named and restored byte for byte. At the first send, the suites on the mirror, on these documents: strokes 3609 of 3609, smoke 72 of 72; on the ground, from his glass at 19:23:
 strokes 3613 of 3613, smoke 72 of 72 (the ground counts four more strokes than the mirror, as it did before this piece: 3603 against 3599).
 
 ### atlas: the operator's typed shell on the front page, and the rack's portless host mended (2026-10-03, WHAT'S LEFT H15 and C36; the entry is atlas's)

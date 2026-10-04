@@ -20456,6 +20456,20 @@ def test_the_pack_is_wired(reg, lib, book):
     check("the pack goes red when the door stops taking `cancel`",
           red(pack.serve, "COMMANDS", tuple(c for c in pack.serve.COMMANDS if c != "cancel"), "`cancel`"))
 
+    # A CLEAN CHECKOUT has no flows/ (gitignored) and no ledger (sessions/ is the ground's own): that is exactly what GitHub's runner
+    # has. The pack's first send was red on every leg because check() let flow_turns()'s FileNotFoundError walk out of it, and the
+    # mirror could not show it -- it carries the gitignored files. Held here by pointing the pack at neither.
+    was_flow, was_ledger = pack.FLOW, pack.ledger
+    pack.FLOW, pack.ledger = ROOT / "flows" / "not-in-a-checkout.json", (lambda root=None: {})
+    try:
+        clean = pack.check()
+    except Exception as exc:                  # an exception that walks out of check() is the fault, named
+        clean = [f"check() raised {type(exc).__name__}: {exc}"]
+    finally:
+        pack.FLOW, pack.ledger = was_flow, was_ledger
+    check("the pack is still connected on a clean checkout (no flows/, no ledger: GitHub's own)",
+          not clean, "; ".join(clean[:3]))
+
     # the pack never runs an engine on the ground: with no sandbox it refuses, and the ground is no sandbox
     for argv in ([], ["--sandbox", str(ROOT)]):
         buf = io.StringIO()

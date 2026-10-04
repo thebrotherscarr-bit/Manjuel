@@ -138,7 +138,7 @@ into `worlds/` from the real ground.
 
 ## AS GITHUB CHECKS OUT (2026-09-29)
 
-Two faults went to GitHub that no run on this machine could show. Both are reproduced HERE before
+Three faults went to GitHub that no run on this machine could show. Each is reproduced HERE before
 a save now.
 
     A SHORT-NAMED TEMP FOLDER. GitHub's Windows runner keeps its temp folder under an 8.3 short
@@ -150,6 +150,13 @@ a save now.
     detached, with no `main` and no `origin/main`. Anything that reads git is proved in a
     scratch clone shaped like it: `git clone --depth 1 file:///<ground>`, a tag, `git checkout
     --detach`, `git branch -D main`, `git remote remove origin`.
+
+    A CHECKOUT HAS ONLY WHAT GIT TRACKS (2026-10-03). A mirror is a copy of the WORKING TREE, so it carries every
+    gitignored file the ground has -- flows/, sessions/, memory/, state/ -- and a stroke that reads one of them with
+    nothing to catch it missing passes there and dies on GitHub (the test pack's first send: check() read
+    flows/wife-test.json, FileNotFoundError, red on all four legs of core). Run the strokes once in a clean shallow
+    clone of the commit, the changed files copied in, TEMP short as above: `git clone --depth 1 --no-local
+    file:///<ground> <scratch>` -- no flows/, no sessions/, no atlas/, no logs/ -- and read the whole run.
 
     EVERY RUN IS READ. After a send, read GitHub's runs for that commit -- the tag's own run as
     well as the branch's -- and each run's job list. A green on `main` says nothing of the tag.
