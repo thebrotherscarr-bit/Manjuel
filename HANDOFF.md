@@ -736,7 +736,19 @@ from the Inspector, a CRLF file that came back CRLF, refusals by name for `.env`
 `0ff82efd...`) replaced the live ones and were restarted with the start lines they had; two builds of the tree came out byte for byte the same and a third,
 just before the copy, matched. The old ones (door `e4392bb3...`, glass `8ddafc33...`) are in this session's scratch folder, outside the ground. He answered
 the card hours after it was asked; the glass came back on its PIN lock and he unlocked it. The measurement's fifteen run folders and my first probe's folder
-were MOVED out of `aider/work` into the scratch folder, so the Inspector's Recent runs starts empty.
+were MOVED out of `aider/work` into the scratch folder, so the Inspector's Recent runs held nothing until the run below.
+
+**RUN LIVE ON HIS OWN GLASS** (2026-10-04, 21:11 to 21:15, after the first save of both repositories, atlas `406e5e3` and core `f1fd61e`: the door's
+`git_branch switch` refuses a tree with unsaved work and Aider needs a line of work, so a live run could only follow a save). On his page the Aider tab read
+"Aider 0.86.2 is ready: qwen2.5-coder:14b, a window of 8192 tokens (about 14 KB of files at a time)". An instruction on `main` was refused by name. A line of
+work, `aider-proof`, was opened through the call the Version control page's button makes. The `clamp` task of the measurement, handed to the real
+`manjuel/mathkit.py`, was written in 64 seconds (4.1k tokens sent, 339 received, 6 lines added), and the measurement's own scorer, run on it against the
+committed file, says wrote, parses, correct and clean; it is byte for byte the file the measurement's Aider run made, so the earlier OK stands for it too.
+The nested `atlas/` repository, standing on `main` while the core was on its line, refused an edit by name. A new file, `aider_proof.py`, was made in 9.8
+seconds and parses. Both were taken back with the Undo button: `manjuel/mathkit.py` hashed to the committed blob again (`9534e60a...`), the new file was
+gone and the tree was clean. The world's `state/holds.jsonl` holds the six lines (refused, wrote, undone, refused, wrote, undone), and the Inspector's Aider
+Pair read the status, the two runs "taken back", atlas on `main` with nothing changed and the core on its line with nothing changed. The core went back to
+`main`, the line was closed, and no sitting was opened.
 
 **WHAT I GOT WRONG, in the record.** (1) Twice I ran a recursive search rooted at the ground (`grep -rn ... .` with a post-filter, and `grep -rn ... -l .`):
 the walk is the reading, so files under `worlds/` and the 640 MB `aider/venv` were opened before any filter applied. Nothing from `worlds/` was
@@ -749,7 +761,7 @@ repository cut the writer mid-write and left an `index.lock` there (never in the
 "written": the throwaway copy was CRLF and the ground's is LF; found by reading the table, corrected before anything was concluded, no verdict moved.
 (7) A `du` over the venv stalled and was stopped.
 
-**Where the ground stands.** (21:07) The door (pid 21608) and the glass (pid 25236) are the placed Aider builds. No sitting is open (341 closed 2026-10-03 18:11:25), and `manjuel/` did not move, so the REPL needs no restart. The ground's suites ran from his glass on the documents as they stand: strokes 3621 of 3621, smoke 72 of 72. Aider is built, measured and placed; the run of it on his own page, and the save and the send, follow this: the next block states what happened, the hashes, and GitHub's runs on them -- READ THAT RUN FIRST. The scratch pairs and my scratch council door are stopped; the throwaway copy of the ground, the twelve results, the scorer and the old binaries are in this session's scratch folder, outside the ground, and go with it. `aider/work/runs` is empty, so his Recent runs starts clean.
+**Where the ground stands.** (21:07) The door (pid 21608) and the glass (pid 25236) are the placed Aider builds. No sitting is open (341 closed 2026-10-03 18:11:25), and `manjuel/` did not move, so the REPL needs no restart. The ground's suites ran from his glass on the documents as they stand: strokes 3621 of 3621, smoke 72 of 72. Aider is built, measured, placed and run live on his own glass (above); both repositories are saved locally and the send follows this: the next block states the hashes and GitHub's runs on them -- READ THAT RUN FIRST. The scratch pairs and my scratch council door are stopped; the throwaway copy of the ground, the twelve results, the scorer and the old binaries are in this session's scratch folder, outside the ground, and go with it. `aider/work/runs` holds the two proof runs, both taken back.
 
 ## HANDOFF FOR 2026-10-03 — read this before anything below it
 

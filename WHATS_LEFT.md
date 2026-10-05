@@ -178,7 +178,8 @@ Finished lines, newest first. A number is never used again.
   own line endings, and Undo puts it back exactly. Nothing it does is saved, run or landed: the suites and your Land click are yours.
   Measured against the coder flow, as the line asked: Aider 6 of 6 on six small edits, the council 3 of 6 (one pass each); the decision that
   follows from it is B21. The door and the wall are held by 27 strokes (the wall against a real Python), the page by one more, the core by
-  one, and 111 reversals went red; the built pair was driven through a browser, then placed and restarted on your card.
+  one, and 111 reversals went red; the built pair was driven through a browser, then placed and restarted on your card and run on your own glass: a real edit to
+  `manjuel/mathkit.py` in 64 seconds, scored correct, and taken back by the Undo button to the byte.
   *(CHANGELOG, "atlas: Aider behind the glass")*
 - **B20. Aider on the glass: three things only you can give.** RULED 2026-10-04 on your cards, and built as you gave them: yes, download
   `aider-chat` from PyPI (0.86.2 and the 110 packages it needs, about 640 MB, once); the folder is `aider/` at the ground's root, with `venv/`

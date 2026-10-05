@@ -3073,7 +3073,10 @@ were brought current. Proved by 111 reversals (all red), both Go modules (vet an
 browser pane (a real Aider edit in 33 s with its diff card; Undo three ways; a CRLF file kept CRLF; refusals for `.env`, `law/`, `../` and a key). Measured
 as H12 asked: on six small edits to one 8 KB file Aider made 6 of 6 right (70 to 270 seconds), the council's turn 3 of 6 (417 to 648 seconds, one pass,
 three changed nothing); Aider needs the whole file in the seat's 8,192-token window and only 12 of the 31 modules in `manjuel/` fit. That decision is B21.
-The door and the glass were placed and restarted on his card. The ground's suites ran from his glass on the documents as they stand: strokes 3621 of 3621, smoke 72 of 72 (21:06; the seven more strokes than yesterday's 3614 are the new stroke's checks).
+The door and the glass were placed and restarted on his card. The ground's suites ran from his glass on the documents as they stand: strokes 3621 of 3621, smoke 72 of 72 (21:06; the seven more strokes than yesterday's 3614 are the new stroke's checks). After the first save (atlas `406e5e3`, core `f1fd61e`) the tab was run live on
+his own glass (21:11 to 21:15): a real `clamp` edit to `manjuel/mathkit.py` in 64 seconds, scored correct and byte for byte the measurement's own, the nested
+`atlas/` repository refused while it stood on `main`, a new file made in 9.8 seconds, both taken back with the Undo button to the byte, the core back on `main`,
+no sitting opened.
 
 **Rulings** — his cards: the folder (`aider/` at the ground's root), "Install into aider/ (Recommended)", the download from PyPI, the model (the coding
 seat's own, no hosted route), and "Place and restart both (Recommended)". B20 is RULED and moved to Done with H12; B21 (should Aider make the coder flow's
@@ -3086,9 +3089,9 @@ by reading before it ran. (4) The first reversal pass left 9 of 57 mutations gre
 into `Select-Object -First` cut `git add` mid-write in a scratch repository and left a lock there. (6) The scorer called three unchanged council files
 "written" because the throwaway copy was CRLF; corrected before anything was concluded. (7) A `du` over the venv stalled. HANDOFF has each in full.
 
-**At close** — (21:07) The door (pid 21608) and the glass (pid 25236) are the placed Aider builds. No sitting is open (341 closed 2026-10-03 18:11:25), and `manjuel/` did not move, so the REPL needs no restart. The ground's suites ran from his glass on the documents as they stand: strokes 3621 of 3621, smoke 72 of 72. Aider is built, measured and placed; the run of it on his own page, and the save and the send, follow this: the next block states what happened, the hashes, and GitHub's runs on them -- READ THAT RUN FIRST. The scratch pairs and my scratch council door are stopped; the throwaway copy of the ground, the twelve results, the scorer and the old binaries are in this session's scratch folder, outside the ground, and go with it. `aider/work/runs` is empty, so his Recent runs starts clean.
+**At close** — (21:07) The door (pid 21608) and the glass (pid 25236) are the placed Aider builds. No sitting is open (341 closed 2026-10-03 18:11:25), and `manjuel/` did not move, so the REPL needs no restart. The ground's suites ran from his glass on the documents as they stand: strokes 3621 of 3621, smoke 72 of 72. Aider is built, measured, placed and run live on his own glass; both repositories are saved locally and the send follows this: the next entry states the hashes and GitHub's runs on them -- READ THAT RUN FIRST. The scratch pairs and my scratch council door are stopped; the throwaway copy of the ground, the twelve results, the scorer and the old binaries are in this session's scratch folder, outside the ground, and go with it. `aider/work/runs` holds the two proof runs, both taken back.
 
 **Next session** — open `What's left` first: B21 (Aider and the coder flow), B19 (where plugins live), E1 (the wife test with a person), and the second
 brain's builds H2 to H11, H13 (Claude in the loop), H16 (retire the sidebar). The Aider tab is live on the front page; the Recent runs in its Inspector
-start empty. `python tests/pack.py --runner` is still how to run lines live through the glass.
+hold only the two proof runs, both taken back. `python tests/pack.py --runner` is still how to run lines live through the glass.
 

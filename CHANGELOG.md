@@ -63,6 +63,9 @@ under the same date. In this ground:
   facts and the three ways to go are on the page.
 - The door and the glass were rebuilt and placed on his card ("Place and restart both") and restarted, the glass coming back on its PIN lock
   (his); nothing else in the ground moved to do it.
+- **Run live on his own glass, after the first save** (21:11 to 21:15; atlas's entry has it in full): a real `clamp` edit to `manjuel/mathkit.py` in 64
+  seconds, scored correct by the measurement's scorer and byte for byte the measurement's own; the nested `atlas/` repository refused while it stood on
+  `main`; a new file made in 9.8 seconds; both taken back with the Undo button to the byte; the core back on `main`, the proof line closed, no sitting.
 
 **What goes red if unplugged:** in this ground, `test_the_aider_door_keeps_what_the_seats_keep` (the door's lists equal the seats', the door's one extra
 folder is `aider/`, `.gitignore` names it) and `test_no_file_is_mixed_and_the_root_documents_are_crlf` (the walk skips `aider/`); in atlas, the 27
