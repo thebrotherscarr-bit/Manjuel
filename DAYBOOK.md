@@ -3151,3 +3151,34 @@ locally after this entry; nothing sent since 09:11.
 
 **Next session** — read HANDOFF's 2026-10-05 block first: B22, sending, and sealing entries 6 and 7 are his to say. Then the
 list: H17's door half, H9, E1's engine leftovers.
+
+## Session 25 — 2026-10-05 (Monday), sittings 344 to 347 from his glass: the review, the session test, SITTING LAWS 9 and 10, memory through the glass, and v0.2.0
+
+**Standing** — the same conversation, carried across context resets; the laws re-read in full at the start of every turn. From the afternoon his own laws
+bind the hand: everything runs on the glass (SITTING LAW 9, RULE 13), and the work is done in his glass, step by step, on his approval (SITTING LAW 10, RULE 14).
+
+**Version** — at open: core `main@a21cfbe`, atlas `main@9cd70ee` (the morning's save on his card; nothing sent since 09:11). At close: both pinned to 0.2.0
+and folded at 13:39; saved, sent and tagged on his cards after this entry (the record of the cut states the hashes).
+
+**The plan** — his, in the order he gave it: the review ("review what skills are available for performing a full functions test ... make a pass as a
+product manager and QA tester"); "The session test"; "Prove it live in the glass, stop mirroring everything" and "new law. EVERYTHING RUNS on the glass,
+not mirrors. thats what version control is for!"; "Dude just DO ALL THE WORK THROUGH THE LIVE GLASS!"; "Write the plan down first"; "YES! write it up in the
+laws"; "that memory goes through the glass, too, bud."; "all those memories need to be kept"; "let's version bump and tag everything while we are at it."
+
+**What was done** — the review in words, its live half as sitting 344 (the baseline); R1, the session test, built in the Python tab and run live as sitting
+345; his rulings B23 to B27 and the plan H19 to H25 on the list; SITTING LAWS 9 and 10 set from the Laws page and sealed by him, with `CLAUDE.md` RULES 13 and
+14; two memories landed through the Agent tab on his y (sitting 346); the bump to 0.2.0 in both repositories, the live check (sitting 347, 9 of 9), the suites
+(3700 of 3700 and 72 of 72, in his terminal), and the cut's record (WHAT'S LEFT G).
+
+**Rulings** — B23 to B27 (his cards); B28, a PowerShell tab with the longer time, after the cut (H26). Everything runs on the glass, and the work is done in
+his glass step by step. Every memory is kept and is part of Steward's tuning; no copies ("just keep it local, i have backups on other disks"). The release:
+send, tag and send the tags; 0.2.0 for both.
+
+**Faults of the hand's, in the record** — HANDOFF's afternoon annotation has each: the suites fired from the page's script twice, where he could not see them
+and without his card; a wrong claim about the memory chain, corrected in the same reply; two of the hand's reads withdrawn with Deny and recorded as his; a look
+typed with a backslash.
+
+**At close** — (14:23) No sitting open (347 closed 13:44:22, tolled). Live check 9 of 9 (13:44); suites 3700 of 3700 and 72 of 72 (14:11, his terminal); the
+pins at 0.2.0 in both repositories. The release check, the save, the send and the tags follow this entry, each on his card.
+
+**Next session** — read HANDOFF's 2026-10-05 block and its afternoon annotation first. B22 is his; H26 (the PowerShell tab) after the cut; then H19.

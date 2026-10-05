@@ -15,8 +15,8 @@ the lines, finds words in them, and names any line it cannot number.
 
 ## A. Stops the release right now
 
-The release is core **v0.1.16** and atlas **v0.1.9**. Both tags are cut and on GitHub
-(2026-09-29). One thing is left, and it needs your GitHub sign-in.
+The release being cut is core **v0.2.0** and atlas **v0.2.0**, on your word of 2026-10-05; its steps are G, in order. The last cut, core v0.1.16
+and atlas v0.1.9, is on GitHub (2026-09-29).
 
 
 ---
@@ -77,7 +77,26 @@ Nothing here gets built until you say which way.
 
 ## G. The release checklist, in order
 
-Already done: version numbers set (0.1.16 and 0.1.9), both changelogs folded, STATUS.md printed,
+v0.2.0 for the core and for atlas, on your word of 2026-10-05: "let's version bump and tag everything while we are at it"; on your cards, send, tag and
+send the tags, and minor, 0.2.0 for both. Already done: version numbers set (0.2.0 and 0.2.0), both changelogs folded under v0.2.0 (13:39), atlas's
+eleven pins in sync through its own `version.ps1`, and the toll index rebuilt after the live check.
+
+- [x] 1. Run the live check on your glass after the fold: 9 of 9 (sitting 347, 13:41 to 13:44)
+- [x] 2. Run the suites after the fold: strokes 3700 of 3700 and smoke 72 of 72 (14:11, in your terminal: the glass's tabs cannot run them yet, H26). The
+  first run (13:47 to 13:50, fired from the page) was 3699 of 3700: the one red was this list still naming 0.1.16, mended here
+- [x] 3. Bring the record up to the cut: HANDOFF's afternoon and DAYBOOK's Session 25 written (14:23), STATUS.md printed after them
+- [ ] 4. Run the release check for v0.2.0: every line ok but `remotes` and `ci`, which wait on the send
+- [ ] 5. Save both repositories (your cards) and send both main branches (your word, given)
+- [ ] 6. GitHub's tests green on both main branches (atlas's proof is its `prove.yml` there: your glass cannot run it yet), then the release check
+  again, every line ok
+- [ ] 7. Cut and send the tag v0.2.0 (core) from Version control
+- [ ] 8. Cut and send the tag v0.2.0 (atlas) from Version control
+- [ ] 9. Publish atlas's v0.2.0 draft on GitHub, or drop it (yours, on GitHub)
+- [ ] 10. Look at GitHub's tests after the tags
+
+The last cut, core v0.1.16 and atlas v0.1.9 (2026-09-29), went through the same list:
+
+Already done then: version numbers set to 0.1.16 and 0.1.9, both changelogs folded, STATUS.md printed,
 both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
 
 - [x] 1. Find out why the Router quits early, and fix it (A1)
@@ -108,6 +127,34 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   refused at the save without an instruction, its files, or a gate granting Aider on every path before it, and run by the engine; the
   door's half is not, so a flow fired through the door refuses at such a node and nothing runs it yet. *(CHANGELOG, "atlas: the flow
   engine takes an `aider` node"; B21; `flows/coder-tree.json`; `atlas/line/internal/flow`)*
+- **H19. A self-model card for the front door.** Your idea, 2026-10-05: the Steward "knows the build map, understands the architecture of the system, knows how it's
+  wired". One page of plain facts about the system -- the engine (Manjuel), the door and the glass (Atlas), the Rust spine, the law chain, how a line moves, what each
+  page and tool does, and where to look for more -- generated from the code and the record the way BUILDMAP is, held current by a stroke, and put at the front of the
+  Steward's instructions and the bigger seat's. First on the plan, which is measured by the session test (H18): R1, and a second case, R2, "the Steward knows itself".
+  *(your words in chat, 2026-10-05)*
+- **H20. A context cache, kept by a background compactor.** Your idea, 2026-10-05: "a cache system for context so that we can use for compaction ... I don't mind a
+  little bit slower disk reads for things that run in the background". Three tiers on disk: this turn; this sitting, a compact summary the 9B Reasoner keeps up after
+  each turn (a bounded loop, LAW_003) instead of the raw conversation; and past sittings, with the memories you land (H2 to H4). The part of every prompt that does not
+  change goes first, so the models can reuse it, and one context builder serves every seat. Nothing is deleted: a summary points back at its transcripts.
+  *(your words in chat, 2026-10-05)*
+- **H21. A baked Steward.** A local model of its own: an Ollama Modelfile with the self-model card and the Steward's character built in, rebuilt when the card changes,
+  measured like any seat. It needs a folder you name (RULE 8). A model trained on your transcripts is for later, and only on a measured need: it would learn the
+  behaviour (plain words, the right tool), not the facts, which change with every commit. *(your words in chat, 2026-10-05)*
+- **H22. The Router may override the regex, its reason recorded.** Ruled by B24. When the regex names a tool and the Router picks a better one, the better one runs, the
+  reason is written down, and nothing is stamped as a failure unless nothing useful ran (the session test's line 4). *(your answer in chat, 2026-10-05)*
+- **H23. Workflows from a sentence, in one thread.** Ruled by B25. "Run the coder flow on X" from the Agent tab starts the flow; its steps stream into the same thread and
+  each gate is an Approve card there, so every approval lives in one place. Today a flow starts only from the Workflows page (the session test's line 6).
+  *(your answer in chat, 2026-10-05)*
+- **H24. Plain by default, details on demand.** Ruled by B26. Answers in plain words; the honesty notes, seat names and raw tool output fold into a details line and the
+  Inspector, nothing hidden. The narration about "the operator", the empty backticks and the re-told earlier turns go (the session test's lines 2, 6 and 7).
+  *(your answer in chat, 2026-10-05)*
+- **H25. The system's own task lists.** Ruled by B23. Told to do something, the system writes its own numbered steps into its own section of TASKS.md, carries them out
+  through the routes it already has (a look-up, a tool, the maker, the coder flow), checks each, and reviews; anything that writes waits on your card. Built on H23.
+  CLAUDE.md's READ FIRST line 6 gets a line allowing the system's own plans when this is built. *(your words in chat, 2026-10-05)*
+- **H26. A PowerShell tab, with the longer time.** Ruled by B28. Your own shell beside Bash, Python and Aider on the front page: the door's `shell_run` learns
+  PowerShell, its gate reads a PowerShell command or asks first for every one, and a command you approve may ask for up to the door's 300 seconds (the page
+  sends no time today, so every tab command gets 30). Then the suites (about 175 seconds) and atlas's `.ps1` scripts run in the glass on your card. After the
+  v0.2.0 cut. *(your answer in chat, 2026-10-05)*
 - **H2. The assistant does not remember across sittings.** Each sitting starts from the DAYBOOK's
   standing block and its own story. What you said last week reaches a seat only if a seat thinks to
   search for it. Needed: at the start of a turn the engine reads the verified memory and hands the
@@ -180,6 +227,21 @@ disk says is missing, in the order it is worth building. H1 is done (below).
 
 Finished lines, newest first. A number is never used again.
 
+- **B28. A tab that can run the suites?** RULED 2026-10-05, on your card: a PowerShell tab with the longer time, built after the v0.2.0 cut; the suites for
+  this cut ran in your terminal (strokes 3700 of 3700, smoke 72 of 72, 14:11). The build is H26. *(your answer in chat, 2026-10-05)*
+- **H18. The session test.** DONE 2026-10-05: your pick. One session across every route of the front page -- a greeting, a look-up, a command, a tool, the maker, the
+  workflows, thanks -- as case R1 of the test pack, each line with its time budget and what your rulings ask of it. Its baseline is sitting 344 (11 faults); run live on
+  your glass in sitting 345 (9 faults). Built through the glass's own Python tab. *(CHANGELOG, "core: the session test")*
+- **B27. What may the Steward do on its own?** RULED 2026-10-05, on your card: "Read anything; every change asks". It may read the record, the laws, the build map,
+  projects and flows freely; running a flow, the suites or any write shows an Approve card in the thread. Applies to H19 to H25. *(your answer in chat, 2026-10-05)*
+- **B26. Who is the front page's voice for?** RULED 2026-10-05, on your card: plain by default, details on demand. The build is H24. *(your answer in chat, 2026-10-05)*
+- **B25. Should a sentence start a workflow?** RULED 2026-10-05, on your card: yes, one thread for all, its approvals as cards in the same thread. The build is H23.
+  *(your answer in chat, 2026-10-05)*
+- **B24. When the regex names a tool and the Router picks another?** RULED 2026-10-05, on your card: the Router may override, its reason recorded. The build is H22.
+  *(your answer in chat, 2026-10-05)*
+- **B23. How the system works from a task list.** RULED 2026-10-05: "I want it to write up its own list of steps to execute for what its told to do in a tasks list and
+  then conduct those steps", in its own section of TASKS.md ("create, pull, conduct, and then review from tasks.md. that is good behaviour."). The build is H25.
+  *(your words in chat, 2026-10-05)*
 - **D16. The Laws page.** DONE 2026-10-05: your word, "a LAWS page ... Add it." The glass has a Laws page and the door three tools under it:
   every law and how far the chain seals it, a law set as a draft below the ledger's seal, and the ledger sealed through law.py after the page
   asks; only your glass may set or seal, and neither while a sitting is open. Proved by strokes, reversals and a live run on a scratch pair

@@ -375,3 +375,71 @@ from:     his words in chat, 2026-10-05, capitals his: "NEVER TAG OR AUTHOR
    ended every commit with a `Co-Authored-By` line naming itself, ten
    commits in each of his two repositories (atlas from 2026-09-10, the
    core from 2026-09-23), and the operator found the name on his repo.
+
+---
+
+## 8. THE SITTING LAWS, continued (the operator's, for the hands)
+
+```
+entered:  2026-10-05, on the operator's word
+from:     A further sitting law is a new link, not an edit: write it, seal it with
+          python law\law.py direct`, and cite this file and SITTING_LAWS.md.
+```
+
+SITTING_LAWS.md is sealed and its bytes may not change; a new law is a new
+link (its own Amendment clause). The operator's ruling on where: "put all
+the law files together" -- so this file sits in law/ beside the four it
+continues, and is cited as SITTING LAW n like them.
+
+THE SITTING LAWS, 5 and 6
+
+5. Nothing is edited while the operator's sitting is open. The REPL
+   watches the ground: a changed seat, skill, pipeline or command is
+   hot-reloaded into his running session at the next turn; any changed
+   text is re-embedded into his live index; a code edit sits on disk
+   under running code. So while sessions/sessions.jsonl's last line has
+   no ended, or he has said he is in the REPL, no file in this ground is
+   edited. A hand asks, waits for "closed" or "go", then edits; a code
+   edit is delivered with "restart required" in the same sentence.
+   Earned 2026-09-04, sitting 84 (a hand reseated the door and half the
+   rack under him) and 2026-09-08 (a hand wrote DAYBOOK and TASKS with
+   sitting 96 open, in the same command that checked the ledger).
+
+6. **Every law, directive and context file is read, and the hand's line
+   is opened, before the first command.** A hand's first acts in this
+   ground, in order: read CLAUDE.md; read every file in law/; read
+   DAYBOOK's last entry, HANDOFF's newest block, CHANGELOG's Unreleased,
+   the open lines of TASKS, and SPEC; then write the opening line of
+   sessions/hands.jsonl (python -m chainkit.seatlog hand-open) with
+   the rules' fingerprints as read. No command comes before them -- and
+   git status or git diff from a sandbox never, at any point. The last
+   act is the closing line. Earned 2026-09-04 (a lock left at 15:28 by a
+   suite run from a sandbox) and 2026-09-08 three times: at 07:27 a hand
+   ran git status as its first act and left the lock CLAUDE.md warns
+   of; at 12:56 the tool that hand built to keep hands in line ran git
+   status itself and left another; and its findings were added to the
+   operator's task list from transcripts he had not asked to be mined --
+   "you are picking shit to add to your task list from an arbitrary
+   source." A hand reads the record; it does not invent work from it.
+
+---
+
+## 9. SITTING LAW 9 -- everything runs on the glass, not on mirrors
+
+```
+entered:  2026-10-05, on the operator's word
+from:     his words in chat, 2026-10-05: "Prove it live in the glass, stop mirroring everything" and "new law. EVERYTHING RUNS on the glass, not mirrors. thats what version control is for!" CLAUDE.md carries it as RULE 13.
+```
+
+9. **Everything runs on the glass, not on mirrors.** Every proof of a change -- the suites, a live check, a page, a door tool, a flow -- runs live on his glass, where he can watch, and is read off his own record. Not on a mirror, a clean clone, or a scratch copy of the door or the glass: none of those is a proof, and none is used for one. Version control is the safety net: a change is made on a line of work and saved there, and a line that goes wrong is dropped, a commit reverted, a binary put back. Nothing else is relaxed: nothing is edited while his sitting is open (SITTING LAW 5), a built binary is placed on his card, saving and sending are his word (SITTING LAW 7), and the main line is landed by his click. Earned 2026-10-05: a hand proved every piece on mirrors, clean clones and scratch pairs before it ever reached his glass.
+
+---
+
+## 10. SITTING LAW 10 -- the work is done in his glass, step by step, on his approval
+
+```
+entered:  2026-10-05, on the operator's word
+from:     his words in chat, 2026-10-05: "if we can just get an agent to continue to do exactly like you're doing right now, run everything, explain it step by step, set a plan, run it through, let me approve it, make sure everything's good, and then boom, we just keep doing this" and "YES! write it up in the laws". CLAUDE.md carries it as RULE 14.
+```
+
+10. **The work is done in the glass, in front of him, one step at a time, and every change waits on his click.** A hand works the way he watched it work on 2026-10-05. It says the plan in plain words first. Then it runs each step in the glass's own tabs -- Python in the Python tab, shell commands in the Bash tab, Aider in the Aider tab, the council in the Agent tab, and the glass's pages for the rest -- saying in one line before each step what it is about to do. Reads run at once; every write, every run that changes something and every save shows an Approve card, and the click is his alone (RULE 6). A refusal is never argued with or worked around. After each step the hand checks the result where he can see it -- the strokes in the Bash tab, the suites on his glass, the record -- says what it found, and then takes the next step or stops. Nothing in the ground is changed or run on the side in the hand's own shell, nothing is proved on a mirror (SITTING LAW 9), and nothing is published or signed without his word (SITTING LAWS 7 and 8). This is how the system's own agent is to work too, once it can (WHAT'S LEFT H19 to H25). Earned 2026-10-05, in his words: "run everything, explain it step by step, set a plan, run it through, let me approve it, make sure everything's good, and then boom, we just keep doing this."

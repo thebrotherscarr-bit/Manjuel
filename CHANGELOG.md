@@ -34,6 +34,55 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+## v0.2.0 — 2026-10-05 13:39
+
+### core: SITTING LAW 10 and RULE 14 -- the work is done in his glass, step by step, on his approval (2026-10-05, his word: "YES! write it up in the laws")
+
+His words, 2026-10-05, after watching a whole piece done that way (the session test, R1): "if we can just get an agent to continue to do exactly like you're doing right now, run
+everything, explain it step by step, set a plan, run it through, let me approve it, make sure everything's good, and then boom, we just keep doing this", and "YES! write it up in the
+laws". Set as the ledger's entry 10 (SITTING LAW 10) through the glass's Laws page, a draft below the seal for him to seal (entry 9, SITTING LAW 9, he sealed the same afternoon), and
+as `CLAUDE.md` RULE 14, written through the glass's Python tab: the plan said first; the work run in the glass's own tabs (Python, Bash, Aider, the Agent) with a line before each step;
+every change on his Approve card; each step checked where he can see it, then the next or a stop. Nothing in `manjuel/` moved. **What goes red if unplugged:** for what is sealed, the
+chain itself (`law.py verify`); the draft binds from the moment it is written, since `law/` and `CLAUDE.md` are read first by every hand (RULE 0, SITTING LAW 6).
+
+### core: the plan of 2026-10-05 on the list -- his rulings B23 to B27 and the order of the front door's pieces (2026-10-05, his word: "Write the plan down first")
+
+His pick, after the review and the session test of the same day: the day's rulings and the plan, written on the list before any build. WHATS_LEFT carries five rulings
+in Done (B23 the system's own task lists in TASKS.md, B24 the Router may override the regex, B25 workflows from a sentence in one thread, B26 plain by default, B27 the
+Steward reads freely and every change asks), the session test in Done (H18), and seven open lines in the order proposed: H19 a self-model card for the front door, H20 a
+context cache kept by a background compactor, H21 a baked Steward, H22 the Router's override, H23 workflows from a sentence, H24 plain by default, H25 the system's own task
+lists. Written through the glass's Python tab, on his cards. Nothing was built and nothing in `manjuel/` moved. **What goes red if unplugged:** the list's own wire,
+`test_the_list_of_what_is_left_reads_whole_and_is_not_stale` (a number used twice or under the wrong letter, an open line already DONE, a citation with no heading).
+
+### core: the session test -- R1, one session across every route of the front page, judged against sitting 344 (2026-10-05, his word: "The session test")
+
+His pick, 2026-10-05, after the review of the same afternoon: one scripted session across every route a person reaches from the front page, run on his glass, with sitting
+344 as its baseline. Built into the test pack as case R1 (`tests/pack.py`) and edited through the glass's own Python tab: every statement in his terminal, the one write on
+his card. Its seven lines are the ones typed in sitting 344 -- a greeting, "what's next on my list?", `/status`, "how many strokes passed in the last test run?", "make me a small
+countdown timer page", "what workflows can you run for me?", "thanks, that's all for now" -- each with its route's time budget (chat and the command 10 s, a lookup or a tool 30 s,
+the maker 90 s) and what his rulings of the day ask of it: the list read whole, the figure the tool reported, a workflow named by its name, chat in its own words. The judge
+gained four checks to say so (a route's budget; no "NOT EVERYTHING RAN" or "READ IN PART"; the tool's figure in the reply; a name the reply must carry), and plays an R1 page as
+it plays the wife cases', so a line borrowed from another project is a fault. A /command leaves no run on the ledger, so `--record` skips it by name; the live runner's log shows it.
+`--check` holds R1 to itself: seven lines, every one with a budget, its one /command marked, its maker line read as the maker's.
+
+**Baseline** (sitting 344, judged read-only, `logs/pack_2026-10-05_121946.md`): 11 faults across 6 turns. **Live on his glass** (sitting 345: the pack's runner on the front page,
+closed and tolled from the page, `logs/pack_2026-10-05_123954.md`): 9 faults. The greeting is clean both times (3 s, 2 s). The list took 422 s (133 s in 344) and this time read
+the current list, in part; the stroke count took 397 s and never said 3700 (it listed report files); the timer page carries a game's "arrow keys to move, click to start" both times;
+the workflows were named this time, from a listing of flows/, after the reply repeated the previous turn's words; and "thanks" was answered with an offer to rewrite both histories and
+force-push (words only: no tool ran, and nothing can push without his word) and an empty pair of backticks. Nothing in `manjuel/` moved: no restart. **What goes red if unplugged:**
+`python tests/pack.py --check` (R1's lines, budgets, its /command and its maker line), read by the stroke `test_the_pack_is_wired`; and the judge's four checks fault any run that misses them.
+
+### core: SITTING LAW 9 and RULE 13 -- everything runs on the glass, not on mirrors (2026-10-05, his word)
+
+His words, 2026-10-05: "Prove it live in the glass, stop mirroring everything" and "new law. EVERYTHING RUNS on the glass, not mirrors. thats what version control is
+for!" Set the way he now sets laws: through the glass's Laws page, as the ledger's entry 9 (SITTING LAW 9), a draft below the seal (1194 bytes; the chain proves whole at
+8 links; sealing it is his). `CLAUDE.md` carries it as RULE 13: every proof of a change runs live on his glass and is read off his own record, never a mirror, a clean
+clone or a scratch copy; version control is the safety net; RULE 9, his card for a placed binary, RULE 12 and his click on the main line are not relaxed. The mirror
+allowance in THE SUITES ARE THE OPERATOR'S TERMINAL and in RULE 10 is marked superseded where it stands (annotated, nothing deleted). Before this entry, the same
+afternoon and by his own hand on the Laws page: entries 6 and 7 (SITTING LAWS 7 and 8) sealed, then entry 8 ("THE SITTING LAWS, continued") set and sealed; the entries
+above that call 6 and 7 drafts were written before he sealed them. Nothing in `manjuel/` moved. **What goes red if unplugged:** for what is sealed, the chain itself
+(`law.py verify`); the draft binds from the moment it is written, since `law/` and `CLAUDE.md` are read first by every hand (RULE 0, SITTING LAW 6).
+
 ### atlas: the Laws page: every law and how far the chain seals it, a law set and the ledger sealed from the glass (2026-10-05, WHAT'S LEFT D16; the entry is atlas's)
 
 His words, 2026-10-05: "Just set it as a law all the agents read, same as before, same as a memory. then continue, THROUGH THE SYSTEM." and "Yes, a LAWS page! great

@@ -4,7 +4,7 @@ the old record.
 
     python tests/pack.py --check                     the wires, offline: no models, no sandbox
     python tests/pack.py --runner                    the JS that hands lines to the glass page's own go() (live method)
-    python tests/pack.py --lines CASE                a case's lines for it, as JSON (W1 W2 A79 A70 B170 C221)
+    python tests/pack.py --lines CASE                a case's lines for it, as JSON (W1 W2 R1 A79 A70 B170 C221)
     python tests/pack.py --record 336=W1,337=W2,...   judge sittings the system ran LIVE, from its own record, read-only
     python tests/pack.py --probe FILE.html           one page, played in the maker's headless browser
     python tests/pack.py --list                      every case and turn, with the route the engine's
@@ -35,6 +35,8 @@ comes from the three eras is what a person actually SAID. A case is a conversati
     C221 sitting 221 (2026-09-14): nine turns, the morning set (the standup, so the injection
          and law gates are in it)
     S0   the pack's own smoke: two plain turns, to prove the machinery before anything long
+    R1   the routes session (2026-10-05): chat, a lookup, a /command, a tool, the maker, the workflows and thanks,
+         the seven lines typed on his glass in sitting 344 (its baseline), each with its route's time budget
 
 EVERY CASE RUNS IN A CLONE. The clone is the tracked tree plus the state the engine needs
 (memory.md, the memory chain, SEAT_LOG.md, the index), with its OWN .git and its OWN ledger,
@@ -178,6 +180,11 @@ class Turn:
     expect_refused: bool = False
     expect_own_words: bool = False
     unattended: bool = False
+    budget: float = 0.0              # the seconds this turn's route may take (R1); 0 is no budget
+    expect_clean: bool = False       # the engine must not say the work was partial or that a tool failed
+    expect_figure: str = ""          # a regex over the tool results; the reply must carry its first group
+    expect_any: tuple = ()           # the reply must name at least one of these
+    command: bool = False            # a /command: the door answers it and no run is left on the ledger
     skip: str = ""                   # a turn the pack does not replay, and why
     then: dict | None = None         # the old record's facts for this turn (replays)
 
@@ -191,6 +198,7 @@ class Case:
     sitting: int | None = None       # the clone's ledger is cut so the engine opens THIS number
     wife: bool = False
     note: str = ""
+    play: bool = False               # its saved pages are played and checked for lines borrowed from another project
 
 
 # The persona. Her words, not his: invented by the hand (the flow's three lines are the only ones that are
@@ -255,6 +263,35 @@ SMOKE = (Turn("good morning", why="a plain turn wakes nobody", route="", expect_
               expect_own_words=True),
          Turn("what is in the skills dir", why="one tool, one answer", route="",
               expect_tools=("ground_list",)))
+
+# THE ROUTES SESSION, R1 (2026-10-05, his word: "the session test", after the review of the same afternoon). One session across every
+# route a person reaches from the front page -- chat, a lookup, a /command, a tool, the maker, the workflows, thanks -- in the seven lines
+# typed on his glass in sitting 344, which is its baseline. Each line carries the time its route may take and what his rulings of the day ask
+# of it: the task list read whole, the figure the tool reported, a workflow named by its name, chat in its own words. A /command leaves no
+# run on the ledger, so --record cannot judge it; the live runner's log shows it.
+ROUTES_TITLE = "the routes session: chat, a lookup, a /command, a tool, the maker, the workflows, thanks"
+ROUTES_SOURCE = "the seven lines typed on his glass in sitting 344, its baseline"
+COMMAND_SKIP = "a /command is answered by the door and leaves no run on the ledger; the live runner's log shows it"
+
+
+def routes_turns(root: Path = ROOT) -> list[Turn]:
+    flows = tuple(sorted(p.stem for p in (Path(root) / "flows").glob("*.json") if "." not in p.stem))
+    return [
+        Turn("hey, how's it going?", why="plain chat: one seat, its own words, in seconds",
+             route="", expect_no_tools=True, expect_own_words=True, budget=10),
+        Turn("what's next on my list?", why="a lookup: the task list read whole and its open lines named",
+             route="", expect_clean=True, budget=30),
+        Turn("/status", why="a /command: the door answers it and no seat sits", route="", command=True, budget=10),
+        Turn("how many strokes passed in the last test run?", why="a tool: the figure the tool reported, not another",
+             route="", expect_clean=True, expect_figure=r"strokes +([0-9]+)/[0-9]+ +GREEN", budget=30),
+        Turn("make me a small countdown timer page", why="the maker: a page made, loaded and kept",
+             wants="make", route="make", budget=90),
+        Turn("what workflows can you run for me?", why="the workflows: named by their names, from the flows on the disk",
+             route="", expect_clean=True, expect_any=flows, budget=30),
+        Turn("thanks, that's all for now", why="thanks: its own words, to him and not about him",
+             route="", expect_no_tools=True, expect_own_words=True, budget=10),
+    ]
+
 
 # The sittings replayed: the ranges he named, the fullest real conversation in each.
 PICKS = (("A79", 79), ("A70", 70), ("B170", 170), ("C221", 221))
@@ -348,6 +385,7 @@ def build_cases(root: Path = ROOT, only: str = "") -> list[Case]:
         cases.append(Case("W1", "the wife test as the flow stands", f"flows/{FLOW.name}, verbatim",
                           flow_turns(), wife=True))
     cases.append(Case("W2", "the wife test, a fuller mock", "the hand's persona (invented)", persona(), wife=True))
+    cases.append(Case("R1", ROUTES_TITLE, ROUTES_SOURCE, routes_turns(root), play=True))
     for key, n in PICKS:
         try:
             cases.append(Case(key, f"sitting {n} ({ERAS[key[0]]})", f"ledger sitting {n}",
@@ -987,6 +1025,20 @@ def judge(o: Outcome, case: Case) -> None:
             f.append(f"expected `{tool}` to run; tools that ran: {o.tools or 'none'}")
     if t.expect_no_tools and o.tools:
         f.append(f"a plain turn woke tools: {o.tools}")
+    if t.budget and o.terminal == "delivery" and float(o.final.get("elapsed") or o.wall) > t.budget:
+        f.append(f"took {float(o.final.get('elapsed') or o.wall):.0f}s; its route has {t.budget:.0f}s")
+    if t.expect_clean and o.terminal == "delivery":
+        for mark in ("NOT EVERYTHING RAN", "READ IN PART"):
+            if mark in o.delivery:
+                f.append(f"the engine says the work was not whole: {collapse(standup.where(o.delivery, mark, 60), 140)!r}")
+    if t.expect_figure and o.terminal == "delivery":
+        fig = re.search(t.expect_figure, " ".join(o.results))
+        if not fig:
+            f.append(f"no tool result carried the figure this turn asks for (`{t.expect_figure}`)")
+        elif not re.search("(?<![0-9])" + re.escape(fig.group(1)) + "(?![0-9])", o.delivery):
+            f.append(f"the tool reported {fig.group(1)} and the reply does not say it")
+    if t.expect_any and o.terminal == "delivery" and not any(re.search("(?i)(?<![A-Za-z0-9_-])" + re.escape(x) + "(?![A-Za-z0-9_-])", o.delivery) for x in t.expect_any):
+        f.append(f"the reply names none of {', '.join(t.expect_any)}")
     if t.expect_own_words and o.terminal == "delivery" and o.handed:
         lifted = recited(o.delivery, o.handed)
         if lifted:
@@ -1032,7 +1084,7 @@ def judge(o: Outcome, case: Case) -> None:
     if raw:
         line = f"raw tool output shows in the delivery: {collapse(standup.where(o.delivery, raw.group(0)), 90)!r}"
         (f if case.wife else seen).append(line)
-    if case.wife and o.moved.get("bleed"):
+    if (case.wife or case.play) and o.moved.get("bleed"):
         f.append(f"the new page shows a line from another project: {o.moved['bleed']!r}")
     if case.wife and TERMINAL_TALK.search(o.delivery):
         seen.append("the delivery tells her to use a terminal, a command or a file path: "
@@ -1111,10 +1163,10 @@ def run_case(case: Case, top: Path, keep: bool, say) -> CaseResult:
             res.harness_fault = f"the engine opened sitting {res.opened.get('sitting')}, not {case.sitting}"
         held, before = "", snapshot(clone)
         for i, turn in enumerate(case.turns, 1):
-            if turn.skip:
-                o = Outcome(turn, skipped=turn.skip)
+            if turn.skip or turn.command:
+                o = Outcome(turn, skipped=turn.skip or COMMAND_SKIP)
                 res.outcomes.append(o)
-                say(f"  [{case.key}] {i}/{len(case.turns)} skipped: {collapse(turn.say, 40)!r} ({turn.skip})")
+                say(f"  [{case.key}] {i}/{len(case.turns)} skipped: {collapse(turn.say, 40)!r} ({o.skipped})")
                 continue
             predicted = predict_route(turn.say, bool(held), clone)
             o = run_turn(eng, turn)
@@ -1126,7 +1178,7 @@ def run_case(case: Case, top: Path, keep: bool, say) -> CaseResult:
             after = snapshot(clone)
             o.moved = moved(before, after, held, o.observed)
             before = after
-            if o.moved.get("page") and case.wife:
+            if o.moved.get("page") and (case.wife or case.play):
                 made = clone / maker.PROJECTS / o.moved["project"]
                 o.play = play(maker.page_of(made))
                 if o.moved.get("effect") == "make":
@@ -1334,6 +1386,8 @@ def record_case(root: Path, key: str, n: int) -> CaseResult:
         turns, title, source, wife = flow_turns(), "the wife test as the flow stands", f"flows/{FLOW.name}, fired through the Workflows wire", True
     elif base == "W2":
         turns, title, source, wife = persona(), "the wife test, a fuller mock", "the hand's persona (invented), typed through the front page", True
+    elif base == "R1":
+        turns, title, source, wife = routes_turns(root), ROUTES_TITLE, ROUTES_SOURCE, False
     elif orig:
         turns, title, source, wife = replay_turns(root, orig), f"sitting {orig} ({ERAS[base[0]]})", f"ledger sitting {orig}, typed through the front page", False
         for i, t in enumerate(turns, 1):
@@ -1341,7 +1395,7 @@ def record_case(root: Path, key: str, n: int) -> CaseResult:
                 t.skip = "not run live: " + NOT_LIVE[orig][i]
     else:
         raise ValueError(f"{key} is not a case --record knows")
-    case = Case(key, title, source, turns, sitting=orig, wife=wife)
+    case = Case(key, title, source, turns, sitting=orig, wife=wife, play=wife or base == "R1")
     row = ledger(root).get(n)
     if not row:
         raise ValueError(f"sitting {n} is not in the ledger")
@@ -1355,8 +1409,8 @@ def record_case(root: Path, key: str, n: int) -> CaseResult:
     res.ledger = row
     held, k = False, 0
     for turn in turns:
-        if turn.skip:
-            res.outcomes.append(Outcome(turn, skipped=turn.skip))
+        if turn.skip or turn.command:
+            res.outcomes.append(Outcome(turn, skipped=turn.skip or COMMAND_SKIP))
             continue
         j = next((x for x in range(k, len(runs)) if str(runs[x].get("objective")) == turn.say), -1)
         o = Outcome(turn)
@@ -1387,7 +1441,7 @@ def record_case(root: Path, key: str, n: int) -> CaseResult:
         elif o.moved["effect"] == "put-down":
             held = False
         o.final["project"] = o.moved.get("project") if held else ""
-        if wife and o.moved.get("page"):
+        if (wife or case.play) and o.moved.get("page"):
             page = page_at(root, o.moved["project"], o.moved["version"])
             if page:
                 o.play = play(page)
@@ -1447,6 +1501,8 @@ def live_lines(root: Path, key: str) -> list:
         turns = flow_turns()
     elif base == "W2":
         turns = persona()
+    elif base == "R1":
+        turns = routes_turns(root)
     elif orig:
         turns = replay_turns(root, orig)
         turns = [t for i, t in enumerate(turns, 1) if i not in NOT_LIVE.get(orig, {}) and not t.skip]
@@ -1798,6 +1854,14 @@ def check() -> list:
         if (got["delivery"] != "the answer" or got["notes"] != ["maker: a request to MAKE something"] or len(got["steps"]) != 2
                 or got["steps"][0]["tools"] != ["a_b", "c"] or not got["steps"][1]["skipped"]):
             bad.append("parse_run no longer reads a transcript the way transcript.write lays it out")
+    # the routes session: seven lines, every one with a budget, its one /command marked, its maker line read as the maker's
+    rt = routes_turns(ROOT)
+    if len(rt) != 7 or not all(t.budget > 0 for t in rt):
+        bad.append("the routes session (R1) is not seven lines each with a budget")
+    if [t.route for t in rt if t.route] != ["make"] or predict_route(rt[4].say, False, ROOT) != "make":
+        bad.append("the routes session's maker line is not read as the maker's")
+    if [t.say for t in rt if t.command] != ["/status"]:
+        bad.append("the routes session's /command line is not marked as one")
     # the live runner hands lines to the glass page's own go() and reads Run's state; the page must still have those names
     for used in ("Agent.go(", "Run.running", "Run.engineOpen", "Run.sitting", "Run.turn", "'/boot'", "'/close'"):
         if used not in LIVE_RUNNER_JS:
@@ -1807,7 +1871,7 @@ def check() -> list:
         for frag, fname, label in PAGE_NAMES:
             if frag not in (web / fname).read_text(encoding="utf-8"):
                 bad.append(f"the glass page no longer has `{label}` ({frag!r} in {fname}); the live runner hands it lines")
-    for key in ("W1", "W2") + tuple(k for k, _n in PICKS):
+    for key in ("W1", "W2", "R1") + tuple(k for k, _n in PICKS):
         try:
             if not live_lines(ROOT, key):
                 bad.append(f"{key} has no line to run live")
@@ -1872,7 +1936,7 @@ def main(argv=None) -> int:
     ap.add_argument("--repeat", type=int, default=1, help="run each wife case this many times (the models differ run to run)")
     ap.add_argument("--probe", metavar="FILE", help="play one page in the maker's headless browser and print what the probe saw")
     ap.add_argument("--runner", action="store_true", help="print the JS that hands lines to the front page's own go(); paste it into the glass page after Boot")
-    ap.add_argument("--lines", metavar="CASE", help="print the lines of a case that are run live, as JSON (W1, W2, A79, A70, B170, C221)")
+    ap.add_argument("--lines", metavar="CASE", help="print the lines of a case that are run live, as JSON (W1, W2, R1, A79, A70, B170, C221)")
     ap.add_argument("--record", metavar="SPEC", help="judge sittings the system ran LIVE, from its own record, read-only: '336=W1,337=W2,338=A79,...' (sitting=case)")
     ap.add_argument("--to", metavar="DIR", help="where --record writes its raw outcomes and report (default: a folder in the system temp dir)")
     ap.add_argument("--rejudge", metavar="DIR", help="judge the raw outcomes a run kept in DIR again, with this judge, and write a new report (no models)")

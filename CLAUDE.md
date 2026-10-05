@@ -96,6 +96,8 @@ Two mechanical traps, both earned 2026-09-04:
       `git status` finds no repository and no lock can be left, and where
       tests/last_run.* land in the copy, not in his record. The operator's
       terminal is still the proof; the mirror is the hand's own check.
+      (SUPERSEDED 2026-10-05 by RULE 13: everything runs on the glass,
+      not on mirrors. The suites run from his glass, `suite_run`.)
 
 ---
 
@@ -245,7 +247,7 @@ asked. Nothing else.
 
     THE CODING. He names a piece. The hand builds THAT piece -- reads what
     it touches in full first (SITTING LAW 1), builds it, runs the suites
-    on a MIRROR, writes one CHANGELOG entry and the doc lines the piece
+    on a MIRROR (on his glass since RULE 13), writes one CHANGELOG entry and the doc lines the piece
     changed, says "restart required" if manjuel/ moved, and STOPS. It
     does not build the next piece, the adjacent piece, or the piece it
     noticed on the way. It does not add to TASKS.md. It does not open a
@@ -257,7 +259,7 @@ asked. Nothing else.
     or in the place he names; not a build.
 
     THE RHYTHM (his, 2026-09-08): summarise what the disk says -> build
-    the piece he named, or nothing -> review it on the mirror -> document
+    the piece he named, or nothing -> review it on the mirror (on his glass since RULE 13) -> document
     it -> stop. "Tiny-recursive loops instead of massive ones." The
     summary step's legal answer is "nothing to build." A hand that is
     eager to build is the hand that fills his day.
@@ -341,8 +343,61 @@ standing word. He found the name on his repo. Taking such a line out of what
 is already published means rewriting history and force-pushing, which is a
 publish too: it is his to order.
 
+## RULE 13 — EVERYTHING RUNS ON THE GLASS, NOT ON MIRRORS.
+
+Recorded 2026-10-05 on the operator's word: "Prove it live in the glass,
+stop mirroring everything" and "new law. EVERYTHING RUNS on the glass, not
+mirrors. thats what version control is for!" It is SITTING LAW 9
+(law/LAW_LEDGER.md, entry 9, set through the glass's Laws page).
+
+    PROOF. Every proof of a change -- the suites, the live check, a page,
+    a door tool, a flow -- runs live on his glass (`suite_run`,
+    `standup_run`, the page itself), where he can watch, and is read off
+    his own record. A mirror, a clean clone, or a scratch copy of the door
+    or the glass is not a proof and is not used for one.
+
+    SAFETY. Version control is the safety net. A change is made on a line
+    of work and saved there; a line that goes wrong is dropped, a commit
+    reverted, a binary put back.
+
+    WHAT IT DOES NOT RELAX. RULE 9: nothing is edited while his sitting is
+    open. Placing a built binary is his card. Saving and sending are his
+    word (RULE 12). The main line is landed by his click.
+
+This supersedes the MIRROR allowance in THE SUITES ARE THE OPERATOR'S
+TERMINAL, above, and in RULE 10; both are marked where they stand.
+
+## RULE 14 — THE WORK IS DONE IN HIS GLASS, STEP BY STEP, ON HIS APPROVAL.
+
+Recorded 2026-10-05 on the operator's word, after he watched a whole piece
+done that way: "run everything, explain it step by step, set a plan, run it
+through, let me approve it, make sure everything's good, and then boom, we
+just keep doing this", and then: "YES! write it up in the laws". It is
+SITTING LAW 10 (law/LAW_LEDGER.md, entry 10, set through the glass's Laws page).
+
+    THE PLAN FIRST. The hand says what it will do, in plain words, before
+    it does it.
+
+    THE GLASS'S OWN TABS. Python runs in the Python tab, shell commands in
+    the Bash tab, Aider in the Aider tab, the council in the Agent tab, and
+    the glass's pages do the rest (Laws, Workflows, Records). One line
+    before each step says what it is about to do. Nothing in the ground is
+    changed or run on the side in the hand's own shell.
+
+    HIS CLICK. Reads run at once. Every write, every run that changes
+    something and every save shows an Approve card, and the click is his
+    (RULE 6). A refusal is never argued with or worked around.
+
+    CHECKED WHERE HE CAN SEE IT. After each step the hand checks the result
+    in the glass -- the strokes in the Bash tab, the suites on his glass,
+    the record -- says what it found, then takes the next step or stops
+    (RULE 10).
+
+This is the way the system's own agent is to work too, once it can
+(WHAT'S LEFT H19 to H25).
+
 ---
 
 Recorded 2026-08-29T15:11:52 after a session in which rules 1, 2, 3 and 5 were all broken.
 Rule 9 added 2026-09-04; the READ FIRST list rewritten and rule 10 added 2026-09-08;
-rule 11 added 2026-09-24; rule 12 added 2026-10-05.
+rule 11 added 2026-09-24; rules 12, 13 and 14 added 2026-10-05.
