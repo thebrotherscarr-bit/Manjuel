@@ -25,6 +25,12 @@ The release is core **v0.1.16** and atlas **v0.1.9**. Both tags are cut and on G
 
 Nothing here gets built until you say which way.
 
+- **B22. Take the hand's name out of what is already on GitHub, and how.** Your order, 2026-10-05: "REMOVE it, NOW." Ten commits in each
+  repository end with a `Co-Authored-By` line naming the hand. Taking it out of what is published means rewriting both histories and
+  force-pushing them, which is a publish (RULE 12): 83 commits in the core and 96 in atlas get new hashes, the marks on them move (core
+  v0.1.15 and v0.1.16, atlas v0.1.5 to v0.1.9), and a mark sent again starts atlas's release workflow and the core's release gate. atlas's
+  other branches on GitHub were not looked at. Your glass cannot do it as it stands: the door's `git_tag` refuses to move a mark and
+  `git_push` never forces. Nothing is done until you say how, in chat, for that act. *(CHANGELOG, "core: RULE 12 and SITTING LAWS 7 and 8")*
 
 ---
 
@@ -98,7 +104,10 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   line of work, the suites and your Land click stay, and no seat, agent or role is ever given Aider. Needed: a step kind in the flow
   engine that asks the door for an Aider run, on a grant from the gate you click to open the line and nowhere else; `coder-tree`
   folded to a new version with the council's own `attempt` as the fall-back and the old version kept; held by strokes and
-  reversals; and measured through the flow on the six tasks of H12. *(B21; `flows/coder-tree.json`; `atlas/line/internal/flow`)*
+  reversals; and measured through the flow on the six tasks of H12. The engine's half is in the tree (2026-10-05): `aider` is a node kind,
+  refused at the save without an instruction, its files, or a gate granting Aider on every path before it, and run by the engine; the
+  door's half is not, so a flow fired through the door refuses at such a node and nothing runs it yet. *(CHANGELOG, "atlas: the flow
+  engine takes an `aider` node"; B21; `flows/coder-tree.json`; `atlas/line/internal/flow`)*
 - **H2. The assistant does not remember across sittings.** Each sitting starts from the DAYBOOK's
   standing block and its own story. What you said last week reaches a seat only if a seat thinks to
   search for it. Needed: at the start of a turn the engine reads the verified memory and hands the
@@ -171,6 +180,11 @@ disk says is missing, in the order it is worth building. H1 is done (below).
 
 Finished lines, newest first. A number is never used again.
 
+- **D16. The Laws page.** DONE 2026-10-05: your word, "a LAWS page ... Add it." The glass has a Laws page and the door three tools under it:
+  every law and how far the chain seals it, a law set as a draft below the ledger's seal, and the ledger sealed through law.py after the page
+  asks; only your glass may set or seal, and neither while a sitting is open. Proved by strokes, reversals and a live run on a scratch pair
+  over a throwaway copy of `law/`; placed and restarted on your card and opened on your own glass. Sealing the ledger's entries 6 and 7
+  (SITTING LAWS 7 and 8) is yours, from the page. *(CHANGELOG, "atlas: the Laws page")*
 - **B21. Should Aider make the coder flow's code changes?** RULED 2026-10-05, in chat: "yes". Taken as the second way: the flow's `attempt`
   is Aider when every file the change names fits the coding model's window, and the council's own edit when one does not; the line of work,
   the suites and your Land click stay. The build is H17. *(your word 2026-10-05; CHANGELOG, "core: his rulings of 2026-10-05")*

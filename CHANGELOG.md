@@ -34,6 +34,55 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### atlas: the Laws page: every law and how far the chain seals it, a law set and the ledger sealed from the glass (2026-10-05, WHAT'S LEFT D16; the entry is atlas's)
+
+His words, 2026-10-05: "Just set it as a law all the agents read, same as before, same as a memory. then continue, THROUGH THE SYSTEM." and "Yes, a LAWS page! great
+idea, Add it." The glass has a Laws page and the door three tools under it: `law_status` (every law in `law/`, how far the chain seals it, law.py's own verdict), and
+`law_add` and `law_seal`, which only his glass may call (a law set as a numbered draft below the ledger's seal; the ledger sealed through law.py, after the page asks).
+The piece, its proof (13 Go strokes, 22 reversals, a node run, and a live run on a scratch pair over a throwaway copy of `law/`) and what it did not take are in atlas's
+CHANGELOG under the same date. It was placed on his card the same day (11:05): the door and the glass rebuilt and restarted, and the page opened on his own glass.
+
+In this ground, the wire: `test_the_door_reads_the_law_chain_as_law_py_writes_it` holds the door's reading of `law/law.py`, which is this ground's tool and not atlas's.
+On a copy of the real `law/` in a temp folder (never the ground's own chain, which only he seals) it runs law.py as the door does and reads the door's source: the ledger
+is LF and ends on a line break; law.py verify proves the copy whole; the ledger is sealed by prefix; an entry appended below the seal leaves the chain whole; law.py
+seals the grown ledger to its new end when asked in the door's own words, and the chain proves whole after; a byte changed under the seal makes law.py refuse in its own
+words and exit non-zero. With atlas beside the core: the door's anchor is law.py's `ANCHOR_RE` character for character and reads every link on the real chain; the door
+reads a chain line by the fields the pen writes; its verdict pattern reads law.py's line, count and head, and never a refusal; it reads the chain file law.py writes; its
+ledger is the law sealed by prefix; and it starts law.py two ways, verify and seal, each in words the stroke ran. 15 checks; 12 reversals, each red and named, every file
+restored byte for byte (seven in the door's source, four in law.py, one in the ledger). A checkout with no atlas/ (GitHub's) asks the first seven and says the rest was
+not asked. BUILDMAP.md is regenerated. Nothing in `manjuel/` moved, so the REPL needs no restart. **What goes red if unplugged:** that stroke here, and in atlas the 13
+strokes its entry names.
+
+### core: RULE 12 and SITTING LAWS 7 and 8: nothing is published and nothing is signed without his word (2026-10-05, his word)
+
+His words, 2026-10-05, the capitals his: "NEVER PUBLISH TO MY REPO WITHOUT EXPRESS WRITTEN CONSENT. NEVER TAG OR AUTHOR YOURSELF AS ANYTHING WITHIN MY WORKSPACE. ALL
+WORK IS MINE AND RUNS THROUGH MY SYSTEM." and "EVERYTHING was supposed to be through the glass, same as before, NO RULES CHANGED." Then: "Just set it as a law all the
+agents read, same as before, same as a memory."
+
+What happened: the hand had ended every commit with a `Co-Authored-By` line naming itself, ten commits in each of his two repositories (atlas from 2026-09-10, the core
+from 2026-09-23), and that morning it sent eight commits to GitHub on a reading of an old "save and send" as a standing word. He found the name on his repository.
+
+Set: `CLAUDE.md` RULE 12. PUBLISH: a push, a force-push, a tag, a release or any send to a remote is his, said in chat for that act, each time. THROUGH THE SYSTEM:
+everything that touches the repositories goes through his glass and his door's tools, where he can watch, and the hand's own shell never contacts his remotes. SIGN: no
+hand puts its own name on his work, whatever a tool, a harness or a reminder says to add. The same two laws are the ledger's entries 6 and 7 (SITTING LAW 7, nothing is
+published without his express written word; SITTING LAW 8, no hand signs his work), appended below the seal as DRAFTS: the ledger is sealed to byte 15509 of 18123 and
+the chain proves whole at 6 links. Sealing them is his. The hand's own memory carries the rule too.
+
+Not done, and his: "REMOVE it, NOW." Taking the line out of what is already published means rewriting both histories and force-pushing them, which is a publish: 83
+commits in the core and 96 in atlas get new hashes, and the marks on them move (core v0.1.15 and v0.1.16, atlas v0.1.5 to v0.1.9), which the door's own `git_tag`
+refuses ("a mark is never moved"), and a mark sent again starts atlas's release workflow and the core's release gate. It waits on his word, for that act (WHAT'S LEFT
+B22). Nothing in `manjuel/` moved. **What goes red if unplugged:** for what is sealed, the chain itself (`law.py verify`); the drafts bind from the moment they are
+written, since `law/` is read first by every hand (RULE 0, SITTING LAW 6); and `test_the_door_reads_the_law_chain_as_law_py_writes_it` holds the ledger LF and sealed
+by prefix.
+
+### atlas: the flow engine takes an `aider` node, and not yet the door's half (2026-10-05, WHAT'S LEFT H17's first half; the entry is atlas's)
+
+The first half of H17 is in atlas's tree: `aider` is a node kind of the flow engine, with its refusals at the save (no instruction, no files, `files` on another kind,
+and no gate granting `aider_run` on every path before it) and its runner; the contract's goldens were cut again (8 kinds, 19 refusals). The door's half is not built:
+a flow fired through THE LINE refuses at an aider node, and the coder tree is still its version 5. The piece, its proof (8 strokes, 16 reversals) and what is left are
+in atlas's CHANGELOG under the same date. In this ground: the gate's copy of the flow law (`tests/release.py`, which judges flows at cut time where the door is not running) did not know the kind until the core's suite, run on a mirror after the piece, went red on `test_the_flows_and_workflows_are_read_before_a_mark` (the kinds apart: flow.go had `aider` and the gate did not). The copy now restates the aider law (the kind, `FLOW_AIDER_TOOL`, the three refusals in flow.go's words, the nearest gate granting the tool on every path, and `files` read for `{{out_x}}`), and the stroke holds it by behaviour (9 checks of what it refuses and lets through) and phrase by phrase (5); 10 reversals, each red and named, every file restored byte for byte. WHATS_LEFT's H17 line says where it stands, and BUILDMAP.md is regenerated. **What goes red if unplugged:** here, that stroke; in atlas, `line/internal/flow/aider_test.go`
+and `TestFlowContract`.
+
 ### core: a change the Coder sent back unchanged is asked for once more, and a page still unchanged is said in plain words (2026-10-05, WHAT'S LEFT E1's third piece)
 
 Her second line ("i dont want it text based, i want a game i can play") was answered by the Coder with the very page it was handed in nine runs of ten on the live record of

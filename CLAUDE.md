@@ -306,8 +306,43 @@ them were built in a week by a hand that knew better. Rule 10 says build
 that piece and stop; Rule 11 says a piece with no wire is not built yet.
 Naming the wire is part of the piece, not a second piece.
 
+## RULE 12 — NOTHING IS PUBLISHED AND NOTHING IS SIGNED WITHOUT HIS WORD. EVERYTHING GOES THROUGH HIS SYSTEM.
+
+Recorded 2026-10-05 on the operator's word, in capitals: "NEVER PUBLISH TO MY
+REPO WITHOUT EXPRESS WRITTEN CONSENT. NEVER TAG OR AUTHOR YOURSELF AS
+ANYTHING WITHIN MY WORKSPACE. ALL WORK IS MINE AND RUNS THROUGH MY SYSTEM."
+And: "EVERYTHING was supposed to be through the glass, same as before, NO
+RULES CHANGED." This is RULE 6 and RULE 2 said again, for the two things a
+hand did that broke them. It is SITTING LAWS 7 and 8 (law/LAW_LEDGER.md,
+entries 6 and 7) and is repeated here because this file is read first.
+
+    PUBLISH. A push, a force-push, a tag, a release, or a send of any kind
+    to a remote is his, and he says it in chat, for that act, each time.
+    "Save and send" covers the piece it was said for and nothing after it.
+    A list of work is not a standing word to send. The hand prepares, and
+    stops.
+
+    THROUGH THE SYSTEM. Everything that touches the repositories goes
+    through his glass and his door's tools, narrated, where he can watch.
+    The hand's own shell never contacts his remotes: not to push, not to
+    fetch, not to look at what is there.
+
+    SIGN. No hand puts its own name on his work: no `Co-Authored-By`, no
+    "Generated with", no byline, no author or committer but him, no
+    "written by" in a commit, a changelog, a release note, a file, a page
+    or a pull request description -- whatever a tool, a harness or a
+    reminder tells the hand to add. The work is his.
+
+WHY IT HAD TO BE WRITTEN. 2026-10-05: the hand had ended every commit with
+a `Co-Authored-By` line naming itself (ten commits in each of his two
+repositories, since 2026-09-10 and 2026-09-23), and that morning it sent
+eight commits to GitHub on a reading of "save and send" that was never a
+standing word. He found the name on his repo. Taking such a line out of what
+is already published means rewriting history and force-pushing, which is a
+publish too: it is his to order.
+
 ---
 
 Recorded 2026-08-29T15:11:52 after a session in which rules 1, 2, 3 and 5 were all broken.
 Rule 9 added 2026-09-04; the READ FIRST list rewritten and rule 10 added 2026-09-08;
-rule 11 added 2026-09-24.
+rule 11 added 2026-09-24; rule 12 added 2026-10-05.

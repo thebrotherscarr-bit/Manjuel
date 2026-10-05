@@ -889,11 +889,12 @@ def ci(root: Path = ROOT, ask: bool = False, fetch=None) -> Check:
 # would be a convention; the stroke is the wire.
 FLOW_NAME = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")               # flow.go NameRe
 FLOW_HISTORY = re.compile(r"^([a-z0-9][a-z0-9_-]{0,63})\.v(\d+)$")   # <name>.v<k>.json
-FLOW_KINDS = {"ask", "prompt", "seat", "memory", "eval", "gate", "run"}  # flow.go Kinds
+FLOW_KINDS = {"ask", "prompt", "seat", "memory", "eval", "gate", "run", "aider"}  # flow.go Kinds
 FLOW_MATCHES = {"equals", "contains"}                                  # flow.go Matches
 FLOW_MAX_RETRIES = 5                                                   # flow.go MaxRetries
 FLOW_MAX_LOOPS = 5                                                     # flow.go MaxLoops
 FLOW_VAR = re.compile(r"\{\{\s*([A-Za-z0-9_]+)\s*\}\}")                # play.Render's slot
+FLOW_AIDER_TOOL = "aider_run"                                         # flow.go AiderTool
 
 
 def _reach(start: str, forward: list, up: bool) -> set:
@@ -941,6 +942,15 @@ def flow_faults(spec) -> list[str]:
             faults.append(f"node {nn!r} carries unknown kind {kind!r}")
         if kind == "run" and not str(n.get("question") or "").strip():
             faults.append(f"run node {nn!r} has no objective")
+        # AN `aider` NODE (flow.go 2026-10-05, H17; restated the same day): an
+        # instruction, the files it is handed, and no other kind names files.
+        if kind == "aider" and not str(n.get("question") or "").strip():
+            faults.append(f"aider node {nn!r} has no instruction")
+        if kind == "aider" and not str(n.get("files") or "").strip():
+            faults.append(f"aider node {nn!r} names no files; Aider works on the files it is given")
+        if kind != "aider" and str(n.get("files") or "").strip():
+            faults.append(f"node {nn!r} is a {kind} and names no files for Aider, so "
+                          f"`files` means nothing on it")
         if kind == "eval" and not str(n.get("node") or "").strip():
             faults.append(f"eval node {nn!r} names no node to check")
         match = str(n.get("match") or "").strip().lower()
@@ -973,7 +983,7 @@ def flow_faults(spec) -> list[str]:
         ref = str(n.get("node") or "")
         if n.get("kind") == "eval" and ref and ref not in by_name:
             faults.append(f"eval node {nn!r} checks unknown node {ref!r}")
-        texts = [str(n.get(k) or "") for k in ("question", "title", "expected")]
+        texts = [str(n.get(k) or "") for k in ("question", "title", "expected", "files")]
         if isinstance(n.get("vars"), dict):
             texts += [str(v) for v in n["vars"].values()]
         for var in sorted({v for t in texts for v in FLOW_VAR.findall(t)}):
@@ -1051,6 +1061,35 @@ def flow_faults(spec) -> list[str]:
             if (n.get("loops") or 0) > 0 and nn not in reached:
                 faults.append(f"node {nn!r} declares `loops` and nothing returns to it -- "
                               f"a ceiling read by nothing")
+        # aiderGranted (flow.go 2026-10-05, H17): an `aider` node is reached only
+        # past a gate that grants FLOW_AIDER_TOOL, and the NEAREST gate before it
+        # on every path is the one that counts; a path that meets the start first
+        # was never authorised. Over the forward edges, on a flow with no cycle,
+        # as Validate walks it.
+        if len(order) == len(by_name):
+            ups: dict[str, list[str]] = {}
+            for frm, to in forward:
+                ups.setdefault(to, []).append(frm)
+            memo: dict[str, bool] = {}
+
+            def covered(nm: str) -> bool:
+                if nm not in memo:
+                    ok = bool(ups.get(nm))
+                    for up in ups.get(nm, []):
+                        if by_name[up].get("kind") == "gate":
+                            grants = by_name[up].get("grants")
+                            ok = ok and isinstance(grants, list) and FLOW_AIDER_TOOL in grants
+                        else:
+                            ok = covered(up) and ok
+                    memo[nm] = ok
+                return memo[nm]
+
+            for nn, n in by_name.items():
+                if n.get("kind") == "aider" and not covered(nn):
+                    faults.append(f"aider node {nn!r} can be reached without passing a gate that grants "
+                                  f"{FLOW_AIDER_TOOL!r} -- Aider is the operator's own hand, so the gate he crosses "
+                                  f"must say so, and the nearest "
+                                  f"gate before the node on every path is the one that counts")
     return faults
 
 

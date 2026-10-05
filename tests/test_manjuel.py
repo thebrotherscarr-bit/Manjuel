@@ -13536,6 +13536,42 @@ def test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book):
     check("   a check that returns twice is refused", any("returns twice" in x for x in f), str(f))
     cyc = spec([{"name": "a", "kind": "ask", "question": "A"}, {"name": "b", "kind": "run", "question": "B"}],
                [{"from": "a", "to": "b"}, {"from": "b", "to": "a"}])
+    # ---- the aider node (H17), as flow.go judges it (2026-10-05) ----------
+    # Restated in this copy the day flow.go learned it, after this stroke caught
+    # the two copies apart: flow.go knew `aider` and the gate did not.
+    def aided(gates=(("open", True),), files="manjuel/mathkit.py", question="add clamp"):
+        nodes = [{"name": "brief", "kind": "ask", "question": "Q"}]
+        for gname, grants in gates:
+            nodes.append({"name": gname, "kind": "gate", "title": "open the line?",
+                          **({"grants": ["aider_run"]} if grants else {})})
+        nodes.append({"name": "attempt", "kind": "aider", "question": question, "files": files})
+        chain = [n["name"] for n in nodes]
+        return spec(nodes, [{"from": a, "to": b, "when": "always"} for a, b in zip(chain, chain[1:])])
+
+    f = _rel.flow_faults(aided())
+    check("an aider node past a gate that grants aider_run, with an instruction and its files, has no fault",
+          f == [], str(f))
+    f = _rel.flow_faults(aided(gates=()))
+    check("   an aider node reached with no gate before it is refused",
+          any("'attempt' can be reached without passing a gate that grants 'aider_run'" in x for x in f), str(f))
+    f = _rel.flow_faults(aided(gates=(("open", False),)))
+    check("   and so is one past a gate that grants nothing", any("can be reached without passing" in x for x in f), str(f))
+    f = _rel.flow_faults(aided(gates=(("open", True), ("again", False))))
+    check("   the NEAREST gate counts: a granting gate before a gate that grants nothing does not reach the node",
+          any("can be reached without passing" in x for x in f), str(f))
+    f = _rel.flow_faults(spec([{"name": "attempt", "kind": "aider", "question": "Q", "files": "a.py"}], []))
+    check("   an aider node at the start was never authorised", any("can be reached without passing" in x for x in f), str(f))
+    f = _rel.flow_faults(aided(files=""))
+    check("   an aider node that names no files is refused",
+          any("names no files; Aider works on the files it is given" in x for x in f), str(f))
+    f = _rel.flow_faults(aided(question=" "))
+    check("   and one with no instruction", any("'attempt' has no instruction" in x for x in f), str(f))
+    f = faults([{"name": "a", "kind": "ask", "question": "x", "files": "a.py"}], [])
+    check("   `files` on any other kind is refused", any("names no files for Aider" in x for x in f), str(f))
+    f = _rel.flow_faults(aided(files="{{out_nobody}}"))
+    check("   an aider node's files are rendered like a question, so {{out_x}} in them must name a node",
+          any("out_nobody" in x for x in f), str(f))
+
     f = _rel.flow_faults(cyc)
     check("   and a forward edge that closes a cycle, with no `loops` declared, is still a cycle",
           any("cycle or unreachable node" in x for x in f), str(f))
@@ -13587,6 +13623,13 @@ def test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book):
         name_law = _re.search(r"var NameRe = regexp\.MustCompile\(`([^`]+)`\)", src).group(1)
         var_law = _re.search(r"re := regexp\.MustCompile\(`([^`]+)`\)",
                              play_go.read_text(encoding="utf-8")).group(1)
+        aider_tool = (_re.search(r'const AiderTool = "(\w+)"', src) or [None, None])[1]
+        # AND THE AIDER LAW, phrase by phrase (2026-10-05, H17), as the return law is.
+        for phrase in ("has no instruction", "names no files; Aider works on the files it is given",
+                       "names no files for Aider", "can be reached without passing a gate that grants",
+                       "gate before the node on every path is the one that counts"):
+            check(f"   the aider law's refusal {phrase!r} is in both copies",
+                  phrase in src and phrase in (ROOT / "tests" / "release.py").read_text(encoding="utf-8"))
         # AND THE RETURN LAW, phrase by phrase (2026-09-29): every refusal
         # lawfulReturns and loopsOf make is one this copy makes in the same words.
         for phrase in ("does not return:", "stands inside the return from",
@@ -13595,14 +13638,15 @@ def test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book):
             check(f"   the return law's refusal {phrase!r} is in both copies",
                   phrase in src and phrase in (ROOT / "tests" / "release.py").read_text(encoding="utf-8"))
         check("the gate's flow law is flow.go's own: kinds, matches, retries, loops, the name law, "
-              "and play.Render's slot",
-              kinds == _rel.FLOW_KINDS and matches == _rel.FLOW_MATCHES
+              "play.Render's slot, and the tool an aider node's gate must grant",
+              aider_tool == _rel.FLOW_AIDER_TOOL
+              and kinds == _rel.FLOW_KINDS and matches == _rel.FLOW_MATCHES
               and max_retries == _rel.FLOW_MAX_RETRIES and max_loops == _rel.FLOW_MAX_LOOPS
               and name_law == _rel.FLOW_NAME.pattern
               and var_law == _rel.FLOW_VAR.pattern,
-              f"go: {sorted(kinds)} {sorted(matches)} {max_retries} {name_law} {var_law} / "
+              f"go: {sorted(kinds)} {sorted(matches)} {max_retries} {name_law} {var_law} {aider_tool} / "
               f"py: {sorted(_rel.FLOW_KINDS)} {sorted(_rel.FLOW_MATCHES)} {_rel.FLOW_MAX_RETRIES} "
-              f"{_rel.FLOW_NAME.pattern} {_rel.FLOW_VAR.pattern}")
+              f"{_rel.FLOW_NAME.pattern} {_rel.FLOW_VAR.pattern} {_rel.FLOW_AIDER_TOOL}")
 
     # ---- workflows: what CI would run, as written --------------------------
     def workflow(g, name, body):
@@ -20951,6 +20995,161 @@ def test_a_change_that_comes_back_unchanged_is_asked_for_once_more(reg, lib, boo
           and ctx.last_output().startswith("Nothing was changed:"), f"{len(asked)} {ctx.notes[-2:]}")
 
 
+def test_the_door_reads_the_law_chain_as_law_py_writes_it(reg, lib, book):
+    """THE DOOR READS THE LAW AS law.py WRITES IT (his words 2026-10-05: "set it as a law all the agents
+    read ... THROUGH THE SYSTEM", then "a LAWS page ... Add it."). The glass's Laws page asks the door, and
+    the door is Go (atlas/line/internal/tools/law.go): `law_status` reads law/chain.jsonl itself to say how
+    far each law is sealed and takes law.py verify's own line as the verdict; `law_add` appends one entry
+    to the ledger below its seal and walks the chain again; `law_seal` runs `law.py seal LAW_LEDGER.md
+    --note ...`. Each is a reading of THIS tool's words kept in another language, and a copy drifts: an
+    anchor law.py reworded would leave the door calling every law "not on the chain", and a verdict
+    reworded would leave it refusing every write on a chain that is whole. So this holds the door's
+    reading to the real law.py, run on a COPY of the real law/ in a temp folder -- never the ground's own
+    chain, which only he seals. The door's own judgement over a stub is the Go suite's
+    (line/internal/tools/law_test.go). A checkout with no atlas/ beside the core (GitHub's runner: atlas
+    is its own repository) is asked only what the door needs of law.py, and says so."""
+    import json as _json
+    import re as _re
+    import shutil as _sh
+
+    law = ROOT / "law"
+    raw = (law / "LAW_LEDGER.md").read_bytes()
+    crs = raw.count(b"\r")
+    check("the ledger is LF and ends on a line break, the only ledger law_add will append to",
+          raw.endswith(b"\n") and crs == 0, f"{crs} carriage returns; last byte {raw[-1:]!r}")
+
+    go = ROOT / "atlas" / "line" / "internal" / "tools" / "law.go"
+    src = go.read_text(encoding="utf-8") if go.is_file() else ""
+
+    def go_raw(var):
+        m = _re.search(r"var " + var + r" = regexp\.MustCompile\(`([^`]*)`\)", src)
+        return m.group(1) if m else None
+
+    def go_const(name):
+        m = _re.search(r"\b" + name + r"\s*=\s*\"([^\"]*)\"", src)
+        return m.group(1) if m else None
+
+    # How the door starts law.py, read off its own calls: `lawRun(pythonWord(opts.CoreCmd), []string{script, ...}`.
+    # A Go identifier among the words is given the value the door gives it; one this stroke cannot name stays None.
+    note = "sealed by a stroke, on a copy"
+    known = {"lawLedger": go_const("lawLedger"), "note": note}
+    door_calls = []
+    for call in _re.findall(r"lawRun\(pythonWord\(opts\.CoreCmd\), \[\]string\{script, ([^}]*)\}", src):
+        argv = []
+        for tok in (t.strip() for t in call.split(",")):
+            argv.append(tok[1:-1] if len(tok) > 1 and tok[0] == tok[-1] == '"' else known.get(tok))
+        door_calls.append(argv)
+    seal_argv = next((a for a in door_calls if a and a[0] == "seal"), None) or ["seal", "LAW_LEDGER.md", "--note", note]
+
+    probe = ("import importlib.util, json, sys\n"
+             "spec = importlib.util.spec_from_file_location('law_copy', sys.argv[1])\n"
+             "law = importlib.util.module_from_spec(spec)\n"
+             "spec.loader.exec_module(law)\n"
+             "print(json.dumps({'anchor': law.ANCHOR_RE.pattern, 'chain': law._pen().CHAIN_NAME,"
+             " 'seals': law.seals()}))\n")
+    tmp = Path(tempfile.mkdtemp())
+    try:
+        cp = tmp / "law"
+        cp.mkdir()
+        for f in law.iterdir():
+            if f.is_file():
+                _sh.copy2(f, cp / f.name)
+        _sh.copytree(law / "pen", cp / "pen", ignore=_sh.ignore_patterns("__pycache__"))
+        script = str(cp / "law.py")
+
+        def run(*argv):
+            p = subprocess.run([sys.executable, script, *argv], cwd=str(tmp), capture_output=True,
+                               text=True, encoding="utf-8", errors="replace", timeout=60)
+            return p.returncode, (p.stdout + p.stderr).replace("\r\n", "\n").strip()
+
+        def facts():
+            p = subprocess.run([sys.executable, "-c", probe, script], cwd=str(tmp), capture_output=True,
+                               text=True, encoding="utf-8", errors="replace", timeout=60)
+            try:
+                return _json.loads(p.stdout.strip().splitlines()[-1])
+            except Exception:
+                return {"error": (p.stdout + p.stderr)[-300:]}
+
+        def rows_of(path):
+            return [_json.loads(ln) for ln in path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+
+        rc, said = run("verify")
+        check("law.py verify proves a copy of the real law/ whole, asked as the door asks it",
+              rc == 0 and "proves whole" in said, said[-300:])
+        f0 = facts()
+        size = len(raw)
+        seal0 = (f0.get("seals") or {}).get("LAW_LEDGER.md", 0)
+        check("the ledger is an appendable law: law.py seals it by prefix, never past its end",
+              0 < seal0 <= size, f"sealed to byte {seal0} of {size} {f0.get('error', '')}")
+
+        # law_add's act on the copy: one entry appended (the file opened for append, never rewritten), the chain walked again.
+        with open(cp / "LAW_LEDGER.md", "a", encoding="utf-8", newline="\n") as fh:
+            fh.write("\n---\n\n## 99. A stroke's entry\n\n```\nentered:  by a stroke\nfrom:     a copy of law/\n```\n\n"
+                     "Written below the seal, on a copy in a temp folder, never on the ground.\n")
+        rc, said = run("verify")
+        check("an entry appended below the ledger's seal leaves the chain whole (law_add's append, walked again)",
+              rc == 0 and "proves whole" in said, said[-300:])
+
+        # law_seal's act on the copy, in the door's own words.
+        grown = (cp / "LAW_LEDGER.md").stat().st_size
+        rc, said = run(*[str(a) for a in seal_argv])
+        sealed = (facts().get("seals") or {}).get("LAW_LEDGER.md")
+        check("law.py seals the grown ledger to its new end when asked as law_seal asks it",
+              rc == 0 and f"sealed to byte {grown}:" in said and sealed == grown,
+              f"asked {seal_argv}; law.py said {said[-200:]!r}; sealed to {sealed} of {grown}")
+        rc, whole = run("verify")
+        check("and the chain proves whole after that seal", rc == 0 and "proves whole" in whole, whole[-300:])
+        copy_rows = rows_of(cp / "chain.jsonl")
+
+        # A byte changed above the seal: the walk refuses, in its own words, and does not exit clean.
+        b = bytearray((cp / "LAW_LEDGER.md").read_bytes())
+        at = b.index(b"THE LAW LEDGER")
+        b[at] = ord("t")
+        (cp / "LAW_LEDGER.md").write_bytes(bytes(b))
+        rc, refused = run("verify")
+        check("a byte changed under the seal makes law.py refuse in its own words and exit non-zero",
+              rc != 0 and refused.startswith("THE CHAIN REFUSES:") and "proves whole" not in refused, refused[-300:])
+
+        if not src:
+            check("(no atlas/ beside the core here -- the door's reading of law.py is not asked, and says so)", True)
+            return
+
+        anchor = go_raw("lawAnchorRe")
+        check("the door's anchor is law.py's ANCHOR_RE, character for character",
+              anchor is not None and anchor == f0.get("anchor"), f"door {anchor!r}; law.py {f0.get('anchor')!r}")
+        rows = rows_of(law / "chain.jsonl")
+        links = [r for r in rows if r.get("kind") == "link"]
+        unread = [r.get("payload", {}).get("n") for r in links
+                  if not (anchor and _re.match(anchor, (r.get("payload", {}).get("doc") or "").splitlines()[0].strip()))]
+        check("every link on the real chain is read by the door's anchor (none would be skipped as unreadable)",
+              bool(links) and not unread, f"{len(links)} links; unread: {unread}")
+        block = _re.search(r"var row struct \{(.*?)json\.Unmarshal", src, _re.S)
+        tags = set(_re.findall(r'json:"(\w+)"', block.group(1))) if block else set()
+        carried = (all("kind" in r and "hash" in r for r in rows)
+                   and all(isinstance(r.get("payload", {}).get("n"), int)
+                           and isinstance(r.get("payload", {}).get("doc"), str) for r in links))
+        check("the door reads a chain line by the fields the pen writes (kind, hash, payload.n, payload.doc)",
+              tags == {"kind", "hash", "payload", "n", "doc"} and carried, f"the door reads {sorted(tags)}")
+
+        proven = go_raw("lawProvenRe")
+        m = _re.search(proven, whole) if proven else None
+        copy_links = [r for r in copy_rows if r.get("kind") == "link"]
+        check("the door's verdict pattern reads law.py's own line, its count and its head",
+              m is not None and m.group(1) == str(len(copy_links)) and m.group(2) == copy_rows[-1]["hash"][:16],
+              f"pattern {proven!r} on {whole[-120:]!r}")
+        check("and never reads a refusal as whole", bool(proven) and not _re.search(proven, refused))
+        check("the door reads the chain file law.py writes", go_const("lawChain") == f0.get("chain"),
+              f"door {go_const('lawChain')!r}; the pen {f0.get('chain')!r}")
+        check("the door's ledger is the law law.py seals by prefix",
+              go_const("lawLedger") == "LAW_LEDGER.md" and "LAW_LEDGER.md" in (f0.get("seals") or {}),
+              f"door {go_const('lawLedger')!r}; sealed by prefix: {sorted(f0.get('seals') or {})}")
+        check("the door starts law.py two ways, verify and seal, each in words this stroke ran",
+              sorted(" ".join(str(a) for a in c) for c in door_calls) == ["seal LAW_LEDGER.md --note " + note, "verify"],
+              str(door_calls))
+    finally:
+        _sh.rmtree(tmp, ignore_errors=True)
+
+
 def main() -> int:
     if not SELECT:
         begin_run(ROOT, "strokes")   # so a crash cannot leave a green stamp
@@ -21192,6 +21391,7 @@ def main() -> int:
     test_the_maker_picks_up_and_puts_down(reg, lib, book)
     test_the_maker_speaks_to_a_screen_without_a_file_to_open(reg, lib, book)
     test_a_change_that_comes_back_unchanged_is_asked_for_once_more(reg, lib, book)
+    test_the_door_reads_the_law_chain_as_law_py_writes_it(reg, lib, book)
     test_the_pack_is_wired(reg, lib, book)
     test_ink()
     test_math()
