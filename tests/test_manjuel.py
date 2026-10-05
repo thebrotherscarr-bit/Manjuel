@@ -17337,8 +17337,11 @@ def test_no_file_is_mixed_and_the_root_documents_are_crlf(reg, lib, book):
     # masters cut byte-faithfully from live chains (tests/fixtures/chains,
     # sha256 in their MANIFEST), whose terminators are their sources' and
     # must stay so; the ruling and this stroke are the core's.
+    # aider/ is Aider's own environment (WHAT'S LEFT H12 and B20, his word 2026-10-04): a pip install of
+    # somebody else's program, hundreds of megabytes, never authored, never tracked (.gitignore). Its
+    # terminators are its packages' own.
     skip = {".git", "logs", "index", "worlds", "projects", "__pycache__", "agent_workspace",
-            "node_modules", "target", "bin", "build", "dist", "atlas"}
+            "node_modules", "target", "bin", "build", "dist", "atlas", "aider"}
     exts = {".md", ".py", ".json", ".jsonl", ".toml", ".yml", ".yaml", ".txt", ".go", ".js",
             ".css", ".html", ".us", ".mod", ".sum"}
     mixed, roots_lf, seen = [], [], 0
@@ -17360,6 +17363,55 @@ def test_no_file_is_mixed_and_the_root_documents_are_crlf(reg, lib, book):
     check("the tree was read (hundreds of text files)", seen >= 100, str(seen))
     check("no text file in the tree is MIXED", not mixed, ", ".join(mixed[:6]) or f"{seen} files, none mixed")
     check("every .md at the root is CRLF, as the chain's own writers emit", not roots_lf, ", ".join(roots_lf))
+
+
+def test_the_aider_door_keeps_what_the_seats_keep(reg, lib, book):
+    """AIDER BEHIND THE GLASS KEEPS THE SEATS' OWN LIST (WHAT'S LEFT H12 and B20, his word 2026-10-04).
+    Aider is a model writing, so the door's `aider_run` refuses to write what the tree doors refuse
+    (`ground_write`, `ground_edit`): the folders no seat writes, the governing files, the proof stamps, the
+    binaries -- skills.py's `_NEVER_WRITTEN_*`. The door is Go and keeps a COPY of those four lists
+    (atlas/line/internal/tools/aider.go), and a copy drifts: a folder added to the seats' list that the door
+    never heard of is a folder Aider could write. This holds the two equal from this side, where both stand
+    (the Go suite holds them equal from the other: TestAiderNeverWritesTheSameNamesTheSeatsNeverWrite). The
+    door adds exactly one folder of its own, `aider/`. And the ground's own git never carries Aider's
+    environment: .gitignore names `aider/`, and it was written BEFORE the folder was, because `git_commit`
+    stages everything and one save would otherwise carry a venv of hundreds of megabytes. A checkout with
+    no atlas/ (GitHub's runner: atlas is its own repository) is not asked about the lists, and says so."""
+    import re as _re
+    from manjuel import skills as _sk
+    gi = [l.strip() for l in (ROOT / ".gitignore").read_text(encoding="utf-8").splitlines()]
+    check("the ground's git never carries Aider's environment (.gitignore names aider/)", "aider/" in gi)
+    go = ROOT / "atlas" / "line" / "internal" / "tools" / "aider.go"
+    if not go.is_file():
+        check("(no atlas/ beside the core here -- the door's copy of the seats' lists is not asked, and says so)", True)
+        return
+    src = go.read_text(encoding="utf-8")
+
+    def go_names(var, pairs):
+        m = _re.search(r"var " + var + r" = (?:map\[string\]string|\[\]string)\{(.*?)\}", src, _re.S)
+        if not m:
+            return None
+        out = set()
+        for ln in m.group(1).splitlines():
+            quoted = _re.findall(r'"((?:[^"\\]|\\.)*)"', ln)
+            if quoted:
+                out.update(quoted[:1] if pairs else quoted)
+        return out
+
+    door = {"folders": go_names("aiderNeverTop", True), "files": go_names("aiderNeverFiles", True),
+            "stamps": go_names("aiderNeverStamps", False), "binaries": go_names("aiderNeverSuffixes", False)}
+    seats = {"folders": set(_sk._NEVER_WRITTEN_TOP), "files": set(_sk._NEVER_WRITTEN_FILES),
+             "stamps": set(_sk._NEVER_WRITTEN_STAMPS), "binaries": set(_sk._NEVER_WRITTEN_SUFFIXES)}
+    check("the door's four lists were read off aider.go", all(door.values()),
+          ", ".join(k for k, v in door.items() if not v))
+    check("the door's one folder of its own is aider/ (Aider's environment is not part of the work)",
+          "aider" in (door["folders"] or set()))
+    if all(door.values()):
+        door["folders"] = door["folders"] - {"aider"}
+        for kind in seats:
+            check(f"the door refuses exactly what the seats' {kind} list refuses",
+                  door[kind] == seats[kind],
+                  f"the seats only: {sorted(seats[kind] - door[kind])}; the door only: {sorted(door[kind] - seats[kind])}")
 
 
 def test_the_toll_index_is_read_off_the_log(reg, lib, book):
@@ -20696,6 +20748,7 @@ def main() -> int:
     test_the_plan_names_every_mark_where_it_sits(reg, lib, book)
     test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book)
     test_no_file_is_mixed_and_the_root_documents_are_crlf(reg, lib, book)
+    test_the_aider_door_keeps_what_the_seats_keep(reg, lib, book)
     test_the_toll_index_is_read_off_the_log(reg, lib, book)
     test_a_toll_refreshes_the_index_beside_it(reg, lib, book)
     test_a_listing_the_closing_seat_shortened_is_completed(reg, lib, book)

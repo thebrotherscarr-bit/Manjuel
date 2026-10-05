@@ -115,7 +115,7 @@ Rebuild after any Go change. The webapp EMBEDS its own HTML, CSS and
 JavaScript (`go:embed`), so a change to a page is not live until you rebuild
 and restart it -- editing the file on disk does nothing to a running server.
 
-**Start the door.** `atlas-mcp` is the MCP door: it serves the 86 tools and it
+**Start the door.** `atlas-mcp` is the MCP door: it serves the 89 tools and it
 is the only thing that spawns a Manjuel engine. It holds `127.0.0.1:8090`.
 
     cd atlas\line
@@ -187,6 +187,23 @@ run, hold and refusal is a line in that world's `state/holds.jsonl`. The command
 the door's keys, so one that needs a variable has to be told it. When starting the door from PowerShell, quote the
 value of `--manjuel` as ONE argument (`--manjuel "python <ground>/manjuel.py"`): passed as an array element it is split
 in two and the door refuses to start.
+
+**Aider (since 2026-10-04).** The front page's Aider tab drives Aider through the door's `aider_run`, `aider_undo` and
+`aider_status`; the first two only the glass may call, so the door has to run with `--auth` for the same reason as the
+shell. Aider lives in `aider/` at the ground's root, which `.gitignore` keeps out of every save and the core's suites
+skip: `aider\venv` is the pip install (`aider-chat` 0.86.2 and the 110 packages it needs, about 640 MB, fetched from
+PyPI once, at install time, on his word of 2026-10-04) and `aider\work` is its home, its temp folder and one folder per
+run (the last 30 are kept; a run's folder holds the instruction, Aider's own transcript, the files as they were, which
+is what Undo restores, and the files as Aider left them). To install it again, with a Python 3.10 to 3.12 (it does not
+run on newer ones): `python -m venv aider\venv`, then `aider\venv\Scripts\python.exe -m pip install aider-chat==0.86.2`.
+Nothing downloads when it runs: the door starts it with a built environment (none of the door's keys), no analytics,
+update check, URL scraping or shell suggestions, its model metadata as a file, and inside a wall (it writes only to the
+run's own scratch folder, reaches nothing but this machine, and starts no other process; `atlas/CHANGELOG.md` has the
+wall's honest limits). The model is the coding seat's own (`agents/expert_coder.md`: Model Target and Context): the door
+loads it into Ollama at that window before Aider starts, and a file bigger than the window is refused up front, so
+Aider cannot take most of the big modules (the measurement is WHAT'S LEFT B21's). The edit it makes lands only on a
+line of work, unsaved: the suites and the Land click stay yours. A tree that is copied or tarred for a proof must leave
+`aider/` out.
 
 **Stop them.** They are servers; they run until stopped. Nothing is lost --
 the engine already exits with every sitting, and both processes keep no state

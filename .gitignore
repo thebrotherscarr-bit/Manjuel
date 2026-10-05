@@ -137,3 +137,9 @@ state/
 # added here would land as a bare gitlink, and a person's game is not the
 # estate's code. Same shape as atlas/ above -- in the ground, not in this repo.
 projects/
+#
+# aider/ is AIDER'S OWN ENVIRONMENT (WHAT'S LEFT H12 and B20; his word, 2026-10-04: install it into "aider/"):
+# venv/ (the pip install of aider-chat, hundreds of MB) and work/ (its home, its history, its scratch runs).
+# Never authored, never the core's. `git_commit` stages everything (`git add -A`), so this line is written
+# BEFORE the folder is, or one save would carry a whole environment.
+aider/

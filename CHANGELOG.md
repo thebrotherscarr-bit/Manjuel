@@ -34,6 +34,41 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### atlas: Aider behind the glass: the front page's Aider tab, and the door tools under it (2026-10-04, WHAT'S LEFT H12 and B20; the entry is atlas's)
+
+His order of 2026-10-04: "finish up h12 and b20, save and send, run it through the glass. also, finish wiring in the Aider panel, it's on this system."
+The front page's third tab, the one that said it was not wired, now runs Aider 0.86.2: a line typed in it (or `aider ...` from any tab) goes to a new door
+tool, `aider_run`, which copies the files he named into a scratch folder, runs Aider on the copy in a wall, with the coding seat's own model
+(`qwen2.5-coder:14b`, read off `agents/expert_coder.md`) on this machine's Ollama and no hosted route, and writes the edit back only on a line of work,
+only if every Python file still parses, each file in its own line endings; `aider_undo` takes a run back exactly; `aider_status` is read quietly.
+Only his glass may call the first two (no seat, agent or role is ever given Aider), nothing here commits, runs the suites or lands (RULE 6), and every
+run, refusal and undo is a line in the world's `state/holds.jsonl`. The piece, its wall, its proof and what it did not take are in atlas's CHANGELOG
+under the same date. In this ground:
+
+- **His three answers (B20), built as given.** The download: `aider-chat` 0.86.2 and the 110 packages it needs, about 640 MB, from PyPI, once, on his
+  word, into a Python 3.11 (Aider does not run on the machine's own 3.14). The folder: `aider/` at the ground's root, with `venv/` and `work/` (its
+  home, its temp folder and one folder per run, the last 30 kept). The model: the seat's own, no hosted route. `.gitignore` names `aider/` and was
+  written BEFORE the folder was (`git_commit` stages everything; one save would have carried the venv); the core's mixed-terminator walk skips it.
+- **The stroke.** `tests/test_manjuel.py` gained `test_the_aider_door_keeps_what_the_seats_keep`: the door is Go and keeps a copy of `skills.py`'s four
+  never-written lists, a copy drifts, and this holds the two equal from the core's side (the Go suite holds them from the other), with the
+  `.gitignore` line; a checkout with no `atlas/` (GitHub's) is not asked about the lists and says so. BUILDMAP.md regenerated. `manjuel/` did not move,
+  so the REPL needs no restart.
+- **RUNBOOK** says the door serves 89 tools (it served 86), what Aider needs, how to put its environment back, and that a tree copied or tarred for a
+  proof must leave `aider/` out.
+- **The measurement H12 asked for** (six small changes to one 226-line module, the same objectives through Aider and through the council, scored by
+  one scorer that parses, runs a differential battery and checks nothing else in the file moved): Aider 6 of 6 (70 to 270 seconds), the council's turn 3 of 6 (one pass each; 466 to 648 seconds); the table, what the numbers do not say
+  (one sample a task, one pass where the flow gives two, and Aider's window of 8,192 tokens, which 12 of the 31 modules in `manjuel/` fit) are in
+  atlas's entry.
+- **B21 is new on his list:** whether Aider should be the coder flow's `attempt` engine. It is a tab today; nothing in a flow calls it. The measured
+  facts and the three ways to go are on the page.
+- The door and the glass were rebuilt and placed on his card ("Place and restart both") and restarted, the glass coming back on its PIN lock
+  (his); nothing else in the ground moved to do it.
+
+**What goes red if unplugged:** in this ground, `test_the_aider_door_keeps_what_the_seats_keep` (the door's lists equal the seats', the door's one extra
+folder is `aider/`, `.gitignore` names it) and `test_no_file_is_mixed_and_the_root_documents_are_crlf` (the walk skips `aider/`); in atlas, the 27
+strokes of `aider_test.go` (the wall against a real Python among them) and `TestTheAiderTabIsTheDoorsAiderAndNothingElse`, with the page's three
+neighbours named in atlas's entry. Reversals: 111 of 111 red (8 of them this ground's stroke, the rest atlas's).
+
 ### core: the test pack stands on a clean checkout; GitHub's first run of it was red (2026-10-03)
 
 The pack was saved and sent as `f820d03` on his "go, run the suites, save and send", after the ground's suites ran green from his glass.

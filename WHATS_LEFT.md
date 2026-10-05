@@ -25,11 +25,15 @@ The release is core **v0.1.16** and atlas **v0.1.9**. Both tags are cut and on G
 
 Nothing here gets built until you say which way.
 
-- **B20. Aider on the glass: three things only you can give.** (1) Your yes to download it: the package
-  `aider-chat` from PyPI, whose size is not known until it is resolved. (2) Where its environment lives:
-  inside the ground (RULE 1), in a folder you name (RULE 8). (3) Which model drives it first: a local
-  one, or the hosted route (the key is yours to place). Until you give them, H12 waits. *(your word
-  2026-10-02)*
+- **B21. Should Aider make the coder flow's code changes?** Aider is a tab you type in; nothing in a flow calls it. What was measured
+  (H12, 2026-10-04): the same six small edits to one 8 KB file, each handed once to Aider and once to the council's coding turn. Aider got all
+  six right, in about two minutes each (70 to 270 seconds). The council got three right, in about ten minutes each, and in the other three
+  changed nothing. Two limits on that: the council had one try and one pass where the flow gives two, and Aider has to hold the whole file
+  in the coding model's 8,192-token window, which only 12 of the core's 31 modules in `manjuel/` fit (`skills.py` is 249 KB). Three ways to
+  go. **(a)** Leave it as built: Aider is a tab for small files and the flow stays as it is (recommended: nothing to take back). **(b)** Let
+  the flow's `attempt` use Aider when every file it names fits the window, and the council's own edit when one does not. **(c)** Measure the
+  council properly first (three tries a task, both passes) and decide on that, about three hours of the graphics card. Whichever you pick,
+  the line of work, the suites and your Land click stay. *(H12's measurement; your idea of 2026-10-02)*
 - **B19. Where do plugins live?** A plugin is a folder, and a hand makes no folder (RULE 8). Name the
   place, or say to put them under a folder that exists. Until you do, H9 waits. *(CLAUDE.md RULE 8;
   your word 2026-10-02)*
@@ -149,16 +153,6 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   file (never opening a secret or client file), summarises it, and stages a proposal citing it, which
   you land or drop. No new folder: the workspace is the inbox. *(SPEC 1, "the workspace";
   `manjuel/boot.py`)*
-- **H12. Aider as a bounded editor behind the glass.** Your idea (10-02): a page on the glass that drives
-  Aider, open source and proven at search-and-replace edits. The ground already has that loop: `ground_edit`
-  (an `@@ OLD` / `@@ NEW` edit on a line of work only) and the `coder-tree` flow (a line of work, the
-  strokes, the smoke, your Land click). So the question is whether Aider edits better with the models this
-  machine has, and that is measured, not argued: the same coding tasks through `coder-tree` and through
-  Aider on a scratch clone, auto-commit off, its update checks and analytics off, a local model first,
-  scored by the same suites. If it wins, it becomes the flow's `attempt` engine and the page is a thin
-  view over a door tool; every gate stays (the line of work, the suites, your click). A page costs a glass
-  rebuild and your card to place the binary; the front page's Aider tab (H14) is where it would appear, and today it
-  says it is not wired. Waits on B20. *(SPEC 4.9; `flows/coder-tree.json`)*
 - **H13. Claude in the loop.** Your idea (10-02): a reasoning, planning and review agent beside the council.
   Two shapes, and the first needs nothing built: the door already lets an outside agent connect, with reads
   free and every write held for your decision on Version control, so Claude can be in the loop today through
@@ -177,6 +171,19 @@ disk says is missing, in the order it is worth building. H1 is done (below).
 
 Finished lines, newest first. A number is never used again.
 
+- **H12. Aider as a bounded editor behind the glass.** DONE 2026-10-04: the front page's Aider tab is wired to three new door tools
+  (`aider_run`, `aider_undo`, `aider_status`; only your glass may call the first two). Aider 0.86.2 runs on a copy of the files you name,
+  inside a wall (it writes only to its own scratch folder, reaches nothing but this machine and starts no other process), with the coding
+  seat's own model on this machine's Ollama. Its edit lands only on a line of work, only if every Python file still parses, each file in its
+  own line endings, and Undo puts it back exactly. Nothing it does is saved, run or landed: the suites and your Land click are yours.
+  Measured against the coder flow, as the line asked: Aider 6 of 6 on six small edits, the council 3 of 6 (one pass each); the decision that
+  follows from it is B21. The door and the wall are held by 27 strokes (the wall against a real Python), the page by one more, the core by
+  one, and 111 reversals went red; the built pair was driven through a browser, then placed and restarted on your card.
+  *(CHANGELOG, "atlas: Aider behind the glass")*
+- **B20. Aider on the glass: three things only you can give.** RULED 2026-10-04 on your cards, and built as you gave them: yes, download
+  `aider-chat` from PyPI (0.86.2 and the 110 packages it needs, about 640 MB, once); the folder is `aider/` at the ground's root, with `venv/`
+  (a Python 3.11: it does not run on the machine's own 3.14) and `work/`, and `.gitignore` names it so a save can never carry it; the model is
+  the coding seat's own, `qwen2.5-coder:14b` on Ollama, no hosted route. *(CHANGELOG, "atlas: Aider behind the glass")*
 - **C37. The front page's window grew with the terminal, so the whole page scrolled.** DONE 2026-10-03: you saw it in the
   app's browser pane. Below 1024 px wide (the pane is 888) the window's height was set by its content instead of staying the
   size it starts at, so every line made the page taller (3,696 px at the pane's width, more as a session went on) and the

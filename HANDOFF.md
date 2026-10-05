@@ -671,6 +671,86 @@ dropped by operator ruling 2026-09-01 — see the fix log.
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
 
+## HANDOFF FOR 2026-10-04 — read this before anything below it
+
+**THE DAY SO FAR.** The same conversation, carried across a context reset; the laws and the record re-read in full at the start of every turn.
+No sitting was opened by the hand (the ledger's last line is still sitting 341, closed 2026-10-03 18:11:25), so the ground was edited freely. The
+morning's one small act is annotated under yesterday's block and in DAYBOOK (he asked what the six `pack_*.md` reports do and ruled them KEPT;
+nothing above the annotation changed). Then his order:
+
+**HIS WORD: "finish up h12 and b20, save and send, run it through the glass. also, finish wiring in the Aider panel, it's on this system."** His
+cards: the folder ("What folder would you suggest? /aider?", answered `aider/` at the ground's root, with `venv/` and `work/`), "Install into aider/
+(Recommended)", the download from PyPI (yes), the model (the coding seat's own, no hosted route); and that evening "Place and restart both
+(Recommended)".
+
+**AIDER BEHIND THE GLASS (H12 and B20): BUILT.** The front page's third tab, which said it was not wired, drives Aider 0.86.2 through three door
+tools: `aider_run {message, files, context?, timeout?, project?}` and `aider_undo {run, project?}` (both `ServiceOnly` writers: only his glass may call them, no seat,
+agent or role is ever given Aider) and `aider_status` (a reader the page asks quietly). The door serves 89 tools now. The code is atlas's:
+`atlas/line/internal/tools/aider.go` (the tools), `aiderguard.go` (the wall), `aider_test.go` (27 strokes); the page is `webapp/static/js/agent.js`
+(the Aider tab and the Inspector's Aider Pair pane) and `agent.css`. What a run is: the files he names (at most 4 to change, 4 to read) are copied, in
+LF, into a scratch folder under `aider/work/runs/<id>/`, which is its own empty git repository; Aider runs there headless, one message and out, with
+`qwen2.5-coder:14b` (read off `agents/expert_coder.md` on every call) loaded into Ollama first at the seat's window, 8,192 tokens, so the files and
+the instruction must fit about 14 KB; what it changed comes back only if the nearest repository stands on a line of work (never main), no name the
+seats may not write is touched, every Python file still parses, nothing moved in the ground meanwhile; each file returns in its own terminator;
+Undo puts it back from the manifest's hashes and refuses what has moved since. The wall is a PEP 578 audit hook (`python -I -B -X utf8 -c <source>`):
+writes only to the run's scratch, Aider's home and temp and the run's three history files; no reading the ground or the profile except `aider/` and the
+interpreter's library; loopback only; no other process; and it announces itself with a per-run nonce, or the run is thrown away. HONEST LIMITS: an
+audit hook is not a kernel sandbox, and native code loaded through `ctypes` steps around it; the scratch copy, the line of work, the suites and his
+Land click are what stand behind it. Nothing it does is saved, run or landed.
+
+**WHERE IT LIVES AND WHAT NEVER TO DO TO IT.** `aider/` at the ground's root: `venv/` is a Python 3.11.16 (uv's, since Aider does not run on the machine's
+3.14) with `aider-chat` 0.86.2 and the 110 packages it needs (about 640 MB, from PyPI, once, on his word); `work/` is its home, its temp folder and one folder
+per run (the last 30 kept). `.gitignore` names it (written BEFORE the folder was: `git_commit` stages everything), the core's mixed-terminator walk skips
+it. NEVER put a recursive command over it or over the ground's root (`grep -r`, `find`, `du`, a Glob rooted at Research): it holds 640 MB and the ground
+holds `worlds/`; name the folders. A mirror, clone or tar for a proof must leave `aider/` out. RUNBOOK says how to put the environment back.
+
+**THE MACHINE'S FACTS (measured).** `qwen2.5-coder:14b` decodes about 3.6 tokens a second on this card and prefills about 50: an edit of a small file
+takes 30 seconds to five minutes, the door waits 600 seconds by default (1,200 at most), and the page says "a run takes minutes". Aider at temperature 0
+answers byte for byte the same twice. Ollama's keep-alive here is short and a request that landed while it unloaded hung four minutes once, so the
+door warms the model first (an empty request at the seat's window, `keep_alive` ten minutes) and refuses, naming it, if the rack will not load it.
+
+**WHAT THE FIRST REAL RUNS FOUND (each is a stroke now).** Aider looks UP for a git repository even with `--no-git` and found the world's own: the scratch
+folder is its own repository. Every healthy run asks for `git version` (GitPython) and the shell's `ver` (the platform module, three spellings): refused
+quietly, everything else out loud, or a card would teach him to read past the one that matters. Aider makes its own run folder at start (allowed if it
+exists). Windows Aider writes CRLF (`--line-endings lf`, and the door puts each file's own terminator back). `--yes-always` is not optional and with it
+Aider writes ANY path the model names: that is why the wall exists.
+
+**MEASURED, AS H12 ASKED (one file, `manjuel/mathkit.py`, 226 lines; six small changes; one scorer, written before any attempt).** Aider through
+`aider_run`: **6 of 6** (70, 100, 123, 140, 262, 270 seconds). The council, the same words handed to a council turn on a throwaway copy with the real
+engine (the coder flow's `attempt` is such a turn), one pass each: **3 of 6** (`correlation`, `mean`'s `trim`, `clamp`; 417 and about 600 and about
+600 seconds); `variance`, `zscores` and `cosine` changed nothing (466 to 648 seconds; `cosine` asked `ground_edit` for an edit of the wrong shape and
+the closing words still claimed the change, the engine's "NOT EVERYTHING RAN" note saying otherwise). Not said by the numbers: the council had one
+sample a task and one pass where the flow gives two; and Aider needs the whole file in the 8,192-token window, which only 12 of the 31 modules in
+`manjuel/` fit (`skills.py` is 249 KB) and 14 of the 26 Go files in `line/internal/tools`. **B21 is the new decision on the page**: leave Aider a tab
+(recommended), let the flow's `attempt` use it for files that fit, or measure the council properly first. WHATS_LEFT: B20 and H12 moved to Done.
+
+**PROOF.** 111 reversals, each red and named, every file restored byte for byte (the door and the wall 67, the page 36, the core's stroke 8); atlas's
+Go suites green in both modules (vet and 25 packages; `line/internal/tools` 125 s with the wall run against a real Python); the page's render check
+with node; and the built pair (a scratch door on 8190 and glass on 8191, over a throwaway ground, a fresh wire) driven in the browser pane: a refusal
+on main, a line of work opened through the shell's own approval card, a real Aider edit (33 s) with its diff card, Undo by the button, by `/undo` and
+from the Inspector, a CRLF file that came back CRLF, refusals by name for `.env`, `law/`, `../` and a key (the log holds "[withheld: a secret]"), the
+`aider ` prefix from the Agent tab with no engine open. That drive found one thing, mended and held: `/drop` answered with the chat's state afterwards
+("No files in the chat yet") and read as nothing done; it says what it dropped now.
+
+**PLACED (the evening), ON HIS CARD.** The door (pid 21608, 12,801,536 bytes, sha256 `ba668ad1...`) and the glass (pid 25236, 11,177,472 bytes,
+`0ff82efd...`) replaced the live ones and were restarted with the start lines they had; two builds of the tree came out byte for byte the same and a third,
+just before the copy, matched. The old ones (door `e4392bb3...`, glass `8ddafc33...`) are in this session's scratch folder, outside the ground. He answered
+the card hours after it was asked; the glass came back on its PIN lock and he unlocked it. The measurement's fifteen run folders and my first probe's folder
+were MOVED out of `aider/work` into the scratch folder, so the Inspector's Recent runs starts empty.
+
+**WHAT I GOT WRONG, in the record.** (1) Twice I ran a recursive search rooted at the ground (`grep -rn ... .` with a post-filter, and `grep -rn ... -l .`):
+the walk is the reading, so files under `worlds/` and the 640 MB `aider/venv` were opened before any filter applied. Nothing from `worlds/` was
+printed, named or used, and I stopped both; SITTING LAW 2 is what it broke and the memory note is in place. (2) A listing of an `.aider` path
+outside the ground, while looking for where Aider keeps state: RULE 3, nothing read or changed. (3) A patch fed through a Bash
+heredoc had its escapes eaten twice: NUL and CR bytes landed in `aider_test.go` (found by reading, repaired) and, this evening, a `\n` inside a JavaScript
+string became a real newline in `agent.js` (found by reading before any build, `node --check` clean after). (4) The first pass of reversals left 9 of 57
+mutations GREEN: the strokes were too loose; they were tightened and the pass redone, all red. (5) `git add -A | Select-Object -First 3` in a SCRATCH
+repository cut the writer mid-write and left an `index.lock` there (never in the ground). (6) The measurement's scorer called three UNCHANGED council files
+"written": the throwaway copy was CRLF and the ground's is LF; found by reading the table, corrected before anything was concluded, no verdict moved.
+(7) A `du` over the venv stalled and was stopped.
+
+**Where the ground stands.** (21:07) The door (pid 21608) and the glass (pid 25236) are the placed Aider builds. No sitting is open (341 closed 2026-10-03 18:11:25), and `manjuel/` did not move, so the REPL needs no restart. The ground's suites ran from his glass on the documents as they stand: strokes 3621 of 3621, smoke 72 of 72. Aider is built, measured and placed; the run of it on his own page, and the save and the send, follow this: the next block states what happened, the hashes, and GitHub's runs on them -- READ THAT RUN FIRST. The scratch pairs and my scratch council door are stopped; the throwaway copy of the ground, the twelve results, the scorer and the old binaries are in this session's scratch folder, outside the ground, and go with it. `aider/work/runs` is empty, so his Recent runs starts clean.
+
 ## HANDOFF FOR 2026-10-03 — read this before anything below it
 
 **THE DAY SO FAR.** The same conversation, carried across a context reset; the laws and the record re-read in full at
@@ -770,6 +850,23 @@ READ THAT RUN FIRST. `manjuel/` did not move, so the REPL needs no restart. `log
 `pack_2026-10-03_181226.md`, is the one to read; the other five are the hand's earlier ones (two smoke runs and three sandbox passes, the
 three bigger ones carrying an erratum), his to keep or remove. No sitting open (341 closed 18:11:25). The door pid 9248 and the glass
 pid 18916 (placed 18:38, for the scroll fix) are the live binaries. The scratch pairs I used (8190/8191) are stopped.
+
+*Annotated 2026-10-04, on his word, nothing above changed. He asked what the six `pack_*.md` reports in `logs/` do, what they are for and
+whether the system needs them. Answered: by themselves they do nothing; they are the debug pass's written findings, for a person to read; a search of
+the engine, the door, the glass and the tests finds nothing that reads them, and both suites ran green in a clean clone of the commit with no `logs/`
+at all. His ruling, in his words: "im not interested in "folding in" wrong information, but the logs are the logs and the record is what it is. just
+annotate the record stating that this discrepency exists, as all agents read the record." So "his to keep or remove" above is RULED: KEPT. All six
+stay in `logs/`; none is to be deleted or rewritten, and the discrepancy is stated here instead. THE DISCREPANCY: three of the six, the sandbox passes
+`logs/pack_2026-10-03_152528.md`, `logs/pack_2026-10-03_155517.md` and `logs/pack_2026-10-03_164615.md`, carry a play-probe verdict that is partly
+WRONG. The probe sampled only the top-left 400x400 pixels of a canvas, so a game that draws lower down was marked `graphical=False` and "she cannot
+SEE the result" when it does draw; re-probed with the corrected instrument, 2 of 14 first games draw nothing, not the number or the marks those three
+give. Their other findings stand. Each of the three says all of this in an ERRATUM block at its head, written after the live run, and names
+`logs/pack_2026-10-03_181226.md`, judged from the live sittings 336 to 341, as the report that supersedes it. The other two,
+`logs/pack_2026-10-03_151818.md` and `logs/pack_2026-10-03_164037.md`, are two-turn smoke checks and carry no discrepancy. An agent that reads one of
+the three, or meets a passage of it in a search, takes its playability verdicts as superseded and reads the live report. None of the six is in the
+live index yet (a read-only look at `index/vectors.db` on 2026-10-04: 1,812 documents, last written 2026-10-03 17:55); they enter it at the next
+`index_ground rebuild`, which is his. And the mend named above is core `main@7e4c71b`: GitHub's own runs on it and on atlas `main@aee457a` were green on
+every leg (read 19:51 on 10-03).*
 
 ## HANDOFF FOR 2026-10-02 — read this before anything below it
 

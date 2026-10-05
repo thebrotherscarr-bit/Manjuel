@@ -3040,3 +3040,55 @@ green. The front page's scroll (C37: the window locked to its starting size, the
 glass (placed on his card), saved and sent with the pack (atlas: `agent.css`, `glass_test.go`, its CHANGELOG). The test pack's
 live report (`logs/pack_2026-10-03_181226.md`, "Reviewer's notes" first) is the thing to read: which of what it found to take up is his,
 and `python tests/pack.py --runner`, `--lines` and `--record` are the way to measure any fix.
+
+**After this entry was written** (appended 2026-10-04 on his word, the same conversation across midnight; nothing above changed) -- he asked what the
+six `pack_*.md` reports in `logs/` do, what they are for and whether the system needs them (they are the debug pass's findings, nothing reads them,
+and the suites ran green in a clean clone with no `logs/`), and ruled, in his words: "im not interested in "folding in" wrong information, but the logs
+are the logs and the record is what it is. just annotate the record stating that this discrepency exists, as all agents read the record." **Ruling:** all
+six reports are KEPT, none deleted (HANDOFF's "his to keep or remove" is answered), and the discrepancy is annotated in HANDOFF's block of 2026-10-03:
+three of them, the sandbox passes `pack_2026-10-03_152528.md`, `..._155517.md` and `..._164615.md`, carry a play-probe verdict that is partly wrong (a
+corner of a canvas sampled; 2 of 14 first games draw nothing, not the number or the marks they give; the other findings stand), each says so at its head,
+and `pack_2026-10-03_181226.md` supersedes them.
+
+## Session 23 — 2026-10-04 (Sunday), no sitting opened by the hand: Aider behind the glass, H12 and B20
+
+**Standing** — the same conversation, carried across a context reset; the laws re-read in full at the start of every turn. His standing word of
+09-29 stands ("do the list top to bottom", "restart it", "never make me wait"); RULE 9 held, because no sitting was open all day (the ledger's last line is
+sitting 341, closed 2026-10-03 18:11:25). The council's measurement ran in a throwaway copy of the ground with its own ledger (sittings 342 and 343 are
+the copy's, not the ground's).
+
+**Version** — at open: core `main@7e4c71b`, atlas `main@aee457a`, level with GitHub and green on every leg (read 10-03 19:51). At close: saved and sent
+after this entry; the next entry states the hashes and GitHub's runs, and READ THAT RUN FIRST.
+
+**The plan** — his: "finish up h12 and b20, save and send, run it through the glass. also, finish wiring in the Aider panel, it's on this system."
+Earlier in the day he asked what the six `pack_*.md` reports in `logs/` do and ruled them KEPT (annotated under 10-03 in HANDOFF; nothing above changed).
+
+**What was done** — Aider 0.86.2 installed into `aider/` (a Python 3.11 venv, 110 packages, about 640 MB, from PyPI once, on his word) and driven
+behind the glass. Three door tools (`aider_run`, `aider_undo` both `ServiceOnly`, so only his glass may call them; `aider_status` a quiet reader), a wall
+(a PEP 578 audit hook: writes only to the run's scratch, loopback only, no other process, announced by a per-run nonce), every gate the council's tree
+doors keep (a line of work, the seats' never-written lists, no key, no secret, no client path, a parse check, a race check, a rollback, an Undo), the
+Aider tab and the Inspector's Aider Pair pane. The door is `atlas/line/internal/tools/aider.go`, `aiderguard.go`, `aider_test.go` (27 strokes, the wall run
+against a real Python); the core gained one stroke (`test_the_aider_door_keeps_what_the_seats_keep`), `.gitignore` names `aider/`, BUILDMAP and RUNBOOK
+were brought current. Proved by 111 reversals (all red), both Go modules (vet and 25 packages), the render check, and the built pair driven in the
+browser pane (a real Aider edit in 33 s with its diff card; Undo three ways; a CRLF file kept CRLF; refusals for `.env`, `law/`, `../` and a key). Measured
+as H12 asked: on six small edits to one 8 KB file Aider made 6 of 6 right (70 to 270 seconds), the council's turn 3 of 6 (417 to 648 seconds, one pass,
+three changed nothing); Aider needs the whole file in the seat's 8,192-token window and only 12 of the 31 modules in `manjuel/` fit. That decision is B21.
+The door and the glass were placed and restarted on his card. The ground's suites ran from his glass on the documents as they stand: strokes 3621 of 3621, smoke 72 of 72 (21:06; the seven more strokes than yesterday's 3614 are the new stroke's checks).
+
+**Rulings** — his cards: the folder (`aider/` at the ground's root), "Install into aider/ (Recommended)", the download from PyPI, the model (the coding
+seat's own, no hosted route), and "Place and restart both (Recommended)". B20 is RULED and moved to Done with H12; B21 (should Aider make the coder flow's
+code changes?) is new and his.
+
+**Faults of the hand's, in the record** — (1) Two recursive searches rooted at the ground read files under `worlds/` and the 640 MB venv before any filter
+applied (nothing from `worlds/` printed, named or used; SITTING LAW 2). (2) A listing of an `.aider` path outside the ground (RULE 3; nothing read or
+changed). (3) Heredoc escapes eaten twice (NUL and CR bytes in `aider_test.go`; a `\n` turned into a real newline inside a JavaScript string), each found
+by reading before it ran. (4) The first reversal pass left 9 of 57 mutations green; the strokes were tightened and it was redone, all red. (5) A pipe
+into `Select-Object -First` cut `git add` mid-write in a scratch repository and left a lock there. (6) The scorer called three unchanged council files
+"written" because the throwaway copy was CRLF; corrected before anything was concluded. (7) A `du` over the venv stalled. HANDOFF has each in full.
+
+**At close** — (21:07) The door (pid 21608) and the glass (pid 25236) are the placed Aider builds. No sitting is open (341 closed 2026-10-03 18:11:25), and `manjuel/` did not move, so the REPL needs no restart. The ground's suites ran from his glass on the documents as they stand: strokes 3621 of 3621, smoke 72 of 72. Aider is built, measured and placed; the run of it on his own page, and the save and the send, follow this: the next block states what happened, the hashes, and GitHub's runs on them -- READ THAT RUN FIRST. The scratch pairs and my scratch council door are stopped; the throwaway copy of the ground, the twelve results, the scorer and the old binaries are in this session's scratch folder, outside the ground, and go with it. `aider/work/runs` is empty, so his Recent runs starts clean.
+
+**Next session** — open `What's left` first: B21 (Aider and the coder flow), B19 (where plugins live), E1 (the wife test with a person), and the second
+brain's builds H2 to H11, H13 (Claude in the loop), H16 (retire the sidebar). The Aider tab is live on the front page; the Recent runs in its Inspector
+start empty. `python tests/pack.py --runner` is still how to run lines live through the glass.
+
