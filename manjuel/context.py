@@ -405,6 +405,13 @@ class RunContext:
     # record says so. Asked of nobody, the question ended the whole run
     # (pipeline._handle_failure). The REPL never sets it: he is there.
     unattended: bool = False
+    # A SCREEN IS SHOWING WHAT THE MAKER MAKES (2026-10-05, WHAT'S LEFT E1). Set by
+    # the headless door (serve.py) -- the one THE LINE spawns for the glass, whose
+    # front page frames the project a delivery names -- so the maker's reports do
+    # not tell a person to go and open a file (the wife test's finding: a game
+    # handed over as a path). The REPL never sets it: its only screen is a
+    # terminal, and a path is what a terminal can be told.
+    screen: bool = False
     steps: list[StepResult] = field(default_factory=list)
     flags: set[str] = field(default_factory=set)
     artifacts: list[Path] = field(default_factory=list)

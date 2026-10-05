@@ -1762,7 +1762,7 @@ def _maker_go_back(ctx: RunContext, env, project, target: int, report) -> None:
         out = f"Nothing was changed: {exc}."
         ctx.notes.append(f"maker: go back refused -- {exc}")
     else:
-        out = maker.report_back(project, n, to)
+        out = maker.report_back(project, n, to, screen=ctx.screen)
         ctx.artifacts.append(project / maker.PAGE)
         ctx.notes.append(f"maker: {project.name} went back to version {to}, "
                          f"saved as version {n}")
@@ -1781,7 +1781,8 @@ def _maker_pick_up(ctx: RunContext, ground, project, report) -> None:
                      + (" -- it was already in hand" if already else ""))
     report("  " + ink.dim(ctx.notes[-1]))
     ctx.steps.append(StepResult(agent="Maker", model="(engine)",
-                                output=maker.report_picked(project, already)))
+                                output=maker.report_picked(project, already,
+                                                           screen=ctx.screen)))
 
 
 def _maker_put_down(ctx: RunContext, ground, project, report) -> None:
@@ -1909,9 +1910,11 @@ def _maker_land(ctx: RunContext, env, output: str, report) -> None:
     ctx.artifacts.append(project / maker.PAGE)
     if make.get("kind") == "change":
         make["report"] = maker.report_changed(project, n, lines, make.get("was", 0),
-                                              ctx.objective, trouble)
+                                              ctx.objective, trouble,
+                                              screen=ctx.screen)
     else:
-        make["report"] = maker.report_made(project, lines, trouble)
+        make["report"] = maker.report_made(project, lines, trouble,
+                                           screen=ctx.screen)
     ctx.notes.append(f"maker: {project.name} version {n} saved ({maker.PAGE}, "
                      f"{lines} lines)")
     report("      " + ink.dim(ctx.notes[-1]))

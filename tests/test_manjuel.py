@@ -20531,6 +20531,254 @@ def test_the_pack_is_wired(reg, lib, book):
               rc == 2 and "refused" in buf.getvalue(), f"rc {rc}: {buf.getvalue()[:120]!r}")
 
 
+def test_the_maker_speaks_to_a_screen_without_a_file_to_open(reg, lib, book):
+    """THE MAKER AT A SCREEN (2026-10-05, WHAT'S LEFT E1, the wife test's finding).
+
+    She asked for a game and was told to open a path in her browser: a person who
+    is not at a terminal, handed a file. The glass frames the project every
+    delivery names (atlas, the front page's play frame), so on a screen the four
+    reports that sent a person to a file say the page is ready and leave the file
+    out; at the REPL, where a terminal can only be told where a file is, they are
+    what they were, word for word.
+
+    HELD AT FOUR JOINTS, because the wire has four: the source (every report call
+    in pipeline.py passes `ctx.screen`; only the headless door builds a context
+    with `screen=True`; the REPL's contexts never do), the words (the terminal's
+    are golden, so the REPL cannot drift), the turn through the engine (each
+    report is handed the flag), and the wire through the headless door itself
+    (the only thing that sets it). The pack's own judge, `TERMINAL_TALK`, is the
+    instrument: it flags the terminal's words and nothing in the screen's.
+
+    Hermetic: temp grounds, a stand-in Coder, pages one line long, and no browser
+    (the check that loads a page is held by its own stroke, not by this one).
+    """
+    import ast
+    import builtins as _b
+    import importlib
+    import inspect as _inspect
+    import io
+    import json as _json
+    import shutil
+    from manjuel import cli as _cli
+    from manjuel import maker, pipeline
+    from manjuel import seatlog as _sl
+    from manjuel import serve as _sv
+
+    tests_dir = str(ROOT / "tests")
+    if tests_dir not in sys.path:
+        sys.path.insert(0, tests_dir)
+    talk = importlib.import_module("pack").TERMINAL_TALK
+
+    PAGE_ONE = "<!DOCTYPE html>\n<html><body><p>one</p></body></html>\n"
+    PAGE_TWO = "<!DOCTYPE html>\n<html><body><p>two</p></body></html>\n"
+
+    def answer(page):
+        return f"<filepath>index.html</filepath>\n```html\n{page}```\n"
+
+    # ---- THE SOURCE: who says a screen is showing, and who is told ----------
+    def calls_to(mod, owner, names):
+        tree = ast.parse(_inspect.getsource(mod))
+        return [n for n in ast.walk(tree) if isinstance(n, ast.Call)
+                and ((isinstance(n.func, ast.Attribute) and n.func.attr in names
+                      and isinstance(n.func.value, ast.Name) and n.func.value.id == owner)
+                     or (not owner and isinstance(n.func, ast.Name) and n.func.id in names))]
+
+    def has(call, key, value):
+        return any(k.arg == key and ast.unparse(k.value) == value for k in call.keywords)
+
+    reports = calls_to(pipeline, "maker", ("report_made", "report_changed", "report_back", "report_picked"))
+    check("pipeline.py hands the screen to every report that would send a person to a file (four calls)",
+          len(reports) == 4 and all(has(c, "screen", "ctx.screen") for c in reports),
+          f"{len(reports)} call(s); without it: "
+          f"{[ast.unparse(c.func) for c in reports if not has(c, 'screen', 'ctx.screen')]}")
+    door = calls_to(_sv, "", ("RunContext",))
+    check("the headless door is the one place that says a screen is showing: its context is built with screen=True",
+          len(door) == 1 and has(door[0], "screen", "True"), f"{len(door)} RunContext call(s) in serve.py")
+    repl = calls_to(_cli, "", ("RunContext",))
+    check("the REPL never says it: none of its contexts is built with a screen",
+          len(repl) > 0 and not any(k.arg == "screen" for c in repl for k in c.keywords),
+          f"{len(repl)} RunContext call(s) in cli.py")
+    check("and a context starts without one", RunContext(objective="x").screen is False)
+
+    if not HAVE_GIT:
+        return                    # reported once, in main(); never a crash
+
+    # ---- THE WORDS: the terminal's, golden; a screen's, with no file in them --
+    g = Path(tempfile.mkdtemp())
+    p = maker.new_project(g, "snake-game")
+    maker.save_version(p, PAGE_ONE, "make me a page")
+    maker.save_version(p, PAGE_TWO, "make it two")
+    path = "projects\\snake-game\\index.html"
+    said_next = ("What next? Ask for a change in plain words -- \"make it faster\", \"add a score\" -- "
+                 "and it becomes version 2. \"Go back\" returns to an earlier version, and nothing is "
+                 "ever thrown away.")
+    check("at a terminal the made report is what it always was, word for word",
+          maker.report_made(p, 74) == (
+              "Made snake-game -- version 1.\n\nIt is one page, index.html (74 lines), in "
+              "projects\\snake-game\\ with its own history. To try it, open " + path
+              + " in your browser.\n\n" + said_next), maker.report_made(p, 74)[:200])
+    check("   and so is the changed report",
+          maker.report_changed(p, 2, 80, 74, "make it faster") == (
+              "Changed snake-game -- version 2: make it faster\n\nindex.html is now 80 lines (it was 74). "
+              "Open " + path + " again to see it.\n\nSay \"go back\" to return to version 1, or ask for "
+              "the next change."), maker.report_changed(p, 2, 80, 74, "make it faster")[:200])
+    listing = "  1  make me a page\n  2  make it two"
+    check("   and the go-back report",
+          maker.report_back(p, 3, 1) == (
+              "snake-game is back to version 1 -- saved as version 3, so nothing was lost.\n\nIts "
+              "versions:\n" + listing + "\n\nOpen " + path + " to see it."), maker.report_back(p, 3, 1)[:200])
+    check("   and the pick-up report",
+          maker.report_picked(p) == (
+              "Working on snake-game now -- it is at version 2.\n\nIts versions:\n" + listing
+              + "\n\nOpen " + path + " to see it. Ask for a change in plain words and it becomes version "
+              "3; say \"put it down\" when you are done with it."), maker.report_picked(p)[:200])
+    for what, text in (("made", maker.report_made(p, 74)),
+                       ("changed", maker.report_changed(p, 2, 80, 74, "make it faster")),
+                       ("back", maker.report_back(p, 3, 1)),
+                       ("picked", maker.report_picked(p))):
+        check(f"the pack's judge flags the terminal's {what} report as a file to open", bool(talk.search(text)), text[:120])
+    shown = {"made": maker.report_made(p, 74, screen=True),
+             "changed": maker.report_changed(p, 2, 80, 74, "make it faster", screen=True),
+             "back": maker.report_back(p, 3, 1, screen=True),
+             "picked": maker.report_picked(p, screen=True)}
+    for what, text in shown.items():
+        check(f"on a screen the {what} report sends nobody to a file, and the pack's judge sees nothing to flag",
+              path not in text and not talk.search(text), text[:200])
+    check("   and says the page is ready, in the way each report always spoke",
+          "with its own history. It is ready to try.\n\n" + said_next in shown["made"]
+          and shown["changed"].startswith("Changed snake-game -- version 2: make it faster")
+          and "(it was 74). It is ready to try again.\n\nSay \"go back\"" in shown["changed"]
+          and shown["back"].endswith(listing + "\n\nIt is ready to try.")
+          and "\n\nIt is ready to try. Ask for a change in plain words and it becomes version 3;" in shown["picked"],
+          str({k: v[-90:] for k, v in shown.items()}))
+    check("   and a note on a page that still errors rides with it, as it did",
+          maker.report_made(p, 74, "One thing to know: x.", screen=True).count("One thing to know: x.") == 1
+          and maker.report_changed(p, 2, 80, 74, "n", "One thing to know: x.", screen=True).count("One thing to know: x.") == 1)
+
+    # ---- THE TURN, and THE WIRE: gathered with no browser, judged below --------
+    def turns(screen):
+        gr = Path(tempfile.mkdtemp())
+        pages = iter([PAGE_ONE, PAGE_TWO])
+
+        def reply(a):
+            return answer(next(pages)) if a.key == "expert coder" else "A SEAT THAT SAT"
+
+        def turn(objective):
+            r = Stub(reply=reply)
+            ctx = RunContext(objective=objective, screen=screen)
+            run_pipeline(ctx, reg, r, lib, env_for(gr, reg, r), steps=book.get("default"),
+                         report=lambda m: None)
+            return ctx.last_output()
+
+        maker.forget()
+        try:
+            return [turn("Make me a simple snake game I can play."), turn("make it faster"), turn("go back"),
+                    turn("put it down"), turn("work on the snake game")]
+        finally:
+            maker.forget()
+
+    class Sess:
+        """cli.Session's shape, as the maker's wire stroke stands it in."""
+        def __init__(self, runtime, gw):
+            self.runtime, self.registry, self.skills, self.book = runtime, reg, lib, book
+            self.gw = gw
+            self.last = None
+            self.pipeline_name = "default"
+            self.pipeline = book.get("default")
+            self.session = "S-screen"
+            self.last_run_ref = ""
+            self.sitting = _sl.Sitting(n=99, id="S-screen", started="2026-10-05T10:00:00")
+            self.standing = ""
+            self.speaking = False
+            self.dialogue: list = []
+            self._dvecs: dict = {}
+            self.topic_start = 0
+            self.watcher = None
+            self.pending_feed = self.pending_spoken = self.pending_method = ""
+            self.model_override = ""
+            self.rack_ok = True
+        def rack_check(self): return True
+        def load(self): return True
+        def pipeline_names(self): return book.names()
+        def pipeline_steps(self, name): return book.get(name)
+        @property
+        def env(self):
+            env = env_for(self.gw, reg, self.runtime, session=self.session, skills=self.skills)
+            env.ground = self.gw
+            return env
+
+    def over_the_wire():
+        gw = Path(tempfile.mkdtemp())
+        shutil.copytree(ROOT / "law", gw / "law", ignore=shutil.ignore_patterns("__pycache__"))
+        shutil.copytree(ROOT / "skills", gw / "skills")
+        for d in ("agent_workspace", "logs", "sessions"):
+            (gw / d).mkdir()
+        wire_pages = iter([PAGE_ONE, PAGE_TWO])
+
+        def wire_reply(a):
+            return answer(next(wire_pages)) if a.key == "expert coder" else "A SEAT THAT SAT"
+
+        out = io.StringIO()
+        src = io.StringIO("".join(_json.dumps(l) + "\n" for l in (
+            {"cmd": "objective", "text": "Make me a simple snake game I can play."},
+            {"cmd": "objective", "text": "make it faster"},
+            {"cmd": "objective", "text": "go back"},
+            {"cmd": "objective", "text": "work on the snake game"},
+            {"cmd": "close"})))
+        keep_out, keep_in = sys.stdout, _b.input
+        maker.forget()
+        try:
+            wire, inbox = _sv.open_wire(out=out, source=src)
+            door = _sv.Door(Sess(Stub(reply=wire_reply), gw), wire, inbox, ground=gw, closer=lambda s: None)
+            inbox.start()
+            door.serve()
+        finally:
+            sys.stdout, _b.input = keep_out, keep_in
+            maker.forget()
+        rows = [_json.loads(l) for l in out.getvalue().splitlines() if l.strip()]
+        return [r.get("text", "") for r in rows if r["event"] == "delivery"]
+
+    real_run_page = maker.run_page
+    maker.run_page = lambda page, *a, **k: (True, [], "")
+    try:
+        at_terminal, at_screen, wired = turns(False), turns(True), over_the_wire()
+    finally:
+        maker.run_page = real_run_page
+
+    t_made, t_changed, t_back, t_down, t_picked = at_terminal
+    s_made, s_changed, s_back, s_down, s_picked = at_screen
+    check("a turn at a terminal still ends in the file to open: made, changed, gone back, picked up",
+          all(talk.search(t) for t in (t_made, t_changed, t_back, t_picked))
+          and f"To try it, open {path} in your browser." in t_made
+          and f"Open {path} again to see it." in t_changed
+          and t_back.endswith(f"Open {path} to see it.") and f"Open {path} to see it. Ask for" in t_picked,
+          str([t[-80:] for t in (t_made, t_changed, t_back, t_picked)]))
+    check("a turn on a screen makes the page and says so, and sends nobody to a file",
+          s_made.startswith("Made snake-game -- version 1.") and "It is ready to try." in s_made
+          and path not in s_made and not talk.search(s_made), s_made[:240])
+    check("   a change likewise",
+          s_changed.startswith("Changed snake-game -- version 2: make it faster")
+          and "It is ready to try again." in s_changed and path not in s_changed and not talk.search(s_changed),
+          s_changed[:240])
+    check("   going back likewise",
+          s_back.startswith("snake-game is back to version 1 -- saved as version 3")
+          and s_back.endswith("It is ready to try.") and path not in s_back and not talk.search(s_back),
+          s_back[-160:])
+    check("   and picking a project up likewise",
+          s_picked.startswith("Working on snake-game now -- it is at version 3.")
+          and "It is ready to try. Ask for a change in plain words" in s_picked
+          and path not in s_picked and not talk.search(s_picked), s_picked[:240])
+    check("   and putting it down never said to open anything, at either",
+          s_down == t_down and s_down.startswith("Put snake-game down.") and not talk.search(s_down), s_down[:160])
+    check("over the headless door's wire, no delivery of the maker tells a person to open a file",
+          len(wired) == 4 and not any(talk.search(t) or path in t for t in wired),
+          repr([t[:90] for t in wired]))
+    check("   and each says the page is ready: made, changed, gone back, picked up",
+          len(wired) == 4 and "It is ready to try." in wired[0] and wired[1].count("It is ready to try again.") == 1
+          and wired[2].endswith("It is ready to try.") and "It is ready to try. Ask for a change" in wired[3],
+          repr([t[-70:] for t in wired]))
+
+
 def main() -> int:
     if not SELECT:
         begin_run(ROOT, "strokes")   # so a crash cannot leave a green stamp
@@ -20770,6 +21018,7 @@ def main() -> int:
     test_the_maker(reg, lib, book)
     test_the_maker_runs_the_page_before_it_keeps_it(reg, lib, book)
     test_the_maker_picks_up_and_puts_down(reg, lib, book)
+    test_the_maker_speaks_to_a_screen_without_a_file_to_open(reg, lib, book)
     test_the_pack_is_wired(reg, lib, book)
     test_ink()
     test_math()

@@ -34,6 +34,28 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: the maker speaks to a person at a screen without handing her a file to open (2026-10-05, WHAT'S LEFT E1's second piece)
+
+The wife test's second finding, read on the live record of 2026-10-03 (sittings 336 and 337) and again on 2026-10-05: she asked for a game and was told "To try it,
+open projects\game-3\index.html in your browser", a path, to a person who is not at a terminal. The front page now frames the project every delivery names (atlas's entry
+of the same day), so on a screen the engine stops saying it. `RunContext.screen` is new and False by default; the headless door (`serve.py`, the one THE LINE spawns for
+the glass) builds every turn's context with `screen=True`, and the REPL's contexts never do. The four maker reports that sent a person to a file take it (`report_made`,
+`report_changed`, `report_back`, `report_picked`, with `maker.READY`): at a terminal they are what they were, word for word; on a screen they say "It is ready to try." (or "ready
+to try again") and leave the file out. `pipeline.py` hands each of them `ctx.screen`. The put-down report never said to open anything and is unchanged.
+
+What it did not take, and the list still carries under E1: her second line's "Nothing was saved: the page came back exactly as it was" (the next piece), "the game"
+meaning the oldest of that name, a blank canvas passing the maker's check, and the small-talk narration.
+
+Held by `test_the_maker_speaks_to_a_screen_without_a_file_to_open` (26 checks), at four joints: the source (every report call in `pipeline.py` passes `ctx.screen`; only the
+headless door builds a context with `screen=True`; none of the REPL's does), the words (the terminal's golden; the screen's judged by the pack's own `TERMINAL_TALK`, which
+flags the first and nothing in the second), the turn through the engine (made, changed, gone back, picked up) and the wire through the real headless door. 16 reversals, each
+red and named, every file restored byte for byte: a report not handed the flag (four ways, and the flag hard-wired on); the door saying no screen, or saying nothing; each report
+ignoring the flag (four ways); the terminal's sentence reworded (two ways); the screen's sentence naming the file again; a context that starts with a screen; the REPL saying a
+screen is showing. Cutting the door's flag also reddens the two checks through the wire, not only the one that reads the source. Proved in a clean clone of the pushed commit
+(3617 strokes, 72 smoke) and through his glass (3647 strokes, 72 smoke). **Restart required** for a REPL already open (`manjuel/` moved); the
+door starts a fresh engine for every Boot, so the glass's next Boot has it. **What goes red if unplugged:** that stroke: the four report calls, the door's `screen=True`, and
+the terminal's golden words.
+
 ### atlas: the front page plays what the maker made (2026-10-05, WHAT'S LEFT E1's first piece; the entry is atlas's)
 
 The first of the wife test's findings is mended in the tree: the front page now plays the project a delivery names, in a frame between the terminal's output and its

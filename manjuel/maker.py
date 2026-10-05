@@ -805,6 +805,18 @@ def _where(project) -> str:
     return f"{PROJECTS}\\{Path(project).name}\\{PAGE}"
 
 
+# AT A SCREEN, NOTHING IS TO BE OPENED (2026-10-05, WHAT'S LEFT E1). The wife
+# test's finding was that a person who asked for a game was handed a path
+# ("To try it, open projects\game-3\index.html in your browser"). The glass
+# frames the project every delivery names, so on a screen the four reports that
+# sent a person to a file say the page is ready and leave the file out. `screen`
+# is RunContext.screen: only the headless door sets it, every call in
+# pipeline.py hands it over, and a stroke reads them all. At the REPL it is
+# False and the sentence stays, because a terminal can only be told where a
+# file is.
+READY = "It is ready to try."
+
+
 def _trouble(said: str) -> str:
     """The check's word, as a paragraph, or nothing at all.
 
@@ -816,12 +828,12 @@ def _trouble(said: str) -> str:
     return f"\n\n{said}" if said else ""
 
 
-def report_made(project, lines: int, trouble: str = "") -> str:
+def report_made(project, lines: int, trouble: str = "", screen: bool = False) -> str:
     name = Path(project).name
+    look = READY if screen else f"To try it, open {_where(project)} in your browser."
     return (f"Made {name} -- version 1.\n\n"
             f"It is one page, {PAGE} ({lines} lines), in {PROJECTS}\\{name}\\ "
-            f"with its own history. To try it, open {_where(project)} in your "
-            f"browser."
+            f"with its own history. {look}"
             + _trouble(trouble) + "\n\n"
             f"What next? Ask for a change in plain words -- \"make it faster\", "
             f"\"add a score\" -- and it becomes version 2. \"Go back\" returns to "
@@ -829,11 +841,12 @@ def report_made(project, lines: int, trouble: str = "") -> str:
 
 
 def report_changed(project, n: int, lines: int, was: int, note: str,
-                   trouble: str = "") -> str:
+                   trouble: str = "", screen: bool = False) -> str:
     name = Path(project).name
+    look = ("It is ready to try again." if screen
+            else f"Open {_where(project)} again to see it.")
     return (f"Changed {name} -- version {n}: {_note(note)}\n\n"
-            f"{PAGE} is now {lines} lines (it was {was}). Open {_where(project)} "
-            f"again to see it."
+            f"{PAGE} is now {lines} lines (it was {was}). {look}"
             + _trouble(trouble) + "\n\n"
             f"Say \"go back\" to return to version {n - 1}, or ask for the next "
             f"change.")
@@ -858,13 +871,13 @@ def said_checked(ran: bool, why: str, faults, repaired: bool) -> str:
             f"play. Ask for a change in plain words and it can be fixed.")
 
 
-def report_back(project, n: int, target: int) -> str:
+def report_back(project, n: int, target: int, screen: bool = False) -> str:
     name = Path(project).name
     listing = "\n".join(f"  {i}  {note.split(': ', 1)[-1]}"
                         for i, _sha, note in versions(project)[-6:])
+    look = READY if screen else f"Open {_where(project)} to see it."
     return (f"{name} is back to version {target} -- saved as version {n}, so "
-            f"nothing was lost.\n\nIts versions:\n{listing}\n\n"
-            f"Open {_where(project)} to see it.")
+            f"nothing was lost.\n\nIts versions:\n{listing}\n\n{look}")
 
 
 def report_unsaved(why: str) -> str:
@@ -881,7 +894,7 @@ def report_too_big(project, size: int) -> str:
             f"maker, not of your request.")
 
 
-def report_picked(project, already: bool = False) -> str:
+def report_picked(project, already: bool = False, screen: bool = False) -> str:
     name = Path(project).name
     vs = versions(project)
     head = (f"You are already working on {name}" if already
@@ -891,8 +904,9 @@ def report_picked(project, already: bool = False) -> str:
                 f"into it.\n\nSay \"put it down\" to set it aside.")
     listing = "\n".join(f"  {i}  {note.split(': ', 1)[-1]}"
                         for i, _sha, note in vs[-6:])
+    look = READY if screen else f"Open {_where(project)} to see it."
     return (f"{head} -- it is at version {len(vs)}.\n\nIts versions:\n"
-            f"{listing}\n\nOpen {_where(project)} to see it. Ask for a change "
+            f"{listing}\n\n{look} Ask for a change "
             f"in plain words and it becomes version {len(vs) + 1}; say \"put it "
             f"down\" when you are done with it.")
 

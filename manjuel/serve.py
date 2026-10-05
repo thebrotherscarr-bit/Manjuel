@@ -783,7 +783,10 @@ class Door:
                          review_only=sess.pipeline_name in ("court", "estate"),
                          standing=getattr(sess, "standing", ""),
                          story=_log.story_block(sess.sitting),
-                         unattended=bool(getattr(self, "unattended", False)))
+                         unattended=bool(getattr(self, "unattended", False)),
+                         # THIS DOOR IS THE GLASS'S (context.screen): what the maker
+                         # makes is framed on a screen, so no file is to be opened
+                         screen=True)
         sess.pending_feed = ""
         sess.pending_method = ""
         sess.last_run_ref = f"logs/{transcript.name_for(ctx)}"
