@@ -3095,3 +3095,18 @@ into `Select-Object -First` cut `git add` mid-write in a scratch repository and 
 brain's builds H2 to H11, H13 (Claude in the loop), H16 (retire the sidebar). The Aider tab is live on the front page; the Recent runs in its Inspector
 hold only the two proof runs, both taken back. `python tests/pack.py --runner` is still how to run lines live through the glass.
 
+**After this entry was written** (appended 2026-10-05 on his word; nothing above changed) -- he asked what was next on the list and, shown the fifteen open
+lines, answered three: "b21: yes. b19: plugins are in a plugin folder. slash pluging should work. e1: the wife test was a real script from a human."
+**Rulings:** B21 is RULED yes and taken as the second way (Aider is the coder flow's `attempt` where every file fits its window, the council's own edit where one
+does not, every gate kept): the build is H17, new on the list. B19 is RULED (a plugin folder at the ground's root, a `/plugin` command that works it): H9 no
+longer waits. E1 is CORRECTED, not closed: the wife test's three lines are hers, word for word, read off the run of 2026-09-23 in which she asked for a game and
+got thirteen minutes and nothing; the 2026-10-03 DAYBOOK, HANDOFF and CHANGELOG call the replay "a mock" and say "a mock is not a person", and are kept as written.
+The pack's second case (W2) is the hand's own mock and says so; its first (W1) is her script, and what it found on her second line is a finding on her real words.
+**The red run:** read on the morning of 10-05, core `1eb2378` is green on all four GitHub legs and atlas `cbec5eb` is green on its Windows gate but RED on `the go half,
+off Windows` at its test step (the log needs a GitHub sign-in, so the failing test is not yet known); the Aider tests had never run on Linux. It is the next
+thing mended. Nothing was built to record these rulings.
+
+**Later the same day** (2026-10-05, appended; nothing above changed) -- atlas's Linux leg was mended (the wall's probe test, not the wall; atlas `42aa51a`, core `1eb2378`
+green) and the first piece of E1 was built and proved on a scratch glass in the browser pane: the front page plays the project a delivery names, the whole game on screen
+(a glass change, not yet placed). He asked, mid-work, to "use the browser when possible, i want to see the progress", and the proofs were run in the pane.
+

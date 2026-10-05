@@ -34,6 +34,26 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### atlas: the front page plays what the maker made (2026-10-05, WHAT'S LEFT E1's first piece; the entry is atlas's)
+
+The first of the wife test's findings is mended in the tree: the front page now plays the project a delivery names, in a frame between the terminal's output and its
+input line, with the whole game on screen (a game made for an 800 by 600 canvas is shrunk to fit, never cut off). The piece, its two design findings, its proof (a
+stroke with 21 reversals, a node run, a scratch glass in the browser pane against the real door) and what it did not take are in atlas's CHANGELOG under the same
+date. In this ground: WHATS_LEFT's E1 says the first of its findings is mended and not yet placed; nothing in `manjuel/` moved, so the REPL needs no restart. It is a
+glass change, so it takes a rebuild and a restart of the glass, on his card. **What goes red if unplugged:** in atlas, `TestTheFrontPagePlaysWhatTheMakerMade`.
+
+### core: his rulings of 2026-10-05: Aider makes the coder flow's changes (B21), plugins live in a plugin folder with a working /plugin (B19), and the wife test is a real script from a human (E1)
+
+He answered three lines of WHAT'S LEFT in chat: B21, "yes"; B19, "plugins are in a plugin folder. slash pluging should work."; and, of E1, "the wife test
+was a real script from a human." The list carries them. B21 and B19 are in Done as RULED. H17 is new: Aider as the flow's `attempt`, taken as the second
+way of B21 (Aider where every file fits the coding model's window, the council's own edit where one does not, every gate kept), which is the build. H9's
+wait on B19 is struck: the place is a plugin folder at the root and the front door a `/plugin` command. E1's text is corrected, not closed: its three
+lines are hers, read off the run of 2026-09-23 in which she asked for a game and got thirteen minutes and nothing; the pack's first case replays them
+verbatim and its second case is the hand's own fuller mock. The 2026-10-03 records that call the replay "a mock" are kept as written and annotated in
+HANDOFF and DAYBOOK. What SPEC 4.8 asks (her at the glass with nobody helping) is unchanged. Nothing was built, and nothing in `manjuel/` moved.
+**What goes red if unplugged:** the list's own wire, `test_the_list_of_what_is_left_reads_whole_and_is_not_stale`: the two Done lines cite this heading,
+so a heading that goes missing, a number used twice or a number under the wrong letter fails the suites.
+
 ### atlas: Aider behind the glass: the front page's Aider tab, and the door tools under it (2026-10-04, WHAT'S LEFT H12 and B20; the entry is atlas's)
 
 His order of 2026-10-04: "finish up h12 and b20, save and send, run it through the glass. also, finish wiring in the Aider panel, it's on this system."

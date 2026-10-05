@@ -763,6 +763,24 @@ repository cut the writer mid-write and left an `index.lock` there (never in the
 
 **Where the ground stands.** (21:07) The door (pid 21608) and the glass (pid 25236) are the placed Aider builds. No sitting is open (341 closed 2026-10-03 18:11:25), and `manjuel/` did not move, so the REPL needs no restart. The ground's suites ran from his glass on the documents as they stand: strokes 3621 of 3621, smoke 72 of 72. Aider is built, measured, placed and run live on his own glass (above); both repositories are saved locally and the send follows this: the next block states the hashes and GitHub's runs on them -- READ THAT RUN FIRST. The scratch pairs and my scratch council door are stopped; the throwaway copy of the ground, the twelve results, the scorer and the old binaries are in this session's scratch folder, outside the ground, and go with it. `aider/work/runs` holds the two proof runs, both taken back.
 
+*Annotated 2026-10-05, on his word, nothing above changed. He asked what was next on the list, was shown the fifteen open lines, and answered three of
+them: "b21: yes. b19: plugins are in a plugin folder. slash pluging should work. e1: the wife test was a real script from a human." RULED: B21 yes, taken as
+the second way (Aider is the coder flow's `attempt` where every file fits its window, the council's own edit where one does not, every gate kept; the build
+is H17); B19 (a plugin folder at the ground's root, a `/plugin` command that works it; H9 no longer waits). CORRECTED, not closed: E1. The wife test's three
+lines are hers, word for word, read off the run of 2026-09-23 in which she asked for a game and got thirteen minutes and nothing, and the pack's first
+case (W1) replays them verbatim; the 2026-10-03 block below, its DAYBOOK entry and the CHANGELOG call the replay "a mock" and say "a mock is not a person".
+The pack's SECOND case (W2, thirteen turns) is the hand's own mock and says so, but W1 is her script, and the finding on her second line ("Nothing was
+saved", 9 runs of 10) is a finding on her real words. Those records are kept as written. What SPEC 4.8 asks, her at the glass with nobody helping, is
+unchanged. READ THE RUNS FIRST, as the block above asked; read on the morning of 2026-10-05: core `1eb2378` is GREEN on all four legs; atlas `cbec5eb` is green
+on the Windows gate (`the battery (windows)`) and RED on `the go half, off Windows`, at its test step. GitHub's log needs a sign-in, so which test failed is
+not yet known; it is a fault of the 2026-10-04 piece (the Aider tests had never run on Linux), and it is the next thing mended.*
+
+*Later the same day, 2026-10-05 (nothing above changed).* Mended and sent first: atlas's Linux leg, which went red on `cbec5eb` because the Aider wall's probe test
+handed command STRINGS, which only Windows reads as command lines (the wall was right and the test was wrong; the run's annotations named it, since the log needs a
+sign-in, and the workflow now writes failing lines as annotations); atlas `42aa51a` and core `1eb2378` are green on GitHub. Then the first piece of E1: the front page
+plays the project a delivery names, whole on screen (atlas CHANGELOG, "The front page plays what the maker made"; a glass change, built and proved on a scratch glass in
+the browser pane, NOT yet placed: it needs his card, and then a rebuild and restart of the glass). The rest of E1's findings are the engine's (`manjuel/`).
+
 ## HANDOFF FOR 2026-10-03 — read this before anything below it
 
 **THE DAY SO FAR.** The same conversation, carried across a context reset; the laws and the record re-read in full at

@@ -25,19 +25,6 @@ The release is core **v0.1.16** and atlas **v0.1.9**. Both tags are cut and on G
 
 Nothing here gets built until you say which way.
 
-- **B21. Should Aider make the coder flow's code changes?** Aider is a tab you type in; nothing in a flow calls it. What was measured
-  (H12, 2026-10-04): the same six small edits to one 8 KB file, each handed once to Aider and once to the council's coding turn. Aider got all
-  six right, in about two minutes each (70 to 270 seconds). The council got three right, in about ten minutes each, and in the other three
-  changed nothing. Two limits on that: the council had one try and one pass where the flow gives two, and Aider has to hold the whole file
-  in the coding model's 8,192-token window, which only 12 of the core's 31 modules in `manjuel/` fit (`skills.py` is 249 KB). Three ways to
-  go. **(a)** Leave it as built: Aider is a tab for small files and the flow stays as it is (recommended: nothing to take back). **(b)** Let
-  the flow's `attempt` use Aider when every file it names fits the window, and the council's own edit when one does not. **(c)** Measure the
-  council properly first (three tries a task, both passes) and decide on that, about three hours of the graphics card. Whichever you pick,
-  the line of work, the suites and your Land click stay. *(H12's measurement; your idea of 2026-10-02)*
-- **B19. Where do plugins live?** A plugin is a folder, and a hand makes no folder (RULE 8). Name the
-  place, or say to put them under a folder that exists. Until you do, H9 waits. *(CLAUDE.md RULE 8;
-  your word 2026-10-02)*
-
 
 ---
 
@@ -62,11 +49,15 @@ Nothing here gets built until you say which way.
 
 ## E. Never tested for real
 
-- **E1. The wife test.** Someone who is not you sits at the dashboard, asks it to make something
-  in her own words, and uses the result with no help. All three pieces are built. The test with a
-  person has not been run. A MOCK of it has, live on your glass (2026-10-03, sittings 336 to 341; read the "Reviewer's notes" in
-  `logs/pack_2026-10-03_181226.md` first): she is understood and handed a game in about 30 seconds, and then cannot see or play
-  it from the front page; her second line gets "Nothing was saved". Nothing is fixed; which of it to take up is yours. *(SPEC 4.8)*
+- **E1. The wife test.** Someone who is not you sits at the dashboard, asks it to make something in her own words, and uses the result
+  with no help. All three pieces are built. The test is real, not a mock: its three lines are hers, word for word, read off the run of
+  2026-09-23 in which she asked for a game and got thirteen minutes and nothing (your word, 2026-10-05: "the wife test was a real script
+  from a human"). Those lines have been run through your glass since, live (2026-10-03, sittings 336 to 341; read the "Reviewer's notes"
+  in `logs/pack_2026-10-03_181226.md` first; the pack's second case is the hand's own fuller mock, and says so): she is understood and
+  handed a game in about 30 seconds, and then cannot see or play it from the front page; her second line, "i dont want it text based, i
+  want a game i can play", gets "Nothing was saved". The first of those is mended in the tree and not yet
+  placed on your glass (2026-10-05: the front page frames the project a delivery names, the whole game on screen); the rest is not. What SPEC 4.8
+  still asks for is her at the glass with nobody helping, once these are mended. *(CHANGELOG, "atlas: the front page plays what the maker made"; SPEC 4.8)*
 
 ---
 
@@ -99,6 +90,12 @@ workflows, backed by ollama as a first route then secondarily through additional
 with a modules and plugin system ... a conversational assistant that evolves over time." What the
 disk says is missing, in the order it is worth building. H1 is done (below).
 
+- **H17. Aider makes the coder flow's code changes.** Ruled by B21 (2026-10-05: "yes"), taken as the second way: the flow's `attempt` is
+  Aider when every file the change names fits the coding model's 8,192-token window, and the council's own edit when one does not; the
+  line of work, the suites and your Land click stay, and no seat, agent or role is ever given Aider. Needed: a step kind in the flow
+  engine that asks the door for an Aider run, on a grant from the gate you click to open the line and nowhere else; `coder-tree`
+  folded to a new version with the council's own `attempt` as the fall-back and the old version kept; held by strokes and
+  reversals; and measured through the flow on the six tasks of H12. *(B21; `flows/coder-tree.json`; `atlas/line/internal/flow`)*
 - **H2. The assistant does not remember across sittings.** Each sitting starts from the DAYBOOK's
   standing block and its own story. What you said last week reaches a seat only if a seat thinks to
   search for it. Needed: at the start of a turn the engine reads the verified memory and hands the
@@ -141,7 +138,7 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   the core. Needed: a plugin is one folder with a manifest (name, version, what it reads and writes,
   whether it reaches out) holding its tools, seats and flows; installed by your landing, which lays a
   chain link pinning its bytes; the loader refuses a plugin whose bytes no longer match; removal
-  folds, never deletes. Waits on B19 for the place. *(SPEC 1, "not a general agent framework")*
+  folds, never deletes. The place is ruled (B19): a plugin folder at the root, and a `/plugin` command that works it. *(SPEC 1, "not a general agent framework")*
 - **H10. Nothing runs unless you open a sitting or fire a flow.** The engine has no daemon, and a
   search of the tool server finds no scheduler or ticker. Needed: a scheduler in the tool server that
   fires named flows at stated times or on a trigger, each bounded by LAW_003, each outcome a proposal
@@ -171,6 +168,11 @@ disk says is missing, in the order it is worth building. H1 is done (below).
 
 Finished lines, newest first. A number is never used again.
 
+- **B21. Should Aider make the coder flow's code changes?** RULED 2026-10-05, in chat: "yes". Taken as the second way: the flow's `attempt`
+  is Aider when every file the change names fits the coding model's window, and the council's own edit when one does not; the line of work,
+  the suites and your Land click stay. The build is H17. *(your word 2026-10-05; CHANGELOG, "core: his rulings of 2026-10-05")*
+- **B19. Where do plugins live?** RULED 2026-10-05, in chat: "plugins are in a plugin folder. slash pluging should work." Taken as a plugin
+  folder at the ground's root (`plugins/`) and a `/plugin` command that works it. H9 no longer waits. *(your word 2026-10-05; CHANGELOG, "core: his rulings of 2026-10-05")*
 - **H12. Aider as a bounded editor behind the glass.** DONE 2026-10-04: the front page's Aider tab is wired to three new door tools
   (`aider_run`, `aider_undo`, `aider_status`; only your glass may call the first two). Aider 0.86.2 runs on a copy of the files you name,
   inside a wall (it writes only to its own scratch folder, reaches nothing but this machine and starts no other process), with the coding
