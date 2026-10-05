@@ -549,3 +549,8 @@
 {"suite": "smoke", "at": 1791233428.8087032, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "strokes", "at": 1791234684.1679225, "state": "finished", "passed": 3700, "total": 3700, "green": true, "failed": []}
 {"suite": "smoke", "at": 1791234705.7864804, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "standup", "at": 1791239225.8045015, "state": "finished", "passed": 8, "total": 9, "green": false, "failed": ["a folder"], "report": "logs/standup_2026-10-05_152705.md"}
+{"suite": "standup", "at": 1791240000.2547069, "state": "finished", "passed": 9, "total": 9, "green": true, "failed": [], "report": "logs/standup_2026-10-05_154000.md"}
+{"suite": "strokes", "at": 1791240510.6886368, "state": "finished", "passed": 3699, "total": 3700, "green": false, "failed": ["every mark git holds here is named in BUILDPATH by the commit it sits on today"]}
+{"suite": "smoke", "at": 1791240515.0010352, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1791240818.2108905, "state": "finished", "passed": 3700, "total": 3700, "green": true, "failed": []}

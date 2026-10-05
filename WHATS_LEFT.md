@@ -15,8 +15,8 @@ the lines, finds words in them, and names any line it cannot number.
 
 ## A. Stops the release right now
 
-The release being cut is core **v0.2.0** and atlas **v0.2.0**, on your word of 2026-10-05; its steps are G, in order. The last cut, core v0.1.16
-and atlas v0.1.9, is on GitHub (2026-09-29).
+The release being cut is core **v0.2.1** and atlas **v0.2.1**, on your word of 2026-10-05 ("tag it 0.2.1"); its steps are G, in order. The last
+cut, core and atlas v0.2.0, is on GitHub (2026-10-05).
 
 
 ---
@@ -77,8 +77,15 @@ Nothing here gets built until you say which way.
 
 ## G. The release checklist, in order
 
+v0.2.1, on your word of 2026-10-05 ("tag it 0.2.1"): the PowerShell tab (H26) on top of v0.2.0. Already done: version numbers set (0.2.1 and 0.2.1).
+
+- [ ] 1. The live check, the toll index and the suites after the bump (the suites in a shell tab, which may run 300 s now)
+- [ ] 2. The release check; save and send both; GitHub green; the tags and their sends, all from the PowerShell tab
+
+v0.2.0, earlier the same day, went through the list below; its tags sit on core `f232dd6` and atlas `e2db417`.
+
 v0.2.0 for the core and for atlas, on your word of 2026-10-05: "let's version bump and tag everything while we are at it"; on your cards, send, tag and
-send the tags, and minor, 0.2.0 for both. Already done: version numbers set (0.2.0 and 0.2.0), both changelogs folded under v0.2.0 (13:39), atlas's
+send the tags, and minor, 0.2.0 for both. Already done then: version numbers set to 0.2.0 and 0.2.0, both changelogs folded under v0.2.0 (13:39), atlas's
 eleven pins in sync through its own `version.ps1`, and the toll index rebuilt after the live check.
 
 - [x] 1. Run the live check on your glass after the fold: 9 of 9 (sitting 347, 13:41 to 13:44)
