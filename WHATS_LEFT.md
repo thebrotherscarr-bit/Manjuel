@@ -151,10 +151,6 @@ disk says is missing, in the order it is worth building. H1 is done (below).
 - **H25. The system's own task lists.** Ruled by B23. Told to do something, the system writes its own numbered steps into its own section of TASKS.md, carries them out
   through the routes it already has (a look-up, a tool, the maker, the coder flow), checks each, and reviews; anything that writes waits on your card. Built on H23.
   CLAUDE.md's READ FIRST line 6 gets a line allowing the system's own plans when this is built. *(your words in chat, 2026-10-05)*
-- **H26. A PowerShell tab, with the longer time.** Ruled by B28. Your own shell beside Bash, Python and Aider on the front page: the door's `shell_run` learns
-  PowerShell, its gate reads a PowerShell command or asks first for every one, and a command you approve may ask for up to the door's 300 seconds (the page
-  sends no time today, so every tab command gets 30). Then the suites (about 175 seconds) and atlas's `.ps1` scripts run in the glass on your card. After the
-  v0.2.0 cut. *(your answer in chat, 2026-10-05)*
 - **H2. The assistant does not remember across sittings.** Each sitting starts from the DAYBOOK's
   standing block and its own story. What you said last week reaches a seat only if a seat thinks to
   search for it. Needed: at the start of a turn the engine reads the verified memory and hands the
@@ -227,6 +223,8 @@ disk says is missing, in the order it is worth building. H1 is done (below).
 
 Finished lines, newest first. A number is never used again.
 
+- **H26. A PowerShell tab, with the longer time.** DONE 2026-10-05: your word, "Let's get this done". The front page's fifth tab runs PowerShell 7 as you, every line on your
+  card, and every shell tab may run up to 300 seconds. Placed on your card and run live: a 35-second sleep came back. *(CHANGELOG, "atlas: the PowerShell tab")*
 - **B28. A tab that can run the suites?** RULED 2026-10-05, on your card: a PowerShell tab with the longer time, built after the v0.2.0 cut; the suites for
   this cut ran in your terminal (strokes 3700 of 3700, smoke 72 of 72, 14:11). The build is H26. *(your answer in chat, 2026-10-05)*
 - **H18. The session test.** DONE 2026-10-05: your pick. One session across every route of the front page -- a greeting, a look-up, a command, a tool, the maker, the

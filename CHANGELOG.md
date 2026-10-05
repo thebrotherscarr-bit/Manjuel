@@ -34,6 +34,10 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### atlas: the PowerShell tab, and a shell line may run up to 300 s (2026-10-05, WHAT'S LEFT H26; the entry is atlas's)
+
+His word: "i should be able to run them in a tab alongside the agent, bash, python, and aider buttons or tabs. Let's get this done". The glass's fifth tab runs PowerShell 7 through the door's `shell_run`, every line on his card, and every shell tab asks for up to 300 s. Placed on his card and run live: a 35 s sleep came back. The record is atlas's CHANGELOG, "The PowerShell tab".
+
 ## v0.2.0 — 2026-10-05 13:39
 
 ### core: SITTING LAW 10 and RULE 14 -- the work is done in his glass, step by step, on his approval (2026-10-05, his word: "YES! write it up in the laws")
