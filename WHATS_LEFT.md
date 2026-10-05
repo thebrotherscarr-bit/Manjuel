@@ -57,9 +57,10 @@ Nothing here gets built until you say which way.
   handed a game in about 30 seconds, and then cannot see or play it from the front page; her second line, "i dont want it text based, i
   want a game i can play", gets "Nothing was saved". The first of those is mended and on your glass
   (2026-10-05: the front page frames the project a delivery names, the whole game on screen; run live with her first line, `game-5` in 27.5 seconds), and the engine no longer tells a screen to open a file (2026-10-05, in the tree; the glass's next Boot
-  has it); the rest is not: her second line's "Nothing was saved", "the game" meaning the oldest of that name, a blank canvas passing the maker's check, and the small-talk
+  has it), and a change the Coder sends back unchanged is asked for once more and then said in plain words (2026-10-05, in the tree; measured on your glass: see the changelog); the rest is not:
+  "the game" meaning the oldest of that name (needs a ruling: the project list sends the same words for an exact pick), a blank canvas passing the maker's check, and the small-talk
   narration. What SPEC 4.8
-  still asks for is her at the glass with nobody helping, once these are mended. *(CHANGELOG, "atlas: the front page plays what the maker made" and "core: the maker speaks to a person at a screen"; SPEC 4.8)*
+  still asks for is her at the glass with nobody helping, once these are mended. *(CHANGELOG, "atlas: the front page plays what the maker made", "core: the maker speaks to a person at a screen" and "core: a change the Coder sent back unchanged"; SPEC 4.8)*
 
 ---
 

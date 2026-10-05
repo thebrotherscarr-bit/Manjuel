@@ -575,6 +575,58 @@ def repair_prompt(page: str, faults, objective: str) -> str:
 
 
 # ---------------------------------------------------------------------
+# the answer that changed nothing (2026-10-05, WHAT'S LEFT E1)
+# ---------------------------------------------------------------------
+#
+# A CHANGE COMES BACK AS A WHOLE PAGE, and sometimes the page that comes back is
+# the page that went in. Her second line -- "i dont want it text based, i want a
+# game i can play" -- was answered that way nine times in ten on the live record
+# of 2026-10-03, and she was told "Nothing was saved". A wish or a complaint is
+# not an exact instruction, and a seat told to change nothing else answers one
+# with nothing. So the Coder is asked ONCE more, with what it did written beside
+# the ask, and the rule that kept it from changing anything else is lifted for
+# that one try.
+#
+# THE ESTATE'S SECOND LAWFUL LOOP (LAW_003), after the repair above. Its three
+# bounds, all three: a declared ceiling (`AGAINS`, read by the loop in
+# pipeline._maker_again), a stop condition a MACHINE checks (the new page is not
+# the page in hand -- `same_page`, over the bytes, never the seat's account of
+# its own work), and every pass in the record (each answer is a step of its own,
+# each check a note). The gate is outside the loop: what it makes is saved as the
+# next version, and "go back" is one sentence.
+
+# The ceiling, and it is the whole of LAW_003's first bound: ONE more try.
+AGAINS = 1
+
+
+def same_page(a: str, b: str) -> bool:
+    """Whether two pages are the same page: line endings and the blank lines at
+    either end are not changes, and git would call them none."""
+    def flat(text: str) -> str:
+        return (text or "").replace("\r\n", "\n").strip("\n")
+    return flat(a) == flat(b)
+
+
+def again_prompt(page: str, objective: str) -> str:
+    """The Coder's ONE more try after it sent the page back exactly as it was.
+
+    What it is told is a fact the engine measured -- the page it sent is the
+    page it was handed -- and what the person said is quoted as they said it.
+    The first ask's "change nothing else" is not repeated: it is why a wish gets
+    nothing back."""
+    return (f"You were handed this page and asked for a change, and the page you "
+            f"sent back was EXACTLY the same page, so nothing changed. Here it is:"
+            f"\n\n```html\n{(page or '').rstrip()}\n```\n\n"
+            f"WHAT THE PERSON SAID, in their own words: {(objective or '').strip()}"
+            f"\n\nThey will open the page again and expect to SEE a difference. If "
+            f"what they said is a wish or a complaint rather than an exact "
+            f"instruction, decide for yourself what to change so that it answers "
+            f"them, and make the difference plain when the page is opened. Never "
+            f"send the same page back.\n\n"
+            f"Rewrite the WHOLE page with that change made.\n{RULES}\n{_SHAPE}")
+
+
+# ---------------------------------------------------------------------
 # the project: a folder with its own history
 # ---------------------------------------------------------------------
 
@@ -884,6 +936,18 @@ def report_unsaved(why: str) -> str:
     return (f"Nothing was saved: {why}.\n\n"
             f"The Coder's whole answer is in this run's record. Ask again, or say "
             f"it a different way.")
+
+
+def report_unchanged(project, tries: int = 1) -> str:
+    """What she is told when the Coder sent the page back exactly as it was,
+    every time it was asked (`tries` passes): that nothing changed, and how to
+    ask in a way that gets something -- not a record to go and read."""
+    again = ", even when asked again" if tries > 1 else ""
+    return (f"Nothing was changed: the page came back exactly as it was{again}, so "
+            f"there is no new version to save.\n\n"
+            f"Say what you want different in other words -- one thing at a time, "
+            f"like \"make it faster\" or \"add a score\" -- and it becomes version "
+            f"{len(versions(project)) + 1}.")
 
 
 def report_too_big(project, size: int) -> str:

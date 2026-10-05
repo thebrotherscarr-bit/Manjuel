@@ -1884,6 +1884,68 @@ def _maker_prove(ctx: RunContext, env, page: str, report) -> tuple[str, str]:
                                     repaired=True)
 
 
+def _maker_again(ctx: RunContext, env, make: dict, page: str, report) -> tuple[str, int]:
+    """A change that came back as the page that went in: ask the Coder ONCE more.
+
+    Returns (the page to go on with, how many passes the Coder made). The page
+    is "" when it is still the page that was handed in -- the caller then says
+    so in plain words and saves nothing.
+
+    THE ESTATE'S SECOND LAWFUL LOOP (LAW_003). Its three bounds, all three: the
+    ceiling is `maker.AGAINS`, declared in maker.py where a reader meets it; the
+    stop condition is `maker.same_page`, the new page against the page in hand,
+    bytes and never a seat's account of its own work; and every pass is in the
+    record -- each answer is a step of its own with the Coder's words in it, each
+    check a note. A turn with no room for another model call does not start one.
+    """
+    was = str(make.get("page") or "")
+    if not maker.same_page(page, was):
+        return page, 1                       # it changed the page: no second try
+    ctx.notes.append(f"maker: the {MAKER_SEAT} sent the page back exactly as it was")
+    report("      " + ink.warn(ctx.notes[-1]))
+    seat = env.registry.get(MAKER_SEAT) if env.registry.has(MAKER_SEAT) else None
+    tries = 1
+    for attempt in range(1, maker.AGAINS + 1):
+        left = _budget(ctx)
+        if seat is None or (left is not None and left <= 15):
+            ctx.notes.append("maker: no second try -- "
+                             + ("no time left in this turn" if seat is not None
+                                else f"no {MAKER_SEAT} seat"))
+            report("      " + ink.warn(ctx.notes[-1]))
+            break
+        report("      " + ink.dim(f"maker: asking the {MAKER_SEAT} again "
+                                  f"(try {attempt} of {maker.AGAINS})"))
+        prompt = maker.again_prompt(was, ctx.objective)
+        t0 = time.time()
+        try:
+            answer = env.runtime.chat(_within_deadline(seat, ctx), prompt)
+        except Exception as exc:             # a second try never takes a turn down
+            ctx.notes.append(f"maker: the second try could not run "
+                             f"({type(exc).__name__}: {exc})")
+            report("      " + ink.warn(ctx.notes[-1]))
+            break
+        tries += 1
+        # EVERY PASS IN THE RECORD (LAW_003, the third bound): the second try is
+        # a step of its own, with what the seat answered, like any other turn.
+        ctx.steps.append(StepResult(agent=seat.name, model=seat.model,
+                                    output=answer or "", prompt=prompt,
+                                    elapsed=time.time() - t0))
+        again, why_not = maker.page_from(answer or "")
+        if not again:
+            ctx.notes.append(f"maker: try {attempt} was not a page ({why_not}) "
+                             f"-- the page stands as it was")
+            report("      " + ink.warn(ctx.notes[-1]))
+            break
+        if maker.same_page(again, was):
+            ctx.notes.append(f"maker: try {attempt} sent the same page again")
+            report("      " + ink.warn(ctx.notes[-1]))
+            continue
+        ctx.notes.append(f"maker: try {attempt} changed the page")
+        report("      " + ink.dim(ctx.notes[-1]))
+        return again, tries                  # the stop condition, machine-checked
+    return "", tries
+
+
 def _maker_land(ctx: RunContext, env, output: str, report) -> None:
     """Check what the Coder answered and save it as a version -- or say
     plainly why nothing was saved. The report is held for the delivery."""
@@ -1894,6 +1956,17 @@ def _maker_land(ctx: RunContext, env, output: str, report) -> None:
         ctx.notes.append(f"maker: nothing saved -- {why}")
         report("      " + ink.warn(ctx.notes[-1]))
         return
+    # A CHANGE THAT CHANGED NOTHING (2026-10-05, WHAT'S LEFT E1): ask once more,
+    # then say so in plain words -- see `_maker_again` and maker.AGAINS.
+    if make.get("kind") == "change":
+        page, tries = _maker_again(ctx, env, make, page, report)
+        if not page:
+            make["report"] = maker.report_unchanged(make["project"], tries)
+            ctx.notes.append(f"maker: nothing saved -- the page came back exactly as "
+                             f"it was ({tries} pass{'' if tries == 1 else 'es'} of "
+                             f"the {MAKER_SEAT})")
+            report("      " + ink.warn(ctx.notes[-1]))
+            return
     # PIECE 3: it is whole and local; now find out whether it WORKS.
     page, trouble = _maker_prove(ctx, env, page, report)
     lines = len(page.splitlines())

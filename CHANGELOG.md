@@ -34,6 +34,48 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: a change the Coder sent back unchanged is asked for once more, and a page still unchanged is said in plain words (2026-10-05, WHAT'S LEFT E1's third piece)
+
+Her second line ("i dont want it text based, i want a game i can play") was answered by the Coder with the very page it was handed in nine runs of ten on the live record of
+2026-10-03, and she was told "Nothing was saved: the page came back exactly as it was, so there is no new version to save. The Coder's whole answer is in this run's record." A wish
+or a complaint is not an exact instruction, and a seat told "change nothing else" answers one with nothing. Now `pipeline._maker_land` compares the page that came back with the page in
+hand (`maker.same_page`) before anything else is done to it. When it is the same, `_maker_again` asks the Expert Coder ONCE more (`maker.AGAINS`, one) with `maker.again_prompt`: the page
+handed back, the fact that it came back EXACTLY the same, her own words, the "change nothing else" rule lifted for that one try, and "never send the same page back". A page that differs
+goes on as before (the browser check, the one repair, the save as the next version). The same page again, or an answer that is not a page, saves nothing, and she is told so in plain words
+(`maker.report_unchanged`): "Nothing was changed: the page came back exactly as it was, even when asked again, so there is no new version to save. Say what you want different in other
+words -- one thing at a time, like "make it faster" or "add a score" -- and it becomes version N." No "nothing was saved", no record to go and read. An unchanged page is no longer loaded in a
+browser first.
+
+THE ESTATE'S SECOND LAWFUL LOOP (LAW_003), after the maker's repair. Its ceiling is declared where a reader meets it (`maker.AGAINS`, pinned at one and read by the loop); its stop condition is the
+machine's (the new page is not the page in hand, over the bytes, never the seat's account of its own work); and every pass is in the record (the second answer is a step of its own with the
+seat's words and the prompt it was given, each check a note). A turn with no time left does not start the try. The gate is outside the loop: what it makes is the next version, and "go back"
+is one sentence. One thing the record shows as it stands, and this piece did not change: a repair's and a second try's steps are appended before the first answer's step, so a transcript lists
+them ahead of it (they are told apart by their prompts).
+
+**Run live on his own glass** (2026-10-05, 09:02 to 09:07; sitting 343, closed, nine runs, tolled; the glass's next Boot had the code, no restart): her first two lines four times, each pair on a fresh game
+(`game-6` to `game-9`), then her thanks. The first line made each game in 16 to 37 seconds and the reply on the glass said "It is ready to try." with no file to open (four of four). The second line, which
+dead-ended in nine runs of ten on the record of 2026-10-03 and in the first live run of this morning, saved version 2 twice and said "Nothing was changed: the page came back exactly as it was, even when asked
+again, so there is no new version to save" twice (40 and 38 seconds, two passes each; every pass is in the transcripts and the notes). In `game-9` the Coder's first answer already differed (20 seconds, no second
+try); in `game-6` the first answer was the same page and THE SECOND TRY CHANGED IT (44 seconds: "maker: the Expert Coder sent the page back exactly as it was", "try 1 changed the page", version 2 saved); in
+`game-7` and `game-8` both passes were the same page. So the second try rescued one of the three unchanged answers: four samples, and the models vary. It is a loop that works as built and rescues some, not a
+fix for a Coder that does not know what to change for a wish; raising `maker.AGAINS` buys another twenty seconds a pass and is a number to move only on a measured need (SITTING LAW 3). Her thanks was
+answered "It's nice to hear that, thanks man, appreciate it too!" in 15 seconds: plain, nothing about the operator (one more sample, not a verdict). The four games are `projects/game-6` to `projects/game-9`
+(gitignored, kept).
+
+What it did not take, and the list still carries under E1: "the game" meaning the oldest of that name (the glass's project list sends the same words for an exact pick, so words alone cannot
+tell the two apart: it needs a ruling), a blank canvas passing the maker's check, and the small-talk narration.
+
+Held by `test_a_change_that_comes_back_unchanged_is_asked_for_once_more` (24 checks): the words (what is the same page; the second ask hands the page back, says it came back the same, quotes
+her, lifts the rule, keeps the rules of every page), the declared ceiling, the loop reading it and the land going through it (read off the source), and the turns through the engine with a stand-in
+Coder (one more try then a differing page saved as version 2, both answers in the record, the same page twice saves nothing and says so plainly and the browser never sees it, a page that
+changed is not asked again, a second try that is not a page or reaches the internet saves nothing, the ceiling moved to none and to two moves the passes with it, no time left asks nothing). 19 reversals,
+each red and named, every file restored byte for byte: the ceiling read as none and hard-coded at two; the stop condition accepting the same page; the second answer not recorded; the deadline
+guard gone; a changed page asked about anyway, and compared with itself; the land not going through it; the reply not told the passes; the second ask the ordinary one, keeping the rule, leaving out her
+words, or not saying it came back the same; `same_page` seeing a line ending or the blank lines at the ends as a change; the declared ceiling at two; the reply saying "saved", sending her to a record, or
+forgetting which version her next ask becomes. Proved in a clean clone of the pushed commit (3641 strokes, 72 smoke) and through his glass (3671 strokes, 72 smoke).
+**Restart required** for a REPL already open (`manjuel/` moved); the door starts a fresh engine for every Boot, so the glass's next Boot has it. **What goes red if unplugged:** that stroke: the loop's ceiling,
+its stop condition, the land's call to it, the record of both passes, and the reply's words.
+
 ### core: the maker speaks to a person at a screen without handing her a file to open (2026-10-05, WHAT'S LEFT E1's second piece)
 
 The wife test's second finding, read on the live record of 2026-10-03 (sittings 336 and 337) and again on 2026-10-05: she asked for a game and was told "To try it,

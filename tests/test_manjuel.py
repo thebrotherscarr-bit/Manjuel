@@ -20779,6 +20779,178 @@ def test_the_maker_speaks_to_a_screen_without_a_file_to_open(reg, lib, book):
           repr([t[-70:] for t in wired]))
 
 
+def test_a_change_that_comes_back_unchanged_is_asked_for_once_more(reg, lib, book):
+    """THE MAKER'S SECOND LAWFUL LOOP (LAW_003; 2026-10-05, WHAT'S LEFT E1).
+
+    Her second line, "i dont want it text based, i want a game i can play", was
+    answered by the Coder with the page it was handed nine times in ten on the
+    live record of 2026-10-03, and she was told "Nothing was saved". A wish is not
+    an exact instruction, and a seat told to change nothing else answers one with
+    nothing. So a change that comes back unchanged is asked for ONCE more, with
+    the fact written beside the ask and the rule that caused it lifted -- and when
+    it is still the same page she is told so in plain words, with how to ask.
+
+    LAW_003's three bounds, each held: the CEILING is `maker.AGAINS` and is read by
+    the loop (moved to 0 or 2, the number of times the Coder sits moves with it);
+    the STOP CONDITION is the machine's (`same_page`: the new page is not the page
+    in hand), so a page that differs is saved and one that does not never is, and
+    the unchanged page is not even loaded in a browser; and EVERY PASS IS IN THE
+    RECORD (each answer a step of its own, each check a note). A turn with no time
+    left does not start the try. The gate stays outside: what it makes is the next
+    version, and "go back" is one sentence.
+
+    Hermetic: temp grounds, a stand-in Coder, pages one line long, and no browser.
+    """
+    import ast
+    import inspect as _inspect
+    import time as _time
+    from manjuel import maker, pipeline
+
+    PAGE_ONE = "<!DOCTYPE html>\n<html><body><p>one</p></body></html>\n"
+    PAGE_TWO = "<!DOCTYPE html>\n<html><body><p>two</p></body></html>\n"
+    HER = "i dont want it text based, i want a game i can play."
+
+    def answer(page):
+        return f"<filepath>index.html</filepath>\n```html\n{page}```\n"
+
+    # ---- THE WORDS: what is the same page, and what the second ask says -------
+    check("a page is the same page whatever its line endings and the blank lines at its ends",
+          maker.same_page(PAGE_ONE, PAGE_ONE.replace("\n", "\r\n")) and maker.same_page(PAGE_ONE, "\n\n" + PAGE_ONE + "\n\n"))
+    check("   and one changed character is a different page",
+          not maker.same_page(PAGE_ONE, PAGE_TWO) and not maker.same_page(PAGE_ONE, PAGE_ONE.replace("one", "on")))
+    ask = maker.again_prompt(PAGE_ONE, HER)
+    check("the second ask hands back the page it was given, says it came back the same, and quotes her own words",
+          "<p>one</p>" in ask and "EXACTLY the same page" in ask and HER in ask, ask[:300])
+    check("   lifts the rule that caused it (no 'change nothing else') and says never to send the same page back",
+          "change nothing else" not in ask and "Never send the same page back." in ask
+          and "decide for yourself what to change" in ask)
+    check("   and keeps the rules of every page it writes, and the shape of the answer",
+          maker.RULES in ask and ask.rstrip().endswith("```html\n...the whole page...\n```"), ask[-200:])
+
+    check("the ceiling is declared where a reader meets it, and it is ONE more try (LAW_003's first bound)",
+          maker.AGAINS == 1, str(maker.AGAINS))
+
+    tree = ast.parse(_inspect.getsource(pipeline))
+    again_fn = next((n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name == "_maker_again"), None)
+    land_fn = next((n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name == "_maker_land"), None)
+    names = {ast.unparse(n) for n in ast.walk(again_fn)} if again_fn else set()
+    check("the loop reads the declared ceiling, and the machine's stop condition and the ask are the maker's",
+          again_fn is not None and "maker.AGAINS" in names and "maker.same_page" in names and "maker.again_prompt" in names,
+          str(sorted(n for n in names if n.startswith("maker."))))
+    check("   and a change's land goes through it before the browser, and a screen or a terminal makes no difference to it",
+          land_fn is not None and "_maker_again" in {ast.unparse(n.func) for n in ast.walk(land_fn) if isinstance(n, ast.Call)}
+          and "screen" not in _inspect.getsource(maker.report_unchanged))
+
+    if not HAVE_GIT:
+        return                    # reported once, in main(); never a crash
+
+    # ---- THE TURN: a project in hand, a stand-in Coder that answers from a list --
+    def scene(answers, seconds=None):
+        g = Path(tempfile.mkdtemp())
+        p = maker.new_project(g, "snake-game")
+        maker.save_version(p, PAGE_ONE, "make me a page")
+        maker.set_current(g, p)
+        queue = list(answers)
+        loaded = []
+
+        def reply(a):
+            if a.key != "expert coder":
+                return "A SEAT THAT SAT"
+            return queue.pop(0) if queue else answer(PAGE_ONE)      # past the list: the unchanged page, counted below
+
+        def no_browser(page, *a, **k):
+            loaded.append(page)
+            return True, [], ""
+
+        r = Stub(reply=reply)
+        ctx = RunContext(objective=HER)
+        if seconds is not None:
+            ctx.deadline_at = _time.time() + seconds
+        real = maker.run_page
+        maker.run_page = no_browser
+        try:
+            run_pipeline(ctx, reg, r, lib, env_for(g, reg, r), steps=book.get("default"), report=lambda m: None)
+        finally:
+            maker.run_page = real
+            maker.forget()
+        return ctx, p, [pr for n, pr in r.seen if n == "Expert Coder"], loaded
+
+    ctx, p, asked, loaded = scene([answer(PAGE_ONE), answer(PAGE_TWO)])
+    out = ctx.last_output()
+    check("a change that comes back unchanged is asked for once more, and what the second try changes is saved as the next version",
+          len(asked) == 2 and len(maker.versions(p)) == 2 and "<p>two</p>" in maker.page_of(p)
+          and out.startswith("Changed snake-game -- version 2:"), f"{len(asked)} ask(s) {maker.versions(p)} {out[:100]}")
+    second_ask = asked[1] if len(asked) > 1 else ""
+    check("   the first ask is the ordinary one ('change nothing else'); the second says it came back the same and quotes her",
+          "change nothing else" in asked[0] and "EXACTLY the same page" not in asked[0]
+          and "EXACTLY the same page" in second_ask and HER in second_ask and "<p>one</p>" in second_ask
+          and "change nothing else" not in second_ask, second_ask[:200] or "(there was no second ask)")
+    steps = [s for s in ctx.steps if s.agent == "Expert Coder"]
+    second = [s for s in steps if "EXACTLY the same page" in s.prompt]
+    first = [s for s in steps if "EXACTLY the same page" not in s.prompt]
+    check("   both answers are in the record, each a step of its own with its words and the prompt it was given",
+          len(steps) == 2 and len(first) == 1 and len(second) == 1
+          and "<p>one</p>" in first[0].output and "<p>two</p>" in second[0].output
+          and "change nothing else" in first[0].prompt, str([(s.output[-40:], s.prompt[:30]) for s in steps]))
+    check("   and the notes say what happened at each pass",
+          any("the Expert Coder sent the page back exactly as it was" in n for n in ctx.notes)
+          and any("try 1 changed the page" in n for n in ctx.notes), str(ctx.notes)[-400:])
+    check("   and only the page that changed was loaded in the browser check",
+          len(loaded) == 1 and "<p>two</p>" in loaded[0], str(len(loaded)))
+
+    ctx, p, asked, loaded = scene([answer(PAGE_ONE), answer(PAGE_ONE)])
+    out = ctx.last_output()
+    check("a page that is still the same after the second try saves nothing, and sits the Coder exactly 1 + the ceiling times",
+          len(maker.versions(p)) == 1 and len(asked) == 1 + maker.AGAINS, f"{maker.versions(p)} {len(asked)}")
+    check("   and she is told in plain words that nothing changed, and how to ask, never 'nothing was saved' or a record to read",
+          out.startswith("Nothing was changed: the page came back exactly as it was, even when asked again, so there is no new version to save.")
+          and "becomes version 2." in out and "make it faster" in out and "record" not in out and "Coder" not in out, out[:300])
+    check("   and the unchanged page is never loaded in a browser",
+          loaded == [], str(len(loaded)))
+    check("   and the record says both passes happened",
+          any("try 1 sent the same page again" in n for n in ctx.notes)
+          and any("2 passes of the Expert Coder" in n for n in ctx.notes)
+          and len([s for s in ctx.steps if s.agent == "Expert Coder"]) == 2, str(ctx.notes)[-400:])
+
+    ctx, p, asked, loaded = scene([answer(PAGE_TWO)])
+    check("a change that changed the page is NOT asked again",
+          len(asked) == 1 and len(maker.versions(p)) == 2 and not any("exactly as it was" in n for n in ctx.notes),
+          f"{len(asked)} {ctx.notes}")
+
+    ctx, p, asked, loaded = scene([answer(PAGE_ONE), "I could not do that."])
+    check("a second try that is not a page leaves the page as it was, says why in the record, and tells her plainly",
+          len(maker.versions(p)) == 1 and len(asked) == 2
+          and any("try 1 was not a page" in n for n in ctx.notes)
+          and ctx.last_output().startswith("Nothing was changed:"), f"{ctx.notes[-2:]} {ctx.last_output()[:80]}")
+    ctx, p, asked, loaded = scene([answer(PAGE_ONE), answer('<!DOCTYPE html>\n<html><body><script src="https://cdn.example.com/x.js"></script></body></html>\n')])
+    check("   and a second try that reaches the internet is refused by the same arithmetic, and saves nothing (RULE 4)",
+          len(maker.versions(p)) == 1 and any("RULE 4" in n for n in ctx.notes), str(ctx.notes)[-300:])
+
+    # THE CEILING IS THE NUMBER: moved, the number of passes moves with it.
+    was = maker.AGAINS
+    try:
+        maker.AGAINS = 0
+        ctx, p, asked, loaded = scene([answer(PAGE_ONE)])
+        check("a ceiling of none asks nothing more, and says nothing about a second try",
+              len(asked) == 1 and len(maker.versions(p)) == 1 and ctx.last_output().startswith("Nothing was changed: the page came back exactly as it was, so")
+              and "even when asked again" not in ctx.last_output(), f"{len(asked)} {ctx.last_output()[:90]}")
+        maker.AGAINS = 2
+        ctx, p, asked, loaded = scene([answer(PAGE_ONE), answer(PAGE_ONE), answer(PAGE_ONE)])
+        check("a ceiling of two asks twice more and no more, and saves nothing",
+              len(asked) == 3 and len(maker.versions(p)) == 1, f"{len(asked)} {maker.versions(p)}")
+        ctx, p, asked, loaded = scene([answer(PAGE_ONE), answer(PAGE_ONE), answer(PAGE_TWO)])
+        check("   and a page that differs on the last try is saved",
+              len(asked) == 3 and len(maker.versions(p)) == 2 and "<p>two</p>" in maker.page_of(p), f"{len(asked)} {maker.versions(p)}")
+    finally:
+        maker.AGAINS = was
+
+    # A TURN WITH NO TIME LEFT DOES NOT START THE TRY.
+    ctx, p, asked, loaded = scene([answer(PAGE_ONE), answer(PAGE_TWO)], seconds=8)
+    check("a turn with no room for another model call asks nothing more, and says so in the record",
+          len(asked) == 1 and len(maker.versions(p)) == 1 and any("no second try -- no time left in this turn" in n for n in ctx.notes)
+          and ctx.last_output().startswith("Nothing was changed:"), f"{len(asked)} {ctx.notes[-2:]}")
+
+
 def main() -> int:
     if not SELECT:
         begin_run(ROOT, "strokes")   # so a crash cannot leave a green stamp
@@ -21019,6 +21191,7 @@ def main() -> int:
     test_the_maker_runs_the_page_before_it_keeps_it(reg, lib, book)
     test_the_maker_picks_up_and_puts_down(reg, lib, book)
     test_the_maker_speaks_to_a_screen_without_a_file_to_open(reg, lib, book)
+    test_a_change_that_comes_back_unchanged_is_asked_for_once_more(reg, lib, book)
     test_the_pack_is_wired(reg, lib, book)
     test_ink()
     test_math()
