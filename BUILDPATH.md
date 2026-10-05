@@ -503,6 +503,8 @@ sent by name (SPEC 8.2 carries the same, under its themes):
                                 memory is hash-chained; nothing is sent or
                                 signed without his word; the work is done on
                                 his glass, step by step, on his approval
+           v0.2.1   2026-10-05  the PowerShell tab: PowerShell 7 beside Bash,
+                                Python and Aider, every line on his card
     atlas  v0.1.6   2026-09-18  THE DOOR'S OWN QUARTER ("atlas needs its own
                                 number too")
            v0.1.7   2026-09-23  EVERY PIN IN STEP
@@ -517,6 +519,8 @@ sent by name (SPEC 8.2 carries the same, under its themes):
            v0.2.0   2026-10-05  the front page with its tabs and its play
                                 frame, Aider behind the glass, the Laws page,
                                 and the flow engine takes an aider node
+           v0.2.1   2026-10-05  the PowerShell tab, and a shell line may run
+                                up to 300 s
 
 THE MARKS AS GIT HOLDS THEM, read 2026-09-30. The rewrite of 2026-09-21 moved
 every mark that stood before it (CHANGELOG's headings say "on <sha> since"),
@@ -524,9 +528,9 @@ so the 2026-09-17 list above is history (LAW 1) and this is where they sit:
 
     core   0.1.7   00d2e56    0.1.9   6d3e6b1    v0.1.11 b4b6593
            v0.1.12 084fe33    v0.1.13 4e04378    v0.1.14 de2420e
-           v0.1.15 af50522    v0.1.16 e8aa9b5    v0.2.0  f232dd6
+           v0.1.15 af50522    v0.1.16 e8aa9b5    v0.2.0  f232dd6    v0.2.1  9ce3b74
     atlas  v0.1.5  3dacdbc    v0.1.6  0c65afc    v0.1.7  063a152
-           v0.1.8  56a3078    v0.1.9  b1059a1    v0.2.0  e2db417
+           v0.1.8  56a3078    v0.1.9  b1059a1    v0.2.0  e2db417    v0.2.1  5c6beeb
 
 The six removed on 2026-09-17 are still removed. A stroke holds this list to
 the marks (`test_the_plan_names_every_mark_where_it_sits`): every changelog

@@ -34,7 +34,7 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
-## v0.2.1 — 2026-10-05 15:16
+## v0.2.1 — 2026-10-05 15:16 (tag on 9ce3b74)
 
 ### atlas: the PowerShell tab, and a shell line may run up to 300 s (2026-10-05, WHAT'S LEFT H26; the entry is atlas's)
 

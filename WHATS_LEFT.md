@@ -15,8 +15,8 @@ the lines, finds words in them, and names any line it cannot number.
 
 ## A. Stops the release right now
 
-The release being cut is core **v0.2.1** and atlas **v0.2.1**, on your word of 2026-10-05 ("tag it 0.2.1"); its steps are G, in order. The last
-cut, core and atlas v0.2.0, is on GitHub (2026-10-05).
+The last cut is core **v0.2.1** and atlas **v0.2.1**, on GitHub (2026-10-05, your word: "tag it 0.2.1"); nothing is being cut
+now. Atlas's v0.2.0 and v0.2.1 draft releases on GitHub are yours to publish.
 
 
 ---
@@ -79,8 +79,10 @@ Nothing here gets built until you say which way.
 
 v0.2.1, on your word of 2026-10-05 ("tag it 0.2.1"): the PowerShell tab (H26) on top of v0.2.0. Already done: version numbers set (0.2.1 and 0.2.1).
 
-- [ ] 1. The live check, the toll index and the suites after the bump (the suites in a shell tab, which may run 300 s now)
-- [ ] 2. The release check; save and send both; GitHub green; the tags and their sends, all from the PowerShell tab
+- [x] 1. The live check, the toll index and the suites after the bump: the live check 9 of 9 (15:40, after an 8 of 9 at 15:27),
+  the suites 3700 of 3700 and 72 of 72 (15:53, in the Bash tab)
+- [x] 2. The release check 16 of 16; saved and sent (core `9ce3b74`, atlas `5c6beeb`); GitHub green on main; both tags sent from
+  the PowerShell tab. The core tag's own run went red on one stroke, which cannot name a tag inside the commit it sits on
 
 v0.2.0, earlier the same day, went through the list below; its tags sit on core `f232dd6` and atlas `e2db417`.
 
