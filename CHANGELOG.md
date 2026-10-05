@@ -38,9 +38,9 @@ hand that iterates without updating this file is out of line.
 
 The first of the wife test's findings is mended in the tree: the front page now plays the project a delivery names, in a frame between the terminal's output and its
 input line, with the whole game on screen (a game made for an 800 by 600 canvas is shrunk to fit, never cut off). The piece, its two design findings, its proof (a
-stroke with 21 reversals, a node run, a scratch glass in the browser pane against the real door) and what it did not take are in atlas's CHANGELOG under the same
-date. In this ground: WHATS_LEFT's E1 says the first of its findings is mended and not yet placed; nothing in `manjuel/` moved, so the REPL needs no restart. It is a
-glass change, so it takes a rebuild and a restart of the glass, on his card. **What goes red if unplugged:** in atlas, `TestTheFrontPagePlaysWhatTheMakerMade`.
+stroke with 22 reversals, a node run, a scratch glass in the browser pane against the real door) and what it did not take are in atlas's CHANGELOG under the same
+date. In this ground: WHATS_LEFT's E1 says the first of its findings is mended and on his glass (run live with her first line); nothing in `manjuel/` moved, so the REPL needs no restart. It is a
+glass change: the glass was rebuilt and restarted on his card, twice (the second time for three fixes the live run showed). **What goes red if unplugged:** in atlas, `TestTheFrontPagePlaysWhatTheMakerMade`.
 
 ### core: his rulings of 2026-10-05: Aider makes the coder flow's changes (B21), plugins live in a plugin folder with a working /plugin (B19), and the wife test is a real script from a human (E1)
 

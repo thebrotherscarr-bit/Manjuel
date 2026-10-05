@@ -3110,3 +3110,8 @@ thing mended. Nothing was built to record these rulings.
 green) and the first piece of E1 was built and proved on a scratch glass in the browser pane: the front page plays the project a delivery names, the whole game on screen
 (a glass change, not yet placed). He asked, mid-work, to "use the browser when possible, i want to see the progress", and the proofs were run in the pane.
 
+**Placed and run live** (2026-10-05, 08:04 to 08:07, appended; nothing above changed) -- the glass with the play frame was placed on his card twice and the wife test's three lines
+were typed on his own front page (sitting 342, closed, three runs): the first made `game-5` in 27.5 s and the page showed it whole, the second answered "Nothing was saved: the page came
+back exactly as it was", the third got a plain reply. The engine's share of E1 (that reply, the file path in the first reply's words, "the game" meaning the oldest of that name, a blank
+canvas passing the maker's check) is not mended.
+

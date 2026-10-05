@@ -55,8 +55,8 @@ Nothing here gets built until you say which way.
   from a human"). Those lines have been run through your glass since, live (2026-10-03, sittings 336 to 341; read the "Reviewer's notes"
   in `logs/pack_2026-10-03_181226.md` first; the pack's second case is the hand's own fuller mock, and says so): she is understood and
   handed a game in about 30 seconds, and then cannot see or play it from the front page; her second line, "i dont want it text based, i
-  want a game i can play", gets "Nothing was saved". The first of those is mended in the tree and not yet
-  placed on your glass (2026-10-05: the front page frames the project a delivery names, the whole game on screen); the rest is not. What SPEC 4.8
+  want a game i can play", gets "Nothing was saved". The first of those is mended and on your glass
+  (2026-10-05: the front page frames the project a delivery names, the whole game on screen; run live with her first line, `game-5` in 27.5 seconds); the rest is not. What SPEC 4.8
   still asks for is her at the glass with nobody helping, once these are mended. *(CHANGELOG, "atlas: the front page plays what the maker made"; SPEC 4.8)*
 
 ---

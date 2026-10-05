@@ -781,6 +781,13 @@ sign-in, and the workflow now writes failing lines as annotations); atlas `42aa5
 plays the project a delivery names, whole on screen (atlas CHANGELOG, "The front page plays what the maker made"; a glass change, built and proved on a scratch glass in
 the browser pane, NOT yet placed: it needs his card, and then a rebuild and restart of the glass). The rest of E1's findings are the engine's (`manjuel/`).
 
+*Placed and run live, 2026-10-05, 08:04 to 08:07 (nothing above changed).* The glass with the play frame was placed on his card twice (the second time for three small fixes
+the first live run showed), and the wife test's three lines were typed on his own front page, sitting 342, closed: the first made `game-5` in 27.5 s and the frame showed it
+whole on the page, the second answered "Nothing was saved: the page came back exactly as it was" (15.3 s), the third got a plain reply (8.4 s). E1's other findings are the engine's
+and are not mended: that second-line reply, the reply that still says to open a file path, "the game" meaning the oldest of that name, a blank canvas passing the maker's check,
+and the small-talk narration (it did not recur this time). The boot's gate also reads `HANDOFF FOR 2026-10-05 -- missing`: these annotations are not that block; the day's block
+is written when the day's work stops.*
+
 ## HANDOFF FOR 2026-10-03 — read this before anything below it
 
 **THE DAY SO FAR.** The same conversation, carried across a context reset; the laws and the record re-read in full at
