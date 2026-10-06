@@ -671,6 +671,24 @@ dropped by operator ruling 2026-09-01 — see the fix log.
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
 
+## HANDOFF FOR 2026-10-06 — read this before anything below it
+
+**THE DAY SO FAR.** The same conversation, carried on from last night; the laws re-read in full at the start of every turn. No sitting has opened since 352 (closed 2026-10-05 21:34:46). The last input of last night was the evening's record (HANDOFF's annotation under 2026-10-05, DAYBOOK's Session 26 and the list's v0.2.2 ticks), written on his card at 23:00:43; its own text says 22:45, when it was drafted. Every time below is read off the door's hold record (`state/holds.jsonl`), git and GitHub.
+
+**This morning, on his word, through his glass:**
+
+- 08:28:59 — the two strokes that read last night's record, in the Bash tab: the list 8 of 8, the line endings 6 of 6.
+- 08:29:23 — saved and sent on his word ("save and send it"): core `616bfaf` (HANDOFF, DAYBOOK, WHAT'S LEFT; 3 files), under his name only, main level with GitHub.
+- 08:34:49 — GitHub's `prove` on `616bfaf` read in the Bash tab: green on all four legs (Windows 3.13 in 5m12s, Windows 3.10 in 4m53s, Ubuntu 3.13 in 1m10s, Ubuntu 3.10 in 1m15s).
+- The glass locked itself before the next card; that line got an HTTP 401 and ran nothing, and he unlocked it.
+- 08:58:14 — atlas's drafts published on his word ("publish the drafts for atlas"): v0.2.0 (08:58:10), v0.2.1 (08:58:12) and v0.2.2 (08:58:13), which GitHub now marks Latest. v0.1.7 is still a draft, from 2026-09-23; it was not part of the word and is left as it is.
+
+**His rulings this morning.** B22, the hand's name in what is already published: "leave it ... for now", so it stands as it is, open and his. The `Fire it` hole (a Fire made while a run is moving is held by the door and starts a new run the moment the moving one pauses, and the page fires with an empty box: runs 2 and 4 of last night): explained in words at his "huh?"; not built; his to name.
+
+**Where the ground stands.** (09:00) No sitting is open (352 closed 2026-10-05 21:34:46). The door (pid 22260) and the glass (pid 17572) are last night's builds with the gate mended, running since 21:17:51. Core `main@616bfaf` and atlas `main@605ab80`, both on GitHub; the marks v0.2.2 on core `156284a` and atlas `acdceb6`; atlas's v0.2.0, v0.2.1 and v0.2.2 releases published. Unsaved: this block.
+
+**Next, his:** the `Fire it` hole, if he names it; the v0.1.7 draft; B22, when he picks it up; then H19 (the self-model card), and the found items of 2026-10-05 (the maker's page check printing tracebacks, the spinner left running on a failed seat, the Evals page's wording for a suite still running, the shell gate's false parks).
+
 ## HANDOFF FOR 2026-10-05 — read this before anything below it
 
 **THE DAY.** The same conversation, carried across context resets; the laws and the record re-read in full at the start of every turn. Two sittings were
