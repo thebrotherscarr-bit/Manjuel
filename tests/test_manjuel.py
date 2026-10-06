@@ -12820,8 +12820,10 @@ def test_the_release_gate_runs_on_a_mark(reg, lib, book):
     # mtime against the record's, and a checkout has neither.
     # AND A SIXTH (2026-10-02, D9): `ci` asks GitHub whether the run on this commit is green, and on
     # a runner that run is the runner's own, still going -- the question cannot be put there.
+    # AND A SEVENTH (2026-10-05, his word: "fix the remotes check"): `remotes`. On a runner HEAD
+    # is the mark, and the cut's own record moves main past it; `mark` asks the runner's question.
     check("the checks that need the ground are named in one place",
-          _rel.TERMINAL_ONLY == ("strokes", "smoke", "standup", "flows", "status", "ci"),
+          _rel.TERMINAL_ONLY == ("strokes", "smoke", "standup", "flows", "status", "ci", "remotes"),
           str(_rel.TERMINAL_ONLY))
     # TWO REASONS A CHECK GOES UNRUN, and they are not the same fact. The three
     # above cannot be ASKED of a checkout (no mtimes). `mark` has nothing to

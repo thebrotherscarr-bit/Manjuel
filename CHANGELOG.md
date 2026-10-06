@@ -34,6 +34,10 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: on a runner the release gate leaves `remotes` to the terminal (2026-10-05, his word: "fix the remotes check")
+
+v0.2.2's own release-gate run on GitHub went red on one check and nothing else: `remotes` ("core: HEAD 156284a, origin/main 2ef2c59"). On a runner HEAD is the mark itself, and the cut's own record commit moves main past the mark within the minute, so "level with origin" cannot hold there once the record follows the cut -- the release flow's order, and every hand cut's before it. `mark` asks the runner's real question, whether the line carries the mark, and it was ok ("v0.2.2 -> 156284adb, carried by origin/main"). `remotes` is now the seventh of `TERMINAL_ONLY`: named and not asked under `--record-only`, asked on his terminal as before. v0.2.2's tag run stays red, because it ran the tag's own code; the next cut's tag run is the proof. Held by the gate's record-only strokes (the one list, the names it leaves unrun, and their count).
+
 ## v0.2.2 — 2026-10-05 20:51 (tag on 156284a)
 
 ### core: the release as one workflow -- `tests/cut.py`, the gate's flow law taught the `tool` node, and the plan's stroke no longer reds a tag's own run (2026-10-05, his word: "make the release one workflow")
