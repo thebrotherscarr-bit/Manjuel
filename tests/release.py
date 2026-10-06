@@ -808,9 +808,10 @@ def _git_out(d: Path, *args: str) -> str:
         return ""
 
 
-def ci(root: Path = ROOT, ask: bool = False, fetch=None) -> Check:
+def ci(root: Path = ROOT, ask: bool = False, fetch=None, at: str = "HEAD") -> Check:
     """GitHub's own verdict on the commit HEAD points at, for core and for atlas (D9). `ask` is whether
-    a mark is named or `--ci` was passed; `fetch` is the asker (a stroke hands one in)."""
+    a mark is named or `--ci` was passed; `fetch` is the asker (a stroke hands one in); `at` is the commit asked about, HEAD unless a mark is named
+    (tests/cut.py waits on both, 2026-10-05)."""
     if not ask:
         return Check("ci", True, "not asked: no mark named (name one, or pass --ci) -- GitHub is asked "
                                  "at the mark, never on a routine run", ran=False)
@@ -823,7 +824,7 @@ def ci(root: Path = ROOT, ask: bool = False, fetch=None) -> Check:
         if not (d / ".git").exists():
             continue
         m = GITHUB_ORIGIN.search(_git_out(d, "remote", "get-url", "origin"))
-        sha = _git_out(d, "rev-parse", "HEAD")
+        sha = _git_out(d, "rev-parse", f"{at}^{{commit}}")
         if not m:
             unasked.append(f"{name}: origin is not on GitHub")
             continue
@@ -889,12 +890,13 @@ def ci(root: Path = ROOT, ask: bool = False, fetch=None) -> Check:
 # would be a convention; the stroke is the wire.
 FLOW_NAME = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")               # flow.go NameRe
 FLOW_HISTORY = re.compile(r"^([a-z0-9][a-z0-9_-]{0,63})\.v(\d+)$")   # <name>.v<k>.json
-FLOW_KINDS = {"ask", "prompt", "seat", "memory", "eval", "gate", "run", "aider"}  # flow.go Kinds
+FLOW_KINDS = {"ask", "prompt", "seat", "memory", "eval", "gate", "run", "aider", "tool"}  # flow.go Kinds
 FLOW_MATCHES = {"equals", "contains"}                                  # flow.go Matches
 FLOW_MAX_RETRIES = 5                                                   # flow.go MaxRetries
 FLOW_MAX_LOOPS = 5                                                     # flow.go MaxLoops
 FLOW_VAR = re.compile(r"\{\{\s*([A-Za-z0-9_]+)\s*\}\}")                # play.Render's slot
 FLOW_AIDER_TOOL = "aider_run"                                         # flow.go AiderTool
+FLOW_TOOL = re.compile(r"^[a-z][a-z0-9_]{0,63}$")                     # flow.go ToolRe
 
 
 def _reach(start: str, forward: list, up: bool) -> set:
@@ -951,6 +953,21 @@ def flow_faults(spec) -> list[str]:
         if kind != "aider" and str(n.get("files") or "").strip():
             faults.append(f"node {nn!r} is a {kind} and names no files for Aider, so "
                           f"`files` means nothing on it")
+        # A `tool` NODE (flow.go 2026-10-05, restated the same day): a tool named
+        # in the door's shape, arguments named the same way, and no other kind
+        # carries `tool` or `args`. Which tools the door carries, and whether one
+        # that writes was granted, is the door's to say when the node runs.
+        tool, args = n.get("tool"), n.get("args")
+        if kind == "tool" and not (isinstance(tool, str) and FLOW_TOOL.fullmatch(tool)):
+            faults.append(f"tool node {nn!r} names no tool the door could carry ({tool!r}); "
+                          f"a tool is named in lower case, words joined by underscores")
+        if kind != "tool" and (str(tool or "").strip() or args):
+            faults.append(f"node {nn!r} is a {kind} and calls no tool, so `tool` and "
+                          f"`args` mean nothing on it")
+        for k in sorted(args) if isinstance(args, dict) else []:
+            if not FLOW_TOOL.fullmatch(str(k)):
+                faults.append(f"tool node {nn!r} passes an argument named {k!r}; "
+                              f"an argument is named as a tool is")
         if kind == "eval" and not str(n.get("node") or "").strip():
             faults.append(f"eval node {nn!r} names no node to check")
         match = str(n.get("match") or "").strip().lower()
@@ -986,6 +1003,8 @@ def flow_faults(spec) -> list[str]:
         texts = [str(n.get(k) or "") for k in ("question", "title", "expected", "files")]
         if isinstance(n.get("vars"), dict):
             texts += [str(v) for v in n["vars"].values()]
+        if isinstance(n.get("args"), dict):
+            texts += [str(v) for v in n["args"].values()]
         for var in sorted({v for t in texts for v in FLOW_VAR.findall(t)}):
             if var.startswith("out_") and var[4:] not in by_name:
                 faults.append(f"node {nn!r} reads {{{{{var}}}}} and no node is named {var[4:]!r}")

@@ -13572,6 +13572,35 @@ def test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book):
     check("   an aider node's files are rendered like a question, so {{out_x}} in them must name a node",
           any("out_nobody" in x for x in f), str(f))
 
+    # ---- the tool node (2026-10-05), as flow.go judges it --------------------
+    def tooled(tool="git_push", args=None, kind="tool"):
+        node = {"name": "send", "kind": kind, "tool": tool, **({"question": "Q"} if kind != "tool" else {})}
+        if args is not None:
+            node["args"] = args
+        return spec([{"name": "brief", "kind": "ask", "question": "Q"}, node],
+                    [{"from": "brief", "to": "send", "when": "always"}])
+
+    f = _rel.flow_faults(tooled(args={"project": "{{world}}"}))
+    check("a tool node naming a tool in the door's shape, its arguments named the same way, has no fault",
+          f == [], str(f))
+    f = _rel.flow_faults(tooled(tool=""))
+    check("   a tool node that names no tool is refused",
+          any("names no tool the door could carry" in x for x in f), str(f))
+    f = _rel.flow_faults(tooled(tool="Git Push"))
+    check("   and one named outside the door's shape", any("names no tool the door could carry" in x for x in f), str(f))
+    f = _rel.flow_faults(tooled(kind="ask"))
+    check("   `tool` on any other kind is refused", any("calls no tool, so `tool` and" in x for x in f), str(f))
+    f = _rel.flow_faults(tooled(args={"__caller": "me"}))
+    check("   an argument named as the door's own keys are is refused",
+          any("an argument is named as a tool is" in x for x in f), str(f))
+    f = _rel.flow_faults(tooled(args={"message": "{{out_nobody}}"}))
+    check("   a tool node's arguments are rendered like a question, so {{out_x}} in them must name a node",
+          any("out_nobody" in x for x in f), str(f))
+    shipped = ROOT / "flows" / "release.json"
+    if shipped.is_file():
+        f = _rel.flow_faults(_json.loads(shipped.read_text(encoding="utf-8")))
+        check("   the release flow as folded on this ground passes the gate's law", f == [], str(f))
+
     f = _rel.flow_faults(cyc)
     check("   and a forward edge that closes a cycle, with no `loops` declared, is still a cycle",
           any("cycle or unreachable node" in x for x in f), str(f))
@@ -13630,6 +13659,15 @@ def test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book):
                        "gate before the node on every path is the one that counts"):
             check(f"   the aider law's refusal {phrase!r} is in both copies",
                   phrase in src and phrase in (ROOT / "tests" / "release.py").read_text(encoding="utf-8"))
+        # AND THE TOOL LAW (2026-10-05), phrase by phrase, and its name law: what a
+        # tool node may name, restated here the day flow.go learned it.
+        for phrase in ("names no tool the door could carry", "calls no tool, so `tool` and",
+                       "an argument is named as a tool is"):
+            check(f"   the tool law's refusal {phrase!r} is in both copies",
+                  phrase in src and phrase in (ROOT / "tests" / "release.py").read_text(encoding="utf-8"))
+        tool_law = (_re.search(r"var ToolRe = regexp\.MustCompile\(`([^`]+)`\)", src) or [None, None])[1]
+        check("   the tool node's name law is flow.go's own", tool_law == _rel.FLOW_TOOL.pattern,
+              f"go: {tool_law} / py: {_rel.FLOW_TOOL.pattern}")
         # AND THE RETURN LAW, phrase by phrase (2026-09-29): every refusal
         # lawfulReturns and loopsOf make is one this copy makes in the same words.
         for phrase in ("does not return:", "stands inside the return from",
@@ -17278,20 +17316,97 @@ def test_the_plan_names_every_mark_where_it_sits(reg, lib, book):
     check("every mark a changelog heading places is named in BUILDPATH by that commit",
           not missing, ", ".join(missing) or f"{len(placed)} marks placed, every commit named")
     held: dict[str, str] = {}
+    cutting: list[str] = []
     for root, name in ((ROOT, "core"), (ROOT / "atlas", "atlas")):
         if not (root / ".git").exists():
             continue
+        # THE MARK ON HEAD IS THE CUT BEING RECORDED (2026-10-05). BUILDPATH names
+        # a mark by its commit, so only a commit AFTER the mark can name it -- and
+        # a tag's own run on GitHub stands at that tag, where the plan cannot name
+        # it yet: v0.2.1's own run went red on this leg and on nothing else. A
+        # mark on HEAD is asked once HEAD moves past it, which the record's own
+        # commit does (tests/cut.py record), and it is said so below.
+        h = subprocess.run(["git", "rev-parse", "--short=7", "HEAD"], capture_output=True,
+                           text=True, cwd=str(root), timeout=30, stdin=subprocess.DEVNULL)
+        here = h.stdout.strip() if h.returncode == 0 else ""
         for t in sorted(_rel.held_marks(root)):
             q = subprocess.run(["git", "rev-parse", "--short=7", f"{t}^{{commit}}"], capture_output=True,
                                text=True, cwd=str(root), timeout=30, stdin=subprocess.DEVNULL)
-            if q.returncode == 0:
+            if q.returncode == 0 and here and q.stdout.strip() == here:
+                cutting.append(f"{name} {t}")
+            elif q.returncode == 0:
                 held[f"{name} {t}"] = q.stdout.strip()
     if held:
         unnamed = [f"{k} ({v})" for k, v in held.items() if v not in plan]
         check("every mark git holds here is named in BUILDPATH by the commit it sits on today",
-              not unnamed, ", ".join(unnamed) or f"{len(held)} marks held, every one named")
+              not unnamed, ", ".join(unnamed) or f"{len(held)} marks held, every one named"
+              + (f"; on HEAD, the cut being recorded: {', '.join(cutting)}" if cutting else ""))
     else:
         check("(git holds no marks here -- the held-marks leg is not asked, and says so)", True)
+
+
+def test_the_release_steps_move_the_record_as_one(reg, lib, book):
+    """THE RELEASE AS ONE WORKFLOW (2026-10-05, his word: "make the release one
+    workflow"). tests/cut.py is what the door's `release_step` runs between his
+    gates. Its text work is held here on copies, never on his record: the pins
+    move, a changelog folds under the mark once and refuses a mark with nothing
+    under it, the record writes "(tag on <sha>)" once, a mark's theme is its
+    entries' titles, and BUILDPATH's ladder and its list of the marks gain the
+    mark by side, once. And the wait on GitHub asks again while a run goes."""
+    sys.path.insert(0, str(ROOT / "tests"))
+    import cut as _cut
+
+    check("the pins move to the number, the first version line only",
+          _cut.pin('[project]\nversion = "0.2.1"\n[tool.x]\nversion = "9"\n', "0.2.2")
+          == '[project]\nversion = "0.2.2"\n[tool.x]\nversion = "9"\n'
+          and _cut.pin('__version__ = "0.2.1"\n', "0.2.2") == '__version__ = "0.2.2"\n')
+    log = ("# Changelog\n\n## Unreleased\n\n### core: the thing (2026-10-05, his word)\n\nbody\n\n"
+           "## v0.2.1 — 2026-10-05 15:16 (tag on 9ce3b74)\n")
+    folded = _cut.fold(log, "## Unreleased", "## v0.2.2", "2026-10-05 18:00")
+    check("a changelog folds under the mark: Unreleased stays, the entry stands under the new heading",
+          "## Unreleased\n\n## v0.2.2 — 2026-10-05 18:00\n\n### core: the thing" in folded, folded)
+    check("   and knows when it already has", _cut.has_heading(folded, "## v0.2.2")
+          and not _cut.has_heading(log, "## v0.2.2") and not _cut.has_heading(folded, "## v0.2"))
+    try:
+        _cut.fold("## Unreleased\n\n## v0.2.1 — x\n", "## Unreleased", "## v0.2.2", "s")
+        empty = "folded"
+    except _cut.Refused as exc:
+        empty = str(exc)
+    check("   a mark with nothing under Unreleased is refused", "nothing under" in empty, empty)
+    tagged = _cut.tag_heading(folded, "## v0.2.2", "abc1234")
+    check("the record writes where the mark sits on its heading, once",
+          "## v0.2.2 — 2026-10-05 18:00 (tag on abc1234)" in tagged
+          and _cut.tag_heading(tagged, "## v0.2.2", "abc1234") == tagged, tagged)
+    check("   and a mark's theme is its entries' titles, without the side or the closing note",
+          _cut.themes(tagged + "\n### atlas: the door (a note (inner))\n", "## v0.2.2") == "the thing"
+          and _cut.themes("## [v0.2.2] — x\n\n### atlas: the tool node (2026-10-05, his word (twice))\n\n"
+                          "### core: the cut\n\n## [v0.2.1]\n", "## [v0.2.2]") == "the tool node; the cut")
+    plan = (ROOT / "BUILDPATH.md").read_text(encoding="utf-8").replace("\r\n", "\n")
+    moved = _cut.plan(plan, "v9.9.9", "2026-10-05", ("1111111", "the core's theme"), ("2222222", "atlas's theme"))
+    start = moved.index(_cut.LADDER)
+    end = moved.index(_cut.HELD, start)
+    ladder = moved[start:end]
+    check("BUILDPATH gains the mark on its ladder, by side, the core's above atlas's block",
+          "           v9.9.9   2026-10-05  the core's theme" in ladder
+          and "           v9.9.9   2026-10-05  atlas's theme" in ladder
+          and ladder.index("the core's theme") < ladder.index("    atlas  v") < ladder.index("atlas's theme"),
+          ladder[-600:])
+    held = moved[end:]
+    check("   and its list of the marks as git holds them, each side by the commit it sits on",
+          "v9.9.9  1111111" in held and "v9.9.9  2222222" in held
+          and held.index("v9.9.9  1111111") < held.index("    atlas  ") < held.index("v9.9.9  2222222"),
+          held[:900])
+    check("   and a mark already named is left alone",
+          _cut.plan(moved, "v9.9.9", "2026-10-05", ("1111111", "x"), ("2222222", "y")) == moved)
+    check("   and nothing above the ladder moves: an earlier day's list of the marks is history (LAW 1)",
+          moved[:start] == plan[:plan.index(_cut.LADDER)])
+    asked: list[str] = []
+    answers = [_cut.release.Check("ci", False, "core abc1234: tests is still in_progress; read it when it is done"),
+               _cut.release.Check("ci", True, "core abc1234 green (tests)")]
+    c = _cut.wait_ci(ROOT, "v9.9.9", wait_s=600, sleep=lambda s: asked.append("slept"),
+                     clock=lambda: 0.0, ask=lambda root, ask, at: (asked.append(at), answers.pop(0))[1])
+    check("the wait on GitHub asks again while a run goes, at the commit it was given, and stops when it is done",
+          c.ok and c.ran and asked == ["v9.9.9", "slept", "v9.9.9"], str(asked))
 
 
 def test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book):
@@ -21365,6 +21480,7 @@ def main() -> int:
     test_the_map_says_how_to_ask(reg, lib, book)
     test_the_refusals_document_lists_every_site_in_the_code(reg, lib, book)
     test_the_plan_names_every_mark_where_it_sits(reg, lib, book)
+    test_the_release_steps_move_the_record_as_one(reg, lib, book)
     test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book)
     test_no_file_is_mixed_and_the_root_documents_are_crlf(reg, lib, book)
     test_the_aider_door_keeps_what_the_seats_keep(reg, lib, book)

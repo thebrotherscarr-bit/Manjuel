@@ -15,8 +15,8 @@ the lines, finds words in them, and names any line it cannot number.
 
 ## A. Stops the release right now
 
-The last cut is core **v0.2.1** and atlas **v0.2.1**, on GitHub (2026-10-05, your word: "tag it 0.2.1"); nothing is being cut
-now. Atlas's v0.2.0 and v0.2.1 draft releases on GitHub are yours to publish.
+The last cut is core **v0.2.1** and atlas **v0.2.1**, on GitHub (2026-10-05, your word: "tag it 0.2.1"); **v0.2.2** is being cut
+now, by the release flow (H27; your card of 2026-10-05). Atlas's v0.2.0 and v0.2.1 draft releases on GitHub are yours to publish.
 
 
 ---
@@ -76,6 +76,14 @@ Nothing here gets built until you say which way.
 ---
 
 ## G. The release checklist, in order
+
+v0.2.2, on your word of 2026-10-05 (your card: "Fire it for v0.2.2"): the release as one workflow (H27), cut by that workflow itself. Its first
+step does what this list did by hand: version numbers set (0.2.2 and 0.2.2) by the flow's bump, then the live check and the suites after it.
+
+- [ ] 1. The flow's first gate: the bump, the live check, the toll index, the suites and the release check
+- [ ] 2. Its second gate: both repositories saved and sent, and GitHub green on both main lines
+- [ ] 3. Its third gate: both tags cut and sent, the record written, saved and sent, and GitHub read once more
+- [ ] 4. Publish atlas's v0.2.2 draft on GitHub, or drop it (yours, on GitHub)
 
 v0.2.1, on your word of 2026-10-05 ("tag it 0.2.1"): the PowerShell tab (H26) on top of v0.2.0. Already done: version numbers set (0.2.1 and 0.2.1).
 
@@ -232,6 +240,10 @@ disk says is missing, in the order it is worth building. H1 is done (below).
 
 Finished lines, newest first. A number is never used again.
 
+- **H27. The release as one workflow.** DONE 2026-10-05: your word, "make the release one workflow". The Workflows page's `release` flow: three
+  gates, each your click (cut, save and send, tag), and between them the bump, the live check, the toll index, the suites, the release check, both
+  saves and sends, GitHub read, both marks cut and sent, and the record written, saved and sent. Fired with the mark it cuts, `{"mark": "v0.2.2"}`.
+  *(CHANGELOG, "core: the release as one workflow")*
 - **H26. A PowerShell tab, with the longer time.** DONE 2026-10-05: your word, "Let's get this done". The front page's fifth tab runs PowerShell 7 as you, every line on your
   card, and every shell tab may run up to 300 seconds. Placed on your card and run live: a 35-second sleep came back. *(CHANGELOG, "atlas: the PowerShell tab")*
 - **B28. A tab that can run the suites?** RULED 2026-10-05, on your card: a PowerShell tab with the longer time, built after the v0.2.0 cut; the suites for

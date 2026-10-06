@@ -34,6 +34,16 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+## v0.2.2 — 2026-10-05 20:51
+
+### core: the release as one workflow -- `tests/cut.py`, the gate's flow law taught the `tool` node, and the plan's stroke no longer reds a tag's own run (2026-10-05, his word: "make the release one workflow")
+
+The release's own steps are one script, `tests/cut.py`, which the door's new `release_step` runs between his gates in `flows/release.json`: `bump` moves the pins, atlas's version files (its own `version.ps1`, set and then sync) and both changelogs to the mark, and refuses a changelog with nothing under Unreleased; `index` rebuilds the toll index after the live check; `check` prints STATUS.md and asks the release gate, every line ok but `remotes` and `ci`, which wait on the send; `ci` waits for GitHub's runs in both repositories (on HEAD, and on the mark once it is cut; twenty minutes at most for each) and asks the gate again; `record` writes "(tag on <sha>)" on both headings and puts the mark on BUILDPATH's ladder and on its list of the marks, by side. Every step can be run again and says when there is nothing to do, so a release that stopped is fired again from the start. Nothing in it saves, sends or cuts: those are the door's `git_commit`, `git_push` and `git_tag`, each reached only past a gate that grants it.
+
+The flow (`flows/release.json`, on this ground) has three gates, each his click: cut (the bump, the live check with one more pass if it misses, the toll index, the suites, the release check), save and send (both repositories, then GitHub's runs read and the gate asked again), and tag (both marks cut and sent, the record written, saved and sent, and GitHub read once more, on the record and on the marks). The release gate's `ci` check takes the commit it asks about (`at`, HEAD unless a mark is named), so the marks' own runs are read too.
+
+The gate's copy of the flow law knows the `tool` node, held to flow.go's words by the reconciling stroke (its three refusals and its name law). The plan's stroke (`test_the_plan_names_every_mark_where_it_sits`) no longer asks BUILDPATH to name a mark on HEAD: BUILDPATH can name a mark only in the commit after it, so a tag's own run on GitHub was red on that leg every time (v0.2.1's was); a mark on HEAD is the cut being recorded, said so, and asked once HEAD moves on. Held by `test_the_release_steps_move_the_record_as_one` (the pins, the fold and its refusal, the heading, the themes, BUILDPATH by side and once, the wait on GitHub). The engine's half is atlas's CHANGELOG, "The tool node".
+
 ## v0.2.1 — 2026-10-05 15:16 (tag on 9ce3b74)
 
 ### atlas: the PowerShell tab, and a shell line may run up to 300 s (2026-10-05, WHAT'S LEFT H26; the entry is atlas's)
