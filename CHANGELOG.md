@@ -34,7 +34,7 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
-## v0.2.2 — 2026-10-05 20:51
+## v0.2.2 — 2026-10-05 20:51 (tag on 156284a)
 
 ### core: the release as one workflow -- `tests/cut.py`, the gate's flow law taught the `tool` node, and the plan's stroke no longer reds a tag's own run (2026-10-05, his word: "make the release one workflow")
 
