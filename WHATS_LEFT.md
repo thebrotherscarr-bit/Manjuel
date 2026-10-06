@@ -17,6 +17,8 @@ the lines, finds words in them, and names any line it cannot number.
 
 The last cut is core **v0.2.2** and atlas **v0.2.2**, on GitHub (2026-10-05, cut by the release flow, H27; your card: "Fire it for v0.2.2"); nothing is
 being cut now. Atlas's release workflow ran green on its v0.2.2 tag, which leaves a draft: the v0.2.0, v0.2.1 and v0.2.2 drafts are yours to publish.
+The next cut is **v0.2.3**, when every page has moved onto the front page and the old Dashboard is sidelined (H16). Your word, 2026-10-06:
+"0.2.3 will be when all pages are transferred over and the old dashboard is sidelined." Until then the version stays 0.2.2.
 
 
 ---
@@ -235,11 +237,13 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   stays on every other page. Your design pass of 2026-10-06: the tabs stay as they work now, the old pages stay under
   Pages until what they have is in the Inspector, and the Workflows builder goes inside it; one tab at a time, on your
   word. **Done:** Workflows (2026-10-06: the builder itself is in the tab, and Fire refuses an empty box or a second
-  fire while a run is moving). **Next, as the pass laid them out:** Audit Ledger (Records, Evals, the live check),
-  Registry & Docs (Tools with Call, Agents, Settings), Guardrails (Laws), Aider Pair (Version control's buttons), Run
-  (the Watchboard's raw wire, the Dashboard's Projects). Then retire the sidebar and the old Dashboard (kept whole at
+  fire while a run is moving); Audit Ledger (2026-10-06: what the build has proved, the estate and the live standups as
+  Records draws them, the live check, and the evals scored by hand). **Next, as the pass laid them out:** Registry &
+  Docs (Tools with Call, Agents, Settings), Guardrails (Laws), Aider Pair (Version control's buttons), Run (the
+  Watchboard's raw wire, the Dashboard's Projects). Then retire the sidebar and the old Dashboard (kept whole at
   `/dashboard`), and remove what nothing reads afterwards (`home.js` and the tests that pin it). *(your word
-  2026-10-02: "then transition over"; 2026-10-06: "let us make a design pass", then "go, start with workflows")*
+  2026-10-02: "then transition over"; 2026-10-06: "let us make a design pass", then "go, start with workflows" and
+  "go, next: audit ledger")*
 
 ---
 

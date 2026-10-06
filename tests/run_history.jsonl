@@ -567,3 +567,6 @@
 {"suite": "smoke", "at": 1791264239.155507, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "strokes", "at": 1791309193.3898368, "state": "finished", "passed": 3722, "total": 3722, "green": true, "failed": []}
 {"suite": "smoke", "at": 1791309201.7719529, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "standup", "at": 1791312567.973356, "state": "finished", "passed": 9, "total": 9, "green": true, "failed": [], "report": "logs/standup_2026-10-06_114927.md"}
+{"suite": "strokes", "at": 1791313437.6795962, "state": "finished", "passed": 3722, "total": 3722, "green": true, "failed": []}
+{"suite": "smoke", "at": 1791313445.222928, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
