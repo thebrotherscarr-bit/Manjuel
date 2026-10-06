@@ -232,10 +232,14 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   above, used by a counsel seat that reads, advises and never acts. That one waits on H8 and your word, seat
   by seat. *(RUNBOOK, "`--auth` and the service wire"; B18)*
 - **H16. The move onto the front page.** The front page replaced the Dashboard at `/` on 2026-10-02 and the sidebar
-  stays on every other page. When you have lived on it: move what the other pages show into the Inspector or the
-  Pages menu, retire the sidebar and the old Dashboard (kept whole at `/dashboard`), and remove what nothing reads
-  afterwards (`home.js` and the tests that pin it). Waits on you using it. *(your word
-  2026-10-02: "then transition over")*
+  stays on every other page. Your design pass of 2026-10-06: the tabs stay as they work now, the old pages stay under
+  Pages until what they have is in the Inspector, and the Workflows builder goes inside it; one tab at a time, on your
+  word. **Done:** Workflows (2026-10-06: the builder itself is in the tab, and Fire refuses an empty box or a second
+  fire while a run is moving). **Next, as the pass laid them out:** Audit Ledger (Records, Evals, the live check),
+  Registry & Docs (Tools with Call, Agents, Settings), Guardrails (Laws), Aider Pair (Version control's buttons), Run
+  (the Watchboard's raw wire, the Dashboard's Projects). Then retire the sidebar and the old Dashboard (kept whole at
+  `/dashboard`), and remove what nothing reads afterwards (`home.js` and the tests that pin it). *(your word
+  2026-10-02: "then transition over"; 2026-10-06: "let us make a design pass", then "go, start with workflows")*
 
 ---
 
