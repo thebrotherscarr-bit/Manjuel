@@ -3182,3 +3182,21 @@ typed with a backslash.
 pins at 0.2.0 in both repositories. The release check, the save, the send and the tags follow this entry, each on his card.
 
 **Next session** — read HANDOFF's 2026-10-05 block and its afternoon annotation first. B22 is his; H26 (the PowerShell tab) after the cut; then H19.
+
+## Session 26 — 2026-10-05 (Monday), sittings 348 to 352 from his glass: the PowerShell tab, v0.2.1, the release as one workflow, and v0.2.2
+
+**Standing** — the same conversation, carried across context resets; the laws re-read in full at the start of every turn. Everything runs on his glass, every write on his card, and a publish only on his word in chat.
+
+**Version** — at open: core `main@f232dd6`, atlas `main@e2db417` (v0.2.0). Cut this evening: v0.2.1 (core `9ce3b74`, atlas `5c6beeb`) and v0.2.2 (core `156284a`, atlas `acdceb6`), each with the record of its cut after it. At close: core `main@e56e3f9`, atlas `main@605ab80`, both on GitHub; this entry, HANDOFF's evening annotation and the list's ticks unsaved.
+
+**The plan** — his, in the order he gave it: "Let's get this done" (the PowerShell tab); "tag it 0.2.1", "a version bump and a formal tag/release"; "go, then make the release one workflow" and "go build the release workflow"; on his cards, "Place and restart" for each build, "Fire it for v0.2.2" and "Close the hole, then re-fire"; "fix the remotes check and clean up the runs"; "run the suites, then save and send it"; "write up tonight's handoff and daybook, tick the checklist".
+
+**What was done** — H26, the PowerShell tab, placed on his card and run live. v0.2.1 cut on his cards. H27, the release as one workflow: the `tool` node (atlas), `release_step` and `tests/cut.py`, the release flow, the gate's flow law taught the node, and the plan's stroke mended for a tag's own run; a new stroke caught `cut.py record` aiming at the 2026-09-17 list before it ever ran. The Workflows page taught to ask for a tool node's inputs. v0.2.2 cut by the flow on its third run, his click at every gate. On the way a held "stop" found a hole (a gate decision answered a later gate, unseen), mended in the door and the page the same night. The last read found the core tag's release-gate red on `remotes`, mended on main (`e56e3f9`). The leftover runs closed, or left as they ended.
+
+**Rulings** — his cards as above. This session's safety check refused the hand's own save and send of the remotes fix, and he typed it himself in the PowerShell tab.
+
+**Faults of the hand's, in the record** — HANDOFF's evening annotation has each: a write inside run 2's live check's sitting (RULE 9); that sitting first called his; the door restarted with run 2's live check running; a guess about the tag's red before its log was read; a Python entry typed into the Bash tab.
+
+**At close** — (22:45) No sitting open (352 closed 21:34:46, tolled). Live check 9 of 9 (sitting 352); suites 3722 of 3722 and 72 of 72 (22:23); the release gate as the tag job runs it, 11 of 11; GitHub's `prove` on `e56e3f9` green on all four legs. v0.2.2 on GitHub in both repositories; its core tag's release-gate red, on the tag's own code.
+
+**Next session** — read HANDOFF's 2026-10-05 block and both its annotations first. Atlas's drafts and B22 are his; the `Fire it` hole if he names it; then H19.
