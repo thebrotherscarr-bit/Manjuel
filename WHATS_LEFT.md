@@ -239,13 +239,14 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   word. **Done:** Workflows (2026-10-06: the builder itself is in the tab, and Fire refuses an empty box or a second
   fire while a run is moving); Audit Ledger (2026-10-06: what the build has proved, the estate and the live standups as
   Records draws them, the live check, and the evals scored by hand); Registry & Docs (2026-10-06: Tools with Call, the
-  seats as the Agents page draws them, and the documents with Records' dates and seals); and Settings, a door of its own
-  beside Guardrails at your word (2026-10-06: the door's address, the evals pass mark and the messaging bridge).
-  **Next, as the pass laid them out:** Guardrails (Laws), Aider Pair (Version control's buttons), Run (the Watchboard's
-  raw wire, the Dashboard's Projects). Then retire the sidebar and the old Dashboard (kept whole at `/dashboard`), and
-  remove what nothing reads afterwards (`home.js` and the tests that pin it). *(your word 2026-10-02: "then transition
-  over"; 2026-10-06: "let us make a design pass", then "go, start with workflows", "go, next: audit ledger", "go, next:
-  registry & docs", and "Add another page along the top next to guardrails that is for settings")*
+  seats as the Agents page draws them, and the documents with Records' dates and seals); Settings, a door of its own
+  beside Guardrails at your word (2026-10-06: the door's address, the evals pass mark and the messaging bridge); and
+  Guardrails (2026-10-06: the Laws, drawn by the Laws page's own object under the hold queue). **Next, as the pass laid
+  them out:** Aider Pair (Version control's buttons), Run (the Watchboard's raw wire, the Dashboard's Projects). Then
+  retire the sidebar and the old Dashboard (kept whole at `/dashboard`), and remove what nothing reads afterwards
+  (`home.js` and the tests that pin it). *(your word 2026-10-02: "then transition over"; 2026-10-06: "let us make a
+  design pass", then "go, start with workflows", "go, next: audit ledger", "go, next: registry & docs", "Add another
+  page along the top next to guardrails that is for settings", and "go, next: guardrails")*
 
 ---
 
