@@ -17,8 +17,9 @@ the lines, finds words in them, and names any line it cannot number.
 
 The last cut is core **v0.2.2** and atlas **v0.2.2**, on GitHub (2026-10-05, cut by the release flow, H27; your card: "Fire it for v0.2.2"); nothing is
 being cut now. Atlas's release workflow ran green on its v0.2.2 tag, which leaves a draft: the v0.2.0, v0.2.1 and v0.2.2 drafts are yours to publish.
-The next cut is **v0.2.3**, when every page has moved onto the front page and the old Dashboard is sidelined (H16). Your word, 2026-10-06:
-"0.2.3 will be when all pages are transferred over and the old dashboard is sidelined." Until then the version stays 0.2.2.
+The next cut is **v0.2.3**. Your word, 2026-10-06: "0.2.3 will be when all pages are transferred over and the old dashboard is sidelined."
+That is true since 2026-10-07 (H16, done): every page is reached from the front page, and the sidebar and the old Dashboard are retired. The
+cut is yours to order; until you do, the version stays 0.2.2.
 
 
 ---
@@ -233,23 +234,6 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   it (it needs a key minted for that connection). The second is the system calling Claude: the hosted route
   above, used by a counsel seat that reads, advises and never acts. That one waits on H8 and your word, seat
   by seat. *(RUNBOOK, "`--auth` and the service wire"; B18)*
-- **H16. The move onto the front page.** The front page replaced the Dashboard at `/` on 2026-10-02 and the sidebar
-  stays on every other page. Your design pass of 2026-10-06: the tabs stay as they work now, the old pages stay under
-  Pages until what they have is in the Inspector, and the Workflows builder goes inside it; one tab at a time, on your
-  word. **Done:** Workflows (2026-10-06: the builder itself is in the tab, and Fire refuses an empty box or a second
-  fire while a run is moving); Audit Ledger (2026-10-06: what the build has proved, the estate and the live standups as
-  Records draws them, the live check, and the evals scored by hand); Registry & Docs (2026-10-06: Tools with Call, the
-  seats as the Agents page draws them, and the documents with Records' dates and seals); Settings, a door of its own
-  beside Guardrails at your word (2026-10-06: the door's address, the evals pass mark and the messaging bridge);
-  Guardrails (2026-10-06: the Laws, drawn by the Laws page's own object under the hold queue); Aider Pair
-  (2026-10-06: Version control's own repositories under Aider, with every change in a world at once); and Run
-  (2026-10-07: the Watchboard's own wire in place of the tab's own list of events, and the Dashboard's Projects under
-  it, a pick played beside the terminal). Every tab the pass laid out is in. **Next:** retire the sidebar and the old
-  Dashboard (kept whole at `/dashboard`), and remove what nothing reads afterwards (`home.js` and the tests that pin
-  it). *(your word 2026-10-02: "then transition over"; 2026-10-06: "let us make a design pass", then "go, start with
-  workflows", "go, next: audit ledger", "go, next: registry & docs", "Add another page along the top next to guardrails
-  that is for settings", "go, next: guardrails", "go, next: aider pair", and "go, next: run"; 2026-10-07, on your cards:
-  the wire in place of the tab's own events, and a pick played "Beside the terminal")*
 
 ---
 
@@ -257,6 +241,14 @@ disk says is missing, in the order it is worth building. H1 is done (below).
 
 Finished lines, newest first. A number is never used again.
 
+- **H16. The move onto the front page.** DONE 2026-10-07: your word, "go, next: retire the sidebar and the old dashboard", the last step of your
+  design pass of 2026-10-06. Every tab the pass laid out is in the Inspector (Workflows, Audit Ledger, Registry & Docs, Settings, Guardrails and
+  Aider Pair on 2026-10-06, Run on 2026-10-07), and the sidebar and the old Dashboard are retired: every page is one list that the front page's
+  Pages menu, the palette and each page's crumb read, and `/dashboard` opens the front page. On your cards, the covenant is in the front page's
+  footer, unsent work is a number on its Aider Pair door, and the idle line is in the terminal's title. `home.js`, the sidebar's styles and its
+  glyphs are gone, and the tests that pinned them hold what stands now. Placed on your card and proved live on your glass (sitting 356: a turn's
+  thread kept and back after a reload, Version control's Recent staged into the terminal, the idle line at five idle minutes). *(atlas
+  CHANGELOG, "The sidebar and the old Dashboard retire")*
 - **H27. The release as one workflow.** DONE 2026-10-05: your word, "make the release one workflow". The Workflows page's `release` flow: three
   gates, each your click (cut, save and send, tag), and between them the bump, the live check, the toll index, the suites, the release check, both
   saves and sends, GitHub read, both marks cut and sent, and the record written, saved and sent. Fired with the mark it cuts, `{"mark": "v0.2.2"}`.
