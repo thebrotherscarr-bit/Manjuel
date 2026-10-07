@@ -241,13 +241,15 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   Records draws them, the live check, and the evals scored by hand); Registry & Docs (2026-10-06: Tools with Call, the
   seats as the Agents page draws them, and the documents with Records' dates and seals); Settings, a door of its own
   beside Guardrails at your word (2026-10-06: the door's address, the evals pass mark and the messaging bridge);
-  Guardrails (2026-10-06: the Laws, drawn by the Laws page's own object under the hold queue); and Aider Pair
-  (2026-10-06: Version control's own repositories under Aider, with every change in a world at once). **Next, as the
-  pass laid them out:** Run (the Watchboard's raw wire, the Dashboard's Projects). Then retire the sidebar and the old
+  Guardrails (2026-10-06: the Laws, drawn by the Laws page's own object under the hold queue); Aider Pair
+  (2026-10-06: Version control's own repositories under Aider, with every change in a world at once); and Run
+  (2026-10-07: the Watchboard's own wire in place of the tab's own list of events, and the Dashboard's Projects under
+  it, a pick played beside the terminal). Every tab the pass laid out is in. **Next:** retire the sidebar and the old
   Dashboard (kept whole at `/dashboard`), and remove what nothing reads afterwards (`home.js` and the tests that pin
   it). *(your word 2026-10-02: "then transition over"; 2026-10-06: "let us make a design pass", then "go, start with
   workflows", "go, next: audit ledger", "go, next: registry & docs", "Add another page along the top next to guardrails
-  that is for settings", "go, next: guardrails", and "go, next: aider pair")*
+  that is for settings", "go, next: guardrails", "go, next: aider pair", and "go, next: run"; 2026-10-07, on your cards:
+  the wire in place of the tab's own events, and a pick played "Beside the terminal")*
 
 ---
 
