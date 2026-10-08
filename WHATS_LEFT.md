@@ -262,7 +262,10 @@ will be a documentation pass for both repos. including making sure the changelog
 a packaging and deliverable pass"; "0.3.0 will be a full release packaged and ready for deployment." And: "you can add in steps for achieving these
 goals". The steps under each are proposed from the disk; each is yours to change before it is built.
 
-- **I1. v0.2.5: the full GitHub integration.** In order: (1) Approve cards that stay in view: a pinned "Waiting for your hand" tray on the window,
+- **I1. v0.2.5: the full GitHub integration.** Found on the way to the first step and mended first, on your card ("Fix it first",
+  2026-10-08): an approved hold runs in the world it was held for; it had run in the world of the glass that answered it, so the council's
+  call held for atlas opened its line in the core. *(atlas CHANGELOG, "An approved hold runs in the world it was held for")* Then, in order:
+  (1) Approve cards that stay in view: a pinned "Waiting for your hand" tray on the window,
   every parked card from any tab or tool with Approve and Deny, and Guardrails reading the same list and refreshing itself (your cards: "A pinned
   tray", "First in v0.2.5"); (2) the old page name gone from the code's own messages: the tree doors' refusal and a comment in `manjuel/skills.py`,
   a message in `manjuel/pipeline.py`, atlas's `aider.go` and `holds.go` (restart required; the door rebuilt and placed on your card); (3) Send to
