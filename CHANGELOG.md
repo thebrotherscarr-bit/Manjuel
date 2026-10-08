@@ -34,7 +34,7 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
-## v0.2.4 — 2026-10-08 10:51
+## v0.2.4 — 2026-10-08 10:51 (tag on 2230e7d)
 
 ### core: the road to 0.3.0 on the list, v0.2.4's checklist, and the handoff for 2026-10-08 (2026-10-08, his word: "you can add in steps for achieving these goals")
 

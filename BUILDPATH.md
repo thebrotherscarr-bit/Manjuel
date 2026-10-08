@@ -509,6 +509,12 @@ sent by name (SPEC 8.2 carries the same, under its themes):
                                 `tests/cut.py`, the gate's flow law taught
                                 the `tool` node, and the plan's stroke no
                                 longer reds a tag's own run
+           v0.2.4   2026-10-08  the road to 0.3.0 on the list, v0.2.4's
+                                checklist, and the handoff for 2026-10-08;
+                                the docs call the glass's page GitHub, and a
+                                stroke holds the name; on a runner the
+                                release gate leaves `remotes` to the
+                                terminal
     atlas  v0.1.6   2026-09-18  THE DOOR'S OWN QUARTER ("atlas needs its own
                                 number too")
            v0.1.7   2026-09-23  EVERY PIN IN STEP
@@ -531,6 +537,44 @@ sent by name (SPEC 8.2 carries the same, under its themes):
                                 buttons at the first click; The tool node: a
                                 flow calls the door's own tools by name, and
                                 the release's steps are one door tool
+           v0.2.4   2026-10-08  GitHub is a tab of its own: Version control
+                                is renamed GitHub, with a door and an
+                                Inspector tab beside Aider Pair, drawn by
+                                the page's own object; Pull requests through
+                                the glass: `git_pr` lists a world's open
+                                pull requests with their checks and opens
+                                one from a line of work on his click; it
+                                never merges; The operator's edit:
+                                `file_edit`, one exact edit of one text
+                                file, parked on his card and written only on
+                                his Approve; A line from a script is a typed
+                                line: Agent.drive, kept in the front page;
+                                The front page is the window: it takes
+                                exactly the window's height, never scrolls,
+                                and the Inspector lies over the terminal on
+                                a narrow screen; The sidebar and the old
+                                Dashboard retire: every page is one list the
+                                front page reads, and what they carried is
+                                on the front page; Run carries the
+                                Watchboard's wire and the Dashboard's
+                                Projects, and a pick plays beside the
+                                terminal; Aider Pair carries Version
+                                control: the Version control page's own
+                                repositories, drawn under Aider; Guardrails
+                                carries the Laws: the Laws page's own
+                                object, drawn under the hold queue; Registry
+                                & Docs carries Tools with Call, the seats
+                                and Records' documents, and Settings is a
+                                door of its own; The Audit Ledger tab
+                                carries Records, Evals and the live check:
+                                what the build has proved, the estate and
+                                the live standups, the live check's button,
+                                and the evals scored by hand; The Workflows
+                                tab is the builder: the Inspector draws the
+                                Workflows page's own builder, Fire refuses
+                                an empty box and a second press, the door
+                                refuses a fire while a run is moving, and a
+                                refusal reaches the page in words
 
 THE MARKS AS GIT HOLDS THEM, read 2026-09-30. The rewrite of 2026-09-21 moved
 every mark that stood before it (CHANGELOG's headings say "on <sha> since"),
@@ -539,10 +583,10 @@ so the 2026-09-17 list above is history (LAW 1) and this is where they sit:
     core   0.1.7   00d2e56    0.1.9   6d3e6b1    v0.1.11 b4b6593
            v0.1.12 084fe33    v0.1.13 4e04378    v0.1.14 de2420e
            v0.1.15 af50522    v0.1.16 e8aa9b5    v0.2.0  f232dd6    v0.2.1  9ce3b74
-           v0.2.2  156284a
+           v0.2.2  156284a    v0.2.4  2230e7d
     atlas  v0.1.5  3dacdbc    v0.1.6  0c65afc    v0.1.7  063a152
            v0.1.8  56a3078    v0.1.9  b1059a1    v0.2.0  e2db417    v0.2.1  5c6beeb
-           v0.2.2  acdceb6
+           v0.2.2  acdceb6    v0.2.4  af92401
 
 The six removed on 2026-09-17 are still removed. A stroke holds this list to
 the marks (`test_the_plan_names_every_mark_where_it_sits`): every changelog
