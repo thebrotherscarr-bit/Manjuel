@@ -247,7 +247,7 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   `manjuel/boot.py`)*
 - **H13. Claude in the loop.** Your idea (10-02): a reasoning, planning and review agent beside the council.
   Two shapes, and the first needs nothing built: the door already lets an outside agent connect, with reads
-  free and every write held for your decision on the GitHub page or in Guardrails, so Claude can be in the loop today through
+  free and every write held for your decision on its card at the foot of the front page's terminal (or on the GitHub page), so Claude can be in the loop today through
   it (it needs a key minted for that connection). The second is the system calling Claude: the hosted route
   above, used by a counsel seat that reads, advises and never acts. That one waits on H8 and your word, seat
   by seat. *(RUNBOOK, "`--auth` and the service wire"; B18)*
@@ -265,10 +265,12 @@ goals". The steps under each are proposed from the disk; each is yours to change
 - **I1. v0.2.5: the full GitHub integration.** Found on the way to the first step and mended first, on your card ("Fix it first",
   2026-10-08): an approved hold runs in the world it was held for; it had run in the world of the glass that answered it, so the council's
   call held for atlas opened its line in the core. *(atlas CHANGELOG, "An approved hold runs in the world it was held for")* Then, in order:
-  (1) Approve cards that stay in view: a pinned "Waiting for your hand" tray on the window,
-  every parked card from any tab or tool with Approve and Deny, and Guardrails reading the same list and refreshing itself (your cards: "A pinned
-  tray", "First in v0.2.5"); (2) the old page name gone from the code's own messages: the tree doors' refusal and a comment in `manjuel/skills.py`,
-  a message in `manjuel/pipeline.py`, atlas's `aider.go` and `holds.go` (restart required; the door rebuilt and placed on your card); (3) Send to
+  (1) Approve cards that stay in view, in since 2026-10-08 and placed on your card: every card that waits for your hand (the council's question, a
+  line that asks first, any call the door parked) is pinned at the foot of the terminal, over the line you type in, in every tab, and Guardrails
+  is Laws (your cards: "A pinned tray", "First in v0.2.5", "It becomes Laws"; and "pin them to the window ... Basically replacing the Guardrails
+  tab") *(atlas CHANGELOG, "Approve cards stay in view")*; (2) the old page names gone from the code's own messages: the tree doors' refusal and a comment in `manjuel/skills.py`,
+  a message in `manjuel/pipeline.py`, atlas's `aider.go` and `holds.go`, and the held note of its `edit.go`, which still sends you to Guardrails (restart required; the door
+  rebuilt and placed on your card); (3) Send to
   GitHub on a line of work that has never been sent, and the GitHub tab's words for it ("not linked to GitHub at all"); (4) a pull request merged on
   GitHub from the GitHub tab, its Merge button live only when its provers are green, and the new main brought down to this machine (your card:
   "Merge on GitHub when green"), with RUNBOOK's note of 2026-09-28 rewritten to that loop; (5) main protected in both repositories: a pull request
