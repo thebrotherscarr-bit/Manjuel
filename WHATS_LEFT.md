@@ -15,11 +15,11 @@ the lines, finds words in them, and names any line it cannot number.
 
 ## A. Stops the release right now
 
-The last cut is core **v0.2.2** and atlas **v0.2.2**, on GitHub (2026-10-05, cut by the release flow, H27; your card: "Fire it for v0.2.2"); nothing is
-being cut now. Atlas's release workflow ran green on its v0.2.2 tag, which leaves a draft: the v0.2.0, v0.2.1 and v0.2.2 drafts are yours to publish.
-The next cut is **v0.2.3**. Your word, 2026-10-06: "0.2.3 will be when all pages are transferred over and the old dashboard is sidelined."
-That is true since 2026-10-07 (H16, done): every page is reached from the front page, and the sidebar and the old Dashboard are retired. The
-cut is yours to order; until you do, the version stays 0.2.2.
+The last cut is core **v0.2.2** and atlas **v0.2.2**, on GitHub (2026-10-05, cut by the release flow, H27; your card: "Fire it for v0.2.2"). Atlas's
+releases v0.2.0, v0.2.1 and v0.2.2 were published on your word (2026-10-06, 08:58); v0.1.7 is still a draft.
+The next cut is **v0.2.4**, being cut now (G). Your word, 2026-10-06: "0.2.3 will be when all pages are transferred over and the old dashboard is
+sidelined." That is true since 2026-10-07 (H16, done). Then, 2026-10-08: "bump and tag 0.2.4 then 0.2.5 will be the full github integration
+release", and on your card the same day: v0.2.4 now, and 0.2.3 is never used. Until the cut, the version stays 0.2.2. The road on to 0.3.0 is I.
 
 
 ---
@@ -79,6 +79,19 @@ Nothing here gets built until you say which way.
 ---
 
 ## G. The release checklist, in order
+
+v0.2.4, on your word of 2026-10-08 ("bump and tag 0.2.4"; on your card the same day, 0.2.3 is never used): cut by the release flow (H27),
+whose first gate sets the version numbers: version numbers set (0.2.4 and 0.2.4) by the flow's bump, then the live check and the suites after it.
+What it carries since v0.2.2: every page on the front page (H16), the front page as the window and `Agent.drive`, the door's `file_edit`, pull
+requests through the glass, the GitHub tab, and the docs calling it so.
+
+- [x] 1. Atlas's `github-tab` line landed onto main here (your card: "Land it here, all buttons", since no button sends a never-sent line until
+  v0.2.5): your Land onto main at 10:46, a fast-forward to `66f1b8e`, the GitHub tab; GitHub gets it at the second gate
+- [ ] 2. Today's HANDOFF block written and saved (the release check asks for the mark's own day)
+- [ ] 3. The flow's first gate: the bump, the live check, the toll index, the suites and the release check
+- [ ] 4. Its second gate: both repositories saved and sent, and GitHub green on both main lines
+- [ ] 5. Its third gate: both tags cut and sent, the record written, saved and sent, and GitHub read once more
+- [ ] 6. Publish atlas's v0.2.4 draft on GitHub, or drop it (yours, on GitHub)
 
 v0.2.2, on your word of 2026-10-05 (your card: "Fire it for v0.2.2"): the release as one workflow (H27), cut by that workflow itself. Its first
 step does what this list did by hand: version numbers set (0.2.2 and 0.2.2) by the flow's bump, then the live check and the suites after it.
@@ -234,6 +247,47 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   it (it needs a key minted for that connection). The second is the system calling Claude: the hosted route
   above, used by a counsel seat that reads, advises and never acts. That one waits on H8 and your word, seat
   by seat. *(RUNBOOK, "`--auth` and the service wire"; B18)*
+
+---
+
+## I. The road to 0.3.0
+
+Your words, 2026-10-08: "0.2.5 will be the full github integration release"; "0.2.6 will be an optimization and flow pass, making sure all
+functions are working"; "0.2.7 will be an update for both core and atlas, making sure all functions from prior versions are fullfilled"; "0.2.8
+will be a documentation pass for both repos. including making sure the changelogs, licenses, dependencies, etc are all reviewed"; "0.2.9 will be
+a packaging and deliverable pass"; "0.3.0 will be a full release packaged and ready for deployment." And: "you can add in steps for achieving these
+goals". The steps under each are proposed from the disk; each is yours to change before it is built.
+
+- **I1. v0.2.5: the full GitHub integration.** In order: (1) Approve cards that stay in view: a pinned "Waiting for your hand" tray on the window,
+  every parked card from any tab or tool with Approve and Deny, and Guardrails reading the same list and refreshing itself (your cards: "A pinned
+  tray", "First in v0.2.5"); (2) the old page name gone from the code's own messages: the tree doors' refusal and a comment in `manjuel/skills.py`,
+  a message in `manjuel/pipeline.py`, atlas's `aider.go` and `holds.go` (restart required; the door rebuilt and placed on your card); (3) Send to
+  GitHub on a line of work that has never been sent, and the GitHub tab's words for it ("not linked to GitHub at all"); (4) a pull request merged on
+  GitHub from the GitHub tab, its Merge button live only when its provers are green, and the new main brought down to this machine (your card:
+  "Merge on GitHub when green"), with RUNBOOK's note of 2026-09-28 rewritten to that loop; (5) main protected in both repositories: a pull request
+  and green provers to change it (the core's four `prove` legs, atlas's battery), and the release flow taught to land its record through it (your
+  card: "Stage it"; force-pushes and deletion are blocked on both since 2026-10-08); (6) the provers themselves: atlas's `release.yml` pins its
+  outside action to an exact commit, and a sent line's provers run once rather than twice. *(CHANGELOG, "core: the docs call the glass's page GitHub")*
+- **I2. v0.2.6: an optimization and flow pass.** Every function working, and measured: every flow on the Workflows page fired to COMPLETE or retired
+  on your word (the release check names `coder`, `release` and `version-tag` as fired and never COMPLETE); the live check 9 of 9 and the review
+  panel inside its turn; the session test (R1) run again against its baseline (sitting 345, 9 faults) and its faults mended or ruled; the time each
+  route of the front page takes, measured against the session test's budgets, and the slowest made faster.
+- **I3. v0.2.7: both repositories keep what earlier versions promised.** Every OPEN line in SPEC section 4 met or ruled; every open line on this
+  page (B, E, H) built, ruled, or moved to a later version on your word; the found items in HANDOFF from 2026-10-05 on put on this page or ruled;
+  the wife test (E1) with her at the glass and nobody helping.
+- **I4. v0.2.8: a documentation pass, both repositories.** Both CHANGELOGs read against git, every save accounted for; both LICENSE files; the
+  dependencies reviewed and written down: the core's `pyproject.toml` (`ollama`, and `numpy` for the tests), atlas's `sbom.json` against
+  `Cargo.lock` and both `go.mod` files, the Python battery (standard library only) and Aider's own environment (`aider/venv`, outside both
+  repositories); the core's README, QUICKSTART, RUNBOOK, BUILDPATH, SPEC and SYSTEM_DESIGN, and atlas's README, DELIVERABLE, LAUNCH_PLAN, THE_ROAD,
+  ACCEPTANCE, SECURITY and STATE_OF_BUILD, each read against the disk; HANDOFF's own header, which still names `tests/test_chainkit.py`.
+- **I5. v0.2.9: packaging and the deliverable.** The Settings page set up for every API integration: each hosted route's state shown (on or off,
+  never the key), its key placed by you in `.env` (RULE 4, amended; RULE 7); the local Ollama models set up: the models the seats name, pulled and
+  checked by the rack's own report; the rack checked: what is loaded, what fits the card, what no seat names; a first run on a machine that has none
+  of this, written down step by step (Ollama, the models, the door and the glass started, the PIN set); what ships, from atlas's release workflow
+  (its binaries) and the core's `pyproject.toml`, against DELIVERABLE.md; what sits loose at the core's root and ships with nothing
+  (`atlas.bundle`, `atlas-mcp.exe`, `chain_original.py.bak`); a backup for the record (named 2026-09-23: it exists once, on one disk).
+- **I6. v0.3.0: a full release, packaged and ready to deploy.** I1 to I5 done or ruled; the release installed on a clean machine from the release
+  alone, following only its documents; the release check green with the live check and the review panel; both repositories' releases published by you.
 
 ---
 
