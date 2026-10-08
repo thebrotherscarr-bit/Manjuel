@@ -17488,6 +17488,108 @@ def test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book):
           f"checklist {v.group(1) if v else '-'}, pin {pin.group(1) if pin else '-'}")
 
 
+def test_the_docs_call_the_page_what_the_glass_calls_it(reg, lib, book):
+    """THE DOCS CALL THE PAGE WHAT THE GLASS CALLS IT (2026-10-08; his word: "fix the discpancies in the
+    docs about the naming convention", and the wire on his card: "a test that goes red if a living doc
+    calls the page Version control again, with dated history lines left alone"). The glass's Version
+    control page became GitHub that day, with a door and an Inspector tab of its own (atlas CHANGELOG,
+    "GitHub is a tab of its own"), and the docs went on sending him to Version control: eight places on
+    nine lines (BUILDPATH's step 4 broke the name over a line's end), moved on his cards with two
+    lines that came with them (H16's Aider Pair door, and a new row in the words table), and nothing
+    could have gone red over any of them, because nothing read the name.
+
+    THE LIVING DOCS ARE DOCTRINE'S (`doctrine.living`): a ledger is the record of its day and is not read
+    here. Three more are not read either: CLAUDE.md is his, and its "Version control is the safety net"
+    is the practice, not the page; STATUS.md and SEAT_LOG_INDEX.md are printed from the record and quote
+    it. A living line that names the old page is red, unless it is one of the dated lines named below by
+    a phrase of its own -- a box on a release's list, a dated ruling, the words table's row for the old name,
+    a sitting's account in pipelines.md -- and every one of those phrases must still be there, so the
+    list cannot outlive the lines it excuses. The capital is the mark: "version control" in lowercase is
+    the practice (DESIGN, SPEC), "Version control" was the page. Stroked both ways on a temp ground, and
+    held to the glass's own label where atlas/ stands beside the core.
+    """
+    import re as _re
+    from manjuel import doctrine as D
+
+    OLD = "Version control"
+    NOT_READ = {"CLAUDE.md", "STATUS.md", "SEAT_LOG_INDEX.md"}
+    DATED = {
+        "WHATS_LEFT.md": ("tag v0.2.0 (core) from Version control",
+                          "tag v0.2.0 (atlas) from Version control",
+                          "tag v0.1.16 (core) from Version control",
+                          "tag v0.1.9 (atlas) from Version control",
+                          "Version control's Recent staged into the terminal",
+                          "A merge button on Version control (was D6)",
+                          "cut and sent from the Version control page",
+                          "| Version control, until 2026-10-08;"),
+        "SPEC.md": ("`land` on Version control, B16",),
+        "pipelines.md": ("Version control has no such click",),
+    }
+
+    def stale(ground):
+        said = []
+        head, tail = OLD.split()
+        for p in D.living(ground):
+            if p.name in NOT_READ:
+                continue
+            excused = DATED.get(p.name, ())
+            lines = p.read_text(encoding="utf-8").splitlines()
+            for n, line in enumerate(lines, 1):
+                # the name broken over a line's end is the name too: BUILDPATH's step 4 ended one line
+                # "on Version" and began the next "control --" until 2026-10-08
+                nxt = lines[n] if n < len(lines) else ""
+                broken = line.rstrip().endswith(head) and nxt.lstrip().startswith(tail)
+                if (OLD in line or broken) and not any(phrase in line for phrase in excused):
+                    said.append(f"{p.name}:{n}: {line.strip()[:100]}")
+        return said
+
+    # ---- both ways, on a temp ground ---------------------------------------------------
+    g = Path(tempfile.mkdtemp())
+    for name, body in (("RUNBOOK.md", "open a line of work first (Lines of work on Version control)"),
+                       ("NOTES.md", "send it from the GitHub tab; version control is the safety net"),
+                       ("WHATS_LEFT.md", "- [x] 5. Cut and send the tag v0.1.16 (core) from Version control"),
+                       ("CLAUDE.md", "SAFETY. Version control is the safety net."),
+                       ("STATUS.md", "- the record names Version control, quoted"),
+                       ("CHANGELOG.md", "### the page was called Version control until 2026-10-08")):
+        (g / name).write_text(body, encoding="utf-8")
+    found = stale(g)
+    check("a living doc that sends him to Version control is found, by file and line",
+          found == ["RUNBOOK.md:1: open a line of work first (Lines of work on Version control)"], str(found))
+    check("   and the GitHub tab, the practice in lowercase, a dated line named by its phrase, his rules, "
+          "a page printed from the record and a ledger are not",
+          not any(f.split(":")[0] in ("NOTES.md", "WHATS_LEFT.md", "CLAUDE.md", "STATUS.md", "CHANGELOG.md")
+                  for f in found), str(found))
+    (g / "WHATS_LEFT.md").write_text("- [ ] 9. Cut the next tag from Version control", encoding="utf-8")
+    check("   and a line that only looks like history is not excused: the phrase is the line's own",
+          any(f.startswith("WHATS_LEFT.md:1:") for f in stale(g)), str(stale(g)))
+    b = Path(tempfile.mkdtemp())
+    (b / "BUILDPATH.md").write_text("    4  send the main line FIRST -- Save, then Send to GitHub on Version\n"
+                                    "       control -- so the mark's commit is already on origin.", encoding="utf-8")
+    check("   and the name broken over a line's end is found too, as BUILDPATH's step 4 had it until 2026-10-08",
+          stale(b) == ["BUILDPATH.md:1: 4  send the main line FIRST -- Save, then Send to GitHub on Version"],
+          str(stale(b)))
+
+    # ---- and on this ground ----------------------------------------------------------------
+    found = stale(ROOT)
+    check("no living doc on this ground calls the glass's page Version control: it is GitHub",
+          not found, "; ".join(found[:4]))
+    gone = [f"{name}: {phrase!r}" for name, phrases in DATED.items() for phrase in phrases
+            if phrase not in (ROOT / name).read_text(encoding="utf-8")]
+    check("   and every dated line excused by its phrase is still there, so no excuse outlives its line",
+          not gone, "; ".join(gone))
+    check("   and the docs that send him to the page name it GitHub (RUNBOOK, BUILDPATH)",
+          "the GitHub tab" in (ROOT / "RUNBOOK.md").read_text(encoding="utf-8")
+          and "in the GitHub tab" in (ROOT / "BUILDPATH.md").read_text(encoding="utf-8"))
+    app = ROOT / "atlas" / "webapp" / "static" / "js" / "app.js"
+    if app.is_file():
+        m = _re.search(r"page:[ ]*'flows',[ ]*href:[ ]*'/flows',[ ]*label:[ ]*'([^']+)'",
+                       app.read_text(encoding="utf-8"))
+        check("   and GitHub is what the glass itself calls that page (app.js), so the docs and the page say one name",
+              bool(m) and m.group(1) == "GitHub", m.group(0) if m else "no label for /flows in app.js")
+    else:
+        check("(no atlas/ beside the core here -- the glass's own name for the page is not asked, and says so)", True)
+
+
 def test_no_file_is_mixed_and_the_root_documents_are_crlf(reg, lib, book):
     """THE TERMINATOR RULING FOLLOWS THE DISK (his word 2026-09-30, B3).
     CLAUDE.md said CRLF everywhere while the disk was 35 CRLF to 151 LF; now
@@ -21484,6 +21586,7 @@ def main() -> int:
     test_the_plan_names_every_mark_where_it_sits(reg, lib, book)
     test_the_release_steps_move_the_record_as_one(reg, lib, book)
     test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book)
+    test_the_docs_call_the_page_what_the_glass_calls_it(reg, lib, book)
     test_no_file_is_mixed_and_the_root_documents_are_crlf(reg, lib, book)
     test_the_aider_door_keeps_what_the_seats_keep(reg, lib, book)
     test_the_toll_index_is_read_off_the_log(reg, lib, book)

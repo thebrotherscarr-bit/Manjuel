@@ -914,7 +914,7 @@ never refused; a whole file written must still be clean).
 **Action.** Refused, and NOTHING IS WRITTEN. The refusal names the rule -- RULE
 7, SITTING LAW 2, ESTATE LAW 2, LAW 8, RULE 8, RULE 6 -- and, for the main
 line, the cure: open a line of work (`git_branch new` through the door, or
-Lines of work on Version control) and write on it.
+Lines of work in the GitHub tab) and write on it.
 
 **Why.** His ruling, 2026-09-28: "yes, that's the whole idea of the coder, I
 want to actually be able to write/read/modify files within the harness." Until

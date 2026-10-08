@@ -133,7 +133,7 @@ appended by the door itself, so do not add them.
 
 **`--auth` and the service wire (since 2026-09-25).** With `--auth` the door
 demands a bearer on every call and HOLDS a writing call from anything but the
-glass until you decide it on Version control; without it, RULE 6 is a
+glass until you decide it on the GitHub page or in Guardrails; without it, RULE 6 is a
 sentence. A writing tool's reading action is not held: `git_tag list` and
 `git_branch list` (their default, too) answer any bearer, while `cut`, `send`,
 `remove`, `new`, `switch` and `close` wait for your hand (since 2026-09-28). A
@@ -366,8 +366,8 @@ The engine reads that by arithmetic -- no Router, no plan -- fetches
 `_NEVER_WRITTEN_TOP` whole off the file's own map, and seats the Expert Coder
 alone with it; what it answers goes through `ground_edit` and the delivery is
 the door's own line. ON MAIN THE DOOR REFUSES (RULE 6): open a line of work
-first (Lines of work on Version control, or the `coder-tree` flow's gate), and
-merging it back is yours, on your terminal -- Version control has no merge
+first (Lines of work in the GitHub tab, or the `coder-tree` flow's gate), and
+merging it back is yours, on your terminal -- the GitHub tab has no merge
 button and the door carries no such verb. The name must be exact and on the map (`help`
 is not `helper`); a bare `.py` is the workspace, not the ground. A DOCUMENT IS
 ASKED BY HEADING (2026-09-29), a root document by its bare name:
@@ -793,7 +793,7 @@ cut -- by you (RULE 6).
 
 **AND THE MARK ITSELF (2026-09-17).** One mark per version,
 `vMAJOR.MINOR.PATCH`, cut on the main line after the gate and sent BY NAME
-from Version control -- never `git push --tags`, which sends every mark this
+from the GitHub tab -- never `git push --tags`, which sends every mark this
 machine holds. Send the main line first: the door refuses to send a mark whose
 commit origin's main line does not already carry, and refuses to cut one
 anywhere but the main line. The panel asks the door before it offers anything,

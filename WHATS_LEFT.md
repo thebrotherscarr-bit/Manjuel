@@ -230,7 +230,7 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   `manjuel/boot.py`)*
 - **H13. Claude in the loop.** Your idea (10-02): a reasoning, planning and review agent beside the council.
   Two shapes, and the first needs nothing built: the door already lets an outside agent connect, with reads
-  free and every write held for your decision on Version control, so Claude can be in the loop today through
+  free and every write held for your decision on the GitHub page or in Guardrails, so Claude can be in the loop today through
   it (it needs a key minted for that connection). The second is the system calling Claude: the hosted route
   above, used by a counsel seat that reads, advises and never acts. That one waits on H8 and your word, seat
   by seat. *(RUNBOOK, "`--auth` and the service wire"; B18)*
@@ -245,7 +245,7 @@ Finished lines, newest first. A number is never used again.
   design pass of 2026-10-06. Every tab the pass laid out is in the Inspector (Workflows, Audit Ledger, Registry & Docs, Settings, Guardrails and
   Aider Pair on 2026-10-06, Run on 2026-10-07), and the sidebar and the old Dashboard are retired: every page is one list that the front page's
   Pages menu, the palette and each page's crumb read, and `/dashboard` opens the front page. On your cards, the covenant is in the front page's
-  footer, unsent work is a number on its Aider Pair door, and the idle line is in the terminal's title. `home.js`, the sidebar's styles and its
+  footer, unsent work is a number on its Aider Pair door (on its own GitHub door since 2026-10-08), and the idle line is in the terminal's title. `home.js`, the sidebar's styles and its
   glyphs are gone, and the tests that pinned them hold what stands now. Placed on your card and proved live on your glass (sitting 356: a turn's
   thread kept and back after a reload, Version control's Recent staged into the terminal, the idle line at five idle minutes). *(atlas
   CHANGELOG, "The sidebar and the old Dashboard retire")*
@@ -677,6 +677,7 @@ Finished lines, newest first. A number is never used again.
 | session | a sitting |
 | tag | a mark |
 | work branch | a line of work |
+| GitHub (the page, and its tab and door on the front page) | Version control, until 2026-10-08; its address is still /flows |
 
 ## How this page is kept
 
