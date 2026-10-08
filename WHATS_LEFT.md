@@ -15,11 +15,11 @@ the lines, finds words in them, and names any line it cannot number.
 
 ## A. Stops the release right now
 
-The last cut is core **v0.2.2** and atlas **v0.2.2**, on GitHub (2026-10-05, cut by the release flow, H27; your card: "Fire it for v0.2.2"). Atlas's
-releases v0.2.0, v0.2.1 and v0.2.2 were published on your word (2026-10-06, 08:58); v0.1.7 is still a draft.
-The next cut is **v0.2.4**, being cut now (G). Your word, 2026-10-06: "0.2.3 will be when all pages are transferred over and the old dashboard is
-sidelined." That is true since 2026-10-07 (H16, done). Then, 2026-10-08: "bump and tag 0.2.4 then 0.2.5 will be the full github integration
-release", and on your card the same day: v0.2.4 now, and 0.2.3 is never used. Until the cut, the version stays 0.2.2. The road on to 0.3.0 is I.
+The last cut is core **v0.2.4** and atlas **v0.2.4**, on GitHub (2026-10-08, cut by the release flow on your three clicks; G). Your word, 2026-10-06:
+"0.2.3 will be when all pages are transferred over and the old dashboard is sidelined", true since 2026-10-07 (H16, done); then, 2026-10-08: "bump
+and tag 0.2.4 then 0.2.5 will be the full github integration release", and on your card the same day 0.2.3 is never used. Atlas's v0.2.4 release is
+a draft for you to publish (G); v0.2.0, v0.2.1 and v0.2.2 were published on your word (2026-10-06, 08:58), and v0.1.7 is still a draft.
+The next cut is **v0.2.5**, the full GitHub integration (I1). The road on to 0.3.0 is I.
 
 
 ---
@@ -87,10 +87,14 @@ requests through the glass, the GitHub tab, and the docs calling it so.
 
 - [x] 1. Atlas's `github-tab` line landed onto main here (your card: "Land it here, all buttons", since no button sends a never-sent line until
   v0.2.5): your Land onto main at 10:46, a fast-forward to `66f1b8e`, the GitHub tab; GitHub gets it at the second gate
-- [ ] 2. Today's HANDOFF block written and saved (the release check asks for the mark's own day)
-- [ ] 3. The flow's first gate: the bump, the live check, the toll index, the suites and the release check
-- [ ] 4. Its second gate: both repositories saved and sent, and GitHub green on both main lines
-- [ ] 5. Its third gate: both tags cut and sent, the record written, saved and sent, and GitHub read once more
+- [x] 2. Today's HANDOFF block written (10:44) and saved with the cut (`2230e7d`); the release check read it: "HANDOFF FOR 2026-10-08"
+- [x] 3. The flow's first gate (run `f-20261008-175101-58aeb2db`, your click 10:51): the bump, the live check 9 of 9 (sitting 359, 10:56), the toll
+  index, the suites 3730 of 3730 and 72 of 72 (10:59), and the release check: every line ok but `remotes` and `ci`, which waited on the send
+- [x] 4. Its second gate (your click 11:01): both saved and sent (core `2230e7d`, atlas `af92401`), GitHub green on both and the release check 17 of 17
+  (11:07)
+- [x] 5. Its third gate (your click 11:07): both tags cut and sent (core `v0.2.4` on `2230e7d`, atlas on `af92401`), the record written, saved and sent
+  (core `07a0efe`, atlas `6891fcd`), and GitHub read once more: the tags' own runs green; the core's record save red, from the docs stroke reading
+  BUILDPATH's ladder, mended on your card ("Fix it now") and saved after it
 - [ ] 6. Publish atlas's v0.2.4 draft on GitHub, or drop it (yours, on GitHub)
 
 v0.2.2, on your word of 2026-10-05 (your card: "Fire it for v0.2.2"): the release as one workflow (H27), cut by that workflow itself. Its first

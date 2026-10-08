@@ -17505,8 +17505,10 @@ def test_the_docs_call_the_page_what_the_glass_calls_it(reg, lib, book):
     a phrase of its own -- a box on a release's list, a dated ruling, the words table's row for the old name,
     a sitting's account in pipelines.md -- and every one of those phrases must still be there, so the
     list cannot outlive the lines it excuses. The capital is the mark: "version control" in lowercase is
-    the practice (DESIGN, SPEC), "Version control" was the page. Stroked both ways on a temp ground, and
-    held to the glass's own label where atlas/ stands beside the core.
+    the practice (DESIGN, SPEC), "Version control" was the page. BUILDPATH's ladders are history too: the
+    release record (`cut.py record`) writes each mark's CHANGELOG titles into the newest, and atlas's title
+    for v0.2.4 names the old page (its first record, core 07a0efe, went red on GitHub over it). Stroked both
+    ways on a temp ground, and held to the glass's own label where atlas/ stands beside the core.
     """
     import re as _re
     from manjuel import doctrine as D
@@ -17534,7 +17536,14 @@ def test_the_docs_call_the_page_what_the_glass_calls_it(reg, lib, book):
                 continue
             excused = DATED.get(p.name, ())
             lines = p.read_text(encoding="utf-8").splitlines()
+            ladder = False
             for n, line in enumerate(lines, 1):
+                # BUILDPATH's ladders are history: the release record (`cut.py record`) writes each mark's
+                # CHANGELOG titles into the newest one, and atlas's title for v0.2.4 names the old page
+                if line.startswith("## "):
+                    ladder = p.name == "BUILDPATH.md" and line.startswith("## The ladder")
+                if ladder:
+                    continue
                 # the name broken over a line's end is the name too: BUILDPATH's step 4 ended one line
                 # "on Version" and began the next "control --" until 2026-10-08
                 nxt = lines[n] if n < len(lines) else ""
@@ -17568,6 +17577,14 @@ def test_the_docs_call_the_page_what_the_glass_calls_it(reg, lib, book):
     check("   and the name broken over a line's end is found too, as BUILDPATH's step 4 had it until 2026-10-08",
           stale(b) == ["BUILDPATH.md:1: 4  send the main line FIRST -- Save, then Send to GitHub on Version"],
           str(stale(b)))
+    c = Path(tempfile.mkdtemp())
+    (c / "BUILDPATH.md").write_text("## The ladder, 2026-09-30\n\n"
+                                    "           v0.2.4   2026-10-08  GitHub is a tab of its own: Version control\n\n"
+                                    "## The marks, and how one is cut\n\n"
+                                    "    5  cut the mark on Version control.", encoding="utf-8")
+    check("   and BUILDPATH's ladders are history the release record writes, so a CHANGELOG title there is not read; "
+          "the same words below them are",
+          stale(c) == ["BUILDPATH.md:7: 5  cut the mark on Version control."], str(stale(c)))
 
     # ---- and on this ground ----------------------------------------------------------------
     found = stale(ROOT)
