@@ -1628,7 +1628,7 @@ def _tree_report(ctx: RunContext, saved: str, door: str, said: str) -> str:
     if saved:
         return (f"Landed on the line of work through {door}: {said}\n\nNothing has reached "
                 f"the main line; the suites are the review, and merging the line is the "
-                f"operator's click on Version control.")
+                f"operator's click on the GitHub tab.")
     if door:
         return f"Nothing landed -- {door} said: {said}"
     engine_said = [n for n in ctx.notes if n.startswith("coder tree: ")]

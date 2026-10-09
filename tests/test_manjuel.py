@@ -17607,6 +17607,70 @@ def test_the_docs_call_the_page_what_the_glass_calls_it(reg, lib, book):
         check("(no atlas/ beside the core here -- the glass's own name for the page is not asked, and says so)", True)
 
 
+def test_the_code_calls_the_pages_what_the_glass_calls_them(reg, lib, book):
+    """THE CODE CALLS THE PAGES WHAT THE GLASS CALLS THEM (2026-10-09, WHAT'S LEFT I1 step 2). On 2026-10-08
+    the glass's Version control page became GitHub, its Guardrails tab became Laws, and the calls held for his
+    hand became cards pinned at the foot of the front page's terminal. The docs were held to the new name that day
+    (the stroke above); the code's own words were not, and three places went on naming the old pages: the tree
+    doors' refusal on the main line and the comment beside it (skills.py), and the report of a landing on the tree
+    (pipeline.py). The door's own words are the Go suite's: TestTheDoorCallsThePagesWhatTheGlassCallsThem, in
+    atlas/line/internal/tools/edit_test.go.
+
+    Every module of the core is read whole, every run of spaces made one and the glue between two string
+    literals or two comment lines taken out, so a name broken over a line's end is found too: the refusal was
+    broken that way, and a grep for the name passed it. The capital is the mark, as in the docs: version control
+    in lowercase is the practice, not the page. Stroked both ways on samples, then on the code, then on the
+    refusal the tree doors actually send on the main line.
+    """
+    import re as _re
+
+    OLD = ("Version control", "Guardrails")
+    # the glue between two literals: a closing quote, an optional plus, an opening quote with its prefix
+    GLUE = _re.compile("[\"'] ?[+]? ?[rbfu]{0,2}[\"']", _re.I)
+
+    def stale(text):
+        flat = GLUE.sub("", " ".join(text.split())).replace(" # ", " ")
+        return [n for n in OLD if n in flat]
+
+    # ---- both ways, on samples ----------------------------------------------------------------
+    split = ('                f"`git_branch new <name>` through the door, or Lines of work on Version "\n'
+             '                f"control -- and write on it. Nothing was written.", "")')
+    check("a page's old name broken over two string literals is found (the tree doors' refusal as it stood)",
+          stale(split) == ["Version control"], str(stale(split)))
+    check("   and over a comment's wrap",
+          stale("# the door opens one, or he does on Version\n#   control; merging it is his") == ["Version control"])
+    check("   and over a plus between two literals",
+          stale('"Lines of work on Version " + "control"') == ["Version control"])
+    check("   and the old tab named outright",
+          stale("It waits for his Approve on the card in Guardrails.") == ["Guardrails"])
+    check("   while the practice in lowercase, and the pages' own names, are not",
+          stale("version control is the safety net; save it on the GitHub tab, seal it on Laws") == [])
+
+    # ---- every module of the core -------------------------------------------------------------
+    modules = sorted((ROOT / "manjuel").rglob("*.py"))
+    found = {p.relative_to(ROOT).as_posix(): stale(p.read_text(encoding="utf-8")) for p in modules}
+    found = {k: v for k, v in found.items() if v}
+    check("every module of the core was read for the old names (thirty and more)", len(modules) >= 30,
+          str(len(modules)))
+    check("no module of the core sends him to Version control or Guardrails: the pages are the GitHub tab "
+          "and the card at the foot of the terminal", not found, str(found))
+
+    # ---- the words the tree doors actually send on the main line --------------------------------
+    if not HAVE_GIT:
+        return                    # reported once, in main(); never a crash
+    g = Path(tempfile.mkdtemp())
+    (g / "manjuel").mkdir()
+    (g / "manjuel" / "thing.py").write_bytes(b"X = 1\n")
+    for args in (["init", "-q"], ["config", "user.email", "t@t"], ["config", "user.name", "t"],
+                 ["checkout", "-q", "-b", "main"]):
+        subprocess.run(["git", *args], cwd=g, capture_output=True, stdin=subprocess.DEVNULL)
+    gitstate.commit(g, "manjuel: the ground")
+    said = lib.execute("ground_write", {"filepath": "manjuel/new.py", "content": "Y = 2\n"},
+                       env_for(g, reg, Stub()))
+    check("on the main line the tree doors' refusal sends him to the GitHub tab for a line of work, by that name",
+          said.startswith("Refused") and "Lines of work on the GitHub tab" in said and not stale(said), said[:240])
+
+
 def test_no_file_is_mixed_and_the_root_documents_are_crlf(reg, lib, book):
     """THE TERMINATOR RULING FOLLOWS THE DISK (his word 2026-09-30, B3).
     CLAUDE.md said CRLF everywhere while the disk was 35 CRLF to 151 LF; now
@@ -21604,6 +21668,7 @@ def main() -> int:
     test_the_release_steps_move_the_record_as_one(reg, lib, book)
     test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book)
     test_the_docs_call_the_page_what_the_glass_calls_it(reg, lib, book)
+    test_the_code_calls_the_pages_what_the_glass_calls_them(reg, lib, book)
     test_no_file_is_mixed_and_the_root_documents_are_crlf(reg, lib, book)
     test_the_aider_door_keeps_what_the_seats_keep(reg, lib, book)
     test_the_toll_index_is_read_off_the_log(reg, lib, book)

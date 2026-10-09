@@ -4152,7 +4152,7 @@ def _apply_passage(path: Path, old: str, new: str) -> str:
 #   THE MAIN LINE IS HIS (`line_of_work`). A write lands only while the
 #   repository the file belongs to stands on a line of work: a branch that is
 #   not main or master and is not detached. The council opens one through the
-#   door (`git_branch new`) or he does on Version control; merging it is his
+#   door (`git_branch new`) or he does on the GitHub tab; merging it is his
 #   click (RULE 6). The repository is the NEAREST one -- atlas/ carries its
 #   own `.git` inside the ground -- and a ground with none refuses, because a
 #   rule that cannot be checked is not a rule.
@@ -4271,8 +4271,8 @@ def line_of_work(env, path: Path) -> tuple[str, str]:
         where = "detached" if branch == "" else f"on `{branch}`"
         return (f"Refused: the repository at `{repo.name or repo}` stands {where}, and the "
                 f"main line is the operator's (RULE 6). Open a line of work first -- "
-                f"`git_branch new <name>` through the door, or Lines of work on Version "
-                f"control -- and write on it. Nothing was written.", "")
+                f"`git_branch new <name>` through the door, or Lines of work on the "
+                f"GitHub tab -- and write on it. Nothing was written.", "")
     return "", branch
 
 

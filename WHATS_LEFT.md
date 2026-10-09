@@ -265,12 +265,15 @@ goals". The steps under each are proposed from the disk; each is yours to change
 - **I1. v0.2.5: the full GitHub integration.** Found on the way to the first step and mended first, on your card ("Fix it first",
   2026-10-08): an approved hold runs in the world it was held for; it had run in the world of the glass that answered it, so the council's
   call held for atlas opened its line in the core. *(atlas CHANGELOG, "An approved hold runs in the world it was held for")* Then, in order:
-  (1) Approve cards that stay in view, in since 2026-10-08 and placed on your card: every card that waits for your hand (the council's question, a
-  line that asks first, any call the door parked) is pinned at the foot of the terminal, over the line you type in, in every tab, and Guardrails
-  is Laws (your cards: "A pinned tray", "First in v0.2.5", "It becomes Laws"; and "pin them to the window ... Basically replacing the Guardrails
-  tab") *(atlas CHANGELOG, "Approve cards stay in view")*; (2) the old page names gone from the code's own messages: the tree doors' refusal and a comment in `manjuel/skills.py`,
-  a message in `manjuel/pipeline.py`, atlas's `aider.go` and `holds.go`, and the held note of its `edit.go`, which still sends you to Guardrails (restart required; the door
-  rebuilt and placed on your card); (3) Send to
+  (1) Approve cards that stay in view, in since 2026-10-08, placed on your card, and on atlas's main line since your word ("merge it", pull
+  request #3, `8e1ee6f`): every card that waits for your hand (the council's question, a line that asks first, any call the door parked) is
+  pinned at the foot of the terminal, over the line you type in, in every tab, and Guardrails is Laws (your cards: "A pinned tray", "First in
+  v0.2.5", "It becomes Laws"; and "pin them to the window ... Basically replacing the Guardrails tab") *(atlas CHANGELOG, "Approve cards stay
+  in view")*; (2) the old page names gone from the code's own messages, in since 2026-10-09: the tree doors' refusal and a comment in
+  `manjuel/skills.py` and a message in `manjuel/pipeline.py` name the GitHub tab, and atlas's `aider.go`, `holds.go` and `edit.go` (its held
+  note) name the GitHub tab or the card at the foot of the front page's terminal; a stroke and a Go test hold both sides, and the door was
+  rebuilt and placed on your card (the core's half reaches the engine at its next Boot) *(CHANGELOG, "core: the code calls the pages what the glass calls them")*
+  *(atlas CHANGELOG, "The door calls the pages what the glass calls them")*; (3) Send to
   GitHub on a line of work that has never been sent, and the GitHub tab's words for it ("not linked to GitHub at all"); (4) a pull request merged on
   GitHub from the GitHub tab, its Merge button live only when its provers are green, and the new main brought down to this machine (your card:
   "Merge on GitHub when green"), with RUNBOOK's note of 2026-09-28 rewritten to that loop; (5) main protected in both repositories: a pull request
