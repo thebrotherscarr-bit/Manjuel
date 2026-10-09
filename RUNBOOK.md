@@ -367,8 +367,12 @@ The engine reads that by arithmetic -- no Router, no plan -- fetches
 alone with it; what it answers goes through `ground_edit` and the delivery is
 the door's own line. ON MAIN THE DOOR REFUSES (RULE 6): open a line of work
 first (Lines of work in the GitHub tab, or the `coder-tree` flow's gate), and
-merging it back is yours, on your terminal -- the GitHub tab has no merge
-button and the door carries no such verb. The name must be exact and on the map (`help`
+merging it back is yours, from the GitHub tab (since 2026-10-09): save the line
+and send it, open a pull request under Pull requests, and once every check on
+it has passed, Merge on GitHub merges it there as a merge commit and brings the
+new main line down to this machine. Until then the tab had no merge button and
+the door no such verb, so it was your terminal's; Land onto main, fast-forward,
+still lands a line without a pull request. The name must be exact and on the map (`help`
 is not `helper`); a bare `.py` is the workspace, not the ground. A DOCUMENT IS
 ASKED BY HEADING (2026-09-29), a root document by its bare name:
 

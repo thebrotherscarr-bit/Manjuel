@@ -231,7 +231,12 @@ goals". The steps under each are proposed from the disk; each is yours to change
   *(CHANGELOG, "atlas: Send to GitHub on a line of work that has never been sent")*
   *(atlas CHANGELOG, "Send to GitHub on a line of work that has never been sent")*; (4) a pull request merged on
   GitHub from the GitHub tab, its Merge button live only when its provers are green, and the new main brought down to this machine (your card:
-  "Merge on GitHub when green"), with RUNBOOK's note of 2026-09-28 rewritten to that loop; (5) main protected in both repositories: a pull request
+  "Merge on GitHub when green"), with RUNBOOK's note of 2026-09-28 rewritten to that loop, in since 2026-10-09 and placed on your card, the
+  door's founding law that it never merges superseded for it on your word ("we have to be able to merge ... supersede that one"): on the
+  GitHub tab a pull request whose checks have all passed has a live Merge on GitHub (grey until then, saying why), the first press says what
+  will happen, and the second merges it there as a merge commit (your card: "Merge commit") and brings the new main line down; not yet pressed
+  on a real pull request (the first will be this piece's own, once it is sent) *(CHANGELOG, "atlas: Merge on GitHub")*
+  *(atlas CHANGELOG, "Merge on GitHub")*; (5) main protected in both repositories: a pull request
   and green provers to change it (the core's four `prove` legs, atlas's battery), and the release flow taught to land its record through it (your
   card: "Stage it"; force-pushes and deletion are blocked on both since 2026-10-08); (6) the provers themselves: atlas's `release.yml` pins its
   outside action to an exact commit, and a sent line's provers run once rather than twice. *(CHANGELOG, "core: the docs call the glass's page GitHub")*
