@@ -34,6 +34,36 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: the versions cut and never tagged are marked after the fact, each on the commit that cut its number -- core v0.1.6 and v0.1.10, atlas v0.1.2, v0.1.3 and v0.1.4 (2026-10-09, his word: "post-script the versions that didnt get any tags or info ... tag them with what happened that day"; his card: "Both")
+
+His word, 2026-10-09, and his card the same morning, "Both": the release checklists first (the entry below), then a mark for each version cut and never tagged, each on its own card, the sending of them a separate word of his. Five such versions stand on the two main lines, and each is marked now, annotated and in his name, on the commit that moved the pins to its number, its message saying what the version carried as the record of its day tells it:
+
+    core   v0.1.6    on 2f84bca   both pins say 0.1.6 there; its parent says 0.1.4
+    core   v0.1.10   on e06c932   both pins say 0.1.10 there; its parent says 0.1.9
+    atlas  v0.1.2    on 0586228   every VERSION file and Cargo.toml say 0.1.2 there
+    atlas  v0.1.3    on 7688c04   every VERSION file and Cargo.toml say 0.1.3 there
+    atlas  v0.1.4    on 467e94c   every VERSION file and Cargo.toml say 0.1.4 there
+
+Each was checked first as the door's `git_tag` judges a cut (a lawful name, every pin agreeing at the commit, the commit on the main line, no mark of that name already), and cut in his Bash tab on his card (holds 21 to 25). The first proposal put the marks on the last commit to declare each number; those commits already carry the next version's work as this file folds it (what was saved under 0.1.10's pins after its bump is v0.1.11's), so the marks went to the bumps, and he was told before any was cut. None of the five commits carries the attribution line B22 is about.
+
+Left unmarked, each for its reason: core 0.1.0, 0.1.1, 0.1.3 and 0.1.4, whose cutting commits stand only on `pre-strip-master` (RULE 1; its six old marks, removed on 2026-09-17, stay removed); 0.1.5, which no commit on the main line declares; 0.1.8, which no commit declares in both pins (`pyproject.toml` still said 0.1.7 where the package said 0.1.8, and the door refuses a mark its pins disagree on); 0.1.2 and 0.2.3, numbers never used; and atlas 0.1.0+f1 and 0.1.1+f1, which no commit of atlas's own repository declares.
+
+The record moved with them. BUILDPATH's list of the marks as git holds them carries the five on the last row of each side, with a paragraph saying they were marked after the fact on 2026-10-09 and are not sent. In this file 0.1.6's heading names its mark, with a post-script under it; 0.1.10 has a heading of its own (`## v0.1.10 — 2026-09-11 12:18 (tag on e06c932)`) above the entries it carries, which stood under v0.1.11's heading until today with their words unchanged, and v0.1.11's heading carries a post-script saying so. Atlas's CHANGELOG has the same for its three ("Three versions cut and never tagged are marked after the fact"). Nothing was sent: the five marks are on this machine until his word. No code moved: no restart.
+
+**What goes red if unplugged:** `test_the_plan_names_every_mark_where_it_sits`, which wants every mark git holds in both repositories named in BUILDPATH by the commit it sits on, and every heading here and in atlas's CHANGELOG that places a mark named there too; and at the next cut the release gate's `marks`, which refuses a core mark with no CHANGELOG heading and reports where each heading says its mark sits against where it does.
+
+The suites from his glass, with both entries in place: strokes 3739 of 3739 and smoke 72 of 72 (09:08).
+
+### core: the release checklists of v0.1.16 to v0.2.2 post-scripted from the record of their days and moved under Done (2026-10-09, his word: "post-script the versions that didnt get any tags or info ... and then get them off our list of tasks")
+
+His word, 2026-10-09, and on his card the same morning, "Both": the release checklists first, then marks for the versions never tagged. WHAT'S LEFT's G carried the lists of four cuts already made, and seven of their boxes had stayed open after the cuts happened: v0.2.0's 4 to 10 (named in this file yesterday, found and his to rule) and v0.2.2's 4. Each is ticked now with what the record says happened that day, read off the door's hold record (`state/holds.jsonl`), git, HANDOFF's blocks for 2026-10-05 and 2026-10-06, STATUS.md as printed at 14:25 that day (`git show f232dd6:STATUS.md`), and GitHub's runs, read today through the Bash tab on his cards.
+
+v0.2.0, 2026-10-05: the release check at 14:26 refused on `remotes` alone (the morning's save, core `a21cfbe` and atlas `9cd70ee`, not yet sent; `ci` not asked without a mark); both saved and sent at 14:31 (core `f232dd6`, atlas `e2db417`), and `prove` green on both main lines; the check with GitHub asked refused at 14:35 and passed at 14:40; both tags cut and sent at 14:44; atlas's draft published 2026-10-06 08:58 on his word. And the tags' own runs, which the record had never read: atlas's green (`release`, `prove`); the core's red on both, `prove` on the plan's stroke ("every mark git holds here is named in BUILDPATH by the commit it sits on today ... core v0.2.0 (f232dd6)", the leg a tag's own run could not pass until it was mended for v0.2.2) and `release-gate` on `spec` ("changed since v0.1.16 with no CHANGELOG line naming them under Unreleased or an uncut version: 4.4"). v0.2.2's box 4: atlas's draft published 2026-10-06 08:58, with v0.2.0's and v0.2.1's.
+
+The four lists (v0.2.2, v0.2.1, v0.2.0 and v0.1.16) stand under Done now, as "The release checklists of the cuts before v0.2.4", every box ticked; G keeps v0.2.4's list, whose box 6 (publish atlas's v0.2.4 draft) is his, and one line pointing down. Nothing was deleted: the lists moved whole and their words are kept; only the ticks and the post-scripts are new. The docs stroke excuses four of their lines by a phrase of their own (`tag v0.2.0 (core) from Version control` and three more), and those lines carry their phrases where they now stand. No code moved: no restart.
+
+**What goes red if unplugged:** `test_the_list_of_what_is_left_reads_whole_and_is_not_stale`, which holds the first checklist on the page to the pin (still v0.2.4's; a moved list read first would red it), and `test_the_docs_call_the_page_what_the_glass_calls_it`, which wants every excused line still on the page. Both alone on his glass: 8 of 8 and 12 of 12.
+
 ### core: the code calls the pages what the glass calls them -- the tree doors' refusal, a comment and a report name the GitHub tab, and a stroke holds it (2026-10-09, WHAT'S LEFT I1's second step)
 
 His word, 2026-10-09: "alright, let's get to work." -- the second step of I1, v0.2.5 on the road to 0.3.0 ("0.2.5 will be the full github integration release"). On 2026-10-08 the glass's Version control page became GitHub, its Guardrails tab became Laws, and the calls held for his hand became cards pinned at the foot of the front page's terminal; the docs were held to the new name that day ("core: the docs call the glass's page GitHub, and a stroke holds the name"), and the code's own words were named and left. Three places in the core went on naming the old pages, and each now names the new one: the tree doors' refusal on the main line (`skills.py` 4274 and 4275), whose cure now reads "`git_branch new <name>` through the door, or Lines of work on the GitHub tab -- and write on it. Nothing was written." (the old name was broken over two f-strings, so a search for it passed it by); the comment above the doors (`skills.py` 4155, "or he does on the GitHub tab; merging it is his"); and the engine's report of a landing on the tree (`pipeline._tree_report`, 1631), which ends "merging the line is the operator's click on the GitHub tab." REFUSALS §27 has said "the GitHub tab" since yesterday's pass, and now says what the refusal it describes says.
@@ -5066,6 +5096,8 @@ build each closed by its own line since -- the gate in CI (2026-09-24), the smal
 (09-29), SITTING LAWS 5 and 6 (the law ledger's entries 1 and 2, 09-21), the terminator ruling and
 the client token (09-30, B3 and B5), and ESTATE LAW 2's gate on `worlds/` (09-30, B4).*
 
+*Post-script, 2026-10-09: 0.1.10 has a mark of its own since, cut after the fact on his word on `e06c932`, the commit that cut its number; its heading now stands below, above the entries it carries.*
+
 ### 0.1.11 — THE CODING UPDATE
 
 His word, 2026-09-12: *"manjuel 0.1.11 - the coding update."* The two
@@ -5990,6 +6022,10 @@ declare `\n` into tracked record files — `test_manjuel.py:130` and `:235/:237`
 and `audit_record.py:368`. They are CONSISTENTLY LF rather than mixed, so they
 break the ruling without breaking the rule this pass was called for. Named
 here, left standing, his to rule on.
+
+## v0.1.10 — 2026-09-11 12:18 (tag on e06c932)
+
+**MARKED AFTER THE FACT**, 2026-10-09, on his word: "post-script the versions that didnt get any tags or info ... tag them with what happened that day": the mark sits on `e06c932`, the commit that cut 0.1.10 (both pins say so there; its parent says 0.1.9), and its message says what it carries. Everything below this heading down to 0.1.9 is in it. These entries stood under v0.1.11's heading until today, and their words are unchanged.
 
 ### 0.1.10, and a flow that checks a bump rather than making one
 
@@ -8276,7 +8312,9 @@ wolf is a guard that gets ignored.
 
 ---
 
-## 0.1.6 — 2026-09-09 12:00 — BUILT, NOT TAGGED (superseded by 0.1.7 the same day)
+## 0.1.6 — 2026-09-09 12:00 — BUILT, NOT TAGGED (superseded by 0.1.7 the same day; marked after the fact on 2026-10-09) (tag on 2f84bca)
+
+*Post-script, 2026-10-09: marked after the fact on his word, on `2f84bca`, the commit that cut 0.1.6 (both pins say 0.1.6 there; its parent says 0.1.4), its message what it carries. The words below are as they were written.*
 
 Never sealed, and the record says why rather than leaving a heading that
 promises a tag nobody cut. The release gate refused at 23a6a38 -- the live

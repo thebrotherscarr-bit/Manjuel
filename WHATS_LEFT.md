@@ -97,57 +97,8 @@ requests through the glass, the GitHub tab, and the docs calling it so.
   BUILDPATH's ladder, mended on your card ("Fix it now") and saved after it
 - [ ] 6. Publish atlas's v0.2.4 draft on GitHub, or drop it (yours, on GitHub)
 
-v0.2.2, on your word of 2026-10-05 (your card: "Fire it for v0.2.2"): the release as one workflow (H27), cut by that workflow itself. Its first
-step does what this list did by hand: version numbers set (0.2.2 and 0.2.2) by the flow's bump, then the live check and the suites after it.
-
-- [x] 1. The flow's first gate: the bump, the live check, the toll index, the suites and the release check. On its third run: the live check 9 of 9
-  (sitting 352, 21:34), the suites 3722 of 3722 and 72 of 72 (21:38), the release check 17 of 17 (21:39). The first run had stopped at the save gate on
-  a click held from its first part; the hole is mended (atlas CHANGELOG, "A gate's decision answers the gate it was shown at")
-- [x] 2. Its second gate: both repositories saved and sent (core `156284a`, atlas `acdceb6`, 21:43), and GitHub green on both main lines (21:49)
-- [x] 3. Its third gate: both tags cut and sent, the record written, saved and sent (core `2ef2c59`, atlas `605ab80`, 21:51), and GitHub read once more:
-  both main lines and atlas's tag green; the core tag's release-gate red on `remotes` alone, mended on main after the cut (`e56e3f9`)
-- [ ] 4. Publish atlas's v0.2.2 draft on GitHub, or drop it (yours, on GitHub)
-
-v0.2.1, on your word of 2026-10-05 ("tag it 0.2.1"): the PowerShell tab (H26) on top of v0.2.0. Already done: version numbers set (0.2.1 and 0.2.1).
-
-- [x] 1. The live check, the toll index and the suites after the bump: the live check 9 of 9 (15:40, after an 8 of 9 at 15:27),
-  the suites 3700 of 3700 and 72 of 72 (15:53, in the Bash tab)
-- [x] 2. The release check 16 of 16; saved and sent (core `9ce3b74`, atlas `5c6beeb`); GitHub green on main; both tags sent from
-  the PowerShell tab. The core tag's own run went red on one stroke, which cannot name a tag inside the commit it sits on
-
-v0.2.0, earlier the same day, went through the list below; its tags sit on core `f232dd6` and atlas `e2db417`.
-
-v0.2.0 for the core and for atlas, on your word of 2026-10-05: "let's version bump and tag everything while we are at it"; on your cards, send, tag and
-send the tags, and minor, 0.2.0 for both. Already done then: version numbers set to 0.2.0 and 0.2.0, both changelogs folded under v0.2.0 (13:39), atlas's
-eleven pins in sync through its own `version.ps1`, and the toll index rebuilt after the live check.
-
-- [x] 1. Run the live check on your glass after the fold: 9 of 9 (sitting 347, 13:41 to 13:44)
-- [x] 2. Run the suites after the fold: strokes 3700 of 3700 and smoke 72 of 72 (14:11, in your terminal: the glass's tabs cannot run them yet, H26). The
-  first run (13:47 to 13:50, fired from the page) was 3699 of 3700: the one red was this list still naming 0.1.16, mended here
-- [x] 3. Bring the record up to the cut: HANDOFF's afternoon and DAYBOOK's Session 25 written (14:23), STATUS.md printed after them
-- [ ] 4. Run the release check for v0.2.0: every line ok but `remotes` and `ci`, which wait on the send
-- [ ] 5. Save both repositories (your cards) and send both main branches (your word, given)
-- [ ] 6. GitHub's tests green on both main branches (atlas's proof is its `prove.yml` there: your glass cannot run it yet), then the release check
-  again, every line ok
-- [ ] 7. Cut and send the tag v0.2.0 (core) from Version control
-- [ ] 8. Cut and send the tag v0.2.0 (atlas) from Version control
-- [ ] 9. Publish atlas's v0.2.0 draft on GitHub, or drop it (yours, on GitHub)
-- [ ] 10. Look at GitHub's tests after the tags
-
-The last cut, core v0.1.16 and atlas v0.1.9 (2026-09-29), went through the same list:
-
-Already done then: version numbers set to 0.1.16 and 0.1.9, both changelogs folded, STATUS.md printed,
-both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
-
-- [x] 1. Find out why the Router quits early, and fix it (A1)
-- [x] 2. Run the live check until it is 9 of 9
-- [x] 3. Run the release check for v0.1.16: every line ok (16 of 16, 2026-09-29 15:10)
-- [x] 4. Run atlas's proof (21 held, 14 absent, 0 broke, 2026-09-29)
-- [x] 5. Cut and send the tag v0.1.16 (core) from Version control (on `e8aa9b5`)
-- [x] 6. Cut and send the tag v0.1.9 (atlas) from Version control (on `b1059a1`)
-- [x] 7. Publish the atlas drafts on GitHub, v0.1.8 and v0.1.9, or drop them (A5): published 2026-09-30 on your word; v0.1.7 is a draft too, unnamed, still one
-- [x] 8. Look at GitHub's tests after the tag: green on both main branches (A4). The core
-  tag's own run was red and was not read until later that day; fixed on main (C34)
+The lists of the cuts before it, v0.2.2 back to v0.1.16, are finished and kept under Done (moved 2026-10-09, every box that was
+still open post-scripted from the record of its day).
 
 ---
 
@@ -724,6 +675,71 @@ Finished lines, newest first. A number is never used again.
 - **C12. The GPU memory report cannot say "over".** DONE 2026-09-29. An overcommitted card says
   "OVER by ~0.5GB", and every size says whether it is on disk or in memory. The TASKS box is
   yours to tick (F7). *(CHANGELOG)*
+
+### The release checklists of the cuts before v0.2.4
+
+Moved here from G on 2026-10-09 (your word: "post-script the versions that didnt get any tags or info ... and then get them off our list of tasks"),
+every box ticked; the ones left open are post-scripted from the record of their day: the door's hold record, git, GitHub's runs (read 2026-10-09),
+HANDOFF's blocks for 2026-10-05 and 2026-10-06, and STATUS.md as it was printed at 14:25 on 2026-10-05.
+
+v0.2.2, on your word of 2026-10-05 (your card: "Fire it for v0.2.2"): the release as one workflow (H27), cut by that workflow itself. Its first
+step does what this list did by hand: version numbers set (0.2.2 and 0.2.2) by the flow's bump, then the live check and the suites after it.
+
+- [x] 1. The flow's first gate: the bump, the live check, the toll index, the suites and the release check. On its third run: the live check 9 of 9
+  (sitting 352, 21:34), the suites 3722 of 3722 and 72 of 72 (21:38), the release check 17 of 17 (21:39). The first run had stopped at the save gate on
+  a click held from its first part; the hole is mended (atlas CHANGELOG, "A gate's decision answers the gate it was shown at")
+- [x] 2. Its second gate: both repositories saved and sent (core `156284a`, atlas `acdceb6`, 21:43), and GitHub green on both main lines (21:49)
+- [x] 3. Its third gate: both tags cut and sent, the record written, saved and sent (core `2ef2c59`, atlas `605ab80`, 21:51), and GitHub read once more:
+  both main lines and atlas's tag green; the core tag's release-gate red on `remotes` alone, mended on main after the cut (`e56e3f9`)
+- [x] 4. Publish atlas's v0.2.2 draft on GitHub, or drop it (yours, on GitHub): published 2026-10-06 08:58 on your word ("publish the drafts for
+  atlas"), with v0.2.0 and v0.2.1, and GitHub marked it Latest
+
+v0.2.1, on your word of 2026-10-05 ("tag it 0.2.1"): the PowerShell tab (H26) on top of v0.2.0. Already done: version numbers set (0.2.1 and 0.2.1).
+
+- [x] 1. The live check, the toll index and the suites after the bump: the live check 9 of 9 (15:40, after an 8 of 9 at 15:27),
+  the suites 3700 of 3700 and 72 of 72 (15:53, in the Bash tab)
+- [x] 2. The release check 16 of 16; saved and sent (core `9ce3b74`, atlas `5c6beeb`); GitHub green on main; both tags sent from
+  the PowerShell tab. The core tag's own run went red on one stroke, which cannot name a tag inside the commit it sits on
+
+v0.2.0, earlier the same day, went through the list below; its tags sit on core `f232dd6` and atlas `e2db417`.
+
+v0.2.0 for the core and for atlas, on your word of 2026-10-05: "let's version bump and tag everything while we are at it"; on your cards, send, tag and
+send the tags, and minor, 0.2.0 for both. Already done then: version numbers set to 0.2.0 and 0.2.0, both changelogs folded under v0.2.0 (13:39), atlas's
+eleven pins in sync through its own `version.ps1`, and the toll index rebuilt after the live check.
+
+- [x] 1. Run the live check on your glass after the fold: 9 of 9 (sitting 347, 13:41 to 13:44)
+- [x] 2. Run the suites after the fold: strokes 3700 of 3700 and smoke 72 of 72 (14:11, in your terminal: the glass's tabs cannot run them yet, H26). The
+  first run (13:47 to 13:50, fired from the page) was 3699 of 3700: the one red was this list still naming 0.1.16, mended here
+- [x] 3. Bring the record up to the cut: HANDOFF's afternoon and DAYBOOK's Session 25 written (14:23), STATUS.md printed after them
+- [x] 4. Run the release check for v0.2.0: every line ok but `remotes` and `ci`, which wait on the send: run at 14:26 and refused on `remotes` alone
+  (the morning's save, core `a21cfbe` and atlas `9cd70ee`, not yet sent), with `ci` not asked until a mark is named; STATUS.md had printed it so at
+  14:25 ("REFUSED: 1 of 15 -- remotes")
+- [x] 5. Save both repositories (your cards) and send both main branches (your word, given): saved and sent at 14:31, core `f232dd6` and atlas `e2db417`
+- [x] 6. GitHub's tests green on both main branches (atlas's proof is its `prove.yml` there: your glass cannot run it yet), then the release check
+  again, every line ok: `prove` green on both main lines; the check with GitHub asked was refused at 14:35, four minutes after the send, and passed at 14:40
+- [x] 7. Cut and send the tag v0.2.0 (core) from Version control: cut on `f232dd6` and sent at 14:44
+- [x] 8. Cut and send the tag v0.2.0 (atlas) from Version control: cut on `e2db417` and sent at 14:44 (the PowerShell tab's push of it at 15:07, with
+  H26's save, came after)
+- [x] 9. Publish atlas's v0.2.0 draft on GitHub, or drop it (yours, on GitHub): published 2026-10-06 08:58 on your word ("publish the drafts for atlas")
+- [x] 10. Look at GitHub's tests after the tags: read 2026-10-09. Atlas's tag green (`release` and `prove`). The core's tag red on both of its own runs:
+  `prove` on the plan's stroke ("every mark git holds here is named in BUILDPATH by the commit it sits on today ... core v0.2.0 (f232dd6)", which no
+  tag's own run could pass until the stroke was mended for v0.2.2), and `release-gate` on `spec` ("changed since v0.1.16 with no CHANGELOG line naming
+  them under Unreleased or an uncut version: 4.4")
+
+The last cut, core v0.1.16 and atlas v0.1.9 (2026-09-29), went through the same list:
+
+Already done then: version numbers set to 0.1.16 and 0.1.9, both changelogs folded, STATUS.md printed,
+both main branches sent to GitHub (core `f8203d1`, atlas `86ba8f8`).
+
+- [x] 1. Find out why the Router quits early, and fix it (A1)
+- [x] 2. Run the live check until it is 9 of 9
+- [x] 3. Run the release check for v0.1.16: every line ok (16 of 16, 2026-09-29 15:10)
+- [x] 4. Run atlas's proof (21 held, 14 absent, 0 broke, 2026-09-29)
+- [x] 5. Cut and send the tag v0.1.16 (core) from Version control (on `e8aa9b5`)
+- [x] 6. Cut and send the tag v0.1.9 (atlas) from Version control (on `b1059a1`)
+- [x] 7. Publish the atlas drafts on GitHub, v0.1.8 and v0.1.9, or drop them (A5): published 2026-09-30 on your word; v0.1.7 is a draft too, unnamed, still one
+- [x] 8. Look at GitHub's tests after the tag: green on both main branches (A4). The core
+  tag's own run was red and was not read until later that day; fixed on main (C34)
 
 ---
 

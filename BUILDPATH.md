@@ -584,9 +584,15 @@ so the 2026-09-17 list above is history (LAW 1) and this is where they sit:
            v0.1.12 084fe33    v0.1.13 4e04378    v0.1.14 de2420e
            v0.1.15 af50522    v0.1.16 e8aa9b5    v0.2.0  f232dd6    v0.2.1  9ce3b74
            v0.2.2  156284a    v0.2.4  2230e7d
+           v0.1.6  2f84bca    v0.1.10 e06c932
     atlas  v0.1.5  3dacdbc    v0.1.6  0c65afc    v0.1.7  063a152
            v0.1.8  56a3078    v0.1.9  b1059a1    v0.2.0  e2db417    v0.2.1  5c6beeb
            v0.2.2  acdceb6    v0.2.4  af92401
+           v0.1.2  0586228    v0.1.3  7688c04    v0.1.4  467e94c
+
+The last row of each side was marked on 2026-10-09, after the fact (his word: "post-script the versions that didnt get any tags or info ... tag them with what happened that day"): versions
+cut and never tagged, each marked on the commit that cut its number, with every pin there agreeing and its
+message what it carried. They are not sent.
 
 The six removed on 2026-09-17 are still removed. A stroke holds this list to
 the marks (`test_the_plan_names_every_mark_where_it_sits`): every changelog
