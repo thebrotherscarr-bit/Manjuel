@@ -55,7 +55,9 @@ WHAT IT READS (nothing it decides is generated -- LAW 1 for the hands):
                terminal's: flows/ is runtime state and in no checkout
     workflows  every .github/workflows/*.yml is tracked (an untracked one is
                one CI never sees), and every python command in it names a
-               script in the tree and flags that script knows
+               script in the tree and flags that script knows; every action
+               from outside GitHub's own is named by its commit, and no
+               workflow proves a line twice, on its push and its pull request
     status     STATUS.md was printed by tests/status.py AFTER the record it
                reads last moved (CHANGELOG, DAYBOOK, HANDOFF, TASKS, SPEC) --
                the page that says where the ground stands cannot go quietly
@@ -1233,11 +1235,83 @@ def run_commands(text: str) -> list[tuple[str, str]]:
     return out
 
 
+# AN OUTSIDE ACTION IS NAMED BY ITS COMMIT, AND A LINE IS PROVED ONCE (2026-10-09,
+# WHAT'S LEFT I1's sixth step). A `uses:` from anyone but GitHub's own `actions/`
+# that names a tag runs whatever its owner points that tag at next, so it names the
+# commit, the tag beside it as a comment. And a workflow that runs on pull requests
+# does not also run on a push to every line: prove.yml's bare `push:` proved every
+# line with a pull request open twice, the same commit both times. A line is proved
+# by its pull request; main and the marks by their own push. atlas's battery holds
+# its own workflows to the same two rules (its tests/prove.py, the GITHUB leg).
+USES_KEY = re.compile(r"^\s*(?:-\s+)?uses:\s*[\"']?([^\"'\s#]+)")
+SHA_PIN = re.compile(r"^[0-9a-f]{40}$")
+ON_KEY = re.compile(r"^[\"']?on[\"']?:\s*(.*)$")
+SUB_KEY = re.compile(r"^([\w-]+):\s*(.*)$")
+
+
+def outside_actions(text: str) -> list[str]:
+    """Every action a workflow uses from outside GitHub's own `actions/`, as written
+    (`owner/repo@ref`). `./` is this repository's own and is not counted."""
+    return [m.group(1) for m in map(USES_KEY.match, text.splitlines())
+            if m and not m.group(1).startswith(("./", "actions/"))]
+
+
+def triggers(text: str) -> dict[str, list[str]]:
+    """Each trigger in a workflow's top-level `on:`, with the lines under it stripped,
+    read by indentation the way run_commands reads `run:`; `on: push` and
+    `on: [push, pull_request]` as well as the block."""
+    lines = text.splitlines()
+    for i, line in enumerate(lines):
+        m = ON_KEY.match(line)
+        if not m:
+            continue
+        rest = m.group(1).split("#")[0].strip()
+        if rest:
+            return {t.strip(" \"'"): [] for t in rest.strip("[]").split(",") if t.strip()}
+        out: dict[str, list[str]] = {}
+        key, depth = "", 0
+        for body in lines[i + 1:]:
+            if not body.strip() or body.lstrip().startswith("#"):
+                continue
+            ind = len(body) - len(body.lstrip())
+            if not ind:
+                break
+            if not depth or ind <= depth:
+                depth, key = ind, body.strip().lstrip("- ").split(":")[0].strip()
+                out[key] = []
+            else:
+                out[key].append(body.strip())
+        return out
+    return {}
+
+
+def pushes_every_line(on: dict[str, list[str]]) -> bool:
+    """Whether a push to any line of work runs the workflow: a `push` with no
+    `branches` to limit it (or only a bare `*`), and not one limited to marks."""
+    body = on.get("push")
+    if body is None:
+        return False
+    for j, line in enumerate(body):
+        m = SUB_KEY.match(line)
+        if m and m.group(1) == "branches":
+            named = m.group(2).split("#")[0].strip()
+            items = named.strip("[]").split(",") if named else []
+            for item in ([] if named else body[j + 1:]):
+                if not item.startswith("-"):
+                    break
+                items.append(item)
+            return any(t.strip(" -\"'") and not t.strip(" -\"'*") for t in items)
+    keys = {m.group(1) for m in map(SUB_KEY.match, body) if m}
+    return "branches-ignore" in keys or not keys & {"tags", "tags-ignore"}
+
+
 def workflows(root: Path = ROOT) -> Check:
     """Every CI workflow in the record is one CI will run as written: tracked
     (an untracked workflow is one CI never sees -- release-gate.yml sat on disk
     untracked the day this was built), every python command naming a script
-    that is in the tree, every flag one that script's source knows.
+    that is in the tree, every flag one that script's source knows -- and, since
+    2026-10-09, every action from outside GitHub's own named by its commit, and
+    no line proved twice (USES_KEY, above).
 
     RECORD, NOT RUN. Whether a workflow last went green is GitHub's to say and
     is not asked here (RULE 4: the gate reaches no server). What is asked is
@@ -1260,9 +1334,10 @@ def workflows(root: Path = ROOT) -> Check:
     bad: list[str] = []
     if tracked is not None:
         bad += [f"{f.name} is untracked -- CI never sees it" for f in files if f.name not in tracked]
-    n_cmd = 0
+    n_cmd = n_out = 0
     for f in files:
-        for script, args in run_commands(f.read_text(encoding="utf-8", errors="replace")):
+        text = f.read_text(encoding="utf-8", errors="replace")
+        for script, args in run_commands(text):
             n_cmd += 1
             target = root / script
             if not target.is_file():
@@ -1272,13 +1347,25 @@ def workflows(root: Path = ROOT) -> Check:
             for flag in (t for t in args.split() if t.startswith("-")):
                 if f'"{flag}"' not in src and f"'{flag}'" not in src:
                     bad.append(f"{f.name}: {script} knows no {flag}")
+        used = outside_actions(text)
+        n_out += len(used)
+        bad += [f"{f.name}: {a} names a tag its owner can move -- an action from outside "
+                "GitHub's own is named by its 40-hex commit"
+                for a in used if not SHA_PIN.match(a.partition("@")[2])]
+        on = triggers(text)
+        if "pull_request" in on and pushes_every_line(on):
+            bad.append(f"{f.name} runs on pull requests AND on a push to every line, so a line "
+                       "with one open is proved twice -- limit the push to main "
+                       "(`branches: [main]`)")
     if bad:
         return Check("workflows", False, "; ".join(bad))
     tracking = "each tracked" if tracked is not None else "tracking not asked (no repository here)"
+    outside = (f"{n_out} outside action{'s' if n_out != 1 else ''}, each named by its commit"
+               if n_out else "no action from outside GitHub's own")
     return Check("workflows", True,
                  f"{len(files)} workflow{'s' if len(files) != 1 else ''}, {tracking}; "
                  f"{n_cmd} python command{'s' if n_cmd != 1 else ''}, every script in the tree "
-                 f"and every flag known")
+                 f"and every flag known; {outside}; no line proved twice")
 
 
 def status(root: Path = ROOT) -> Check:

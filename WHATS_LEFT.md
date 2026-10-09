@@ -243,7 +243,11 @@ goals". The steps under each are proposed from the disk; each is yours to change
   merged inside its gates (your card: "Inside its gates"), the door's merge taught to take a line and to wait for green; not yet run through a
   real cut (the first will be v0.2.5) *(CHANGELOG, "core: main takes a change only through a pull request")*
   *(atlas CHANGELOG, "The release flow's merge")*; (6) the provers themselves: atlas's `release.yml` pins its
-  outside action to an exact commit, and a sent line's provers run once rather than twice. *(CHANGELOG, "core: the docs call the glass's page GitHub")*
+  outside action to an exact commit, and a sent line's provers run once rather than twice, in since 2026-10-09: `release.yml` names the commit
+  `v2` pointed at that day (v2.6.2), and in both repositories `prove.yml` runs on a line's pull request and on a push to main or a mark, not on
+  every line's push; the release gate's `workflows` check and a new leg of atlas's battery refuse an outside action named by a tag and a workflow
+  that proves a line twice; not yet seen on GitHub (the first will be this piece's own pull request) *(CHANGELOG, "core: a line is proved once")*
+  *(atlas CHANGELOG, "The provers themselves")*. *(CHANGELOG, "core: the docs call the glass's page GitHub")*
 - **I2. v0.2.6: an optimization and flow pass.** Every function working, and measured: every flow on the Workflows page fired to COMPLETE or retired
   on your word (the release check names `coder`, `release` and `version-tag` as fired and never COMPLETE); the live check 9 of 9 and the review
   panel inside its turn; the session test (R1) run again against its baseline (sitting 345, 9 faults) and its faults mended or ruled; the time each

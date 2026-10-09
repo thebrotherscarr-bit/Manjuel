@@ -28,8 +28,19 @@
 
 name: prove
 
+# A LINE IS PROVED ONCE (2026-10-09, WHAT'S LEFT I1's sixth step): by its pull
+# request, and main and the marks by their own push. A bare `push:` ran this on
+# every line AND on its pull request -- the same commit twice, eight legs for
+# four. Main takes a change only through a pull request whose four legs are
+# green, so that run is the one that counts; a mark is still proved as GitHub
+# checks it out, shallow and detached (TESTING.md, "AS GITHUB CHECKS OUT"); and
+# `workflow_dispatch` still proves any line by hand. tests/release.py's
+# `workflows` check refuses a workflow that runs on pull requests and on a push
+# to every line.
 on:
   push:
+    branches: [main]
+    tags: ["v*"]
   pull_request:
   workflow_dispatch:
 
