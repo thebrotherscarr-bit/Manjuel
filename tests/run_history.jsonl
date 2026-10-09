@@ -611,3 +611,6 @@
 {"suite": "smoke", "at": 1791563438.1559563, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "strokes", "at": 1791576100.8007846, "state": "finished", "passed": 3739, "total": 3739, "green": true, "failed": []}
 {"suite": "smoke", "at": 1791576109.1281087, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1791584527.3729992, "state": "crashed", "passed": null, "total": null, "green": false}
+{"suite": "strokes", "at": 1791585395.668784, "state": "finished", "passed": 3739, "total": 3739, "green": true, "failed": []}
+{"suite": "smoke", "at": 1791585406.9632156, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}

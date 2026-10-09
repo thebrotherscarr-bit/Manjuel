@@ -736,8 +736,12 @@ AFTER THE GATE, SENT BY NAME -- and never moved.
        2026-09-24, when the gate grew to thirteen and the count was a number
        written into a doc); `python tests/prove.py --check`, both Go
        modules, gofmt and the door's battery (atlas).
-    4  send the main line FIRST -- Save, then Send to GitHub in the GitHub
-       tab -- so the mark's commit is already on origin.
+    4  land the main line on GitHub FIRST, so the mark's commit is already on
+       origin: since 2026-10-09 GitHub takes main only through a pull request
+       whose checks have passed (the core's four `prove` legs, atlas's
+       battery) -- save on a line of work, send it, open the pull request, and
+       Merge on GitHub once its checks pass, from the GitHub tab. The release
+       flow (v5) does all of it for a cut and for its record.
     5  cut the mark in the GitHub tab. The door refuses a name that is not
        plain semver, a number the version file does not agree with at that
        commit, a mark that already exists, a dirty tree at HEAD, and
