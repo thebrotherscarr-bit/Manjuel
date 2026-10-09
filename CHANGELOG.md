@@ -34,6 +34,10 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### atlas: Send to GitHub on a line of work that has never been sent, and the GitHub tab's words for it (2026-10-09, WHAT'S LEFT I1's third step; the entry is atlas's)
+
+His word, 2026-10-09: "save and send, then go on to I1 step 3". On a line of work never sent, the GitHub tab greyed Send to GitHub ("Nothing to send") and called the line "not linked to GitHub at all", though the door's `git_push` sends such a line and links it; now the page asks whether the world has an origin, offers Send "for the first time", and keeps "not linked to GitHub at all" for a world with no origin. The piece, its stroke (`TestALineThatHasNeverBeenSentCanBeSent`, red against the page as it stood and green after), the build placed on his card and the live check on his glass are in atlas's CHANGELOG under the same name. In this ground: WHATS_LEFT's I1 says step (3) is in. Nothing in `manjuel/` moved: no restart. **What goes red if unplugged:** in atlas, that stroke; here, the list's own wire, whose citation of this heading must stand. The suites from his glass, with the record in place: strokes 3739 of 3739 and smoke 72 of 72 (09:30).
+
 ### core: the versions cut and never tagged are marked after the fact, each on the commit that cut its number -- core v0.1.6 and v0.1.10, atlas v0.1.2, v0.1.3 and v0.1.4 (2026-10-09, his word: "post-script the versions that didnt get any tags or info ... tag them with what happened that day"; his card: "Both")
 
 His word, 2026-10-09, and his card the same morning, "Both": the release checklists first (the entry below), then a mark for each version cut and never tagged, each on its own card, the sending of them a separate word of his. Five such versions stand on the two main lines, and each is marked now, annotated and in his name, on the commit that moved the pins to its number, its message saying what the version carried as the record of its day tells it:

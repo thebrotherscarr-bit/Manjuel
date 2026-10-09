@@ -225,7 +225,11 @@ goals". The steps under each are proposed from the disk; each is yours to change
   note) name the GitHub tab or the card at the foot of the front page's terminal; a stroke and a Go test hold both sides, and the door was
   rebuilt and placed on your card (the core's half reaches the engine at its next Boot) *(CHANGELOG, "core: the code calls the pages what the glass calls them")*
   *(atlas CHANGELOG, "The door calls the pages what the glass calls them")*; (3) Send to
-  GitHub on a line of work that has never been sent, and the GitHub tab's words for it ("not linked to GitHub at all"); (4) a pull request merged on
+  GitHub on a line of work that has never been sent, and the GitHub tab's words for it ("not linked to GitHub at all"), in since 2026-10-09 and
+  placed on your card: on a line never sent, Send to GitHub is live and says it sends the line for the first time, the GitHub row says the line has
+  never been sent, and "not linked to GitHub at all" is kept for a world with no origin; a stroke holds the page to the door's own git
+  *(CHANGELOG, "atlas: Send to GitHub on a line of work that has never been sent")*
+  *(atlas CHANGELOG, "Send to GitHub on a line of work that has never been sent")*; (4) a pull request merged on
   GitHub from the GitHub tab, its Merge button live only when its provers are green, and the new main brought down to this machine (your card:
   "Merge on GitHub when green"), with RUNBOOK's note of 2026-09-28 rewritten to that loop; (5) main protected in both repositories: a pull request
   and green provers to change it (the core's four `prove` legs, atlas's battery), and the release flow taught to land its record through it (your
