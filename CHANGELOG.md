@@ -34,6 +34,30 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: the record of the v0.2.5 cut -- WHAT'S LEFT's checklist ticked and I1 moved to Done, HANDOFF and DAYBOOK told the cut, and STATUS printed again (2026-10-10; his word: "do the follow-up, reprint STATUS and record the cut")
+
+The release flow v5's first real run (`f-20261010-162719-64bb3771`, 09:27 to 09:58) cut v0.2.5 on his three
+clicks. At the first gate: the lines `release-v0.2.5`, the bump, the live check 9 of 9 (sitting 364), the toll
+index, the suites 3748 of 3748 and 72 of 72, and the release check 17 of 17. At the second: both saved on the line
+(core `d67d9f1`, atlas `5ab8864`), sent, and merged on GitHub through pull requests once their provers passed
+(core 5 as `4503173`, atlas 10 as `144a425`). At the third: both tags cut and sent, and the record written on
+`record-v0.2.5`, saved and merged the same way (core 6 as `c3177fc`, atlas 11 as `687e386`). GitHub's runs are
+green on both main lines and both tags, the core's `release-gate` among them. The flow's last read refused one
+line of eighteen, `status`: STATUS.md, saved with the cut at the second gate, was older than the CHANGELOG the
+record step wrote at the third, so the run ended FAIL on that line alone. At 10:00, on his word, atlas's v0.2.4
+and v0.2.5 releases were published on GitHub, v0.2.5 marked Latest.
+
+This pass, on the line `after-v0.2.5`: WHAT'S LEFT's section A names v0.2.5 as the last cut and v0.2.6 (I2) as
+the next; G's boxes 2 to 6 are ticked, each with what the run's record says; I1 moves to Done, DONE 2026-10-10;
+HANDOFF's block of 2026-10-10 and DAYBOOK's Session 27 each carry a note of the cut below what they said, nothing
+above it changed; and STATUS.md is printed again, last, after every record it reads. No code moved: nothing to
+restart.
+
+**What goes red if unplugged:** the list's stroke (`test_the_list_of_what_is_left_reads_whole_and_is_not_stale`)
+on an open line that says DONE with a date, a citation of an entry that is not in this file, or a checklist whose
+version is not the pin; and the release gate's `status`, at the next cut, while STATUS.md is older than the record
+it reads.
+
 ## v0.2.5 — 2026-10-10 09:27 (tag on 4503173)
 
 ### core: the council's push takes the pull request road too -- the engine's own push refuses a send of a main origin has, by name, in the door's own words (2026-10-09, WHAT'S LEFT I1's eighth step; his card: "Council's push, by name")
