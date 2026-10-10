@@ -190,7 +190,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `DriftChecker.note_once` | 137-143 | Return `reason` the first time only, so a skipped check is stated |
 | def | `DriftChecker.score` | 145-160 |  |
 
-### manjuel/gitstate.py — 632 lines
+### manjuel/gitstate.py — 666 lines
 
 *Git, from the core's own hand.*
 
@@ -211,15 +211,16 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `commit` | 272-306 |  |
 | def | `pull` | 309-322 |  |
 | def | `head_and_remote` | 325-341 | (local head, remote head, why the remote could not be read). |
-| def | `push` | 344-357 |  |
-| def | `_jailed` | 378-395 | Refuse a path that leaves this ground. Resolve first, judge after. |
-| def | `diff` | 401-472 | What actually changed -- one file, or the whole tree. |
-| def | `branches` | 475-508 | Every line of work, newest first, with where you stand marked. |
-| def | `_bad_branch_name` | 514-526 |  |
-| def | `switch` | 529-560 | Move to a line of work, or open one and move there. |
-| def | `close_branch` | 563-589 | Finish with a line of work. |
-| def | `remotes` | 592-614 | Where this ground sends, by name and host. |
-| def | `_host_of` | 617-632 | The server a remote points at, for both spellings git accepts. |
+| def | `push` | 344-361 |  |
+| def | `main_by_pull_request` | 364-391 | Why `branch` is not pushed from here, or "" when it may be. |
+| def | `_jailed` | 412-429 | Refuse a path that leaves this ground. Resolve first, judge after. |
+| def | `diff` | 435-506 | What actually changed -- one file, or the whole tree. |
+| def | `branches` | 509-542 | Every line of work, newest first, with where you stand marked. |
+| def | `_bad_branch_name` | 548-560 |  |
+| def | `switch` | 563-594 | Move to a line of work, or open one and move there. |
+| def | `close_branch` | 597-623 | Finish with a line of work. |
+| def | `remotes` | 626-648 | Where this ground sends, by name and host. |
+| def | `_host_of` | 651-666 | The server a remote points at, for both spellings git accepts. |
 
 ### manjuel/ink.py — 143 lines
 
@@ -1013,7 +1014,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `GroundWatch.start` | 182-207 |  |
 | def | `GroundWatch.stop` | 209-215 |  |
 
-manjuel/: 31 files, 24868 lines.
+manjuel/: 31 files, 24902 lines.
 
 ## GUARDS — by the failure that earned them
 
@@ -1123,8 +1124,8 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 |---|---|---|
 | 46 | `(module)` | EVERY git CALL CLOSES ITS OWN STDIN. Found 2026-09-09 by driving the |
 | 285 | `commit` | trailers onto the subject line -- session 6's record reads |
-| 364 | `(module)` | Until 2026-09-10 this module could say WHETHER the ground was dirty and |
-| 440 | `diff` | WHAT A GROUND KEEPS OUT OF ITS HISTORY IS NOT A CHANGE (2026-09-22). |
+| 398 | `(module)` | Until 2026-09-10 this module could say WHETHER the ground was dirty and |
+| 474 | `diff` | WHAT A GROUND KEEPS OUT OF ITS HISTORY IS NOT A CHANGE (2026-09-22). |
 
 ### manjuel/intent.py
 
@@ -1609,7 +1610,7 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 Every `test_*` function in tests/, the manjuel names it touches, and
 its line range. The suites are the memory (HANDOFF: test discipline).
 
-### tests/test_manjuel.py — 233 test functions
+### tests/test_manjuel.py — 234 test functions
 
 | test | lines | touches |
 |---|---|---|
@@ -1842,8 +1843,9 @@ its line range. The suites are the memory (HANDOFF: test discipline).
 | `test_doctrine` | 20368-20542 | `D`, `D.dead_paths`, `D.doc_pass_report`, `D.doctrine_report`, `D.living`, `D.open_tasks`, `D.sittings`, `D.skills_axis`, `D.stale_tallies`, `D.versions`, `_H`, `_SL` |
 | `test_the_core_sees_its_own_repository` | 20545-20692 | `gitstate`, `gitstate.GitRefused`, `gitstate._bad_branch_name`, `gitstate._host_of`, `gitstate._jailed`, `gitstate.branches`, `gitstate.close_branch`, `gitstate.commit`, `gitstate.diff`, `gitstate.read`, `gitstate.remotes`, `gitstate.switch` |
 | `test_record_and_git` | 20695-20799 | `RunContext`, `_cli`, `_cli._toll_answer`, `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.pull`, `gitstate.push`, `gitstate.read`, `seatlog`, `seatlog.RunNote` |
-| `test_the_pack_is_wired` | 20814-20875 | — |
-| `test_the_maker_speaks_to_a_screen_without_a_file_to_open` | 20878-21123 | `RunContext`, `_cli`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `maker`, `maker.forget`, `maker.new_project`, `maker.report_back`, `maker.report_changed` |
-| `test_a_change_that_comes_back_unchanged_is_asked_for_once_more` | 21126-21295 | `RunContext`, `maker`, `maker.AGAINS`, `maker.RULES`, `maker.again_prompt`, `maker.forget`, `maker.new_project`, `maker.page_of`, `maker.report_unchanged`, `maker.run_page`, `maker.same_page`, `maker.save_version` |
-| `test_the_door_reads_the_law_chain_as_law_py_writes_it` | 21298-21450 | — |
+| `test_the_councils_push_sends_no_main_origin_has` | 20802-20919 | `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.push`, `gitstate.switch` |
+| `test_the_pack_is_wired` | 20934-20995 | — |
+| `test_the_maker_speaks_to_a_screen_without_a_file_to_open` | 20998-21243 | `RunContext`, `_cli`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `maker`, `maker.forget`, `maker.new_project`, `maker.report_back`, `maker.report_changed` |
+| `test_a_change_that_comes_back_unchanged_is_asked_for_once_more` | 21246-21415 | `RunContext`, `maker`, `maker.AGAINS`, `maker.RULES`, `maker.again_prompt`, `maker.forget`, `maker.new_project`, `maker.page_of`, `maker.report_unchanged`, `maker.run_page`, `maker.same_page`, `maker.save_version` |
+| `test_the_door_reads_the_law_chain_as_law_py_writes_it` | 21418-21570 | — |
 

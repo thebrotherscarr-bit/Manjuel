@@ -251,7 +251,11 @@ goals". The steps under each are proposed from the disk; each is yours to change
   2026-10-09 and placed on your card (your cards: "Mend Land onto main", "Main is on GitHub" and "Place both, keep both"): where origin has a
   world's main line, the door refuses a landing onto it and a send of it by name, naming the pull request road, and the GitHub tab greys Land
   onto main, Send to GitHub and the council's Push with the door's sentence; a main origin has never had lands and sends as before
-  *(CHANGELOG, "atlas: a main on GitHub takes a pull request")* *(atlas CHANGELOG, "A main on GitHub takes a pull request")*. *(CHANGELOG, "core: the docs call the glass's page GitHub")*
+  *(CHANGELOG, "atlas: a main on GitHub takes a pull request")* *(atlas CHANGELOG, "A main on GitHub takes a pull request")*; (8) the council's own push
+  the same, in since 2026-10-09 (your card: "Council's push, by name"): the engine's push (the `git_push` skill, `git_cycle` after its commit,
+  the REPL's `/git push`) refuses a send of a main origin has, by name and in the door's own words, before anything leaves, and sends a line of
+  work and a main origin has never had as before; it reaches the engine at its next Boot
+  *(CHANGELOG, "core: the council's push takes the pull request road too")*. *(CHANGELOG, "core: the docs call the glass's page GitHub")*
 - **I2. v0.2.6: an optimization and flow pass.** Every function working, and measured: every flow on the Workflows page fired to COMPLETE or retired
   on your word (the release check names `coder`, `release` and `version-tag` as fired and never COMPLETE); the live check 9 of 9 and the review
   panel inside its turn; the session test (R1) run again against its baseline (sitting 345, 9 faults) and its faults mended or ruled; the time each

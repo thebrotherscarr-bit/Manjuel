@@ -1063,15 +1063,15 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 | line | says |
 |---|---|
-| 387 | an absolute path is outside this ground ({rel}). |
-| 392 | that path could not be resolved ({rel}). |
-| 394 | that path resolves outside this ground ({rel}). |
-| 455 | that file holds this estate's keys, and they are |
-| 459 | this ground's git ignores {rel}, so it is not part |
-| 516 | name the line of work. |
-| 518 | a branch name may not begin with '-' -- git reads it |
-| 522 | {name!r} is not a lawful branch name |
-| 525 | {name!r} is not a lawful branch name. |
+| 421 | an absolute path is outside this ground ({rel}). |
+| 426 | that path could not be resolved ({rel}). |
+| 428 | that path resolves outside this ground ({rel}). |
+| 489 | that file holds this estate's keys, and they are |
+| 493 | this ground's git ignores {rel}, so it is not part |
+| 550 | name the line of work. |
+| 552 | a branch name may not begin with '-' -- git reads it |
+| 556 | {name!r} is not a lawful branch name |
+| 559 | {name!r} is not a lawful branch name. |
 
 ### manjuel/intent.py — 1 site
 
