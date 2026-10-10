@@ -34,6 +34,29 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: the release flow's record step prints STATUS again -- so the flow's last read can pass, and the flow can finish COMPLETE (2026-10-10, WHAT'S LEFT I2; his card: "Record step reprints STATUS")
+
+The release flow had never finished COMPLETE in six firings, and v0.2.5's run showed why its last
+read never could as built: `tests/cut.py check` prints STATUS.md before the gate at the first gate,
+and `tests/cut.py record` writes CHANGELOG and BUILDPATH at the third, so at the flow's last read the
+page was older than the record it reads and `status` refused, at every cut, by construction. `record`
+now asks the gate's own reader (`release.status`) once it has written, and when the page is older it
+prints it again through the function `check` uses (`print_status`, which `check` now calls in place
+of its own copy of the command); the record's save takes every change on the line, so it carries
+the page. A page that will not print refuses the step by name. No door rebuild and no new flow
+version: the door runs `tests/cut.py`, and the flow's save takes the line whole.
+
+**Proved.** Four checks in `test_the_release_steps_move_the_record_as_one`, on a repository built in
+the stroke with the page's printer stood in for: the record step prints the page again once the
+record it wrote is newer, and the gate's `status` then passes it; run again over a fresh page it
+prints nothing and says so; a page that will not print refuses the step. Red first on his glass (14
+of 18: the four new checks, one of them in the v0.2.5 run's own words, "STATUS.md is older than
+CHANGELOG.md"), then green (18 of 18); `tests/cut.py` and the stroke parse under 3.11. The release
+flow's first COMPLETE run is the v0.2.6 cut's.
+
+No module of `manjuel/` moved: nothing to restart. **What goes red if unplugged:** the four checks;
+and at the next cut, the flow's last read (`status`), which is where this was found.
+
 ### core: the record of the v0.2.5 cut -- WHAT'S LEFT's checklist ticked and I1 moved to Done, HANDOFF and DAYBOOK told the cut, and STATUS printed again (2026-10-10; his word: "do the follow-up, reprint STATUS and record the cut")
 
 The release flow v5's first real run (`f-20261010-162719-64bb3771`, 09:27 to 09:58) cut v0.2.5 on his three
