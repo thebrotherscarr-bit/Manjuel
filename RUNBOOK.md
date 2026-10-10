@@ -225,36 +225,46 @@ itself -- close the sitting first if one is open.
 
 ## Running it from the dashboard
 
-The pages, in the order the panel lists them:
+The glass is one page since 2026-10-07: the front page, a terminal with five
+tabs (Agent, Bash, Python, PowerShell, Aider) and an Inspector beside it whose
+tabs carry what the old pages did. Every other address opens the front page
+with its Inspector tab open (2026-10-10, WHAT'S LEFT D17), and the Pages menu,
+the palette (Ctrl K) and an old bookmark still reach each one:
 
-    Dashboard   the launchpad. THE ENGINE card is first because nothing below
-                it runs until one is open. Then the box you type in, the
-                brief (silent when there is nothing to say), and THE
-                REPOSITORY with its Commit and Push buttons. It repaints
-                itself every 15s and says so when what it shows is stale.
-                PROJECTS, under the run (2026-09-21): what the maker made,
-                each with its versions and its page running in a sandboxed
-                frame; "Work on this" and "Put it down" say the words for you.
-                A page there has no storage of its own -- a game forgets its
-                high score -- and opened from projects\<name>\ it keeps it.
-    Chat        the same conversation, kept. The composer is disabled with
-                the reason written under it when no engine is open.
-    Agents      the fourteen seats as they declare themselves in agents/.
-    Evals       the last run whole -- every seat, tool, result, timing --
-                and evals scored by hand.
-    Records     the estate's own memory: the suite and standup proof cards,
-                the sittings, and 141 documents in seven kinds (doctrine,
-                record, spec, agents, commands, skills, logs), each opening
-                whole with a sha256 receipt.
-    Settings    the dials.
+    /chat       the Watchboard, now the Run tab: the last turn, its floor (each
+                seat's own words, whole), its tool calls and its wire, and under
+                them PROJECTS, what the maker made
+    /agents     Registry & Docs: the seats as they declare themselves in agents/,
+                each with its file and its receipt
+    /tools      Registry & Docs: the door's tools, each saying what it does,
+                with a Call
+    /records    Registry & Docs: the documents by kind, each served whole with a
+                sha256 receipt; what was proven and what sat are on the Audit
+                Ledger
+    /evals      the Audit Ledger: the proof, the live check, the engine's own
+                report, the evals scored by hand, and the transcripts
+    /left       What's left: the list of what is still open, counted and
+                searchable
+    /workflows  Workflows: the builder, the flows and their runs
+    /laws       Laws: every law, a draft set below the seal, and the seal
+    /flows      GitHub: each world's repository, its lines of work, its marks
+                and its pull requests
+    /settings   Settings: the door's address, the evals pass mark and the
+                messaging bridge
+
+What waits for your hand -- the council's question, a shell line that asks
+first, any call the door parked -- is a card pinned at the foot of the
+terminal, in every tab.
 
 **The loop, four clicks.**
 
     1. Boot            opens an engine AND a sitting. Nothing opens one for
                        you; a sitting nobody meant to start is what every
                        refusal in this system guards against.
-    2. type and Run    the turn runs on the Dashboard, the answer lands under
-                       the box, and the whole trace goes to Evals.
+    2. type and Run    the turn runs in the terminal's Agent tab, the answer
+                       lands in the thread, and the whole turn -- each seat's
+                       words, every tool call, every event -- is in the
+                       Inspector's Run tab.
     3. Commit / Push   type the message in THE REPOSITORY's field first. Both
                        go THROUGH THE COUNCIL, not around it: the law gate
                        stamps the act, the Router runs `git_commit`, and the
@@ -420,8 +430,8 @@ Two different things, and it is worth keeping them apart.
 **Skills** are what a SEAT can do -- 42 of them, declared as markdown in
 `skills\`, hot-reloaded into a running session at the next turn. A seat asks
 for one by keyword and the engine runs it; the law gate can refuse it, and a
-refusal names the law. Read them on Records -> skills, or `commands.md` for
-what can be asked for in words.
+refusal names the law. Read them in Registry & Docs (its documents, the
+skills kind), or `commands.md` for what can be asked for in words.
 
 **Tools** are what ATLAS serves over MCP -- 82 of them, listed at
 `http://127.0.0.1:8090/tools` and reachable from the glass through

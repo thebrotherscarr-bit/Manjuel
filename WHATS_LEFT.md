@@ -8,8 +8,8 @@ STATUS.md. The source is named at the end of every line.
 
 Every line has a number. Say the number to order the work: "do C10".
 
-This file is the list behind the webapp's **What's left** page. Read it there: the page counts
-the lines, finds words in them, and names any line it cannot number.
+This file is the list behind the glass's **What's left** tab, beside Run in the front page's Inspector (a page of its own
+until 2026-10-10). Read it there: the tab counts the lines, finds words in them, and names any line it cannot number.
 
 ---
 
@@ -52,16 +52,6 @@ Nothing here gets built until you say which way.
 ---
 
 ## D. Built but not finished, or not hooked up
-
-- **D17. The pages that copy an Inspector tab still stand as pages of their own.** Your word, 2026-10-10, after the hand drove the pane to
-  the standalone Workflows page for a check and you had to leave it to answer the cards parked on the terminal's tabs: "that shit should be
-  retired, everything stays within the new interface, as previously judged." On your cards the same day: every standalone page that has a tab
-  in the Inspector is retired into that tab, its address opening the front page with that tab open, and the five with no tab (Watchboard,
-  Agents, Evals, Records, Tools) are put to you one by one. The four with a tab are retired, built the same day on your cards ("Plan as
-  written", "Keep them, opening the tab", "Remove what nothing reads"): Workflows, Laws, GitHub at `/flows` and Settings stay on the Pages
-  menu and the palette, each opening the front page with its tab open, and what only those pages drew is gone. Still open: the five, each put
-  to you, and What's left (`/left`), which has no tab either and was left out of the five: on your card the same day ("Yes, six pages") it
-  is put to you with them. *(your words in chat, 2026-10-10)* *(CHANGELOG, "atlas: the pages with a tab open their tab")*
 
 ---
 
@@ -260,6 +250,19 @@ goals". The steps under each are proposed from the disk; each is yours to change
 
 Finished lines, newest first. A number is never used again.
 
+- **D17. The pages that copy an Inspector tab still stand as pages of their own.** DONE 2026-10-10: your word, after the hand drove the pane to
+  the standalone Workflows page for a check and you had to leave it to answer the cards parked on the terminal's tabs: "that shit should be
+  retired, everything stays within the new interface, as previously judged." Built in two parts the same day, each on your cards. First the
+  four with a tab ("Plan as written", "Keep them, opening the tab", "Remove what nothing reads"): Workflows, Laws, GitHub at `/flows` and
+  Settings open the front page with their tab open, and what only those pages drew is gone. Then the six with no tab, put to you one by one
+  ("Yes, six pages"; "Plan as written"): the Watchboard (`/chat`) opens Run, which draws its floor, each seat's own words, and its tool calls
+  beside the wire ("Watchboard can go into runs", "Yes, floor and tools too"); Agents and Records open Registry & Docs ("Open Registry &
+  Docs"); Tools opens it too, each tool saying what it does under its name ("Descriptions into the tab"); Evals opens the Audit Ledger as it is;
+  and What's left (`/left`) is a tab of its own, beside Run ("A tab of its own"). All ten stay on the Pages menu and the palette, and the front
+  page comes up on its Agent tab every time it is drawn ("the front page should always land on Agent as default, then go from there"; "Agent,
+  named tab beside"). Placed on your card and proved live on your glass: every address on its tab with the terminal on Agent, and one short
+  turn (sitting 365) filling the floor and the tool calls as it ran. *(your words in chat, 2026-10-10)*
+  *(CHANGELOG, "atlas: the pages with a tab open their tab")* *(CHANGELOG, "atlas: the six pages with no tab open a tab")*
 - **I1. v0.2.5: the full GitHub integration.** DONE 2026-10-10: cut as v0.2.5 by the release flow v5, its first real run, on your three clicks
   (core on `4503173`, atlas on `144a425`), every box of G ticked, and its record written after it on your word ("do the follow-up, reprint STATUS and
   record the cut"). The line as it stood: found on the way to the first step and mended first, on your card ("Fix it first",
