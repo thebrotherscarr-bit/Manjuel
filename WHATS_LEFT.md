@@ -53,6 +53,12 @@ Nothing here gets built until you say which way.
 
 ## D. Built but not finished, or not hooked up
 
+- **D17. The pages that copy an Inspector tab still stand as pages of their own.** Your word, 2026-10-10, after the hand drove the pane to
+  the standalone Workflows page for a check and you had to leave it to answer the cards parked on the terminal's tabs: "that shit should be
+  retired, everything stays within the new interface, as previously judged." On your cards the same day: every standalone page that has a tab
+  in the Inspector is retired into that tab, its address opening the front page with that tab open (Workflows, Laws, GitHub at `/flows`,
+  Settings), and the five with no tab (Watchboard, Agents, Evals, Records, Tools) are put to you one by one; a piece of its own, after the
+  record of the retired flows. *(your words in chat, 2026-10-10; CHANGELOG, "core: the release check names a retired flow retired")*
 
 ---
 
@@ -219,12 +225,15 @@ a packaging and deliverable pass"; "0.3.0 will be a full release packaged and re
 goals". The steps under each are proposed from the disk; each is yours to change before it is built.
 
 - **I2. v0.2.6: an optimization and flow pass.** Every function working, and measured: every flow on the Workflows page fired to COMPLETE or retired
-  on your word (the release check names `coder`, `release` and `version-tag` as fired and never COMPLETE); the live check 9 of 9 and the review
-  panel inside its turn; the session test (R1) run again against its baseline (sitting 345, 9 faults) and its faults mended or ruled; the time each
-  route of the front page takes, measured against the session test's budgets, and the slowest made faster.
+  on your word (the release check named `coder`, `release` and `version-tag` as fired and never COMPLETE; since 2026-10-10 it names `coder` and
+  `version-tag` retired, and `release` alone as never COMPLETE); the live check 9 of 9 and the review panel inside its turn; the session test (R1)
+  run again against its baseline (sitting 345, 9 faults) and its faults mended or ruled; the time each route of the front page takes, measured
+  against the session test's budgets, and the slowest made faster.
   Your cards of 2026-10-10 on its first part: the release flow's record step prints STATUS.md again, so its last read can pass (built the same
   day; its first COMPLETE is the v0.2.6 cut) *(CHANGELOG, "core: the release flow's record step prints STATUS again")*; and `coder` and
-  `version-tag` retired, every version kept (not built yet).
+  `version-tag` retired, every version kept (built the same day: the door fires neither again and keeps every version, the Workflows tab says why
+  and offers no Fire, and the release check names both retired) *(CHANGELOG, "core: the release check names a retired flow retired")*
+  *(atlas CHANGELOG, "A flow is retired by a version of its own")*.
 - **I3. v0.2.7: both repositories keep what earlier versions promised.** Every OPEN line in SPEC section 4 met or ruled; every open line on this
   page (B, E, H) built, ruled, or moved to a later version on your word; the found items in HANDOFF from 2026-10-05 on put on this page or ruled;
   the wife test (E1) with her at the glass and nobody helping.
