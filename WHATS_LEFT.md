@@ -246,8 +246,12 @@ goals". The steps under each are proposed from the disk; each is yours to change
   outside action to an exact commit, and a sent line's provers run once rather than twice, in since 2026-10-09: `release.yml` names the commit
   `v2` pointed at that day (v2.6.2), and in both repositories `prove.yml` runs on a line's pull request and on a push to main or a mark, not on
   every line's push; the release gate's `workflows` check and a new leg of atlas's battery refuse an outside action named by a tag and a workflow
-  that proves a line twice; not yet seen on GitHub (the first will be this piece's own pull request) *(CHANGELOG, "core: a line is proved once")*
-  *(atlas CHANGELOG, "The provers themselves")*. *(CHANGELOG, "core: the docs call the glass's page GitHub")*
+  that proves a line twice; seen on GitHub the same evening, `prove` run once in each repository for the line, by its pull request *(CHANGELOG, "core: a line is proved once")*
+  *(atlas CHANGELOG, "The provers themselves")*; (7) Land onto main and the Send of main offered only where GitHub takes them, in since
+  2026-10-09 and placed on your card (your cards: "Mend Land onto main", "Main is on GitHub" and "Place both, keep both"): where origin has a
+  world's main line, the door refuses a landing onto it and a send of it by name, naming the pull request road, and the GitHub tab greys Land
+  onto main, Send to GitHub and the council's Push with the door's sentence; a main origin has never had lands and sends as before
+  *(CHANGELOG, "atlas: a main on GitHub takes a pull request")* *(atlas CHANGELOG, "A main on GitHub takes a pull request")*. *(CHANGELOG, "core: the docs call the glass's page GitHub")*
 - **I2. v0.2.6: an optimization and flow pass.** Every function working, and measured: every flow on the Workflows page fired to COMPLETE or retired
   on your word (the release check names `coder`, `release` and `version-tag` as fired and never COMPLETE); the live check 9 of 9 and the review
   panel inside its turn; the session test (R1) run again against its baseline (sitting 345, 9 faults) and its faults mended or ruled; the time each

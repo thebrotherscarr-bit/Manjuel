@@ -375,8 +375,8 @@ it has passed, Merge on GitHub merges it there as a merge commit and brings the
 new main line down to this machine. Until then the tab had no merge button and
 the door no such verb, so it was your terminal's. Since the same day main takes
 nothing else, in either repository: GitHub refuses a send to main that did not
-come through a pull request whose checks have passed, yours included, so Land
-onto main, fast-forward, lands a line here and goes no further. The name must be exact and on the map (`help`
+come through a pull request whose checks have passed, yours included, and the
+door refuses Land onto main, and a send of main, by name (WHAT'S LEFT I1's seventh step). The name must be exact and on the map (`help`
 is not `helper`); a bare `.py` is the workspace, not the ground. A DOCUMENT IS
 ASKED BY HEADING (2026-09-29), a root document by its bare name:
 
