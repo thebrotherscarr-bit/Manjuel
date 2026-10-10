@@ -20799,6 +20799,126 @@ def test_record_and_git():
           rec.exists() and pr.exists() and pr.parent.name == "_prompts")
 
 
+def test_the_councils_push_sends_no_main_origin_has(reg, lib, book):
+    """THE COUNCIL'S PUSH, BY NAME (2026-10-09, WHAT'S LEFT I1's eighth step). Since the seventh step the door
+    refuses Land onto main and a send of main once origin has a main, because GitHub takes a change to it only
+    through a pull request whose checks have passed (atlas: TestAMainOriginHasTakesAPullRequestAndNothingElse).
+    The engine's own push did not know it: `git_push`, and `git_cycle` after its commit, ran a bare `git push`
+    from main and left GitHub to refuse it in GitHub's words. gitstate.push refuses that send by name now,
+    before anything leaves, and says the road the door says, in the door's words.
+
+    Stroked both ways on temp repositories and bare origins on this machine, so nothing leaves it: a main
+    origin has is refused, through the skill a seat calls too, and origin's main does not move; a line of work
+    is sent as it always was; a main origin has never had is sent, the first send of a new repository, and the
+    next push of it is refused. Where atlas/ stands beside the core, the sentence is held to the door's own.
+    """
+    import os as _os
+
+    if not HAVE_GIT:
+        return                    # reported once, in main(); never a crash
+
+    def git(where, *a):
+        return subprocess.run(["git", *a], cwd=str(where), capture_output=True, text=True,
+                              stdin=subprocess.DEVNULL, timeout=60)
+
+    def bare():
+        origin = Path(tempfile.mkdtemp()) / "origin.git"
+        git(origin.parent, "init", "-q", "--bare", "-b", "main", str(origin))
+        return origin
+
+    def repo(origin):
+        g = Path(tempfile.mkdtemp())
+        for args in (["init", "-q", "-b", "main"], ["config", "user.email", "t@t"],
+                     ["config", "user.name", "t"], ["remote", "add", "origin", str(origin)]):
+            git(g, *args)
+        return g
+
+    def head(where, ref="HEAD"):
+        p = git(where, "rev-parse", "--verify", "--quiet", ref)
+        return p.stdout.strip() if p.returncode == 0 else ""
+
+    def upstream(g, branch):
+        git(g, "config", f"branch.{branch}.remote", "origin")
+        git(g, "config", f"branch.{branch}.merge", f"refs/heads/{branch}")
+
+    def pushed(g):
+        try:
+            return gitstate.push(g), ""
+        except gitstate.GitRefused as exc:
+            return "", str(exc)
+
+    road = ""
+    held = _os.environ.get(gitstate.REMOTE_ENV)
+    _os.environ[gitstate.REMOTE_ENV] = "1"
+    try:
+        # ---- a main origin has: refused by name, and nothing leaves ---------------------------------
+        origin = bare()
+        g = repo(origin)
+        (g / "a.txt").write_text("one", encoding="utf-8")
+        gitstate.commit(g, "the first save")
+        git(g, "push", "-q", "-u", "origin", "main")      # the fixture's own send, not the engine's
+        sent = head(origin, "main")
+        check("the fixture stands: origin has main at the first save, and the ground knows it",
+              bool(sent) and sent == head(g) and head(g, "refs/remotes/origin/main") == sent, sent)
+        (g / "b.txt").write_text("two", encoding="utf-8")
+        gitstate.commit(g, "work done on main")
+        out, road = pushed(g)
+        check("the engine's push of a main origin has is refused by name, before anything leaves",
+              not out and road.startswith("main is on GitHub"), out or road)
+        check("   and origin's main did not move", head(origin, "main") == sent,
+              f"{head(origin, 'main')[:9]} vs {sent[:9]}")
+        check("   and the refusal says the road: a line of work, sent, a pull request from it, Merge on GitHub",
+              all(w in road for w in ("only through a pull request whose checks have passed",
+                                      "Do the work on a line of work, send that line",
+                                      "Pull requests, on the GitHub tab", "Merge on GitHub")), road)
+        said = lib.execute("git_push", {}, env_for(g, reg, Stub()))
+        check("   and a seat's git_push says it in the engine's words, as a refusal, and sends nothing",
+              said == "Refused: " + road and head(origin, "main") == sent, said[:200])
+
+        # ---- a line of work: sent as it always was ----------------------------------------------------
+        gitstate.switch(g, "spur", create=True)
+        (g / "c.txt").write_text("three", encoding="utf-8")
+        gitstate.commit(g, "work done on a line")
+        upstream(g, "spur")
+        out, why = pushed(g)
+        check("a line of work is sent as it always was", not why and head(origin, "spur") == head(g),
+              why or out)
+
+        # ---- a main origin has never had: the first send of a new repository ---------------------------
+        empty = bare()
+        g2 = repo(empty)
+        (g2 / "a.txt").write_text("one", encoding="utf-8")
+        gitstate.commit(g2, "a new repository's first save")
+        upstream(g2, "main")
+        out, why = pushed(g2)
+        check("a main origin has never had is sent: the first send of a new repository",
+              not why and head(empty, "main") == head(g2), why or out)
+        (g2 / "b.txt").write_text("two", encoding="utf-8")
+        gitstate.commit(g2, "work done on main after it")
+        out, why = pushed(g2)
+        check("   and once origin has it, the next push of main is refused by the same rule",
+              not out and why.startswith("main is on GitHub") and head(empty, "main") != head(g2),
+              out or why)
+    finally:
+        _os.environ.pop(gitstate.REMOTE_ENV, None)
+        if held is not None:
+            _os.environ[gitstate.REMOTE_ENV] = held
+
+    # ---- ONE ROAD, SAID THE SAME AT BOTH DOORS ---------------------------------------------------------
+    go = ROOT / "atlas" / "line" / "internal" / "tools" / "gitctl.go"
+    if not go.is_file():
+        check("(no atlas/ beside the core here -- the door's sentence is not asked, and says so)", True)
+        return
+    src = go.read_text(encoding="utf-8")
+    at = src.find("func mainByPullRequest")
+    start = src.find("fmt.Sprintf(", at) if at >= 0 else -1
+    end = src.find(", mainName, mainName)", start) if start >= 0 else -1
+    door = "".join(src[start:end].split('"')[1::2]) if 0 <= start < end else ""
+    check("the engine says the road in the door's own words (atlas gitctl.go, mainByPullRequest)",
+          bool(door) and door.replace("%s", "main") == "Refused: " + road,
+          f"door {door[:100]!r} / engine {road[:100]!r}")
+
+
 # ---------------------------------------------------------------------
 
 
@@ -21704,6 +21824,7 @@ def main() -> int:
     test_doctrine()
     test_record_and_git()
     test_the_core_sees_its_own_repository()
+    test_the_councils_push_sends_no_main_origin_has(reg, lib, book)
 
     # ONE loud line about the environment, rather than a crash or a lie.
     # Six strokes drive real git. When it is absent they return instead of

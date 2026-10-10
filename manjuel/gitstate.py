@@ -349,12 +349,46 @@ def push(ground: Path) -> str:
             f"{REMOTE_ENV}=1 to allow it."
         )
     ground = Path(ground)
-    if not read(ground).is_repo:
+    st = read(ground)
+    if not st.is_repo:
         raise GitRefused("this ground is not a git repository")
+    road = main_by_pull_request(ground, st.branch)
+    if road:
+        raise GitRefused(road)
     rc, out, err = _write(["push"], ground)
     if rc != 0:
         raise GitRefused(err or out or "git push failed")
     return out or err or "Pushed."
+
+
+def main_by_pull_request(ground: Path, branch: str) -> str:
+    """Why `branch` is not pushed from here, or "" when it may be.
+
+    A MAIN ORIGIN HAS TAKES A PULL REQUEST AND NOTHING ELSE (2026-10-09, WHAT'S
+    LEFT I1's eighth step). Both repositories protect main on GitHub: a change
+    reaches it only through a pull request whose checks have passed. The door
+    has refused a send of such a main by name since the seventh step
+    (atlas/line/internal/tools/gitctl.go, mainByPullRequest), and this is the
+    engine's own push saying the same road in the same words, before anything
+    leaves -- where a bare `git push` from main left GitHub to refuse it in
+    GitHub's words. A main origin has never had is sent as before: that is the
+    first send of a new repository. Reads only: the answer is the ref this
+    ground already holds for origin, and nothing is fetched to make it.
+    """
+    if branch not in ("main", "master"):
+        return ""
+    try:
+        rc, _ = _run(["rev-parse", "--verify", "--quiet",
+                      f"refs/remotes/origin/{branch}"], Path(ground))
+    except RuntimeError:
+        return ""
+    if rc != 0:
+        return ""
+    return (f"{branch} is on GitHub, and GitHub takes a change to it only "
+            f"through a pull request whose checks have passed. Do the work on "
+            f"a line of work, send that line, and open a pull request from it "
+            f"(Pull requests, on the GitHub tab); once its checks pass, Merge "
+            f"on GitHub merges it there and brings the new {branch} down here.")
 
 
 # =====================================================================
