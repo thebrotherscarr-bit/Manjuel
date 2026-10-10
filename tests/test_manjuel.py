@@ -13633,6 +13633,33 @@ def test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book):
     check("   and a run of a flow no longer on disk is reported by name",
           c.ok and "no longer on disk: gone" in c.why, c.why)
 
+    # ---- a retired flow is named retired (2026-10-10, his card: "Retire both, versions kept") ------
+    # `coder` and `version-tag` were superseded -- by coder-tree, and by the release flow -- and the gate named
+    # them "fired, never COMPLETE" at every cut (WHAT'S LEFT I2). A flow is retired by a version of its own
+    # that carries `retired`, why in words (flow.go Spec.Retired): the door fires it no more, every version
+    # before it is kept, and the gate names it retired -- neither unfired nor unfinished.
+    g = ground(**{"probe.json": {**spec(version=2), "retired": "superseded by probe-tree"},
+                  "probe.v1.json": spec(version=1),
+                  "idle.json": {**spec(), "name": "idle", "retired": " never needed "}})
+    (g / "flows" / "runs.jsonl").write_text(
+        _json.dumps({"kind": "start", "run": "f-4", "flow": "probe", "version": 1}) + "\n"
+        + _json.dumps({"kind": "stopped", "run": "f-4", "verdict": "FAIL"}) + "\n", encoding="utf-8")
+    c = _rel.flows(g)
+    check("a retired flow is named retired, with why, never as fired and never COMPLETE",
+          c.ok and "retired: idle (never needed), probe (superseded by probe-tree)" in c.why
+          and "never COMPLETE" not in c.why, c.why)
+    check("   nor as NEVER FIRED when nobody fired it, and both are still flows the door would list",
+          "NEVER FIRED" not in c.why and c.why.startswith("2 flows the door would list, each valid"), c.why)
+    f = _rel.flow_faults({**spec(), "retired": "   "})
+    check("   a mark that says nothing is a fault, in the door's words (flow.go's Validate refuses it)",
+          any("marked retired with no reason" in x for x in f), str(f))
+    f = _rel.flow_faults({**spec(), "retired": 5})
+    check("   and so is a mark that is not words at all (the door could not read that spec)",
+          any("`retired` mark that is not words" in x for x in f), str(f))
+    c = _rel.flows(ground(**{"probe.json": {**spec(), "retired": ""}}))
+    check("   while an empty mark is no mark: the flow is not retired, and is reported as any other",
+          c.ok and "retired" not in c.why and "NEVER FIRED: probe" in c.why, c.why)
+
     # ---- the law is stated twice, so it is reconciled ---------------------
     #
     # flow.go is the law; release.py restates it where the door is not running.
@@ -13670,6 +13697,14 @@ def test_the_flows_and_workflows_are_read_before_a_mark(reg, lib, book):
         tool_law = (_re.search(r"var ToolRe = regexp\.MustCompile\(`([^`]+)`\)", src) or [None, None])[1]
         check("   the tool node's name law is flow.go's own", tool_law == _rel.FLOW_TOOL.pattern,
               f"go: {tool_law} / py: {_rel.FLOW_TOOL.pattern}")
+        # AND THE RETIRED MARK (2026-10-10, WHAT'S LEFT I2): the key the gate reads is the one flow.go
+        # writes, and a mark that says nothing is refused in the same words in both copies.
+        retired_key = (_re.search(r'\bRetired\s+string\s+`json:"(\w+)(?:,omitempty)?"`', src) or [None, None])[1]
+        check("   the retired mark the gate reads is flow.go's own key, and a blank one is refused in both copies' words",
+              retired_key is not None and retired_key == getattr(_rel, "FLOW_RETIRED", None)
+              and "marked retired with no reason" in src
+              and "marked retired with no reason" in (ROOT / "tests" / "release.py").read_text(encoding="utf-8"),
+              f"go: {retired_key} / py: {getattr(_rel, 'FLOW_RETIRED', None)}")
         # AND THE RETURN LAW, phrase by phrase (2026-09-29): every refusal
         # lawfulReturns and loopsOf make is one this copy makes in the same words.
         for phrase in ("does not return:", "stands inside the return from",

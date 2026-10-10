@@ -51,7 +51,8 @@ WHAT IT READS (nothing it decides is generated -- LAW 1 for the hands):
                the flow law (gated; the door's flow_list names one it cannot
                read too, since 2026-09-25); folded versions that would fail
                today's law, flows
-               never fired, and flows never COMPLETE are REPORTED. The
+               never fired, and flows never COMPLETE are REPORTED -- a flow
+               marked `retired` as retired, never as either (2026-10-10). The
                terminal's: flows/ is runtime state and in no checkout
     workflows  every .github/workflows/*.yml is tracked (an untracked one is
                one CI never sees), and every python command in it names a
@@ -907,6 +908,7 @@ FLOW_MAX_LOOPS = 5                                                     # flow.go
 FLOW_VAR = re.compile(r"\{\{\s*([A-Za-z0-9_]+)\s*\}\}")                # play.Render's slot
 FLOW_AIDER_TOOL = "aider_run"                                         # flow.go AiderTool
 FLOW_TOOL = re.compile(r"^[a-z][a-z0-9_]{0,63}$")                     # flow.go ToolRe
+FLOW_RETIRED = "retired"                                              # flow.go Spec.Retired's json key
 
 
 def _reach(start: str, forward: list, up: bool) -> set:
@@ -939,6 +941,16 @@ def flow_faults(spec) -> list[str]:
     name = spec.get("name")
     if not isinstance(name, str) or not FLOW_NAME.match(name):
         faults.append(f"flow name {name!r} breaks the name law")
+    # THE RETIRED MARK (flow.go Spec.Retired, 2026-10-10; restated the same day): why the flow is
+    # fired no more, in words. Validate refuses a mark that says nothing, and a mark that is not
+    # words at all is one the door cannot read, so neither is a flow it would list as whole.
+    retired = spec.get(FLOW_RETIRED)
+    if retired is not None and not isinstance(retired, str):
+        faults.append(f"flow {name!r} carries a `{FLOW_RETIRED}` mark that is not words ({retired!r}); "
+                      "the door cannot read such a spec")
+    elif retired and not retired.strip():
+        faults.append(f"flow {name!r} is marked retired with no reason; say why in words, "
+                      f"or leave `{FLOW_RETIRED}` off")
     nodes = spec.get("nodes") or []
     if not nodes:
         faults.append("carries no nodes")
@@ -1138,11 +1150,18 @@ def flows(root: Path = ROOT) -> Check:
     never finished COMPLETE. A flow declared and fired by nothing is the LOOSE
     shape -- and on 2026-09-25 `version-tag`, the flow that cuts marks, had
     never once been fired.
+    RETIRED (2026-10-10, WHAT'S LEFT I2). A flow whose latest version carries
+    `retired` (flow.go Spec.Retired: why, in words) is one the door fires no
+    more, every version before it kept. It is named retired, with why, and
+    never as unfired or unfinished: until the gate read the mark it named
+    `coder` and `version-tag`, superseded by coder-tree and by the release
+    flow, "fired, never COMPLETE" at every cut.
     """
     d = root / "flows"
     if not d.is_dir():
         return Check("flows", True, "no flows/ on this ground -- nothing saved, nothing to judge")
     latest: dict[str, list[str]] = {}
+    retired: dict[str, str] = {}
     history: list[str] = []
     corrupt: list[str] = []
     broken: list[str] = []
@@ -1165,6 +1184,9 @@ def flows(root: Path = ROOT) -> Check:
                 stale.append(f"{f.name} ({faults[0]})")
         else:
             latest[base] = faults
+            why = spec.get(FLOW_RETIRED) if isinstance(spec, dict) else None
+            if isinstance(why, str) and why.strip():
+                retired[base] = why.strip()
             if faults:
                 broken.append(f"{f.name}: " + "; ".join(faults[:2]))
     starts: dict[str, int] = {}
@@ -1191,10 +1213,12 @@ def flows(root: Path = ROOT) -> Check:
         parts.append(f"{len(history)} folded version{'s' if len(history) != 1 else ''}"
                      + (f", {len(stale)} would not pass today's law: " + ", ".join(stale)
                         if stale else ""))
-    never = sorted(n for n in latest if not starts.get(n))
+    if retired:
+        parts.append("retired: " + ", ".join(f"{n} ({retired[n]})" for n in sorted(retired)))
+    never = sorted(n for n in latest if not starts.get(n) and n not in retired)
     if never:
         parts.append("NEVER FIRED: " + ", ".join(never))
-    unfinished = sorted(n for n in latest if starts.get(n) and not complete.get(n))
+    unfinished = sorted(n for n in latest if starts.get(n) and not complete.get(n) and n not in retired)
     if unfinished:
         parts.append("fired, never COMPLETE: " + ", ".join(unfinished))
     gone = sorted(n for n in starts if n not in latest)
