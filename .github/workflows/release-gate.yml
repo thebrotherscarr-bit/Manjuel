@@ -15,8 +15,8 @@
 # job ran the strokes it would stamp `tests/last_run.json` with ITS OWN green,
 # and the gate would then pass on CI's run of the suites rather than on his.
 # The stamp is tracked on purpose: it is the EVIDENCE that the operator proved
-# this ground on his own terminal. prove.yml runs the suites on every push,
-# which is a different question and already answered.
+# this ground on his own terminal. prove.yml runs the suites on every pull
+# request and on main, which is a different question and already answered.
 #
 # WHAT THIS JOB CANNOT ASK, and says so in its own output rather than
 # pretending: `strokes`, `smoke` and `standup` all compare a stamp against the

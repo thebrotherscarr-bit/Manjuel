@@ -4,7 +4,9 @@
 
 `.github/workflows/prove.yml` runs both suites plus `law.py --prove`,
 `buildmap.py --check` and `standup.py --dry` (and the record audit,
-report-only) on Windows and Ubuntu, Python 3.10 and 3.13, on every push.
+report-only) on Windows and Ubuntu, Python 3.10 and 3.13, on every pull
+request and every push to main or a mark: a line of work is proved once, by
+its pull request (2026-10-09).
 
 **No rack, no network, no GPU, no model.** Every model call in both suites
 is a stub; `ollama` is installed only because `manjuel/runtime.py` imports

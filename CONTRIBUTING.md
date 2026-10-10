@@ -12,7 +12,8 @@
 Both suites are **offline and stubbed**: no rack, no network, no GPU, no
 model. If a change makes them need a live model, that is the regression —
 the offline property is a promise this project makes publicly, and CI runs
-both on Windows and Ubuntu, Python 3.10 and 3.13, on every push.
+both on Windows and Ubuntu, Python 3.10 and 3.13, on every pull request and
+every push to main or a mark.
 
 `law.py verify` walks the hash-chained ledger. It is not in CI on purpose:
 a fork with a re-terminated law file should fail on a real terminal, where
