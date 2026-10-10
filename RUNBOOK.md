@@ -271,6 +271,13 @@ terminal, in every tab.
                        commit body carries the sitting id. A button that
                        shelled out to git would be a second write-path past
                        everything the estate checks.
+                       (Annotated 2026-10-10: THE REPOSITORY card retired
+                       with the Dashboard on 2026-10-07. Through the
+                       council, ask in the terminal's Agent tab; the GitHub
+                       tab's Save the work and Send to GitHub are the door's
+                       own tools, on your press -- "GitHub, from the glass",
+                       below. Since 2026-10-09 main takes a change only
+                       through a pull request.)
     4. Close sitting   writes `ended` and reaps the engine, and pays the toll
                        -- unattended -- if the sitting ran anything. A sitting
                        that ran nothing closes with no toll: sitting 220,
@@ -296,7 +303,8 @@ terminal, in every tab.
 
 **Or the whole turn in one act.** `git_cycle` is step 3's commit and push as a
 single skill, with the proofs read first and the push verified after. Type it
-on the Dashboard the way you would any objective, and give it the message --
+in the terminal's Agent tab (on the Dashboard until it retired, 2026-10-07)
+the way you would any objective, and give it the message --
 that is the one part it cannot read off the ground:
 
     git_cycle: "what this commit is"
@@ -366,7 +374,9 @@ TASKS, REFUSALS, memory, BUILDMAP) are skipped on purpose — a number in a
 ledger is a true record of its day, not a claim about now.
 
 Push is disabled unless the wall is open (`MANJUEL_GIT_REMOTE` in `.env`) and
-there is something to push; hover it and it says which.
+there is something to push; hover it and it says which. (Annotated 2026-10-10:
+that Push was the Dashboard's, retired with it on 2026-10-07; the GitHub
+tab's Send to GitHub is greyed the same way, with its reason on it.)
 
 **Asking for a change to the harness itself (2026-09-28).** Name the file
 with its folder and the passage in backticks, with a change verb:
@@ -399,6 +409,84 @@ that already carries what the gate refuses (skills.py's loopback `urllib`)
 still takes an edit that adds none of it. Type the request without a tool's
 own words in it ("the founding documents" names semantic_search, and the
 window shuts). REFUSALS §28 lists what the engine answers with no seat.
+
+## GitHub, from the glass
+
+The GitHub tab in the front page's Inspector -- the GitHub door in the top
+bar, or the address /flows -- is where both repositories are saved, sent and
+merged: the core as `research`, atlas as `atlas`. It has been a tab of the
+Inspector since 2026-10-08, and since 2026-10-10 its old page's address opens
+the tab. Each world is said in plain words off the door's `git` tool: the line
+of work you stand on, where it sends, the last save, what is not saved,
+whether GitHub has what you have, and whether sending is allowed. Every act
+calls a door tool when you press it, every refusal is the door's own
+sentence, and a button that cannot work is greyed with its reason on it
+before you press. The number on the GitHub door counts what is not saved or
+not sent across the worlds, and is hidden when there is none.
+
+    Save the work      commits every change in the world, under the message
+                       typed above the buttons
+    Send to GitHub     sends the saves GitHub does not have; on a line of
+                       work never sent, sends it for the first time and
+                       links it there; greyed, with the door's sentence, on
+                       a main line GitHub already has
+    Take from GitHub   takes the saves GitHub has that you do not; greyed
+                       while there is unsaved work
+    Lines of work      every line and whether it is on GitHub: Move here,
+                       Finish with it, and Start a new line
+    Version marks      every mark and where it is: Cut the mark (its name
+                       filled in from the world's own version file, and
+                       refused if it is not that number), Send to GitHub and
+                       Remove. The door is asked first, so a mark that may
+                       not go is greyed with why, and a send or a remove is
+                       armed: the first press says what will happen, the
+                       second does it
+    Pull requests      the open ones, each with its line, its checks and its
+                       link, and Merge on GitHub; Open a pull request opens
+                       one from the line you stand on into main
+
+A changed file in a world's list opens its diff, and "Every change in a
+world", under the worlds, shows all of one world's changes at once.
+
+**A change's road to main (both repositories, since 2026-10-09).** Main takes
+a change only through a pull request whose checks have passed -- the core's
+four `prove` legs, atlas's battery on Windows -- and GitHub refuses anything
+else, from anyone, you included; nothing force-pushes main or deletes it.
+
+    1. Lines of work -> Start a new line, and do the work on it. Aider and
+       the coder's changes to the harness write only on a line of work.
+    2. Save the work, then Send to GitHub ("for the first time" on a new
+       line).
+    3. Pull requests -> Open a pull request. GitHub proves the line once, on
+       its pull request.
+    4. When every check has passed, Merge on GitHub goes live: the first
+       press says what will happen, the second merges it there as a merge
+       commit and brings the new main down to this machine. Until then it is
+       grey and says why: the checks are still running, failed, or have not
+       run.
+    5. Lines of work -> Move here on main, and Finish with the line once it
+       is merged.
+
+Land onto main, and a Send of main, are refused by name where GitHub has the
+main line, and greyed on the tab with that sentence. The council's own push
+(the `git_push` skill, `git_cycle`, the REPL's /git push) refuses the same way
+before anything leaves -- but `git_cycle` still saves on main first, and that
+save has to be moved onto a line by hand. Sending, fetching and merging all
+stay behind the wall, `MANJUEL_GIT_REMOTE` in `.env`: while it is shut they
+refuse by name.
+
+**What waits for your hand.** The tab's buttons act when you press them. A
+write the door holds for anything but your glass -- a save, a send, a mark, a
+merge asked by a seat or a script -- is a card at the foot of the front
+page's terminal, in every tab, until you answer it; and a line typed in the
+Bash tab that saves or sends waits on its card the same way (one card can
+add, commit, push and open the pull request).
+
+**A cut.** The release flow (the Workflows tab) takes a version through the
+same road inside its three gates: it opens `release-<mark>` in both
+repositories, merges each pull request once its provers pass, cuts and sends
+the marks on main, and writes the record on `record-<mark>` the same way.
+BUILDPATH, "The marks, and how one is cut", has the steps.
 
 ## Running it from the terminal instead
 

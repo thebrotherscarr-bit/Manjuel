@@ -235,6 +235,9 @@ goals". The steps under each are proposed from the disk; each is yours to change
   `Cargo.lock` and both `go.mod` files, the Python battery (standard library only) and Aider's own environment (`aider/venv`, outside both
   repositories); the core's README, QUICKSTART, RUNBOOK, BUILDPATH, SPEC and SYSTEM_DESIGN, and atlas's README, DELIVERABLE, LAUNCH_PLAN, THE_ROAD,
   ACCEPTANCE, SECURITY and STATE_OF_BUILD, each read against the disk; HANDOFF's own header, which still names `tests/test_chainkit.py`.
+  Its first part, on your word of 2026-10-10 ("annotate the runbook with the new information on the github funtionality as part of the documentation
+  pass on the road to 0.3.0"): RUNBOOK's "GitHub, from the glass", the tab, its buttons and a change's road to main, held to the tab's own
+  buttons by the docs stroke (your card: "Add the check"). *(CHANGELOG, "core: RUNBOOK says how GitHub works from the glass")*
 - **I5. v0.2.9: packaging and the deliverable.** The Settings page set up for every API integration: each hosted route's state shown (on or off,
   never the key), its key placed by you in `.env` (RULE 4, amended; RULE 7); the local Ollama models set up: the models the seats name, pulled and
   checked by the rack's own report; the rack checked: what is loaded, what fits the card, what no seat names; a first run on a machine that has none

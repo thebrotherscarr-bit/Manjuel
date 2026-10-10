@@ -17598,7 +17598,9 @@ def test_the_docs_call_the_page_what_the_glass_calls_it(reg, lib, book):
     the practice (DESIGN, SPEC), "Version control" was the page. BUILDPATH's ladders are history too: the
     release record (`cut.py record`) writes each mark's CHANGELOG titles into the newest, and atlas's title
     for v0.2.4 names the old page (its first record, core 07a0efe, went red on GitHub over it). Stroked both
-    ways on a temp ground, and held to the glass's own label where atlas/ stands beside the core.
+    ways on a temp ground, and held to the glass's own label where atlas/ stands beside the core. And RUNBOOK's
+    "GitHub, from the glass" is held to the GitHub tab's own buttons (2026-10-10, his card: "Add the check"): the
+    section stands, names each button it walks him through, and each name is a label the tab's code draws.
     """
     import re as _re
     from manjuel import doctrine as D
@@ -17695,6 +17697,40 @@ def test_the_docs_call_the_page_what_the_glass_calls_it(reg, lib, book):
               bool(m) and m.group(1) == "GitHub", m.group(0) if m else "no label for /flows in app.js")
     else:
         check("(no atlas/ beside the core here -- the glass's own name for the page is not asked, and says so)", True)
+
+    # THE BUTTONS RUNBOOK NAMES ARE THE TAB'S OWN (2026-10-10, his card: "Add the check"; WHAT'S LEFT I4's first part).
+    # RUNBOOK's "GitHub, from the glass" walks him through the GitHub tab by its buttons' names, and a button renamed in
+    # the tab's code would leave the doc sending him to one that is not there, with nothing red. So the section must
+    # stand and name each of them, and each name must be a label the tab's own code draws (atlas's flows.js) where
+    # atlas/ stands beside the core. Stroked both ways on samples first.
+    BUTTONS = ("Save the work", "Send to GitHub", "Take from GitHub", "Lines of work", "Version marks", "Pull requests",
+               "Open a pull request", "Merge on GitHub", "Start a new line", "Move here", "Finish with it",
+               "Land onto main", "Cut the mark", "Remove")
+
+    def section(doc):
+        parts = doc.replace("\r\n", "\n").split("\n## GitHub, from the glass\n", 1)
+        return " ".join(parts[1].split("\n## ", 1)[0].split()) if len(parts) == 2 else ""
+
+    def undrawn(names, code):
+        return [b for b in names if f">{b}</button>" not in code]
+
+    sample = "x\n## GitHub, from the glass\n\nSave the work, then Send to\nGitHub.\n## Next\nRemove"
+    check("   and a RUNBOOK section is read whole, a name broken over a line's end included, and not past its end",
+          section(sample) == "Save the work, then Send to GitHub.", repr(section(sample)))
+    check("   and a button the tab's code does not draw is found, and one it does is not",
+          undrawn(("Save the work", "Send to GitHub"), "<button>Save it</button><button>Send to GitHub</button>")
+          == ["Save the work"])
+    sec = section((ROOT / "RUNBOOK.md").read_text(encoding="utf-8"))
+    unnamed = [b for b in BUTTONS if b not in sec]
+    check("   and RUNBOOK's \"GitHub, from the glass\" stands and names every button it walks him through",
+          bool(sec) and not unnamed, ", ".join(unnamed) or "no such section")
+    flows = ROOT / "atlas" / "webapp" / "static" / "js" / "flows.js"
+    if flows.is_file():
+        missing = undrawn(BUTTONS, flows.read_text(encoding="utf-8"))
+        check("   and every one of them is a label the GitHub tab's own code draws (flows.js), so the doc and the tab "
+              "say one name", not missing, ", ".join(missing))
+    else:
+        check("(no atlas/ beside the core here -- the GitHub tab's own labels are not asked, and says so)", True)
 
 
 def test_the_code_calls_the_pages_what_the_glass_calls_them(reg, lib, book):
