@@ -133,7 +133,7 @@ appended by the door itself, so do not add them.
 
 **`--auth` and the service wire (since 2026-09-25).** With `--auth` the door
 demands a bearer on every call and HOLDS a writing call from anything but the
-glass until you decide it on its card, pinned at the foot of the front page's terminal (or on the GitHub page); without it, RULE 6 is a
+glass until you decide it on its card, pinned at the foot of the front page's terminal; without it, RULE 6 is a
 sentence. A writing tool's reading action is not held: `git_tag list` and
 `git_branch list` (their default, too) answer any bearer, while `cut`, `send`,
 `remove`, `new`, `switch` and `close` wait for your hand (since 2026-09-28). A
