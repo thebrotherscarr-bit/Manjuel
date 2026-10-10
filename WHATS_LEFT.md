@@ -15,11 +15,11 @@ the lines, finds words in them, and names any line it cannot number.
 
 ## A. Stops the release right now
 
-The last cut is core **v0.2.4** and atlas **v0.2.4**, on GitHub (2026-10-08, cut by the release flow on your three clicks; G). Your word, 2026-10-06:
-"0.2.3 will be when all pages are transferred over and the old dashboard is sidelined", true since 2026-10-07 (H16, done); then, 2026-10-08: "bump
-and tag 0.2.4 then 0.2.5 will be the full github integration release", and on your card the same day 0.2.3 is never used. Atlas's v0.2.4 release is
-a draft for you to publish (G); v0.2.0, v0.2.1 and v0.2.2 were published on your word (2026-10-06, 08:58), and v0.1.7 is still a draft.
-The next cut is **v0.2.5**, the full GitHub integration (I1). The road on to 0.3.0 is I.
+The last cut is core **v0.2.5** and atlas **v0.2.5**, on GitHub (2026-10-10, cut by the release flow v5 on your three clicks, its first real run; G),
+the full GitHub integration (I1, done). Your word, 2026-10-08: "bump and tag 0.2.4 then 0.2.5 will be the full github integration release", and on
+your card the same day 0.2.3 is never used; v0.2.4 was cut that day. Atlas's v0.2.4 and v0.2.5 releases were published on your word (2026-10-10, 10:00),
+v0.2.5 marked Latest; v0.2.0, v0.2.1 and v0.2.2 were published on your word (2026-10-06, 08:58), and v0.1.7 is still a draft.
+The next cut is **v0.2.6**, the optimization and flow pass (I2). The road on to 0.3.0 is I.
 
 
 ---
@@ -90,13 +90,17 @@ name at the door and at the engine's own push.
 
 - [x] 1. Every open pull request of I1 merged on GitHub on your clicks, oldest first (core 1 to 4, atlas 6 to 9), and both repositories on main and
   level with GitHub (core `c2836b2`, atlas `3ca7246`, 2026-10-10 09:16)
-- [ ] 2. Today's HANDOFF block, DAYBOOK's Session 27 and this list written (2026-10-10), to be saved with the cut at the second gate
-- [ ] 3. The flow's first gate (your click): the lines `release-v0.2.5`, the bump, the live check, the toll index, the suites and the release check
-- [ ] 4. Its second gate (your click): both saved on the line and sent, a pull request each merged on GitHub once its provers pass, main down here,
-  and GitHub read
-- [ ] 5. Its third gate (your click): both tags cut and sent, the record written on `record-v0.2.5`, saved, sent and merged the same way, and GitHub
-  read once more
-- [ ] 6. Publish atlas's v0.2.5 draft on GitHub, or drop it (yours, on GitHub); atlas's v0.2.4 draft waits the same way (v0.2.4's box 6)
+- [x] 2. Today's HANDOFF block, DAYBOOK's Session 27 and this list written (2026-10-10), saved with the cut at the second gate (core `d67d9f1`)
+- [x] 3. The flow's first gate (run `f-20261010-162719-64bb3771`, your click 09:27): the lines `release-v0.2.5`, the bump, the live check 9 of 9
+  (sitting 364, 09:30), the toll index, the suites 3748 of 3748 and 72 of 72 (09:34) and the release check, 17 of 17 with the mark not yet asked
+- [x] 4. Its second gate (your click 09:35): both saved on the line and sent (core `d67d9f1`, atlas `5ab8864`), a pull request each (core 5, atlas 10)
+  merged on GitHub once its provers passed (core `4503173`, atlas `144a425`, 09:41), main down here, and GitHub read: green on both
+- [x] 5. Its third gate (your click 09:46): both tags cut and sent (core `v0.2.5` on `4503173`, atlas on `144a425`), the record written on
+  `record-v0.2.5`, saved (core `e800aad`, atlas `315b6cb`), sent and merged the same way (core 6 and atlas 11: `c3177fc`, `687e386`, 09:53), and
+  GitHub read once more: both main lines and both tags green. The run's last read refused `status` alone (09:58: STATUS.md older than the record's
+  CHANGELOG), so the run ends FAIL; STATUS.md printed again after the cut, on your word *(CHANGELOG, "core: the record of the v0.2.5 cut")*
+- [x] 6. Publish atlas's v0.2.5 draft on GitHub, or drop it (yours, on GitHub); atlas's v0.2.4 draft waits the same way (v0.2.4's box 6): both
+  published 2026-10-10 at 10:00 on your word ("publish the atlas drafts, check th CI"), and GitHub marked v0.2.5 Latest
 
 The lists of the cuts before it, v0.2.4 back to v0.1.16, are finished and kept under Done (v0.2.2 and before moved 2026-10-09, every box that was
 still open post-scripted from the record of its day; v0.2.4 moved 2026-10-10, its box 6 carried into box 6 above).
@@ -214,7 +218,36 @@ will be a documentation pass for both repos. including making sure the changelog
 a packaging and deliverable pass"; "0.3.0 will be a full release packaged and ready for deployment." And: "you can add in steps for achieving these
 goals". The steps under each are proposed from the disk; each is yours to change before it is built.
 
-- **I1. v0.2.5: the full GitHub integration.** Found on the way to the first step and mended first, on your card ("Fix it first",
+- **I2. v0.2.6: an optimization and flow pass.** Every function working, and measured: every flow on the Workflows page fired to COMPLETE or retired
+  on your word (the release check names `coder`, `release` and `version-tag` as fired and never COMPLETE); the live check 9 of 9 and the review
+  panel inside its turn; the session test (R1) run again against its baseline (sitting 345, 9 faults) and its faults mended or ruled; the time each
+  route of the front page takes, measured against the session test's budgets, and the slowest made faster.
+- **I3. v0.2.7: both repositories keep what earlier versions promised.** Every OPEN line in SPEC section 4 met or ruled; every open line on this
+  page (B, E, H) built, ruled, or moved to a later version on your word; the found items in HANDOFF from 2026-10-05 on put on this page or ruled;
+  the wife test (E1) with her at the glass and nobody helping.
+- **I4. v0.2.8: a documentation pass, both repositories.** Both CHANGELOGs read against git, every save accounted for; both LICENSE files; the
+  dependencies reviewed and written down: the core's `pyproject.toml` (`ollama`, and `numpy` for the tests), atlas's `sbom.json` against
+  `Cargo.lock` and both `go.mod` files, the Python battery (standard library only) and Aider's own environment (`aider/venv`, outside both
+  repositories); the core's README, QUICKSTART, RUNBOOK, BUILDPATH, SPEC and SYSTEM_DESIGN, and atlas's README, DELIVERABLE, LAUNCH_PLAN, THE_ROAD,
+  ACCEPTANCE, SECURITY and STATE_OF_BUILD, each read against the disk; HANDOFF's own header, which still names `tests/test_chainkit.py`.
+- **I5. v0.2.9: packaging and the deliverable.** The Settings page set up for every API integration: each hosted route's state shown (on or off,
+  never the key), its key placed by you in `.env` (RULE 4, amended; RULE 7); the local Ollama models set up: the models the seats name, pulled and
+  checked by the rack's own report; the rack checked: what is loaded, what fits the card, what no seat names; a first run on a machine that has none
+  of this, written down step by step (Ollama, the models, the door and the glass started, the PIN set); what ships, from atlas's release workflow
+  (its binaries) and the core's `pyproject.toml`, against DELIVERABLE.md; what sits loose at the core's root and ships with nothing
+  (`atlas.bundle`, `atlas-mcp.exe`, `chain_original.py.bak`); a backup for the record (named 2026-09-23: it exists once, on one disk).
+- **I6. v0.3.0: a full release, packaged and ready to deploy.** I1 to I5 done or ruled; the release installed on a clean machine from the release
+  alone, following only its documents; the release check green with the live check and the review panel; both repositories' releases published by you.
+
+---
+
+## Done
+
+Finished lines, newest first. A number is never used again.
+
+- **I1. v0.2.5: the full GitHub integration.** DONE 2026-10-10: cut as v0.2.5 by the release flow v5, its first real run, on your three clicks
+  (core on `4503173`, atlas on `144a425`), every box of G ticked, and its record written after it on your word ("do the follow-up, reprint STATUS and
+  record the cut"). The line as it stood: found on the way to the first step and mended first, on your card ("Fix it first",
   2026-10-08): an approved hold runs in the world it was held for; it had run in the world of the glass that answered it, so the council's
   call held for atlas opened its line in the core. *(atlas CHANGELOG, "An approved hold runs in the world it was held for")* Then, in order:
   (1) Approve cards that stay in view, in since 2026-10-08, placed on your card, and on atlas's main line since your word ("merge it", pull
@@ -260,33 +293,6 @@ goals". The steps under each are proposed from the disk; each is yours to change
   plus a DAYBOOK entry"; your word: "what is left for this to be finalized under the tags and versions? that was the plan, and we have begun
   rabbit-holing"): every open pull request of I1 merged on GitHub on your clicks (core 1 to 4, atlas 6 to 9) and both repositories on main, then
   v0.2.5 cut by the release flow v5, its first real run, on your three clicks; the checklist is G. *(CHANGELOG, "core: the docs call the glass's page GitHub")*
-- **I2. v0.2.6: an optimization and flow pass.** Every function working, and measured: every flow on the Workflows page fired to COMPLETE or retired
-  on your word (the release check names `coder`, `release` and `version-tag` as fired and never COMPLETE); the live check 9 of 9 and the review
-  panel inside its turn; the session test (R1) run again against its baseline (sitting 345, 9 faults) and its faults mended or ruled; the time each
-  route of the front page takes, measured against the session test's budgets, and the slowest made faster.
-- **I3. v0.2.7: both repositories keep what earlier versions promised.** Every OPEN line in SPEC section 4 met or ruled; every open line on this
-  page (B, E, H) built, ruled, or moved to a later version on your word; the found items in HANDOFF from 2026-10-05 on put on this page or ruled;
-  the wife test (E1) with her at the glass and nobody helping.
-- **I4. v0.2.8: a documentation pass, both repositories.** Both CHANGELOGs read against git, every save accounted for; both LICENSE files; the
-  dependencies reviewed and written down: the core's `pyproject.toml` (`ollama`, and `numpy` for the tests), atlas's `sbom.json` against
-  `Cargo.lock` and both `go.mod` files, the Python battery (standard library only) and Aider's own environment (`aider/venv`, outside both
-  repositories); the core's README, QUICKSTART, RUNBOOK, BUILDPATH, SPEC and SYSTEM_DESIGN, and atlas's README, DELIVERABLE, LAUNCH_PLAN, THE_ROAD,
-  ACCEPTANCE, SECURITY and STATE_OF_BUILD, each read against the disk; HANDOFF's own header, which still names `tests/test_chainkit.py`.
-- **I5. v0.2.9: packaging and the deliverable.** The Settings page set up for every API integration: each hosted route's state shown (on or off,
-  never the key), its key placed by you in `.env` (RULE 4, amended; RULE 7); the local Ollama models set up: the models the seats name, pulled and
-  checked by the rack's own report; the rack checked: what is loaded, what fits the card, what no seat names; a first run on a machine that has none
-  of this, written down step by step (Ollama, the models, the door and the glass started, the PIN set); what ships, from atlas's release workflow
-  (its binaries) and the core's `pyproject.toml`, against DELIVERABLE.md; what sits loose at the core's root and ships with nothing
-  (`atlas.bundle`, `atlas-mcp.exe`, `chain_original.py.bak`); a backup for the record (named 2026-09-23: it exists once, on one disk).
-- **I6. v0.3.0: a full release, packaged and ready to deploy.** I1 to I5 done or ruled; the release installed on a clean machine from the release
-  alone, following only its documents; the release check green with the live check and the review panel; both repositories' releases published by you.
-
----
-
-## Done
-
-Finished lines, newest first. A number is never used again.
-
 - **H16. The move onto the front page.** DONE 2026-10-07: your word, "go, next: retire the sidebar and the old dashboard", the last step of your
   design pass of 2026-10-06. Every tab the pass laid out is in the Inspector (Workflows, Audit Ledger, Registry & Docs, Settings, Guardrails and
   Aider Pair on 2026-10-06, Run on 2026-10-07), and the sidebar and the old Dashboard are retired: every page is one list that the front page's
