@@ -515,6 +515,39 @@ sent by name (SPEC 8.2 carries the same, under its themes):
                                 stroke holds the name; on a runner the
                                 release gate leaves `remotes` to the
                                 terminal
+           v0.2.5   2026-10-10  the council's push takes the pull request
+                                road too -- the engine's own push refuses a
+                                send of a main origin has, by name, in the
+                                door's own words; a main on GitHub takes a
+                                pull request and nothing else -- Land onto
+                                main and the Send of main refused by the
+                                door and greyed on the GitHub tab, where
+                                origin has the main line; a line is proved
+                                once, by its pull request, and an action
+                                from outside GitHub's own is named by its
+                                commit; the release gate's `workflows` check
+                                holds both; main takes a change only through
+                                a pull request whose provers are green, in
+                                both repositories, and the release flow
+                                lands its cut and its record that way; Merge
+                                on GitHub, live only when every check on a
+                                pull request has passed, and the new main
+                                brought down to this machine; Send to GitHub
+                                on a line of work that has never been sent,
+                                and the GitHub tab's words for it; the
+                                versions cut and never tagged are marked
+                                after the fact, each on the commit that cut
+                                its number -- core v0.1.6 and v0.1.10, atlas
+                                v0.1.2, v0.1.3 and v0.1.4; the release
+                                checklists of v0.1.16 to v0.2.2 post-
+                                scripted from the record of their days and
+                                moved under Done; the code calls the pages
+                                what the glass calls them -- the tree doors'
+                                refusal, a comment and a report name the
+                                GitHub tab, and a stroke holds it;
+                                BUILDPATH's ladders are history, so the docs
+                                stroke leaves them alone, and main is green
+                                again after the v0.2.4 cut
     atlas  v0.1.6   2026-09-18  THE DOOR'S OWN QUARTER ("atlas needs its own
                                 number too")
            v0.1.7   2026-09-23  EVERY PIN IN STEP
@@ -575,6 +608,34 @@ sent by name (SPEC 8.2 carries the same, under its themes):
                                 an empty box and a second press, the door
                                 refuses a fire while a run is moving, and a
                                 refusal reaches the page in words
+           v0.2.5   2026-10-10  A main on GitHub takes a pull request and
+                                nothing else: Land onto main and the Send of
+                                main refused by the door and greyed on the
+                                GitHub tab, where origin has the main line;
+                                The provers themselves: release.yml's
+                                outside action named by its commit, and a
+                                line proved once, by its pull request; The
+                                release flow's merge: `git_pr merge` by the
+                                line it opened, and waiting for green; Merge
+                                on GitHub: a pull request merged there as a
+                                merge commit, live only when every check on
+                                it has passed, and the new main brought down
+                                here; Send to GitHub on a line of work that
+                                has never been sent, and the GitHub tab's
+                                words for it; Three versions cut and never
+                                tagged are marked after the fact: v0.1.2,
+                                v0.1.3 and v0.1.4, each on the commit that
+                                cut its number; The door calls the pages
+                                what the glass calls them: Aider's refusal
+                                and a parked call's answer name the GitHub
+                                tab, and `file_edit`'s held note the card at
+                                the foot of the terminal; Approve cards stay
+                                in view: every card that waits for his hand
+                                is pinned at the foot of the terminal, in
+                                every tab, and Guardrails is Laws; An
+                                approved hold runs in the world it was held
+                                for: a council's call held for atlas,
+                                approved from the glass, had run in the core
 
 THE MARKS AS GIT HOLDS THEM, read 2026-09-30. The rewrite of 2026-09-21 moved
 every mark that stood before it (CHANGELOG's headings say "on <sha> since"),
@@ -584,11 +645,11 @@ so the 2026-09-17 list above is history (LAW 1) and this is where they sit:
            v0.1.12 084fe33    v0.1.13 4e04378    v0.1.14 de2420e
            v0.1.15 af50522    v0.1.16 e8aa9b5    v0.2.0  f232dd6    v0.2.1  9ce3b74
            v0.2.2  156284a    v0.2.4  2230e7d
-           v0.1.6  2f84bca    v0.1.10 e06c932
+           v0.1.6  2f84bca    v0.1.10 e06c932    v0.2.5  4503173
     atlas  v0.1.5  3dacdbc    v0.1.6  0c65afc    v0.1.7  063a152
            v0.1.8  56a3078    v0.1.9  b1059a1    v0.2.0  e2db417    v0.2.1  5c6beeb
            v0.2.2  acdceb6    v0.2.4  af92401
-           v0.1.2  0586228    v0.1.3  7688c04    v0.1.4  467e94c
+           v0.1.2  0586228    v0.1.3  7688c04    v0.1.4  467e94c    v0.2.5  144a425
 
 The last row of each side was marked on 2026-10-09, after the fact (his word: "post-script the versions that didnt get any tags or info ... tag them with what happened that day"): versions
 cut and never tagged, each marked on the commit that cut its number, with every pin there agreeing and its

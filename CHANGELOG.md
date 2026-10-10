@@ -34,7 +34,7 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
-## v0.2.5 — 2026-10-10 09:27
+## v0.2.5 — 2026-10-10 09:27 (tag on 4503173)
 
 ### core: the council's push takes the pull request road too -- the engine's own push refuses a send of a main origin has, by name, in the door's own words (2026-10-09, WHAT'S LEFT I1's eighth step; his card: "Council's push, by name")
 
