@@ -238,7 +238,11 @@ goals". The steps under each are proposed from the disk; each is yours to change
   on a real pull request (the first will be this piece's own, once it is sent) *(CHANGELOG, "atlas: Merge on GitHub")*
   *(atlas CHANGELOG, "Merge on GitHub")*; (5) main protected in both repositories: a pull request
   and green provers to change it (the core's four `prove` legs, atlas's battery), and the release flow taught to land its record through it (your
-  card: "Stage it"; force-pushes and deletion are blocked on both since 2026-10-08); (6) the provers themselves: atlas's `release.yml` pins its
+  card: "Stage it"; force-pushes and deletion are blocked on both since 2026-10-08), in since 2026-10-09: the rule is on in both rulesets, binding
+  you too with no bypass (your card: "Everyone, me too"), and the release flow is v5, landing the cut and its record each through a pull request
+  merged inside its gates (your card: "Inside its gates"), the door's merge taught to take a line and to wait for green; not yet run through a
+  real cut (the first will be v0.2.5) *(CHANGELOG, "core: main takes a change only through a pull request")*
+  *(atlas CHANGELOG, "The release flow's merge")*; (6) the provers themselves: atlas's `release.yml` pins its
   outside action to an exact commit, and a sent line's provers run once rather than twice. *(CHANGELOG, "core: the docs call the glass's page GitHub")*
 - **I2. v0.2.6: an optimization and flow pass.** Every function working, and measured: every flow on the Workflows page fired to COMPLETE or retired
   on your word (the release check names `coder`, `release` and `version-tag` as fired and never COMPLETE); the live check 9 of 9 and the review

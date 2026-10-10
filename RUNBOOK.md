@@ -317,6 +317,8 @@ It does five things and reports what each one said:
 
 It refuses rather than guesses: no message, a red proof, nothing to commit, the
 wall shut, not a repository -- each names itself and stops. Nothing half-runs.
+On the main line GitHub refuses its push since 2026-10-09: main takes nothing
+but a pull request whose checks have passed.
 
 **Before you start, and before you tag.** Two read-only reports answer the two
 questions that used to mean opening six files in order. Neither writes
@@ -371,8 +373,10 @@ merging it back is yours, from the GitHub tab (since 2026-10-09): save the line
 and send it, open a pull request under Pull requests, and once every check on
 it has passed, Merge on GitHub merges it there as a merge commit and brings the
 new main line down to this machine. Until then the tab had no merge button and
-the door no such verb, so it was your terminal's; Land onto main, fast-forward,
-still lands a line without a pull request. The name must be exact and on the map (`help`
+the door no such verb, so it was your terminal's. Since the same day main takes
+nothing else, in either repository: GitHub refuses a send to main that did not
+come through a pull request whose checks have passed, yours included, so Land
+onto main, fast-forward, lands a line here and goes no further. The name must be exact and on the map (`help`
 is not `helper`); a bare `.py` is the workspace, not the ground. A DOCUMENT IS
 ASKED BY HEADING (2026-09-29), a root document by its bare name:
 
@@ -798,9 +802,11 @@ cut -- by you (RULE 6).
 **AND THE MARK ITSELF (2026-09-17).** One mark per version,
 `vMAJOR.MINOR.PATCH`, cut on the main line after the gate and sent BY NAME
 from the GitHub tab -- never `git push --tags`, which sends every mark this
-machine holds. Send the main line first: the door refuses to send a mark whose
-commit origin's main line does not already carry, and refuses to cut one
-anywhere but the main line. The panel asks the door before it offers anything,
+machine holds. Land the main line on GitHub first -- since 2026-10-09 only
+through a pull request merged there once its checks have passed, which the
+release flow (v5) does for a cut and for its record: the door refuses to send a
+mark whose commit origin's main line does not already carry, and refuses to cut
+one anywhere but the main line. The panel asks the door before it offers anything,
 so a mark that may not go is greyed with the reason under it rather than after
 the click. The seven steps are in BUILDPATH, "The marks, and how one is cut".
 
