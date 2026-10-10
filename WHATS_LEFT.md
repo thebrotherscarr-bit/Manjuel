@@ -56,9 +56,12 @@ Nothing here gets built until you say which way.
 - **D17. The pages that copy an Inspector tab still stand as pages of their own.** Your word, 2026-10-10, after the hand drove the pane to
   the standalone Workflows page for a check and you had to leave it to answer the cards parked on the terminal's tabs: "that shit should be
   retired, everything stays within the new interface, as previously judged." On your cards the same day: every standalone page that has a tab
-  in the Inspector is retired into that tab, its address opening the front page with that tab open (Workflows, Laws, GitHub at `/flows`,
-  Settings), and the five with no tab (Watchboard, Agents, Evals, Records, Tools) are put to you one by one; a piece of its own, after the
-  record of the retired flows. *(your words in chat, 2026-10-10; CHANGELOG, "core: the release check names a retired flow retired")*
+  in the Inspector is retired into that tab, its address opening the front page with that tab open, and the five with no tab (Watchboard,
+  Agents, Evals, Records, Tools) are put to you one by one. The four with a tab are retired, built the same day on your cards ("Plan as
+  written", "Keep them, opening the tab", "Remove what nothing reads"): Workflows, Laws, GitHub at `/flows` and Settings stay on the Pages
+  menu and the palette, each opening the front page with its tab open, and what only those pages drew is gone. Still open: the five, each put
+  to you, and What's left (`/left`), which has no tab either and was left out of the five: on your card the same day ("Yes, six pages") it
+  is put to you with them. *(your words in chat, 2026-10-10)* *(CHANGELOG, "atlas: the pages with a tab open their tab")*
 
 ---
 
@@ -209,7 +212,7 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   `manjuel/boot.py`)*
 - **H13. Claude in the loop.** Your idea (10-02): a reasoning, planning and review agent beside the council.
   Two shapes, and the first needs nothing built: the door already lets an outside agent connect, with reads
-  free and every write held for your decision on its card at the foot of the front page's terminal (or on the GitHub page), so Claude can be in the loop today through
+  free and every write held for your decision on its card at the foot of the front page's terminal, so Claude can be in the loop today through
   it (it needs a key minted for that connection). The second is the system calling Claude: the hosted route
   above, used by a counsel seat that reads, advises and never acts. That one waits on H8 and your word, seat
   by seat. *(RUNBOOK, "`--auth` and the service wire"; B18)*
