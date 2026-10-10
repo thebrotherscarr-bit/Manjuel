@@ -80,25 +80,26 @@ Nothing here gets built until you say which way.
 
 ## G. The release checklist, in order
 
-v0.2.4, on your word of 2026-10-08 ("bump and tag 0.2.4"; on your card the same day, 0.2.3 is never used): cut by the release flow (H27),
-whose first gate sets the version numbers: version numbers set (0.2.4 and 0.2.4) by the flow's bump, then the live check and the suites after it.
-What it carries since v0.2.2: every page on the front page (H16), the front page as the window and `Agent.drive`, the door's `file_edit`, pull
-requests through the glass, the GitHub tab, and the docs calling it so.
+v0.2.5, the full GitHub integration (I1), on your word of 2026-10-08 ("0.2.5 will be the full github integration release") and your card of 2026-10-10
+(I1's ninth step is the cut, "Prep, plus a DAYBOOK entry"): cut by the release flow v5 (H27), its first real run, whose first gate sets the version
+numbers: version numbers set (0.2.5 and 0.2.5) by the flow's bump, then the live check and the suites after it. Since v5 the flow opens a line of
+work, `release-v0.2.5`, in each repository and lands the cut, then its record, each through a pull request merged on GitHub inside its gates.
+What it carries since v0.2.4: I1's steps, every card that waits for your hand pinned in the dock (Guardrails is Laws), the old page names out of
+the code, Send on a line never sent, Merge on GitHub, main protected in both repositories, the provers run once, and a main on GitHub refused by
+name at the door and at the engine's own push.
 
-- [x] 1. Atlas's `github-tab` line landed onto main here (your card: "Land it here, all buttons", since no button sends a never-sent line until
-  v0.2.5): your Land onto main at 10:46, a fast-forward to `66f1b8e`, the GitHub tab; GitHub gets it at the second gate
-- [x] 2. Today's HANDOFF block written (10:44) and saved with the cut (`2230e7d`); the release check read it: "HANDOFF FOR 2026-10-08"
-- [x] 3. The flow's first gate (run `f-20261008-175101-58aeb2db`, your click 10:51): the bump, the live check 9 of 9 (sitting 359, 10:56), the toll
-  index, the suites 3730 of 3730 and 72 of 72 (10:59), and the release check: every line ok but `remotes` and `ci`, which waited on the send
-- [x] 4. Its second gate (your click 11:01): both saved and sent (core `2230e7d`, atlas `af92401`), GitHub green on both and the release check 17 of 17
-  (11:07)
-- [x] 5. Its third gate (your click 11:07): both tags cut and sent (core `v0.2.4` on `2230e7d`, atlas on `af92401`), the record written, saved and sent
-  (core `07a0efe`, atlas `6891fcd`), and GitHub read once more: the tags' own runs green; the core's record save red, from the docs stroke reading
-  BUILDPATH's ladder, mended on your card ("Fix it now") and saved after it
-- [ ] 6. Publish atlas's v0.2.4 draft on GitHub, or drop it (yours, on GitHub)
+- [x] 1. Every open pull request of I1 merged on GitHub on your clicks, oldest first (core 1 to 4, atlas 6 to 9), and both repositories on main and
+  level with GitHub (core `c2836b2`, atlas `3ca7246`, 2026-10-10 09:16)
+- [ ] 2. Today's HANDOFF block, DAYBOOK's Session 27 and this list written (2026-10-10), to be saved with the cut at the second gate
+- [ ] 3. The flow's first gate (your click): the lines `release-v0.2.5`, the bump, the live check, the toll index, the suites and the release check
+- [ ] 4. Its second gate (your click): both saved on the line and sent, a pull request each merged on GitHub once its provers pass, main down here,
+  and GitHub read
+- [ ] 5. Its third gate (your click): both tags cut and sent, the record written on `record-v0.2.5`, saved, sent and merged the same way, and GitHub
+  read once more
+- [ ] 6. Publish atlas's v0.2.5 draft on GitHub, or drop it (yours, on GitHub); atlas's v0.2.4 draft waits the same way (v0.2.4's box 6)
 
-The lists of the cuts before it, v0.2.2 back to v0.1.16, are finished and kept under Done (moved 2026-10-09, every box that was
-still open post-scripted from the record of its day).
+The lists of the cuts before it, v0.2.4 back to v0.1.16, are finished and kept under Done (v0.2.2 and before moved 2026-10-09, every box that was
+still open post-scripted from the record of its day; v0.2.4 moved 2026-10-10, its box 6 carried into box 6 above).
 
 ---
 
@@ -255,7 +256,10 @@ goals". The steps under each are proposed from the disk; each is yours to change
   the same, in since 2026-10-09 (your card: "Council's push, by name"): the engine's push (the `git_push` skill, `git_cycle` after its commit,
   the REPL's `/git push`) refuses a send of a main origin has, by name and in the door's own words, before anything leaves, and sends a line of
   work and a main origin has never had as before; it reaches the engine at its next Boot
-  *(CHANGELOG, "core: the council's push takes the pull request road too")*. *(CHANGELOG, "core: the docs call the glass's page GitHub")*
+  *(CHANGELOG, "core: the council's push takes the pull request road too")*; (9) the cut itself, and nothing else, on your card of 2026-10-10 ("Prep,
+  plus a DAYBOOK entry"; your word: "what is left for this to be finalized under the tags and versions? that was the plan, and we have begun
+  rabbit-holing"): every open pull request of I1 merged on GitHub on your clicks (core 1 to 4, atlas 6 to 9) and both repositories on main, then
+  v0.2.5 cut by the release flow v5, its first real run, on your three clicks; the checklist is G. *(CHANGELOG, "core: the docs call the glass's page GitHub")*
 - **I2. v0.2.6: an optimization and flow pass.** Every function working, and measured: every flow on the Workflows page fired to COMPLETE or retired
   on your word (the release check names `coder`, `release` and `version-tag` as fired and never COMPLETE); the live check 9 of 9 and the review
   panel inside its turn; the session test (R1) run again against its baseline (sitting 345, 9 faults) and its faults mended or ruled; the time each
@@ -701,11 +705,29 @@ Finished lines, newest first. A number is never used again.
   "OVER by ~0.5GB", and every size says whether it is on disk or in memory. The TASKS box is
   yours to tick (F7). *(CHANGELOG)*
 
-### The release checklists of the cuts before v0.2.4
+### The release checklists of the cuts before v0.2.5
 
 Moved here from G on 2026-10-09 (your word: "post-script the versions that didnt get any tags or info ... and then get them off our list of tasks"),
 every box ticked; the ones left open are post-scripted from the record of their day: the door's hold record, git, GitHub's runs (read 2026-10-09),
-HANDOFF's blocks for 2026-10-05 and 2026-10-06, and STATUS.md as it was printed at 14:25 on 2026-10-05.
+HANDOFF's blocks for 2026-10-05 and 2026-10-06, and STATUS.md as it was printed at 14:25 on 2026-10-05. v0.2.4's list followed on 2026-10-10, when
+v0.2.5's took its place in G; its one open box, atlas's v0.2.4 draft, is carried into v0.2.5's list (box 6).
+
+v0.2.4, on your word of 2026-10-08 ("bump and tag 0.2.4"; on your card the same day, 0.2.3 is never used): cut by the release flow (H27),
+whose first gate sets the version numbers: version numbers set (0.2.4 and 0.2.4) by the flow's bump, then the live check and the suites after it.
+What it carries since v0.2.2: every page on the front page (H16), the front page as the window and `Agent.drive`, the door's `file_edit`, pull
+requests through the glass, the GitHub tab, and the docs calling it so.
+
+- [x] 1. Atlas's `github-tab` line landed onto main here (your card: "Land it here, all buttons", since no button sends a never-sent line until
+  v0.2.5): your Land onto main at 10:46, a fast-forward to `66f1b8e`, the GitHub tab; GitHub gets it at the second gate
+- [x] 2. Today's HANDOFF block written (10:44) and saved with the cut (`2230e7d`); the release check read it: "HANDOFF FOR 2026-10-08"
+- [x] 3. The flow's first gate (run `f-20261008-175101-58aeb2db`, your click 10:51): the bump, the live check 9 of 9 (sitting 359, 10:56), the toll
+  index, the suites 3730 of 3730 and 72 of 72 (10:59), and the release check: every line ok but `remotes` and `ci`, which waited on the send
+- [x] 4. Its second gate (your click 11:01): both saved and sent (core `2230e7d`, atlas `af92401`), GitHub green on both and the release check 17 of 17
+  (11:07)
+- [x] 5. Its third gate (your click 11:07): both tags cut and sent (core `v0.2.4` on `2230e7d`, atlas on `af92401`), the record written, saved and sent
+  (core `07a0efe`, atlas `6891fcd`), and GitHub read once more: the tags' own runs green; the core's record save red, from the docs stroke reading
+  BUILDPATH's ladder, mended on your card ("Fix it now") and saved after it
+- [ ] 6. Publish atlas's v0.2.4 draft on GitHub, or drop it (yours, on GitHub): not yet, carried into v0.2.5's list (box 6)
 
 v0.2.2, on your word of 2026-10-05 (your card: "Fire it for v0.2.2"): the release as one workflow (H27), cut by that workflow itself. Its first
 step does what this list did by hand: version numbers set (0.2.2 and 0.2.2) by the flow's bump, then the live check and the suites after it.

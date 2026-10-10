@@ -3200,3 +3200,21 @@ pins at 0.2.0 in both repositories. The release check, the save, the send and th
 **At close** — (22:45) No sitting open (352 closed 21:34:46, tolled). Live check 9 of 9 (sitting 352); suites 3722 of 3722 and 72 of 72 (22:23); the release gate as the tag job runs it, 11 of 11; GitHub's `prove` on `e56e3f9` green on all four legs. v0.2.2 on GitHub in both repositories; its core tag's release-gate red, on the tag's own code.
 
 **Next session** — read HANDOFF's 2026-10-05 block and both its annotations first. Atlas's drafts and B22 are his; the `Fire it` hole if he names it; then H19.
+
+## Session 27 — 2026-10-06 (Tuesday) to 2026-10-10 (Saturday), sittings 353 to 363 from his glass: the front page, v0.2.4, and the full GitHub integration up to its cut
+
+**Standing** — the same conversation, carried across context resets; the laws re-read through the glass at each of his messages. Everything runs on his glass, every write on his card, a publish only on his word in chat; since 2026-10-09 main changes in both repositories only through a pull request whose checks have passed, him included. HANDOFF's blocks for 10-06, 10-07, 10-08 and 10-10 carry the days whole.
+
+**Version** — at open: core `main@e56e3f9`, atlas `main@605ab80` (v0.2.2). Cut on the way: v0.2.4 on 2026-10-08 by the release flow on his three clicks (core on `2230e7d`, atlas on `af92401`; 0.2.3 never used, his card). At close: core `main@c2836b2`, atlas `main@3ca7246`, level with GitHub, the pins at 0.2.4; this entry, HANDOFF's 10-10 block and WHAT'S LEFT unsaved, to be saved with the v0.2.5 cut.
+
+**The plan** — his, in order: the move onto the front page one Inspector tab at a time, then the sidebar retired (H16); `file_edit` in the door; pull requests through the glass; the GitHub tab; "bump and tag 0.2.4 then 0.2.5 will be the full github integration release"; the road to 0.3.0 (WHAT'S LEFT I); I1 one step at a time ("save and send, then go on to I1 step N"); and on 10-10 "what is left for this to be finalized under the tags and versions? ... we have begun rabbit-holing": step 9 is the cut of v0.2.5 and nothing else.
+
+**What was done** — 10-06 and 10-07: every page moved into the front page's Inspector and the sidebar and the old Dashboard retired (H16); the front page as the window and `Agent.drive`; `file_edit` in the door, written by Aider on his word; pull requests through the glass. 10-08: the GitHub tab; v0.2.4; I1's first piece (an approved hold runs in its own world) and step 1 (every waiting card pinned in the dock, Guardrails become Laws). 10-09: I1 steps 2 to 8 (the old page names out of the code; Send on a line never sent; Merge on GitHub; main protected and the release flow v5; the provers run once; a main on GitHub refused by name at the door, then at the engine's own push), and the versions never tagged marked after the fact. 10-10: every I1 pull request merged on his clicks (core 1 to 4, atlas 6 to 9) and both repositories on main.
+
+**Rulings** — his words and cards, as HANDOFF quotes them: 0.2.3 never used; the road to 0.3.0 (0.2.5 GitHub, 0.2.6 the optimization and flow pass, 0.2.7 earlier promises kept, 0.2.8 documentation, 0.2.9 packaging, 0.3.0 the release); the door's founding no-merge law superseded on his word ("we have to be able to merge"), a merge commit each time; main protected for everyone, him too; the release flow merges inside its gates; step 9 is the cut, prep plus this entry.
+
+**Faults of the hand's, in the record** — HANDOFF's blocks for 10-07, 10-08 and 10-10 carry them, (17) to (44): among them the Python tab's translator, stopped on his word; a main line closed by "finish with"; cards in one file parked together, so the lower refused; and a door merge put to him as a card that ran without one.
+
+**At close** — (09:22, 2026-10-10) No sitting open (363 closed 2026-10-08 14:14:44; none since). The door (pid 18656) and the glass (pid 1840) are I1 step 7's builds. Suites from his glass 3748 of 3748 and 72 of 72 (2026-10-09 18:21). Both repositories on main and level with GitHub, no pull request open.
+
+**Next session** — the cut: he fires the release flow with `v0.2.5` and clicks its three gates (v5's first real run, landing through pull requests); then atlas's v0.2.5 and v0.2.4 drafts, his to publish; then I2, v0.2.6, the optimization and flow pass. B22 and E1 stay his.

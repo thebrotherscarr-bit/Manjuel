@@ -34,6 +34,8 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+## v0.2.5 — 2026-10-10 09:27
+
 ### core: the council's push takes the pull request road too -- the engine's own push refuses a send of a main origin has, by name, in the door's own words (2026-10-09, WHAT'S LEFT I1's eighth step; his card: "Council's push, by name")
 
 His word, 2026-10-09: "save and send, then go on to I1 step 8". I1 had seven steps, so the eighth was put to him, and he chose it on his card ("Council's push, by name"): what the seventh step's entry named and did not fix. The council's own push goes through `manjuel/gitstate.py`, not the door, so a bare `git push` from a main GitHub has left GitHub to refuse it, in GitHub's words. Now `gitstate.push` asks first. `main_by_pull_request(ground, branch)` asks, for `main` or `master` only, whether this ground already holds `refs/remotes/origin/<branch>` -- reads only, nothing is fetched -- and where it does, the push is refused before anything leaves, in the door's own sentence (atlas `gitctl.go`, `mainByPullRequest`): do the work on a line of work, send that line, open a pull request from it (Pull requests, on the GitHub tab), and once its checks pass Merge on GitHub merges it there and brings the new main down. A line of work is sent as it always was, and so is a main origin has never had: that is the first send of a new repository. Every road to the push says it: the `git_push` skill answers `Refused:` and the sentence, `git_cycle` commits and then says "NOT PUSHED" with it, as it says any refused push, and the REPL's `/git push` prints it as a refusal after its confirm.
