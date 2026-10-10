@@ -17410,6 +17410,61 @@ def test_the_release_steps_move_the_record_as_one(reg, lib, book):
     check("the wait on GitHub asks again while a run goes, at the commit it was given, and stops when it is done",
           c.ok and c.ran and asked == ["v9.9.9", "slept", "v9.9.9"], str(asked))
 
+    # ---- THE PAGE AFTER THE RECORD (2026-10-10, his card: "the record step reprints STATUS") ----
+    # v0.2.5's run ended FAIL at its last read on `status` alone: `check` printed STATUS.md at the
+    # first gate and `record` wrote CHANGELOG at the third, so the page was older than the record it
+    # reads at every cut, by construction. Held on a repository built here, with the page's printer
+    # stood in for: tests/status.py prints the real ground's page, never a temp one.
+    if not HAVE_GIT:
+        return                    # reported once, in main(); never a crash
+    import subprocess as _sp
+    g = Path(tempfile.mkdtemp())
+    (g / "CHANGELOG.md").write_text("# Changelog\n\n## Unreleased\n\n## v9.9.9 — 2026-10-10 09:27\n\n"
+                                    "### core: the thing\n\nbody\n", encoding="utf-8")
+    (g / "BUILDPATH.md").write_text(plan, encoding="utf-8")
+    for args in (["init", "-q"], ["config", "user.email", "t@t"], ["config", "user.name", "t"],
+                 ["checkout", "-q", "-b", "main"]):
+        _sp.run(["git", *args], cwd=g, capture_output=True, stdin=_sp.DEVNULL)
+    gitstate.commit(g, "the ground")
+    _sp.run(["git", "tag", "v9.9.9"], cwd=g, capture_output=True, stdin=_sp.DEVNULL)
+    printed: list = []
+
+    def page(root, run=None):
+        printed.append(Path(root))
+        (Path(root) / "STATUS.md").write_text(f"# STATUS\n\n{_cut.release.STATUS_MARK}\n", encoding="utf-8")
+        return True, "wrote STATUS.md"
+
+    page(g)                                     # the page as the first gate printed it
+    printed.clear()
+    then = time.time() - 60
+    os.utime(g / "STATUS.md", (then, then))
+    real = getattr(_cut, "print_status", None)
+    _cut.print_status = page
+    try:
+        said = _cut.record(g, "v9.9.9")
+        check("the record step prints STATUS.md again once the record it wrote is newer than the page",
+              printed == [g] and "STATUS.md: printed again, after the record it reads" in said, f"{printed} {said}")
+        check("   so the gate's own reader passes the page the record's save carries",
+              _cut.release.status(g).ok, _cut.release.status(g).why)
+        printed.clear()
+        again = _cut.record(g, "v9.9.9")
+        check("   and a record run again over a page already newer prints nothing, and says so",
+              not printed and "STATUS.md: already printed after the record it reads" in again, f"{printed} {again}")
+        os.utime(g / "STATUS.md", (then, then))
+        _cut.print_status = lambda root, run=None: (False, "STATUS.md could not be printed: the page would not print")
+        try:
+            _cut.record(g, "v9.9.9")
+            refused = ""
+        except _cut.Refused as exc:
+            refused = str(exc)
+        check("   and a page that cannot be printed refuses the step by name, never a quiet pass",
+              "could not be printed" in refused and "would not print" in refused, refused)
+    finally:
+        if real is None:
+            del _cut.print_status
+        else:
+            _cut.print_status = real
+
 
 def test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book):
     """THE LIST HAS A WIRE (WHAT'S LEFT D15, 2026-09-30). WHATS_LEFT.md is kept

@@ -18,7 +18,10 @@ The release flow (flows/release.json) runs these through the door's
                                         it is cut, then the gate: every line ok
     python tests/cut.py record vX.Y.Z   where the marks sit: "(tag on <sha>)" on
                                         both headings, and the mark on BUILDPATH's
-                                        ladder and its list of the marks, by side
+                                        ladder and its list of the marks, by side;
+                                        then STATUS.md printed again when the gate
+                                        says the record left it older than what it
+                                        reads, so the record's save carries it
 
 Every step can be run again: a ground already where a step leaves it is said
 so and left alone, so a release that stopped is fired again from the start.
@@ -140,13 +143,22 @@ def index(root: Path, run=subprocess.run) -> tuple[bool, str]:
     return q.returncode == 0, (q.stdout + q.stderr).strip()
 
 
-def check(root: Path, mark: str, run=subprocess.run) -> tuple[bool, str]:
-    """STATUS.md printed, then the gate for the mark: every line ok but the two
-    that wait on the send."""
+def print_status(root: Path, run=subprocess.run) -> tuple[bool, str]:
+    """STATUS.md printed by tests/status.py: before the gate in `check`, and again
+    in `record` when the record it wrote left the page older than what it reads."""
     q = run([sys.executable, str(root / "tests" / "status.py")], cwd=str(root),
             capture_output=True, text=True, timeout=900, stdin=subprocess.DEVNULL)
     if q.returncode != 0:
         return False, "STATUS.md could not be printed: " + (q.stdout + q.stderr).strip()[-600:]
+    return True, (q.stdout or "").strip()
+
+
+def check(root: Path, mark: str, run=subprocess.run) -> tuple[bool, str]:
+    """STATUS.md printed, then the gate for the mark: every line ok but the two
+    that wait on the send."""
+    ok, why = print_status(root, run)
+    if not ok:
+        return False, why
     results = release.checks(root, cutting=mark)
     bad = [c.name for c in results if c.ran and not c.ok]
     hard = [n for n in bad if n not in SENT_LATE]
@@ -301,7 +313,12 @@ def heading_day(text: str, head: str) -> str:
 
 
 def record(root: Path, mark: str) -> list[str]:
-    """Where the marks sit, written into the record: both headings and BUILDPATH."""
+    """Where the marks sit, written into the record: both headings and BUILDPATH
+    -- and STATUS.md printed again after them when the gate's own reader says the
+    page is now older than the record it reads, so the record's save carries a
+    page the flow's last read passes. `check` printed it at the first gate and this
+    step writes CHANGELOG after it: v0.2.5's run ended FAIL on `status` alone for
+    that (2026-10-10)."""
     core_sha = sits_on(root, mark)
     if not core_sha:
         raise Refused(f"{mark} is not cut in the core yet -- the record follows the cut")
@@ -333,6 +350,13 @@ def record(root: Path, mark: str) -> list[str]:
     said.append(f"BUILDPATH.md: {mark} on the ladder and on the list of the marks, by side")
     for p, text, end in writes:
         write(p, text, end)
+    if release.status(root).ok:
+        said.append("STATUS.md: already printed after the record it reads")
+    else:
+        ok, why = print_status(root)
+        if not ok:
+            raise Refused(why)
+        said.append("STATUS.md: printed again, after the record it reads")
     return said
 
 
