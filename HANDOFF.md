@@ -786,6 +786,12 @@ Found on the way, not on the list (his to put there): (r) at the flow's last rea
 
 **Next, all his:** the suites from his glass; the save and send of `i2-inventory` with a pull request, merged on GitHub once green; then I2's second step, the measure, one card per sitting.
 
+*Later still (nothing above changed).* GitHub's run of pull request 14 (`i2-inventory`, saved and sent on his card, no attribution) was red on every leg on one check: the inventory stroke's count of what it read, "14 seats, 45 skills, 0 flows, 34 commands". flows/ stands on the ground and is not in the repository, so a fresh clone has none. His word: "FAILED check out the CI". The failed run's log read in his Bash tab on his cards (holds 194 and 195); mended on the same line on his card (196): the flows are asked where flows/ stands, as the door's tools and the glass's tabs are where atlas/ does. Then the stroke alone, BUILDMAP regenerated and the parse under 3.11 (197), this record corrected, and the suites from his glass again, 3772 of 3772 and 72 of 72 (17:36).
+
+**Faults of the hand's.** (71) The inventory stroke asked for the flows on every ground: the hand did not check that what the stroke reads is in the repository before it went to GitHub, and the run of pull request 14 went red on every leg.
+
+**Next, all his:** his word to send the mend onto pull request 14, and the merge once its checks pass; then I2's second step, the measure, one card per sitting.
+
 ## HANDOFF FOR 2026-10-08 — read this before anything below it
 
 **SINCE THE BLOCK BELOW, AND TODAY.** The same conversation, carried on from the morning of 2026-10-07 (after the block below was saved at 08:18) through the night into today, across a context reset; since the reset the laws are re-read through the glass at each of his messages. Every time below is local (UTC-7), read off git, atlas's own history of every move (`atlas/.git/logs/HEAD`), the sitting ledger, the door's hold record (`state/holds.jsonl`) and the suites' run history. Four sittings were opened after the block below, all on 2026-10-07 and all closed by the client: 355 (08:40:25 to 08:41:54), 356 (09:26:28 to 09:32:48, tolled: H16's proof), 357 (10:13:35 to 10:14:51) and 358 (10:49:43 to 10:50:16); none since.

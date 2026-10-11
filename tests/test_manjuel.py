@@ -17768,18 +17768,27 @@ def test_the_inventory_lists_every_function(reg, lib, book):
     for p in sorted((ROOT / "skills").glob("*.md")):
         m = _re.search(r"Action Keyword:\*\*\s*(\S+)", p.read_text(encoding="utf-8"))
         skills.append(m.group(1).strip() if m else p.stem)
-    flows = sorted({p.name.split(".")[0] for p in (ROOT / "flows").glob("*.json")})
     palette = (ROOT / "manjuel" / "cli.py").read_text(encoding="utf-8")
     block = palette[palette.index("COMMANDS = ["):]
     block = block[:block.index("\n]")]
     cmds = _re.findall(r'^\s+\("([^"]+)",', block, _re.M)
     cmds += _re.findall(r"^##[ \t]+Command:[ \t]*(\S+)", (ROOT / "commands.md").read_text(encoding="utf-8"), _re.M)
-    check("   and the disk was read whole: its seats, skills, flows and commands found",
-          len(seats) >= 10 and len(skills) >= 30 and len(flows) >= 5 and len(cmds) >= 25,
-          f"{len(seats)} seats, {len(skills)} skills, {len(flows)} flows, {len(cmds)} commands")
-    for kind, names in (("seat", seats), ("skill", skills), ("flow", flows), ("command", cmds)):
+    check("   and the disk was read whole: its seats, skills and commands found",
+          len(seats) >= 10 and len(skills) >= 30 and len(cmds) >= 25,
+          f"{len(seats)} seats, {len(skills)} skills, {len(cmds)} commands")
+    for kind, names in (("seat", seats), ("skill", skills), ("command", cmds)):
         missing = unlisted(names, inv)
         check(f"   and every {kind} on the disk is a line of INVENTORY.md", not missing, ", ".join(missing))
+    # THE FLOWS STAND ON THE GROUND, NOT IN THE REPOSITORY (flows/ is not tracked; found by GitHub's run of pull request
+    # 14, where a fresh clone has none): they are asked where flows/ stands, as the door and the glass are where atlas/ does.
+    flows_dir = ROOT / "flows"
+    if flows_dir.is_dir():
+        flows = sorted({p.name.split(".")[0] for p in flows_dir.glob("*.json")})
+        missing = unlisted(flows, inv)
+        check("   and the flows were read whole, and every flow on the disk is a line of INVENTORY.md",
+              len(flows) >= 5 and not missing, ", ".join(missing) or f"{len(flows)} flows")
+    else:
+        check("(no flows/ here -- it stands on the ground, not in the repository, so the flows are not asked, and says so)", True)
     tools_dir = ROOT / "atlas" / "line" / "internal" / "tools"
     agent_js = ROOT / "atlas" / "webapp" / "static" / "js" / "agent.js"
     if tools_dir.is_dir() and agent_js.is_file():
