@@ -217,11 +217,16 @@ will be a documentation pass for both repos. including making sure the changelog
 a packaging and deliverable pass"; "0.3.0 will be a full release packaged and ready for deployment." And: "you can add in steps for achieving these
 goals". The steps under each are proposed from the disk; each is yours to change before it is built.
 
-- **I2. v0.2.6: an optimization and flow pass.** Every function working, and measured: every flow on the Workflows page fired to COMPLETE or retired
-  on your word (the release check named `coder`, `release` and `version-tag` as fired and never COMPLETE; since 2026-10-10 it names `coder` and
-  `version-tag` retired, and `release` alone as never COMPLETE); the live check 9 of 9 and the review panel inside its turn; the session test (R1)
-  run again against its baseline (sitting 345, 9 faults) and its faults mended or ruled; the time each route of the front page takes, measured
-  against the session test's budgets, and the slowest made faster.
+- **I2. v0.2.6: an optimization and flow pass.** Your words: "an optimization and flow pass, making sure all functions are working". Set with you on
+  2026-10-10 ("that's more in line with what I was talking about"; the first pass broad, no rabbit holes), in four steps, in order. (1) The inventory:
+  INVENTORY.md at the root (your card; its first pass written the same day), every function of both repositories on a line of its own -- the council
+  (seats, pipelines, skills, /commands), the door's tools, the glass (the terminal's tabs, the Inspector's tabs, the pages) and the flows, the rack and
+  the outside parts (your card: all four). (2) The measure: every line run live on your glass and its time written down (your card: "A live run, every
+  item"), one card per sitting; the live check 9 of 9 with the review panel inside its turn, and the session test (R1) against its baseline (sitting
+  345, 9 faults), among them. (3) Each fault and each slow route mended or ruled, one piece at a time, in the order you pick. (4) The v0.2.6 cut
+  through the release flow, finishing COMPLETE (the release check names `release` alone as fired and never COMPLETE). Done means every line of
+  INVENTORY.md proved on your glass or ruled, R1 with no fault left unruled, every route inside its budget or its budget ruled, and the cut COMPLETE;
+  the inventory carries into I3. *(CHANGELOG, "core: v0.2.6 set in four steps")*
   Your cards of 2026-10-10 on its first part: the release flow's record step prints STATUS.md again, so its last read can pass (built the same
   day; its first COMPLETE is the v0.2.6 cut) *(CHANGELOG, "core: the release flow's record step prints STATUS again")*; and `coder` and
   `version-tag` retired, every version kept (built the same day: the door fires neither again and keeps every version, the Workflows tab says why
