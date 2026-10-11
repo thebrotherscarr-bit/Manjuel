@@ -772,6 +772,20 @@ Found on the way, not on the list (his to put there): (r) at the flow's last rea
 
 **Next, all his:** the suites from his glass; the save and send of `runbook-github` with a pull request, merged on GitHub once green; then I2, v0.2.6, on his word.
 
+*Later again (nothing above changed).* RUNBOOK's piece merged, then I2: the road talked through, v0.2.6 set in four steps, and the first one's first pass.
+
+**RUNBOOK's piece saved, sent and merged.** The suites from his glass, with the record in place, 3762 of 3762 and 72 of 72 (16:10); on his card ("Save, send, open the PR") the line saved and sent with pull request 13 (no attribution), and merged by his press (`9a5dd57`, 16:16). On his word ("merged, move to main and go on to I2") the core moved to main on his card (16:18).
+
+**The road, talked through.** Asked how I2 should start, his word: "First we need to talk about what is the path to 0.3.0? what is 0.2.6 supposed to be? each step has a purpose." The road was put back to him in his own words of 2026-10-08, version by version, with the steps written under each and v0.2.6 as four steps: inventory, measure, mend or rule, cut. His answer: "Yea, that's more in line with what I was talking about ... this will actually make the 0.2.7 step much easier ... DO NOT rabbit-hole on small pieces. keep this first pass fairly broad". His cards: INVENTORY.md at the root; a live run on his glass for every line, strokes aside; all four parts; one card per measuring sitting.
+
+**I2 set, and INVENTORY.md's first pass** on the core's line `i2-inventory`, opened on his card (16:28): WHAT'S LEFT's I2 rewritten to the plan (16:34), INVENTORY.md seeded from WHAT'S LEFT's first line, so it is CRLF, and filled, 244 lines (16:34), its line in `index_roots.txt` (16:45), and the stroke he chose, `test_the_inventory_lists_every_function`, with its line in main() (16:45); the stroke alone 13 of 13, BUILDMAP regenerated and matching, the test file parsed under 3.11 (16:46). No module of `manjuel/` moved: no restart. *(CHANGELOG, "core: v0.2.6 set in four steps")*
+
+**Faults of the hand's.** (69) 16:36, the index line parked as a card (184) that would have added an LF line to a CRLF file: the hand had read the file's endings off the door's output, which drops carriage returns. Caught before his click; he denied it (16:44), and the line went in on a corrected card (185) that copies HANDOFF.md's line with its own ending. (70) Earlier, the wait on the suites (16:05 to 16:10) was a check every 40 seconds, a call each, which read to him as one thing run over and over ("wtf are you trying to run over and over and over?"); one call now waits on a run.
+
+**Where the ground stands.** (16:47) No sitting is open (365 closed 15:19:52). The door pid 30864 and the glass pid 32976. The core on `i2-inventory` at `9a5dd57`, level with GitHub's main, with WHAT'S LEFT, INVENTORY.md, `index_roots.txt`, `tests/test_manjuel.py`, BUILDMAP, CHANGELOG and this note unsaved; atlas on main at `05e34e4`. `manjuel/` did not move: no restart of the engine.
+
+**Next, all his:** the suites from his glass; the save and send of `i2-inventory` with a pull request, merged on GitHub once green; then I2's second step, the measure, one card per sitting.
+
 ## HANDOFF FOR 2026-10-08 — read this before anything below it
 
 **SINCE THE BLOCK BELOW, AND TODAY.** The same conversation, carried on from the morning of 2026-10-07 (after the block below was saved at 08:18) through the night into today, across a context reset; since the reset the laws are re-read through the glass at each of his messages. Every time below is local (UTC-7), read off git, atlas's own history of every move (`atlas/.git/logs/HEAD`), the sitting ledger, the door's hold record (`state/holds.jsonl`) and the suites' run history. Four sittings were opened after the block below, all on 2026-10-07 and all closed by the client: 355 (08:40:25 to 08:41:54), 356 (09:26:28 to 09:32:48, tolled: H16's proof), 357 (10:13:35 to 10:14:51) and 358 (10:49:43 to 10:50:16); none since.

@@ -17733,6 +17733,73 @@ def test_the_docs_call_the_page_what_the_glass_calls_it(reg, lib, book):
         check("(no atlas/ beside the core here -- the GitHub tab's own labels are not asked, and says so)", True)
 
 
+def test_the_inventory_lists_every_function(reg, lib, book):
+    """THE INVENTORY LISTS EVERY FUNCTION (2026-10-10, WHAT'S LEFT I2, v0.2.6's first step; his card: "Add the stroke").
+    INVENTORY.md is the list v0.2.6 is measured against -- every line run live on his glass -- and v0.2.7 checks what
+    earlier versions promised against it; a seat, a skill, a flow, a /command, a door tool or a tab of the glass that
+    exists and is not on it would go unmeasured, with nothing red. So every name the disk declares is held to a line of
+    the inventory, by the name cell of a row whose handle is a letter and a number: each seat's heading in agents/, each
+    skill's action keyword in skills/, each flow in flows/ (by name, any version), each command the engine's palette
+    carries (cli.COMMANDS, read off the source) and each of commands.md's own; and, where atlas/ stands beside the core,
+    each tool the door's table names and each tab of the front page's terminal and Inspector. Names only, broad on
+    purpose: what a line says is the measure step's to judge. Stroked both ways on a sample first."""
+    import re as _re
+
+    def listed(doc):
+        rows = _re.finditer(r"^\| [A-Z]\d+ \| ([^|]+?) \|", doc.replace("\r\n", "\n"), _re.M)
+        return {_re.sub(r" \(v\d+\)$", "", m.group(1).strip()) for m in rows}
+
+    def unlisted(names, doc):
+        have = listed(doc)
+        return [n for n in names if n not in have]
+
+    sample = "| # | name |\n|---|---|\n| S1 | Router | picks a tool | | |\n| F1 | release (v5) | a cut | | |"
+    check("the inventory's rows are read by their name cell, a flow's version set aside",
+          listed(sample) == {"Router", "release"}, str(listed(sample)))
+    check("   and a name the sample does not list is found, and one it lists is not",
+          unlisted(["Router", "Steward", "release"], sample) == ["Steward"])
+
+    inv = (ROOT / "INVENTORY.md").read_text(encoding="utf-8")
+    seats = []
+    for p in sorted((ROOT / "agents").glob("*.md")):
+        m = _re.search(r"^## (.+)$", p.read_text(encoding="utf-8"), _re.M)
+        seats.append(m.group(1).strip() if m else p.stem)
+    skills = []
+    for p in sorted((ROOT / "skills").glob("*.md")):
+        m = _re.search(r"Action Keyword:\*\*\s*(\S+)", p.read_text(encoding="utf-8"))
+        skills.append(m.group(1).strip() if m else p.stem)
+    flows = sorted({p.name.split(".")[0] for p in (ROOT / "flows").glob("*.json")})
+    palette = (ROOT / "manjuel" / "cli.py").read_text(encoding="utf-8")
+    block = palette[palette.index("COMMANDS = ["):]
+    block = block[:block.index("\n]")]
+    cmds = _re.findall(r'^\s+\("([^"]+)",', block, _re.M)
+    cmds += _re.findall(r"^##[ \t]+Command:[ \t]*(\S+)", (ROOT / "commands.md").read_text(encoding="utf-8"), _re.M)
+    check("   and the disk was read whole: its seats, skills, flows and commands found",
+          len(seats) >= 10 and len(skills) >= 30 and len(flows) >= 5 and len(cmds) >= 25,
+          f"{len(seats)} seats, {len(skills)} skills, {len(flows)} flows, {len(cmds)} commands")
+    for kind, names in (("seat", seats), ("skill", skills), ("flow", flows), ("command", cmds)):
+        missing = unlisted(names, inv)
+        check(f"   and every {kind} on the disk is a line of INVENTORY.md", not missing, ", ".join(missing))
+    tools_dir = ROOT / "atlas" / "line" / "internal" / "tools"
+    agent_js = ROOT / "atlas" / "webapp" / "static" / "js" / "agent.js"
+    if tools_dir.is_dir() and agent_js.is_file():
+        tools = sorted({n for p in tools_dir.glob("*.go") if not p.name.endswith("_test.go")
+                        for n in _re.findall(r'^\s+Name:\s+"([a-z_]+)",', p.read_text(encoding="utf-8"), _re.M)})
+        src = agent_js.read_text(encoding="utf-8")
+        tabs = []
+        for key in ("  MODES: [", "  TABS: ["):
+            seg = src[src.index(key):]
+            seg = seg[:seg.index("\n  ],")]
+            tabs += [m.group(2) for m in _re.finditer(r"label:\s*(['\"])(.+?)\1", seg)]
+        check("   and the door's table and the front page's tabs were read whole",
+              len(tools) >= 80 and len(tabs) >= 12, f"{len(tools)} tools, {len(tabs)} tabs")
+        for kind, names in (("door tool", tools), ("tab of the glass", tabs)):
+            missing = unlisted(names, inv)
+            check(f"   and every {kind} is a line of INVENTORY.md", not missing, ", ".join(missing))
+    else:
+        check("(no atlas/ beside the core here -- the door's tools and the glass's tabs are not asked, and says so)", True)
+
+
 def test_the_code_calls_the_pages_what_the_glass_calls_them(reg, lib, book):
     """THE CODE CALLS THE PAGES WHAT THE GLASS CALLS THEM (2026-10-09, WHAT'S LEFT I1 step 2). On 2026-10-08
     the glass's Version control page became GitHub, its Guardrails tab became Laws, and the calls held for his
@@ -21914,6 +21981,7 @@ def main() -> int:
     test_the_release_steps_move_the_record_as_one(reg, lib, book)
     test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book)
     test_the_docs_call_the_page_what_the_glass_calls_it(reg, lib, book)
+    test_the_inventory_lists_every_function(reg, lib, book)
     test_the_code_calls_the_pages_what_the_glass_calls_them(reg, lib, book)
     test_no_file_is_mixed_and_the_root_documents_are_crlf(reg, lib, book)
     test_the_aider_door_keeps_what_the_seats_keep(reg, lib, book)
