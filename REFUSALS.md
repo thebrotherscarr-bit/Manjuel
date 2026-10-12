@@ -1083,8 +1083,8 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 | line | says |
 |---|---|
-| 3677 | a sub-task may not start another sub-task |
-| 3681 | {SUB_RUNS_MAX} sub-tasks have already run this |
+| 3823 | a sub-task may not start another sub-task |
+| 3827 | {SUB_RUNS_MAX} sub-tasks have already run this |
 
 ### manjuel/skills.py — 76 sites
 

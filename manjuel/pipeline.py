@@ -669,6 +669,26 @@ def read_flags(text: str) -> set[str]:
     return out
 
 
+# THE ROUTER'S TASK LINE (2026-10-12, his card: "Engine packs, Router names
+# task"): the one line the Router writes for the seat that takes its work
+# further. The flags' channel and their bounds -- one line, a stray tag eats
+# one short run -- and their fate: read by the engine (read_task), never
+# shown to him (strip_control).
+_TASK_RE = re.compile(r"<task>([^<\n]{0,300})(?:</task>)?", re.IGNORECASE)
+
+
+def read_task(text: str) -> str:
+    """The task the Router named for the seat after it (<task>...</task>), or
+    "": the first one, its words as written, on one line."""
+    for m in _TASK_RE.finditer(text or ""):
+        if _is_mention(text or "", m):
+            continue
+        task = " ".join(m.group(1).split())
+        if task:
+            return task
+    return ""
+
+
 def strip_control(text: str) -> str:
     """Flags are the seat's channel to the ENGINE, never to the operator.
 
@@ -682,7 +702,7 @@ def strip_control(text: str) -> str:
     purpose: no wording makes a 3B reliably silent about a tag it was told to
     emit, but the engine can make an emitted tag never reach a person.
     """
-    cleaned = _FLAGS_RE.sub("", text or "")
+    cleaned = _TASK_RE.sub("", _FLAGS_RE.sub("", text or ""))
     # The action block goes too -- but ONLY when there is an <action>. The
     # Expert Coder declares a bare <filepath> line that land_code() reads
     # AFTER this strip; a <filepath> with no <action> is a declaration, not
@@ -797,7 +817,95 @@ def read_verdict(text: str) -> tuple[bool, str]:
 # ---------------------------------------------------------------------
 
 
+# THE ROUTER'S PACKAGE (2026-10-12, his cards: "Router packs, big seats think",
+# "Engine packs, Router names task"). The estate budgets a prompt in characters
+# (no tokenizer rides the engine), and three characters to a token keeps a
+# package inside the window it is cut for. A seat that declares no Context or
+# no Max Tokens is packed for these.
+PACKAGE_CHARS_PER_TOKEN = 3
+PACKAGE_DEFAULT_CONTEXT = 4096
+PACKAGE_DEFAULT_ANSWER = 1024
+
+
+def _package(agent: Agent, ctx: RunContext) -> str:
+    """What a seat that sits after the Router is handed, or "" -- for the
+    Router itself, and on a turn no Router sat in.
+
+    His word, 2026-10-12: the Router is the second layer, able "to call a
+    longer context window, fill it up, and deliver like a package over to a
+    larger tool or workflow that is seated by a different type of model".
+    Until this, a seat woken after the Router -- the Reasoner, the Expert
+    Coder, the Proofreader, the Quartermaster -- was handed every earlier
+    seat's whole output (history_block): the door's words, the Router's
+    prose and its tools' results together, unbounded, into a window of 8,192
+    tokens against the Router's 16,384.
+
+    The package: his words as typed (source_block); what the Router's tools
+    RETURNED, each under its tool's name and as returned -- facts, never a
+    seat's words about them (LAW 5) -- with the door's words left out; the
+    task; and the seat's limits. Sized by arithmetic to the seat's own
+    window: its Context less its answer room, less what rides with it (its
+    prompt, the law, the method), at PACKAGE_CHARS_PER_TOKEN; when the
+    results do not fit, each keeps an even share of the room from its head,
+    the short ones whole, and a cut says so. The record notes the size
+    against the window."""
+    if agent.key == "router" or not any(
+            s.agent.strip().lower() == "router" for s in ctx.steps):
+        return ""
+    facts: list[tuple[str, str]] = []
+    for s in ctx.steps:
+        results = list(s.tool_results or [])
+        for i, name in enumerate(s.tool_calls or []):
+            facts.append((name, str(results[i] if i < len(results) else "").strip()))
+    window = agent.context or PACKAGE_DEFAULT_CONTEXT
+    answer = agent.max_tokens or PACKAGE_DEFAULT_ANSWER
+    head = ctx.source_block()
+    task = (getattr(ctx, "router_task", "") or "").strip()
+    if not task:
+        task = "Answer the Original Objective above from what this package holds."
+        note = (f"the Router named no task for the {agent.name}: its task is his "
+                f"words, the Original Objective")
+        if note not in ctx.notes:
+            ctx.notes.append(note)
+    tail = (f"## The task\n{task}\n\n"
+            "## Limits\nYou cannot run tools. Use only what this package holds; where it "
+            "does not hold what the task needs, say what is missing rather than guessing.\n\n"
+            "## Your Task\nApply your role to the task above. The Original Objective is the "
+            "authoritative statement of intent.")
+    room = ((window - answer) * PACKAGE_CHARS_PER_TOKEN
+            - len(agent.system_prompt or "") - len(carried_blocks(agent, ctx))
+            - len(getattr(ctx, "method", "") or "") - len(head) - len(tail)
+            - 600 - 120 * len(facts))
+    total = sum(len(t) for _, t in facts)
+    kept = list(facts)
+    if total > room:
+        left = max(room, 0)
+        order = sorted(range(len(facts)), key=lambda i: len(facts[i][1]))
+        for k, i in enumerate(order):
+            share = left // (len(order) - k)
+            kept[i] = (facts[i][0], facts[i][1][:share])
+            left -= len(kept[i][1])
+    blocks = []
+    for (name, text), (_, whole) in zip(kept, facts):
+        block = f"### `{name}`\n{text}"
+        if len(text) < len(whole):
+            block += (f"\n[cut to fit the {agent.name}'s window: {len(text)} of "
+                      f"{len(whole)} characters]")
+        blocks.append(block)
+    read = "\n\n".join(blocks) or "Nothing was read this turn: no tool ran."
+    shown = sum(len(t) for _, t in kept)
+    note = (f"package for the {agent.name}: {len(facts)} tool result(s), {shown} of "
+            f"{total} characters, packed for a {window}-token window"
+            + ("; cut to fit" if shown < total else ""))
+    if note not in ctx.notes:
+        ctx.notes.append(note)
+    return f"{head}\n\n## What the Router's tools returned (facts, as returned)\n{read}\n\n{tail}"
+
+
 def _default_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
+    package = _package(agent, ctx)
+    if package:
+        return package
     return (
         f"{ctx.source_block()}\n\n"
         f"## Prior Stage Outputs\n{ctx.history_block()}\n\n"
@@ -862,6 +970,23 @@ def _router_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
     named_spec = skills.spec(ctx.named_tool) if ctx.named_tool else None
     manual = (f"\n\n## How `{ctx.named_tool}` works\n{named_spec.body.strip()}\n"
               if named_spec and not named_spec.is_prompt_skill else "")
+    # WHO TAKES IT FURTHER (2026-10-12, his card: "Engine packs, Router names
+    # task"). Before the Router sits the engine knows which woken seats wait
+    # behind it (ctx.package_for, set in run_pipeline); it names them, and asks
+    # for their task in one line, which the engine reads (read_task).
+    after = list(getattr(ctx, "package_for", None) or [])
+    handover = (f"\n\nAFTER YOU: {', '.join(after)} take{'s' if len(after) == 1 else ''} this "
+                f"further, handed his words and what your tools return. End your reply "
+                f"with <task>one line: what {'it is' if len(after) == 1 else 'they are'} to "
+                f"do with that</task>." if after else "")
+    # THE WAYS UP, read from the seat files (his card: "No, let it move"). Until
+    # 2026-10-12 one was written here by hand -- `technical` for the Expert Coder --
+    # and the Reasoner, on `hard`, could not be reached by the Router at all.
+    ways = list(getattr(ctx, "way_up", None) or [])
+    way_up = ("\n\nTo hand the work up to a bigger seat, add its flag anywhere in your "
+              "reply: " + ", ".join(f"<flags>{f}</flags> wakes the {seat}" for f, seat in ways)
+              + ". Only when the work needs that seat; say in <task>one line</task> what "
+              "it is to do." if ways else "")
     return f"""{ctx.source_block()}
 
 ## Prior Stage Outputs (record, not template)
@@ -885,10 +1010,7 @@ Omit <filepath> or <content> if that skill does not need them.
 The action_keyword MUST be one of: {', '.join(sorted(skills.keywords())) or '(none available)'}
 
 If NO skill is needed, output no XML -- write a prose draft resolving the
-objective.
-
-If code needs writing, add <flags>technical</flags> anywhere in your reply to
-wake the Expert Coder. Only when code is actually wanted."""
+objective.{way_up}{handover}"""
 
 
 def _delivery_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
@@ -2727,6 +2849,23 @@ def run_pipeline(
             continue
 
         report(f"  [{i}/{total}] {ink.seat(agent.name)}  {ink.dim(agent.model)}")
+        # WHO WAITS BEHIND THE ROUTER, told to it before it sits (2026-10-12):
+        # the woken seats queued after it that are handed its package.
+        if agent.key == "router":
+            woken = {k for k, _ in seats.summoned}
+            ctx.package_for = [str(s) for s in seats.queue[seats.cursor + 1:]
+                               if str(s).strip().lower() in woken
+                               and _BUILDERS.get(registry.get(str(s)).key, _default_prompt)
+                               in (_default_prompt, _coder_prompt)]
+            # ...and the ways up it may take on its own, read from the seat files
+            # (his card: "No, let it move"): each racked seat anchored after it
+            # that takes its package, under a flag a seat may raise.
+            ctx.way_up = [(f, a.name) for a in seats.rack
+                          if _BUILDERS.get(a.key, _default_prompt) in (_default_prompt, _coder_prompt)
+                          and seating.parse_anchor(a.wakes).kind == seating.ANCHOR_AFTER
+                          and (seating.parse_anchor(a.wakes).target or "").strip().lower() == "router"
+                          for f in seating.wake_flags(a)
+                          if f in FLAGS_RAISED and (a.key, f) not in seats.summoned]
         prompt = build_prompt(agent, ctx, skills)
         started = time.time()
 
@@ -3375,6 +3514,13 @@ def run_pipeline(
         if raised:
             ctx.flags |= raised
             report("      " + ink.dim(f"flags raised: {', '.join(sorted(raised))}"))
+
+        # THE ROUTER'S TASK LINE, read before the channel closes (2026-10-12):
+        # the one line it named for the seat after it, handed in the package.
+        if agent.key == "router":
+            task = read_task(output)
+            if task:
+                ctx.router_task = task
 
         # The flag has been read; close the channel before the text reaches a
         # transcript, a delivery, or the thread. A seat whose whole reply was

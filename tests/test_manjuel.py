@@ -9960,6 +9960,115 @@ def test_a_path_skill_takes_the_file_its_words_name(reg, lib, book):
           (ctx.tool_args or {}).get("content") == "the covenant", str(ctx.notes)[-300:])
 
 
+def test_a_seat_after_the_router_is_handed_the_package(reg, lib, book):
+    """His cards, 2026-10-12: "Router packs, big seats think" and "Engine packs,
+    Router names task". A seat that sits after the Router -- the Reasoner, the
+    Expert Coder, any racked seat woken after it -- was handed every earlier
+    seat's whole output (history_block) into an 8k window. It is handed a
+    package now: his words as typed, what the Router's tools returned, each
+    under its tool's name and as returned, cut by arithmetic to fit the seat's
+    window with the cut marked, the task and its limits; the door's own words,
+    which are testimony, stay out. A turn with no Router is as it was."""
+    from manjuel.pipeline import build_prompt
+    big = "the line that matters " * 3000
+    ctx = RunContext(objective="think hard about what pipelines.md says")
+    ctx.steps.append(StepResult(agent="Steward", model="m", output="the door's own words, which are not facts"))
+    ctx.steps.append(StepResult(agent="Router", model="m", output="Tool executed: ground_read",
+                                tool_calls=["ground_read"], tool_results=["pipelines.md -- read whole " + big]))
+    seat = reg.get("Reasoner")
+    p = build_prompt(seat, ctx, lib)
+    check("a seat after the Router is handed the package, not every earlier seat's output",
+          "## What the Router's tools returned" in p and "Prior Stage Outputs" not in p
+          and "the door's own words" not in p, p[:300])
+    check("... his words first, as typed",
+          p.startswith("## Original Objective") and p.splitlines()[1] == "think hard about what pipelines.md says", p[:120])
+    check("... each result under its tool's name, cut to fit the seat's window, the cut marked",
+          "### `ground_read`" in p and "pipelines.md -- read whole" in p and "cut to fit the Reasoner's window" in p
+          and len(p) < (seat.context - seat.max_tokens) * 3, f"{len(p)} characters")
+    check("... the task and its limits",
+          "## The task" in p and "## Limits" in p and "You cannot run tools" in p, p[-600:])
+    check("... and the record says how big the package was against the window",
+          any(n.startswith("package for the Reasoner") and "8192-token window" in n for n in ctx.notes),
+          str(ctx.notes))
+    ctx2 = RunContext(objective="brief me on the feed")
+    ctx2.steps.append(StepResult(agent="Morning Reviewer", model="m", output="the feed, compressed"))
+    p2 = build_prompt(reg.get("Reasoner"), ctx2, lib)
+    check("a turn with no Router hands the earlier outputs as before",
+          "Prior Stage Outputs" in p2 and "the feed, compressed" in p2, p2[:200])
+
+
+def test_the_router_names_the_task_it_packs(reg, lib, book):
+    """His card, 2026-10-12: "Engine packs, Router names task". Before the
+    Router sits, the engine knows which woken seats wait behind it and tells it
+    by name; the Router names their task in one line, <task>...</task>, which
+    the engine reads and takes out before anything reaches him, as it does
+    flags. The seat after it is handed that task in its package; with none
+    named, the task is his words, and the record says so."""
+    from manjuel.pipeline import read_task, strip_control
+    said = "I read it. <task>name the slowest running order and why</task>"
+    check("the task is read off the Router's reply",
+          read_task(said) == "name the slowest running order and why", repr(read_task(said)))
+    check("... and taken out before anything reaches him",
+          strip_control(said) == "I read it.", repr(strip_control(said)))
+
+    def turn(router_says):
+        g = Path(tempfile.mkdtemp())
+        r = Stub(reply=lambda a: router_says if a.key == "router" else "x")
+        ctx = RunContext(objective="which running order is slowest?")
+        ctx.flags |= {"hard", "needs_tool"}
+        run_pipeline(ctx, reg, r, lib, env_for(g, reg, r, skills=lib),
+                     steps=book.get("default"), report=lambda m: None)
+        return ctx, {n: p for n, p in r.seen}
+
+    ctx, seen = turn(said)
+    router, reasoner = seen.get("Router", ""), seen.get("Reasoner", "")
+    check("the Router is told which seat takes it further, and to name its task",
+          "AFTER YOU: Reasoner" in router and "<task>" in router, router[-400:])
+    check("the seat after it is handed the task the Router named",
+          "## The task" in reasoner and "name the slowest running order and why" in reasoner, reasoner[-600:])
+    ctx, seen = turn("I read it, and name nothing.")
+    check("with no task named, the task is his words, and the record says so",
+          "Answer the Original Objective above" in seen.get("Reasoner", "")
+          and any("named no task" in n for n in ctx.notes), str(ctx.notes)[-300:])
+
+
+def test_the_router_moves_up_on_its_own(reg, lib, book):
+    """His card, 2026-10-12: "No, let it move". The Router's one way up was a
+    line written into its prompt by hand -- <flags>technical</flags> for the
+    Expert Coder -- so the Reasoner, waiting on `hard`, could not be reached by
+    it. The ways up are read from the seat files now: each racked seat that
+    sits after the Router and is handed its package, under the flag that wakes
+    it -- not a gate, not a seat that wakes last. The Router's own flag wakes
+    the seat with no card, and the seat is handed the task the Router named."""
+    import builtins
+    asked = []
+    saved = builtins.input
+    builtins.input = lambda prompt="": asked.append(prompt) or "n"
+    try:
+        g = Path(tempfile.mkdtemp())
+        r = Stub(reply=lambda a: ("Read it. <flags>hard</flags> <task>weigh the two orders and "
+                                  "name the slower</task>") if a.key == "router" else "x")
+        ctx = RunContext(objective="which running order is slower, default or estate?")
+        ctx.flags.add("needs_tool")
+        run_pipeline(ctx, reg, r, lib, env_for(g, reg, r, skills=lib),
+                     steps=book.get("default"), report=lambda m: None)
+    finally:
+        builtins.input = saved
+    seen = {n: p for n, p in r.seen}
+    router = seen.get("Router", "")
+    check("the Router is told each way up, read from the seat files",
+          "<flags>hard</flags> wakes the Reasoner" in router
+          and "<flags>technical</flags> wakes the Expert Coder" in router, router[-500:])
+    check("... and not a gate, nor a seat that wakes last",
+          "wakes the Quality Evaluator" not in router and "wakes the Quartermaster" not in router,
+          router[-500:])
+    check("the Router's own flag wakes the Reasoner with no card",
+          "Reasoner" in seen and not asked, f"asked={asked} sat={sorted(seen)}")
+    check("... and it is handed the task the Router named",
+          "weigh the two orders and name the slower" in seen.get("Reasoner", ""),
+          seen.get("Reasoner", "")[-500:])
+
+
 def test_the_shortlist_is_budget_not_judgement(reg, lib, book):
     """The shortlist was measured UNNECESSARY for accuracy on 2026-09-01
     (79% of tool turns already resolve deterministically). What changed is
@@ -22284,6 +22393,9 @@ def main() -> int:
     test_his_plain_words_raise_the_flag_and_ask_first(reg, lib, book)
     test_the_card_carries_its_color(reg, lib, book)
     test_a_path_skill_takes_the_file_its_words_name(reg, lib, book)
+    test_a_seat_after_the_router_is_handed_the_package(reg, lib, book)
+    test_the_router_names_the_task_it_packs(reg, lib, book)
+    test_the_router_moves_up_on_its_own(reg, lib, book)
     test_the_shortlist_is_budget_not_judgement(reg, lib, book)
     test_the_record_can_be_audited(reg, lib, book)
     test_a_subtask_runs_scoped_and_bounded(reg, lib, book)
