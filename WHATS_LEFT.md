@@ -227,6 +227,8 @@ goals". The steps under each are proposed from the disk; each is yours to change
   through the release flow, finishing COMPLETE (the release check names `release` alone as fired and never COMPLETE). Done means every line of
   INVENTORY.md proved on your glass or ruled, R1 with no fault left unruled, every route inside its budget or its budget ruled, and the cut COMPLETE;
   the inventory carries into I3. *(CHANGELOG, "core: v0.2.6 set in four steps")*
+  Its measure, on your cards of 2026-10-10 (sittings 366 to 371): all 244 lines of INVENTORY.md run live or ruled, 41 with a fault and 29
+  ruled; the third step next, one piece at a time, in the order you pick. *(CHANGELOG, "core: I2's second step, the measure")*
   Your cards of 2026-10-10 on its first part: the release flow's record step prints STATUS.md again, so its last read can pass (built the same
   day; its first COMPLETE is the v0.2.6 cut) *(CHANGELOG, "core: the release flow's record step prints STATUS again")*; and `coder` and
   `version-tag` retired, every version kept (built the same day: the door fires neither again and keeps every version, the Workflows tab says why
