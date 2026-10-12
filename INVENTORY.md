@@ -44,7 +44,7 @@ each slow route mended or ruled, one piece at a time. (4) The v0.2.6 cut through
 
 | # | name | what it does | live run | time |
 |---|---|---|---|---|
-| P1 | default | The everyday turn: the Steward answers first and closes; tools, code and documents go through the seats between. | sittings 366, 367 and 370: ok; slow routes (R1: 168, 50 and 91 s against 30) | 2.6 to 168 s |
+| P1 | default | The everyday turn: the Steward answers first and closes; tools, code and documents go through the seats between; each turn is tagged by its level, which may bring the Router or a big seat | sitting 376: ok, an ask at each level -- the Steward alone, the Router, the Reasoner on his card, a workflow's job run as the Reasoner's; FAULT: a big seat's turn left the closing Steward 48 s of the 600-second deadline | 2.6 to 661.5 s |
 | P2 | brief | For a pasted feed: the Morning Reviewer compresses it, and it is delivered as a written briefing. | sitting 369: ok, the feed briefed by four seats | 54.8 s |
 | P3 | estate | Every seat runs, the deliberate way: inquire, hold the whole, refute, then rule. | sitting 373: the search its words chose set aside and no tool run (369's fault mended); FAULT: the Steward described itself, not the covenant, and Manjuel ruled that SUPPORTED after six and a half minutes on gemma4:12b | 590.7 s |
 | P4 | court | The review panel: every counsel is heard, then Manjuel rules; its turn may take 900 s. | sitting 366: FAULT, Jesster and Manjuel past their bounds, Neiro's last word; 368: /table ruled with all five | 900 s; 779 s |

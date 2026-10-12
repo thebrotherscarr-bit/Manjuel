@@ -328,6 +328,11 @@ class RunContext:
     # ...and the ways up it may take on its own (his card: "No, let it move"):
     # (flag, seat) for each racked seat behind it that takes its package.
     way_up: list = field(default_factory=list)
+    # THE LEVEL (2026-10-12, his cards: "Tag and route", "By the seat that takes
+    # it"): the seat that takes this turn by the measure of his words
+    # (intent.level), and the big seat's flag a level 3 or 4 asks him about.
+    level: str = ""
+    level_flag: str = ""
     # Arguments a named skill's own **Takes:** rules found in the operator's
     # words. Carried so the payload survives the moment of recognition --
     # before this, matching a keyword threw the rest of the sentence away.

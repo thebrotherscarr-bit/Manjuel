@@ -2712,6 +2712,31 @@ def run_pipeline(
         ctx.named_tool = ""
         ctx.flags.discard("needs_tool")
 
+    # THE LEVEL (2026-10-12, his cards: "Tag and route", "Arithmetic on your
+    # words", "By the seat that takes it", "Note it, run it as 3"). His words are
+    # measured (intent.level) and the turn is tagged by the seat that takes it.
+    # Where a Router stands the level only ever adds to the route already chosen
+    # -- a larger ask brings the Router, a much larger one a big seat's flag,
+    # asked on his card below -- and a workflow's job runs as a level 3 until
+    # workflows from a sentence exist. A follow-up keeps the door, and a running
+    # order with no Router is tagged and nothing more.
+    if not make:
+        lv, seat, why, lv_flag = intent.level(ctx.objective, ctx.feed)
+        ctx.level = seat
+        here = any(str(s).strip().lower() == "router" for s in steps) and not followup
+        note = f"level: {seat}" + (f" ({'; '.join(why)})" if why else "")
+        if lv >= 4:
+            note += (" -- a workflow's job; workflows from a sentence are not built yet (H23), so "
+                     + ("the Expert Coder" if lv_flag == "technical" else "the Reasoner") + " takes it")
+        if lv >= 2 and not here:
+            note += " -- tagged only: " + ("a follow-up keeps the door" if followup
+                                           else "this running order has no Router")
+        ctx.notes.append(note)
+        if here and lv >= 2 and not ctx.named_tool and "needs_tool" not in ctx.flags:
+            ctx.flags.add("needs_tool")
+        if here and lv >= 3:
+            ctx.level_flag = lv_flag
+
     # NO ROUTER, NO TOOL (2026-10-12, his card: "No tool in either"). quick and
     # estate carry no Router, and sitting 369 chose a tool for each that no seat
     # could run: "what is two plus two?" went to semantic_search and never said
@@ -2796,7 +2821,10 @@ def run_pipeline(
     # nobody, because the racked seats waited on a tag the Steward did not write.
     # The engine reads his words now (intent.plain_flags), and before a racked
     # seat wakes he is asked on one card; nobody at the card wakes nobody.
-    for flag in sorted(intent.plain_flags(ctx.objective) - ctx.flags):
+    # ...and the big seat's flag the level of his words asks for (THE LEVEL,
+    # above), on the same card: his plain words and their measure ask one way.
+    wake_on = intent.plain_flags(ctx.objective) | ({ctx.level_flag} if ctx.level_flag else set())
+    for flag in sorted(wake_on - ctx.flags):
         racked = [a.name for a in seats.rack if flag in seating.wake_flags(a)]
         if racked and _ask_to_wake(ctx, flag, racked, report):
             ctx.flags.add(flag)
