@@ -14,6 +14,10 @@ A seat with no `May Call` line holds NO tools: it reads nothing, writes
 nothing and reaches nothing. That is most of this roster, and it is the
 reason the estate can say a seat never touches the filesystem.
 
+WIDENED 2026-10-12 (his word: the Steward up front answers reads and simple
+tool calls; his card: simple is one tool and one target): the reading skills,
+his sitting-39 ruling, "review, never write". No writer, so `edit` stays denied.
+
 ```json
 {
   "can_approve": false,
@@ -21,10 +25,25 @@ reason the estate can say a seat never touches the filesystem.
   "id": "seat_steward",
   "kind": "agent",
   "may_call": [
+    "classify_sentiment",
+    "extract_facts",
+    "git_status",
     "ground_list",
     "ground_read",
+    "ground_report",
+    "inspect",
     "list_directory",
-    "read_file"
+    "proved",
+    "rack_list",
+    "read_file",
+    "search_transcripts",
+    "semantic_search",
+    "sitting",
+    "skill_report",
+    "skill_search",
+    "statistics",
+    "symbols",
+    "when"
   ],
   "mode": "spine",
   "model": "llama3.2:latest",

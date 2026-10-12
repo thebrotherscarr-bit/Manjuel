@@ -27,18 +27,18 @@ each slow route mended or ruled, one piece at a time. (4) The v0.2.6 cut through
 |---|---|---|---|---|
 | S1 | Deep Researcher | qwen3.5:9b · stage transform · racked, summoned by its flag | sitting 370: sat for deep_research; FAULT: it answered with the law-court meaning, not the ground's court | 119.1 s (the turn) |
 | S2 | Delivery Agent | phi4-mini:latest · stage deliver · wakes on deliver · stands in brief | sitting 369: ok, delivered the brief | 54.8 s (the brief) |
-| S3 | Expert Coder | qwen2.5-coder:14b · stage transform · wakes on technical · racked, summoned by its flag | sitting 367: ok, made countdown-timer-3 (R1 line 5); in 370 the technical flag did not wake it | 46.4 s |
+| S3 | Expert Coder | qwen2.5-coder:14b · stage transform · wakes on technical · racked, summoned by its flag | sitting 373: ok, "lint this python" raised technical and a green card asked him; woken on his word, beside lint_code, which found the bug | 178.1 s (the turn, with his card) |
 | S4 | Jesster | deepseek-r1:8b · stage gate · stands in estate, court | sitting 368: ok, counsel in /table (drifted 0.537); 369 estate; FAULT in 366: past its 600 s bound in the court | 779 s (the table) |
 | S5 | Manjuel | gemma4:12b · stage gate · stands in estate, court | sitting 368: ok, ruled /table (drifted 0.541); ruled estate in 369; FAULT in 366: past its bound in the court | 779 s (the table) |
 | S6 | Morning Reviewer | llama3.2:latest · stage transform · stands in brief | sitting 369: ok, compressed the feed for the brief | 54.8 s (the brief) |
 | S7 | Neiro | llama3.2:latest · stage transform · stands in estate, court | sittings 366, 368 and 369: ok, counsel in the court, the table and estate | 399 to 900 s (the turns) |
-| S8 | Proofreader | phi4-mini:latest · stage transform · wakes on prose · racked, summoned by its flag | sitting 370: FAULT, not woken: "proofread this sentence" raised no prose flag, and the Steward answered alone | 1.7 s (the turn) |
+| S8 | Proofreader | phi4-mini:latest · stage transform · wakes on prose · racked, summoned by its flag | sitting 373: woken on his word at a green card ("proofread this sentence" raised prose); FAULT: it mended "too" and kept "their" for "they're" | 134.8 s (the turn, with his card) |
 | S9 | Quality Evaluator | qwen3.5:4b · stage gate · wakes on drifted, review · racked, summoned by its flag | sitting 369: ok, summoned on "drifted" in the brief, PASS | 54.8 s (the brief) |
-| S10 | Quartermaster | llama3.2:latest · stage transform · racked, summoned by its flag | not run: no turn in sittings 366 to 370 summoned it, the rack's own turns included | — |
-| S11 | Reasoner | qwen3.5:9b · stage transform · wakes on hard · racked, summoned by its flag | sitting 370: FAULT, "think hard: ..." raised no hard flag and the Router answered; /parity measured its model | 13.4 s (the turn) |
+| S10 | Quartermaster | llama3.2:latest · stage transform · wakes on rack · racked, summoned by its flag | sitting 373: ok, "give me the rack report" raised rack and a green card asked him; woken on his word, and rack_report answered | 51.6 s (the turn, with his card) |
+| S11 | Reasoner | qwen3.5:9b · stage transform · wakes on hard · racked, summoned by its flag | sitting 373: ok, "think hard: ..." raised hard and a green card asked him; woken on his word, it answered 5 cents and showed the working; cut at its 1400 tokens | 307 s (the turn, with his card) |
 | S12 | Router | qwen3.5:4b · stage route · when needs_tool · stands in default, court | sittings 366 to 370: ok on every tool turn; slow (121 s on R1 line 2), cut at its 900 tokens in /table, claimed a write in 366's court | 2 to 300 s |
 | S13 | Security Guardian | llama3.2:latest · stage guard · wakes on has_feed, suspicious · stands in brief, estate, court, quick | sittings 366 to 370: ok, SAFE wherever it sat; the three gates refused at once | at once at the gates |
-| S14 | Steward | llama3.2:latest · stage transform · stands in default, estate, quick | sittings 366 to 370: ok, a greeting in 2.6 s; FAULT: it retells earlier turns, and answered "thanks" with "You want to run the suites." | 2.2 to 47 s |
+| S14 | Steward | llama3.2:latest · stage transform · stands in default, estate, quick | sittings 373 and 374: ok, it answers its own reads ("list the skills", inspect); FAULT: it still retells earlier turns, once with its own instructions, and it turned skill_report's 45 skills into 43 | 8.6 to 20.5 s (its own reads) |
 
 ### Pipelines (pipelines.md, 5)
 
@@ -46,20 +46,20 @@ each slow route mended or ruled, one piece at a time. (4) The v0.2.6 cut through
 |---|---|---|---|---|
 | P1 | default | The everyday turn: the Steward answers first and closes; tools, code and documents go through the seats between. | sittings 366, 367 and 370: ok; slow routes (R1: 168, 50 and 91 s against 30) | 2.6 to 168 s |
 | P2 | brief | For a pasted feed: the Morning Reviewer compresses it, and it is delivered as a written briefing. | sitting 369: ok, the feed briefed by four seats | 54.8 s |
-| P3 | estate | Every seat runs, the deliberate way: inquire, hold the whole, refute, then rule. | sitting 369: FAULT, all five spoke and Manjuel ruled, but the search it chose had no Router to run it | 398.8 s |
+| P3 | estate | Every seat runs, the deliberate way: inquire, hold the whole, refute, then rule. | sitting 373: the search its words chose set aside and no tool run (369's fault mended); FAULT: the Steward described itself, not the covenant, and Manjuel ruled that SUPPORTED after six and a half minutes on gemma4:12b | 590.7 s |
 | P4 | court | The review panel: every counsel is heard, then Manjuel rules; its turn may take 900 s. | sitting 366: FAULT, Jesster and Manjuel past their bounds, Neiro's last word; 368: /table ruled with all five | 900 s; 779 s |
-| P5 | quick | One seat past the gate, for a throwaway question. | sitting 369: FAULT, "two plus two" chose a search no seat in quick can run, and never said four | 16.1 s |
+| P5 | quick | One seat past the gate, for a throwaway question. | sitting 373: ok, "two plus two" said four; the search its words chose set aside, with no Router to run it | 3.9 s |
 
 ### Skills (skills/, 45): what a seat can call
 
 | # | name | what it does | live run | time |
 |---|---|---|---|---|
 | K1 | classify_sentiment | Classifies one piece of human feedback on three axes at once: Tone, Urgency and Intent. | sitting 370: ok | 61.5 s |
-| K2 | decompose_task | Breaks a large objective into an ordered sequence of small, individually checkable steps. | sitting 370: FAULT, not called; it answered an earlier turn | 4.3 s |
+| K2 | decompose_task | Breaks a large objective into an ordered sequence of small, individually checkable steps. | sitting 373: ok, called by its own words ("break this into small checkable steps") | 96.5 s |
 | K3 | deep_research | Runs an intensive deep-dive analytical evaluation on a complex subject payload using a specialized reasoning sub-agent. | sitting 370: FAULT, ran, and answered the law-court meaning | 119.1 s |
-| K4 | edit_file | Replaces ONE exact passage in a file that is already in the workspace, so a large file can be changed without rewriting it whole. | sitting 370: FAULT, not called (list_directory ran); nothing edited | 21.3 s |
-| K5 | embed_text | Adds or refreshes a single workspace file in the semantic index immediately, without a full sweep. | sitting 370: FAULT, not called (ground_read ran) | 205 s |
-| K6 | extract_facts | Pulls hard facts out of long or dense text - quantities, dates, names, and explicit quotes - and drops everything else. | sitting 370: FAULT, not called (sitting ran) | 23.8 s |
+| K4 | edit_file | Replaces ONE exact passage in a file that is already in the workspace, so a large file can be changed without rewriting it whole. | sitting 373: ok, a write the Router decides: its first call failed on the edit's form, its second changed measure.py | 38.1 s |
+| K5 | embed_text | Adds or refreshes a single workspace file in the semantic index immediately, without a full sweep. | sitting 373: called by its own words, and refused the ground file (it embeds a workspace file, as it says); FAULT: the Router then rebuilt the whole index unasked | 291.4 s |
+| K6 | extract_facts | Pulls hard facts out of long or dense text - quantities, dates, names, and explicit quotes - and drops everything else. | sitting 373: ok, called by its own words | 53.4 s |
 | K7 | git_commit | Stages every change in the ground and commits it locally with a message. | RULED (his card): the saves are his | — |
 | K8 | git_cycle | Runs the FULL version-control cycle in one act: refuses to ship on red or stale STROKES or SMOKE, and reports the tag's four other proofs without ... | RULED (his card): the saves and sends are his | — |
 | K9 | git_init | Starts version control in this ground if it is not already a repository. | RULED (his card): the repositories stand | — |
@@ -72,7 +72,7 @@ each slow route mended or ruled, one piece at a time. (4) The v0.2.6 cut through
 | K16 | ground_report | States where the chain is standing: the ground path, the agent workspace, the active session, and what is resident on the card right now. | sitting 370: ok | 33.2 s |
 | K17 | ground_write | Writes one WHOLE file into the ground itself — source in manjuel/ or atlas/line/, a test under tests/, a doc — at a path relative to the ground, on ... | RULED (his card): a change to the ground is a piece's | — |
 | K18 | index_ground | Builds or refreshes the semantic index over the configured roots (see index_roots.txt). | sitting 368: ok, through /index | 84.3 s |
-| K19 | inspect | Reports the FACTS about a file before anything reads it — size, real type by its first bytes, line terminator, line count, first line, when it was ... | sitting 370: FAULT, not called (ground_read ran) | 83.9 s |
+| K19 | inspect | Reports the FACTS about a file before anything reads it — size, real type by its first bytes, line terminator, line count, first line, when it was ... | sitting 374: ok, the file the words name, read by the Steward; mended on his card after 373 took the whole sentence as its file | 8.6 s |
 | K20 | linear_regression | Fits a trendline through a series of numbers using ordinary least squares and projects the next few steps. | sitting 370: ok | 15.5 s |
 | K21 | lint_code | Reads a block of source and reports likely defects - syntax errors, unhandled exceptions, unused imports, off-by-one and resource leaks. | sitting 370: ok, found the bug | 85.4 s |
 | K22 | list_directory | Lists all available files currently sitting inside the workspace directory. | sitting 370: ok; its raw output in the answer | 130.1 s |
@@ -83,21 +83,21 @@ each slow route mended or ruled, one piece at a time. (4) The v0.2.6 cut through
 | K27 | rack_pull | Downloads a model that is not yet installed. | RULED (his card): downloads | — |
 | K28 | rack_report | Reports the observed state of the rack - models installed, loaded in VRAM, declared by this ground, missing, and the VRAM budget. | sitting 370: ok | 66.2 s |
 | K29 | rack_sync | Pulls a current list of models from Ollama and rewrites rack.md - what is installed, what is loaded, what this ground declares, what is declared but ... | sitting 368: ok, through /rack | 1.3 s |
-| K30 | rack_unload | Frees VRAM by evicting a loaded model. | sitting 370: FAULT, not called | 8.6 s |
-| K31 | read_file | Reads the raw text content of a specific file inside the workspace. | sitting 370: ok as write_file's check; FAULT asked alone (list_directory ran) | 26.8 s |
+| K30 | rack_unload | Frees VRAM by evicting a loaded model. | sitting 373: ok, called by name; nothing to free | 15.4 s |
+| K31 | read_file | Reads the raw text content of a specific file inside the workspace. | sitting 373: ok, asked alone ("read the file measure.py from the workspace") | 17.8 s |
 | K32 | remember | Proposes a note to carry into later sessions - a decision, a ruling, a correction, something learned. | sitting 370: ok, a note proposed; dropped on his card | 149.7 s |
-| K33 | run_python | Runs ONE Python file from the workspace and reports what it said — the verdict (RAN, FAILED with the exit code, or STOPPED BY THE JAIL), its stdout ... | sitting 370: FAULT, not called when asked (list_directory ran); it ran inside subtask | 21.7 s |
+| K33 | run_python | Runs ONE Python file from the workspace and reports what it said — the verdict (RAN, FAILED with the exit code, or STOPPED BY THE JAIL), its stdout ... | sitting 373: ok, called when asked; it printed "the measure ran here 4" | 18.5 s |
 | K34 | search_transcripts | Searches THE RECORD by meaning - what HAPPENED. | sitting 370: ok | 50.5 s |
-| K35 | semantic_search | Searches the indexed ground by meaning rather than keywords, returning the matching passages with their file, location and similarity score. | sittings 366 to 370: ok; chosen where it cannot run, in quick and estate | 50.0 s (366) |
+| K35 | semantic_search | Searches the indexed ground by meaning rather than keywords, returning the matching passages with their file, location and similarity score. | sitting 373: set aside in quick and estate, where no Router can run it; FAULT: chosen for a sum and for a riddle | 50.0 s (366) |
 | K36 | sitting | Resolves a SITTING NUMBER to the runs it held and the transcript path of each one, read from the paid record in SEAT_LOG.md. | sitting 370: ok | 54.5 s |
-| K37 | skill_report | Lists every skill the chain can actually execute, with what each one does — read from the loaded library, never generated. | sitting 370: FAULT, not called when asked; it ran for skill_search | 19.4 s |
-| K38 | skill_search | Finds which of this chain's skills bear on a subject, and reports each one's own description in full — read from skills/*.md, never summarised. | sitting 370: FAULT, not called (skill_report ran) | 27.2 s |
+| K37 | skill_report | Lists every skill the chain can actually execute, with what each one does — read from the loaded library, never generated. | sitting 373: ok, called by its own words, and "list the skills" read by the Steward | 16.1 s; 20.5 s |
+| K38 | skill_search | Finds which of this chain's skills bear on a subject, and reports each one's own description in full — read from skills/*.md, never summarised. | sitting 373: ok, called by its own words; on a tie with skill_report, put to him on an amber card | 28.8 s; 112.3 s (the tie) |
 | K39 | speak | Read text aloud through the machine's own speech engine. | sitting 370: ok, spoke; slow | 154 s |
 | K40 | statistics | Computes n, mean, median, min, max, standard deviation and variance over a series of numbers. | sitting 370: ok | 28.5 s |
 | K41 | subtask | Hands ONE scoped piece of work to a fresh run with its own context, and returns only its result. | sitting 370: ok, a fresh run; its answer retold another turn | 253.6 s |
 | K42 | symbols | Where a name is DECLARED in this ground, read straight off the disk — file and line for every def, class, func, type or exported binding, in Python, ... | sitting 370: ok | 20.4 s |
 | K43 | time_align | Parses loose task lists or historical log entries and aligns them onto an ordered timeline. | sitting 370: ok | 58.9 s |
-| K44 | when | Lists what ran in a WINDOW OF TIME, read from the transcript stamps in logs/. | sitting 370: FAULT, not called | 20.2 s |
+| K44 | when | Lists what ran in a WINDOW OF TIME, read from the transcript stamps in logs/. | sitting 373: ok, called by its own words | 33.7 s |
 | K45 | write_file | Writes text, scripts, or markdown data to a file inside the workspace. | sitting 370: ok, measure.py in the workspace | 39.8 s |
 
 ### Commands (the engine's palette, 31, and commands.md's own, 3): typed as /name
@@ -163,7 +163,7 @@ Each is called by the glass (a tab, a button, Registry & Docs' Call) or by the c
 | T16 | env_close | close the world's sitting properly and reap its engine | sitting 365: ok, closed and tolled at 15:19:52 | not timed |
 | T17 | env_list | which worlds have an engine open, and which are being sat in elsewhere | glass 17:59: ok, none open | 6 ms |
 | T18 | env_open | open the Manjuel engine inside a world. | sitting 365: ok, opened at 15:15:07 | not timed |
-| T19 | file_edit | the operator's own exact edit of one text file in this world: the path, the exact old text and the new text are plain fields. | holds 200 and 201, 17:37: ok, each landed on his Approve | about 5 s with his click |
+| T19 | file_edit | the operator's own exact edit of one text file in this world: the path, the exact old text and the new text are plain fields; it sets the seats (agents/) and the skills (skills/) too, while no sitting is open | glass 2026-10-12, 08:51 to 11:12: ok, seven skill files and two seats set with no sitting open, then the engine, a stroke and this record, each landed on his Approve, on a red card since the glass of that morning | about 5 s with his click |
 | T20 | flow_cancel | end a live run; reached nodes stand (N2) | glass 17:59: ok, a made-up run: nothing live, nothing claimed | 4 ms |
 | T21 | flow_compare | two runs side by side, node by node (N2) | glass 17:59: ok, smoke's two runs IDENTICAL | 33 ms |
 | T22 | flow_get | read one flow spec version (N2) | glass 17:59: ok, smoke v1 | 5 ms |
@@ -247,7 +247,7 @@ Each is called by the glass (a tab, a button, Registry & Docs' Call) or by the c
 
 | # | name | what it does | live run | time |
 |---|---|---|---|---|
-| G1 | Agent | the council: a line typed here is a turn; boot, close and the gate are here too | glass 18:14: ok, with no engine it offers Boot; its turn ran in sitting 365 | under 1 s |
+| G1 | Agent | the council: a line typed here is a turn; boot, close and the gate are here too; its questions come as cards colored by what they are for -- amber to pick a tool, green to wake a seat -- and an edit or a command waits on a red one | sittings 373 and 374: ok, 20 asks with /boot, /use and /close around them; an amber card on a tie, a green card for each of four racked seats, each answered on his click | under 1 s; a card waits on him |
 | G2 | Bash | Git Bash as you; a plain look runs at once, anything that writes waits on its card | the glass all day: ok, a plain look at once, a write on its card (holds 202 to 208); git --version parked as a write (card 204): the gate reads it as an option that moves git | 67 ms to 4.3 s |
 | G3 | Python | one Python session per world that keeps its names; the rest waits on its card | card 205, 18:25: ok, 3.14.7 | 41 ms |
 | G4 | PowerShell | PowerShell 7 as you; every line waits on its card, up to 300 s | card 206, 18:25: ok, 7.6.6 | 603 ms |

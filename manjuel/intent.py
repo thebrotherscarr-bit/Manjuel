@@ -551,11 +551,30 @@ def _named_not_used(form: str, hay: str, raw: str) -> bool:
     return _wears_quotes(form, raw)
 
 
+# THE WORKSPACE HAS ITS OWN READER AND LISTER (sitting 370). The table names
+# the ground's reader and lister by "read the file" and "list the files";
+# said with the workspace as the place, the workspace's own skill is the one
+# he means. "read the file measure.py from the workspace" is read_file --
+# not ground_read, and not list_directory on a tie the alphabet broke.
+_WORKSPACE_TWINS = {"ground_read": "read_file", "ground_list": "list_directory"}
+_WORKSPACE_PLACE = re.compile(r"(?<![a-z0-9_])(?:(?:the|my|our|agent) workspace|agent_workspace)(?![a-z0-9_])")
+
+
 def names_a_tool(objective: str, keywords) -> str:
     """Return the keyword the objective names, or "" if none does.
 
     Matches the keyword itself (`git_commit`), its spaced form (`git commit`),
-    and any declared alias. Longest match wins so `git_commit` beats `commit`.
+    a phrase the skill declares in its own file (`**Says:**`), and the shared
+    table above. WHICH ONE WINS is his word of 2026-10-12, the plain intent of
+    the input read off what the system actually has: a skill's OWN words (its
+    name, its spaced name, its `Says:`) outrank the shared table; then a form
+    he LEADS with (after one courtesy clause) outranks one named later; then
+    the longest, so `git_commit` still beats `commit`. Sitting 370 measured the
+    old rule, length alone: "inspect the file INVENTORY.md" went to ground_read
+    on the table's "the file", one letter longer than "inspect". Said with the
+    workspace as the place, the ground's reader and lister give way to the
+    workspace's own (`_WORKSPACE_TWINS`). And an order to run a named `.py` is
+    not taken by anything but his own lead: wants_running reads it next.
 
     A ONE-WORD KEYWORD THAT IS ENGLISH GRAMMAR must be named, not merely
     spoken -- see `_FUNCTION_WORDS`. A declared `**Says:**` phrase is never
@@ -573,26 +592,54 @@ def names_a_tool(objective: str, keywords) -> str:
     `keywords` may be a plain set of keywords or a SkillLibrary; passing the
     library is what makes the declared phrases visible.
     """
+    hits, kws, hay = _tool_hits(objective, keywords)
+    if not hits:
+        return ""
+    (is_own, leads, _), kw = max(hits)
+    twin = _WORKSPACE_TWINS.get(kw)
+    if twin and twin in kws and _WORKSPACE_PLACE.search(hay):
+        kw = twin
+    # AN ORDER TO RUN A NAMED SCRIPT IS NOT TAKEN BY A PLACE WORD (sitting
+    # 370): "run measure.py from the workspace" was named list_directory on
+    # the table's "the workspace", and the order to run never reached
+    # wants_running. Only his own lead -- `run_python measure.py` -- stands
+    # in front of it.
+    if not (is_own and leads) and wants_running(objective):
+        return ""
+    return kw
+
+
+def _tool_hits(objective: str, keywords) -> tuple[list, object, str]:
+    """Every skill his words name, each ranked (own, leads, length) -- the one
+    ranking names_a_tool and tool_choices share, so the card he is shown and
+    the pick can never disagree about what he said. Returns the hits, the
+    keywords they were drawn from, and the normalised objective."""
     hay = _norm(objective)
     if not hay:
-        return ""
+        return [], (), hay
+    # What he LEADS with: his words after one courtesy clause.
+    lead = _norm(_after_courtesy(objective))
 
     lib = keywords if hasattr(keywords, "keywords") else None
     kws = lib.keywords() if lib is not None else keywords
 
-    hits: list[tuple[int, str]] = []
+    # Each hit is ranked (own, leads, length): OWN is a skill's own words
+    # against the shared table; LEADS is the form opening what he said.
+    hits: list[tuple[tuple[bool, bool, int], str]] = []
     for kw in kws:
         declared: tuple = ()
         spec = None
         if lib is not None:
             spec = lib.spec(kw)
             declared = tuple(getattr(spec, "says", ()) or ()) if spec else ()
-        bare = [kw, kw.replace("_", " ")] + list(ALIASES.get(kw, ()))
+        own = [kw, kw.replace("_", " ")]
+        shared = list(ALIASES.get(kw, ()))
         # A DECLARED PHRASE IS ALREADY A NAMING, so it is never held to the
-        # function-word rule below -- `says` and `bare` are kept apart for
-        # exactly that reason.
-        for form, is_phrase in ([(f, False) for f in bare]
-                                + [(f, True) for f in declared]):
+        # function-word rule below -- the declared phrases and the bare forms
+        # are kept apart for exactly that reason.
+        for form, is_phrase, is_own in ([(f, False, True) for f in own]
+                                        + [(f, False, False) for f in shared]
+                                        + [(f, True, True) for f in declared]):
             f = _norm(form)
             if not f:
                 continue
@@ -608,10 +655,30 @@ def names_a_tool(objective: str, keywords) -> str:
                     and not _number_follows(f, hay)
                     and not _wears_quotes(f, objective or "")):
                 continue
-            hits.append((len(f), kw))
-    if not hits:
-        return ""
-    return max(hits)[1]
+            leads = lead == f or lead.startswith(f + " ")
+            hits.append(((is_own, leads, len(f)), kw))
+    return hits, kws, hay
+
+
+def tool_choices(objective: str, keywords) -> tuple[list[str], bool]:
+    """The skills his words name, best first (three at most, each its workspace
+    twin where the place says so), and whether the first is SURE: alone, or a
+    class above the next -- a skill's own words over the shared table, his lead
+    over a word named later. Two in one class is a guess, and a guess is put to
+    him on one card (his cards of 2026-10-12: "Only when it isn't sure", "Best
+    match + next two")."""
+    hits, kws, hay = _tool_hits(objective, keywords)
+    best: dict[str, tuple] = {}
+    for rank, kw in hits:
+        twin = _WORKSPACE_TWINS.get(kw)
+        if twin and twin in kws and _WORKSPACE_PLACE.search(hay):
+            kw = twin
+        if kw not in best or rank > best[kw]:
+            best[kw] = rank
+    ranked = sorted(best.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
+    choices = [kw for kw, _ in ranked[:3]]
+    sure = len(ranked) <= 1 or ranked[0][1][:2] > ranked[1][1][:2]
+    return choices, sure
 
 
 # ---------------------------------------------------------------------
@@ -744,9 +811,11 @@ def cue_only(objective: str) -> bool:
 # READ hello.md. A write is a decision -- what file, what content, which
 # skill -- and deciding is the Router's office, so these raise needs_tool
 # with NO named tool.
+# `replace` joined 2026-10-12 (sitting 370: "in measure.py in the workspace,
+# replace 'x' with 'y'" was not write-shaped, so list_directory, a reader, took it).
 _WRITE_VERBS = re.compile(
     r"(?i)\b(write|make|create|save|generate|build|add|append|update|edit|"
-    r"fix|change|modify|refactor|implement|delete|remove|rename)\b")
+    r"fix|change|modify|refactor|implement|delete|remove|rename|replace)\b")
 
 # Action-verb + object shapes that plainly want hands, without naming which.
 _ACTION_SHAPE = re.compile(
@@ -793,6 +862,28 @@ def wants_running(objective: str) -> str:
         return ""
     got = names_a_file(text)
     return got if got.lower().endswith(".py") else ""
+
+
+# HIS PLAIN WORDS RAISE A RACKED SEAT'S FLAG (2026-10-12, his card: "Engine
+# raises on plain words"). Sitting 370: "proofread this sentence", "think hard:
+# ...", "lint this python" and "give me the rack report" woke nobody -- the
+# racked seats waited on a tag the Steward did not write. Narrow on purpose: a
+# wrong wake costs minutes (the Reasoner once sat 235 s on a mention), and every
+# wake is put to him on a card first (pipeline.py, _ask_to_wake).
+_PLAIN_FLAGS = (
+    ("prose", re.compile(r"(?i)\b(?:proof-?read|copy-?edit|check (?:the|my) (?:grammar|spelling)"
+                         r"|fix (?:the|my) (?:grammar|spelling))\b")),
+    ("hard", re.compile(r"(?i)\b(?:think (?:hard|it through|this through)|reason (?:it|this) (?:out|through)"
+                        r"|step by step)\b")),
+    ("technical", re.compile(r"(?i)\b(?:lint|debug|traceback|stack trace)\b")),
+    ("rack", re.compile(r"(?i)\b(?:rack report|what(?:'s| is) loaded|which models|in vram)\b")),
+)
+
+
+def plain_flags(objective: str) -> set[str]:
+    """The racked seats' flags his own words raise, or an empty set."""
+    text = objective or ""
+    return {flag for flag, rx in _PLAIN_FLAGS if rx.search(text)}
 
 
 # A FOLLOW-UP POINTS AT THE CONVERSATION. Sitting 87 (2026-09-04, runs 8,

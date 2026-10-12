@@ -1,5 +1,7 @@
 ## Quartermaster
 - **Model Target:** llama3.2:latest
+- **Wakes On:** rack
+- **Wakes:** last
 - **Stage:** transform
 - **On Fail:** skip
 - **Context:** 8192

@@ -648,3 +648,19 @@
 {"suite": "smoke", "at": 1791815128.1333218, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "strokes", "at": 1791817367.2164989, "state": "finished", "passed": 3772, "total": 3772, "green": true, "failed": []}
 {"suite": "smoke", "at": 1791817372.9211793, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1791820582.3503785, "state": "finished", "passed": 3808, "total": 3810, "green": false, "failed": ["edit_file.md: `replace` is specific enough to claim", "rack_unload.md: `unload` is specific enough to claim"]}
+{"suite": "smoke", "at": 1791820588.1540143, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1791820998.2677274, "state": "finished", "passed": 3809, "total": 3809, "green": true, "failed": []}
+{"suite": "smoke", "at": 1791821007.1167386, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1791821643.9248288, "state": "finished", "passed": 3813, "total": 3822, "green": false, "failed": ["the block's sentences inside a tool result are a fact the tool returned, not a recital", "... and the same sentences as the seat's own testimony below the boundary are discarded", "a seat that is not the Steward sits on the head it was given", "...the Router sat once, to read the result, and was told: words, no other tool", "...its call after the decided one is set aside and the record says so", "the pipeline withholds the lifted citation", "and the record names the fault", "the Steward is cleared for reading skills only", "no two strokes share a name, so a red names one thing"]}
+{"suite": "smoke", "at": 1791821652.9135973, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1791822420.2670276, "state": "finished", "passed": 3823, "total": 3823, "green": true, "failed": []}
+{"suite": "smoke", "at": 1791822429.22602, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1791823038.8443894, "state": "finished", "passed": 3842, "total": 3842, "green": true, "failed": []}
+{"suite": "smoke", "at": 1791823047.764502, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1791823671.6600535, "state": "finished", "passed": 3846, "total": 3846, "green": true, "failed": []}
+{"suite": "smoke", "at": 1791823680.5703459, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1791827644.6185813, "state": "finished", "passed": 3851, "total": 3851, "green": true, "failed": []}
+{"suite": "smoke", "at": 1791827653.6428156, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1791829212.036963, "state": "finished", "passed": 3851, "total": 3851, "green": true, "failed": []}
+{"suite": "smoke", "at": 1791829221.0364587, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}

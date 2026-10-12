@@ -2668,35 +2668,37 @@ def test_a_door_that_calls_a_tool_hands_it_to_the_router(reg, lib, book):
     (g / "lawnote.md").write_text("You are bound by the ten estate laws; the engine enforces what it "
                                   "can and refuses what it must. Testimony is never fact (LAW 5).\n", encoding="utf-8")
     def tool_reader(a):
-        # "read lawnote.md" is decided by arithmetic: ground_read runs first,
-        # the Router reads the result, and its own words stand BELOW the
-        # boundary -- the live shape of 12:48.
-        if a.key == "router":
+        # "read lawnote.md" is decided by arithmetic: ground_read runs first.
+        # Since 2026-10-12 a read is the Steward's own, so the Router stands
+        # aside: the tool's facts stand alone in its step, and the Steward's
+        # words are its own -- the line between them is the line between steps.
+        if a.key == "steward":
             return "the note restates the law in one line; that is all it holds"
-        return "the note was read; nothing else to say about it here"
+        return "x"
     r10 = Stub(reply=tool_reader)
     ctx10 = RunContext(objective="read lawnote.md", feed="")
     run_pipeline(ctx10, reg, r10, lib, env_for(g, reg, r10),
                  steps=book.get("default"), report=lambda s: None)
     router_out = ctx10.output_of("Router") or ""
     check("the block's sentences inside a tool result are a fact the tool returned, not a recital",
-          "enforces what it can" in router_out and "reading the above (testimony, not tool output)" in router_out
+          "enforces what it can" in router_out
+          and "the note restates the law" in (ctx10.last_output() or "")
           and not any("recited the law block" in n for n in ctx10.notes),
           str(ctx10.notes)[-160:])
     def tool_then_recital(a):
-        # "read rack.md" is decided by arithmetic: ground_read runs first and
-        # the Router reads the result -- so its prose stands BELOW the boundary.
-        if a.key == "router":
+        # "read rack.md" is decided by arithmetic and the Steward reads it --
+        # so a recital of the law is the Steward's own testimony.
+        if a.key == "steward":
             return ("You are bound by the ten estate laws; the engine enforces what it "
                     "can and refuses what it must. Testimony is never fact (LAW 5).")
-        return "nine models on the rack, as the file says"
+        return "x"
     r11 = Stub(reply=tool_then_recital)
     ctx11 = RunContext(objective="read rack.md", feed="")
     run_pipeline(ctx11, reg, r11, lib, env_for(g, reg, r11),
                  steps=book.get("default"), report=lambda s: None)
     check("... and the same sentences as the seat's own testimony below the boundary are discarded",
-          any("Router recited the law block" in n for n in ctx11.notes)
-          and "enforces what it can" not in (ctx11.output_of("Router") or ""), str(ctx11.notes)[-200:])
+          any("Steward recited the law block" in n for n in ctx11.notes)
+          and "enforces what it can" not in (ctx11.last_output() or ""), str(ctx11.notes)[-200:])
     # ITS OWN INSTRUCTIONS (WHAT'S LEFT C6, 2026-09-30): the closing seat
     # reading a sentence of its seat file back is the same recital.
     steward_md = (ROOT / "agents" / "steward.md").read_text(encoding="utf-8")
@@ -5047,8 +5049,10 @@ def test_the_headless_door(reg, lib, book):
         # roster's proof -- taken on the Router because he named it.
         reg = _AR.load(ROOT / "agents")
         loads.clear()
+        # A turn the Router sits for: since 2026-10-12 a listing decided by
+        # arithmetic is the Steward's to read, so a write is asked instead.
         rows, sess, text, rc = drive(
-            [{"cmd": "objective", "text": "what is in the skills dir",
+            [{"cmd": "objective", "text": "write a note about the rack",
               "voices": {"Router": "phi4:latest"}},
              {"cmd": "close"}],
             Rack(installed={"phi4:latest"}, reply="[Router] read it."))
@@ -5883,13 +5887,20 @@ def test_what_is_in_the_x_dir_is_a_listing(reg, lib, book):
     check("...and the call was DECIDED: the Router was never asked to choose",
           any("decided by arithmetic (names_a_folder)" in n for n in ctx.notes)
           and not any("Available Skills" in p for n, p in r.seen if n == "Router"), str(ctx.notes))
-    check("...the Router sat once, to read the result, and was told: words, no other tool",
-          [p for n, p in r.seen if n == "Router"] and
-          all("Results So Far" in p and "no XML and no other tool" in p
-              for n, p in r.seen if n == "Router"))
+    # SINCE 2026-10-12 A LISTING DECIDED BY ARITHMETIC IS THE STEWARD'S TO READ
+    # (his word: the Steward answers reads and simple tool calls; his card:
+    # "Build it properly"). The Router is not asked at all, and sitting 91's
+    # rule moves with the reading: the closing Steward is told words, no other tool.
+    check("...the Router was not asked to read it: the Steward was, told words and no other tool",
+          not [p for n, p in r.seen if n == "Router"]
+          and [p for n, p in r.seen if n == "Steward"]
+          and all("no XML and no other tool" in p for n, p in r.seen if n == "Steward"),
+          str([n for n, _ in r.seen]))
 
-    # THE DISOBEDIENT ROUTER (sitting 91): whatever it would call, the
-    # decided call runs first and its second call is set aside.
+    # THE DISOBEDIENT ROUTER (sitting 91): whatever it would call, the decided
+    # call runs first -- and since 2026-10-12 it is not asked to read a
+    # listing at all. A closing Steward that answers the decided call with
+    # another tool call is set aside the same way, and the listing stands.
     rd = DisobedientRouter()
     ctxd = RunContext(objective="what is in the skills dir")
     ed = env_for(g, reg, rd)
@@ -5898,12 +5909,30 @@ def test_what_is_in_the_x_dir_is_a_listing(reg, lib, book):
     rand = [k for st in ctxd.steps for k in (st.tool_calls or ())]
     check("a Router that always calls skill_report cannot stop ground_list from running",
           rand == ["ground_list"], str(rand))
+    check("...and it is not asked to read the listing at all",
+          not [p for n, p in rd.seen if n == "Router"], str([n for n, _ in rd.seen]))
+
+    class DisobedientSteward(ObedientRouter):
+        """A closing seat that answers the decided listing with another tool call."""
+        def chat(self, agent, prompt, stream_to=None, tools=None, think_to=None,
+                 think=None):
+            if agent.key == "steward":
+                self.seen.append((agent.name, prompt))
+                self.souls.append((agent.name, agent.system_prompt or ""))
+                return "<action>skill_report</action>"
+            return super().chat(agent, prompt, stream_to, tools, think_to, think)
+    rs = DisobedientSteward()
+    ctxs = RunContext(objective="what is in the skills dir")
+    es = env_for(g, reg, rs)
+    es.ground = g
+    run_pipeline(ctxs, reg, rs, lib, es, steps=book.get("default"), report=lambda s: None)
+    rans = [k for st in ctxs.steps for k in (st.tool_calls or ())]
     check("...its call after the decided one is set aside and the record says so",
-          any("asked for `skill_report` after the decided call ran -- set aside" in n
-              for n in ctxd.notes), str(ctxd.notes))
+          rans == ["ground_list"] and any("after the work was already done -- discarded" in n
+                                         for n in ctxs.notes), f"{rans} {ctxs.notes}")
     check("...and the listing is what stands",
-          "Contents of skills" in (ctxd.output_of("Router") or "")
-          and "37 skills" not in (ctxd.output_of("Router") or ""), (ctxd.output_of("Router") or "")[:100])
+          "Contents of skills" in (ctxs.output_of("Router") or "")
+          and "37 skills" not in (ctxs.output_of("Router") or ""), (ctxs.output_of("Router") or "")[:100])
 
     ctx2 = RunContext(objective="what is in the nosuch dir")
     r2 = ObedientRouter()
@@ -9597,6 +9626,338 @@ def test_asking_about_a_tool_is_not_asking_for_it(reg, lib, book):
     ap = build_prompt(reg.get("Steward"), acted, lib)
     check("and when a tool DID run, it is named",
           "TOOLS THAT ACTUALLY RAN THIS TURN: git_status" in ap, ap[-200:])
+
+
+def test_a_skill_asked_for_in_its_own_words_is_the_one_named(reg, lib, book):
+    """SITTING 370 (2026-10-10, the measure). Eleven skills were asked for in
+    plain words and another ran, or none. "inspect the file INVENTORY.md
+    before reading it" went to ground_read, because the table's "the file" is
+    one letter longer than "inspect"; "read the file measure.py from the
+    workspace" went to list_directory on a tie the alphabet broke; "run
+    measure.py from the workspace" never reached the order to run, because a
+    place word had already named a skill.
+
+    His word, 2026-10-12: the plain intent of the input is read off what the
+    system actually has. So a skill's OWN words -- its name and its `Says:`,
+    declared in its own file -- outrank the shared table; the word he leads
+    with outranks a place or a thing named later; and an order to run a named
+    script is not taken by a place word. The questions are his own, verbatim."""
+    from manjuel import intent
+
+    asked = (
+        ("break this into small checkable steps: cut v0.2.6", "decompose_task"),
+        ("extract the facts from this: sitting 366 ran from 18:41 to 19:01 and "
+         "met 9 of 10 expectations", "extract_facts"),
+        ("inspect the file INVENTORY.md before reading it", "inspect"),
+        ("what ran between 18:40 and 19:10 today?", "when"),
+        ("list every skill you can actually execute", "skill_report"),
+        ("which of your skills bear on git?", "skill_search"),
+        ("read the file measure.py from the workspace", "read_file"),
+        ("unload phi4-mini:latest from VRAM now", "rack_unload"),
+        ("embed the file INVENTORY.md into the index now", "embed_text"),
+    )
+    for q, want in asked:
+        got = intent.names_a_tool(q, lib)
+        check(f"asked in its own words, {want} is named: {q[:40]!r}",
+              got == want, f"named {got!r}")
+
+    # AN ORDER TO REPLACE IS A WRITE, and a write is the Router's to decide,
+    # never arithmetic's: the reader the table named for the place word is set
+    # aside and the Router is woken with no tool named (edit_file is its pick).
+    edit = "in measure.py in the workspace, replace 'the measure ran' with 'the measure ran here'"
+    g = Path(tempfile.mkdtemp())
+    r = Stub(reply="x")
+    ctx = RunContext(objective=edit)
+    run_pipeline(ctx, reg, r, lib, env_for(g, reg, r, skills=lib),
+                 steps=book.get("default"), report=lambda m: None)
+    check("an order to replace is no reader's: the Router decides the write",
+          not ctx.named_tool and any("write-shaped" in n for n in ctx.notes),
+          f"named {ctx.named_tool!r}; {str(ctx.notes)[:200]}")
+
+    run = "run measure.py from the workspace and tell me what it printed"
+    got = intent.names_a_tool(run, lib)
+    check("an order to run a named script is not taken by a place word",
+          got == "", f"named {got!r}")
+    check("...and the order to run is still read as one",
+          intent.wants_running(run) == "measure.py", repr(intent.wants_running(run)))
+
+    # WHAT ALREADY WORKED STILL DOES: with no skill's own words in the
+    # sentence, the shared table still names its skill.
+    for q, want in (("read the file pipelines.md", "ground_read"),
+                    ("what is in the workspace", "list_directory"),
+                    ("what skills do you have", "skill_report"),
+                    ("git commit", "git_commit")):
+        got = intent.names_a_tool(q, lib)
+        check(f"the table still names {want}: {q!r}", got == want, f"named {got!r}")
+
+
+def test_no_router_in_the_order_means_no_tool(reg, lib, book):
+    """SITTING 369 (2026-10-10, the measure). quick and estate carry no Router,
+    yet the engine chose a tool for them: "what is two plus two?" in quick went
+    to semantic_search, nothing could run it, and the turn never said four;
+    estate ruled without the search it chose. His card, 2026-10-12: "No tool in
+    either". Where the running order has no Router, no tool is chosen -- and so
+    no card is shown -- and the seats answer from what they have. The review
+    panel keeps its read-only Router and its reach."""
+    asked = (("quick", "what is two plus two?"),
+             ("quick", "what does the covenant say about the ground?"),
+             ("estate", "what does the covenant say about the ground?"))
+    for pipe, q in asked:
+        g = Path(tempfile.mkdtemp())
+        r = Stub(reply="x")
+        ctx = RunContext(objective=q)
+        run_pipeline(ctx, reg, r, lib, env_for(g, reg, r, skills=lib),
+                     steps=book.get(pipe), report=lambda m: None)
+        check(f"{pipe}: no tool is chosen where no Router can run it: {q!r}",
+              not ctx.named_tool and "needs_tool" not in ctx.flags,
+              f"named {ctx.named_tool!r}; flags {sorted(ctx.flags)}")
+        check(f"{pipe}: and the record says why: {q!r}",
+              any("no Router" in n for n in ctx.notes), str(ctx.notes)[:200])
+
+    g = Path(tempfile.mkdtemp())
+    r = Stub(reply="x")
+    ctx = RunContext(objective="what does the covenant say about the ground?")
+    run_pipeline(ctx, reg, r, lib, env_for(g, reg, r, skills=lib),
+                 steps=book.get("court"), report=lambda m: None)
+    check("the review panel keeps its Router, and its reach",
+          ctx.named_tool == "semantic_search", f"named {ctx.named_tool!r}")
+
+
+def test_the_steward_reads_its_own_simple_calls(reg, lib, book):
+    """His word, 2026-10-12: the Steward up front answers reads, simple tool
+    calls and simple tasks; the Router is the second layer, for the harder
+    work. His card: simple is one tool and one target. So the Steward's own
+    list (agents/steward.md, May Call) holds the reading skills -- his
+    sitting-39 ruling, "review, never write" -- and the one-target ones that
+    write nothing; and a call the engine DECIDED on that list runs as before,
+    but the Router does not sit again to read it: the closing Steward answers
+    from the result. Sitting 84's one executor stands -- the call runs in the
+    Router's step, and only there."""
+    from manjuel.skills import REVIEW_ONLY_SKILLS, WRITING_SKILLS
+    own = reg.get("Steward").callable_set(lib.keywords())
+    check("the Steward's own list holds every reading skill",
+          REVIEW_ONLY_SKILLS <= own, str(sorted(REVIEW_ONLY_SKILLS - own)))
+    check("and nothing that writes", not (own & WRITING_SKILLS),
+          str(sorted(own & WRITING_SKILLS)))
+
+    g = Path(tempfile.mkdtemp())
+    r = Stub(reply="x")
+    ctx = RunContext(objective="list the skills")
+    run_pipeline(ctx, reg, r, lib, env_for(g, reg, r, skills=lib),
+                 steps=book.get("default"), report=lambda m: None)
+    asked = [name for name, _ in r.seen]
+    ran = [c for s in ctx.steps for c in (s.tool_calls or [])]
+    check("a decided call on the Steward's list ran",
+          ctx.named_tool == "skill_report" and "skill_report" in ran,
+          f"named {ctx.named_tool!r}; ran {ran}")
+    check("the Router did not sit again to read it", "Router" not in asked, str(asked))
+    check("the closing Steward answered from the result", "Steward" in asked, str(asked))
+    check("and the record says the Steward answered", any("the Steward answers" in n for n in ctx.notes),
+          str(ctx.notes)[:200])
+
+
+def test_a_tool_it_is_not_sure_of_is_put_to_him(reg, lib, book):
+    """His cards, 2026-10-12: "Only when it isn't sure" and "Best match + next
+    two". When his words name two skills just as strongly, the turn asks him
+    once -- the best match, the next two and "just answer, no tool" -- through
+    the engine's own question (the Agent tab's card on the glass, the prompt in
+    the REPL). One clear match asks nothing. A turn nobody attends, or one with
+    no keyboard, takes the best match, as it always did, and says so; and "just
+    answer" means no tool at all."""
+    import builtins
+    from manjuel import intent
+    tie = "for this, which of your skills bear on git, and list every skill you can actually execute"
+    choices, sure = intent.tool_choices(tie, lib)
+    check("two skills named as strongly are not sure, the best first",
+          not sure and choices[:2] == ["skill_search", "skill_report"], f"{choices} sure={sure}")
+    one, sure1 = intent.tool_choices("which of your skills bear on git?", lib)
+    check("one he leads with is sure", sure1 and one[:1] == ["skill_search"], f"{one} sure={sure1}")
+
+    def turn(said, unattended=False):
+        asked = []
+
+        def fake(prompt=""):
+            asked.append(prompt)
+            if said is EOFError:
+                raise EOFError
+            return said
+        saved = builtins.input
+        builtins.input = fake
+        try:
+            g = Path(tempfile.mkdtemp())
+            r = Stub(reply="x")
+            ctx = RunContext(objective=tie)
+            ctx.unattended = unattended
+            run_pipeline(ctx, reg, r, lib, env_for(g, reg, r, skills=lib),
+                         steps=book.get("default"), report=lambda m: None)
+        finally:
+            builtins.input = saved
+        return ctx, asked
+
+    ctx, asked = turn("2")
+    check("the card offers the best match, the next one and just answer",
+          asked and "1  skill_search" in asked[0] and "2  skill_report" in asked[0]
+          and "just answer, no tool" in asked[0], (asked or [""])[0][:300])
+    check("his pick on the card is the tool that is named",
+          ctx.named_tool == "skill_report" and any("his pick" in n for n in ctx.notes),
+          f"{ctx.named_tool!r} {ctx.notes[-2:]}")
+    ctx, asked = turn(str(len(choices) + 1))
+    check("just answer means no tool at all",
+          not ctx.named_tool and "needs_tool" not in ctx.flags,
+          f"{ctx.named_tool!r} {sorted(ctx.flags)}")
+    ctx, asked = turn(EOFError)
+    check("no keyboard takes the best match, and says so",
+          ctx.named_tool == "skill_search" and any("no answer at the card" in n for n in ctx.notes),
+          f"{ctx.named_tool!r}")
+    ctx, asked = turn("2", unattended=True)
+    check("a turn nobody attends asks nothing and takes the best match",
+          not asked and ctx.named_tool == "skill_search", f"{ctx.named_tool!r} asked={len(asked)}")
+
+
+def test_his_plain_words_raise_the_flag_and_ask_first(reg, lib, book):
+    """His cards, 2026-10-12: "Engine raises on plain words", "Yes, a card to
+    wake it", and for the Quartermaster "Give it a flag, same way". Sitting 370:
+    "proofread this sentence", "think hard: ...", "lint this python" and the
+    rack report woke nobody, because the racked seats waited on a tag the
+    Steward did not write. His own words raise the flag now, and before the
+    racked seat wakes he is asked; nobody at the card wakes nobody, as before."""
+    import builtins
+    from manjuel import intent
+    from manjuel.pipeline import FLAGS, FLAGS_ENGINE
+    from manjuel.seating import wake_flags
+    for q, want in (("proofread this sentence: their going too the store", {"prose"}),
+                    ("think hard: a bat and a ball cost 1.10 together", {"hard"}),
+                    ("lint this python: def add(a, b): return a - b", {"technical"}),
+                    ("give me the rack report: installed, loaded and declared", {"rack"}),
+                    ("hello there, how is it going", set())):
+        check(f"his words raise {sorted(want) or 'nothing'}: {q[:30]!r}",
+              intent.plain_flags(q) == want, str(intent.plain_flags(q)))
+    check("rack is the engine's flag, in the closed set",
+          "rack" in FLAGS_ENGINE and "rack" in FLAGS)
+    qm = reg.get("Quartermaster")
+    check("the Quartermaster wakes on rack, last",
+          wake_flags(qm) == ["rack"] and (qm.wakes or "").strip().lower() == "last",
+          str(wake_flags(qm)))
+
+    def turn(q, said, unattended=False):
+        asked = []
+
+        def fake(prompt=""):
+            asked.append(prompt)
+            if said is EOFError:
+                raise EOFError
+            return said
+        saved = builtins.input
+        builtins.input = fake
+        try:
+            g = Path(tempfile.mkdtemp())
+            r = Stub(reply="x")
+            ctx = RunContext(objective=q)
+            ctx.unattended = unattended
+            run_pipeline(ctx, reg, r, lib, env_for(g, reg, r, skills=lib),
+                         steps=book.get("default"), report=lambda m: None)
+        finally:
+            builtins.input = saved
+        return ctx, asked, [n for n, _ in r.seen]
+
+    q = "proofread this sentence: their going too the store"
+    ctx, asked, sat = turn(q, "y")
+    check("he is asked before the Proofreader wakes",
+          asked and "Proofreader" in asked[0] and "Wake it" in asked[0], str(asked)[:200])
+    check("his yes wakes it", "Proofreader" in sat and "prose" in ctx.flags, str(sat))
+    ctx, asked, sat = turn(q, "n")
+    check("his no leaves it resting", "Proofreader" not in sat, str(sat))
+    ctx, asked, sat = turn(q, EOFError)
+    check("no keyboard wakes nobody, and says so",
+          "Proofreader" not in sat and any("not woken" in n for n in ctx.notes), str(ctx.notes[-2:]))
+    ctx, asked, sat = turn(q, "y", unattended=True)
+    check("a turn nobody attends asks nothing and wakes nobody",
+          not asked and "Proofreader" not in sat, f"asked={len(asked)} {sat}")
+
+
+def test_the_card_carries_its_color(reg, lib, book):
+    """His word, 2026-10-12: "color-code the cards ... the current amber cards for
+    big reads or approvals for memories, etc. Then a green card for moving up to the
+    router or switching seats, and a red card for things like code edits, file
+    writes ... Simplicity is key here." The engine's own questions carry their
+    color with them -- to the glass on the wire's needs_answer, tinted in the REPL:
+    the card for a tool it is not sure of is amber, the card to wake a racked seat
+    is green."""
+    import builtins
+    import inspect
+    from manjuel import serve
+    from manjuel.pipeline import CARD_COLORS
+    check("three colors and nothing more", CARD_COLORS == ("amber", "green", "red"), str(CARD_COLORS))
+    check("the wire's question carries the card's color",
+          "color" in inspect.signature(serve.Door.ask).parameters
+          and "color=" in inspect.getsource(serve.Door.ask))
+    check("and the glass's door sets the card hook beside input, and takes it back",
+          "builtins.ask_card = self.ask" in inspect.getsource(serve.Door.serve)
+          and "ask_card" in inspect.getsource(serve.Door.serve).split("finally:")[-1])
+    seen = []
+
+    def card(prompt, color="amber"):
+        seen.append(color)
+        return "n"
+    had = hasattr(builtins, "ask_card")
+    saved = getattr(builtins, "ask_card", None)
+    builtins.ask_card = card
+    try:
+        for q in ("for this, which of your skills bear on git, and list every skill you can actually execute",
+                  "proofread this sentence: their going too the store"):
+            g = Path(tempfile.mkdtemp())
+            r = Stub(reply="x")
+            run_pipeline(RunContext(objective=q), reg, r, lib, env_for(g, reg, r, skills=lib),
+                         steps=book.get("default"), report=lambda m: None)
+    finally:
+        if had:
+            builtins.ask_card = saved
+        else:
+            del builtins.ask_card
+    check("the card for a tool it is not sure of is amber, the card to wake a seat green",
+          seen == ["amber", "green"], str(seen))
+
+
+def test_a_path_skill_takes_the_file_its_words_name(reg, lib, book):
+    """Sitting 373, routing's first part proved live: "inspect the file
+    INVENTORY.md before reading it" handed `inspect` the whole rest of the
+    sentence as its file -- content='the file INVENTORY.md before reading
+    it' -- and the decided call failed, not a file in the workspace or the
+    ground. His card: "Mend it, then save". The words after the name are a
+    path's argument only when they name one: a skill whose own Path Args
+    declare `content` a path takes the file or folder the words name, found
+    on disk, the workspace first as inspect reads it; naming none, nothing
+    is decided and the Router writes the call. A skill whose content is
+    words is untouched."""
+    from manjuel.context import tool_verdicts
+    g = Path(tempfile.mkdtemp())
+    (g / "INVENTORY.md").write_text("# inventory", encoding="utf-8")
+
+    def turn(q):
+        r = Stub(reply="x")
+        ctx = RunContext(objective=q)
+        run_pipeline(ctx, reg, r, lib, env_for(g, reg, r, skills=lib),
+                     steps=book.get("default"), report=lambda m: None)
+        return ctx
+
+    ctx = turn("inspect the file INVENTORY.md before reading it")
+    check("the file the words name is inspect's argument, and the call is decided",
+          (ctx.tool_args or {}).get("content") == "INVENTORY.md" and ctx.named_by == "the words"
+          and any("decided by arithmetic" in n for n in ctx.notes), str(ctx.notes)[-400:])
+    said = " ".join(tool_verdicts(ctx.steps))
+    check("... and inspect found the file", "INVENTORY.md -- inspected, not read" in said, said[:300])
+    (g / "agent_workspace" / "pasted.py").write_text("print(1)", encoding="utf-8")
+    ctx = turn("inspect pasted.py before reading it")
+    check("a file in the workspace is found there first, as inspect reads it",
+          (ctx.tool_args or {}).get("content") == "pasted.py", str(ctx.notes)[-300:])
+    ctx = turn("inspect the file NOWHERE.md before reading it")
+    check("a file the words name that is not on disk decides nothing; the Router writes the call",
+          "content" not in (ctx.tool_args or {}) and ctx.named_by != "the words"
+          and not any("decided by arithmetic" in n for n in ctx.notes)
+          and any("name no file or folder on disk" in n for n in ctx.notes), str(ctx.notes)[-300:])
+    ctx = turn("semantic_search the covenant")
+    check("a skill whose content is words still takes the words",
+          (ctx.tool_args or {}).get("content") == "the covenant", str(ctx.notes)[-300:])
 
 
 def test_the_shortlist_is_budget_not_judgement(reg, lib, book):
@@ -14572,23 +14933,26 @@ def test_the_citation_check(reg, lib, book):
           bogus_citations(results, "nothing in the ground mentions warden") == [])
 
     # and through the pipeline: the bogus prose is withheld, results stand.
-    # (2026-09-08: `semantic_search warden` is DECIDED -- the engine runs
-    # the search first and the Router sits once to read it; the Router's
-    # first words are therefore the reading, not the call.)
+    # (2026-09-08: `semantic_search warden` is DECIDED -- the engine runs the
+    # search first. Since 2026-10-12 a search is the Steward's own, so the
+    # Router stands aside and the closing Steward reads it -- and this check
+    # reads the Steward's prose, as it read the Router's; his card: "Build it
+    # properly".)
     def _reply(a):
-        if a.key == "router":
+        if a.key == "steward":
             return lifted
-        return "<flags>needs_tool</flags> passing it along"
+        return "x"
     g = Path(tempfile.mkdtemp())
     ctx = RunContext(objective="semantic_search warden")
     run_pipeline(ctx, reg, Stub(reply=_reply), lib,
                  env_for(g, reg, Stub(reply=_reply)),
                  steps=book.get("default"), report=lambda m: None)
     router = next(s for s in ctx.steps if s.agent == "Router" and not s.skipped)
+    steward = [s for s in ctx.steps if s.agent == "Steward" and not s.skipped][-1]
     check("the pipeline withholds the lifted citation",
-          "REFUSED" in router.output and "what_is_jesster" not in
-          router.output.split("REFUSED")[-1].split("`")[0],
-          router.output[-200:])
+          "REFUSED" in steward.output and "what_is_jesster" not in
+          steward.output.split("REFUSED")[-1].split("`")[0],
+          steward.output[-200:])
     check("the tool's own reading still travels (facts first)",
           "Tool executed: semantic_search" in router.output
           or "Tool attempted: semantic_search" in router.output)
@@ -21913,6 +22277,13 @@ def main() -> int:
     test_sitting70_regressions(reg, lib, book)
     test_markup_never_reaches_the_terminal(reg, lib, book)
     test_asking_about_a_tool_is_not_asking_for_it(reg, lib, book)
+    test_a_skill_asked_for_in_its_own_words_is_the_one_named(reg, lib, book)
+    test_no_router_in_the_order_means_no_tool(reg, lib, book)
+    test_the_steward_reads_its_own_simple_calls(reg, lib, book)
+    test_a_tool_it_is_not_sure_of_is_put_to_him(reg, lib, book)
+    test_his_plain_words_raise_the_flag_and_ask_first(reg, lib, book)
+    test_the_card_carries_its_color(reg, lib, book)
+    test_a_path_skill_takes_the_file_its_words_name(reg, lib, book)
     test_the_shortlist_is_budget_not_judgement(reg, lib, book)
     test_the_record_can_be_audited(reg, lib, book)
     test_a_subtask_runs_scoped_and_bounded(reg, lib, book)

@@ -447,13 +447,17 @@ class Door:
 
     # ---- the keyboard --------------------------------------------------
 
-    def ask(self, prompt: str = "") -> str:
+    def ask(self, prompt: str = "", color: str = "amber") -> str:
         """Stands where input() stood. One question, one answer, over the
         wire; a cancel here is Ctrl-C and a close is Ctrl-D, which is what
-        every input() site in cli.py and pipeline.py already handles."""
+        every input() site in cli.py and pipeline.py already handles. The
+        card's color rides with the question (2026-10-12, his word: amber for
+        reads and approvals, green for moving up or waking a seat, red for
+        code edits and file writes); input() itself asks amber."""
         self.asked += 1
         self.inbox.set_state(Inbox.ASKING)
-        self.wire.emit("needs_answer", id=self.asked, prompt=str(prompt or ""))
+        self.wire.emit("needs_answer", id=self.asked, prompt=str(prompt or ""),
+                       color=color if color in ("amber", "green", "red") else "amber")
         try:
             while True:
                 row = self.inbox.take()
@@ -527,6 +531,8 @@ class Door:
         from . import cli as _cli
         real_input = builtins.input
         builtins.input = self.ask
+        # ...and the colored card's hook beside it (pipeline._ask, 2026-10-12).
+        builtins.ask_card = self.ask
         try:
             while True:
                 self.inbox.set_state(Inbox.IDLE)
@@ -634,6 +640,7 @@ class Door:
                         self.sess.load()
         finally:
             builtins.input = real_input
+            builtins.__dict__.pop("ask_card", None)
 
     # ---- the head this turn runs on ------------------------------------
 
