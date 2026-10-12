@@ -307,8 +307,31 @@ goals". The steps under each are proposed from the disk; each is yours to change
   escalation processes" -- no seat re-roled: the Steward the small asks, the Router the tool calls and the package, the Reasoner
   and the Expert Coder the big ones, a workflow (H23) the unbounded, the court as it stands. Routing's next part, shaped with you
   before anything is built.
-  **Now (12:50):** the save and send of `router-package`, with a pull request, on your word; then the levels, or workflows
-  from a sentence (H23), your pick.
+  (b)'s second part saved, sent and merged on your click (pull request 18, 2026-10-12).
+  **(b) Routing, its third part, the levels** (your cards: "Tag and route", "Arithmetic on your words", "By the seat that takes
+  it", "Note it, run it as 3"), on the line `levels`, each step's test shown red first, then green: (1) `intent.level` measures your
+  words by arithmetic -- length (over 200 characters the Router's, over 600 a big seat's), two or more questions, a file named,
+  code, your words for a big seat, a pasted feed, acts in sequence -- and tags the turn by the seat that takes it; (2) where a
+  Router stands, a level 2 brings the Router, a level 3 asks you on the green card to wake the big seat, and a level 4 is said to
+  be a workflow's job (H23) and runs as a level 3; quick and estate are tagged only, a follow-up keeps the door. The suites 3881
+  of 3881 and 72 of 72 (14:27). Sitting 376 (14:27 to 14:56), an ask at each level: the Steward alone, 2.6 s; the Router, 315.9 s;
+  the Reasoner on your card with the Router's package, 661.5 s; a workflow's job run as the Reasoner's, its package cut to fit
+  (17,447 of 27,453 characters), 307.2 s. Found: two questions no tool answers brought the Router, which paged through
+  SEAT_LOG.md, and the answer missed them -- the level-2 cut line to check; a long fresh question was taken for a follow-up
+  ("check what you tell me"), so its level only tagged it; "what I could change" read as a write and the Router rebuilt the
+  index unasked, the second time today; the 600-second deadline left the closing Steward 48 s after a big seat; the Router named
+  no task again; the token cuts again; and the Bash tab refused a read-only measure of your record three times without naming
+  what it matched. *(CHANGELOG, "core: routing, its third part, the levels")*
+  Your word at about 15:00 on the engine's answers: "truncated and shitty responses half the time. a lot of repeating the ansers,
+  referencing earlier responses, repeating things, losing context". The causes, off sitting 376's record and the code: the answer
+  caps cut a seat in three of the four turns past the Steward (the Router at 900 tokens three times, the Reasoner at 1400 twice,
+  the Quality Evaluator at 700 once); the closing answer is written by the Steward on llama3.2 (3B), handed every seat's words and
+  told to retell them in its own voice, so a big seat's answer reaches you rewritten; the same prompt carries the conversation so
+  far, and it retells it, (c); that conversation is cut to its newest 2,400 characters, and the Router never sees it; and the
+  600-second clock counts the time a card waits for you. Your card: all four fixes, as the next pieces.
+  **Now (15:12):** the save and send of `levels` on your card ("Save and send"); then the answers, one piece at a time in your
+  card's order, each planned here before it is built: (1) the big seat's answer passed through, (c); (2) the caps raised where
+  they cut; (3) the clock stopped while a card waits; (4) the conversation given more room.
   Your cards of 2026-10-10 on its first part: the release flow's record step prints STATUS.md again, so its last read can pass (built the same
   day; its first COMPLETE is the v0.2.6 cut) *(CHANGELOG, "core: the release flow's record step prints STATUS again")*; and `coder` and
   `version-tag` retired, every version kept (built the same day: the door fires neither again and keeps every version, the Workflows tab says why

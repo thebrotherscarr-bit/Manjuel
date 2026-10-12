@@ -10069,6 +10069,83 @@ def test_the_router_moves_up_on_its_own(reg, lib, book):
           seen.get("Reasoner", "")[-500:])
 
 
+def test_a_turn_is_measured_into_its_level(reg, lib, book):
+    """His idea, 2026-10-12: "tagging the things based on the size of the input
+    ... different levels of escalation based on the complexity of the input";
+    his cards: "Arithmetic on your words", "By the seat that takes it". A turn
+    is measured by arithmetic -- its length, its questions, a file named, code,
+    his words, a pasted feed, acts in sequence -- and tagged by the seat that
+    takes it, with today's seats (his ruling: keep the roles): the Steward, the
+    Router, the Reasoner or the Expert Coder, a workflow."""
+    from manjuel import intent
+    longer = "explain how the seats take turns here, and why each one waits for the last one, " * 3
+    much = "explain how the seats take turns here, and why each one waits for the last one, " * 8
+    for q, n, seat in (("hello there, how is it going", 1, "Steward"),
+                       ("read pipelines.md and tell me which running order is slowest", 2, "Router"),
+                       ("which seat sits longest? and which sits shortest?", 2, "Router"),
+                       (longer, 2, "Router"),
+                       (much, 3, "Reasoner"),
+                       ("think hard: a bat and a ball cost 1.10 together", 3, "Reasoner"),
+                       ("lint this python: def add(a, b): return a - b", 3, "Expert Coder"),
+                       ("read the inventory, then find the slowest route, then fix it and write it up",
+                        4, "workflow")):
+        got = intent.level(q)
+        check(f"level {n}, the {seat}: {q[:36]!r}", got[0] == n and got[1] == seat, str(got[:3]))
+    big = intent.level("summarise this", "y" * 30000)
+    check("a feed beyond a big seat's window is a workflow's job", big[0] == 4 and big[1] == "workflow", str(big[:3]))
+    check("a level 3 names the big seat's flag: hard to reason, technical for code",
+          intent.level("think hard: why")[3] == "hard"
+          and intent.level("lint this python: def f(): pass")[3] == "technical"
+          and intent.level("hello there")[3] == "", "")
+
+
+def test_the_level_routes_with_todays_seats(reg, lib, book):
+    """His cards, 2026-10-12: "Tag and route", "Note it, run it as 3". The level
+    sets where a turn starts, with today's seats: a short single ask is the
+    Steward's and nothing more wakes; a larger ask brings the Router; a much
+    larger one asks him on the green card to wake the big seat, which sits after
+    the Router and its package; a workflow's job is said so and runs as a level 3
+    until workflows from a sentence exist (H23); where no Router stands the level
+    is a tag and nothing more. The record says which seat took it."""
+    import builtins
+
+    def turn(q, steps="default"):
+        asked = []
+        saved = builtins.input
+        builtins.input = lambda prompt="": asked.append(prompt) or "y"
+        try:
+            g = Path(tempfile.mkdtemp())
+            r = Stub(reply="x")
+            ctx = RunContext(objective=q)
+            run_pipeline(ctx, reg, r, lib, env_for(g, reg, r, skills=lib),
+                         steps=book.get(steps), report=lambda m: None)
+        finally:
+            builtins.input = saved
+        router = any(s.agent == "Router" and not s.skipped for s in ctx.steps)
+        return ctx, asked, [n for n, _ in r.seen], router
+
+    ctx, asked, sat, router = turn("hello there, how is it going")
+    check("a short single ask is the Steward's, and nothing more wakes",
+          ctx.level == "Steward" and not router and not asked
+          and any(n.startswith("level: Steward") for n in ctx.notes), f"{ctx.level} {sat} {ctx.notes[-3:]}")
+    ctx, asked, sat, router = turn("which seat sits longest? and which sits shortest?")
+    check("a larger ask brings the Router", ctx.level == "Router" and router, f"{ctx.level} {sat}")
+    much = "explain how the seats take turns here, and why each one waits for the last one, " * 8
+    ctx, asked, sat, router = turn(much)
+    check("a much larger ask asks him on the green card, and the big seat sits after the Router",
+          ctx.level == "Reasoner" and bool(asked) and "Reasoner" in asked[0] and router and "Reasoner" in sat,
+          f"{ctx.level} asked={len(asked)} {sat}")
+    ctx, asked, sat, router = turn("read the inventory, then find the slowest route, then fix it and write it up")
+    check("a workflow's job is said so, and runs as a level 3 until workflows exist",
+          ctx.level == "workflow" and "Reasoner" in sat
+          and any("workflows from a sentence are not built yet (H23)" in n for n in ctx.notes),
+          f"{ctx.level} {sat} {ctx.notes[-3:]}")
+    ctx, asked, sat, router = turn("which seat sits longest? and which sits shortest?", steps="quick")
+    check("where no Router stands, the level is a tag and nothing more",
+          ctx.level == "Router" and not router and any("tagged only" in n for n in ctx.notes),
+          f"{ctx.notes[-3:]}")
+
+
 def test_the_shortlist_is_budget_not_judgement(reg, lib, book):
     """The shortlist was measured UNNECESSARY for accuracy on 2026-09-01
     (79% of tool turns already resolve deterministically). What changed is
@@ -22396,6 +22473,8 @@ def main() -> int:
     test_a_seat_after_the_router_is_handed_the_package(reg, lib, book)
     test_the_router_names_the_task_it_packs(reg, lib, book)
     test_the_router_moves_up_on_its_own(reg, lib, book)
+    test_a_turn_is_measured_into_its_level(reg, lib, book)
+    test_the_level_routes_with_todays_seats(reg, lib, book)
     test_the_shortlist_is_budget_not_judgement(reg, lib, book)
     test_the_record_can_be_audited(reg, lib, book)
     test_a_subtask_runs_scoped_and_bounded(reg, lib, book)

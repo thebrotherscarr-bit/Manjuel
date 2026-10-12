@@ -885,6 +885,67 @@ def plain_flags(objective: str) -> set[str]:
     text = objective or ""
     return {flag for flag, rx in _PLAIN_FLAGS if rx.search(text)}
 
+# THE LEVELS (2026-10-12, his idea -- "tagging the things based on the size of
+# the input ... different levels of escalation based on the complexity of the
+# input" -- and his cards: "Arithmetic on your words", "By the seat that takes
+# it"; his ruling: "keep the current laws and rulings for roles, and use them for
+# the routing and escalation processes"). A turn is measured by arithmetic on his
+# own words and tagged by the seat that takes it, with today's seats: the Steward
+# a short single ask; the Router a larger one; the Reasoner, or the Expert Coder
+# for code, a much larger one; a workflow (H23) many acts, or more than a big
+# seat's window holds. The cut lines are judgement, set that day and checked in a
+# live sitting; the counting is the engine's own (_ACT_VERB, the numbered list
+# is_big_objective reads, plain_flags, names_a_file).
+LEVEL_LONG = 200               # characters: a larger ask
+LEVEL_VERY_LONG = 600          # characters: a much larger one
+LEVEL_FEED = 2000              # a pasted feed this long is a big seat's to read
+LEVEL_BEYOND_A_WINDOW = 24000  # a big seat's 8,192 tokens, at three characters to a token
+LEVEL_SEATS = {1: "Steward", 2: "Router", 3: "Reasoner", 4: "workflow"}
+_CODE_RE = re.compile(r"(?m)```|^\s*(?:def|class|import|from)\s+\w|\bdef\s+\w+\s*\(|\bfunction\s+\w+\s*\(")
+
+
+def level(objective: str, feed: str = "") -> tuple[int, str, list, str]:
+    """(level, the seat that takes it, why, the big seat's flag) for one turn.
+    A level only ever adds to the route the engine already chose."""
+    text = (objective or "").strip()
+    feed = (feed or "").strip()
+    raised = plain_flags(text)
+    code = bool(_CODE_RE.search(text)) or "technical" in raised
+    acts = len(_ACT_VERB.findall(text))
+    steps = len(re.findall(r"(?m)^\s*(?:\d+[.)]|[-*])\s+\S", text))
+    why: list = []
+    n = 1
+    if len(text) > LEVEL_LONG:
+        n = 2
+        why.append(f"{len(text)} characters")
+    if text.count("?") >= 2:
+        n = max(n, 2)
+        why.append(f"{text.count('?')} questions")
+    named = names_a_file(text)
+    if named:
+        n = max(n, 2)
+        why.append(f"names {named}")
+    if len(text) > LEVEL_VERY_LONG:
+        n = max(n, 3)
+    if code:
+        n = max(n, 3)
+        why.append("code")
+    if raised & {"hard", "technical"}:
+        n = max(n, 3)
+        why.append("his words: " + ", ".join(sorted(raised & {"hard", "technical"})))
+    if len(feed) > LEVEL_FEED:
+        n = max(n, 3)
+        why.append(f"a {len(feed)}-character feed")
+    if is_big_objective(text) and max(acts, steps) >= 3:
+        n = 4
+        why.append(f"{max(acts, steps)} acts in sequence")
+    if len(feed) > LEVEL_BEYOND_A_WINDOW:
+        n = 4
+        why.append("a feed beyond a big seat's window")
+    flag = ("technical" if code else "hard") if n >= 3 else ""
+    seat = "Expert Coder" if n == 3 and code else LEVEL_SEATS[n]
+    return n, seat, why, flag
+
 
 # A FOLLOW-UP POINTS AT THE CONVERSATION. Sitting 87 (2026-09-04, runs 8,
 # 9, 13): "what does that last part mean? Refused: `content` must be a
