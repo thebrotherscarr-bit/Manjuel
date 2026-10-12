@@ -285,8 +285,30 @@ goals". The steps under each are proposed from the disk; each is yours to change
   again, and `inspect` read INVENTORY.md's facts in 8.6 s; INVENTORY's lines for the racked seats, the Steward, estate, quick, twelve
   skills, `file_edit` and the Agent tab measured again.
   *(CHANGELOG, "core: routing, its first part, the front face")* *(atlas CHANGELOG, "Routing's front face, atlas's part")*
-  **Now (11:15):** the save and send of both lines `routing`, with a pull request in each repository, on your word; then (b)'s
-  next part, the Router packing the harder work for a big seat or a workflow (with H23), or another piece, your pick.
+  (b)'s first part saved, sent and merged on your click (pull request 17 in each repository, 2026-10-12).
+  **(b) Routing, its second part, the Router's package** (your cards: "Engine packs, Router names task", "Big seats now, workflows
+  next", "No, let it move"), on the line `router-package`, each step's test shown red first, then green: (1) the package -- a seat
+  after the Router is handed your words, what the Router's tools returned (each under its tool's name, cut to fit its window, the cut
+  marked), the task and its limits, in place of every earlier seat's raw output, and the record notes its size; (2) the Router is
+  told which seat waits behind it and asked to name the task in `<task>`, which the engine reads and takes out, as it does flags --
+  with none, the task is your words; (3) the Router's ways up are read from the seat files (`technical` for the Expert Coder, `hard`
+  for the Reasoner), with no card. The suites 3866 of 3866 and 72 of 72 (12:05). Sitting 375 (12:05 to 12:49): the Expert Coder
+  handed all of pipelines.md (12,915 characters) and answering from it; the Reasoner handed three skill_search results (8,052
+  characters) and building its answer from them; the Expert Coder handed lint_code's result and writing the fix (saved in the
+  workspace as scratch.py); the riddle's Reasoner handed your words alone, 5 cents. Found: the Router named no task in any of the
+  three turns that asked it (the fallback held each time); the text of pipelines.md raised `technical` when it was read (its own
+  example tags), so a file's words woke a seat; the turn's 600-second deadline counts the time a card waits for you (an ask whose
+  card you answered after ten minutes ran out of time); "lint the code in measure.py from the workspace" named `list_directory`;
+  the Reasoner cut at 1400 tokens twice and the Quality Evaluator at 700; the closing answer retold an earlier turn twice, (c).
+  *(CHANGELOG, "core: routing, its second part, the Router's package")*
+  The levels, your idea of the day: each turn tagged by the size and complexity of what you ask -- a single sentence, a larger ask,
+  a much larger input, and the unbounded (many turns, agentic asks, scripted iterations, a bigger window and more horsepower) --
+  each starting at its own seat. Your ruling: "keep the current laws and rulings for roles, and use them for the routing and
+  escalation processes" -- no seat re-roled: the Steward the small asks, the Router the tool calls and the package, the Reasoner
+  and the Expert Coder the big ones, a workflow (H23) the unbounded, the court as it stands. Routing's next part, shaped with you
+  before anything is built.
+  **Now (12:50):** the save and send of `router-package`, with a pull request, on your word; then the levels, or workflows
+  from a sentence (H23), your pick.
   Your cards of 2026-10-10 on its first part: the release flow's record step prints STATUS.md again, so its last read can pass (built the same
   day; its first COMPLETE is the v0.2.6 cut) *(CHANGELOG, "core: the release flow's record step prints STATUS again")*; and `coder` and
   `version-tag` retired, every version kept (built the same day: the door fires neither again and keeps every version, the Workflows tab says why

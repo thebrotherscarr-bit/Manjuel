@@ -320,6 +320,14 @@ class RunContext:
     # Router stood aside from, so the closing Steward reads it -- told words and
     # no other tool, its prose checked as the Router's was (run_pipeline).
     steward_reads: str = ""
+    # THE ROUTER'S PACKAGE (2026-10-12, his card: "Engine packs, Router names
+    # task"): the woken seats queued behind the Router as it sits, told to it
+    # by name, and the task it named for them in <task> (run_pipeline).
+    package_for: list = field(default_factory=list)
+    router_task: str = ""
+    # ...and the ways up it may take on its own (his card: "No, let it move"):
+    # (flag, seat) for each racked seat behind it that takes its package.
+    way_up: list = field(default_factory=list)
     # Arguments a named skill's own **Takes:** rules found in the operator's
     # words. Carried so the payload survives the moment of recognition --
     # before this, matching a keyword threw the rest of the sentence away.
