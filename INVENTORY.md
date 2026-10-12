@@ -226,7 +226,7 @@ Each is called by the glass (a tab, a button, Registry & Docs' Call) or by the c
 | T79 | shell_run | the operator's own typed shell, run in this world: a Git Bash command or a Python entry (Python keeps its names between entries). | holds 202 to 208, 17:38 to 18:30: ok, a commit and push, the versions, a line opened | 41 ms to 4.3 s |
 | T80 | standup_run | run the estate's live standup in this world -- the morning set (default), the court, or all -- and hand back its tally and report. | sitting 366: ok, the live check with the review panel, 9 of 10 met (the court missed) | 1157 s |
 | T81 | state_matrix | state = fold(record) index of the named project | glass 17:59: ok; road and state absent (read_plan's map) | 7 ms |
-| T82 | suite_run | run the estate's own suites in this world -- the strokes, the smoke, or both (default) -- one after the other with the python the door runs the ... | the glass, 17:36: ok, 3772 of 3772 and 72 of 72 | 309 s |
+| T82 | suite_run | run the estate's own suites in this world -- the strokes, the smoke, or both (default) -- one after the other with the python the door runs the ... | the glass, 2026-10-12 07:21, drawn as it ran (a `door>` entry in the terminal, a running row in the Run tab's Door calls): ok, 3772 of 3772 and 72 of 72 | 237 s |
 | T83 | team_history | read the bridge record, filtered, newest last (N5) | glass 17:59: ok, nothing yet | 5 ms |
 | T84 | team_ingest | verify + store one inbound platform envelope (N5) | not run: not chosen on his card (18:03) | — |
 | T85 | team_send | send one guarded message to discord/slack/whatsapp (N5) | RULED (his card, 18:03): leaves the machine | — |
@@ -257,11 +257,11 @@ Each is called by the glass (a tab, a button, Registry & Docs' Call) or by the c
 
 | # | name | what it does | live run | time |
 |---|---|---|---|---|
-| G6 | Run | the last turn: its stages and seats, the floor (each seat's own words), the tool calls and the wire; and the Projects card | glass 18:13: ok, sitting 365's turn: its seats, floor, tool call and wire; the Projects card | 172 ms |
+| G6 | Run | the last turn: its stages and seats, the floor (each seat's own words), the tool calls and the wire; Door calls, every call the glass makes as it goes and comes back, with how many it keeps of how many were made; and the Projects card | glass 2026-10-12, 07:50 to 07:56: ok after a mend on his card -- its count read "300 since this page opened" with 604 made; seen after it: "the newest 5 of 17 since this page opened", the page's keep at 5 for that check; the suites' run among its rows; the Projects card | 657 ms |
 | G7 | What's left | WHATS_LEFT.md, counted, searchable, read again in place | glass 18:13: ok, 26 open | 158 ms |
 | G8 | Aider Pair | Aider's state, the files in the chat, the recent runs and their Undo | glass 18:13: ok, installed, no files in the chat | 155 ms |
 | G9 | GitHub | each world's repository: save, send, take, lines of work, marks, pull requests; every change in a world | glass 18:13: ok, both repositories | 156 ms |
-| G10 | Audit Ledger | what the build has proved, the live check, the engine's report, the estate, the evals scored by hand, the transcripts | glass 18:13: ok, the suites (17:36) and the live check 9 of 9 (09:30) | 156 ms |
+| G10 | Audit Ledger | what the build has proved, the live check, the engine's report, the estate, the evals scored by hand, the transcripts; drawn again when the suites or the live check end | glass 2026-10-12 07:51: ok, the suites (07:25, 3772 of 3772 and 72 of 72, drawn again on its own when they ended) and the live check 9 of 10 (2026-10-10 19:01), its three reads back | 20 ms |
 | G11 | Workflows | the flow builder: the flows, a flow's steps and edges, Save, Fire, the gates, the runs waiting on him | glass 18:13: ok, the 7 flows, two retired | 155 ms |
 | G12 | Laws | every law and how far the chain seals it; a law set as a draft; the ledger sealed | glass 18:13: ok, the chain proves whole | 315 ms |
 | G13 | Settings | the door's address, the evals pass mark, the messaging bridge | glass 18:13: ok, the door's address | 161 ms |
