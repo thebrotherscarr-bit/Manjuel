@@ -8,6 +8,7 @@ fix for the telephone-game failure in the original chain.
 from __future__ import annotations
 
 import ast
+import builtins
 import os
 import re
 import time
@@ -99,8 +100,14 @@ _FLAGS_RE = re.compile(r"<flags>([^<\n]{0,80})(?:</flags>)?",
 # reconciler found it the day LOOSE existed. It is the Steward's to raise:
 # the operator's own draft, written to be sent, wanting a read before it
 # goes. seating.summon pulls the Proofreader in on it, last.
+# AND HIS PLAIN WORDS RAISE THEM TOO (2026-10-12, his card: "Engine raises on
+# plain words"; the ruling above annotated where it stands, nothing in it
+# changed): `prose`, `hard` and `technical` are still a seat's to raise, and the
+# engine raises them from his own words as well (intent.plain_flags), with a card
+# before a seat wakes. `rack` is the engine's alone -- no seat claims it -- and
+# wakes the Quartermaster (his card: "Give it a flag, same way").
 FLAGS_RAISED = ("needs_tool", "technical", "hard", "deliver", "suspicious", "prose")
-FLAGS_ENGINE = ("worked", "review", "drifted", "has_feed")
+FLAGS_ENGINE = ("worked", "review", "drifted", "has_feed", "rack")
 FLAGS = FLAGS_RAISED + FLAGS_ENGINE
 # The Router's control block, when it turns up in a seat that is not the
 # Router (sitting 84). Stripped from anything a person reads; the handoff
@@ -1142,6 +1149,13 @@ def _steward_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
     if ran:
         did = (f"TOOLS THAT ACTUALLY RAN THIS TURN: {', '.join(ran)}. "
                f"Report what they returned, and nothing beyond it.")
+        # THE STEWARD READS ITS OWN (2026-10-12): when the Router stood aside for
+        # a decided call on the Steward's own list, this seat is the reader, and
+        # sitting 91's instruction to the reader is its own.
+        if ctx.steward_reads:
+            did += (" The tool the objective asked for has run and its result is "
+                    "above. Write the plain answer FROM THAT RESULT, in words, with "
+                    "no XML and no other tool. Report only what the result shows.")
     else:
         did = ("NO TOOL RAN THIS TURN. Nothing was performed, fetched, "
                "written or checked. What is above is a seat's WORDS — a "
@@ -1467,6 +1481,39 @@ def decided_call(ctx: RunContext, skills: SkillLibrary | None = None) -> str:
         if str(args.get(k) or "").strip():
             xml += f"<{k}>{args[k]}</{k}>"
     return xml
+
+
+def _the_path_named(spec, words: str, env) -> str:
+    """The file or folder a path-taking skill's words NAME, on disk -- or "".
+
+    Sitting 373, routing's first part proved live: "inspect the file
+    INVENTORY.md before reading it" handed `inspect` the whole rest of the
+    sentence as its file, and the decided call failed -- not a file in the
+    workspace or the ground. The words after the name are a path's argument
+    only when they name one: the filename they carry (names_a_file), else the
+    words themselves, kept only if it is there -- in the workspace, which
+    inspect reads first, or where the skill's own **Path Args:** jail it
+    (declared_path, the gate's own resolution). Naming nothing on disk is ""
+    -- nothing is decided, and the Router writes the call, as for any argument
+    the words do not spell (his card, 2026-10-12: "Mend it, then save")."""
+    from pathlib import Path
+    for cand in (unjail(intent.names_a_file(words)), unjail((words or "").strip())):
+        if not cand:
+            continue
+        try:
+            ws = Path(env.workspace).resolve()
+            p = (ws / cand).resolve()
+            if (p == ws or ws in p.parents) and p.exists():
+                return cand
+        except (OSError, ValueError, TypeError, AttributeError):
+            pass
+        try:
+            p = declared_path(spec, {"content": cand}, env)
+            if p is not None and p.exists():
+                return cand
+        except (OSError, ValueError, TypeError, AttributeError):
+            pass
+    return ""
 
 
 def _refuse_testimony(agent: Agent, evidence: str, refusal: str) -> str:
@@ -2006,6 +2053,92 @@ def _maker_deliver(ctx: RunContext) -> None:
 # ---------------------------------------------------------------------
 
 
+# THE CARD'S COLOR (2026-10-12, his word: "a color-coded quick look at what the
+# card is for ... Simplicity is key here"): amber for reads and approvals, green
+# for moving up to the Router or waking a seat, red for code edits and file
+# writes. On the glass the question carries its color (the hook `ask_card`, set
+# beside input by whatever stands in for the keyboard); in the REPL the prompt
+# itself is tinted.
+CARD_COLORS = ("amber", "green", "red")
+
+
+def _ask(prompt: str, color: str = "amber") -> str:
+    """One question, its card colored by what it is for."""
+    card = getattr(builtins, "ask_card", None)
+    if card is not None:
+        return card(prompt, color)
+    tint = {"green": ink.good, "red": ink.bad}.get(color, ink.warn)
+    return input(tint(prompt))
+
+
+def _ask_which_tool(ctx: RunContext, choices: list, skills: SkillLibrary,
+                    report=print) -> tuple[str, bool]:
+    """(the tool he picked, or ""; whether he asked for an answer with no tool).
+
+    NOT SURE, SO HE IS ASKED (2026-10-12, his cards: "Only when it isn't sure",
+    "Best match + next two"). One question through the engine's own input() --
+    the Agent tab's card on the glass, the prompt in the REPL: the best match,
+    the next two, each with its own description, and "just answer, no tool". A
+    turn nobody attends takes the best match, as it always did; so does one with
+    no keyboard; and both say so in the record."""
+    best = choices[0]
+    names = ", ".join(choices)
+    if getattr(ctx, "unattended", False):
+        ctx.notes.append(f"intent: not sure between {names} -- nobody at the card "
+                         f"(an unattended turn), so the best match, `{best}`")
+        return best, False
+    lines = ["  I can read this more than one way -- which do you mean?"]
+    for n, kw in enumerate(choices, 1):
+        spec = skills.spec(kw)
+        m = re.search(r"\*\*Description:\*\*\s*(.+)", spec.body if spec else "")
+        what = " ".join((m.group(1) if m else "").split())[:90]
+        lines.append(f"    {n}  {kw}" + (f" -- {what}" if what else ""))
+    plain_no = len(choices) + 1
+    lines.append(f"    {plain_no}  just answer, no tool")
+    try:
+        said = _ask("\n".join(lines) + "\n  [1]: ", "amber").strip().lower()
+    except (EOFError, KeyboardInterrupt):
+        ctx.notes.append(f"intent: not sure between {names} -- no answer at the card, "
+                         f"so the best match, `{best}`")
+        return best, False
+    plain = said in (str(plain_no), "none", "no", "no tool", "just answer", "answer")
+    if plain:
+        pick = ""
+    elif said.isdigit() and 1 <= int(said) <= len(choices):
+        pick = choices[int(said) - 1]
+    elif said in choices:
+        pick = said
+    else:
+        pick = best
+    ctx.notes.append(f"intent: not sure between {names} -- his pick on the card: "
+                     + (f"`{pick}`" if pick else "just answer, no tool"))
+    report("      " + ink.dim(ctx.notes[-1]))
+    return pick, plain
+
+
+def _ask_to_wake(ctx: RunContext, flag: str, seats: list, report=print) -> bool:
+    """Whether he says to wake the racked seat his plain words call for (2026-10-12,
+    his card: "Yes, a card to wake it"). Nobody at the card -- an unattended
+    turn, or no keyboard -- wakes nobody, as before, and the record says so."""
+    who = " and the ".join(seats)
+    if getattr(ctx, "unattended", False):
+        ctx.notes.append(f"rack: his words ask for the {who} ({flag}) -- nobody at the "
+                         f"card (an unattended turn), so it was not woken")
+        return False
+    try:
+        said = _ask(f"  Your words ask for the {who} ({flag}). Wake it for this? "
+                    f"[y/N]: ", "green").strip().lower()
+    except (EOFError, KeyboardInterrupt):
+        ctx.notes.append(f"rack: his words ask for the {who} ({flag}) -- no answer at "
+                         f"the card, so it was not woken")
+        return False
+    woke = said in ("y", "yes")
+    ctx.notes.append(f"rack: his words ask for the {who} ({flag}) -- his word on the "
+                     f"card: {'wake it' if woke else 'not now'}")
+    report("      " + ink.dim(ctx.notes[-1]))
+    return woke
+
+
 def run_pipeline(
     ctx: RunContext,
     registry: AgentRegistry,
@@ -2079,6 +2212,15 @@ def run_pipeline(
     # The LIBRARY, not just its keywords: that is what lets a skill's own
     # `**Says:**` phrases be seen alongside the table in intent.py.
     named = intent.names_a_tool(ctx.objective, skills)
+    # NOT SURE, SO HE IS ASKED (2026-10-12, his cards: "Only when it isn't
+    # sure", "Best match + next two"): two skills named just as strongly are a
+    # guess, and a guess is put to him -- only where a Router stands to run what
+    # he picks (quick and estate choose no tool at all, below).
+    plain = False
+    if named and not make and any(str(s).strip().lower() == "router" for s in steps):
+        choices, sure = intent.tool_choices(ctx.objective, skills)
+        if not sure and len(choices) > 1:
+            named, plain = _ask_which_tool(ctx, choices, skills, report)
 
     # AN UNKNOWN SKILL NAME IS SAID SO (the review of 2026-09-08). Sitting
     # 95: `index_workspace rebuild` -- a word shaped like a skill that is
@@ -2316,6 +2458,16 @@ def run_pipeline(
             low = " ".join(ctx.objective.lower().split())
             if low.startswith(named + " ") and len(low) > len(named) + 1:
                 rest = ctx.objective.strip()[len(named):].strip(" :-")
+                # A PATH'S ARGUMENT IS A PATH (sitting 373; his card, "Mend it,
+                # then save"). When the skill's own **Path Args:** make
+                # `content` a path, the words are the file or folder they NAME,
+                # found on disk (_the_path_named); naming none, nothing is
+                # decided here and the Router writes the call.
+                if rest and any(a == "content" for a, _ in (spec.path_args or ())):
+                    rest = _the_path_named(spec, rest, env)
+                    if not rest:
+                        ctx.notes.append(f"intent: the words after `{named}` name no file "
+                                         f"or folder on disk -- the Router writes the call")
                 if rest and "content" not in (ctx.tool_args or {}):
                     ctx.tool_args = dict(ctx.tool_args or {}, content=rest)
                     ctx.named_by = "the words"
@@ -2438,6 +2590,22 @@ def run_pipeline(
         ctx.named_tool = ""
         ctx.flags.discard("needs_tool")
 
+    # NO ROUTER, NO TOOL (2026-10-12, his card: "No tool in either"). quick and
+    # estate carry no Router, and sitting 369 chose a tool for each that no seat
+    # could run: "what is two plus two?" went to semantic_search and never said
+    # four, and estate ruled without the search it chose. Where the running order
+    # has no Router, no tool is chosen and no card is shown: the seats answer from
+    # what they have.
+    # ...and "just answer, no tool", his pick on the card above, is the same: no
+    # later reader picks a tool for him after he said none.
+    if not make and (plain or not any(str(s).strip().lower() == "router" for s in steps)):
+        if ctx.named_tool or "needs_tool" in ctx.flags:
+            ctx.notes.append(f"intent: `{ctx.named_tool or 'a tool'}` set aside -- "
+                             + ("he asked for an answer, no tool" if plain else
+                                "this running order has no Router to run it; the seats answer"))
+        ctx.named_tool = ""
+        ctx.flags.discard("needs_tool")
+
     # The front Steward has nothing to add to a run arithmetic already
     # dispatched -- his "I'll pass this along" was ceremony, a model call
     # spent narrating a decision nobody asked him to make. He fronts only
@@ -2498,6 +2666,18 @@ def run_pipeline(
     # objective is still a request, and a tool result is still material.
     if drift is not None and ctx.feed.strip():
         drift.prime(f"{ctx.objective}\n\n{ctx.feed}")
+
+    # HIS PLAIN WORDS RAISE THE FLAG, AND HE IS ASKED FIRST (2026-10-12, his
+    # cards: "Engine raises on plain words", "Yes, a card to wake it", and for
+    # the Quartermaster "Give it a flag, same way"). Sitting 370: "proofread this
+    # sentence", "think hard: ...", "lint this python" and the rack report woke
+    # nobody, because the racked seats waited on a tag the Steward did not write.
+    # The engine reads his words now (intent.plain_flags), and before a racked
+    # seat wakes he is asked on one card; nobody at the card wakes nobody.
+    for flag in sorted(intent.plain_flags(ctx.objective) - ctx.flags):
+        racked = [a.name for a in seats.rack if flag in seating.wake_flags(a)]
+        if racked and _ask_to_wake(ctx, flag, racked, report):
+            ctx.flags.add(flag)
 
     # `has_feed` is known before anything runs, so a `first`-anchored guard is
     # genuinely first -- it reads the material before any other seat does.
@@ -2922,6 +3102,23 @@ def run_pipeline(
                     manual = (f"\n\n## How `{action}` works\n{used.body.strip()}\n"
                               if used and not used.is_prompt_skill else "")
                     if decided:
+                        # THE STEWARD READS ITS OWN (2026-10-12, his word: the Steward up front
+                        # answers reads and simple tool calls, the Router is the second layer for
+                        # the harder work; his card: simple is one tool and one target). A decided
+                        # call on the Steward's own list (agents/steward.md, May Call) has run, and
+                        # the Router does not sit again to read it: the result stands and the
+                        # closing Steward answers from it. Sitting 84's one executor stands -- the
+                        # call ran here, in the Router's step, and only here.
+                        own = (registry.get("Steward").callable_set(skills.keywords())
+                               if registry.has("Steward") else set())
+                        if ctx.named_tool in own:
+                            note = (f"`{ctx.named_tool}` is the Steward's own: the Router "
+                                    f"does not read it, the Steward answers")
+                            ctx.notes.append(note)
+                            report("      " + ink.dim(note))
+                            ctx.steward_reads = ctx.named_tool
+                            output = ""
+                            break
                         follow = (
                             f"Objective: {ctx.objective.strip()}\n\n"
                             "## Results So Far\n" + "\n\n".join(results) + "\n\n"
@@ -2993,6 +3190,32 @@ def run_pipeline(
                 output = "\n\n".join(results) + (
                     f"\n\n--- {agent.name} reading the above (testimony, "
                     f"not tool output) ---\n\n{said}" if said.strip() else ""
+                )
+
+        # THE STEWARD'S READING CARRIES SITTING 61'S CHECK (2026-10-12, his card:
+        # "Build it properly"). When the Router stood aside for a decided call on
+        # the Steward's own list, the Steward is the reader: a scored citation in
+        # its words that the search did not return is withheld, and the results
+        # stand on their own, as they did when the Router read them.
+        if (agent.key == "steward" and ctx.steward_reads
+                and (output or "").strip() and not extract_tool_call(output)[0]):
+            facts = "\n\n".join(s.output for s in ctx.steps
+                                if "semantic_search" in (s.tool_calls or ()))
+            bogus = bogus_citations(facts, output) if facts else []
+            if bogus:
+                shown = "; ".join(f"`{p}` at {s}" for p, s in bogus)
+                note = (f"{agent.name} cited {shown} as a search result; "
+                        f"the search returned no such result this turn")
+                if note not in ctx.notes:
+                    ctx.notes.append(note)
+                report("      " + ink.warn(note))
+                output = (
+                    f"REFUSED — the prose cited {shown} as a search "
+                    f"result, and the results above are the exhaustive "
+                    f"list of what this turn's search returned. The "
+                    f"citation is unsupported, so the prose is not "
+                    f"delivered; the results stand on their own (LAW 5: "
+                    f"testimony is never fact)."
                 )
 
         # Something other than talk actually happened. The closing seat waits

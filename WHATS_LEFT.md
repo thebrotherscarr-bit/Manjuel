@@ -240,9 +240,53 @@ goals". The steps under each are proposed from the disk; each is yours to change
   question. (h) The slow routes. (i) The three pages no link reaches, the Trace Log, Messages and the Playground, retired (your card: "Retire
   them"). Not among them: `verify_chain` and `law_status` disagreeing on the law chain (INVENTORY T95) is H7; the mic is I5's (your card:
   "Rule it for v0.2.6").
-  **Now (2026-10-12, 08:03):** (a) mended, recorded and proved -- the suites from your glass, with the record in place, 3772 of 3772 and 72 of
-  72 (08:02). Next, the save and send of both lines with a pull request each (your card: "Record, then save and send"), merged on GitHub once
-  green; then the next piece, your pick.
+  (a) saved, sent and merged on your click (pull request 16 in each repository, 2026-10-12).
+  **Now (2026-10-12, 08:33): (b) Routing, its first part, the front face**, on your answers of the day: the Steward up front answers reads,
+  simple tool calls and simple tasks; the Router is the second layer, which packs the harder work for a big seat or a workflow (its next part,
+  with H23). This part, on the line `routing`, each step's test shown red first: (0) the door's wall opened for skills/ and agents/
+  while no sitting is open (your card: file_edit sets them on your Approve card; pipelines.md stays shut; Aider's wall as it is), the door
+  rebuilt and placed on your card; (1) your words read against the tools the turn's seats can
+  actually call, by each skill's own words (its name and its `Says:` phrases, declared in its own file where sitting 370's asks found none),
+  the word you lead with outranking a place or a thing named later; (2) the Steward's own list grown from four reads to the reading skills (the
+  review-only set, your sitting-39 ruling; a standing stroke keeps it to reading): one sure match runs and the Steward answers from it, the
+  Router's three safeguards carried onto the Steward's reading (your card: "Build it properly" -- sitting 61's withheld citation, 63's line
+  between a tool's facts and a seat's words, 91's second call set aside); writes and the bigger work go to the Router as today; (3) not
+  sure (two close, or a weak match): one card with the best match, the next two and "just answer, no tool", through the engine's own question
+  (the Agent tab's card, the REPL's prompt), the best match taken where nobody can answer (a flow, the live check); (4) quick and estate: no
+  tool and no card; (5) your plain words raise prose, hard and technical, and a new `rack`, each with a card to wake its seat (the Quartermaster
+  wakes on `rack`), your 2026-09-25 ruling annotated where it stands; (6) the cards colored by what they are for, three colors and nothing
+  more (your word: "Simplicity is key here"): amber for reads and approvals, as now; green for moving up to the Router or waking a seat; red
+  for code edits and file writes (the dock's edit cards and the Bash tab's command cards); the engine's question carries its color to the
+  glass and to the REPL, and atlas gets a line `routing` of its own. Then the suites from your glass, one live sitting re-asking every
+  question that failed, the record, and the save and send with a pull request in each repository.
+  Where it stands (09:27): (0) in -- the door placed on your card (`d2ad8f4e...`); (1) in -- sitting 370's eleven questions name their
+  own skills (the stroke shown red at 8 of 19, then green), and "replace" is a write verb, so an edit order is the Router's to decide; (4)
+  in -- quick and estate choose no tool (shown red at 4 of 10, then green); (2) in, built properly -- the Steward reads its own decided
+  calls, told words and no other tool, its prose checked for a lifted citation and a recited law, its list the 19 reading skills (its first
+  cut skipped those safeguards and the suites said so); (3) in -- two skills named as strongly put to you on one card, the best match, the
+  next and "just answer, no tool", the best match where nobody can answer; (5) in -- your plain words raise prose, hard, technical and
+  rack, a card before the seat wakes, nobody woken where nobody can answer, the Quartermaster racked on rack; the suites 3842 of 3842 and
+  72 of 72 (09:37); (6) in -- the council's question carries its color (amber, or green to wake a seat), the Bash tab's command cards
+  and the door's parked calls red; the glass placed on your card (`282119d3...`); the suites 3846 of 3846 and 72 of 72 (09:48). The live
+  sitting, 373 (09:49 to 10:31, your card: "All of it, estate included"), all 19 asks: sitting 370's eleven questions each named its own
+  skill, and the Steward answered its own reads; quick and estate ran no tool; the tie put an amber card to you (you picked `skill_search`,
+  and the Router wrote its subject: a call with an argument to write is the Router's); each flag ask put a green card to you, and on your
+  word the Proofreader, the Reasoner, the Expert Coder and the Quartermaster woke. One fault on this road: "inspect the file INVENTORY.md
+  before reading it" handed `inspect` the whole rest of the sentence as its file, and it failed. Found beside it, each for the piece it
+  belongs to: routing's next part -- after `embed_text` refused a ground file the Router rebuilt the whole index unasked (292 s), "add"
+  inside code to lint read as a write order, and a sum and a riddle were each sent to a search of the ground; (c) the closing answer
+  retold the turns before, once with its own instructions, turned `skill_report`'s 45 skills into 43 and dropped one of
+  `skill_search`'s five git skills; (g) estate cannot read the covenant -- the Steward described itself and Manjuel ruled that
+  SUPPORTED; (h) Manjuel six and a half minutes on gemma4:12b. Not yet placed: three seats cut at their token limits (the Reasoner at
+  1400, the Router at 900, the Quality Evaluator at 700), the Proofreader mending "too" and missing "they're", and a reload with no
+  seat, skill or order changed.
+  Mended on your card ("Mend it, then save"): a skill whose argument is a path takes the file or folder your words name, found on disk,
+  else the Router writes the call -- its test shown red, then green; the suites 3851 of 3851 and 72 of 72 (10:54); sitting 374 asked it
+  again, and `inspect` read INVENTORY.md's facts in 8.6 s; INVENTORY's lines for the racked seats, the Steward, estate, quick, twelve
+  skills, `file_edit` and the Agent tab measured again.
+  *(CHANGELOG, "core: routing, its first part, the front face")* *(atlas CHANGELOG, "Routing's front face, atlas's part")*
+  **Now (11:15):** the save and send of both lines `routing`, with a pull request in each repository, on your word; then (b)'s
+  next part, the Router packing the harder work for a big seat or a workflow (with H23), or another piece, your pick.
   Your cards of 2026-10-10 on its first part: the release flow's record step prints STATUS.md again, so its last read can pass (built the same
   day; its first COMPLETE is the v0.2.6 cut) *(CHANGELOG, "core: the release flow's record step prints STATUS again")*; and `coder` and
   `version-tag` retired, every version kept (built the same day: the door fires neither again and keeps every version, the Workflows tab says why

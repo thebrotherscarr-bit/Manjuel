@@ -316,6 +316,10 @@ class RunContext:
     # "nothing run" and "objective names `skill_search`" and a reader
     # could not tell which happened. One turn, one account of the route.
     named_by: str = ""
+    # THE STEWARD READS ITS OWN (2026-10-12): the skill whose decided call the
+    # Router stood aside from, so the closing Steward reads it -- told words and
+    # no other tool, its prose checked as the Router's was (run_pipeline).
+    steward_reads: str = ""
     # Arguments a named skill's own **Takes:** rules found in the operator's
     # words. Carried so the payload survives the moment of recognition --
     # before this, matching a keyword threw the rest of the sentence away.
