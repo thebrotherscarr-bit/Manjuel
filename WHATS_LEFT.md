@@ -229,6 +229,20 @@ goals". The steps under each are proposed from the disk; each is yours to change
   the inventory carries into I3. *(CHANGELOG, "core: v0.2.6 set in four steps")*
   Its measure, on your cards of 2026-10-10 (sittings 366 to 371): all 244 lines of INVENTORY.md run live or ruled, 41 with a fault and 29
   ruled; the third step next, one piece at a time, in the order you pick. *(CHANGELOG, "core: I2's second step, the measure")*
+  Its third step, set with you on 2026-10-12: the faults and the slow routes by cause, in nine pieces (your card: "By cause, about 9"), each
+  mended or ruled, one at a time, in the order you pick. (a) Visible runs, the first, on your cards and your rule of that day ("Transparency is
+  REQUIRED for the system"): every call the glass makes listed in the Run tab as it goes and comes back, the long runs drawn in the terminal, the
+  Audit Ledger read again when the suites end; built, placed and proved live that morning *(CHANGELOG, "atlas: every call the glass makes is in sight")*.
+  (b) Routing: eleven skills not called when asked by name, a search chosen where no Router can run it, racked seats their flags do not wake.
+  (c) The Steward's answers: the closing Steward retelling the turns before. (d) The door's tools: `read_plan`, `mesh_cite`, `prompt_compare`,
+  `seat_ask`, `ask_steward`, and a tool list whose every argument reads "the ground this call names". (e) Your commands that print their
+  expansion and run nothing. (f) The review panel past its bounds. (g) Grounding: `deep_research` and coder-tree's brief answering beside the
+  question. (h) The slow routes. (i) The three pages no link reaches, the Trace Log, Messages and the Playground, retired (your card: "Retire
+  them"). Not among them: `verify_chain` and `law_status` disagreeing on the law chain (INVENTORY T95) is H7; the mic is I5's (your card:
+  "Rule it for v0.2.6").
+  **Now (2026-10-12, 08:03):** (a) mended, recorded and proved -- the suites from your glass, with the record in place, 3772 of 3772 and 72 of
+  72 (08:02). Next, the save and send of both lines with a pull request each (your card: "Record, then save and send"), merged on GitHub once
+  green; then the next piece, your pick.
   Your cards of 2026-10-10 on its first part: the release flow's record step prints STATUS.md again, so its last read can pass (built the same
   day; its first COMPLETE is the v0.2.6 cut) *(CHANGELOG, "core: the release flow's record step prints STATUS again")*; and `coder` and
   `version-tag` retired, every version kept (built the same day: the door fires neither again and keeps every version, the Workflows tab says why
@@ -237,6 +251,10 @@ goals". The steps under each are proposed from the disk; each is yours to change
 - **I3. v0.2.7: both repositories keep what earlier versions promised.** Every OPEN line in SPEC section 4 met or ruled; every open line on this
   page (B, E, H) built, ruled, or moved to a later version on your word; the found items in HANDOFF from 2026-10-05 on put on this page or ruled;
   the wife test (E1) with her at the glass and nobody helping.
+  And every unused reference taken out of both repositories, on your word of 2026-10-12 ("As part of the 0.2.7 functions test we will remove any
+  unused references"), after atlas's CHANGELOG was found pointing at an outside website for its own rules; those a function uses stay ("There are
+  several areas where we will need to reach out ie github discord slack ollama claude, etc."). Each CHANGELOG's own rules written into its header
+  in that line's place (your card: "Each CHANGELOG's header"). The outside names found that day are in HANDOFF's note of 2026-10-12.
 - **I4. v0.2.8: a documentation pass, both repositories.** Both CHANGELOGs read against git, every save accounted for; both LICENSE files; the
   dependencies reviewed and written down: the core's `pyproject.toml` (`ollama`, and `numpy` for the tests), atlas's `sbom.json` against
   `Cargo.lock` and both `go.mod` files, the Python battery (standard library only) and Aider's own environment (`aider/venv`, outside both
@@ -245,12 +263,16 @@ goals". The steps under each are proposed from the disk; each is yours to change
   Its first part, on your word of 2026-10-10 ("annotate the runbook with the new information on the github funtionality as part of the documentation
   pass on the road to 0.3.0"): RUNBOOK's "GitHub, from the glass", the tab, its buttons and a change's road to main, held to the tab's own
   buttons by the docs stroke (your card: "Add the check"). *(CHANGELOG, "core: RUNBOOK says how GitHub works from the glass")*
+  A second pass on the references, here and in I5, on your word of 2026-10-12 ("on the document and packaging pass on the road to 0.3.0 we will
+  make a second pass on the references").
 - **I5. v0.2.9: packaging and the deliverable.** The Settings page set up for every API integration: each hosted route's state shown (on or off,
   never the key), its key placed by you in `.env` (RULE 4, amended; RULE 7); the local Ollama models set up: the models the seats name, pulled and
   checked by the rack's own report; the rack checked: what is loaded, what fits the card, what no seat names; a first run on a machine that has none
   of this, written down step by step (Ollama, the models, the door and the glass started, the PIN set); what ships, from atlas's release workflow
   (its binaries) and the core's `pyproject.toml`, against DELIVERABLE.md; what sits loose at the core's root and ships with nothing
   (`atlas.bundle`, `atlas-mcp.exe`, `chain_original.py.bak`); a backup for the record (named 2026-09-23: it exists once, on one disk).
+  The voice: the glass's mic (INVENTORY G19), which heard nothing in the measure (your word: "that parts not working for right now"), ruled
+  for v0.2.6 and carried here on your card ("Rule it for v0.2.6").
 - **I6. v0.3.0: a full release, packaged and ready to deploy.** I1 to I5 done or ruled; the release installed on a clean machine from the release
   alone, following only its documents; the release check green with the live check and the review panel; both repositories' releases published by you.
 
