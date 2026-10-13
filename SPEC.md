@@ -74,6 +74,12 @@ A proposal that needs a word uses the nearest one below.
 | **the spine** | the seats that sit every run of a pipeline. | pipelines.md |
 | **the door** | the Steward: first to answer, last to report. | pipelines.md |
 | **the court** | Neiro, Jesster, Manjuel: reads, never acts; Manjuel rules last. | THE LAW; pipelines.md |
+| **Manjuel** | the core: the record, the immutable law and ledger, and the logic core (PPMI, no language model) that reads a request before any model; every answer filtered through the law and the founding papers. The seed of the whole project, and the engine's package in code. Until the Judge is renamed (WHAT'S LEFT H28) the review panel's ruling seat carries the name too. | the founding papers; his cards, 2026-10-13 |
+| **the Judge** | the seat on gemma4:12b that rules last on the review panel and sits in the estate pipeline; called Manjuel until its rename (WHAT'S LEFT H28). | his word, 2026-10-13 |
+| **Steward** | the body that acts: the seats, the skills and tools, the rack of models and the maker, with full autonomy inside the walls and none past his gate. The door (the Steward seat) is its voice. | the founding papers; his card, 2026-10-13 |
+| **Jesster** | the coder: writes the code and refutes it; the Expert Coder and Aider work under its name. On the review panel it is counsel, as before. | his word, 2026-08-14, kept 2026-10-13 |
+| **Neiro** | the overseer: holds the state of the whole process from the record, runs the work as flows and watches each run; never acts on the world or approves. On the review panel it is counsel, as before. | the founding papers; his card, 2026-10-13 |
+| **Aurora** | the webapp, the user-facing part ("like the menu at a restaurant"): the glass, named atlas for ease, its admin section for now; kept as it is. | his word, 2026-10-13 |
 | **the Router** | the one seat that runs tools. | DESIGN.md |
 | **a skill** | one tool: a markdown file in `skills/` and a handler. | skills/ |
 | **a pipeline** | ONE TURN's running order of seats and tools: who sits, in what order, who wakes on which flag, which seat hands to which. The Steward handing to the Router, the Router calling the index, Jesster reviewing what the Router read -- all inside one pipeline. Declared in `pipelines.md`. | pipelines.md; ruled 2026-09-07 |
@@ -640,6 +646,26 @@ sent by name, and never moved. The steps are in BUILDPATH, "The marks, and
 how one is cut"; the door refuses the rest by name (`git_tag`, 2026-09-12
 and 2026-09-17), and the six marks that pointed into the stripped history
 were removed 2026-09-17 on his word.
+
+### 8.4 The plan by office (2026-10-13, his cards)
+
+Set with him card by card after the founding papers (`foundation/`), the laws and his own July designs were read whole: what
+each part of the system is, in his words, and what comes next. WHAT'S LEFT carries the pieces ("The plan by office", and H28
+on); BUILDPATH carries the order; the words in section 1 carry the names.
+
+    Manjuel    the core: "the well, core ... the seed of this entire project" -- the record, the law and
+               ledger, and the logic core, "the PPMI and very-quick decision/logic side of the system";
+               every answer filtered through the law and the founding papers
+    Steward    the body that acts: the seats, the tools, the rack and the maker; nothing past his gate
+    Jesster    the coder: writes the code and refutes it ("Jesster IS the Coder", 2026-08-14)
+    Neiro      the overseer: the state of the whole process, the work run as flows, every run watched
+    Aurora     the webapp, kept as it is ("NO REBUILDING")
+    the Judge  the seat on gemma4:12b that rules last on the review panel, called Manjuel until renamed
+
+THE ORDER, his card: Manjuel's logic core first -- the Judge renamed so the name means the core alone, then
+PPMI reading the request before any model, then the honesty gate on every answer -- and after it, as
+proposed and his to change, the coding loop, the faults and Neiro's own task list. Nothing here is MET
+until section 4 says so; section 4 gains its lines with the pieces.
 
 ---
 
