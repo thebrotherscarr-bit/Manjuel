@@ -234,7 +234,7 @@ goals". The steps under each are proposed from the disk; each is yours to change
   REQUIRED for the system"): every call the glass makes listed in the Run tab as it goes and comes back, the long runs drawn in the terminal, the
   Audit Ledger read again when the suites end; built, placed and proved live that morning *(CHANGELOG, "atlas: every call the glass makes is in sight")*.
   (b) Routing: eleven skills not called when asked by name, a search chosen where no Router can run it, racked seats their flags do not wake.
-  (c) The Steward's answers: the closing Steward retelling the turns before. (d) The door's tools: `read_plan`, `mesh_cite`, `prompt_compare`,
+  (c) The Steward's answers, done 2026-10-12: the closing Steward retelling the turns before. (d) The door's tools: `read_plan`, `mesh_cite`, `prompt_compare`,
   `seat_ask`, `ask_steward`, and a tool list whose every argument reads "the ground this call names". (e) Your commands that print their
   expansion and run nothing. (f) The review panel past its bounds. (g) Grounding: `deep_research` and coder-tree's brief answering beside the
   question. (h) The slow routes. (i) The three pages no link reaches, the Trace Log, Messages and the Playground, retired (your card: "Retire
@@ -329,9 +329,27 @@ goals". The steps under each are proposed from the disk; each is yours to change
   told to retell them in its own voice, so a big seat's answer reaches you rewritten; the same prompt carries the conversation so
   far, and it retells it, (c); that conversation is cut to its newest 2,400 characters, and the Router never sees it; and the
   600-second clock counts the time a card waits for you. Your card: all four fixes, as the next pieces.
-  **Now (15:12):** the save and send of `levels` on your card ("Save and send"); then the answers, one piece at a time in your
-  card's order, each planned here before it is built: (1) the big seat's answer passed through, (c); (2) the caps raised where
-  they cut; (3) the clock stopped while a card waits; (4) the conversation given more room.
+  (b)'s third part saved, sent and merged on your click (pull request 19, 2026-10-12).
+  **The answers, piece (1): the big seat's answer as written** (your cards: "The engine, from the record", "Every closing
+  answer"), on the line `pass-through`, planned here first. The measured case, sitting 376's fourth ask: the Reasoner
+  answered well; the closing Steward credited its answer to the Router and said ground_list "returned an empty list" and
+  ground_read "an empty string", both false; the Quality Evaluator then sat after the Steward and passed its words as the
+  delivery. Built in two steps, each test shown red first: (i) when the Reasoner or the Expert Coder answers, its words are
+  the delivery as written -- the closing Steward does not sit to retell them, nothing is woken after them, a reviewer's
+  changes stay in the record, and the engine adds what is still open from the record (an answer cut at its length limit, a
+  file saved or refused, the reviewer's verdict); (ii) every closing answer is written from this turn alone -- no
+  conversation, no story, no standing -- while the Steward at the front keeps all three. The suites 3897 of 3897 and 72 of
+  72 (17:45). Sitting 377 (17:46 to 18:01), four asks: the Reasoner's two paragraphs delivered as written, its cut at 1400
+  tokens named from the record (360.1 s); the Expert Coder's fix delivered as written, the file named and "saved in the
+  workspace" from the record, the reviewer having passed it (377.7 s); a tool turn closed from this turn alone (46.7 s); a
+  follow-up answered at the door from the conversation, 45 files (8.6 s). (c) is done for the closing answer. Found: the
+  token cuts again, the Reasoner's visible answer whole, so the limit goes to its hidden thinking (piece (2)); the Router
+  wrote the fix itself with write_file before the Expert Coder sat ("fix it" read as write-shaped); the door narrated a flag
+  it raised, the flag stripped; the recompose's note named nothing it appended when only a named tool had not run; and
+  pipelines.md's lines on the closing Steward still say what was -- the edit tool refuses that file (yours, the pipelines'
+  law), so they are yours to change. *(CHANGELOG, "core: the answers, piece (1), the big seat's answer as written")*
+  **Now (18:04):** the save and send of `pass-through`, with a pull request, on your word; then piece (2), the caps raised
+  where they cut, planned here first.
   Your cards of 2026-10-10 on its first part: the release flow's record step prints STATUS.md again, so its last read can pass (built the same
   day; its first COMPLETE is the v0.2.6 cut) *(CHANGELOG, "core: the release flow's record step prints STATUS again")*; and `coder` and
   `version-tag` retired, every version kept (built the same day: the door fires neither again and keeps every version, the Workflows tab says why

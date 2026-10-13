@@ -6770,12 +6770,15 @@ def test_chat_remembers_and_still_reaches_tools(reg, lib, book):
           any(st.agent == "Router" and not st.skipped for st in c.steps),
           str([st.agent for st in c.steps if not st.skipped]))
 
-    # the closing steward also gets the dialogue
+    # the closing steward also got the dialogue -- until 2026-10-12, his card
+    # "Every closing answer": the closing answer is this turn alone, because it
+    # retold the conversation (WHAT'S LEFT I2 (c)); the door at the front keeps
+    # it, as the checks above hold. Annotated, not deleted: the ruling changed.
     done_ctx = RunContext(objective="q", dialogue=[("operator", "earlier thing")])
     done_ctx.steps.append(StepResult(agent="Router", model="m", output="tool ran"))
     closing = build_prompt(reg.get("Steward"), done_ctx, lib)
-    check("the closing Steward also remembers the conversation",
-          "earlier thing" in closing)
+    check("the closing Steward is handed this turn alone, not the conversation (his card, 2026-10-12)",
+          "earlier thing" not in closing)
 
 
 def test_ollama_responses_read_in_both_shapes(reg, lib, book):
@@ -6902,13 +6905,16 @@ def test_noise_never_wakes_a_seat(reg, lib, book):
     check("'chaty' is conversation, not a tool run",
           not any(s.tool_calls for s in cc.steps), str(cc.steps)[:80])
 
-    # the closer may not source events from the conversation
+    # the closer may not source events from the conversation -- told so until
+    # 2026-10-12; since his card "Every closing answer" it is not handed the
+    # conversation at all, and is told this turn is all it reports. Annotated,
+    # not deleted: the ruling changed.
     done_ctx = RunContext(objective="q",
                           dialogue=[("steward", "rack_pull got a success code")])
     done_ctx.steps.append(StepResult(agent="Router", model="m", output="listed 3 files"))
     closing = build_prompt(reg.get("Steward"), done_ctx, lib)
-    check("the closer is told the conversation is never a source of events",
-          "never a source of events" in closing)
+    check("the closer is not handed the conversation, and reports this turn alone",
+          "rack_pull got a success code" not in closing and "this turn is all you report" in closing)
     check("and that an invented success is worse than a plain failure",
           "invented success is worse" in closing)
 
@@ -10144,6 +10150,152 @@ def test_the_level_routes_with_todays_seats(reg, lib, book):
     check("where no Router stands, the level is a tag and nothing more",
           ctx.level == "Router" and not router and any("tagged only" in n for n in ctx.notes),
           f"{ctx.notes[-3:]}")
+
+
+def test_the_big_seats_answer_goes_as_written(reg, lib, book):
+    """His word, 2026-10-12, on the engine's answers: "truncated and shitty responses
+    half the time ... repeating the ansers, referencing earlier responses"; his cards:
+    "Pass the big seat's answer through", "The engine, from the record". Sitting 376's
+    fourth ask: the Reasoner answered well, the closing Steward credited the answer to
+    the Router and said ground_list "returned an empty list", and the Quality
+    Evaluator, woken by the Steward's drift, passed its words on as the delivery. When
+    the Reasoner or the Expert Coder answers now, its words are the delivery as
+    written: the closing Steward does not sit to retell them, no reviewer is woken
+    after them, and what is still open is the engine's, from the record. A turn with
+    no big seat closes as it did."""
+    import builtins
+    from types import SimpleNamespace
+    answer = "The slowest route is the court, because every counsel sits in turn before the ruling."
+
+    class Drift:                      # the Reasoner's answer drifts, as in sitting 376
+        def prime(self, text):
+            pass
+
+        def note_once(self, note):
+            return note
+
+        def why_unscored(self):
+            return ""
+
+        def score(self, out):
+            bad = (out or "").startswith(answer)
+            return SimpleNamespace(reason="", ok=not bad, score=0.37 if bad else 0.9,
+                                   stamp=lambda: "drift 0.370 DRIFTED")
+
+    def turn(flags, drift=None):
+        saved = builtins.input
+        builtins.input = lambda prompt="": "y"
+        try:
+            g = Path(tempfile.mkdtemp())
+            r = Stub()
+
+            def reply(a):
+                if a.key == "reasoner":
+                    r.last_usage = {"seat": a.name, "done_reason": "length", "prompt_tokens": 900,
+                                    "answer_tokens": 1400, "window": 8192, "max_tokens": 1400}
+                    return answer
+                r.last_usage = None
+                return {"router": "I read it.",
+                        "steward": "The Router has informed us the court is slowest.",
+                        "quality evaluator": "A corrected report: the court is slowest."}.get(a.key, "x")
+            r.reply = reply
+            ctx = RunContext(objective="which running order is slowest, and why?")
+            ctx.flags |= set(flags)
+            run_pipeline(ctx, reg, r, lib, env_for(g, reg, r, skills=lib),
+                         steps=book.get("default"), report=lambda m: None, drift=drift)
+        finally:
+            builtins.input = saved
+        return ctx, [n for n, _ in r.seen]
+
+    ctx, sat = turn({"hard", "needs_tool"}, Drift())
+    out = ctx.last_output()
+    check("the Reasoner's words are the delivery, as written", out.startswith(answer), out[:200])
+    check("... the closing Steward does not sit to retell them",
+          "Reasoner" in sat and "Steward" not in sat[sat.index("Reasoner") + 1:] and "informed us" not in out,
+          f"{sat}")
+    check("... no reviewer is woken after them to rewrite them",
+          "Quality Evaluator" not in sat and "corrected report" not in out, f"{sat}")
+    check("... what is still open is the engine's, from the record: the answer cut at its length limit",
+          "length limit" in out and "1400" in out, out[-400:])
+    check("... and the record says the delivery is the Reasoner's words, as written",
+          any("the Reasoner's answer is the delivery, as written" in n for n in ctx.notes),
+          str(ctx.notes)[-400:])
+    ctx, sat = turn({"needs_tool"})
+    check("a turn with no big seat closes as it did: the Steward comes back and tells it",
+          "Router" in sat and "Steward" in sat[sat.index("Router") + 1:], f"{sat}")
+    try:
+        from manjuel.pipeline import as_written
+    except ImportError as exc:
+        check("the engine composes the delivery as written", False, repr(exc))
+        return
+    code = ("Here it is.\n<filepath>cosine.py</filepath>\n```python\n"
+            "def cosine(a, b):\n    return 0.0\n```")
+    c = RunContext(objective="write a cosine function")
+    c.steps.append(StepResult(agent="Router", model="m", output="no skill needed"))
+    c.steps.append(StepResult(agent="Expert Coder", model="m", output=code))
+    c.steps.append(StepResult(agent="Quality Evaluator", model="m", output="A corrected version of the code."))
+    c.notes.append("coder landed cosine.py (2 lines) -- review raised")
+    c.big_answer = ("Expert Coder", code)
+    said = as_written(c)
+    check("the coder's words as written, its file named in plain text, not markup",
+          said.startswith("Here it is.") and "`cosine.py`" in said and "<filepath>" not in said
+          and "def cosine(a, b):" in said, said[:300])
+    check("... where the file was saved, from the engine's own note",
+          "saved in the workspace: cosine.py (2 lines)" in said, said[-400:])
+    check("... and a reviewer's changes stay in the record, not in the answer",
+          "A corrected version" not in said and "Quality Evaluator" in said and "in the record" in said,
+          said[-400:])
+
+
+def test_the_closing_answer_is_this_turn_alone(reg, lib, book):
+    """His card, 2026-10-12: "Every closing answer" -- written from this turn
+    alone. The closing Steward was handed the conversation so far and, in its
+    system role, the sitting's story and its standing, and it retold them:
+    sitting 373's closing answers turned skill_report's 45 skills into 43 and
+    retold an earlier turn, and the record calls it (c). The closing seat now
+    reports this turn's work alone -- no conversation, no story, no standing; the
+    law still rides. The Steward at the front keeps all three: a follow-up is
+    answered there."""
+    from manjuel.pipeline import build_prompt, carried_blocks
+    talk = [("operator", "an earlier question about the covenant"),
+            ("steward", "an earlier answer about the covenant")]
+    story = "## The sitting so far\n1. an earlier run about the covenant"
+    standing = "## Standing\nwhat this sitting is for"
+    steward = reg.get("Steward")
+    close = RunContext(objective="what is in the skills folder?", dialogue=list(talk),
+                       story=story, standing=standing, law="## The law\nok")
+    close.steps.append(StepResult(agent="Router", model="m", output="37 entries",
+                                  tool_calls=["ground_list"], tool_results=["37 entries"]))
+    close.flags.add("worked")
+    p, carried = build_prompt(steward, close, lib), carried_blocks(steward, close)
+    check("the closing answer is handed no conversation",
+          "Conversation so far" not in p and "an earlier question" not in p, p[:300])
+    check("... no story of the sitting and no standing",
+          "The sitting so far" not in carried and "what this sitting is for" not in carried, carried[:300])
+    check("... the law still rides with it", "## The law" in carried, carried[:200])
+    check("... and it reports this turn's work",
+          "TOOLS THAT ACTUALLY RAN THIS TURN: ground_list" in p, p[-400:])
+    front = RunContext(objective="and what did I just ask you?", dialogue=list(talk),
+                       story=story, standing=standing, law="## The law\nok")
+    p, carried = build_prompt(steward, front, lib), carried_blocks(steward, front)
+    check("the Steward at the front keeps the conversation",
+          "Conversation so far" in p and "an earlier question" in p, p[:300])
+    check("... and the story and the standing",
+          "The sitting so far" in carried and "what this sitting is for" in carried, carried[:300])
+    g = Path(tempfile.mkdtemp())
+    r = Stub(reply=lambda a: "I looked." if a.key == "router" else "x")
+    ctx = RunContext(objective="and what did you find about that again?", dialogue=list(talk),
+                     story=story, standing=standing)
+    ctx.flags.add("needs_tool")
+    run_pipeline(ctx, reg, r, lib, env_for(g, reg, r, skills=lib),
+                 steps=book.get("default"), report=lambda m: None)
+    asked = [q for n, q in r.seen if n == "Steward"]
+    souls = [s for n, s in r.souls if n == "Steward"]
+    check("in a turn, the front Steward sits with them and the closing one without",
+          len(asked) == 2 and "Conversation so far" in asked[0] and "The sitting so far" in souls[0]
+          and "Conversation so far" not in asked[1] and "The sitting so far" not in souls[1]
+          and "what this sitting is for" not in souls[1],
+          f"{[n for n, _ in r.seen]}")
 
 
 def test_the_shortlist_is_budget_not_judgement(reg, lib, book):
@@ -22475,6 +22627,8 @@ def main() -> int:
     test_the_router_moves_up_on_its_own(reg, lib, book)
     test_a_turn_is_measured_into_its_level(reg, lib, book)
     test_the_level_routes_with_todays_seats(reg, lib, book)
+    test_the_big_seats_answer_goes_as_written(reg, lib, book)
+    test_the_closing_answer_is_this_turn_alone(reg, lib, book)
     test_the_shortlist_is_budget_not_judgement(reg, lib, book)
     test_the_record_can_be_audited(reg, lib, book)
     test_a_subtask_runs_scoped_and_bounded(reg, lib, book)

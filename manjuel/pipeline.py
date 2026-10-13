@@ -1100,6 +1100,15 @@ def _guard_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
     )
 
 
+def _worked_steps(ctx: RunContext) -> list:
+    """The seats that did this turn's work: every completed seat but the door
+    and the guard. Empty at the front; not empty when the Steward sitting now is
+    the one that comes back after the work -- _steward_prompt's closing branch and
+    carried_blocks' cut (2026-10-12) read the same answer."""
+    return [s for s in ctx.completed()
+            if s.agent.lower() not in ("steward", "security guardian")]
+
+
 def _steward_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
     """The Steward bookends the run, and the two ends are different jobs.
 
@@ -1107,8 +1116,7 @@ def _steward_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
     and he is telling them what came of it -- in the same voice, not as a
     formal briefing.
     """
-    worked = [s for s in ctx.completed()
-              if s.agent.lower() not in ("steward", "security guardian")]
+    worked = _worked_steps(ctx)
 
     talk = ctx.dialogue_block()
     talk = f"{talk}\n\n" if talk else ""
@@ -1284,8 +1292,14 @@ def _steward_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
                "description or an opinion — and your answer must not put "
                "it in the past tense as though it were done. Say what was "
                "said, not what was accomplished.")
+    # THE CLOSING ANSWER IS THIS TURN ALONE (2026-10-12, his card: "Every closing
+    # answer"; WHAT'S LEFT I2 (c)). The conversation so far rode here "for tone",
+    # and a 3B retold it: sitting 373's closing answers retold an earlier turn and
+    # turned skill_report's 45 skills into 43. The door at the front keeps the
+    # conversation, the story and the standing; this seat reports the work in
+    # front of it and nothing before it (carried_blocks makes the same cut).
     return (
-        f"{talk}They asked: {ctx.objective.strip()}\n\n"
+        f"They asked: {ctx.objective.strip()}\n\n"
         f"Work was done on it:\n\n{done}\n\n"
         f"----------\n"
         f"{did}\n\n"
@@ -1296,9 +1310,9 @@ def _steward_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str:
         f"Write plain sentences. Never reproduce the layout, labels or "
         f"indentation of the record above — no seat names in brackets, no "
         f"copied headings. "
-        f"Report ONLY what appears in the record above. The earlier "
-        f"conversation is context for tone, never a source of events: a tool "
-        f"mentioned in it did not run now unless it is listed above. Never "
+        f"Report ONLY what appears in the record above: it is this turn, and "
+        f"this turn is all you report -- no earlier turn is yours to tell "
+        f"again. Never "
         f"report a status code, push, search or result you cannot point to "
         f"in the work shown — sitting 22 delivered three invented tool runs "
         f"that way, and an invented success is worse than a plain failure."
@@ -1381,6 +1395,82 @@ def _is_court(agent: Agent) -> bool:
     return _BUILDERS.get(agent.key) is _advisory_prompt
 
 
+def _big_seat(agent: Agent) -> bool:
+    """A seat the Router hands its work up to (2026-10-12): woken after the
+    Router by a flag a seat may raise, and handed the Router's package. Today
+    the Reasoner and the Expert Coder -- read off the seat files and the
+    builders, never a list kept here. The Router's ways up (`way_up`) and the
+    answer delivered as written (`as_written`) are the same seats by this one
+    definition."""
+    try:
+        anchor = seating.parse_anchor(agent.wakes)
+    except seating.SeatingError:
+        return False
+    return (_BUILDERS.get(agent.key, _default_prompt) in (_default_prompt, _coder_prompt)
+            and anchor.kind == seating.ANCHOR_AFTER
+            and (anchor.target or "").strip().lower() == "router"
+            and any(f in FLAGS_RAISED for f in seating.wake_flags(agent)))
+
+
+def as_written(ctx: RunContext) -> str:
+    """The delivery when a big seat answered (2026-10-12, his cards: "Pass the
+    big seat's answer through", "The engine, from the record"): its words as
+    written, a `<filepath>` shown as the file's name, then what is still open --
+    the engine's, read off the record, never a seat's account of it (LAW 5).
+
+    SITTING 376'S FOURTH ASK is why. The Reasoner answered in 59 s; the closing
+    Steward, handed that answer to retell, credited it to the Router and said
+    ground_list "returned an empty list" and ground_read "an empty string", both
+    false; and the Quality Evaluator, woken by the Steward's drift, passed its
+    words on as the delivery. A smaller seat rewriting a bigger one's answer is
+    the telephone game this estate was built against (DESIGN 11).
+
+    WHAT IS STILL OPEN, each line read off the record: the answer cut at its
+    length limit (note_cut_reply's note); the coder's file saved, refused or
+    handed to a door (land_code's notes); a reviewer that sat after it and did
+    not pass it -- its changes stay in the record, never in the answer. The
+    failures, the partial reads and the rest are the recompose's, after, as on
+    every turn."""
+    who, words = ctx.big_answer
+    text = _FILEPATH_TAG_RE.sub(lambda m: f"`{m.group(1).strip()}`", words or "").strip()
+    facts: list[str] = []
+    cut = next((n for n in ctx.notes if n.startswith(f"{who}'s reply was CUT by the rack: ")), "")
+    if cut:
+        cap = re.search(r"Max Tokens \((\d+)\)", cut)
+        facts.append(f"the {who}'s answer stopped at its length limit"
+                     + (f" ({cap.group(1)} tokens)" if cap
+                        else " (its window was full)" if "window was FULL" in cut else "")
+                     + ": what it said is what fit")
+    for n in ctx.notes:
+        if n.startswith("coder landed "):
+            facts.append("saved in the workspace: " + n[len("coder landed "):].split(" -- ")[0])
+        elif n.startswith(("coder file REFUSED (", "coder file NOT landed (")):
+            name, _, why = n.split("(", 1)[1].partition("): ")
+            facts.append(f"not saved: {name} -- {why}")
+        elif n.startswith("coder file ") and " landed UNINSPECTED -- " in n:
+            name, _, why = n[len("coder file "):].partition(" landed UNINSPECTED -- ")
+            facts.append(f"saved in the workspace without the check: {name} -- {why}")
+        elif n.startswith("coder ") and not n.startswith(("coder tree:", "coder landed ", "coder file ")):
+            facts.append(n[len("coder "):])
+    after = False
+    for s in ctx.steps:
+        if not after:
+            after = s.ok and s.agent == who and s.output == words
+            continue
+        if s.ok and _BUILDERS.get(s.agent.strip().lower()) is _evaluator_prompt:
+            said = (s.output or "").strip()
+            if said.startswith("UNFINISHED"):
+                facts.append(f"the {s.agent} judged it unfinished: "
+                             + said.split("—", 1)[-1].split(". ")[0].strip())
+            elif said and said != (words or "").strip():
+                facts.append(f"the {s.agent} suggested changes; they are in the record, "
+                             f"not in this answer")
+    if not facts:
+        return text
+    return (text + "\n\nFrom the record, not a seat's account of it:\n"
+            + "\n".join(f"  - {f}" for f in facts))
+
+
 def carried_blocks(agent: Agent, ctx: RunContext) -> str:
     """What a seat is handed BESIDE its own prompt, as the hand is handed
     CLAUDE.md: the law, and the standing. The operator, 2026-09-07: "make
@@ -1416,6 +1506,11 @@ def carried_blocks(agent: Agent, ctx: RunContext) -> str:
         blocks.append(full)
     elif short:
         blocks.append(short)
+    # THE CLOSING ANSWER IS THIS TURN ALONE (2026-10-12, his card: "Every closing
+    # answer"): the Steward that comes back after the work is handed neither the
+    # standing nor the story -- it retold them (WHAT'S LEFT I2 (c)). The law still
+    # rides with it; the door at the front keeps both.
+    door = door and not _worked_steps(ctx)
     standing = getattr(ctx, "standing", "").strip()
     if standing and (door or court):
         blocks.append(standing)
@@ -2858,6 +2953,24 @@ def run_pipeline(
             report(ink.dim(f"  [{i}/{total}] {agent.name} — resting (needs '{gate}')"))
             continue
 
+        # THE BIG SEAT'S ANSWER GOES AS WRITTEN (2026-10-12, his cards: "Pass the
+        # big seat's answer through", "The engine, from the record"; WHAT'S LEFT
+        # I2 (c)). When the Reasoner or the Expert Coder answered this turn, the
+        # closing Steward does not sit to retell it: the delivery is its words as
+        # written and what is still open, from the record (as_written). No model
+        # sits, so no time is spent -- before the deadline's check, which is for
+        # seats -- and nothing is summoned after it to rewrite it: sitting 376's
+        # fourth ask had the Quality Evaluator, woken by the closing Steward's
+        # drift, pass that Steward's retelling on as the answer.
+        if agent.key == "steward" and getattr(ctx, "big_answer", None):
+            who = ctx.big_answer[0]
+            note = (f"the {who}'s answer is the delivery, as written: the closing Steward "
+                    f"does not retell it, and what is still open is the engine's, from the record")
+            ctx.notes.append(note)
+            report(ink.dim(f"  [{i}/{total}] {note}"))
+            ctx.steps.append(StepResult(agent=who, model="(as written)", output=as_written(ctx)))
+            continue
+
         # OUT OF TIME: the deadline passed before this seat's turn. Not
         # seated, named in the record, and (via the recompose) in the
         # delivery. The loop keeps draining the queue so every unseated
@@ -2887,11 +3000,9 @@ def run_pipeline(
                                in (_default_prompt, _coder_prompt)]
             # ...and the ways up it may take on its own, read from the seat files
             # (his card: "No, let it move"): each racked seat anchored after it
-            # that takes its package, under a flag a seat may raise.
-            ctx.way_up = [(f, a.name) for a in seats.rack
-                          if _BUILDERS.get(a.key, _default_prompt) in (_default_prompt, _coder_prompt)
-                          and seating.parse_anchor(a.wakes).kind == seating.ANCHOR_AFTER
-                          and (seating.parse_anchor(a.wakes).target or "").strip().lower() == "router"
+            # that takes its package, under a flag a seat may raise -- the big seats
+            # (_big_seat), the same seats whose answer goes as written.
+            ctx.way_up = [(f, a.name) for a in seats.rack if _big_seat(a)
                           for f in seating.wake_flags(a)
                           if f in FLAGS_RAISED and (a.key, f) not in seats.summoned]
         prompt = build_prompt(agent, ctx, skills)
@@ -3753,6 +3864,13 @@ def run_pipeline(
             for who in seats.summon(ctx.flags):
                 ctx.notes.append(f"rack: {who}")
                 report("      " + ink.dim(f"rack: summoning {who}"))
+
+        # THE BIG SEAT'S ANSWER, KEPT AS WRITTEN (2026-10-12): the words the
+        # closing turn delivers (as_written), whatever sits between -- a reviewer's
+        # changes never replace them. A refusal or a send-back is not an answer.
+        if (_big_seat(agent) and not getattr(ctx, "make", None) and (output or "").strip()
+                and not output.lstrip().startswith(("REFUSED", "UNFINISHED"))):
+            ctx.big_answer = (agent.name, output)
 
         # Advisory measurement: did this stage wander from the source?
         d_score = d_flag = None
