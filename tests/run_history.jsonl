@@ -672,3 +672,8 @@
 {"suite": "smoke", "at": 1791840430.7907057, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "strokes", "at": 1791842601.0394359, "state": "finished", "passed": 3881, "total": 3881, "green": true, "failed": []}
 {"suite": "smoke", "at": 1791842610.1351347, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1791846813.3536613, "state": "finished", "passed": 3896, "total": 3897, "green": false, "failed": ["the closer is told the conversation is never a source of events"]}
+{"suite": "strokes", "at": 1791852093.3595068, "state": "finished", "passed": 3897, "total": 3897, "green": true, "failed": []}
+{"suite": "smoke", "at": 1791852351.492223, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1791854385.106741, "state": "finished", "passed": 3897, "total": 3897, "green": true, "failed": []}
+{"suite": "smoke", "at": 1791855268.7379553, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}

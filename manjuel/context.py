@@ -333,6 +333,11 @@ class RunContext:
     # (intent.level), and the big seat's flag a level 3 or 4 asks him about.
     level: str = ""
     level_flag: str = ""
+    # THE BIG SEAT'S ANSWER (2026-10-12, his cards: "Pass the big seat's answer
+    # through", "The engine, from the record"): (seat, its words as written) when
+    # the Reasoner or the Expert Coder answered this turn -- the closing turn
+    # delivers it as written (pipeline.as_written); empty on every other turn.
+    big_answer: tuple = ()
     # Arguments a named skill's own **Takes:** rules found in the operator's
     # words. Carried so the payload survives the moment of recognition --
     # before this, matching a keyword threw the rest of the sentence away.
