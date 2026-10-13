@@ -774,6 +774,27 @@ rhythm above, and none starts until he names it.
     path and lands in the workspace. It pushes nothing. And no seat ever holds
     the reach: the engine saves, the Coder only answers.
 
+## The order it goes next (2026-10-13, his cards: the plan by office)
+
+The offices, settled with him card by card after the founding papers and his own July designs were read whole (SPEC 8.4
+names them; WHAT'S LEFT carries each office's pieces): Manjuel the core, Steward the body that acts, Jesster the coder, Neiro
+the overseer, Aurora the webapp kept as it is, and the Judge -- the seat on gemma4:12b that rules last on the review panel.
+The order is his: Manjuel's logic core first. Each piece keeps the rhythm above, and none starts until it is planned on WHAT'S
+LEFT and he says go.
+
+    1  THE NAME FREED (WHAT'S LEFT H28). The seat called Manjuel becomes the Judge -- its file, its
+       record, agents.md, the engine's mentions of the seat, the strokes and the live check's cases;
+       pipelines.md's lines are his -- so "Manjuel" means the core alone.
+    2  PPMI READS THE REQUEST (H29). Meaning built from the ground's own words, standard library only:
+       what a request means, which skill and which seat, decided in milliseconds before any model, the
+       regex layer beneath it as the floor, every reading in the record with its score. Measured first
+       on the record's own asks, and shown to him before it is wired.
+    3  THE HONESTY GATE ON EVERY ANSWER (H30). A claim is fact only where its distinctive words are in
+       the record; anything else is marked generated, or answered "no record".
+    4  THE RECORD WHOLE, THEN MEMORY THAT COMES BACK (H7, H6; H2 to H4).
+    then  as proposed, his to change: the coding loop (Jesster's: coder-tree, Manjuel's verdict, a pull
+       request, his merge), the faults in what exists, and Neiro's own task list (H25, H23).
+
 ## The marks, and how one is cut (2026-09-17)
 
 In one line: ONE MARK PER VERSION, `vMAJOR.MINOR.PATCH`, ON THE MAIN LINE,

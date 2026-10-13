@@ -13,6 +13,70 @@ until 2026-10-10). Read it there: the tab counts the lines, finds words in them,
 
 ---
 
+## Today's working path
+
+Your word, 2026-10-13: this page carries the build path, the build plan, the changelog and every document that fits each area,
+and shows the path we are on. **Today: the functions and capabilities of the dashboard and the core**, the v0.2.6 pass (I2):
+"making sure all functions are working".
+
+- **The build path.** Cut so far: core and atlas v0.2.5 (A); BUILDPATH.md's ladder has every cut, with its date and commit.
+  Next: v0.2.6 (I2), then the road to 0.3.0 (I3 to I6).
+- **The build plan.** The plan by office, below, set with you card by card on 2026-10-13: Manjuel's logic core first (your
+  card); then, as proposed and yours to change, the coding loop (I2's plan, steps (1) to (3)), the faults (I2's step (4)),
+  Neiro's task list, and the rest of each office's plan; every function measured again before the v0.2.6 cut (I2's step (5)).
+- **Now (2026-10-13, 10:50): the plan written into the documents** (your word: "write all of this down in the documents, get
+  the plan settled up, and move forward with the work on manjuel"): this page, SPEC, BUILDPATH, DAYBOOK, the CHANGELOG and
+  HANDOFF, on the line `manjuel-core`. Next: Manjuel's first pieces, H28 (the Judge) and H29 (PPMI reads the request), each
+  planned in full on its line before anything is built, and built on your go.
+- **The record behind it.** CHANGELOG.md's Unreleased: what has landed since v0.2.5 (the measure, the visible runs, routing's
+  three parts, the answers' piece (1)). HANDOFF.md's newest block: the day's state and the hand's faults. INVENTORY.md: every
+  function, its last live run and its time. SPEC.md: what done means (4.9, the coder changing the system's own files).
+  BUILDMAP.md and REFUSALS.md: where each thing is in the code, and every refusal it can give.
+- **By area.** The engine (the core): Manjuel's, Steward's and Neiro's plans below, C's first two parts and I2's (b) to (h). The
+  dashboard and the tool server (atlas): C's third part; the webapp kept exactly as it is (Aurora, below), so D19 and I2's (i)
+  are held. The coding loop: Jesster below, D18 and H17, I2's steps (1) to (3), and `flows/coder-tree.json`.
+
+---
+
+## The plan by office (set 2026-10-13)
+
+Set with you card by card on 2026-10-13, after the founding papers (`foundation/`) and your July designs (in your own archive,
+kept off every remote) were read whole: what each part of the system is, in your words, what stands, and what comes next. The
+order across the offices: Manjuel's logic core first (your card); the rest as proposed, yours to change.
+
+- **Manjuel, the core.** "Manjuel is the well, core ... the seed of this entire project": the record, the immutable law and
+  ledger, and the logic core, "the PPMI and very-quick decision/logic side of the system", with no language model in it;
+  everything the system says "Filtered through the laws and foundation docs". Built into the engine we have; the July kernel
+  was the old core, which did not work (your card). Stands: the record, the law chain and its gate, the memory chain, the
+  engine's checks. Next, in order: (0) the seat called Manjuel renamed the Judge, so the name means the core alone (H28; your
+  word: "the Gemma seat can just be called Judge"); (1) PPMI reads the request -- which skill, which seat -- in milliseconds
+  before any model, the regex layer the floor (H29; your card); (2) the honesty gate on every answer: a claim is fact only
+  where its distinctive words are in the record, else marked generated or answered "no record" (H30; your card; the shape of
+  C44); (3) the record whole (H7, then H6); (4) memory that comes back (H2, then H3 and H4). The Judge keeps its seat on the
+  review panel.
+- **Steward, the body that acts.** Everything that reaches out: the seats, the skills and tools, the rack of models and the
+  maker; full autonomy inside the walls, none past your gate; the front seat is its voice (your card). Next: (1) the coding
+  loop (D18), with Jesster below; (2) the faults in what exists, C38 to C67 (your card: the faults after the loop); (3) the
+  model road: a new model pulled on your card, measured against the seat it would replace, moved on your card (your card:
+  "Try, measure, propose"); (4) plugins (H9); (5) the weighing: a second head on a hard question, the difference shown.
+- **Jesster, the coder.** Your word of 2026-08-14, kept on your card: "Jesster IS the Coder" -- it writes the code and
+  refutes it; the Expert Coder and Aider work under that name. Its loop is coder-tree plus QA and a pull request (your card):
+  the change made, checked that it changed the code, the tests, a pull request when they pass, Manjuel's verdict against what
+  was asked, a concern raised to you as a card, your merge -- I2's plan, steps (1) to (3).
+- **Neiro, the overseer.** "The whole process should be unified and run within a transparent and empirically manageable
+  state with an agent to oversee the processes": it holds the state from the record, runs the work as flows and watches each
+  run with numbers; it posts, proposes and escalates, and never acts on the world or approves (your card). Next: (1) its own
+  task list: told to do something, it writes and works its own numbered steps (H25), started by a sentence (H23) (your card);
+  (2) the overseer seat, reading each run and filing what is off for your yes; (3) the beat, the River (H10). This page and
+  INVENTORY stay kept by hand (your card).
+- **Aurora, the webapp.** "The user-facing part of the system, think of it like the menu at a restaurant. looks pretty, stays
+  simple, easy to use": the webapp we use, named ATLAS for ease, is Aurora, its admin section for now. Kept exactly as it is:
+  "NO REBUILDING", its look untouched (your words); nothing of it is in this plan, and D19 is held.
+- **The Smith** is whoever maintains the estate -- the hand and Aider -- under CLAUDE.md, as now; **the River** is Neiro's
+  beat.
+
+---
+
 ## A. Stops the release right now
 
 The last cut is core **v0.2.5** and atlas **v0.2.5**, on GitHub (2026-10-10, cut by the release flow v5 on your three clicks, its first real run; G),
@@ -39,19 +103,117 @@ Nothing here gets built until you say which way.
 
 ## C. Bugs and problems, known and not fixed
 
+Written whole on 2026-10-13 from the record (your card: "Honest pass first"): every fault INVENTORY.md marks that is not mended
+or ruled, and every one found in the sittings since, from I2's own account. One line each, naming the piece that mends it. Not
+repeated here: the glass's mic, ruled to I5 on your card, and the law chain's two checkers disagreeing, which is H7.
+
 ### The models misbehaving
 
+- **C13. The review panel does not fit its time limit.** Reopened 2026-10-13. It was closed 2026-09-30 on one measured run (the
+  panel 561 seconds of its 900, Jesster 207, the judge 317, and ruled inside the turn). In sitting 366 (2026-10-10) Jesster and
+  Manjuel ran past their bounds, Neiro had the last word, and the live check's review-panel case missed: 9 of 10. The mend is
+  I2's (f), the review panel's bounds. *(INVENTORY P4, S4, S5, R4, R5; logs/standup_2026-09-30_155756.md)*
+- **C38. Answers cut at their length limit.** In sittings 373, 375, 376 and 377: the Reasoner at 1,400 tokens (twice in 375 and
+  in 376; in 377 its visible answer was whole, so the limit is spent on its hidden thinking), the Router at 900 (three times in
+  376), the Quality Evaluator at 700. The engine says so in the record each time. The mend is the answers' piece (2), the caps.
+  *(CHANGELOG, "core: routing, its third part, the levels")*
+- **C39. The Router makes the change itself before the coding model sits.** Asked to "lint this python and fix it", it read "fix
+  it" as a write and wrote the fix with `write_file` before the Expert Coder was woken (sitting 377). Routing's next part, I2's
+  (b). *(INVENTORY P1)*
+- **C40. The Router rebuilt the whole search index unasked, twice.** After `embed_text` refused a ground file (sitting 373, 291
+  seconds), and after "what I could change" was read as a write (376). *(INVENTORY K5)*
+- **C41. The Router names no task.** Told which seat waits behind it and asked to name the task, it named none in any turn of
+  sittings 375 and 376; your own words went as the task each time, which is the fallback. In 375 it also ran `skill_search`
+  three times on one ask. *(CHANGELOG, "core: routing, its second part, the Router's package")*
+- **C42. The Proofreader mended "too" and kept "their" for "they're".** Woken on your word at a green card (sitting 373).
+  *(INVENTORY S8)*
+- **C43. The Deep Researcher answered beside the question.** Asked about the court, it answered with a law court's meaning, not
+  the ground's review panel (sitting 370). Grounding, I2's (g). *(INVENTORY S1, K3)*
+- **C44. The estate turn cannot read the covenant.** Asked about the covenant, it answered with the Steward's description of
+  itself, and Manjuel ruled that SUPPORTED after six and a half minutes on gemma4:12b (sitting 373): C3's question, failing
+  another way. Grounding and the slow routes, I2's (g) and (h). *(INVENTORY P3)*
+- **C45. The Steward narrates a flag it raised, with the flag taken out.** "I raise `` to enable the chain to perform the task",
+  in a follow-up answered at the door (sitting 377). Part of H24, plain by default. *(INVENTORY S14)*
+- **C46. The closing answer miscounts a tool's list.** It told `skill_report`'s 45 skills as 43 and dropped `git_pull` from
+  `skill_search`'s five (sitting 373). C7's mend, the whole list added from the record, was made for the rack's list.
+  *(HANDOFF, 2026-10-12, sitting 373)*
 
 ### The engine
 
+- **C47. The turn's 600-second clock counts the time a card waits for you.** An ask whose card you answered after ten minutes
+  ran out of time (sitting 375); after a big seat, the closing Steward was left 48 seconds (376). The answers' piece (3), the
+  clock. *(CHANGELOG, "core: routing, its second part, the Router's package")*
+- **C48. The conversation is cut to its newest 2,400 characters, and the Router never sees it.** What you said a few turns back
+  is gone when it matters (your word of 2026-10-12: "losing context"). The answers' piece (4), the room. *(I2, the causes
+  measured 2026-10-12)*
+- **C49. Words read as an order to write where none was given.** "add" inside code sent to be linted (sitting 373) and "what I
+  could change" (376) were each read as a write; C39 and C40 came of that shape. Routing's next part, I2's (b).
+  *(CHANGELOG, "core: routing, its first part, the front face")*
+- **C50. A search of the ground chosen where nothing needs one.** A sum and a riddle were each sent to `semantic_search`
+  (sitting 373). *(INVENTORY K35)*
+- **C51. "lint the code in measure.py from the workspace" named `list_directory`, not the linter** (sitting 375).
+  *(CHANGELOG, "core: routing, its second part, the Router's package")*
+- **C52. A file's own words woke a seat.** pipelines.md, read for an answer, raised `technical` with its own example tags
+  (sitting 375): a seat woken by what a tool returned, not by your words. *(CHANGELOG, "core: routing, its second part, the
+  Router's package")*
+- **C53. A long new question taken for a follow-up.** In sitting 376 a fresh question was read as a follow-up ("check what you
+  tell me"), so its level only tagged it. *(CHANGELOG, "core: routing, its third part, the levels")*
+- **C54. Two questions no tool answers brought the Router, and the answer missed both.** The Router paged through SEAT_LOG.md
+  (sitting 376); the level-2 line, over 200 characters, is to be checked. *(CHANGELOG, "core: routing, its third part, the
+  levels")*
+- **C55. The engine's note on what it added to an answer was empty.** When only a named tool had not run, the record said the
+  recompose appended and named nothing (sitting 377). *(HANDOFF, 2026-10-12, sitting 377)*
+- **C56. The REPL reloaded with nothing changed.** At `/use default` in sitting 373 it said "ground changed on disk — seats,
+  skills and pipelines reloaded", with nothing written under agents/ or skills/, nor to pipelines.md or commands.md, since 09:32.
+  The watcher takes a file named agents.md, commands.md or pipelines.md anywhere in the ground for a declaration
+  (`manjuel/watch.py`); the cause is not found. *(HANDOFF, 2026-10-12, sitting 373)*
+- **C57. Three of your own commands print their expansion and run nothing:** `/morning`, `/sitting` and `/covenant` (sitting
+  368). I2's (e). *(INVENTORY M32, M33, M34)*
+- **C58. The coder flow's brief answered beside the question.** In sitting 371, asked to make HANDOFF.md's header name its
+  newest block, `coder-tree`'s brief named tests/HANDOFF.md and a different change; it stopped at its first gate on your card.
+  Grounding, I2's (g). *(INVENTORY F2)*
+- **C59. The engine's speech-in hears wrong.** `/chat` heard nothing three times and ended itself; `/listen` heard a click,
+  then words you did not say (sitting 368). The glass's mic, which heard nothing too, is ruled to I5 on your card; these two are
+  not ruled. *(INVENTORY M1, M29, O2)*
+- **C60. The slow routes.** Manjuel six and a half minutes on gemma4:12b in an estate turn (sitting 373); qwen3-vl:8b 75.6
+  seconds to say one word, its load included; `speak` 154 seconds; the Router's turns up to 300 seconds on qwen3.5:4b. Each
+  brought inside a budget, or its budget ruled: I2's (h). *(INVENTORY P3, R7, K39, R8)*
 
 ### The dashboard and the tool server (atlas)
 
-
+- **C61. `read_plan` reads nothing in the core.** All five plan names map to atlas's documents, and none reads; in atlas, the
+  road reads. I2's (d), the door's tools. *(INVENTORY T70)*
+- **C62. `mesh_cite` declares `targets`, and its code reads `cites`.** Given `cites`, an actor not enrolled is refused.
+  *(INVENTORY T48)*
+- **C63. `prompt_compare` compares a version with itself, silently.** Versions given as the strings it declares compared v2
+  with v2; given as numbers, v1 against v2 read IDENTICAL. *(INVENTORY T54)*
+- **C64. `seat_ask` refuses every seat in the core as not declared**, its own example "@manjuel" included. *(INVENTORY T77)*
+- **C65. `ask_steward` has nothing to wake.** It refuses "no engine wired for project research": the tool server runs without
+  `--engine`. *(INVENTORY T4)*
+- **C66. The tool server's list describes every argument of every tool as "the ground this call names".** *(HANDOFF, the
+  measure's first pass)*
+- **C67. The Bash tab's gate stops plain looks.** `git --version` parked as a write (card 204, 2026-10-10), and a read-only
+  measure of your record was refused three times without naming what it matched (sitting 376); H15 promised a refusal by name.
+  *(INVENTORY G2)*
 
 ---
 
 ## D. Built but not finished, or not hooked up
+
+- **D18. The coding loop is built, and does not yet run end to end.** `coder-tree` (v5): your gate opens a line of work, the
+  council makes the change and is sent back when a check fails, the tests and the smoke run, your gate, then a save on the line.
+  Fired nine times since 2026-09-28: six failed, two stopped at your gates, one COMPLETE (2026-09-29). In sitting 371 its brief
+  answered beside the question (C58), and its Aider step is half built (H17). Its "changed" check reads the coder's reply for the
+  words "line of work `", not the code. Against your loop of 2026-10-13 ("make sure the thing changed the code, check the
+  provers, then pull request when proven ... make sure that the code matches the intent, and merge. if there are questions or
+  concerns, flags can be raised"): nothing checks the code changed, it opens no pull request, nothing judges the change against
+  what was asked, a question or a concern raises no card, and its last gate still says the merge to main is "your merge on your
+  terminal", where since 2026-10-09 main takes a change only through a pull request. The plan's steps (1) to (3), in I2.
+  *(flows/coder-tree.json; flows/runs.jsonl)*
+- **D19. Three pages nothing on the front page reaches.** The Trace Log, Messages and the Playground still draw at their
+  addresses, and no menu, palette or link reaches them. Your card of 2026-10-12: "Retire them" (I2's (i)). Not done, and it had
+  fallen out of the plan's step (4); it goes back in with I2's card today. Held later the same day by your word on the webapp:
+  "NO REBUILDING" (the plan by office, Aurora). *(INVENTORY G23, G24, G25)*
 
 ---
 
@@ -69,11 +231,20 @@ Nothing here gets built until you say which way.
   "the game" meaning the oldest of that name (needs a ruling: the project list sends the same words for an exact pick), a blank canvas passing the maker's check, and the small-talk
   narration. What SPEC 4.8
   still asks for is her at the glass with nobody helping, once these are mended. *(CHANGELOG, "atlas: the front page plays what the maker made", "core: the maker speaks to a person at a screen" and "core: a change the Coder sent back unchanged"; SPEC 4.8)*
+- **E4. `prompt_eval` has never run.** It scores a prompt over `evals/<name>.json`, and the core has no `evals/` folder; a
+  folder is yours to name (RULE 8). *(INVENTORY T55)*
+- **E5. The tool server's own save, take and send have not run in this version.** `git_commit`, `git_pull` and
+  `git_push`: the saves and sends since v0.2.5 went through the Bash tab, so each is measured at the next save, take and send
+  made through it. *(INVENTORY T33, T36, T37)*
 
 ---
 
 ## F. Paperwork that is out of date
 
+- **F8. pipelines.md still describes the closing Steward as it was.** Its three passages on the closing Steward say what it did
+  before 2026-10-12; since then a big seat's answer is the delivery as written, and every closing answer is written from the turn
+  alone (the answers' piece (1), in I2). The tool server's edit tool refuses pipelines.md, the pipelines' law and yours, so the
+  change is yours, or it opens with the plan's step (3). *(I2, the answers' piece 1)*
 
 ---
 
@@ -113,6 +284,30 @@ workflows, backed by ollama as a first route then secondarily through additional
 with a modules and plugin system ... a conversational assistant that evolves over time." What the
 disk says is missing, in the order it is worth building. H1 is done (below).
 
+- **H28. The seat called Manjuel renamed the Judge.** Your word, 2026-10-13: "the Gemma seat can just be called Judge". The seat
+  on gemma4:12b that rules last on the review panel and sits in the estate pipeline keeps its model and its job and takes the
+  name, so "Manjuel" means the core alone. The plan, each test shown red first: its seat file and prompt, its record in `us/`,
+  agents.md, the engine's mentions of the seat, the strokes and the live check's cases. `pipelines.md` names it seven times, and
+  the edit tool refuses that file (the pipelines' law, yours): those lines are yours to change, or the tool opened to it on your
+  word. The law's own court (`law.py rule`, LAW_001) stays Manjuel's: the core writes the law, and the Judge is the panel's seat.
+  *(the plan by office, Manjuel)*
+- **H29. PPMI reads the request: Manjuel's logic core, its first piece.** Your cards, 2026-10-13: "the whole first piece was
+  essentially supposed to be manjuel as the logic core that represents the PPMI and very-quick decision/logic side of the system",
+  and PPMI's first job is reading the request. Meaning built from the ground's own words -- word pairs counted over the skills',
+  the seats' and the documents' text and weighted by PPMI, then a fixed projection and sentence weighting, as in your July design
+  of the honest heart; standard library only, no downloaded weight -- so a request is matched to the skill or the seat it means
+  in milliseconds, before any model. The regex layer stays the floor and wins where it is sure; every reading goes in the record
+  with its score and the next best. The plan, each test shown red first: (1) the measure before anything is built: the record's
+  own asks, each with the skill it truly needed, scored for today's reading -- the baseline; (2) the PPMI reader on its own,
+  scored on the same asks and shown to you against the baseline before it is wired; (3) wired in behind the regex layer, handing
+  on as today below a sureness line; (4) the suites, a live sitting re-asking those asks, and the record.
+  *(the plan by office, Manjuel)*
+- **H30. The honesty gate on every answer: Manjuel's second piece.** Your card, 2026-10-13: every answer filtered through the
+  laws and the founding papers. A claim in an answer is fact only where its distinctive words appear in the record of the turn
+  -- what the tools returned, the files read, the law -- and anything else is marked generated, or the answer is "no record"; by
+  arithmetic, as your July design did it (the words a claim shares with the record, weighted by how rare they are). It catches
+  C44's shape (a ruling of SUPPORTED with nothing behind it) and the oldest fault in the record, made-up answers repeated as fact
+  (2026-08-29). Planned in full here before it is built. *(the plan by office, Manjuel)*
 - **H17. Aider makes the coder flow's code changes.** Ruled by B21 (2026-10-05: "yes"), taken as the second way: the flow's `attempt` is
   Aider when every file the change names fits the coding model's 8,192-token window, and the council's own edit when one does not; the
   line of work, the suites and your Land click stay, and no seat, agent or role is ever given Aider. Needed: a step kind in the flow
@@ -348,8 +543,31 @@ goals". The steps under each are proposed from the disk; each is yours to change
   it raised, the flag stripped; the recompose's note named nothing it appended when only a named tool had not run; and
   pipelines.md's lines on the closing Steward still say what was -- the edit tool refuses that file (yours, the pipelines'
   law), so they are yours to change. *(CHANGELOG, "core: the answers, piece (1), the big seat's answer as written")*
-  **Now (18:04):** the save and send of `pass-through`, with a pull request, on your word; then piece (2), the caps raised
-  where they cut, planned here first.
+  **The plan, set 2026-10-13** (your words: "get everything more in-line and make sure we are both looking at and talking about
+  the same thing, write up the plan, then execute"; "this coding loop is a large part of the system, as this is the foundation
+  for continuing development"). In order, each step planned in full here before it runs:
+  **Reordered the same day by the plan by office, at the top of this page: Manjuel's logic core goes first (your card), and these
+  steps follow it; the webapp is kept exactly as it is (your word: "NO REBUILDING"), so (i) in step (4) is held.**
+  (0) The answers' piece (1) landed: pull request 20, its stale map written again and sent (`2b71760`), merged on your click
+  (2026-10-13). The three passages of pipelines.md on the closing Steward stay yours (F8), or open with (3).
+  (1) The coding loop measured as it stands: `coder-tree` fired live on H12's six small edits, one sitting on your glass -- nine
+  fires since 2026-09-28 and one COMPLETE (09-29), and much has moved since; what passes, what breaks and where, written here.
+  Its scorer first, on your word ("That depends on how well the scorer works and what it actually produces"): what judges each
+  of the six edits right or wrong, built on a line, proved on a right and a wrong edit, and what it prints shown to you before
+  it is kept.
+  (2) The loop end to end, as you set it on 2026-10-13: "make sure the thing changed the code, check the provers, then pull
+  request when proven ... make sure that the code matches the intent, and merge. if there are questions or concerns, flags can
+  be raised". The change made by Aider (H17: the door's half of the Aider step, granted only by your gate; the council's own
+  edit the fall-back), a check that the code changed, the tests, a pull request once they pass, the change judged against what
+  was asked, a question or a concern raised to you as a card, and the merge on your click (D18); the same six run again and
+  compared.
+  (3) The loop's reach: what it may write to add a skill, a seat or a plugin (the wall), and where it works -- in place on a
+  line, or a workbench of its own -- on your rulings; the edit tool's rule for pipelines.md among them.
+  (4) The rest of the third step, in your order: the answers' (2) caps, (3) clock and (4) conversation room; (d) the door's
+  tools, (e) commands that run nothing, (f) the review panel's bounds, (g) grounding, (h) the slow routes, and (i) the three
+  pages retired (D19; it had fallen out of this list, put back 2026-10-13). Each fault's own line is under C.
+  (5) Every function measured again (INVENTORY's 244 lines) before the v0.2.6 cut.
+  Where it stands now is at the top of this page, under Today's working path.
   Your cards of 2026-10-10 on its first part: the release flow's record step prints STATUS.md again, so its last read can pass (built the same
   day; its first COMPLETE is the v0.2.6 cut) *(CHANGELOG, "core: the release flow's record step prints STATUS again")*; and `coder` and
   `version-tag` retired, every version kept (built the same day: the door fires neither again and keeps every version, the Workflows tab says why
@@ -578,6 +796,10 @@ Finished lines, newest first. A number is never used again.
   the coder window's own instruction block) and in none of the 272 since 09-29, the coder-tree's
   finished runs included. The law gate refuses the sentence by name and the Router retries; nothing
   reached the disk. Reopen if it recurs in an ordinary turn. *(CHANGELOG, "C1 closed on a recount")*
+  Seen again 2026-10-12 by another road, and mended the same day: in sitting 373 the engine's own call handed `inspect` the
+  whole rest of your sentence as its file, and it failed; on your card ("Mend it, then save") a skill whose argument is a path
+  now takes the file or folder your words name, found on disk, else the Router writes the call, and in sitting 374 `inspect`
+  read INVENTORY.md in 8.6 seconds. *(CHANGELOG, "core: routing, its first part, the front face")*
 - **B14. Simplifying the system.** RULED 2026-10-02: keep the Rust, close the line. The first half
   was BUILT 2026-10-01: the chain verdict is `atlas/tools/chain_verify.py` (29 of 29 goldens, 356 of
   356 canon vectors) and `verify_chain` runs it. The fold was not done: the Rust is the engine of
@@ -597,10 +819,6 @@ Finished lines, newest first. A number is never used again.
   itself is untouched. Refreshed at every toll since 2026-10-02 (`seatlog.pay`; `python
   tests/seatindex.py` runs it by hand) and held by a test.
   *(CHANGELOG, "The toll index")*
-- **C13. The review panel does not fit its time limit.** DONE 2026-09-30, measured: with Jesster
-  capped (B15) and the front door off the panel (B7), the court ran 561 seconds of its 900 --
-  Jesster 207, the judge 317 and ruled inside the turn. 1 of 1, the first since 09-18.
-  *(logs/standup_2026-09-30_155756.md)*
 - **B15. The review panel's two thinking seats have no limit.** RULED and BUILT 2026-09-30:
   Jesster capped at 4,500 tokens, the measured middle of its finished answers; the judge as it
   was. *(CHANGELOG, "His rulings of the afternoon, built")*
