@@ -24,11 +24,13 @@ and shows the path we are on. **Today: the functions and capabilities of the das
 - **The build plan.** The plan by office, below, set with you card by card on 2026-10-13: Manjuel's logic core first (your
   card); then, as proposed and yours to change, the coding loop (I2's plan, steps (1) to (3)), the faults (I2's step (4)),
   Neiro's task list, and the rest of each office's plan; every function measured again before the v0.2.6 cut (I2's step (5)).
-- **Now (2026-10-14, 09:51): H29, PPMI reads the request -- built and wired on the line `ppmi-reading`, the suites green
-  on your glass; step (4) next, a live sitting re-asking the record's asks, then the save and send, each on your word.**
+- **Now (2026-10-14, 10:27): H29 is done -- PPMI reads the request, on main since your merge of pull request 22 (`55c4aab`),
+  and the live sitting (378) read all nine of your asks as planned; its record goes as a second pull request from
+  `ppmi-reading` on your card, then the Judge (H28) or the honesty gate (H30), your pick.**
   Your cards of 2026-10-13 put PPMI first and the Judge (H28) after it; the documents written that morning were brought into
-  line (BUILDPATH and SPEC say so); H29's steps (1) to (3), with the measure and what the reader does, are under H29. The
-  PC's update overnight stopped the door and the glass; both were started again as they ran, and you unlocked the glass.
+  line (BUILDPATH and SPEC say so); H29's four steps, with the measure, what the reader does and the sitting, are under Done,
+  and the sitting's two new faults are C68 and C69. The PC's update overnight stopped the door and the glass; both were
+  started again as they ran, and you unlocked the glass.
 - **The record behind it.** CHANGELOG.md's Unreleased: what has landed since v0.2.5 (the measure, the visible runs, routing's
   three parts, the answers' piece (1)). HANDOFF.md's newest block: the day's state and the hand's faults. INVENTORY.md: every
   function, its last live run and its time. SPEC.md: what done means (4.9, the coder changing the system's own files).
@@ -179,6 +181,13 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
 - **C60. The slow routes.** Manjuel six and a half minutes on gemma4:12b in an estate turn (sitting 373); qwen3-vl:8b 75.6
   seconds to say one word, its load included; `speak` 154 seconds; the Router's turns up to 300 seconds on qwen3.5:4b. Each
   brought inside a budget, or its budget ruled: I2's (h). *(INVENTORY P3, R7, K39, R8)*
+- **C68. The check of numbers no tool returned counts your own numbers.** In sitting 378 the statistics of 4, 8, 15, 16, 23 and
+  42 were answered right, and the engine appended "A NUMBER NO TOOL RETURNED" for 15, 16 and 23, the numbers of your own ask
+  (its words: they appear "in none of this run's tool results"). *(HANDOFF, 2026-10-14, sitting 378)*
+- **C69. A follow-up the door hands to the Router comes back with nothing.** "what about the mean and median of those?", asked
+  right after the statistics: the door raised `needs_tool`, the Router, which never sees the conversation, said it had no
+  numbers, and the closing answer, written from the turn alone, said they were not available (sitting 378). C48's shape; the
+  answers' piece (4), the room. *(HANDOFF, 2026-10-14, sitting 378)*
 
 ### The dashboard and the tool server (atlas)
 
@@ -292,39 +301,6 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   the edit tool refuses that file (the pipelines' law, yours): those lines are yours to change, or the tool opened to it on your
   word. The law's own court (`law.py rule`, LAW_001) stays Manjuel's: the core writes the law, and the Judge is the panel's seat.
   *(the plan by office, Manjuel)*
-- **H29. PPMI reads the request: Manjuel's logic core, its first piece.** Your cards, 2026-10-13: "the whole first piece was
-  essentially supposed to be manjuel as the logic core that represents the PPMI and very-quick decision/logic side of the system",
-  and PPMI's first job is reading the request. Meaning built from the ground's own words -- word pairs counted over the skills',
-  the seats' and the documents' text and weighted by PPMI, then a fixed projection and sentence weighting, as in your July design
-  of the honest heart; standard library only, no downloaded weight -- so a request is matched to the skill or the seat it means
-  in milliseconds, before any model. The regex layer stays the floor and wins where it is sure; every reading goes in the record
-  with its score and the next best. The plan, each test shown red first: (1) the measure before anything is built: the record's
-  own asks, each with the skill it truly needed, scored for today's reading -- the baseline; (2) the PPMI reader on its own,
-  scored on the same asks and shown to you against the baseline before it is wired; (3) wired in behind the regex layer, handing
-  on as today below a sureness line; (4) the suites, a live sitting re-asking those asks, and the record.
-  **Step (1), measured 2026-10-13 before anything was built** (on your card, in the Python tab): today's reading named the
-  right skill for 23 of the record's 35 asks (sittings 370 and 373) and for all 16 of the matrix's canonical asks, about 2.5 ms
-  an ask. Of the 12 it missed, 8 named nothing -- lint, a trendline, statistics, a timeline, the last proof, loading a model and
-  speech, each left to the Router (15 to 154 seconds a turn, INVENTORY), and running a file, which its own rule decides next --
-  and 4 named the wrong skill: "the glass" inside a feedback to classify sent it to the search, "where is the chain standing"
-  to `symbols`, and the workspace's write and replace to `list_directory`. Step (2) is scored on the same asks against this.
-  **Step (2), set on your cards 2026-10-13:** the reader learns its word pairs from the skills' own words alone -- the 45 skill
-  files, 5,300 words -- and not from the seats' and the documents' text first written above (the root documents alone are
-  439,327 words, and every day's edit to them would move the reading); where the regex and the reader name different skills, a
-  match on a skill's own name or `Says:` phrases stands and a match on a shared phrase gives way -- three of the four wrong
-  namings came from shared phrases ("the glass" once, "the workspace" twice), and the fourth, `symbols`' own "where is", stands;
-  and it is built on the line `ppmi-reading`, cut from main after your merge of pull request 21.
-  **Steps (2) and (3), built 2026-10-13 and 2026-10-14** (your cards: "Check unseen asks, then wire", "256"): measured in the
-  Python tab, the reader on its own named the right skill for 35 of the 51 at its best line, and under your rule 44 against
-  the regex's 39, none of the 39 lost; the matrix's 385 phrasings of its plain, rack and git asks came out unchanged and the
-  14 new asks of sittings 375 to 377 ten and ten -- the line (0.6) was set on the same 51, so the live sitting is the honest
-  test. Wired on `ppmi-reading`, each test shown red first: `intent.ppmi_reading` and `intent.read_the_request` (your rule; a
-  skill that writes never named by it -- the Router decides the write); in the engine, every reading in the record with its
-  score and the next best, the reader's pick taken over a shared phrase at once and, where your words named nothing, only
-  after the engine's sure readers (a named file or folder, several acts, a write, an order to run or to search, hands
-  wanted) and before the guess that a question is about the ground. The suites from your glass: strokes 3923 of 3923 and
-  smoke 72 of 72 (2026-10-14). Step (4) next: a live sitting re-asking the record's asks, on your card.
-  *(CHANGELOG, "core: Manjuel's logic core, its first piece")* *(the plan by office, Manjuel)*
 - **H30. The honesty gate on every answer: Manjuel's second piece.** Your card, 2026-10-13: every answer filtered through the
   laws and the founding papers. A claim in an answer is fact only where its distinctive words appear in the record of the turn
   -- what the tools returned, the files read, the law -- and anything else is marked generated, or the answer is "no record"; by
@@ -630,6 +606,63 @@ goals". The steps under each are proposed from the disk; each is yours to change
 
 Finished lines, newest first. A number is never used again.
 
+- **H29. PPMI reads the request: Manjuel's logic core, its first piece.** DONE 2026-10-14: its four steps, each on your cards;
+  the reader on main since your merge of pull request 22 (`55c4aab`), and the live sitting (378) reading all nine of your asks
+  as planned. The line as it stood: your cards, 2026-10-13: "the whole first piece was
+  essentially supposed to be manjuel as the logic core that represents the PPMI and very-quick decision/logic side of the system",
+  and PPMI's first job is reading the request. Meaning built from the ground's own words -- word pairs counted over the skills',
+  the seats' and the documents' text and weighted by PPMI, then a fixed projection and sentence weighting, as in your July design
+  of the honest heart; standard library only, no downloaded weight -- so a request is matched to the skill or the seat it means
+  in milliseconds, before any model. The regex layer stays the floor and wins where it is sure; every reading goes in the record
+  with its score and the next best. The plan, each test shown red first: (1) the measure before anything is built: the record's
+  own asks, each with the skill it truly needed, scored for today's reading -- the baseline; (2) the PPMI reader on its own,
+  scored on the same asks and shown to you against the baseline before it is wired; (3) wired in behind the regex layer, handing
+  on as today below a sureness line; (4) the suites, a live sitting re-asking those asks, and the record.
+  **Step (1), measured 2026-10-13 before anything was built** (on your card, in the Python tab): today's reading named the
+  right skill for 23 of the record's 35 asks (sittings 370 and 373) and for all 16 of the matrix's canonical asks, about 2.5 ms
+  an ask. Of the 12 it missed, 8 named nothing -- lint, a trendline, statistics, a timeline, the last proof, loading a model and
+  speech, each left to the Router (15 to 154 seconds a turn, INVENTORY), and running a file, which its own rule decides next --
+  and 4 named the wrong skill: "the glass" inside a feedback to classify sent it to the search, "where is the chain standing"
+  to `symbols`, and the workspace's write and replace to `list_directory`. Step (2) is scored on the same asks against this.
+  **Step (2), set on your cards 2026-10-13:** the reader learns its word pairs from the skills' own words alone -- the 45 skill
+  files, 5,300 words -- and not from the seats' and the documents' text first written above (the root documents alone are
+  439,327 words, and every day's edit to them would move the reading); where the regex and the reader name different skills, a
+  match on a skill's own name or `Says:` phrases stands and a match on a shared phrase gives way -- three of the four wrong
+  namings came from shared phrases ("the glass" once, "the workspace" twice), and the fourth, `symbols`' own "where is", stands;
+  and it is built on the line `ppmi-reading`, cut from main after your merge of pull request 21.
+  **Steps (2) and (3), built 2026-10-13 and 2026-10-14** (your cards: "Check unseen asks, then wire", "256"): measured in the
+  Python tab, the reader on its own named the right skill for 35 of the 51 at its best line, and under your rule 44 against
+  the regex's 39, none of the 39 lost; the matrix's 385 phrasings of its plain, rack and git asks came out unchanged and the
+  14 new asks of sittings 375 to 377 ten and ten -- the line (0.6) was set on the same 51, so the live sitting is the honest
+  test. Wired on `ppmi-reading`, each test shown red first: `intent.ppmi_reading` and `intent.read_the_request` (your rule; a
+  skill that writes never named by it -- the Router decides the write); in the engine, every reading in the record with its
+  score and the next best, the reader's pick taken over a shared phrase at once and, where your words named nothing, only
+  after the engine's sure readers (a named file or folder, several acts, a write, an order to run or to search, hands
+  wanted) and before the guess that a question is about the ground. The suites from your glass: strokes 3923 of 3923 and
+  smoke 72 of 72 (2026-10-14). Saved and sent on your word ("save and send, then run the live sitting", 2026-10-14):
+  `61c836f` on the line, pull request 22; the merge is yours on GitHub.
+  **Step (4), planned 2026-10-14 before it runs:** one live sitting on your glass, booted fresh so it runs the new engine,
+  re-asking the stroke's asks word for word (yours, from sittings 370 and 373), each with what the record should show: (i)
+  "good morning" -- no tool, the reader names nothing; (ii) "fit a trendline through 3, 5, 7, 9 and project the next two" --
+  `linear_regression`, chosen by the PPMI reader; (iii) "what did the suites last prove, and when?" -- `proved`; (iv)
+  "classify the sentiment of this feedback: the glass is slow but I love it" -- `classify_sentiment`, the shared "the glass"
+  giving way; (v) "what models are on the rack?" -- `rack_list` by your words, the reader's `rack_sync` (0.556) under its line;
+  (vi) "where is the chain standing right now: ground, workspace, session, card?" -- `symbols` by its own words, the reader
+  not asked (a known miss: the record wanted `ground_report`); (vii) "what are the mean, median and standard deviation of
+  4, 8, 15, 16, 23, 42?" -- `statistics`; (viii) "what about the mean and median of those?" -- a follow-up: the reader's pick
+  withdrawn and the door answering; (ix) "propose a note for later sessions: the measure ran today" -- no tool named and the
+  Router woken; a write it proposes is yours to deny. Left out: "say aloud ..." (`speak` uses your speakers), "run measure.py
+  ..." (it runs a script) and "git status" (named by its own words, as (vi) is). Then `/close`, each reading checked off
+  the transcripts, and what it shows written here, in the CHANGELOG and in HANDOFF.
+  **Step (4), run 2026-10-14:** sitting 378 (10:15:18 to 10:20:36) asked all nine, and every reading came out as planned, read
+  off the transcripts: (ii) `linear_regression` 0.693, (iii) `proved` 0.808, (iv) `classify_sentiment` 0.826 over the shared
+  table's `semantic_search`, (vii) `statistics` 0.891, (viii) `statistics` 0.746, withdrawn and the door answering, (ix)
+  `remember` 0.732, a write, so no tool named and the Router woken; (i) no tool, (v) `rack_list` by your words with the
+  reader's best at 0.556, (vi) `symbols` by its own words. Each skill the reader named ran, the Router writing its call, and
+  answered right. Found: C68 and C69; in (vi) the Router ran `ground_report`, the skill the record wanted, where your words
+  named `symbols` (H22's shape); and (ix)'s Router staged a memory proposal, `measure-ran-today`, nothing landed: yours to
+  land or drop with `/memory`.
+  *(CHANGELOG, "core: Manjuel's logic core, its first piece")* *(the plan by office, Manjuel)*
 - **D17. The pages that copy an Inspector tab still stand as pages of their own.** DONE 2026-10-10: your word, after the hand drove the pane to
   the standalone Workflows page for a check and you had to leave it to answer the cards parked on the terminal's tabs: "that shit should be
   retired, everything stays within the new interface, as previously judged." Built in two parts the same day, each on your cards. First the
