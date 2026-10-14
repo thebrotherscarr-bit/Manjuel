@@ -42,7 +42,7 @@ and the tools -- that is RUNBOOK.md, "Starting the system".
       ollama pull phi4-mini                # Proofreader, Delivery Agent
       ollama pull qwen3.5:9b               # Reasoner, Deep Researcher
       ollama pull deepseek-r1:8b           # Jesster (the licensed fool)
-      ollama pull gemma4:12b               # Manjuel -- the court's ruling seat (thinks long; never at the door)
+      ollama pull gemma4:12b               # the Judge -- the court's ruling seat (thinks long; never at the door)
       ollama pull qwen2.5-coder:7b         # the Expert Coder
       ollama pull nomic-embed-text-v2-moe  # index, drift, parity
 

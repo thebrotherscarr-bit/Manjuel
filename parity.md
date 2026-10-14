@@ -34,13 +34,13 @@ the default question; it is one case, kept, and labelled.
                                                               reasoners in a row; gemma4:12b was tried and moved)
     small           llama3.2:latest       phi4-mini:latest    Neiro, Guardian, Morning Rev, Quartermaster
                     phi4-mini:latest      llama3.2:latest     Proofreader, Delivery Agent
-    the court       gemma4:12b            gemma4:e4b          Manjuel -- last seat, rules after counsel; thinking belongs there
+    the court       gemma4:12b            gemma4:e4b          Judge -- last seat, rules after counsel; thinking belongs there
     thinking        qwen3.5:4b            qwen3.5:9b          Router, Quality Evaluator
                     qwen3.5:9b            qwen3.5:4b          Reasoner, Deep Researcher
     code            qwen2.5-coder:7b      qwen2.5-coder:14b   Expert Coder, lint_code
     reasoning       deepseek-r1:8b        qwen3-vl:8b         Jesster
     gemma4:12b is 7.6GB on disk and gemma4:e4b is 9.6GB -- the "e" is
-    effective parameters, not bytes. 12b sits as Manjuel; e4b is the bare
+    effective parameters, not bytes. 12b sits as the Judge; e4b is the bare
     reference. Pulled by the operator 2026-09-04 08:4x.
 
     HOW TO RUN: parity answers each case on the pipeline that is ACTIVE in
@@ -72,7 +72,7 @@ is only a snapshot of when the cases last matched it.
     phi4-mini:latest        2.5GB   Proofreader, Delivery Agent
     qwen3.5:4b              3.4GB   Router, Quality Evaluator
     qwen3.5:9b              6.6GB   Reasoner, Deep Researcher
-    gemma4:12b              7.6GB   Manjuel -- the court's ruling seat
+    gemma4:12b              7.6GB   Judge -- the court's ruling seat
     deepseek-r1:8b          5.2GB   Jesster
     qwen2.5-coder:7b        4.7GB   Expert Coder, lint_code
     nomic-embed-text-v2-moe 1.0GB   index, drift, and the parity comparison
@@ -105,8 +105,8 @@ Warmth and plainness are what the operator asked for at the door.
 
 ## Case: the court's ruling seat — gemma 12b against gemma e4b
 
-Manjuel rules on `gemma4:12b`; the reference is the other gemma. `/use
-court` first; read Manjuel's stage. gemma4:12b was tried at the front door
+The Judge rules on `gemma4:12b`; the reference is the other gemma. `/use
+court` first; read the Judge's stage. gemma4:12b was tried at the front door
 2026-09-04 and moved here the same hour: it thinks for a long time, and a
 thinking door in front of a thinking Router is two reasoners in a row.
 

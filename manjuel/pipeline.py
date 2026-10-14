@@ -736,7 +736,7 @@ DEFAULT_PIPELINE = [
 ]
 
 # The estate seats, in pipelines.md's order: inquire, hold the whole, refute,
-# then rule. Manjuel LAST, here as in the court -- this fallback ran him ahead
+# then rule. The Judge LAST, here as in the court -- this fallback ran him ahead
 # of Jesster until 2026-09-29, the order pipelines.md gave up on 2026-09-01
 # ("the Court ruled on counsel it had not yet heard"). Neither rewrites.
 ESTATE_PIPELINE = [
@@ -744,16 +744,16 @@ ESTATE_PIPELINE = [
     "Steward",
     "Neiro",
     "Jesster",
-    "Manjuel",
+    "Judge",
 ]
 
-# THE LAW's order: the court hears all counsel, then rules. Manjuel last.
+# THE LAW's order: the court hears all counsel, then rules. The Judge last.
 COURT_PIPELINE = [
     "Security Guardian",
     "Steward",
     "Neiro",
     "Jesster",
-    "Manjuel",
+    "Judge",
 ]
 
 PIPELINES: dict[str, list[str]] = {
@@ -1032,7 +1032,7 @@ def _advisory_prompt(agent: Agent, ctx: RunContext, skills: SkillLibrary) -> str
     """For seats that rule on work without rewriting it.
 
     The generic builder tells a stage to 'correct toward the objective', which
-    is exactly what Manjuel and Jesster must never do -- Manjuel rules on what
+    is exactly what the Judge and Jesster must never do -- the Judge rules on what
     the record supports, Jesster refutes. Neither produces a corrected version.
     """
     # Sitting 31: Jesster quoted his own system prompt as "the counsel's
@@ -1337,7 +1337,7 @@ _BUILDERS = {
     "expert coder": _coder_prompt,
     "quality evaluator": _evaluator_prompt,
     "delivery agent": _delivery_prompt,
-    "manjuel": _advisory_prompt,
+    "judge": _advisory_prompt,
     "jesster": _advisory_prompt,
     # Neiro provides for every part and decides for none -- the generic
     # "correct toward the objective" is a rewrite instruction, which is
@@ -3670,10 +3670,10 @@ def run_pipeline(
         # COUNSEL THAT WRITES THE RULING'S HEADING (WHAT'S LEFT C33, 2026-09-30).
         # Forty courts on record: Neiro wrote a ruling heading of its own in 16,
         # Jesster in 23 -- the rule, not the exception -- and the judge ruled
-        # after them every time. The ruling is Manjuel's (LAW_001 §2: counsel
+        # after them every time. The ruling is the Judge's (LAW_001 §2: counsel
         # appends COUNSEL, the court writes RULING). Counsel's words are
         # testimony either way, so nothing is discarded: the record names it.
-        if (_is_court(agent) and agent.key != "manjuel" and own.strip()
+        if (_is_court(agent) and agent.key != "judge" and own.strip()
                 and _RULING_HEAD_RE.search(own)):
             note = (f"{agent.name} wrote the ruling's heading; the ruling is the judge's "
                     f"(LAW_001 §2) -- counsel's words stand as counsel")
@@ -3884,7 +3884,7 @@ def run_pipeline(
         # is counsel, then the ruling, and nothing after it (LAW_001 §2): at
         # the judge's step of a court no seat is summoned, and the record
         # says which seat was not.
-        if _is_court(agent) and agent.key == "manjuel":
+        if _is_court(agent) and agent.key == "judge":
             late = sorted({a.name for a in seats.rack for f in seating.wake_flags(a)
                            if f in ctx.flags and (a.key, f) not in seats.summoned})
             if late:

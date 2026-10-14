@@ -3092,7 +3092,7 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
           "think" in inspect.signature(OllamaRuntime.chat).parameters)
 
     class Court(Stub):
-        """Manjuel thinks and does not rule until asked a second time."""
+        """The Judge thinks and does not rule until asked a second time."""
         def __init__(self):
             super().__init__(reply=None)
             self.manjuel_calls = 0
@@ -3103,7 +3103,7 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
             self.think_seen.append((agent.name, think))
             if agent.stage == "guard":
                 return "SAFE"
-            if agent.key == "manjuel":
+            if agent.key == "judge":
                 self.manjuel_calls += 1
                 if think_to:
                     think_to(f"weighing counsel, turn {self.manjuel_calls}")
@@ -3123,8 +3123,8 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
     check("a seat that deliberated without ruling is asked again",
           r.manjuel_calls == 2, str(r.manjuel_calls))
     check("the retry has thinking switched OFF",
-          [t for n, t in r.think_seen if n == "Manjuel"] == [None, False],
-          str([t for n, t in r.think_seen if n == "Manjuel"]))
+          [t for n, t in r.think_seen if n == "Judge"] == [None, False],
+          str([t for n, t in r.think_seen if n == "Judge"]))
 
     # COUNSEL THAT WRITES THE RULING'S HEADING (WHAT'S LEFT C33, 2026-09-30):
     # named in the record, never discarded -- counsel's words are counsel.
@@ -3142,7 +3142,7 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
     check("   and its words stand as counsel, not discarded",
           "one model can seat three" in (ctxu.output_of("Neiro") or ""), repr(ctxu.output_of("Neiro"))[:80])
     check("   and the judge writing RULING is not named",
-          not any("wrote the ruling's heading" in n and "Manjuel" in n for n in ctx.notes), str(ctx.notes)[-160:])
+          not any("wrote the ruling's heading" in n and "Judge" in n for n in ctx.notes), str(ctx.notes)[-160:])
     from manjuel.pipeline import _RULING_HEAD_RE
     check("counsel merely mentioning a ruling is not writing one",
           not _RULING_HEAD_RE.search("the court's earlier ruling on this was narrow, and I would add a caution"))
@@ -3152,7 +3152,7 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
     # and the record names the seat that was not seated.
     class Flagging(Court):
         def chat(self, agent, prompt, stream_to=None, tools=None, think_to=None, think=None):
-            if agent.key == "manjuel":
+            if agent.key == "judge":
                 self.seen.append((agent.name, prompt))
                 return "RULING: SUPPORTED -- the counsel holds. FACT. <flags>review</flags>"
             return super().chat(agent, prompt, stream_to, tools, think_to, think)
@@ -3161,7 +3161,7 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
     run_pipeline(ctxf, reg, rf, lib, e, steps=book.get("court"), report=lambda s: None)
     sat = [s.agent for s in ctxf.steps]
     check("a flag raised at the judge's step seats nobody after the ruling",
-          sat and sat[-1] == "Manjuel" and "Quality Evaluator" not in sat, str(sat))
+          sat and sat[-1] == "Judge" and "Quality Evaluator" not in sat, str(sat))
     check("   and the record names the seat that was not seated, and why",
           any("the ruling is the last word: Quality Evaluator not seated after it" in n for n in ctxf.notes),
           str(ctxf.notes)[-200:])
@@ -3176,9 +3176,9 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
     run_pipeline(ctxg, reg, rg, lib, e, steps=book.get("court"), report=lambda s: None)
     satg = [s.agent for s in ctxg.steps]
     check("   while the same flag raised by counsel still summons, before the judge (the rack is not disarmed)",
-          "Quality Evaluator" in satg and satg[-1] == "Manjuel"
-          and satg.index("Quality Evaluator") < satg.index("Manjuel"), str(satg))
-    retry = [p for n, p in r.seen if n == "Manjuel"][1]
+          "Quality Evaluator" in satg and satg[-1] == "Judge"
+          and satg.index("Quality Evaluator") < satg.index("Judge"), str(satg))
+    retry = [p for n, p in r.seen if n == "Judge"][1]
     check("the retry carries the seat's own deliberation, labelled as its own words",
           "Your own deliberation so far" in retry and "weighing counsel, turn 1" in retry
           and "RULE NOW" in retry)
@@ -3190,15 +3190,15 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
           any("turn 2 of" in n and "thinking off" in n for n in ctx.notes)
           and any("ruled on turn 2" in n for n in ctx.notes), str(ctx.notes))
     check("the deliberation of BOTH turns is kept in the record",
-          "turn 1" in ctx.output_of("Manjuel") or any(
+          "turn 1" in ctx.output_of("Judge") or any(
               "turn 1" in st.thinking and "turn 2" in st.thinking
-              for st in ctx.steps if st.agent == "Manjuel"),
-          str([st.thinking for st in ctx.steps if st.agent == "Manjuel"]))
+              for st in ctx.steps if st.agent == "Judge"),
+          str([st.thinking for st in ctx.steps if st.agent == "Judge"]))
 
     class Stubborn(Court):
         def chat(self, agent, prompt, stream_to=None, tools=None, think_to=None,
                  think=None):
-            if agent.key == "manjuel":
+            if agent.key == "judge":
                 self.manjuel_calls += 1
                 self.seen.append((agent.name, prompt))
                 self.souls.append((agent.name, agent.system_prompt or ""))
@@ -3217,7 +3217,7 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
           any(f"spent {MAX_RULING_TURNS} of {MAX_RULING_TURNS} turns" in n for n in ctx2.notes),
           str([n for n in ctx2.notes if "turn" in n]))
     check("the salvage line is still what stands (nothing invented over it)",
-          ctx2.output_of("Manjuel").startswith(SALVAGE_MARK))
+          ctx2.output_of("Judge").startswith(SALVAGE_MARK))
 
     class LoopingRouter(Stub):
         def __init__(self):
@@ -3241,9 +3241,9 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
     check("the Router is never pressed by the ruling loop (its loop is the tool loop)",
           r3.router_calls == 1, str(r3.router_calls))
 
-    check("Manjuel's seat declares the wider window the operator ordered",
-          (AgentRegistry.load(ROOT / "agents").get("Manjuel").context or 0) >= 16384,
-          str(AgentRegistry.load(ROOT / "agents").get("Manjuel").context))
+    check("the Judge's seat declares the wider window the operator ordered",
+          (AgentRegistry.load(ROOT / "agents").get("Judge").context or 0) >= 16384,
+          str(AgentRegistry.load(ROOT / "agents").get("Judge").context))
 
     # ---- B. the law in the system role; the ten for the court -------
     ten = lawgate.laws_text(ROOT)
@@ -3264,8 +3264,8 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
     for n, soul in r.souls:
         seen_souls.setdefault(n, soul)
     check("the court seats are handed the TEN verbatim, in the system role",
-          all("Fold, never delete" in seen_souls.get(n, "") for n in ("Neiro", "Jesster", "Manjuel")),
-          str({n: ("Fold, never delete" in seen_souls.get(n, "")) for n in ("Neiro", "Jesster", "Manjuel")}))
+          all("Fold, never delete" in seen_souls.get(n, "") for n in ("Neiro", "Jesster", "Judge")),
+          str({n: ("Fold, never delete" in seen_souls.get(n, "")) for n in ("Neiro", "Jesster", "Judge")}))
     guard_soul = seen_souls.get("Security Guardian", "")
     check("the Guardian gets the short form, not the ten",
           "## The law" in guard_soul and "Fold, never delete" not in guard_soul)
@@ -3273,8 +3273,8 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
           all("## The law" not in p for n, p in r.seen
               if reg.get(n).system_prompt), str([n for n, p in r.seen if "## The law" in p]))
     check("the registry's declaration is untouched by what a seat carried",
-          "## The law" not in reg.get("Manjuel").system_prompt)
-    man = next(st for st in ctx.steps if st.agent == "Manjuel")
+          "## The law" not in reg.get("Judge").system_prompt)
+    man = next(st for st in ctx.steps if st.agent == "Judge")
     check("the record keeps what rode in the system role",
           "[carried in the system message" in man.prompt and "Fold, never delete" in man.prompt)
 
@@ -3311,7 +3311,7 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
     sctx.law = v.block()
     sctx.law_full = v.block(full=ten)
     check("the door is handed the standing", "the new intent" in carried_blocks(reg.get("Steward"), sctx))
-    check("the court is handed the standing", "the new intent" in carried_blocks(reg.get("Manjuel"), sctx))
+    check("the court is handed the standing", "the new intent" in carried_blocks(reg.get("Judge"), sctx))
     check("the Router is NOT (budget; it routes, it does not interpret)",
           "the new intent" not in carried_blocks(reg.get("Router"), sctx))
     check("the Guardian is NOT", "the new intent" not in carried_blocks(reg.get("Security Guardian"), sctx))
@@ -3426,7 +3426,7 @@ def test_the_seat_bound(reg, lib, book):
           reg.get("Jesster").max_tokens == 4500, str(reg.get("Jesster").max_tokens))
     check("the door is bound at his 180", reg.get("Steward").timeout == 180.0)
     check("and the judge at his 600, the most any seat is given",
-          reg.get("Manjuel").timeout == 600.0 == max(a.timeout or 0 for a in reg.all()))
+          reg.get("Judge").timeout == 600.0 == max(a.timeout or 0 for a in reg.all()))
     check("the Router at his 300", reg.get("Router").timeout == 300.0)
     check("no seat declares more than the ceiling",
           all((a.timeout or 0) <= _rt.SEAT_TIMEOUT for a in reg.all()),
@@ -3494,7 +3494,7 @@ def test_the_seat_bound(reg, lib, book):
           "Raise the ceiling with MANJUEL_SEAT_TIMEOUT" in msg0
           and f"ran past the {_rt.SEAT_TIMEOUT:.0f}s bound" in msg0, msg0)
     try:
-        rt2.chat(dataclasses.replace(reg.get("Manjuel"), timeout=289.0, cut_to_turn=True), "go")
+        rt2.chat(dataclasses.replace(reg.get("Judge"), timeout=289.0, cut_to_turn=True), "go")
         msg9 = ""
     except SeatTimeout as exc:
         msg9 = str(exc)
@@ -3516,7 +3516,7 @@ def test_the_seat_bound(reg, lib, book):
           "- **Timeout:** 180" in src)
     check("a seat declares its own bound with `Timeout:`", seat.timeout == 300.0,
           repr(seat.timeout))
-    bare = dataclasses.replace(reg.get("Manjuel"), timeout=None)
+    bare = dataclasses.replace(reg.get("Judge"), timeout=None)
     check("a seat without one carries None -- the ceiling applies",
           bare.timeout is None and float(bare.timeout or _rt.SEAT_TIMEOUT) == _rt.SEAT_TIMEOUT)
     warns: list = []
@@ -3597,7 +3597,7 @@ def test_the_turn_deadline(reg, lib, book):
           f"{type(court).__name__} {declared_of(court)}")
     check("... as a list still: the declaration is never read as a seat",
           [str(s) for s in court] == ["Security Guardian", "Router", "Neiro",
-                                      "Jesster", "Manjuel"], str([str(s) for s in court]))
+                                      "Jesster", "Judge"], str([str(s) for s in court]))
     check("every other pipeline declares none, and takes the dial",
           all(isinstance(book.get(n), Steps) and declared_of(book.get(n)) is None
               for n in book.names() if n != "court"),
@@ -3686,7 +3686,7 @@ def test_the_turn_deadline(reg, lib, book):
 
     # THE BUDGET: a seat seated with less time left than its own bound is
     # handed the smaller number; a seat with more keeps its own.
-    seat = reg.get("Manjuel")                  # Timeout: 600, the most a seat is given
+    seat = reg.get("Judge")                  # Timeout: 600, the most a seat is given
     ctx3 = RunContext(objective="x")
     ctx3.deadline_at = _t.time() + 30
     cut = _within_deadline(seat, ctx3)
@@ -3792,8 +3792,8 @@ def test_the_loops_of_2026_09_08(reg, lib, book):
     #    that file is missing, kept the old one for four weeks.
     from manjuel.pipeline import PIPELINES
     check("in every built-in order that seats the judge, he rules last",
-          all(p[-1] == "Manjuel" for p in PIPELINES.values() if "Manjuel" in p),
-          str({n: p for n, p in PIPELINES.items() if "Manjuel" in p}))
+          all(p[-1] == "Judge" for p in PIPELINES.values() if "Judge" in p),
+          str({n: p for n, p in PIPELINES.items() if "Judge" in p}))
     check("and the built-in estate order is the one pipelines.md declares",
           PIPELINES["estate"] == [str(s) for s in book.get("estate")],
           f"{PIPELINES['estate']} vs {[str(s) for s in book.get('estate')]}")
@@ -3980,28 +3980,28 @@ def test_the_p0_of_the_review(reg, lib, book):
     #    96's court -- Jesster FAILED, Manjuel never seated -- was "met".
     court = next(c for c in _su.CASES if c.name == "the court")
     check("the court case names the seats that must sit and speak, the judge last",
-          court.expect_seats and court.expect_seats[-1] == "Manjuel", str(court.expect_seats))
+          court.expect_seats and court.expect_seats[-1] == "Judge", str(court.expect_seats))
     o = _su.Outcome(case=court)
     o.seats = ["Steward", "Neiro"]; o.failed = [("Jesster", "seat call ran past the 577s bound")]
-    o.late = ["Manjuel"]; o.delivery = "The Court's Ruling: no."; o.notes = ["law: ok"]
+    o.late = ["Judge"]; o.delivery = "The Court's Ruling: no."; o.notes = ["law: ok"]
     _su._judge(o, live=True)
     check("a failed seat is a miss, named",
           any("Jesster FAILED" in f for f in o.faults), str(o.faults))
     check("a seat out of time is a miss, named",
-          any("Manjuel was OUT OF TIME" in f for f in o.faults), str(o.faults))
+          any("Judge was OUT OF TIME" in f for f in o.faults), str(o.faults))
     check("a named seat that did not speak is a miss",
           any("expected Jesster to sit" in f for f in o.faults)
-          and any("expected Manjuel to sit" in f for f in o.faults), str(o.faults))
+          and any("expected Judge to sit" in f for f in o.faults), str(o.faults))
     check("... and the case is NOT met", not o.ok)
     o2 = _su.Outcome(case=court)
-    o2.seats = ["Steward", "Neiro", "Jesster", "Manjuel"]; o2.delivery = "RULING: holds."
+    o2.seats = ["Steward", "Neiro", "Jesster", "Judge"]; o2.delivery = "RULING: holds."
     o2.notes = ["law: ok"]; o2.results = []
     _su._judge(o2, live=True)
-    check("a whole court with Manjuel last is met", o2.ok, str(o2.faults))
+    check("a whole court with the Judge last is met", o2.ok, str(o2.faults))
     o3 = _su.Outcome(case=court)
-    o3.seats = ["Steward", "Neiro", "Manjuel", "Jesster"]; o3.delivery = "x"; o3.notes = ["law: ok"]
+    o3.seats = ["Steward", "Neiro", "Judge", "Jesster"]; o3.delivery = "x"; o3.notes = ["law: ok"]
     _su._judge(o3, live=True)
-    check("Jesster speaking after the judge is a miss -- the last word is Manjuel's",
+    check("Jesster speaking after the judge is a miss -- the last word is the Judge's",
           any("last word" in f for f in o3.faults), str(o3.faults))
 
     # 2. THE NUMBER CHECK. "34 markdown documentation files" for a listing
@@ -4065,7 +4065,7 @@ def test_the_p0_of_the_review(reg, lib, book):
     out = ctx.last_output()
     check("a seat cut at its bound is named in the delivery under SEATS THAT FAILED",
           "SEATS THAT FAILED" in out and "Jesster" in out and "120s bound" in out, out[-400:])
-    check("... and the court still delivered Manjuel's words above it",
+    check("... and the court still delivered the Judge's words above it",
           out.startswith("[seat] counsel"), out[:80])
 
     # 4. A REFUSED FEED IS WITHHELD FROM THE TRANSCRIPT; the delivery is the
@@ -4233,13 +4233,13 @@ def test_the_engines_own_words_are_a_source(reg, lib, book):
     import standup as _su
 
     court = next(c for c in _su.CASES if c.name == "the court")
-    judge_seat = reg.get("Manjuel")
+    judge_seat = reg.get("Judge")
     err = str(_seat_refusal(judge_seat, 179, 179))
 
     def judged(counsel):
         ctx = RunContext(objective=court.objective, review_only=True)
         ctx.steps.append(StepResult(agent="Jesster", model="m", output=counsel))
-        ctx.steps.append(StepResult(agent="Manjuel", model=judge_seat.model,
+        ctx.steps.append(StepResult(agent="Judge", model=judge_seat.model,
                                     output="", error=err))
         recompose(ctx, report=lambda *a, **k: None)
         o = _su.Outcome(case=court)
@@ -4259,7 +4259,7 @@ def test_the_engines_own_words_are_a_source(reg, lib, book):
     check("the standup does not call the engine's own numbers invented",
           nums == [], str(nums))
     check("   and the cut seat is still a fault -- a source is not a pardon",
-          any(f.startswith("Manjuel FAILED") for f in o.faults), str(o.faults))
+          any(f.startswith("Judge FAILED") for f in o.faults), str(o.faults))
 
     o2, nums2 = judged("The counsel holds, on 46 models, that one cannot seat three.")
     check("a number a seat invented beside the engine's is still named",
@@ -4303,16 +4303,16 @@ def test_the_sitting_story(reg, lib, book):
     ctx2 = RunContext(objective="should the court sit on one model?")
     ctx2.steps.append(StepResult(agent="Neiro", model="m", output="counsel"))
     ctx2.steps.append(StepResult(agent="Jesster", model="m", output="", error="[Jesster] ran past the 120s bound"))
-    ctx2.out_of_time.append("Manjuel")
+    ctx2.out_of_time.append("Judge")
     note2 = _sl.note_for(ctx2, "court", "logs/y.md")
     check("... and the seats that failed or ran out of time",
-          note2.seats_failed == ["Jesster"] and note2.out_of_time == ["Manjuel"])
+          note2.seats_failed == ["Jesster"] and note2.out_of_time == ["Judge"])
     st.runs = [vars(note), vars(note2)]
     story = _sl.story_block(st)
     check("the story names each run, its seconds, tools, failures and delivery, newest last",
           "1. what is in the skills dir" in story and "ground_list" in story
           and "2. should the court sit" in story and "FAILED: Jesster" in story
-          and "OUT OF TIME: Manjuel" in story and "-> The skills dir holds 37" in story
+          and "OUT OF TIME: Judge" in story and "-> The skills dir holds 37" in story
           and story.index("1. what is") < story.index("2. should"), story)
     check("the story says what it is and how to use it",
           story.startswith("## The sitting so far") and "the record, not a model's words" in story
@@ -4335,7 +4335,7 @@ def test_the_sitting_story(reg, lib, book):
     ctx3 = RunContext(objective="what happened?", story=story, standing="## Standing\nx", law="## The law\nok")
     check("the door is handed the story beside the law and the standing",
           "The sitting so far" in carried_blocks(reg.get("Steward"), ctx3))
-    check("the court is handed it", "The sitting so far" in carried_blocks(reg.get("Manjuel"), ctx3))
+    check("the court is handed it", "The sitting so far" in carried_blocks(reg.get("Judge"), ctx3))
     check("the Router is not -- it routes, it does not narrate the day",
           "The sitting so far" not in carried_blocks(reg.get("Router"), ctx3))
 
@@ -7600,8 +7600,8 @@ def test_seats_cut_from_the_founding_cloth(reg, lib, book):
     check("and the Dictum's carry rule",
           "Wide to understand, narrow to carry" in st)
 
-    mj = reg.get("Manjuel").system_prompt
-    check("Manjuel rules under the Constitution's articles",
+    mj = reg.get("Judge").system_prompt
+    check("the Judge rules under the Constitution's articles",
           "History is immutable" in mj and "Evidence outranks assumption" in mj)
     check("with his two cores kept separate",
           "Pattern may propose; only Logic may assert" in mj)
@@ -7644,13 +7644,13 @@ def test_the_round_table(reg, lib, book):
 
     steps = book.get("court")
     check("the court order stands: counsel first, the Court last",
-          str(steps[-1]) == "Manjuel", str([str(x) for x in steps]))
+          str(steps[-1]) == "Judge", str([str(x) for x in steps]))
 
     # counsel seats get the advisory prompt, never the rewrite instruction
     ctx = RunContext(objective="should the estate keep versioning logs")
     ctx.steps.append(StepResult(agent="Steward", model="m",
                                 output="my counsel: keep them"))
-    for seat in ("Neiro", "Jesster", "Manjuel"):
+    for seat in ("Neiro", "Jesster", "Judge"):
         prompt = build_prompt(reg.get(seat), ctx, lib)
         check(f"{seat} is told to rule, not rewrite",
               "Do NOT rewrite" in prompt, seat)
@@ -7666,7 +7666,7 @@ def test_the_round_table(reg, lib, book):
         return {"steward": "counsel: keep them, storage is cheap",
                 "neiro": "the whole: walls hold, cadence fine",
                 "jesster": "refute: 'cheap' was assumed, never shown",
-                "manjuel": "NO RECORD on cost; SUPPORTED on cadence"}.get(
+                "judge": "NO RECORD on cost; SUPPORTED on cadence"}.get(
                     a.key, "SAFE")
 
     r = Stub(reply=reply)
@@ -7674,7 +7674,7 @@ def test_the_round_table(reg, lib, book):
     run_pipeline(ctx2, reg, r, lib, env_for(g, reg, r),
                  steps=book.get("court"), report=lambda m: None)
     ran = [st.agent for st in ctx2.steps if not st.skipped]
-    check("every counsel seat sat", ran[-3:] == ["Neiro", "Jesster", "Manjuel"],
+    check("every counsel seat sat", ran[-3:] == ["Neiro", "Jesster", "Judge"],
           str(ran))
     check("the Court's ruling is the delivery",
           "NO RECORD" in ctx2.last_output(), ctx2.last_output()[:40])
@@ -7753,7 +7753,7 @@ def test_the_counsel_stays_in_the_room(reg, lib, book):
                 ("steward", "counsel: keep them, storage is cheap"),
                 ("neiro", "the whole: cadence holds"),
                 ("jesster", "refute: 'cheap' was assumed, never shown"),
-                ("manjuel", "NO RECORD on cost; SUPPORTED on cadence")]
+                ("judge", "NO RECORD on cost; SUPPORTED on cadence")]
 
     ctx = RunContext(objective="was jesster right about the cost?",
                      dialogue=dialogue)
@@ -7762,7 +7762,7 @@ def test_the_counsel_stays_in_the_room(reg, lib, book):
           "'cheap' was assumed" in prompt)
     check("and the Court's ruling", "NO RECORD on cost" in prompt)
     check("each voice speaks under its own name",
-          "jesster:" in prompt and "manjuel:" in prompt and "neiro:" in prompt)
+          "jesster:" in prompt and "judge:" in prompt and "neiro:" in prompt)
 
     src = (ROOT / "manjuel" / "cli.py").read_text(encoding="utf-8")
     check("the gate's SAFE/UNSAFE never pollutes the thread",
@@ -7916,7 +7916,7 @@ def test_counsel_rules_on_counsel_not_furniture(reg, lib, book):
     ctx = RunContext(objective="who is the coder?")
     ctx.steps.append(StepResult(agent="Steward", model="m",
                                 output="counsel: the Smith holds that seat"))
-    for seat in ("Neiro", "Jesster", "Manjuel"):
+    for seat in ("Neiro", "Jesster", "Judge"):
         p = build_prompt(reg.get(seat), ctx, lib)
         check(f"{seat}'s material is marked as the ONLY quotable text",
               "ONLY" in p and "never cited" in p, seat)
@@ -8110,7 +8110,7 @@ def test_the_table_has_eyes_not_hands(reg, lib, book):
     check("the court now has a Router seat, gated on needs_tool",
           any(str(x) == "Router" and x.when == "needs_tool" for x in steps),
           str([str(x) for x in steps]))
-    check("Manjuel still rules last", str(steps[-1]) == "Manjuel")
+    check("the Judge still rules last", str(steps[-1]) == "Judge")
     # HIS RULINGS OF 2026-09-30: rack_report stays off the table (B6); the
     # front door does not sit at it (B7).
     check("rack_report is not on the table's list -- it wakes a model, and rack_list has the numbers (B6)",
@@ -8338,7 +8338,7 @@ def test_attention_budget(reg, lib, book):
                                   ("steward", "UNIQUEMARKER beta")])
     chatty.flags.add("needs_tool")
     for seat in ("Router", "Security Guardian", "Quality Evaluator",
-                 "Neiro", "Jesster", "Manjuel", "Delivery Agent"):
+                 "Neiro", "Jesster", "Judge", "Delivery Agent"):
         p = build_prompt(reg.get(seat), chatty, lib)
         check(f"{seat} never receives the dialogue",
               "UNIQUEMARKER" not in p, seat)
@@ -8360,7 +8360,7 @@ def test_attention_budget(reg, lib, book):
     # builder's own output: everything before the appended run blocks.
     # Kept, not relaxed: the ratio still has to hold, on the part of the
     # prompt the check was always about.
-    for seat in ("Router", "Quality Evaluator", "Manjuel"):
+    for seat in ("Router", "Quality Evaluator", "Judge"):
         p = build_prompt(reg.get(seat), chatty, lib)
         body = p.split("\n\n## Now")[0]
         check(f"{seat}: material leads, instruction trails",
@@ -8577,16 +8577,16 @@ def test_the_ground_watches_itself(reg, lib, book):
 
 
 def test_per_seat_voices(reg, lib, book):
-    """The ruling sounds like Manjuel; the answer sounds like the Steward.
+    """The ruling sounds like the Judge; the answer sounds like the Steward.
     The voice travels in the environment, never argv, and a missing voice
     is a preference unmet, not an error."""
     from manjuel import voice as V
     from manjuel.cli import _voice_for
 
-    # Manjuel declares Mark by the operator's word; while Mark is not yet
+    # The Judge declares Mark by the operator's word; while Mark is not yet
     # installed the fallback speaks default -- a preference unmet, no error.
     check("seats declare voices", reg.get("Steward").voice == "David"
-          and reg.get("Manjuel").voice == "Mark"
+          and reg.get("Judge").voice == "Mark"
           and reg.get("Delivery Agent").voice == "Zira")
     check("an undeclared seat has none", reg.get("Router").voice is None)
 
@@ -8613,9 +8613,9 @@ def test_per_seat_voices(reg, lib, book):
 
     ctx = RunContext(objective="q")
     ctx.steps.append(StepResult(agent="Steward", model="m", output="counsel"))
-    ctx.steps.append(StepResult(agent="Manjuel", model="m", output="RULING"))
+    ctx.steps.append(StepResult(agent="Judge", model="m", output="RULING"))
     check("the last speaking seat lends its voice",
-          _voice_for(S(), ctx) == reg.get("Manjuel").voice)
+          _voice_for(S(), ctx) == reg.get("Judge").voice)
     ctx2 = RunContext(objective="q")
     ctx2.steps.append(StepResult(agent="Steward", model="m", output="hi"))
     check("an ordinary answer wears the Steward's voice",
@@ -21096,7 +21096,7 @@ def test_ink():
         sys.stdout = real_stdout
         ink._STATE["on"] = None
 
-    seats = ["Steward", "Router", "Jesster", "Manjuel", "Security Guardian",
+    seats = ["Steward", "Router", "Jesster", "Judge", "Security Guardian",
              "Quartermaster", "Expert Coder", "Neiro"]
     check("a seat's colour is stable across calls",
           ink.seat_color("Steward") == ink.seat_color("Steward"))

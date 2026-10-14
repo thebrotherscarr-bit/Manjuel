@@ -686,3 +686,10 @@
 {"suite": "smoke", "at": 1791997056.2746916, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "strokes", "at": 1791999206.8818476, "state": "finished", "passed": 3923, "total": 3923, "green": true, "failed": []}
 {"suite": "smoke", "at": 1791999346.8106825, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1792002645.791109, "state": "finished", "passed": 3922, "total": 3923, "green": false, "failed": ["the seats in play get distinct colours"]}
+{"suite": "strokes", "at": 1792002995.0085535, "state": "finished", "passed": 3923, "total": 3923, "green": true, "failed": []}
+{"suite": "smoke", "at": 1792003027.9878228, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1792006920.1535456, "state": "finished", "passed": 3923, "total": 3923, "green": true, "failed": []}
+{"suite": "smoke", "at": 1792007216.4468055, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1792009372.1833892, "state": "finished", "passed": 3923, "total": 3923, "green": true, "failed": []}
+{"suite": "smoke", "at": 1792009403.6482058, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}

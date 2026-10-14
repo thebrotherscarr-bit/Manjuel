@@ -162,7 +162,7 @@ CASES: list[Case] = [
     # and takes the prompt's own default, skip, saying so.)
     Case("the court", "should a court of three seats run on one model?",
          pipeline="court", heavy=True,
-         expect_seats=("Neiro", "Jesster", "Manjuel")),  # the door off the court, his ruling 2026-09-30 (B7)
+         expect_seats=("Neiro", "Jesster", "Judge")),  # the door off the court, his ruling 2026-09-30 (B7)
 ]
 
 
@@ -306,7 +306,7 @@ def _judge(o: Outcome, live: bool = True) -> None:
                                     f"{', '.join(gone[:6])}")
     # THE SEATS (2026-09-08). A seat that failed is a miss whatever the
     # words say; a seat out of time is a miss; a seat the case names that
-    # did not sit and speak is a miss -- Manjuel last, with the ruling.
+    # did not sit and speak is a miss -- the Judge last, with the ruling.
     for seat, err in o.failed:
         o.faults.append(f"{seat} FAILED: {err[:100]}")
     for seat in o.late:

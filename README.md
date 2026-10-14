@@ -151,7 +151,7 @@ engine changes for none of these.
 
 `/model <tag>` runs every seat on one model for the sitting -- a
 measurement, not a configuration; `rack.md` keeps the declared models.
-`/table` seats the counsel on a question and Manjuel rules; `@<seat>`
+`/table` seats the counsel on a question and the Judge rules; `@<seat>`
 opens one seat alone, its own voice, the shared thread. Typing "remember
 that" at the door lands a memory; "pay the toll" pays it.
 

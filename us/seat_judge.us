@@ -1,6 +1,6 @@
-# Manjuel - manjuel stage
+# Judge - manjuel stage
 
-Stage `gate` on model `gemma4:12b`. Prompt of record: `agents/manjuel.md`.
+Stage `gate` on model `gemma4:12b`. Prompt of record: `agents/judge.md`.
 
 RECONCILED 2026-09-03 (TASKS 8.1). `permission` is DERIVED from this
 seat's `May Call` clearance and the declared wall of every skill it may
@@ -18,7 +18,7 @@ reason the estate can say a seat never touches the filesystem.
 {
   "can_approve": false,
   "covenant": "1512741580b7239b",
-  "id": "seat_manjuel",
+  "id": "seat_judge",
   "kind": "agent",
   "may_call": [],
   "mode": "spine",
@@ -35,7 +35,7 @@ reason the estate can say a seat never touches the filesystem.
     }
   },
   "reports_to": "manjuel",
-  "source": "Research/agents/manjuel.md",
+  "source": "Research/agents/judge.md",
   "stage": "gate",
   "us": 1
 }
