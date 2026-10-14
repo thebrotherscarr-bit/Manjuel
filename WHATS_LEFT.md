@@ -24,13 +24,13 @@ and shows the path we are on. **Today: the functions and capabilities of the das
 - **The build plan.** The plan by office, below, set with you card by card on 2026-10-13: Manjuel's logic core first (your
   card); then, as proposed and yours to change, the coding loop (I2's plan, steps (1) to (3)), the faults (I2's step (4)),
   Neiro's task list, and the rest of each office's plan; every function measured again before the v0.2.6 cut (I2's step (5)).
-- **Now (2026-10-14, 10:27): H29 is done -- PPMI reads the request, on main since your merge of pull request 22 (`55c4aab`),
-  and the live sitting (378) read all nine of your asks as planned; its record goes as a second pull request from
-  `ppmi-reading` on your card, then the Judge (H28) or the honesty gate (H30), your pick.**
-  Your cards of 2026-10-13 put PPMI first and the Judge (H28) after it; the documents written that morning were brought into
-  line (BUILDPATH and SPEC say so); H29's four steps, with the measure, what the reader does and the sitting, are under Done,
-  and the sitting's two new faults are C68 and C69. The PC's update overnight stopped the door and the glass; both were
-  started again as they ran, and you unlocked the glass.
+- **Now (2026-10-14, 13:18): H28 is finished -- the live sitting (379) seated the Judge last in the court and the estate,
+  and it ruled in the estate; next, the suites with this record, then the save and send of `judge` on your card ("Yes, save
+  and send it"), and after your merge C70: every seat streaming in the terminal, its thinking live and then folded, planned
+  under C70 on your cards.**
+  The court ran past its time again (C13): the Router's five passes took about 480 s of its 900, and the Judge was cut at the
+  322 s left. H29 is done and merged (pull requests 22 and 23, main at `51cada6`), and its sitting's two new faults are C68
+  and C69.
 - **The record behind it.** CHANGELOG.md's Unreleased: what has landed since v0.2.5 (the measure, the visible runs, routing's
   three parts, the answers' piece (1)). HANDOFF.md's newest block: the day's state and the hand's faults. INVENTORY.md: every
   function, its last live run and its time. SPEC.md: what done means (4.9, the coder changing the system's own files).
@@ -116,9 +116,12 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
   panel 561 seconds of its 900, Jesster 207, the judge 317, and ruled inside the turn). In sitting 366 (2026-10-10) Jesster and
   Manjuel ran past their bounds, Neiro had the last word, and the live check's review-panel case missed: 9 of 10. The mend is
   I2's (f), the review panel's bounds. *(INVENTORY P4, S4, S5, R4, R5; logs/standup_2026-09-30_155756.md)*
+  Seen again in sitting 379 (2026-10-14, H28's live sitting): the court took its whole 900 s, the Router's five passes about
+  480 s of it, and the Judge, seated last, was cut at the 322 s left and did not rule. *(HANDOFF, 2026-10-14, sitting 379)*
 - **C38. Answers cut at their length limit.** In sittings 373, 375, 376 and 377: the Reasoner at 1,400 tokens (twice in 375 and
   in 376; in 377 its visible answer was whole, so the limit is spent on its hidden thinking), the Router at 900 (three times in
   376), the Quality Evaluator at 700. The engine says so in the record each time. The mend is the answers' piece (2), the caps.
+  Seen again in sitting 379: the Router at 900 in the court, and Jesster at its 4,500 in both turns, spent deliberating (C70).
   *(CHANGELOG, "core: routing, its third part, the levels")*
 - **C39. The Router makes the change itself before the coding model sits.** Asked to "lint this python and fix it", it read "fix
   it" as a write and wrote the fix with `write_file` before the Expert Coder was woken (sitting 377). Routing's next part, I2's
@@ -188,6 +191,23 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
   right after the statistics: the door raised `needs_tool`, the Router, which never sees the conversation, said it had no
   numbers, and the closing answer, written from the turn alone, said they were not available (sitting 378). C48's shape; the
   answers' piece (4), the room. *(HANDOFF, 2026-10-14, sitting 378)*
+- **C70. The terminal is blank while a seat thinks, and then its words come at once.** Your word, 2026-10-14: "I would like the
+  streaming of the processes instead of just chunks of text being dumped. thats for all seats and models ... let's tune that, so i
+  can actually see the turns within the terminal"; and "the thinking models show their CoT as they go". They do: `runtime.chat`
+  takes each thinking fragment as it arrives and hands it to `think_to`, which keeps it for the transcript only (sitting 47's
+  "never displayed"), so in sitting 379 the Router's five passes (about 480 s), Jesster's 81 s and the Judge's 322 s drew
+  nothing on the glass. **Planned 2026-10-14, on your cards** ("live, then fold it down, and make sure that the thinking doesnt
+  fill the context window or reach across the original question or request", "The glass and the REPL"), on a line of its own in
+  each repository after H28's merge, each test shown red first and every edit on your card: (1) the engine: each thinking
+  fragment goes on the wire as it arrives, a `think` event with its seat, beside `token` (`serve.py`), and the REPL prints it
+  dimmed (`pipeline.py`); the thought still never reaches a later seat, the delivery or the conversation, and a stroke holds
+  that; (2) the window: a seat's thought and answer never run past what its window has left after the request, so the request
+  is never pushed out of the model's context, and a thought that spends its share is stopped and the seat asked to answer, as
+  the engine already does when a thought spends a seat's whole cap; the share measured on the seats that think and put to you
+  before it is set; (3) the door passes `think` through (`engine.go`); (4) the glass: the Agent tab and the Run tab draw the
+  thought live, dimmed under the seat's name, and fold it to one line when the seat starts to speak ("thought 81 s"), opened
+  with a click; nothing else of the look changes; (5) the suites, the door and the glass built and placed on your card, and a
+  live sitting on your card with every seat streaming. *(HANDOFF, 2026-10-14, sitting 379)*
 
 ### The dashboard and the tool server (atlas)
 
@@ -294,13 +314,6 @@ workflows, backed by ollama as a first route then secondarily through additional
 with a modules and plugin system ... a conversational assistant that evolves over time." What the
 disk says is missing, in the order it is worth building. H1 is done (below).
 
-- **H28. The seat called Manjuel renamed the Judge.** Your word, 2026-10-13: "the Gemma seat can just be called Judge". The seat
-  on gemma4:12b that rules last on the review panel and sits in the estate pipeline keeps its model and its job and takes the
-  name, so "Manjuel" means the core alone. The plan, each test shown red first: its seat file and prompt, its record in `us/`,
-  agents.md, the engine's mentions of the seat, the strokes and the live check's cases. `pipelines.md` names it seven times, and
-  the edit tool refuses that file (the pipelines' law, yours): those lines are yours to change, or the tool opened to it on your
-  word. The law's own court (`law.py rule`, LAW_001) stays Manjuel's: the core writes the law, and the Judge is the panel's seat.
-  *(the plan by office, Manjuel)*
 - **H30. The honesty gate on every answer: Manjuel's second piece.** Your card, 2026-10-13: every answer filtered through the
   laws and the founding papers. A claim in an answer is fact only where its distinctive words appear in the record of the turn
   -- what the tools returned, the files read, the law -- and anything else is marked generated, or the answer is "no record"; by
@@ -606,6 +619,50 @@ goals". The steps under each are proposed from the disk; each is yours to change
 
 Finished lines, newest first. A number is never used again.
 
+- **H28. The seat called Manjuel renamed the Judge.** DONE 2026-10-14: its steps on your cards, the live sitting (379) seating the
+  Judge last in the court and the estate, ruling in the estate. The line as it stood: Your word, 2026-10-13: "the Gemma seat can just be called Judge". The seat
+  on gemma4:12b that rules last on the review panel and sits in the estate pipeline keeps its model and its job and takes the
+  name, so "Manjuel" means the core alone. The plan, each test shown red first: its seat file and prompt, its record in `us/`,
+  agents.md, the engine's mentions of the seat, the strokes and the live check's cases. `pipelines.md` names it seven times, and
+  the edit tool refuses that file (the pipelines' law, yours): those lines are yours to change, or the tool opened to it on your
+  word. The law's own court (`law.py rule`, LAW_001) stays Manjuel's: the core writes the law, and the Judge is the panel's seat.
+  **Planned 2026-10-14, on your cards** ("H28, the Judge", "Rename both files", "Open the edit tool to it", then "Shut it
+  again", "The Judge's own opening", "Yes, that line"): the registry keys a seat by its heading, so "## Judge" makes the key
+  `judge` at once, and `us.py` then wants a record `seat_judge`; the glass and the door name no seat (their "Manjuel" is the
+  engine), so Aurora is untouched. On a line `judge` in each repository, in order, each test shown red first and every edit on
+  your card: (1) the door opened: `file_edit` may set `pipelines.md` on your Approve while no sitting is open (`fileEditSets`,
+  atlas's `edit.go`), its Go test turned from "kept shut" to "parks", built and placed on your card; (2) the tests first: the
+  strokes' places that name the seat and the live check's court case name the Judge, red against the seat as it stands; (3)
+  the seat in one pass: `agents/manjuel.md` and `us/seat_manjuel.us` moved to `agents/judge.md` and `us/seat_judge.us` (one
+  card), the heading and the Judge's own opening ("You are THE JUDGE -- the seat that rules last at the court."; the "heart of
+  the estate" clause goes to Manjuel the core; the rest word for word), the record's id and source, the engine's two court
+  orders, the advisory prompt's key and the two court checks (`pipeline.py`), Neiro's one line ("Manjuel remembers; the Judge
+  rules; Steward finds out and acts."), and `pipelines.md`'s two running orders and five lines of prose; (4) the suites from
+  your glass, the map and the refusals tail checked; (5) a live sitting on your card, the court and the estate each asked once,
+  the Judge ruling last, and `rack.md`'s line written again; (6) the door shut again to `pipelines.md`, the same change
+  reversed, built and placed on your card; (7) the record, H28 to Done, and the save and send of both lines on your word.
+  Stays "Manjuel": the system's own name (the engine, its banner and dials, every seat's record office), the core ("Manjuel's
+  logic core"), the law's court, Steward's "Manjuel remembers; you inquire.", and every line of the record already written.
+  **Steps (1) to (4) and (6), on your cards 2026-10-14**, on the lines `judge`: (1) the door opened to `pipelines.md`, its test
+  shown red first (10:57), built and placed on your card (about 11:12); (2) the tests first, 32 places in the strokes and the
+  live check's court case, red by name against the seat as it stood (11:21); (3) the seat in one pass, `pipelines.md`'s lines
+  six, not seven (line 80's "the deliberate Manjuel" is the system's name); (4) the suites, red once on the Judge's colour (its
+  name's sum lands on the Security Guardian's, so it keeps the seat's own, `ink.KEPT`), then strokes 3923 of 3923 (11:36) and
+  smoke 72 of 72 (11:37); (6) the door shut again, its test red first against the open door (11:40), built and placed on your
+  card (about 11:50, `8f07469a...`), atlas's line `judge` carrying nothing. The record ("Write it now", "Change them in this
+  record"): this line, the Now, the CHANGELOG entry, HANDOFF's note, and eight lines in parity.md, README, RUNBOOK and
+  QUICKSTART that named the seat. **Left:** (5) the live sitting, on your word once your machine is free ("we can run the live
+  sitting when i am not working in the background as well"); then H28 moves to Done, and the core's line is saved and sent
+  on your word (atlas's line has nothing to save).
+  **Step (5), run 2026-10-14:** sitting 379 (12:48:23 to 13:09:37), booted fresh on your word ("yea the live sittings"), its roll
+  call naming the Judge and no seat called Manjuel. The court (its whole 900 s): the Security Guardian, the Router five times
+  (about 480 s: two searches, `pipelines.md` and `agents.md` read, once cut at 900 tokens, once discarded for reciting the law
+  block), Neiro, Jesster twice (its 4,500 tokens spent deliberating, then asked to rule with thinking off), and the Judge last,
+  which ran past the 322 s the turn had left and was skipped (C13). The estate (290 s): the Security Guardian, the Steward,
+  Neiro, Jesster and the Judge last, which ruled -- each counsel's claim SUPPORTED, the question NO RECORD, Neiro's inference a
+  PATTERN marked GENERATED. `/rack` wrote `rack.md`'s line again, the Judge's, and the sitting closed with its toll. Found: C13
+  again, C38 in two more seats, and C70, the terminal blank while a seat thinks.
+  *(CHANGELOG, "core: the seat renamed the Judge")* *(the plan by office, Manjuel)*
 - **H29. PPMI reads the request: Manjuel's logic core, its first piece.** DONE 2026-10-14: its four steps, each on your cards;
   the reader on main since your merge of pull request 22 (`55c4aab`), and the live sitting (378) reading all nine of your asks
   as planned. The line as it stood: your cards, 2026-10-13: "the whole first piece was

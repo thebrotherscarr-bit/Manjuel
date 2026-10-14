@@ -222,7 +222,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `remotes` | 626-648 | Where this ground sends, by name and host. |
 | def | `_host_of` | 651-666 | The server a remote points at, for both spellings git accepts. |
 
-### manjuel/ink.py — 143 lines
+### manjuel/ink.py — 152 lines
 
 *Colour and a spinner. Degrades to plain text without complaint.*
 
@@ -230,20 +230,20 @@ A name that is not on the map is answered by the engine ("none of the names
 |---|---|---|---|
 | def | `_enable_windows_vt` | 33-45 |  |
 | def | `enabled` | 48-57 |  |
-| def | `seat_color` | 60-62 | A stable colour for a seat name. Same seat, same colour, every run. |
-| def | `seat` | 65-68 |  |
-| def | `dim` | 71-72 |  |
-| def | `warn` | 75-76 |  |
-| def | `bad` | 79-80 |  |
-| def | `good` | 83-84 |  |
-| def | `body` | 87-91 | A seat's streamed output, tinted to match its name. |
-| class | `Spinner` | 94-143 | Runs while a stage is thinking; erases itself on the first token. |
-| def | `Spinner.__init__` | 103-107 |  |
-| def | `Spinner.start` | 109-114 |  |
-| def | `Spinner._spin` | 116-123 |  |
-| def | `Spinner.stop` | 125-135 | Stop, erase the line, and return how long it ran. |
-| def | `Spinner.__enter__` | 137-139 |  |
-| def | `Spinner.__exit__` | 141-143 |  |
+| def | `seat_color` | 66-71 | A stable colour for a seat name. Same seat, same colour, every run. |
+| def | `seat` | 74-77 |  |
+| def | `dim` | 80-81 |  |
+| def | `warn` | 84-85 |  |
+| def | `bad` | 88-89 |  |
+| def | `good` | 92-93 |  |
+| def | `body` | 96-100 | A seat's streamed output, tinted to match its name. |
+| class | `Spinner` | 103-152 | Runs while a stage is thinking; erases itself on the first token. |
+| def | `Spinner.__init__` | 112-116 |  |
+| def | `Spinner.start` | 118-123 |  |
+| def | `Spinner._spin` | 125-132 |  |
+| def | `Spinner.stop` | 134-144 | Stop, erase the line, and return how long it ran. |
+| def | `Spinner.__enter__` | 146-148 |  |
+| def | `Spinner.__exit__` | 150-152 |  |
 
 ### manjuel/intent.py — 1814 lines
 
@@ -1036,7 +1036,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `GroundWatch.start` | 182-207 |  |
 | def | `GroundWatch.stop` | 209-215 |  |
 
-manjuel/: 31 files, 25838 lines.
+manjuel/: 31 files, 25847 lines.
 
 ## GUARDS — by the failure that earned them
 
@@ -1152,6 +1152,12 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 | 285 | `commit` | trailers onto the subject line -- session 6's record reads |
 | 398 | `(module)` | Until 2026-09-10 this module could say WHETHER the ground was dirty and |
 | 474 | `diff` | WHAT A GROUND KEEPS OUT OF ITS HISTORY IS NOT A CHANGE (2026-09-22). |
+
+### manjuel/ink.py
+
+| line | in | marker |
+|---|---|---|
+| 60 | `(module)` | A RENAMED SEAT KEEPS ITS COLOUR (2026-10-14, WHAT'S LEFT H28). The seat that rules last |
 
 ### manjuel/intent.py
 

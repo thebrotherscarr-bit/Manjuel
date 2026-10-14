@@ -80,7 +80,7 @@ anything else reads it, and the result is delivered as a written briefing.
 Every seat runs — the deliberate Manjuel, not the everyday one: inquire, hold the
 whole, refute, then rule.
 
-**Manjuel is last, here as in `court`.** Until 2026-09-01 this pipeline ran him
+**The Judge is last, here as in `court`.** Until 2026-09-01 this pipeline ran him
 third of the counsel (`agents.md` and this file disagreed on the ordinal until
 2026-09-04; the fact is the same: ahead of Jesster), so the Court ruled on counsel it had not yet heard —
 recorded as an open discrepancy in `agents.md` and closed by operator ruling.
@@ -92,11 +92,11 @@ record.
 2. Steward
 3. Neiro
 4. Jesster
-5. Manjuel
+5. Judge
 
 ## Pipeline: court
 
-THE LAW's order — the court hears every counsel, then rules. Manjuel last.
+THE LAW's order — the court hears every counsel, then rules. The Judge last.
 
 **The table reviews; it never acts.** The Router here may reach only the
 reading skills — search, ground_read, git_status and their kin. Anything
@@ -120,7 +120,7 @@ closer.
 2. Router      (when: needs_tool)
 3. Neiro
 4. Jesster
-5. Manjuel
+5. Judge
 
 ## Pipeline: quick
 
@@ -352,11 +352,11 @@ Router     reads: rack_list, semantic_search "front door" — READ-ONLY at
            the table; a writing skill is refused by the engine here.
 Neiro      (llama3.2, the warden)   what the record shows, sourced.
 Jesster    (deepseek-r1:8b, the licensed fool)   the strongest case AGAINST.
-Manjuel    (gemma4:12b, rules last)  Supported / Missing / Ruling, citing
+Judge      (gemma4:12b, rules last)  Supported / Missing / Ruling, citing
            what Neiro and Jesster actually said — not what the Router
            asserted without a tool behind it (sitting 82's fault).
 
-delivery   = Manjuel's ruling, with the recompose block appended if any
+delivery   = the Judge's ruling, with the recompose block appended if any
            tool was refused.
 ```
 

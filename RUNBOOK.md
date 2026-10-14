@@ -646,7 +646,7 @@ sudden 7-second pause on the first code question of a sitting.
 **Warm order is an operator ruling and is not to be retuned casually:** the
 spine warms in the foreground at boot, the Reasoner on a background thread,
 the coder stays lazy. One context size per model -- the largest any of its
-seats declares (8192 for most; Manjuel's gemma4:12b runs at 16384 since
+seats declares (8192 for most; the Judge's gemma4:12b runs at 16384 since
 2026-09-07, because at 8192 the ruling never got a token; the Router's
 qwen3.5:4b, and the Quality Evaluator beside it, at 16384 since 2026-09-29,
 because the Router's request -- its prompt and every skill's declaration --

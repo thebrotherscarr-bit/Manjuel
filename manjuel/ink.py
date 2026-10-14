@@ -57,9 +57,18 @@ def enabled() -> bool:
     return _STATE["on"]
 
 
+# A RENAMED SEAT KEEPS ITS COLOUR (2026-10-14, WHAT'S LEFT H28). The seat that rules last
+# at the court was called Manjuel and took 209 by its name's sum; renamed the Judge, the sum
+# lands on the Security Guardian's colour. It keeps its own, so the court reads as it did.
+KEPT = {"judge": 209}
+
+
 def seat_color(name: str) -> int:
     """A stable colour for a seat name. Same seat, same colour, every run."""
-    return PALETTE[sum(ord(c) for c in name.strip().lower()) % len(PALETTE)]
+    key = name.strip().lower()
+    if key in KEPT:
+        return KEPT[key]
+    return PALETTE[sum(ord(c) for c in key) % len(PALETTE)]
 
 
 def seat(name: str) -> str:
