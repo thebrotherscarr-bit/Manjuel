@@ -50,6 +50,11 @@ knows Ollama; `routes.py` knows a hosted route exists (since 2026-10-02); nothin
                   carrying a term worth looking up (asks_the_ground); is it
                   a write, an action, a filename, a follow-up, a farewell.
                   Also the injection markers and the claim/citation shapes.
+                  And since 2026-10-13, Manjuel's logic core: the PPMI
+                  reader (ppmi_reading, read_the_request), meaning read off
+                  the skills' own words with no model, asked where no
+                  skill's own words are in the request -- over a shared
+                  phrase at once, else only after the sure readers above.
     seating.py    the seat rack: who rests, what flag summons them, where
                   they land (first / after X / last). Guarantees the gate
                   stays a gate and one flag cannot seat a loop. `repeat()`
@@ -794,6 +799,11 @@ LEFT and he says go.
     4  THE RECORD WHOLE, THEN MEMORY THAT COMES BACK (H7, H6; H2 to H4).
     then  as proposed, his to change: the coding loop (Jesster's: coder-tree, Manjuel's verdict, a pull
        request, his merge), the faults in what exists, and Neiro's own task list (H25, H23).
+
+Reordered the same day, on his card: 2 before 1 -- PPMI reads the request first, the Judge after it. On his cards for 2:
+the reader learns from the skills' own words alone; where the regex and the reader name different skills, a skill's own
+words stand and a shared phrase gives way; and it is built on the line `ppmi-reading`, cut from main. WHAT'S LEFT H29
+holds the measure it is scored against.
 
 ## The marks, and how one is cut (2026-09-17)
 

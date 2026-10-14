@@ -667,6 +667,10 @@ PPMI reading the request before any model, then the honesty gate on every answer
 proposed and his to change, the coding loop, the faults and Neiro's own task list. Nothing here is MET
 until section 4 says so; section 4 gains its lines with the pieces.
 
+Reordered the same day, on his card: PPMI reading the request first, the Judge after it. And on his cards for that
+piece: the reader learns from the skills' own words alone, a skill's own words stand where the regex and the reader
+disagree, and a shared phrase gives way (WHAT'S LEFT H29).
+
 ---
 
 ## 6. How this file is kept honest

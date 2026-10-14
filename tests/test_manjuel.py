@@ -10298,6 +10298,102 @@ def test_the_closing_answer_is_this_turn_alone(reg, lib, book):
           f"{[n for n, _ in r.seen]}")
 
 
+def test_manjuel_reads_the_request(reg, lib, book):
+    """WHAT'S LEFT H29, 2026-10-13: Manjuel's logic core, its first piece. His cards:
+    "the whole first piece was essentially supposed to be manjuel as the logic core
+    that represents the PPMI and very-quick decision/logic side of the system"; PPMI's
+    first job is reading the request; it learns from the skills' own words alone;
+    "Own words win; shared phrases yield"; 256 axes. Measured first in the Python tab
+    on the 51 asks of the record and the matrix: 44 named right against the regex's
+    39, none of the 39 lost. The asks are his own, from sittings 370 and 373; the
+    line was set on them, so the live sitting is the honest test. A write is never
+    the reader's to name (the 2026-09-08 ruling): it wakes the Router, no tool named."""
+    from manjuel import intent
+    have = all(hasattr(intent, n) for n in ("ppmi_reading", "read_the_request", "PPMI_SURE", "PPMI_BY"))
+    check("Manjuel's logic core is in the engine: the PPMI reader and his rule",
+          have, "intent has no ppmi_reading or read_the_request")
+    if not have:
+        return
+    stats = "what are the mean, median and standard deviation of 4, 8, 15, 16, 23, 42?"
+    check("with no skill library there are no words to read from, and it names nothing",
+          intent.ppmi_reading(stats, lib.keywords()) == ("", 0.0, []),
+          repr(intent.ppmi_reading(stats, lib.keywords())))
+    for q, want in ((stats, "statistics"),
+                    ("fit a trendline through 3, 5, 7, 9 and project the next two", "linear_regression"),
+                    ("what did the suites last prove, and when?", "proved"),
+                    ("say aloud: the skills are measured", "speak"),
+                    ("classify the sentiment of this feedback: the glass is slow but I love it",
+                     "classify_sentiment")):
+        pick, score, best = intent.ppmi_reading(q, lib)
+        check(f"the PPMI reader reads {want}: {q[:36]!r}",
+              pick == want and score >= intent.PPMI_SURE, f"{pick!r} {score} {best}")
+    for q in ("good morning", "what is two plus two?", "hello there, how is it going",
+              "think hard: a bat and a ball cost 1.10 together, and the bat costs 1.00 more "
+              "than the ball. what does the ball cost?"):
+        pick, score, best = intent.ppmi_reading(q, lib)
+        check(f"the PPMI reader names nothing where no skill is asked for: {q[:36]!r}",
+              pick == "", f"{pick!r} {score} {best}")
+    check("the same words read the same, every time",
+          intent.ppmi_reading(stats, lib) == intent.ppmi_reading(stats, lib))
+    check("a word's direction is its digest's, the same on every machine and in every process",
+          intent._ppmi_signs("statistics", 16) == [-1.0, -1.0, -1.0, 1.0, -1.0, -1.0, -1.0, 1.0,
+                                                   -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, 1.0, 1.0],
+          str(intent._ppmi_signs("statistics", 16)))
+    by = intent.PPMI_BY
+    note = "propose a note for later sessions: the measure ran today"
+    for q, want, who, writes in (
+            # the table's "the glass" gives way to the reader
+            ("classify the sentiment of this feedback: the glass is slow but I love it",
+             "classify_sentiment", by, False),
+            # symbols' own "where is" stands, and the reader is not asked
+            ("where is the chain standing right now: ground, workspace, session, card?",
+             "symbols", "", False),
+            (stats, "statistics", by, False),
+            ("run measure.py from the workspace and tell me what it printed", "", "", False),
+            ("git status", "git_status", "", False),
+            ("what models are on the rack?", "rack_list", "", False),
+            # the table's "ran today" gives way, and the write is the Router's
+            (note, "", "", True)):
+        named, chose, reading, said, wants = intent.read_the_request(q, lib)
+        check(f"his rule: {want or 'no tool'} by {who or 'his words'}: {q[:36]!r}",
+              named == want and chose == who and wants == writes,
+              f"{named!r} {chose!r} {wants} {said}")
+    named, chose, reading, said, wants = intent.read_the_request(
+        "where is the chain standing right now: ground, workspace, session, card?", lib)
+    check("where a skill's own words are in the request, the reader is not asked",
+          reading == () and said == "", said)
+
+    def turn(q, dialogue=()):
+        g = Path(tempfile.mkdtemp())
+        r = Stub(reply="x")
+        ctx = RunContext(objective=q, dialogue=list(dialogue))
+        run_pipeline(ctx, reg, r, lib, env_for(g, reg, r, skills=lib),
+                     steps=book.get("default"), report=lambda m: None)
+        return ctx
+
+    ctx = turn(stats)
+    check("in a turn, the reader's pick is the tool, chosen by the PPMI reader and said so",
+          ctx.named_tool == "statistics" and ctx.named_by == by
+          and any("chosen by the PPMI reader" in n for n in ctx.notes),
+          f"{ctx.named_tool!r} {ctx.named_by!r} {str(ctx.notes)[:300]}")
+    check("... the reading in the record, its score and the next best",
+          any(n.startswith("intent: the PPMI reader reads `statistics`") and "`rack_pull`" in n
+              for n in ctx.notes), str(ctx.notes)[:300])
+    check("... and a reading is not a decided call: the Router still writes it",
+          not any("decided by arithmetic" in n for n in ctx.notes), str(ctx.notes)[:300])
+    ctx = turn(note)
+    check("a write the reader reads names no tool and wakes the Router to decide it",
+          not ctx.named_tool and "needs_tool" in ctx.flags
+          and any("a skill that writes" in n for n in ctx.notes),
+          f"{ctx.named_tool!r} {sorted(ctx.flags)} {str(ctx.notes)[:300]}")
+    ctx = turn("what about the mean and median of those?",
+               (("operator", "what are the numbers in the measure?"),
+                ("steward", "4, 8, 15, 16, 23 and 42.")))
+    check("on a follow-up the reader's pick is withdrawn like any guess, and the door answers",
+          not ctx.named_tool and any("withdrawn" in n for n in ctx.notes),
+          f"{ctx.named_tool!r} {str(ctx.notes)[:300]}")
+
+
 def test_the_shortlist_is_budget_not_judgement(reg, lib, book):
     """The shortlist was measured UNNECESSARY for accuracy on 2026-09-01
     (79% of tool turns already resolve deterministically). What changed is
@@ -22629,6 +22725,7 @@ def main() -> int:
     test_the_level_routes_with_todays_seats(reg, lib, book)
     test_the_big_seats_answer_goes_as_written(reg, lib, book)
     test_the_closing_answer_is_this_turn_alone(reg, lib, book)
+    test_manjuel_reads_the_request(reg, lib, book)
     test_the_shortlist_is_budget_not_judgement(reg, lib, book)
     test_the_record_can_be_audited(reg, lib, book)
     test_a_subtask_runs_scoped_and_bounded(reg, lib, book)
