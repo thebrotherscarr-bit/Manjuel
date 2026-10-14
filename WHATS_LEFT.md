@@ -24,10 +24,11 @@ and shows the path we are on. **Today: the functions and capabilities of the das
 - **The build plan.** The plan by office, below, set with you card by card on 2026-10-13: Manjuel's logic core first (your
   card); then, as proposed and yours to change, the coding loop (I2's plan, steps (1) to (3)), the faults (I2's step (4)),
   Neiro's task list, and the rest of each office's plan; every function measured again before the v0.2.6 cut (I2's step (5)).
-- **Now (2026-10-13, 10:50): the plan written into the documents** (your word: "write all of this down in the documents, get
-  the plan settled up, and move forward with the work on manjuel"): this page, SPEC, BUILDPATH, DAYBOOK, the CHANGELOG and
-  HANDOFF, on the line `manjuel-core`. Next: Manjuel's first pieces, H28 (the Judge) and H29 (PPMI reads the request), each
-  planned in full on its line before anything is built, and built on your go.
+- **Now (2026-10-14, 09:51): H29, PPMI reads the request -- built and wired on the line `ppmi-reading`, the suites green
+  on your glass; step (4) next, a live sitting re-asking the record's asks, then the save and send, each on your word.**
+  Your cards of 2026-10-13 put PPMI first and the Judge (H28) after it; the documents written that morning were brought into
+  line (BUILDPATH and SPEC say so); H29's steps (1) to (3), with the measure and what the reader does, are under H29. The
+  PC's update overnight stopped the door and the glass; both were started again as they ran, and you unlocked the glass.
 - **The record behind it.** CHANGELOG.md's Unreleased: what has landed since v0.2.5 (the measure, the visible runs, routing's
   three parts, the answers' piece (1)). HANDOFF.md's newest block: the day's state and the hand's faults. INVENTORY.md: every
   function, its last live run and its time. SPEC.md: what done means (4.9, the coder changing the system's own files).
@@ -53,7 +54,7 @@ order across the offices: Manjuel's logic core first (your card); the rest as pr
   before any model, the regex layer the floor (H29; your card); (2) the honesty gate on every answer: a claim is fact only
   where its distinctive words are in the record, else marked generated or answered "no record" (H30; your card; the shape of
   C44); (3) the record whole (H7, then H6); (4) memory that comes back (H2, then H3 and H4). The Judge keeps its seat on the
-  review panel.
+  review panel. Reordered the same day on your card: (1) before (0), PPMI first and the Judge after it.
 - **Steward, the body that acts.** Everything that reaches out: the seats, the skills and tools, the rack of models and the
   maker; full autonomy inside the walls, none past your gate; the front seat is its voice (your card). Next: (1) the coding
   loop (D18), with Jesster below; (2) the faults in what exists, C38 to C67 (your card: the faults after the loop); (3) the
@@ -301,7 +302,29 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   own asks, each with the skill it truly needed, scored for today's reading -- the baseline; (2) the PPMI reader on its own,
   scored on the same asks and shown to you against the baseline before it is wired; (3) wired in behind the regex layer, handing
   on as today below a sureness line; (4) the suites, a live sitting re-asking those asks, and the record.
-  *(the plan by office, Manjuel)*
+  **Step (1), measured 2026-10-13 before anything was built** (on your card, in the Python tab): today's reading named the
+  right skill for 23 of the record's 35 asks (sittings 370 and 373) and for all 16 of the matrix's canonical asks, about 2.5 ms
+  an ask. Of the 12 it missed, 8 named nothing -- lint, a trendline, statistics, a timeline, the last proof, loading a model and
+  speech, each left to the Router (15 to 154 seconds a turn, INVENTORY), and running a file, which its own rule decides next --
+  and 4 named the wrong skill: "the glass" inside a feedback to classify sent it to the search, "where is the chain standing"
+  to `symbols`, and the workspace's write and replace to `list_directory`. Step (2) is scored on the same asks against this.
+  **Step (2), set on your cards 2026-10-13:** the reader learns its word pairs from the skills' own words alone -- the 45 skill
+  files, 5,300 words -- and not from the seats' and the documents' text first written above (the root documents alone are
+  439,327 words, and every day's edit to them would move the reading); where the regex and the reader name different skills, a
+  match on a skill's own name or `Says:` phrases stands and a match on a shared phrase gives way -- three of the four wrong
+  namings came from shared phrases ("the glass" once, "the workspace" twice), and the fourth, `symbols`' own "where is", stands;
+  and it is built on the line `ppmi-reading`, cut from main after your merge of pull request 21.
+  **Steps (2) and (3), built 2026-10-13 and 2026-10-14** (your cards: "Check unseen asks, then wire", "256"): measured in the
+  Python tab, the reader on its own named the right skill for 35 of the 51 at its best line, and under your rule 44 against
+  the regex's 39, none of the 39 lost; the matrix's 385 phrasings of its plain, rack and git asks came out unchanged and the
+  14 new asks of sittings 375 to 377 ten and ten -- the line (0.6) was set on the same 51, so the live sitting is the honest
+  test. Wired on `ppmi-reading`, each test shown red first: `intent.ppmi_reading` and `intent.read_the_request` (your rule; a
+  skill that writes never named by it -- the Router decides the write); in the engine, every reading in the record with its
+  score and the next best, the reader's pick taken over a shared phrase at once and, where your words named nothing, only
+  after the engine's sure readers (a named file or folder, several acts, a write, an order to run or to search, hands
+  wanted) and before the guess that a question is about the ground. The suites from your glass: strokes 3923 of 3923 and
+  smoke 72 of 72 (2026-10-14). Step (4) next: a live sitting re-asking the record's asks, on your card.
+  *(CHANGELOG, "core: Manjuel's logic core, its first piece")* *(the plan by office, Manjuel)*
 - **H30. The honesty gate on every answer: Manjuel's second piece.** Your card, 2026-10-13: every answer filtered through the
   laws and the founding papers. A claim in an answer is fact only where its distinctive words appear in the record of the turn
   -- what the tools returned, the files read, the law -- and anything else is marked generated, or the answer is "no record"; by

@@ -679,3 +679,8 @@
 {"suite": "smoke", "at": 1791855268.7379553, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "strokes", "at": 1791914635.02907, "state": "finished", "passed": 3897, "total": 3897, "green": true, "failed": []}
 {"suite": "smoke", "at": 1791914672.6670604, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1791995300.3744707, "state": "finished", "passed": 3920, "total": 3923, "green": false, "failed": ["names_a_file is credited with choosing `ground_read`: 'what does pipelines.md say'", "a checked file is still a DECIDED call, and says which branch decided it", "a follow-up still withdraws names_a_file's guess -- the account moved, dispatch did not"]}
+{"suite": "strokes", "at": 1791996057.535709, "state": "finished", "passed": 3923, "total": 3923, "green": true, "failed": []}
+{"suite": "smoke", "at": 1791996596.6303365, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1791997014.4357064, "state": "finished", "passed": 3923, "total": 3923, "green": true, "failed": []}
+{"suite": "smoke", "at": 1791997056.2746916, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}

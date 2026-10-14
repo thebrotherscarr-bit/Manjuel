@@ -14,6 +14,8 @@ anything) actually runs, and may still answer in prose instead.
 
 from __future__ import annotations
 
+import hashlib
+import math
 import re
 
 from .context import POINTING_WORDS
@@ -679,6 +681,211 @@ def tool_choices(objective: str, keywords) -> tuple[list[str], bool]:
     choices = [kw for kw, _ in ranked[:3]]
     sure = len(ranked) <= 1 or ranked[0][1][:2] > ranked[1][1][:2]
     return choices, sure
+
+
+# ---------------------------------------------------------------------
+# Manjuel's logic core: the PPMI reader (2026-10-13, WHAT'S LEFT H29)
+# ---------------------------------------------------------------------
+#
+# HIS CARDS, 2026-10-13: "the whole first piece was essentially supposed to be
+# manjuel as the logic core that represents the PPMI and very-quick
+# decision/logic side of the system", and PPMI's first job is reading the
+# request. His July design of the honest heart read meaning this way, with no
+# language model: word pairs counted and weighted by PPMI, a fixed projection,
+# and sentence weighting. Standard library only; nothing is downloaded.
+#
+# WHAT IT LEARNS FROM, his card: the skills' own words alone -- never the seats'
+# or the documents', which would move the reading with every day's edit. The
+# word pairs are counted over each skill's whole file; a skill is then stood
+# for by its OWN words: its name (twice), the summary the Router reads, its
+# `Says:` and its arguments' notes.
+#
+# HOW IT WAS SET, measured 2026-10-13 in the Python tab on the 51 asks of
+# H29's step (1). On its own, at its best line, it named the right skill for 35
+# of them, the regex 39; under his rule (`read_the_request`) 44, none of the
+# regex's 39 lost. The phrasing matrix's 385 phrasings of its plain, rack and
+# git asks came out unchanged, and the 14 new asks of sittings 375 to 377 were
+# 10 and 10. The axes are his card (256; 43 of 51 at the July design's 64).
+# THE LINE WAS SET ON THOSE SAME 51 ASKS, so it flatters them: the live
+# sitting re-asks.
+PPMI_DIMS = 256                 # the fixed projection's axes (his card)
+PPMI_WINDOW = 4                 # words either side of a word that count as a pair
+PPMI_SURE = 0.6                 # the cosine at and above which the reader names a skill
+PPMI_BY = "the PPMI reader"     # ctx.named_by when the reader chose the tool
+_PPMI_WORD = re.compile(r"[a-z0-9]+")
+_PPMI_MODELS: dict = {}         # one reader, kept until a skill's words change
+
+
+def _ppmi_words(text: str) -> list[str]:
+    """The words the reader counts: lower case, split at anything that is not a
+    letter or a digit, without bare numbers, single letters, greetings, or the
+    furniture any question is made of (`_COMMON_ENOUGH`, below)."""
+    return [w for w in _PPMI_WORD.findall((text or "").lower())
+            if len(w) > 1 and not w.isdigit()
+            and w not in _COMMON_ENOUGH and w not in _GREETING_LEADS]
+
+
+def _ppmi_signs(word: str, dims: int = PPMI_DIMS) -> list[float]:
+    """A word's fixed direction, +1 or -1 on each axis, read off its blake2b
+    digest -- the same on every machine and in every process, where Python's
+    own hash() is salted per process."""
+    h = hashlib.blake2b(word.encode("utf-8"), digest_size=dims // 8).digest()
+    return [1.0 if (h[i // 8] >> (i % 8)) & 1 else -1.0 for i in range(dims)]
+
+
+def _ppmi_sentence(words, vec: dict, weight: dict, dims: int):
+    """A text's vector: its words' vectors, each weighted by how rare the word
+    is in the skills (SIF), averaged -- or None when no word of it is known."""
+    v = [0.0] * dims
+    n = 0
+    for w in words:
+        if w in vec:
+            g = weight[w]
+            v = [x + g * y for x, y in zip(v, vec[w])]
+            n += 1
+    return [x / n for x in v] if n else None
+
+
+def _ppmi_strip(v: list, u: list) -> list:
+    """`v` less the direction every skill shares (SIF's last step)."""
+    d = sum(x * y for x, y in zip(v, u))
+    return [x - d * y for x, y in zip(v, u)]
+
+
+def _ppmi_cosine(p: list, q: list) -> float:
+    a = math.sqrt(sum(x * x for x in p))
+    b = math.sqrt(sum(x * x for x in q))
+    return sum(x * y for x, y in zip(p, q)) / (a * b) if a and b else 0.0
+
+
+def _ppmi_build(specs, dims: int = PPMI_DIMS) -> tuple:
+    """(word vectors, word weights, the shared direction, each skill's vector,
+    the axes), from the skills' own words."""
+    docs = [_ppmi_words(s.keyword.replace("_", " ") + " " + s.body) for s in specs]
+    uni: dict[str, int] = {}
+    pairs: dict[str, dict[str, int]] = {}
+    for ws in docs:
+        for i, w in enumerate(ws):
+            uni[w] = uni.get(w, 0) + 1
+            row = pairs.setdefault(w, {})
+            for j in range(max(0, i - PPMI_WINDOW), min(len(ws), i + PPMI_WINDOW + 1)):
+                if j != i:
+                    row[ws[j]] = row.get(ws[j], 0) + 1
+    count = sum(uni.values()) or 1
+    total = sum(sum(r.values()) for r in pairs.values()) or 1
+    seen: dict[str, int] = {}
+    for r in pairs.values():
+        for c, k in r.items():
+            seen[c] = seen.get(c, 0) + k
+    # A context's count smoothed (to the power 0.75), so a word met once does
+    # not outweigh the rest.
+    smooth = {c: k ** 0.75 for c, k in seen.items()}
+    smooth_total = sum(smooth.values()) or 1.0
+    signs = {c: _ppmi_signs(c, dims) for c in seen}
+    vec: dict[str, list] = {}
+    for w, r in pairs.items():
+        pw = sum(r.values()) / total
+        v = [0.0] * dims
+        for c, k in r.items():
+            pmi = math.log((k / total) / (pw * smooth[c] / smooth_total))
+            if pmi > 0:
+                v = [x + pmi * y for x, y in zip(v, signs[c])]
+        vec[w] = v
+    weight = {w: 0.001 / (0.001 + k / count) for w, k in uni.items()}
+    own = []
+    for s in specs:
+        said = " ".join([s.keyword.replace("_", " ")] * 2 + [s.summary]
+                        + list(s.says or ()) + list(s.param_notes.values()))
+        v = _ppmi_sentence(_ppmi_words(said), vec, weight, dims)
+        if v is not None:
+            own.append((s.keyword, v))
+    # The direction every skill shares, by power iteration from a fixed start,
+    # so what all the skills say alike decides nothing between them.
+    u = [1.0] * dims
+    for _ in range(60):
+        acc = [0.0] * dims
+        for _, v in own:
+            d = sum(x * y for x, y in zip(v, u))
+            acc = [p + d * x for p, x in zip(acc, v)]
+        norm = math.sqrt(sum(x * x for x in acc)) or 1.0
+        u = [x / norm for x in acc]
+    return vec, weight, u, [(kw, _ppmi_strip(v, u)) for kw, v in own], dims
+
+
+def _ppmi_model(specs) -> tuple:
+    """The reader for this library: built once (about a third of a second),
+    then kept until a skill's words change -- the watcher reloads skills/."""
+    key = tuple((s.keyword, s.body) for s in specs)
+    model = _PPMI_MODELS.get(key)
+    if model is None:
+        _PPMI_MODELS.clear()
+        model = _PPMI_MODELS[key] = _ppmi_build(specs)
+    return model
+
+
+def ppmi_reading(objective: str, keywords) -> tuple[str, float, list]:
+    """(the skill his words mean, its cosine, the best three as (skill, cosine)),
+    by the PPMI reader -- the skill is "" under PPMI_SURE; ("", 0.0, []) with no
+    library to read from or no word of his it knows. Arithmetic, no model: the
+    same words in, the same reading out, in a millisecond or two."""
+    specs = list(getattr(keywords, "specs", None) or ()) if hasattr(keywords, "keywords") else []
+    if not specs:
+        return "", 0.0, []
+    vec, weight, u, skills, dims = _ppmi_model(specs)
+    v = _ppmi_sentence(_ppmi_words(objective), vec, weight, dims)
+    if v is None or not skills:
+        return "", 0.0, []
+    v = _ppmi_strip(v, u)
+    ranked = sorted(((_ppmi_cosine(v, sv), kw) for kw, sv in skills), reverse=True)[:3]
+    score = ranked[0][0]
+    return ((ranked[0][1] if score >= PPMI_SURE else ""), round(score, 3),
+            [(kw, round(s, 3)) for s, kw in ranked])
+
+
+def read_the_request(objective: str, keywords) -> tuple[str, str, tuple, str, bool]:
+    """HIS RULE (2026-10-13, his card: "Own words win; shared phrases yield"):
+    (the skill the turn takes, who chose it, the reading, the line for the
+    record, whether the reading is a write).
+
+      a skill's OWN words in his request -- its name, its `Says:` -- stand, and
+      the reader is not asked; an order to run a named script is
+      wants_running's, as before;
+      otherwise the reader is asked: a skill it names at its line is the one
+      taken, and where the shared table named another, the table's phrase
+      gives way; under the line the table's pick stands, or none;
+      but a skill that WRITES is never named by arithmetic (the 2026-09-08
+      ruling): the reading names no tool and the turn wakes the Router to
+      decide the write, as a write-shaped objective does.
+
+    `who` is "" when his words named the skill and PPMI_BY when the reader did;
+    the reading is (skill, cosine, best three), or () when it was not asked."""
+    named = names_a_tool(objective, keywords)
+    hits, kws, hay = _tool_hits(objective, keywords)
+    if (hits and max(hits)[0][0]) or wants_running(objective):
+        return named, "", (), "", False
+    pick, score, best = ppmi_reading(objective, keywords)
+    if not best:
+        return named, "", (), "", False
+    twin = _WORKSPACE_TWINS.get(pick)
+    if twin and twin in kws and _WORKSPACE_PLACE.search(hay):
+        pick = twin
+    reading = (pick, score, best)
+    ranked = ", ".join(f"`{kw}` {s}" for kw, s in best)
+    if not pick:
+        return named, "", reading, (f"intent: the PPMI reader names nothing -- its best is "
+                                    f"under its line, {PPMI_SURE}: {ranked}"), False
+    from .skills import WRITING_SKILLS          # a write is never arithmetic's
+    if pick in WRITING_SKILLS:
+        return "", "", reading, (f"intent: the PPMI reader read `{pick}` ({score}), a skill "
+                                 f"that writes -- a write is the Router's to decide, never "
+                                 f"arithmetic's: no tool is named, the Router is woken: "
+                                 f"{ranked}"), True
+    if pick == named:
+        return named, "", reading, f"intent: the PPMI reader agrees, `{pick}`: {ranked}", False
+    return pick, PPMI_BY, reading, (
+        f"intent: the PPMI reader reads `{pick}` ({score})"
+        + (f" over the shared table's `{named}`" if named else "")
+        + f" -- no skill's own words were in the request: {ranked}"), False
 
 
 # ---------------------------------------------------------------------

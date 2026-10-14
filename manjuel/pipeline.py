@@ -2429,12 +2429,38 @@ def run_pipeline(
     # The LIBRARY, not just its keywords: that is what lets a skill's own
     # `**Says:**` phrases be seen alongside the table in intent.py.
     named = intent.names_a_tool(ctx.objective, skills)
+    # MANJUEL'S LOGIC CORE READS THE REQUEST (2026-10-13, WHAT'S LEFT H29; his
+    # cards: "Own words win; shared phrases yield", and 256 axes). Where no skill's
+    # own words are in the request, the PPMI reader is asked (intent.read_the_request)
+    # and its reading goes in the record, with its score and the next best. Over a
+    # shared phrase's pick, a skill it names at its line is taken here; where his
+    # words named nothing, its pick waits behind the engine's sure readers below --
+    # several acts, an order to run, a write, a named file, a named folder, hands
+    # wanted, an order to search: "the regex layer stays the floor and wins where it
+    # is sure" -- and is taken before the guess that a question is about the ground.
+    # Either way it is chosen by it and said so (named_by), so a follow-up may
+    # withdraw it. A skill that WRITES is never named by it: the Router is woken to
+    # decide the write. Not on a maker's turn: that turn is the Coder's alone.
+    by, later = "", ""
+    if not make:
+        took, by, _, said, writes = intent.read_the_request(ctx.objective, skills)
+        if said:
+            ctx.notes.append(said)
+        if writes:
+            ctx.flags.add("needs_tool")
+            named = ""
+        elif by and named:
+            named = took
+            ctx.named_by = by
+        elif by:
+            later, by = took, ""
     # NOT SURE, SO HE IS ASKED (2026-10-12, his cards: "Only when it isn't
     # sure", "Best match + next two"): two skills named just as strongly are a
     # guess, and a guess is put to him -- only where a Router stands to run what
-    # he picks (quick and estate choose no tool at all, below).
+    # he picks (quick and estate choose no tool at all, below). A skill the
+    # reader chose is its own sure reading, and is not put to him again.
     plain = False
-    if named and not make and any(str(s).strip().lower() == "router" for s in steps):
+    if named and not make and not by and any(str(s).strip().lower() == "router" for s in steps):
         choices, sure = intent.tool_choices(ctx.objective, skills)
         if not sure and len(choices) > 1:
             named, plain = _ask_which_tool(ctx, choices, skills, report)
@@ -2611,6 +2637,12 @@ def run_pipeline(
         ctx.notes.append(
             f"intent: decomposed as an order to search the ground "
             f"(payload: {intent.decomposes_to_search(ctx.objective)!r})")
+    elif not named and later:
+        # THE PPMI READER'S PICK (2026-10-13, WHAT'S LEFT H29), where none of the
+        # engine's sure readers above named a tool: taken before the guess that a
+        # question is about the ground, and credited to the reader.
+        named = later
+        ctx.named_by = intent.PPMI_BY
     elif not named and intent.asks_the_ground(ctx.objective):
         # Sitting 60: substantive questions skipped every tool and a seat
         # invented a client narrative from nothing. A question carrying a
@@ -2790,10 +2822,11 @@ def run_pipeline(
     # them. They name themselves now, so they are named here too, and a
     # follow-up withdraws exactly what it withdrew before. names_a_folder and
     # wants_running already set named_by, are not in this list, and are not
-    # withdrawn -- unchanged.
+    # withdrawn -- unchanged. The PPMI reader's pick (2026-10-13) is a guess like
+    # theirs, and is withdrawn the same way.
     if followup and ctx.named_tool and getattr(ctx, "named_by", "") in (
             "", "asks_about_a_tool", "asks_the_ground", "decomposes_to_search",
-            "names_a_file", "is_big_objective") and not intent.names_a_tool(
+            "names_a_file", "is_big_objective", intent.PPMI_BY) and not intent.names_a_tool(
                 ctx.objective, skills):
         ctx.notes.append(f"intent: `{ctx.named_tool}` withdrawn -- this turn "
                          f"points back at the conversation, and the Router "
