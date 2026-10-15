@@ -24,13 +24,19 @@ and shows the path we are on. **Today: the functions and capabilities of the das
 - **The build plan.** The plan by office, below, set with you card by card on 2026-10-13: Manjuel's logic core first (your
   card); then, as proposed and yours to change, the coding loop (I2's plan, steps (1) to (3)), the faults (I2's step (4)),
   Neiro's task list, and the rest of each office's plan; every function measured again before the v0.2.6 cut (I2's step (5)).
-- **Now (2026-10-14, 13:18): H28 is finished -- the live sitting (379) seated the Judge last in the court and the estate,
-  and it ruled in the estate; next, the suites with this record, then the save and send of `judge` on your card ("Yes, save
-  and send it"), and after your merge C70: every seat streaming in the terminal, its thinking live and then folded, planned
-  under C70 on your cards.**
-  The court ran past its time again (C13): the Router's five passes took about 480 s of its 900, and the Judge was cut at the
-  322 s left. H29 is done and merged (pull requests 22 and 23, main at `51cada6`), and its sitting's two new faults are C68
-  and C69.
+- **Now (2026-10-14, 17:22): C70, every seat streaming in the terminal, on the lines `streaming` cut from main after your
+  merge of pull request 24 (H28; main at `181a907`). Step (1), the engine, is built: each fragment of a seat's thought goes
+  on the wire as a `think` event (`serve.py`) and is printed dimmed in the REPL (`pipeline.py`), its tests shown red and
+  then green, strokes 3942 of 3942 and smoke 72 of 72. Next, on your word ("finish the door and glass, 3 and 4 first, then
+  we will talk about whats left"): (3) the door passes `think` through and never keeps it, then (4) the glass draws it live
+  and folds it. Then the talk: step (2), the window (measured: no window was ever full in 197 thinking turns since
+  2026-10-01; the caps are what cut, Jesster thinking away 78 to 84% of its room, the Judge with no cap at all), and H20 --
+  your words today: caching, truncation and "good indexing", "the most amount of oomph out of each of the models without
+  cutting into the diminishing returns", so "a multi-turn ask or workflow can be native to the system stack"; and "there is
+  not a ton of wiring done to the modules to make it all cohesive ... complexity is shifting us from purpose".**
+  H28 is done and merged: the Judge seated last in the court and the estate (sitting 379), where the court ran past its time
+  again (C13; the Router's five passes about 480 s of its 900, the Judge cut at the 322 s left). H29 is done and merged too
+  (pull requests 22 and 23), and its sitting's two new faults are C68 and C69.
 - **The record behind it.** CHANGELOG.md's Unreleased: what has landed since v0.2.5 (the measure, the visible runs, routing's
   three parts, the answers' piece (1)). HANDOFF.md's newest block: the day's state and the hand's faults. INVENTORY.md: every
   function, its last live run and its time. SPEC.md: what done means (4.9, the coder changing the system's own files).

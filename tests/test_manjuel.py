@@ -4817,6 +4817,62 @@ def test_the_headless_door(reg, lib, book):
           all(e in src_.split('"""', 2)[1] for e in _sv.EVENTS)
           and all(c in src_.split('"""', 2)[1] for c in _sv.COMMANDS))
 
+    # ---- the thought crosses the wire live, and goes nowhere else (C70) ------
+    #
+    # WHAT'S LEFT C70 (2026-10-14), his words: "I would like the streaming of
+    # the processes instead of just chunks of text being dumped ... so i can
+    # actually see the turns within the terminal", and "the thinking models
+    # show their CoT as they go". They do: runtime.chat hands each fragment to
+    # think_to as it arrives. Until C70 the door passed think_to through
+    # untouched, so a seat that thought for minutes drew nothing on the glass.
+    # Each fragment is now a `think` event with its seat, beside `token`, under
+    # the words' own markup rule -- and is handed on to the engine, which keeps
+    # it for the transcript and nowhere else. Colour is read off the door's own
+    # channel here, not off however this suite was launched (test_ink's lesson).
+    from manjuel import ink as _ink
+    thought = ["mulling zq7 ", "the <flags>x</flags>ask", " ponder zq8"]
+
+    class Thinks(Stub):
+        def chat(self, agent, prompt, stream_to=None, tools=None, think_to=None, think=None):
+            if think_to is not None:
+                for piece in thought:
+                    think_to(piece)
+            return super().chat(agent, prompt, stream_to, tools, think_to, think)
+    keep_ink = _ink._STATE["on"]
+    _ink._STATE["on"] = None
+    try:
+        rows, sess, text, rc = drive([{"cmd": "objective", "text": "hello there"},
+                                      {"cmd": "close"}], Thinks(reply="[Steward] hi."))
+    finally:
+        _ink._STATE["on"] = keep_ink
+    kinds = [r["event"] for r in rows]
+    sat = sum(1 for r in rows if r["event"] == "seat")
+    thinks = [r for r in rows if r["event"] == "think"]
+    shown = "".join(r.get("text", "") for r in thinks)
+    check("the door's vocabulary carries `think`, beside `token`",
+          "think" in _sv.EVENTS and "token" in _sv.EVENTS, str(_sv.EVENTS))
+    check("each fragment of a seat's thought crosses the wire as it arrives, attributed to its seat",
+          sat >= 1 and len(thinks) == len(thought) * sat
+          and all(r.get("seat") == "Steward" for r in thinks), repr(thinks)[:300])
+    check("... before the seat's first word, as the model thought it",
+          "think" in kinds and "token" in kinds and kinds.index("think") < kinds.index("token"),
+          str(kinds))
+    check("a tag in the thought is hidden between < and >, the words' own rule",
+          "<" not in shown and ">" not in shown and "zq7" in shown and "zq8" in shown,
+          repr(shown))
+    d = next(r for r in rows if r["event"] == "delivery")
+    check("the thought never reaches the delivery",
+          "zq7" not in d["text"] and "zq8" not in d["text"], repr(d["text"])[:200])
+    check("... nor the screen's text: colour is off on the door's channel, so the engine prints none of it",
+          "zq7" not in text and "zq8" not in text, repr(text[-200:]))
+    check("... nor the thread",
+          "zq7" not in (g / "sessions" / "thread.jsonl").read_text(encoding="utf-8"))
+    check("and the engine still keeps it for the transcript, handed on by the door",
+          "zq7" in (g / d["transcript"]).read_text(encoding="utf-8"), d["transcript"])
+    check("every event the door sent is in its declared vocabulary, `think` with them",
+          all(r["event"] in _sv.EVENTS for r in rows),
+          str(sorted({r["event"] for r in rows} - set(_sv.EVENTS))))
+
     # ---- the head is a property of the TURN (2026-09-23) --------------------
     #
     # His ruling, "let's do C first": a caller names the model ONE turn runs
@@ -8969,7 +9025,7 @@ def test_streaming_never_eats_spaces(reg, lib, book):
     check("thinking-field chunks are dropped whole -- no per-chunk stamping",
           out2 == "ground_list it is." and "deliberation" not in out2,
           repr(out2))
-    check("and streamed thinking never reaches the display either",
+    check("and streamed thinking never reaches the answer's stream either (it is drawn apart, dimmed: C70)",
           "hmm" not in "".join(shown))
 
     # fresh dialogue turns carry no age label to mimic
@@ -9555,6 +9611,85 @@ def test_markup_never_reaches_the_terminal(reg, lib, book):
           "<action>" not in seen and "ground_list</" not in seen, seen[:160])
     check("and the words around it still stream, so the terminal lives",
           "Looking" in seen and "Done." in seen, seen[:160])
+
+
+def test_the_thought_is_drawn_live_and_dimmed(reg, lib, book):
+    """WHAT'S LEFT C70 (2026-10-14), the REPL's half; the door's is in
+    test_the_headless_door. His words: "I would like the streaming of the
+    processes instead of just chunks of text being dumped. thats for all
+    seats and models ... so i can actually see the turns within the
+    terminal", and "the thinking models show their CoT as they go". They
+    do: runtime.chat hands each fragment of a seat's thought to think_to as
+    it arrives. Until C70 the seat loop only kept it for the transcript
+    (sitting 79), so the spinner turned for minutes and then the words came
+    at once.
+
+    Where the spinner would spin -- a terminal with colour on -- each
+    fragment is now printed as it comes, DIMMED, so it never reads as the
+    answer, and the seat's words start on a line of their own after it.
+    Where colour is off (a pipe, the door, the suites) nothing of it is
+    printed: the door sends it as its own event, and a pipe is not the
+    place. Either way it is kept for the transcript, and it never reaches a
+    later seat or the delivery -- his card: "make sure that the thinking
+    doesnt ... reach across the original question or request".
+
+    Colour is FORCED both ways, as test_ink forces it: a stroke whose answer
+    depended on how the suite was launched would be measuring the shell."""
+    import io
+    from manjuel import ink
+
+    thought = ["mulling zq7 ", "it <flags>x</flags>over"]
+
+    class Thinks(Stub):
+        def chat(self, agent, prompt, stream_to=None, tools=None, think_to=None,
+                 think=None):
+            if think_to is not None:
+                for piece in thought:
+                    think_to(piece)
+            return super().chat(agent, prompt, stream_to, tools, think_to, think)
+
+    def run(colour):
+        g = Path(tempfile.mkdtemp())
+        r = Thinks(reply="The answer.")
+        out = io.StringIO()
+        keep_out, keep_ink = sys.stdout, ink._STATE["on"]
+        sys.stdout, ink._STATE["on"] = out, colour
+        try:
+            ctx = RunContext(objective="decide something", feed="")
+            run_pipeline(ctx, reg, r, lib, env_for(g, reg, r),
+                         steps=["Steward", "Jesster"], report=lambda m: None,
+                         stream=True)
+        finally:
+            sys.stdout, ink._STATE["on"] = keep_out, keep_ink
+        return ctx, r, out.getvalue()
+
+    ctx, r, seen = run(True)
+    a, b = seen.find("it xover"), seen.find("The answer.")
+    check("the REPL with colour on prints each fragment of a seat's thought as it arrives",
+          "mulling zq7 " in seen and a >= 0, repr(seen[:240]))
+    check("   the REPL's thought is dimmed, so it never reads as the answer",
+          ink.DIM + "mulling zq7 " in seen, repr(seen[:240]))
+    check("   a tag in the REPL's thought is hidden between < and >, the words' own rule (sitting 70)",
+          "<" not in seen and ">" not in seen, repr(seen[:240]))
+    check("   the seat's words start after its thought, on a line of their own",
+          0 <= a < b and "\n" in seen[a:b], repr(seen[:240]))
+    check("   the thought drawn live is still kept for the transcript, whole (sitting 79)",
+          ctx.steps[0].thinking == "".join(thought).strip(), repr(ctx.steps[0].thinking))
+    later = [p for n, p in r.seen if n == "Jesster"]
+    check("   a later seat is handed the earlier seat's words and never its thought",
+          bool(later) and "The answer." in later[0] and "zq7" not in later[0]
+          and not any("zq7" in s for n, s in r.souls if n == "Jesster"),
+          repr(later[0][:200]) if later else "Jesster never sat")
+    check("   the thought drawn live never reaches the delivery",
+          "zq7" not in ctx.last_output(), ctx.last_output()[:80])
+
+    ctx, r, seen = run(False)
+    check("the REPL with colour off (a pipe, the door, the suites) prints no thought",
+          "zq7" not in seen, repr(seen[:240]))
+    check("   with colour off the seat's words still stream as before",
+          "The answer." in seen, repr(seen[:240]))
+    check("   with colour off the thought is still kept for the transcript",
+          "zq7" in ctx.steps[0].thinking, repr(ctx.steps[0].thinking))
 
 
 def test_asking_about_a_tool_is_not_asking_for_it(reg, lib, book):
@@ -14962,6 +15097,14 @@ def test_the_deliberation_is_kept_and_never_spoken(reg, lib, book):
     ROOM, 79 says it must not be LOST. The transcript is the only place
     that satisfies both.
 
+    ANNOTATED 2026-10-14 (WHAT'S LEFT C70; nothing above changed): on his
+    word ("the thinking models show their CoT as they go") the thought is
+    DISPLAYED now -- drawn live and dimmed in the REPL, a `think` event on
+    the door's wire (test_the_thought_is_drawn_live_and_dimmed,
+    test_the_headless_door). The rest of 47 stands, and this stroke still
+    proves it: never returned by chat(), never fed to a later seat, never
+    in the thread or the delivery.
+
     STROKE IT BOTH WAYS: it must be captured when a model thinks, and it
     must be absent everywhere it was already banned."""
     from manjuel.transcript import write as _write
@@ -19633,7 +19776,7 @@ def test_a_thinking_router_is_never_silent(reg, lib, book):
           "deliberation only" in out, out[:60])
     check("it carries what the model was actually thinking",
           "write_file" in out, out[:90])
-    check("and none of it was streamed to the operator's screen",
+    check("and none of it was streamed as the answer (the thought is drawn apart: C70)",
           shown == [], str(shown))
 
     rt._client = FakeClient([{"message": {"content": "the ", "thinking": "hmm"}},
@@ -22710,6 +22853,7 @@ def main() -> int:
     test_the_router_knows_where_it_is(reg, lib, book)
     test_sitting70_regressions(reg, lib, book)
     test_markup_never_reaches_the_terminal(reg, lib, book)
+    test_the_thought_is_drawn_live_and_dimmed(reg, lib, book)
     test_asking_about_a_tool_is_not_asking_for_it(reg, lib, book)
     test_a_skill_asked_for_in_its_own_words_is_the_one_named(reg, lib, book)
     test_no_router_in_the_order_means_no_tool(reg, lib, book)
