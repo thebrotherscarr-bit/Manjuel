@@ -1,0 +1,11 @@
+{
+  "prompts": {
+    "measure-ready": {
+      "latest": 2,
+      "versions": [
+        1,
+        2
+      ]
+    }
+  }
+}

@@ -3061,8 +3061,12 @@ def run_pipeline(
             # prints until its '>' arrives. The words either side still
             # stream, so the terminal stays alive.
             inside = [False]
+            # What this seat last drew on its line (2026-10-14, WHAT'S LEFT C70): ""
+            # nothing yet, "think" its thought (`muse`, below), "say" its words -- so
+            # each starts on a line of its own.
+            drew = [""]
 
-            def sink(piece, _n=agent.name, _s=spin, _f=first, _in=inside):
+            def sink(piece, _n=agent.name, _s=spin, _f=first, _in=inside, _d=drew):
                 shown = []
                 for ch in str(piece or ""):
                     if _in[0]:
@@ -3080,7 +3084,13 @@ def run_pipeline(
                     _f[0] = False
                     if _s:
                         _s.stop()
+                    if _d[0] == "think":
+                        print()
                     print("      ", end="")
+                elif _d[0] == "think":
+                    print()
+                    print("      ", end="")
+                _d[0] = "say"
                 print(ink.body(_n, text), end="", flush=True)
 
             # What this seat is cleared to call, and the schemas for exactly
@@ -3112,7 +3122,48 @@ def run_pipeline(
             # one that thinks. It goes to the transcript and NOWHERE ELSE:
             # sitting 47's ruling that thinking is never displayed and never
             # reaches a later seat is untouched.
+            # ANNOTATED 2026-10-14 (WHAT'S LEFT C70; nothing above changed): on his
+            # word it is DRAWN as well now -- live and dimmed in the REPL (`muse`,
+            # below), its own event on the glass's wire -- and it still reaches no
+            # later seat, the delivery or the conversation.
             thoughts: list[str] = []
+            musing = [False]
+
+            # THE THOUGHT, DRAWN LIVE (2026-10-14, WHAT'S LEFT C70; his words: "I
+            # would like the streaming of the processes instead of just chunks of
+            # text being dumped ... so i can actually see the turns within the
+            # terminal", and "the thinking models show their CoT as they go").
+            # Each fragment is kept, as above, and where the spinner would spin --
+            # a terminal with colour on -- printed as it arrives, DIMMED, so it
+            # never reads as the answer; the seat's words then start on a line of
+            # their own (`sink`). With colour off nothing of it is printed: a pipe
+            # is not the place, and the glass is sent it as its own event. The
+            # markup rule is the words' own (sitting 70).
+            def muse(piece, _t=thoughts, _s=spin, _in=musing, _d=drew):
+                _t.append(piece)
+                if not (stream and ink.enabled()):
+                    return
+                shown = []
+                for ch in str(piece or ""):
+                    if _in[0]:
+                        if ch == ">":
+                            _in[0] = False
+                        continue
+                    if ch == "<":
+                        _in[0] = True
+                        continue
+                    shown.append(ch)
+                text = "".join(shown)
+                if not text:
+                    return
+                if _d[0] != "think":
+                    if _s:
+                        _s.stop()
+                    if _d[0] == "say":
+                        print()
+                    print("      ", end="")
+                    _d[0] = "think"
+                print(ink.dim(text), end="", flush=True)
             # The seat as it sits THIS call: its own prompt plus the law
             # and the standing in the system role (carried_blocks). The
             # registry's declaration is untouched.
@@ -3139,7 +3190,7 @@ def run_pipeline(
                 output = runtime.chat(_within_deadline(seat, ctx), prompt,
                                       stream_to=sink if stream else None,
                                       tools=tools,
-                                      think_to=thoughts.append)
+                                      think_to=muse)
                 # A REPLY THE RACK CUT IS SAID SO, before anything reads it
                 # as a seat that had nothing to say (note_cut_reply).
                 note_cut_reply(runtime, seat, ctx, report)
@@ -3155,6 +3206,7 @@ def run_pipeline(
                 spin.stop()
             if stream:
                 print()
+                drew[0] = ""
             # Session 5c: a seat returned "" and the chain delivered silence
             # for 56 seconds without ever saying anything had gone wrong. An
             # empty seat is a fault, and must read as one.
@@ -3452,10 +3504,11 @@ def run_pipeline(
                     output = runtime.chat(_within_deadline(seat, ctx), follow,
                                           stream_to=sink if stream else None,
                                           tools=tools,
-                                          think_to=thoughts.append)
+                                          think_to=muse)
                     note_cut_reply(runtime, seat, ctx, report)
                     if stream:
                         print()
+                        drew[0] = ""
                 except RuntimeError_ as exc:
                     report(f"      ! follow-up failed: {exc}")
                     break

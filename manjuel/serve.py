@@ -39,9 +39,13 @@ HOW THE REPL'S KEYBOARD AND SCREEN ARE REPLACED, without editing them:
 THE STRUCTURED EVENTS ride beside the text. Two eyes, neither inside the
 engine: the runtime is wrapped so a seat sitting is a `seat` event and its
 streamed pieces are `token` events (control markup hidden between `<` and
-`>`, the sink's own one-character rule); the skill library's execute() is
-wrapped so a call is a `tool` event and its return a `tool_result`. The
-run's `report` lines are `report` events. The turn ends in exactly one of
+`>`, the sink's own one-character rule), and each fragment of its thought,
+as it arrives, a `think` event under the same rule -- handed on to the
+engine, which keeps it for the transcript and nowhere else (2026-10-14,
+WHAT'S LEFT C70: "the thinking models show their CoT as they go"); the
+skill library's execute() is wrapped so a call is a `tool` event and its
+return a `tool_result`. The run's `report` lines are `report` events. The
+turn ends in exactly one of
 `delivery` / `refused` / `aborted` / `cancelled` / `unreachable` / `error`,
 carrying the record's own notes and per-seat facts (elapsed, tools, error,
 skipped) -- read off the StepResults, never off a seat's words (LAW 5).
@@ -73,9 +77,9 @@ THE WIRE (protocol 1). One JSON object per line, UTF-8.
        {"cmd":"close"}                    close the sitting (the toll is paid
                                           unattended if runs happened, as
                                           on exit)
-  out  opened · text · run · report · seat · token · tool · tool_result ·
-       needs_answer · heard · delivery · refused · aborted · cancelled ·
-       unreachable · error · note · command · closed
+  out  opened · text · run · report · seat · token · think · tool ·
+       tool_result · needs_answer · heard · delivery · refused · aborted ·
+       cancelled · unreachable · error · note · command · closed
 
 EVERY TURN ENDS IN EXACTLY ONE TERMINAL EVENT: delivery for a pipeline
 run, command for a `/command` or any other turn that finished without
@@ -134,7 +138,7 @@ PROTOCOL = 1
 
 # The wire's vocabulary, spelled once so a stroke can hold the door to it.
 COMMANDS = ("objective", "answer", "listen", "cancel", "close")
-EVENTS = ("opened", "text", "run", "report", "seat", "token", "tool",
+EVENTS = ("opened", "text", "run", "report", "seat", "token", "think", "tool",
           "tool_result", "needs_answer", "delivery", "refused", "aborted",
           "cancelled", "unreachable", "error", "note", "heard", "command",
           "closed")
@@ -347,9 +351,10 @@ class Inbox:
 
 
 class _Runtime:
-    """The runtime as it is, plus a `seat` event when a seat sits and
-    `token` events as it speaks. Delegates everything else, so the Stub the
-    suites use and the real OllamaRuntime both fit behind it."""
+    """The runtime as it is, plus a `seat` event when a seat sits, `token`
+    events as it speaks and `think` events as it thinks. Delegates
+    everything else, so the Stub the suites use and the real OllamaRuntime
+    both fit behind it."""
 
     def __init__(self, inner, wire: Wire):
         self._inner = inner
@@ -365,13 +370,15 @@ class _Runtime:
                         streaming=stream_to is not None)
         sink = self._token_sink(agent.name) if stream_to is not None else None
         return self._inner.chat(agent, user_prompt, stream_to=sink, tools=tools,
-                                think_to=think_to, think=think)
+                                think_to=self._think_sink(agent.name, think_to),
+                                think=think)
 
-    def _token_sink(self, seat: str):
+    def _token_sink(self, seat: str, event: str = "token"):
         # SITTING 70's rule, kept: control markup is the seat's channel to
         # the ENGINE and never reaches a person live. A tag can be split
         # across pieces, so this is the sink's one-character state machine:
-        # from `<` to `>` nothing is shown.
+        # from `<` to `>` nothing is shown. A seat's thought takes the same
+        # rule, sent as `think` (`_think_sink`, below).
         inside = [False]
 
         def sink(piece):
@@ -387,7 +394,28 @@ class _Runtime:
                 shown.append(ch)
             text = "".join(shown)
             if text:
-                self._wire.emit("token", seat=seat, text=text)
+                self._wire.emit(event, seat=seat, text=text)
+        return sink
+
+    def _think_sink(self, seat: str, keep):
+        """THE THOUGHT, LIVE (2026-10-14, WHAT'S LEFT C70; his words: "I would
+        like the streaming of the processes instead of just chunks of text
+        being dumped ... so i can actually see the turns within the
+        terminal", and "the thinking models show their CoT as they go").
+        runtime.chat hands each fragment of a seat's thought to think_to as
+        it arrives; until C70 it crossed this door untouched, so a seat that
+        thought for minutes drew nothing on the glass. Each fragment now goes
+        on the wire as it arrives, a `think` event under the words' own
+        markup rule, and is handed on to the engine's own think_to, which
+        keeps it for the transcript (sitting 79) and nowhere else. Every
+        seat's call is given one, whether its caller asked or not, so every
+        seat's thought is seen."""
+        show = self._token_sink(seat, "think")
+
+        def sink(piece):
+            show(piece)
+            if keep is not None:
+                keep(piece)
         return sink
 
 
