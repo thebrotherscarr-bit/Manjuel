@@ -24,16 +24,15 @@ and shows the path we are on. **Today: the functions and capabilities of the das
 - **The build plan.** The plan by office, below, set with you card by card on 2026-10-13: Manjuel's logic core first (your
   card); then, as proposed and yours to change, the coding loop (I2's plan, steps (1) to (3)), the faults (I2's step (4)),
   Neiro's task list, and the rest of each office's plan; every function measured again before the v0.2.6 cut (I2's step (5)).
-- **Now (2026-10-14, 17:22): C70, every seat streaming in the terminal, on the lines `streaming` cut from main after your
-  merge of pull request 24 (H28; main at `181a907`). Step (1), the engine, is built: each fragment of a seat's thought goes
-  on the wire as a `think` event (`serve.py`) and is printed dimmed in the REPL (`pipeline.py`), its tests shown red and
-  then green, strokes 3942 of 3942 and smoke 72 of 72. Next, on your word ("finish the door and glass, 3 and 4 first, then
-  we will talk about whats left"): (3) the door passes `think` through and never keeps it, then (4) the glass draws it live
-  and folds it. Then the talk: step (2), the window (measured: no window was ever full in 197 thinking turns since
-  2026-10-01; the caps are what cut, Jesster thinking away 78 to 84% of its room, the Judge with no cap at all), and H20 --
-  your words today: caching, truncation and "good indexing", "the most amount of oomph out of each of the models without
-  cutting into the diminishing returns", so "a multi-turn ask or workflow can be native to the system stack"; and "there is
-  not a ton of wiring done to the modules to make it all cohesive ... complexity is shifting us from purpose".**
+- **Now (2026-10-14, 18:52): C70's record, on the lines `streaming`.** C70's steps (1), (3), (4) and (5) are built, proved live
+  (sitting 380), saved and sent through Steward (sitting 381; your word: "run everything through the engine boot up a new session
+  and do the github flow through it") and merged on your clicks (Manjuel 25, `611dc8e`; Atlas 18, `fd23adb`); four faults found on
+  that road are C71 to C74. The engine's commit also carried `prompts/`, which your card of 2026-10-12 kept untracked: kept, on
+  your word ("keep prompts"). Its record is written, every file read whole first (your card: "Read each whole"): C70's line, C71
+  to C74, E5 and H20 on this page, a CHANGELOG entry in each repository and HANDOFF's note. Now the suites with it in place, then
+  saved and sent through Steward on your cards (your word: "go"), and a second pull request from the same lines for your press.
+  Then the talk: C70's step (2), the window, with H20 beside it -- your words today and the
+  numbers measured with them are on H20's line.
   H28 is done and merged: the Judge seated last in the court and the estate (sitting 379), where the court ran past its time
   again (C13; the Router's five passes about 480 s of its 900, the Judge cut at the 322 s left). H29 is done and merged too
   (pull requests 22 and 23), and its sitting's two new faults are C68 and C69.
@@ -214,6 +213,33 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
   thought live, dimmed under the seat's name, and fold it to one line when the seat starts to speak ("thought 81 s"), opened
   with a click; nothing else of the look changes; (5) the suites, the door and the glass built and placed on your card, and a
   live sitting on your card with every seat streaming. *(HANDOFF, 2026-10-14, sitting 379)*
+  **Steps (1), (3), (4) and (5), built 2026-10-14**, on the lines `streaming`, each test shown red first and every edit on your
+  card. (1) The engine: each fragment of a thinking seat's thought goes on the wire as it arrives, a `think` event naming its
+  seat beside `token`, kept for the transcript and nowhere else (`serve.py`), and the REPL draws it dimmed (`pipeline.py`); a
+  section of the door's stroke and a new stroke hold it; strokes 3942 of 3942, smoke 72 of 72. (3) The door passes each `think`
+  event to the glass and keeps none (`engine.go`); a Go test holds it. (4) The glass draws the thought live and dimmed under the
+  live line, and when the seat speaks folds it to one line, "▸ Router thought 30 s", opened with a click, in the Agent tab and on
+  the Run tab's floor (`council.js`, `agent.js`, `chat.js`); a Go test holds it. (5) The door and the glass built and placed on
+  your card ("Place both, keep both", about 17:30, the old builds kept), and sitting 380 (17:38 to 17:40, a Router turn) streamed
+  live: the Router's thought drawn as it came, folded at 30 s, the fold holding the record's 1,061 characters. Saved and sent
+  through Steward in sitting 381 (your word: "run everything through the engine boot up a new session and do the github flow
+  through it"): the strokes again through the door, 3942 of 3942 (18:03); `git_cycle` saved the core as `cc8b33c` and the door's
+  `git_push` sent it (C72); the door saved and sent atlas as `96f1dd8`; each send and atlas's save on your card. The pull requests
+  were your press (the door keeps `git_pr` to your glass alone): Manjuel 25 and Atlas 18, merged on your click (`611dc8e`,
+  `fd23adb`, 18:28). **Left: step (2)**, the window, for the talk beside H20.
+  *(CHANGELOG, "core: a seat's thought, live in the terminal")* *(atlas CHANGELOG, "A seat's thought, live on the glass")*
+- **C71. Steward's call to the door gives up before a strokes run ends.** `mcp_call` waits 295 seconds (the skill's bound, less
+  five) and the strokes take longer (313 s in sitting 381), so the turn said `suite_run` "did not answer" and "no output or data
+  was produced", while the door ran on and stamped 3942 of 3942 green 18 seconds later. *(HANDOFF, 2026-10-14, sitting 381)*
+- **C72. The engine's own push cannot send a line GitHub has never had.** In sitting 381 `git_cycle` saved the core's line
+  `streaming` and its push was refused, "no upstream"; the door's `git_push` sets the upstream the first time and says so. Since
+  main was protected (2026-10-09) every save goes on a new line, so the engine's own send fails every time.
+  *(HANDOFF, 2026-10-14, sitting 381)*
+- **C73. The check of numbers no tool returned flagged one a tool did return.** In sitting 381 it named "295", which the door's
+  refusal carried as "295s" ("did not answer inside 295s"). The same check as C68, flagging a number that was in the record.
+  *(HANDOFF, 2026-10-14, sitting 381)*
+- **C74. Steward speaks of a held card as if it were you.** Reading the door's answer that `git_commit` was held for your card,
+  it said "The decision must be provided by me" (sitting 381). Part of H24, plain by default. *(HANDOFF, 2026-10-14, sitting 381)*
 
 ### The dashboard and the tool server (atlas)
 
@@ -272,6 +298,9 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
 - **E5. The tool server's own save, take and send have not run in this version.** `git_commit`, `git_pull` and
   `git_push`: the saves and sends since v0.2.5 went through the Bash tab, so each is measured at the next save, take and send
   made through it. *(INVENTORY T33, T36, T37)*
+  Two of the three ran 2026-10-14, through the council's `mcp_call` (sitting 381), each held for your card: `git_commit` saved
+  atlas's line `streaming` (`96f1dd8`), and `git_push` sent both repositories' `streaming`, each never sent before, setting its
+  upstream and saying so. `git_pull` has not run. *(HANDOFF, 2026-10-14, sitting 381)*
 
 ---
 
@@ -345,6 +374,19 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   each turn (a bounded loop, LAW_003) instead of the raw conversation; and past sittings, with the memories you land (H2 to H4). The part of every prompt that does not
   change goes first, so the models can reuse it, and one context builder serves every seat. Nothing is deleted: a summary points back at its transcripts.
   *(your words in chat, 2026-10-05)*
+  **Your words again, 2026-10-14**, in the talk on C70's step (2), the window: "the windows are very small, and we can greatly expand
+  that with cacheing and truncation"; "What about allowing each model to cache and truncate? then they would each have MUCH larger
+  context windows, right?"; "what about good indexing, as well? My basic ask is to try and get the most amount of "oomph" out of each
+  of the models without cutting into the diminishing returns area of capabiltiies. This way a multi-turn ask or workflow can be native
+  to the system stack"; and "we have many pieces of this system and there is not a ton of wiring done to the modules to make it all
+  cohesive, i feel like this is one of those areas where complexity is shifting us from purpose." Measured the same day over the
+  197 thinking turns since 2026-10-01 (a token taken as four characters): no seat's window was ever full, and the caps are what cut
+  -- the Router (window 16,384, cap 900) 11 times, the Reasoner (8,192 and 1,400) 6, the Quality Evaluator (cap 700) 6, Jesster
+  (8,192 and 4,500) 3, its thought taking 78 to 84% of its room, and the Judge (16,384, no cap) thinking up to 8,481 tokens. The
+  plan, set with you before anything is built: a map of the wiring first -- what each seat is handed today, from where, and what
+  reads it (the conversation's newest 2,400 characters, C48; the Router's package; the index; the memory, H2) -- then both levers
+  side by side on those numbers: each seat's window and caps (C70's step (2)), and what a cache, a truncation and the index would
+  give each seat's room. *(your words in chat, 2026-10-14)*
 - **H21. A baked Steward.** A local model of its own: an Ollama Modelfile with the self-model card and the Steward's character built in, rebuilt when the card changes,
   measured like any seat. It needs a folder you name (RULE 8). A model trained on your transcripts is for later, and only on a measured need: it would learn the
   behaviour (plain words, the right tool), not the facts, which change with every commit. *(your words in chat, 2026-10-05)*
