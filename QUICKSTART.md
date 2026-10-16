@@ -15,7 +15,7 @@ and the tools -- that is RUNBOOK.md, "Starting the system".
 
   So the floor is **one pull per DISTINCT tag named in `agents/*.md`, plus an
   embedder** — three or four gigabytes if you point the seats at one small
-  model, thirty-three if you copy the set below verbatim.
+  model, thirty-seven if you copy the set below verbatim.
 
   **THE SHAPE IS WHAT MATTERS; THE TAGS ARE JUST HIS.** What the roster is
   really asking for is a size per JOB, and you fill the slots:
@@ -43,10 +43,10 @@ and the tools -- that is RUNBOOK.md, "Starting the system".
       ollama pull qwen3.5:9b               # Reasoner, Deep Researcher
       ollama pull deepseek-r1:8b           # Jesster (the licensed fool)
       ollama pull gemma4:12b               # the Judge -- the court's ruling seat (thinks long; never at the door)
-      ollama pull qwen2.5-coder:7b         # the Expert Coder
+      ollama pull qwen2.5-coder:14b        # the Expert Coder and the lint skill (14b since 2026-09-30, B1)
       ollama pull nomic-embed-text-v2-moe  # index, drift, parity
 
-  Parity references, optional: `gemma4:e4b`, `qwen2.5-coder:14b`, `qwen3-vl:8b`.
+  Parity references, optional: `gemma4:e4b`, `qwen2.5-coder:7b`, `qwen3-vl:8b`.
   **What each seat declares in `agents/*.md` is the truth; this list is not.**
   Change a seat's `Model Target:` and the requirement changes with it.
 

@@ -51,8 +51,9 @@ prose. Every guard in it is named after a failure that actually happened.
 - Not a second executor. One seat runs tools. Option A declined 2026-09-04.
 - Not a bigger-model project. SITTING LAW 3: move up only on a measured
   failure.
-- Not a general agent framework. It has fourteen named seats and forty-three
-  named skills, and adding one is writing a markdown file, not code.
+- Not a general agent framework. Its seats and skills are named, one markdown
+  file each (`agents/`, `skills/`; `/agents` and `/skills` list them live), and
+  adding one is writing a markdown file, not code.
 - Not a chat app with memory. `memory.md` is landed by the operator's hand
   (`/remember`, `/memory`, or `remember that` typed at the door); a model
   may only propose.
@@ -73,9 +74,9 @@ A proposal that needs a word uses the nearest one below.
 | **the rack** | the models installed on this machine; also the seats that rest until a flag wakes them. | rack.md; pipelines.md |
 | **the spine** | the seats that sit every run of a pipeline. | pipelines.md |
 | **the door** | the Steward: first to answer, last to report. | pipelines.md |
-| **the court** | Neiro, Jesster, Manjuel: reads, never acts; Manjuel rules last. | THE LAW; pipelines.md |
-| **Manjuel** | the core: the record, the immutable law and ledger, and the logic core (PPMI, no language model) that reads a request before any model; every answer filtered through the law and the founding papers. The seed of the whole project, and the engine's package in code. Until the Judge is renamed (WHAT'S LEFT H28) the review panel's ruling seat carries the name too. | the founding papers; his cards, 2026-10-13 |
-| **the Judge** | the seat on gemma4:12b that rules last on the review panel and sits in the estate pipeline; called Manjuel until its rename (WHAT'S LEFT H28). | his word, 2026-10-13 |
+| **the court** | Neiro, Jesster, the Judge: reads, never acts; the Judge rules last (the ruling seat was called Manjuel until 2026-10-14, WHAT'S LEFT H28). | THE LAW; pipelines.md |
+| **Manjuel** | the core: the record, the immutable law and ledger, and the logic core (PPMI, no language model) that reads a request before any model; every answer filtered through the law and the founding papers. The seed of the whole project, and the engine's package in code. The review panel's ruling seat carried the name too until 2026-10-14, when it was renamed the Judge (WHAT'S LEFT H28). | the founding papers; his cards, 2026-10-13 |
+| **the Judge** | the seat on gemma4:12b that rules last on the review panel and sits in the estate pipeline; called Manjuel until its rename on 2026-10-14 (WHAT'S LEFT H28). | his word, 2026-10-13 |
 | **Steward** | the body that acts: the seats, the skills and tools, the rack of models and the maker, with full autonomy inside the walls and none past his gate. The door (the Steward seat) is its voice. | the founding papers; his card, 2026-10-13 |
 | **Jesster** | the coder: writes the code and refutes it; the Expert Coder and Aider work under its name. On the review panel it is counsel, as before. | his word, 2026-08-14, kept 2026-10-13 |
 | **Neiro** | the overseer: holds the state of the whole process from the record, runs the work as flows and watches each run; never acts on the world or approves. On the review panel it is counsel, as before. | the founding papers; his card, 2026-10-13 |
@@ -83,7 +84,7 @@ A proposal that needs a word uses the nearest one below.
 | **the Router** | the one seat that runs tools. | DESIGN.md |
 | **a skill** | one tool: a markdown file in `skills/` and a handler. | skills/ |
 | **a pipeline** | ONE TURN's running order of seats and tools: who sits, in what order, who wakes on which flag, which seat hands to which. The Steward handing to the Router, the Router calling the index, Jesster reviewing what the Router read -- all inside one pipeline. Declared in `pipelines.md`. | pipelines.md; ruled 2026-09-07 |
-| **a workflow** | SEVERAL TURNS strung into one task: a list of objectives, each run through a pipeline, checked between steps, reported at the end. The standup is the first one. Not yet declared in a file. | the operator, 2026-09-04 and 2026-09-07 |
+| **a workflow** | SEVERAL TURNS strung into one task: a list of objectives, each run through a pipeline, checked between steps, reported at the end. The standup is the first one. Declared in a file since: a flow in `flows/`, its steps, gates, checks and bounded returns, fired from the glass's Workflows tab. | the operator, 2026-09-04 and 2026-09-07 |
 | **a flag** | a seat's one-word signal to the engine; wakes a racked seat. A CLOSED SET since 2026-09-23 (`pipeline.FLAGS`), in two kinds: the five a seat may RAISE as its own testimony (`needs_tool`, `technical`, `hard`, `deliver`, `suspicious`) and the four the engine SETS from what it observed (`worked`, `review`, `drifted`, `has_feed`). `us.py` reports a seat that waits on a flag outside the set, or on one nothing can raise. | DESIGN.md §5; `us.py` §6 |
 | **a sitting** | one launch of the REPL, numbered by Manjuel. Never the hand's session. | seatlog.py; LAW 10 |
 | **the toll** | what a sitting pays at close: what proved, what is thin, what is owed. | LAW 10 |
@@ -116,11 +117,11 @@ A proposal that needs a word uses the nearest one below.
 |---|---|---|
 | **The ground** (`Desktop\Research`) | every read, write, index and dependency stays inside it | `gate_paths` (LAW 8), `_inside_ground`, `safe_path`; the law gate's reach check; strokes `test_index_stays_in_research_and_off_the_keys`, `test_the_law_gate` |
 | **Seats** (`agents/*.md`, 14) | a seat is a markdown file: model, stage, when it wakes, what it may call, its prompt. No seat exists in code. | `registry.py`; `us/chain_*.us` reconciled by `us.py` |
-| **Skills** (`skills/*.md`, 42) | a skill's markdown declares it; a handler or a model target runs it; neither can exist without the other | `SkillLibrary.validate`; `us.py` |
+| **Skills** (`skills/*.md`) | a skill's markdown declares it; a handler or a model target runs it; neither can exist without the other | `SkillLibrary.validate`; `us.py` |
 | **Pipelines** (`pipelines.md`, 5) | the running order is a file; racked seats wake on flags declared in their own file | `PipelineBook`; `seating.py` |
 | **The Router** | the ONLY seat handed tool schemas and the only one whose action blocks execute; bounded at 5 hops; identical calls refused | `pipeline.py` tool loop; REFUSALS §9, §14, §18 |
 | **The door** (the Steward) | speaks in words; a tool call it emits is carried to the Router, never printed; after work it reports what ran and nothing beyond, from this turn alone -- no conversation, no story, no standing; after a big seat it does not sit: the big seat's words are the delivery as written, with what is still open from the record | REFUSALS §18; the closing prompt's `TOOLS THAT ACTUALLY RAN`; `as_written`; strokes `test_the_big_seats_answer_goes_as_written`, `test_the_closing_answer_is_this_turn_alone` |
-| **The court** (Neiro, Jesster, Manjuel) | reviews, never acts; reads only; four different heads; rules last | `review_only`; REFUSALS §3; the 2026-09-04 rack ruling |
+| **The court** (Neiro, Jesster, the Judge) | reviews, never acts; reads only; four different heads; the Judge rules last | `review_only`; REFUSALS §3; the 2026-09-04 rack ruling |
 | **The guards** | a claim of file contents with no read is refused; a claim of a write with no writer is refused; a cited search hit that was not returned is refused; every failed tool AND every partial read is appended to the delivery; a recited scaffold is discarded | REFUSALS §8, §10, §11, §11b, §20; `_SCAFFOLD_RE`; `recompose` |
 | **The law gate** | the sealed ledger verifies on every run or no seat sits; the objective is checked against the decidable laws; every seat is handed the verdict in its SYSTEM role (the court: the ten verbatim); the run is stamped | `lawgate.py`; REFUSALS §19, §20; `test_the_law_gate` |
 | **The standing** | what the sitting is FOR, from DAYBOOK's last entry, read not generated, handed to the door at the front and the court -- never to the closing answer, which is this turn alone | `seatlog.standing_block`; REFUSALS §20; `carried_blocks` |
@@ -179,13 +180,13 @@ are the whole remaining distance.
 - MET (2026-09-26) — THE THIRD CLAUSE: a door call the objective spells out whole — a declared MCP server named as a word and the arguments as a JSON object — is decided too. The engine writes `<action>mcp_call</action>` with no content, the skill reads the objective (as its declaration has always said it does when handed nothing), the door receives exactly what the flow wrote, and the Router sits once to read the result. Earned by `version-tag`'s two `run` nodes on 2026-09-25: a 4B model asked to copy a call it had been handed thought for a minute twice and wrote nothing, and replayed once wrote it as bare JSON with no server named. The tool is resolved by the skill against the door's roster; the server must be named — a lone declared server is the skill's fallback, not the engine's; and only a tool the OBJECTIVE named qualifies, as before. `mcp_call` is not a writer in this ground's roster; the door's own side (holds, RBAC, `git_tag`'s refusals) and a flow's gate before its cut judge the call. The flow spec itself is the wire: `test_a_spelled_out_door_call_is_written_by_the_engine` reads every `run` question in `flows/version-tag.json` and reds when one stops being spelled out.
 
 ### 4.3 The court
-- MET — four heads; reads only; Manjuel last; the recompose reaches both deliveries.
+- MET — four heads; reads only; the Judge last (the seat was called Manjuel until 2026-10-14, WHAT'S LEFT H28); the recompose reaches both deliveries.
 - MET (2026-09-10) — `rack_report` gives FACTS ONLY unless a judgement is asked for. Ruled 2026-09-09 ("4.3 facts only. yep, sounds good") and built the next morning: the Quartermaster is woken only when the question asks to be advised (`intent.asks_for_a_judgement`, beside the estate's other question shapes rather than a second copy in skills.py), and a facts question returns the observed numbers with one line saying no seat read them. Four strokes hold it, and the strongest asserts NO SEAT WAS CALLED rather than merely that its words are absent. The fault it closes: the Router summarised the reading instead of the facts, three times in sitting 85, and SPEC 4.7 records the Quartermaster inventing in three of three readings.
 - MET (2026-09-07) — a PARTIAL read is stamped in the record and the delivery (READ IN PART, NOT WHOLE); a file read in every part is not. `note_partial_read`, `unread_parts`.
 - MET (2026-09-10) — a claim about what a tool result SAID, with no citation tying it to the result, IS NOW MEASURED. The cited half was already built (`bogus_citations`, sitting 61: a (path, cosine) pair claimed but absent from the output); this is the half `intent.cites_search_results` named as its own honest limit, "prose that fabricates without naming a path and a number". A TOOL RESULT IS SOURCE MATERIAL, so drift primes on it and the stages after it are scored against what the tool actually returned. Advisory, as drift is by design — reported, never used to rewrite or discard, "the same principle that keeps Manjuel and Jesster from rewriting the work they rule on". Proven live on one objective three times: `what is in the skills dir` read "not scored this run (no usable source)" at 06:13 and 06:50 and **drift 0.788** at 07:05.
 
 ### 4.4 The law
-- MET — the ten estate laws, the four sitting laws, LAW_003 and the law ledger are sealed (6 links; this line read "4 links" until 2026-09-21, one short since LAW_003 on 2026-09-17); the chain verifies; the gate runs first on every run; a tampered law refuses every run.
+- MET — the ten estate laws, the sitting laws (1 to 4 in their own file, 5 to 10 in the law ledger), LAW_003 and the law ledger are sealed (10 links on 2026-10-16, the ledger sealed four times more on 2026-10-05; this line read "4 links" until 2026-09-21 and "6 links" until 2026-10-16); the chain verifies; the gate runs first on every run; a tampered law refuses every run.
 - MET (2026-09-21) — SITTING LAW 5 (nothing edited while a sitting is open) is sealed. It was a CLAUDE.md rule with no sealed file, and the file's name and place were the operator's to give. **Given 2026-09-21, on his word:** `law/LAW_LEDGER.md`, an appendable law that `law.py seal` seals by prefix, so it grows below its last seal. SITTING LAW 5 is its first entry, with SITTING LAW 6 (the hands-ledger half struck), the docs-move-with-the-change law, no-edit-without-an-entry and a copy of CLAUDE.md's rules. **Sealed the same morning, on his word ("seal it"):** link #6, all five entries, to byte 15509.
 - MET (2026-09-30, his ruling B4) — ESTATE LAW 2 is a gate: every declared path, read or write, that resolves under `worlds/` or through any `vault/` is refused at `gate_paths` by the law's name, the one gate every call passes (stroked both ways). ESTATE LAWS 3 and 4 stay principles by the same ruling. Was: OPEN — ESTATE LAW 2 (originals read-only) is a comment, not a gate: the `ground` jail contains `worlds/`. ESTATE LAW 3 and 4 have no mechanism.
 
@@ -226,7 +227,7 @@ Why it exists: the maker (4.8) writes pages in `projects/`; the coder on the tre
 - MET (2026-09-28) — the tree doors: `ground_edit` and `ground_write` write the ground's own files on a line of work only -- the main line, a name that is never written (`.env`, the law, the ledger, a governing file, a proof stamp, a binary), a MIXED file, and a file that would no longer parse are refused by name, and the refusal names the rule it stands on (REFUSALS §27). An edit is held to what it ADDS, never to the file's older faults (2026-09-29). Strokes both ways.
 - MET (2026-09-28) — the window: an objective that asks for a change to a file in the ground and names a definition in backticks seats the Expert Coder alone on that passage, fetched by name off the map; a name not on the map, or a file that cannot be read, is answered by the engine and no seat sits (REFUSALS §28; BUILDMAP, HOW TO ASK). The Coder answers with an `@@ OLD` / `@@ NEW` edit or the passage rewritten whole, and the door lands it on the window's file or nowhere.
 - MET (2026-09-29) — the loop closed end to end: `coder-tree` run six changed a file under `manjuel/` on a line of work, the suites ran green through the door (`suite_run`), the council saved it on the line, and he merged it by his hand (`3631498`). A pass that fails rides as the feed on the retry, never in the objective (runs seven and eight); the gate before the land carries his hand past the holds to what it granted.
-- OPEN — DONE, in his word of 2026-09-30 (B17, confirmed as proposed): a change to the estate's own code asked for in one sentence from the glass, made on a line of work, proved green by the suites through the door, saved on the line by the council, and landed on the main line by his click alone (`land` on Version control, B16, his ruling the same day) -- twice running, with every step in the record. Run six of 2026-09-29 was the first; the second closes this line.
+- OPEN — DONE, in his word of 2026-09-30 (B17, confirmed as proposed): a change to the estate's own code asked for in one sentence from the glass, made on a line of work, proved green by the suites through the door, saved on the line by the council, and landed on the main line by his click alone (`land` on Version control, B16, his ruling the same day) -- twice running, with every step in the record. Run six of 2026-09-29 was the first; the second closes this line. Since 2026-10-09 main takes a change only through a pull request, so the click that lands it is Merge on GitHub (WHAT'S LEFT I1); the words of his ruling stand as he confirmed them.
 
 ---
 
@@ -447,6 +448,20 @@ plan is the order those OPEN lines close in.
 
 ### 8.2 The versions ahead
 
+**SUPERSEDED 2026-10-16, on his word:** "Rewrite the system design and
+launch_plan. Supersede spec 8.2, on my word." And of what comes next: "This
+is the plan, we are doing the harness. we built the recorder, its perfect,
+now we build the harness on top of it." So the road ahead is no longer the
+themes below but one piece: Steward drives (WHAT'S LEFT H31) -- one loop
+that carries a job to a check a machine reads, under LAW_003's three
+bounds, every write on his card. What it is: `SYSTEM_DESIGN.md`, rewritten
+the same day. Its order, its two weeks and the rulings it owes:
+`atlas/LAUNCH_PLAN.md`, rewritten the same day. What is open, item by item:
+WHAT'S LEFT. The themes below stand as written, the record of how the
+recorder was built (LAW 1); what is still open in them is carried by WHAT'S
+LEFT, and section 4 keeps its OPEN lines. The last paragraph, on the
+appliance, is answered where it stands.
+
 One theme each, each ending at the same gate (8.3). The pieces are in
 BUILDPATH, "The order it goes next".
 
@@ -639,6 +654,13 @@ BUILDPATH, "The order it goes next".
     nothing of it has been built since `--ground`; when he points at it, it
     is read first and re-dated.
 
+    ANSWERED 2026-10-16, on his word ("Rewrite the system design and
+    launch_plan. Supersede spec 8.2, on my word"): he pointed at both files,
+    and both were read whole and rewritten as the harness built on the
+    recorder (the head of this section). Of what they carried before, his
+    word: "That's being left completely out, overwrite, my word approved."
+    The texts of 2026-09-08 stand in git (core `36bf8c3`, atlas `5648290`).
+
 ### 8.3 How a version is cut, from here on
 
 Every mark is `vMAJOR.MINOR.PATCH`, cut on the main line, after the gate,
@@ -670,6 +692,11 @@ until section 4 says so; section 4 gains its lines with the pieces.
 Reordered the same day, on his card: PPMI reading the request first, the Judge after it. And on his cards for that
 piece: the reader learns from the skills' own words alone, a skill's own words stand where the regex and the reader
 disagree, and a shared phrase gives way (WHAT'S LEFT H29).
+
+Both done 2026-10-14 (H29, then H28). Reordered again on 2026-10-16, on his word: the driver goes first -- Steward drives,
+one loop that carries a job to a check a machine reads (WHAT'S LEFT H31; SYSTEM_DESIGN.md; atlas's LAUNCH_PLAN.md) -- and
+the coding loop, Neiro's task list and workflows from a sentence close with it (D18, H25, H23); the honesty gate (H30) after
+it.
 
 ---
 

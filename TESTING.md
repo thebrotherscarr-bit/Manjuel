@@ -3,10 +3,19 @@
 ## The suites run on someone else's machine now
 
 `.github/workflows/prove.yml` runs both suites plus `law.py --prove`,
-`buildmap.py --check` and `standup.py --dry` (and the record audit,
-report-only) on Windows and Ubuntu, Python 3.10 and 3.13, on every pull
-request and every push to main or a mark: a line of work is proved once, by
-its pull request (2026-10-09).
+`buildmap.py --check`, `refusals.py --check` and `standup.py --dry` (and the
+record audit, report-only) on Windows and Ubuntu, Python 3.10 and 3.13, on
+every pull request and every push to main or a mark: a line of work is proved
+once, by its pull request (2026-10-09).
+
+**On the operator's machine they run from his glass** (RULE 13, 2026-10-05),
+where he watches: the door's `suite_run`, asked from the Agent tab
+(`mcp_call atlas suite_run {"set": "strokes", "project": "research"}`), runs
+the strokes and stamps them, and that stamp is the proof. A strokes run takes
+longer than the engine waits for the door (WHAT'S LEFT C71): until that is
+mended, read `tests/last_run.json` for a newer stamp, never the turn's prose.
+The clean-clone and short-TEMP runs under AS GITHUB CHECKS OUT, below,
+reproduce a fault GitHub found; since RULE 13 they are a look, never the proof.
 
 **No rack, no network, no GPU, no model.** Every model call in both suites
 is a stub; `ollama` is installed only because `manjuel/runtime.py` imports
@@ -202,13 +211,16 @@ test that anticipated the fault.
 stroked: vocabulary bias reaching all three transcribe paths, hearing
 corrections, the interrupt, the spoken cap.
 
-## The suites and the checks -- the five CI runs, and the two that report
+## The suites and the checks -- what CI runs, what runs here, and the two that report
 
     python tests/test_manjuel.py     the strokes -- the ENGINE, offline
     python tests/smoke_cli.py         the REPL end to end, offline
     python law/law.py --prove         the ledger, hermetic, exit 0
     python tests/buildmap.py --check  BUILDMAP.md matches the code (regenerate
                                       with `python tests/buildmap.py`)
+    python tests/refusals.py --check  REFUSALS.md's list of refusal sites matches
+                                      the code (regenerate with
+                                      `python tests/refusals.py`)
     python tests/matrix.py            the phrasing matrix: each ask said many ways through the
                                       law gate, the injection markers and the tool naming, none
                                       may come out differently (exit 1 on a finding; --list;
@@ -233,7 +245,7 @@ corrections, the interrupt, the spoken cap.
                                       a delivery); the prose is the
                                       reviewer's judgement.
 
-    python tests/standup.py --court   the court alone: six seats, the big
+    python tests/standup.py --court   the court alone: its seats, the big
                                       models, minutes. Split out 2026-09-09.
     python tests/standup.py --all     both sets.
 

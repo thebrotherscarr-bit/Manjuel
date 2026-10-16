@@ -16,8 +16,7 @@ amended 2026-10-02.)
                            # installs fine and then crashes the suite)
 
 Puts `manjuel` on PATH. `python manjuel.py` from a clone works too.
-Full prerequisites -- Ollama and the model pulls, seven since the rack
-was tiered -- are in QUICKSTART.md.
+Full prerequisites -- Ollama and the model pulls -- are in QUICKSTART.md.
 
 Windows-first: voice (SAPI out, whisper.cpp in) is Windows-bound and
 DEGRADES ALONE -- boot reports GROUND / RACK / RECORD / GATE / VOICE
@@ -31,14 +30,16 @@ check and the standup's dry run) on Windows and Ubuntu on every pull
 request and every push to main or a mark.
 `python tests/standup.py` is the live one: the seats through nine fixed
 objectives on your rack in about ninety seconds, a report to read. The
-court -- six seats, the big models, minutes -- is `--court`, on its own.
+court -- the panel's seats, the big models, minutes -- is `--court`, on its own.
 
 ## The dashboard
 
-There is a control plane: `atlas`. Two processes -- an MCP door serving 82
-tools on `:8090`, and a web app on `:8091` -- and the browser is where the
-whole loop lives: boot an engine, type an objective, watch the seats run,
-commit and push through the council, close the sitting. Nothing opens a
+There is a control plane: `atlas`. Two processes -- an MCP door on `:8090`,
+its tools listed in atlas's `docs/TOOL_PERMISSIONS.md`, and a web app on
+`:8091` -- and the browser is where the whole loop lives: boot an engine,
+type an objective, watch the seats run, save a line of work and send it,
+merge its pull request on GitHub (since 2026-10-09 main takes a change no
+other way), close the sitting. Nothing opens a
 sitting behind you, and every act goes through the law gate rather than
 around it. The web app answers this computer only and opens with a PIN: the
 first time, it asks for your name and one. **RUNBOOK.md, "Starting the
@@ -62,7 +63,11 @@ runs:
 
     Steward  →  Router (when a tool is needed)  →  Steward
 
-Two to four stages for an ordinary exchange. Specialists rest on the rack and
+Two to four stages for an ordinary exchange. Since 2026-10-12 the Steward up
+front answers a plain read itself, a call decided by arithmetic, with no
+Router; and when the Reasoner or the Expert Coder answers, its words are the
+delivery as written: the closing Steward does not sit to retell them, and the
+engine adds what is still open from the record. Specialists rest on the rack and
 are summoned by flag: paste untrusted material and the Security Guardian
 gates it *first*; ask for code and the Expert Coder wakes, its file landed on
 disk by the harness and reviewed; raise something genuinely hard and the
@@ -128,7 +133,10 @@ widen a window, only cover more ground with each one.
                    it by hand); untracked, as the log is
     law/           THE LAW as a hash-chained ledger (`python law/law.py verify`)
     SPEC.md        what this IS and when it is DONE, line by line; the words
-    TASKS.md       what the record owes, by the sitting that found it
+    TASKS.md       your list: what is open, and only what you put or kept
+                   there
+    WHATS_LEFT.md  everything still open, numbered, in plain words; the
+                   glass's What's left tab reads it
     BUILDMAP.md    where to look -- generated from the code (tests/buildmap.py)
     worlds/        the estate's worlds; client data never indexed, never read
     projects/      what the maker made: one folder per project, each its own
@@ -172,7 +180,7 @@ the engine inside a world: that folder's own `agents/`, `skills/`,
 that world's, and this ground's record gains nothing. A path that is not a
 directory is refused, never created.
 
-The forty-three skills are `skills/*.md`; `/skills` lists them and
+The skills are `skills/*.md`; `/skills` lists them and
 `skill_report` (ask "what can you do") reads them off the disk. The ones
 no earlier doc named: `deep_research`, `ground_report`, `skill_report`,
 `skill_search`, `list_directory`, `write_file`, `linear_regression`,
@@ -183,6 +191,8 @@ no earlier doc named: `deep_research`, `ground_report`, `skill_report`,
 ## Documents
 
 - `QUICKSTART.md` — running in five minutes
+- `WHATS_LEFT.md` — everything still open, numbered, and the path we are on
+  today (the glass's What's left tab)
 - `DAYBOOK.md`    — the session book: what each working session was FOR,
   where it drifted, and the rulings it produced. The check sequence lives
   at the top of it.
@@ -192,7 +202,9 @@ no earlier doc named: `deep_research`, `ground_report`, `skill_report`,
 - `RUNBOOK.md`    — when the machine misbehaves: rack down, locks, VRAM, voice
 - `BUILDPATH.md`  — every module, what it owns, and the order it was built
 - `STATUS.md`     — where the ground stands, printed from the record by `tests/status.py`
+- `INVENTORY.md`  — every function of both repositories, its last live run and its time
 - `DESIGN.md`     — the architecture record, including what was tried and superseded
+- `SYSTEM_DESIGN.md` — the recorder, and the harness built on it (WHAT'S LEFT H31)
 - `HANDOFF.md`    — the live operational record: patterns, fix log, rulings
 - `CLAUDE.md`     — standing rules for any agent working in this ground
 - `LICENSE`       — MIT

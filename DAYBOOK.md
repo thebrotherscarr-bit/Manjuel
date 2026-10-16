@@ -3238,3 +3238,23 @@ pins at 0.2.0 in both repositories. The release check, the save, the send and th
 **At close** — (10:50, 2026-10-13) No sitting open (377 the last, closed 2026-10-12 18:01:20). The door and the glass as placed 2026-10-12. Suites from his glass 3897 of 3897 and 72 of 72 (2026-10-12). The core on `manjuel-core` from `main@51deb23`, the documents unsaved; atlas on main.
 
 **Next session** — Manjuel's first pieces, each planned in full on What's left before it is built and built on his go: H28, the seat renamed the Judge; H29, PPMI reads the request, measured first on the record's own asks. B22 and E1 stay his.
+
+## Session 29 — 2026-10-16 (Friday), from his glass, no sitting opened: the harness set as the plan, and the documentation pass
+
+**Standing** — the same conversation, carried across context resets; the laws re-read through the glass at each of his messages, card answers included. Everything on his glass, every write on his card, a send only on his word; main changes in both repositories only through a pull request whose checks have passed. And his rule of the day (#REMEMBER): the hand is oriented to his system, his time, his tasks and his day, not to whatever it finds in the logs; a finding is noted where his rules put it and never turns the work. One direction, his.
+
+**Version** — at open: core `main@7f69ab1`, atlas `main@5648290`, both pins 0.2.5, both on main after his merges of C70's pull requests. At close: the same, with today's documents unsaved.
+
+**The plan** — his, in the order he gave it: the field ("Microsoft MXC, Nvidia RTX Spark, and Nigel") and where the system stands beside the harnesses he named; the target, "A single simple driver that runs long workflows and tool chains to make sure that basically whatever I ask can be done. Fairly simple."; "I also want to make sure all the docs are in line with what we are doing as well so a documentation pass would make a ton of sense at this point."; "Rewrite the system design and launch_plan. Supersede spec 8.2, on my word."; "This is the plan, we are doing the harness. we built the recorder, its perfect, now we build the harness on top of it."; and the pass's depth on his card, "Living docs now, notes on the rest".
+
+**What was done** — the field researched and talked through in words (MXC, RTX Spark, OpenShell, Nemotron 3.5 Bolt, Nigel, Hermes and OpenClaw), each set beside the door and the record. H31, Steward drives, written at the top of What's left on his cards: `qwen3.5:9b` first, Aider handed edits on his card at every run, and three proof jobs (C71, a save and send of a finished line, HANDOFF's finding (bb)); D18, H23 and H25 close with it. SYSTEM_DESIGN.md rewritten as the recorder and the harness built on it (the old text in git at core `36bf8c3`); atlas's LAUNCH_PLAN.md rewritten as the harness's two weeks, pieces 1 to 9 and rulings R1 to R6 (the old text at atlas `5648290`); SPEC 8.2 superseded and answered on his word. Then the documentation pass, What's left I4 pulled forward: F9 to F31 written, every living document in both repositories brought to the system as it stands, and every historical one given a dated note -- cards 27 to 95, all approved, each file read whole before its card, no file left MIXED, no code moved. One note did not land: atlas's `docs/PIPELINES.md`, refused by the door (C75).
+
+**Found (not the plan)** — C75, the door's edit tool taking any file named PIPELINES.md for the pipelines' law, put under C the same day. One more is in HANDOFF's note of the day, for him to place.
+
+**Rulings** — his words and cards as quoted above; the business left out of the system design ("That's being left completely out, overwrite, my word approved."); "Read each whole" for this record; and the #REMEMBER rule under Standing.
+
+**Faults of the hand's, in the record** — HANDOFF's note of 2026-10-16 has each.
+
+**At close** — (10:20) No sitting opened today; 382 the last. The door (pid 22896) and the glass (pid 11144) as placed for C70. The suites from his glass, the save and the send follow this entry, each on his card, and each repository's pull request is his to merge.
+
+**Next session** — H31's piece 2, its set-up (C71), with R1 and R2 put to him on cards first; then the door change (the driver may call `aider_run`, held for his card) and the loop, each new stroke shown red first.

@@ -62,11 +62,16 @@ Ported from `Desktop\Archive` and corrected against the **sealed foundation** �
 Where a `.us` declaration or an LLD conflicted with the foundation, the
 foundation stands.
 
-**The court model** (THE LAW, "GOVERNANCE"): `steward` / `neiro` / `jesster` are
-**THE COUNSEL** — they lay what they saw and what they recommend; their word is
-testimony under signature, heard and never silently discarded. `manjuel` is
-**THE COURT** — he reads the counsel, weighs it against the sealed foundation and
-the record, and rules. The operator is **THE SOVEREIGN**; nothing binds him.
+**The court model** (THE LAW, "GOVERNANCE"): `neiro` / `jesster` are **THE
+COUNSEL** — they lay what they saw and what they recommend; their word is
+testimony under signature, heard and never silently discarded. `judge` is
+**THE COURT** — it reads the counsel, weighs it against the sealed foundation
+and the record, and rules. The operator is **THE SOVEREIGN**; nothing binds him.
+Who sits, and in what order, is `pipelines.md`'s court, read live. Two changes
+since this was first written: the door (`steward`) left the table 2026-09-30
+(his ruling, WHAT'S LEFT B7) and still closes and delivers; and the ruling seat,
+`manjuel` until then, is `judge` since 2026-10-14 (H28), so "Manjuel" names the
+core alone.
 
 Laws every seat carries:
 

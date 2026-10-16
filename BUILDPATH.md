@@ -158,7 +158,8 @@ knows Ollama; `routes.py` knows a hosted route exists (since 2026-10-02); nothin
                   commands, boot + preflight.
     serve.py      the headless door (2026-09-08): the REPL's turn as JSON
                   lines on stdin and stdout -- PROTOCOL 1, five commands in,
-                  nineteen events out -- for atlas's door, which spawns one
+                  twenty events out (`think`, a seat's thought, since
+                  2026-10-14) -- for atlas's door, which spawns one
                   per open world. An engine with no command for thirty
                   minutes between turns closes its own sitting (IDLE_CLOSE,
                   2026-09-16). Added to this map 2026-09-17.
@@ -805,14 +806,19 @@ the reader learns from the skills' own words alone; where the regex and the read
 words stand and a shared phrase gives way; and it is built on the line `ppmi-reading`, cut from main. WHAT'S LEFT H29
 holds the measure it is scored against.
 
+Since (2026-10-16): 2 and 1 are done (H29 and H28, both 2026-10-14). Reordered on his word of 2026-10-16: the driver goes
+first -- Steward drives, one loop that carries a job to a check a machine reads (WHAT'S LEFT H31; SYSTEM_DESIGN.md; atlas's
+LAUNCH_PLAN.md) -- and the coding loop, Neiro's task list and workflows from a sentence close with it (D18, H25, H23); the
+honesty gate (H30) after it. The rhythm's proof is on his glass since 2026-10-05 (RULE 13), never a mirror or a scratch copy.
+
 ## The marks, and how one is cut (2026-09-17)
 
 In one line: ONE MARK PER VERSION, `vMAJOR.MINOR.PATCH`, ON THE MAIN LINE,
 AFTER THE GATE, SENT BY NAME -- and never moved.
 
     1  bump the pins and SAVE them: `pyproject.toml` and
-       `manjuel/__init__.py` in the core, `version.ps1 set` (ten pins) in
-       atlas. The door reads the version AT THE COMMIT, so an unsaved bump is
+       `manjuel/__init__.py` in the core, `version.ps1 set` (eleven pins since Cargo.lock joined,
+       2026-09-22) in atlas. The door reads the version AT THE COMMIT, so an unsaved bump is
        refused by name.
     2  fold the record: CHANGELOG's Unreleased entries move under
        `## vX.Y.Z -- <date> (tag on <commit sha>)`, naming the COMMIT the mark
@@ -854,7 +860,8 @@ rule, and a sent mark is never renamed; everything from v0.1.11 on carries it.
 
 `CLAUDE.md` (the operator's rules) → `DAYBOOK.md` (what the last session
 was FOR — you begin with total amnesia and that is the only file that
-carries intent across the gap) → README → QUICKSTART → this file →
+carries intent across the gap) → `WHATS_LEFT.md` (everything open, and the
+path we are on today, its Now line first) → README → QUICKSTART → this file →
 `pipelines.md` → one seat file → `intent.py` (small and load-bearing) →
 `pipeline.py` last, with a transcript from `logs/` open beside it.
 
