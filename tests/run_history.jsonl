@@ -702,3 +702,9 @@
 {"suite": "smoke", "at": 1792171861.9747276, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "strokes", "at": 1792172507.0271995, "state": "finished", "passed": 3941, "total": 3942, "green": false, "failed": ["no living doc on this ground calls the glass's page Version control: it is GitHub"]}
 {"suite": "strokes", "at": 1792173699.296268, "state": "finished", "passed": 3942, "total": 3942, "green": true, "failed": []}
+{"suite": "smoke", "at": 1792191159.53805, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1792191629.1224086, "state": "finished", "passed": 3959, "total": 3961, "green": false, "failed": ["serve.py: every writer declares newline=", "serve.py: no writer is left on the platform default"]}
+{"suite": "smoke", "at": 1792192009.5906115, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1792192477.6757584, "state": "finished", "passed": 3961, "total": 3961, "green": true, "failed": []}
+{"suite": "smoke", "at": 1792192747.0454738, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1792193126.8233106, "state": "finished", "passed": 3963, "total": 3963, "green": true, "failed": []}
