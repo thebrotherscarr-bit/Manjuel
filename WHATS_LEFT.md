@@ -27,22 +27,13 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   Neiro's task list, and the rest of each office's plan; every function measured again before the v0.2.6 cut (I2's step (5)).
   **Reordered on your word of 2026-10-16: the driver (H31) goes first.** It takes over the coding loop (D18), workflows from a
   sentence (H23) and Neiro's task list (H25); the rest of the plan follows it.
-- **Now (2026-10-16, ~11:05): the suites are green with the record in place; next the save and send, then Steward drives (H31).**
-  C70 and its record are merged on your clicks (the core's pull requests 25 and 26), and both repositories stand on main. Done
-  today, each on your card: H31 written at the top of H with your answers (the driver `qwen3.5:9b` first, Aider on your card at
-  every run, three proof jobs); SYSTEM_DESIGN.md and atlas's LAUNCH_PLAN.md rewritten as the harness built on the recorder, and
-  SPEC 8.2 superseded, on your word; the documentation pass (I4 pulled forward), F9 to F31 written and mended -- every living
-  document of both repositories brought to the system as it is and every historical one given a dated note, all but atlas's
-  `docs/PIPELINES.md`, which the door refused (C75), F9 to F31 now under Done; and its record: the CHANGELOG entries in both
-  repositories, HANDOFF's note and DAYBOOK's Session 29, each read whole first (your card: "Read each whole"). The suites from
-  your glass with the record in place: smoke 72 of 72 and the two map checks in the Bash tab with no sitting open (10:31); the
-  strokes through Steward's `suite_run`, 3941 of 3942 (10:41, sitting 384: the one red was F9's Done line naming the glass's page
-  by its old name, mended on your card), then 3942 of 3942 (11:01, sitting 385), the call giving up at 295 s each time while the
-  door ran on (C71); your rule of the day in memory.md on your y; and C76 found, an engine gone after its boot report. Next: the
-  save and send on your word (your card: "Now line, then send"), a line of work `docs-pass` and a pull request in each
-  repository, the merge yours on GitHub; then H31's build, its set-up (C71) first, with R1 and R2 (atlas's LAUNCH_PLAN) put to
-  you on cards. `pipelines.md` stays yours (F8), and HANDOFF's finding (bb) is left as it stands for H31's proof. C70's step
-  (2), the window, and H20 wait behind H31: a long chain is where the window matters.
+- **Now (2026-10-16, ~16:05): Steward drives (H31) is built -- `/drive`, at Nigel's parity, on your cards -- and proved live;
+  next its save and send, then the driver takes the work: `tidy` first for the merged branches, then the three jobs (C71, a save
+  and send, HANDOFF's (bb)).** The documentation pass is merged (the core's pull request 27). Built today on your cards (134 to
+  155): one job, `plan` and `each` (Nigel's loop), `tidy`, and "What is next?" after each job with what was done carried into the
+  next; every write on your card; commit, push, pull request, CI and the merge on your cards. Reviewed first by four read-only
+  reviewers, 30 faults confirmed and mended; its stroke, `test_steward_drives_to_a_check`, red first on a real fault and mended.
+  C70's step (2), the window, and H20 wait behind H31: a long chain is where the window matters.
 - **The record behind it.** CHANGELOG.md's Unreleased: what has landed since v0.2.5 (the measure, the visible runs, routing's
   three parts, the answers' piece (1)). HANDOFF.md's newest block: the day's state and the hand's faults. INVENTORY.md: every
   function, its last live run and its time. SPEC.md: what done means (4.9, the coder changing the system's own files).

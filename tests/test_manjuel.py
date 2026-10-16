@@ -22713,6 +22713,233 @@ def test_the_door_reads_the_law_chain_as_law_py_writes_it(reg, lib, book):
         _sh.rmtree(tmp, ignore_errors=True)
 
 
+def test_steward_drives_to_a_check(reg, lib, book):
+    """STEWARD DRIVES (WHAT'S LEFT H31). His words, 2026-10-16: "the agent should just wait for the approval
+    before ruling, and then should say what happened"; "checking what it did, verifying it, and then doing the
+    whole CI pipeline? That is Nigel, I want that Parity!"; and "It needs to complete the tasks, close the
+    branch, and then ask for what's next in the workflow, so it can have multi-step iterations." The driver in
+    serve.py works a goal through the skills until a CHECK says done. Held here with a scripted model and a stub
+    library, in a temp folder, so no model, no git and nothing in the ground is touched: a write waits on his
+    answer and does not run on a no; the check, not the model, decides done; a save or a send is never offered
+    to the model; an item a source still lists is not done, and an item tried before is not tried blindly
+    again; after a job it asks what is next, carries what was done into the next job and ends in one
+    delivery; and /drive reaches the driver from Door.turn. The live run, model and all, is the glass's."""
+    import contextlib as _cl
+    import io as _io
+    import json as _json
+    import shutil as _sh
+    from types import SimpleNamespace as _NS
+    from manjuel import serve as SV
+    from manjuel.skills import WRITING_SKILLS
+
+    py = f'"{sys.executable}"'
+
+    # THE PARSE: three modes, the fields cut from the end, "suites" naming the strokes.
+    p = SV.drive_parse("plan tidy the docs | check: suites")
+    check("drive: 'plan' is a mode, and 'suites' as the check names the strokes",
+          p == {"mode": "plan", "goal": "tidy the docs", "check": SV.DRIVE_SUITES, "do": ""}, str(p))
+    p = SV.drive_parse('each git ls-files | do: fix $ITEM | check: python -c "print(1|2)"')
+    check("drive: 'each' takes a source, a do and a check, and a pipe inside the check stays in it",
+          p == {"mode": "each", "goal": "git ls-files", "do": "fix $ITEM", "check": 'python -c "print(1|2)"'}, str(p))
+    p = SV.drive_parse("write the notes")
+    check("drive: a bare goal is one job with no check", p == {"mode": "goal", "goal": "write the notes",
+                                                               "check": "", "do": ""}, str(p))
+
+    events = []
+
+    class Lib:
+        def keywords(self):
+            return ["write_file", "read_file", "git_push", "git_commit", "git_cycle", "remember"]
+
+        def tool_schemas(self, allowed):
+            return [{"type": "function", "function": {"name": n}} for n in sorted(allowed)]
+
+        def execute(self, name, args, env):
+            events.append(("ran", name))
+            return "Saved to workspace: " + str(args.get("filepath"))
+
+    def call(name, **args):
+        return {"role": "assistant", "content": "", "tool_calls": [{"function": {"name": name, "arguments": args}}]}
+
+    class Model:
+        def __init__(self, *replies):
+            self.replies, self.seen = list(replies), []
+
+        def chat(self, **kw):
+            self.seen.append([dict(m) if isinstance(m, dict) else m for m in kw.get("messages", [])])
+            return {"message": self.replies.pop(0) if self.replies else call("done", summary="done")}
+
+    def asker(*answers):
+        queue = list(answers)
+
+        def ask(prompt, color="red"):
+            events.append(("ask", prompt))
+            return queue.pop(0) if queue else ""
+        return ask
+
+    tmp = Path(tempfile.mkdtemp())
+    kept_steps = SV.DRIVE_STEPS
+    try:
+        (tmp / "logs").mkdir()
+        env = _NS(caller="", caller_allowed=None, objective="")
+        tools, allowed = SV.drive_tools(Lib())
+        offered = {t["function"]["name"] for t in tools}
+        check("drive: a save, a send and a memory are never offered to the model",
+              not (offered & SV.DRIVE_NEVER) and "write_file" in offered and "done" in offered, str(sorted(offered)))
+        check("drive: the writes it asks before are the library's own WRITING_SKILLS",
+              "write_file" in WRITING_SKILLS)
+
+        # A WRITE WAITS ON HIS ANSWER, AND THE CHECK DECIDES DONE.
+        events.clear()
+        d = SV.drive(f"write a | check: {py} -c pass", skills=Lib(), env=env, ground=tmp, logs=tmp / "logs",
+                     ask=asker("y"), report=lambda line: None,
+                     client=Model(call("write_file", filepath="a.txt", content="a"), call("done", summary="wrote a")))
+        check("drive: on a yes the write runs only after he was asked, and the passing check ends the job",
+              [e[0] for e in events] == ["ask", "ran"] and events[0][1].rstrip().endswith("[y/n]")
+              and "write_file" in events[0][1] and d.verdict == "passed",
+              f"{events} -> {d.verdict}")
+        check("drive: the driver gives the caller back as it found it", env.caller == "" and env.caller_allowed is None)
+
+        events.clear()
+        SV.DRIVE_STEPS = 4
+        d = SV.drive(f"write a | check: {py} -c \"import sys; sys.exit(3)\"", skills=Lib(), env=env, ground=tmp,
+                     logs=tmp / "logs", ask=asker("n"), report=lambda line: None,
+                     client=Model(call("write_file", filepath="a.txt", content="a"), call("done", summary="done")))
+        SV.DRIVE_STEPS = kept_steps
+        check("drive: on a no the write never runs, and a model that says done is not done while the check fails",
+              ("ran", "write_file") not in events and d.verdict == "budget"
+              and "Declined by the operator" in d.report and d.report.splitlines()[1].startswith("NOT DONE"),
+              f"{events} -> {d.verdict}")
+
+        # NIGEL'S LOOP: an item the source still lists is not done; an item tried is not tried blindly again.
+        spec = f"each {py} -c \"print('x')\" | do: make $ITEM | check: {py} -c pass"
+        d = SV.drive(spec, skills=Lib(), env=env, ground=tmp, logs=tmp / "logs", ask=asker("y"),
+                     report=lambda line: None, client=Model(call("done", summary="made x")))
+        check("drive each: an item the source still lists is not done, whatever the check said",
+              d.items == [["x", "still listed"]] and d.verdict == "failed", f"{d.items} -> {d.verdict}")
+        rows = [_json.loads(l) for l in (tmp / "logs" / SV.DRIVE_IGNORE).read_text(encoding="utf-8").splitlines()]
+        d = SV.drive(spec, skills=Lib(), env=env, ground=tmp, logs=tmp / "logs", ask=asker("y"),
+                     report=lambda line: None, client=Model())
+        check("drive each: the item tried is logged and not tried blindly again",
+              [r["item"] for r in rows] == ["x"] and d.verdict == "nothing", f"{rows} -> {d.verdict}")
+
+        # DECOMPOSE AND RECOMPOSE: the goal as items, each its own job; asked again, worked again.
+        for n in (1, 2):
+            planner = Model({"role": "assistant", "content": '["first part", "second part"]'})
+            d = SV.drive(f"plan two parts | check: {py} -c pass", skills=Lib(), env=env, ground=tmp,
+                         logs=tmp / "logs", ask=asker("y"), report=lambda line: None, client=planner)
+            check(f"drive plan: the goal is broken into items, each its own job, then the whole checked (run {n})",
+                  d.items == [["first part", "passed"], ["second part", "passed"]] and d.verdict == "passed"
+                  and any(s[1] == "check (all)" for s in d.steps)
+                  and "(2 of 2)" in str(planner.seen[-1][1].get("content", "")), f"{d.items} -> {d.verdict}")
+
+        # WHAT IS NEXT: job after job in one turn, the first carried into the second, one delivery at the end.
+        events.clear()
+        models = [Model(call("write_file", filepath="a.txt", content="a")),
+                  Model(call("write_file", filepath="b.txt", content="b"))]
+        real = SV.drive
+        SV.drive = lambda spec, **kw: real(spec, client=models.pop(0), **kw)
+        wire = []
+        door = _NS(ground=tmp, wire=_NS(emit=lambda kind, **kw: wire.append(kind)),
+                   ask=asker("y", f"write b | check: {py} -c pass", "y", ""),
+                   sess=_NS(skills=Lib(), env=env, runtime=_NS(host=None, keep_alive=None), sitting=_NS(runs=[])))
+        second = models[1]
+        try:
+            with _cl.redirect_stdout(_io.StringIO()):
+                SV.door_drive(door, f"write a | check: {py} -c pass")
+        finally:
+            SV.drive = real
+        first_said = str((second.seen[0][1] or {}).get("content", "")) if second.seen else ""
+        asked = [e[1] for e in events if e[0] == "ask"]
+        check("drive: after a job it asks what is next and runs the answer as the next job",
+              len(door.sess.sitting.runs) == 2 and sum("What is next?" in a for a in asked) == 2
+              and [e for e in events if e[0] == "ran"] == [("ran", "write_file")] * 2,
+              f"{len(door.sess.sitting.runs)} runs; asked {len(asked)}")
+        check("drive: what the first job did is carried into the second",
+              "write a" in first_said and "passed" in first_said, first_said[:200])
+        check("drive: the turn ends in one delivery, after every report",
+              wire.count("delivery") == 1 and wire[-1] == "delivery" and "report" in wire, str(wire[-3:]))
+
+        # TIDY: a branch merged into main goes on one answer; one carrying work not merged stays.
+        if HAVE_GIT:
+            repo = tmp / "tidy"
+            repo.mkdir()
+
+            def g(*a):
+                return subprocess.run(["git", "-c", "user.name=stroke", "-c", "user.email=stroke@example.invalid",
+                                       *a], cwd=str(repo), capture_output=True, text=True,
+                                      stdin=subprocess.DEVNULL).stdout
+            g("init", "-q", "-b", "main")
+            (repo / "f.txt").write_text("a\n", encoding="utf-8")
+            g("add", "f.txt")
+            g("commit", "-qm", "one")
+            g("branch", "merged-line")
+            g("switch", "-q", "-c", "open-line")
+            (repo / "g.txt").write_text("b\n", encoding="utf-8")
+            g("add", "g.txt")
+            g("commit", "-qm", "two")
+            g("switch", "-q", "main")
+            events.clear()
+            d = SV.drive("tidy", skills=Lib(), env=env, ground=repo, logs=tmp / "logs", ask=asker("y"),
+                         report=lambda line: None, client=Model())
+            left = sorted(g("branch", "--format=%(refname:short)").split())
+            check("drive tidy: a branch merged into main goes on one answer, one with work not merged stays",
+                  left == ["main", "open-line"] and [e[0] for e in events] == ["ask"]
+                  and "merged-line" in events[0][1] and "open-line" not in events[0][1],
+                  f"{left} -> {d.verdict}")
+
+        # SHIP: the work on disk saved on a line of its own on one answer; a secret stops it before anything is asked.
+        if HAVE_GIT:
+            ship = tmp / "ship"
+            ship.mkdir()
+
+            def h(*a):
+                return subprocess.run(["git", *a], cwd=str(ship), capture_output=True, text=True,
+                                      stdin=subprocess.DEVNULL).stdout
+            who = {"GIT_AUTHOR_NAME": "stroke", "GIT_AUTHOR_EMAIL": "stroke@example.invalid",
+                   "GIT_COMMITTER_NAME": "stroke", "GIT_COMMITTER_EMAIL": "stroke@example.invalid"}
+            kept_env = {k: os.environ.get(k) for k in who}
+            os.environ.update(who)
+            try:
+                h("init", "-q", "-b", "main")
+                (ship / "f.txt").write_text("a\n", encoding="utf-8")
+                h("add", "f.txt")
+                h("commit", "-qm", "one")
+                (ship / "f.txt").write_text("changed\n", encoding="utf-8")
+                (ship / "new.txt").write_text("new\n", encoding="utf-8")
+                events.clear()
+                d = SV.drive("ship save the work", skills=Lib(), env=env, ground=ship, logs=tmp / "logs",
+                             ask=asker("y"), report=lambda line: None, client=Model())
+                saved = sorted(h("show", "--name-only", "--format=", "HEAD").split())
+                check("drive ship: the work on disk is saved on a line of its own on one answer, main untouched",
+                      h("rev-parse", "--abbrev-ref", "HEAD").strip().startswith("drive-")
+                      and saved == ["f.txt", "new.txt"] and h("log", "-1", "--format=%s").strip() == "save the work"
+                      and h("rev-list", "--count", "main").strip() == "1"
+                      and [e[0] for e in events] == ["ask"] and "new.txt" in events[0][1],
+                      f"{saved} -> {d.verdict}")
+                (ship / ".env").write_text("KEY=1\n", encoding="utf-8")
+                events.clear()
+                d = SV.drive("ship again", skills=Lib(), env=env, ground=ship, logs=tmp / "logs",
+                             ask=asker("y"), report=lambda line: None, client=Model())
+                check("drive ship: a secret on disk stops it before anything is asked or saved",
+                      d.verdict == "error" and not events and ".env" in d.error, d.error)
+            finally:
+                for k, v in kept_env.items():
+                    if v is None:
+                        os.environ.pop(k, None)
+                    else:
+                        os.environ[k] = v
+
+        # THE WIRE IN: /drive reaches the driver from Door.turn.
+        src = (ROOT / "manjuel" / "serve.py").read_text(encoding="utf-8")
+        check("drive: Door.turn hands /drive to the driver",
+              'objective.split(None, 1)[0].lower() == "/drive"' in src
+              and 'door_drive(self, objective[len("/drive"):].strip())' in src)
+    finally:
+        SV.DRIVE_STEPS = kept_steps
+        _sh.rmtree(tmp, ignore_errors=True)
+
+
 def main() -> int:
     if not SELECT:
         begin_run(ROOT, "strokes")   # so a crash cannot leave a green stamp
@@ -22976,6 +23203,7 @@ def main() -> int:
     test_a_change_that_comes_back_unchanged_is_asked_for_once_more(reg, lib, book)
     test_the_door_reads_the_law_chain_as_law_py_writes_it(reg, lib, book)
     test_the_pack_is_wired(reg, lib, book)
+    test_steward_drives_to_a_check(reg, lib, book)
     test_ink()
     test_math()
     test_a_commit_is_not_a_tag()
