@@ -37,7 +37,7 @@ the default question; it is one case, kept, and labelled.
     the court       gemma4:12b            gemma4:e4b          Judge -- last seat, rules after counsel; thinking belongs there
     thinking        qwen3.5:4b            qwen3.5:9b          Router, Quality Evaluator
                     qwen3.5:9b            qwen3.5:4b          Reasoner, Deep Researcher
-    code            qwen2.5-coder:7b      qwen2.5-coder:14b   Expert Coder, lint_code
+    code            qwen2.5-coder:14b     qwen2.5-coder:7b    Expert Coder, lint_code (14b since 2026-09-30, B1)
     reasoning       deepseek-r1:8b        qwen3-vl:8b         Jesster
     gemma4:12b is 7.6GB on disk and gemma4:e4b is 9.6GB -- the "e" is
     effective parameters, not bytes. 12b sits as the Judge; e4b is the bare
@@ -144,10 +144,15 @@ family; HIGH means 4b keeps up with 9b on this and the eviction is wasted.
 - **Objective:** This is hard: explain in three sentences why a KV cache makes a language model's memory use grow with context length, and name the one term that grows.
 - **Model:** qwen3.5:4b
 
-## Case: code tier — 7b against 14b
+## Case: code tier — 14b against 7b
+
+The Expert Coder sits on `qwen2.5-coder:14b` since 2026-09-30 (B1); the
+reference is the tier's other head. HIGH means the smaller head keeps up on
+this case. Runs before that date pitted 7b against 14b, and the history's
+seat map says which.
 
 - **Objective:** Write a Python function that returns the cosine similarity of two lists of floats, returning 0.0 when either has zero magnitude.
-- **Model:** qwen2.5-coder:14b
+- **Model:** qwen2.5-coder:7b
 
 ## Case: reasoning tier — the fool against the vision head
 

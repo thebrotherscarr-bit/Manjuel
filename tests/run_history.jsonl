@@ -699,3 +699,6 @@
 {"suite": "strokes", "at": 1792026180.6484644, "state": "finished", "passed": 3942, "total": 3942, "green": true, "failed": []}
 {"suite": "smoke", "at": 1792029258.1130607, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "strokes", "at": 1792029622.0225813, "state": "finished", "passed": 3942, "total": 3942, "green": true, "failed": []}
+{"suite": "smoke", "at": 1792171861.9747276, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1792172507.0271995, "state": "finished", "passed": 3941, "total": 3942, "green": false, "failed": ["no living doc on this ground calls the glass's page Version control: it is GitHub"]}
+{"suite": "strokes", "at": 1792173699.296268, "state": "finished", "passed": 3942, "total": 3942, "green": true, "failed": []}

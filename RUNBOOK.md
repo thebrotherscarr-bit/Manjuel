@@ -10,10 +10,11 @@ Run everything below from `Desktop\Research`.
 **The morning, in one command.** `python tests\standup.py` runs the seats
 through nine fixed objectives on the live rack, opens and tolls a sitting,
 and writes `logs\standup_<stamp>.md`. About ninety seconds, and it runs
-unattended. Read REVIEW THESE FIRST, then the deliveries; write what feels
-off in TASKS.md.
+unattended. Read REVIEW THESE FIRST, then the deliveries; what feels off
+goes on WHATS_LEFT.md under its letter (the glass's What's left tab), since
+TASKS.md is your own list.
 
-    --court    the court alone: six seats, deepseek-r1 and gemma4, minutes.
+    --court    the court alone: its seats, deepseek-r1 and gemma4, minutes.
                Out of the morning set on his ruling 2026-09-09 -- it was 73%
                of the run. (It was also the case that could stop at a question:
                a failed seat asked `retry / skip / abort?` of a run with no
@@ -86,10 +87,12 @@ thing a second machine hits.
 Use `main`, not `--all`. `--all` carries every local branch, and a local
 branch can hold material that was deliberately kept off the remote.
 
-**Build the Rust spine first.** `verify_chain` shells a Rust binary, and the
-Go halves cannot prove themselves without it — `atlas/tests/prove.py` reports
-every leg that needs it ABSENT, naming `cargo build -p atlas` as the command
-that would answer. ABSENT is never a pass: those legs proved nothing.
+**Build the Rust spine first.** `atlas-door` and the door's battery shell a
+Rust binary, and atlas's provers cannot prove those legs without it —
+`atlas/tests/prove.py` reports every leg that needs it ABSENT, naming `cargo
+build -p atlas` as the command that would answer. ABSENT is never a pass: those
+legs proved nothing. (`verify_chain` shelled it too until 2026-10-01; since
+then it runs `atlas/tools/chain_verify.py`, WHAT'S LEFT B14.)
 
 Until 2026-09-11 this page said those legs went RED, and one of them really
 did: `check_trade_parity` refused with a COMMAND rather than a missing path,
@@ -115,11 +118,12 @@ Rebuild after any Go change. The webapp EMBEDS its own HTML, CSS and
 JavaScript (`go:embed`), so a change to a page is not live until you rebuild
 and restart it -- editing the file on disk does nothing to a running server.
 
-**Start the door.** `atlas-mcp` is the MCP door: it serves the 89 tools and it
-is the only thing that spawns a Manjuel engine. It holds `127.0.0.1:8090`.
+**Start the door.** `atlas-mcp` is the MCP door: it serves the door's tools
+(atlas's `docs/TOOL_PERMISSIONS.md` lists every one) and it is the only thing
+that spawns a Manjuel engine. It holds `127.0.0.1:8090`.
 
     cd atlas\line
-    .\atlas-mcp.exe --http 127.0.0.1:8090 --auth --tenant research=<PATH-TO-YOUR-GROUND> --default-project research --manjuel "python <PATH-TO-YOUR-GROUND>/manjuel.py" *> mcp.log
+    .\atlas-mcp.exe --http 127.0.0.1:8090 --auth --tenant research=<PATH-TO-YOUR-GROUND> --tenant atlas=<PATH-TO-YOUR-GROUND>/atlas --default-project research --manjuel "python <PATH-TO-YOUR-GROUND>/manjuel.py" *> mcp.log
 
 `<PATH-TO-YOUR-GROUND>` is the folder holding `manjuel.py` -- an ABSOLUTE
 path, forward slashes, no trailing slash. This line carried the author's own
@@ -127,7 +131,8 @@ path, forward slashes, no trailing slash. This line carried the author's own
 one machine and pointed at nothing on any other.
 
 `--tenant name=path` declares a world; repeat it for more. `--default-project`
-is the one the dashboard uses when you do not name another. `--manjuel` is the
+is the one the dashboard uses when you do not name another. The second world, `atlas`, is the one the GitHub tab saves,
+sends and merges atlas through. `--manjuel` is the
 command the door runs to raise an engine -- `--headless` and `--ground` are
 appended by the door itself, so do not add them.
 
@@ -172,17 +177,18 @@ to the door at `127.0.0.1:8090`.
 **Open it.** `http://127.0.0.1:8091`
 
 The first time, it asks for your name and a PIN of 4 to 8 numbers; after that
-it opens on a lock screen, and the sidebar's Lock button locks it again. It
+it opens on a lock screen, and the lock beside your name, top right of the front
+page ("Lock the console"), locks it again. It
 answers this computer only (127.0.0.1) and keeps its door shut at every start
 -- since 2026-09-21; before that it listened on every address with no gate at
 all. The PIN is never stored, only a hash of it in `atlas\webapp\data\user.json`.
 
-**The shell tabs (since 2026-10-03).** The front page's Bash and Python tabs run what you type through the door's
-`shell_run`, which only the glass may call: the door has to run with `--auth`, or it cannot tell your glass from a
+**The shell tabs (since 2026-10-03).** The front page's Bash and Python tabs, and its PowerShell tab since 2026-10-05
+(PowerShell 7, WHAT'S LEFT H26), run what you type through the door's `shell_run`, which only the glass may call: the door has to run with `--auth`, or it cannot tell your glass from a
 seat and answers the tool to no one. Bash is Git Bash, found by the `git` on the door's PATH (never the bare word
 `bash`, which on this machine is the WSL stub); Python is the python the door runs the engine with, one session per
-world that keeps its names until `/reset`, a runaway entry, or a door restart. A plain look runs at once; anything
-that writes shows a card and waits for your click; a secret or a path outside the ground is refused by name. Every
+world that keeps its names until `/reset`, a runaway entry, or a door restart. A plain look runs at once (in the PowerShell tab every
+line shows a card); anything that writes shows a card and waits for your click; a secret or a path outside the ground is refused by name. Every
 run, hold and refusal is a line in that world's `state/holds.jsonl`. The command gets a built environment with none of
 the door's keys, so one that needs a variable has to be told it. When starting the door from PowerShell, quote the
 value of `--manjuel` as ONE argument (`--manjuel "python <ground>/manjuel.py"`): passed as an array element it is split
@@ -202,7 +208,8 @@ run's own scratch folder, reaches nothing but this machine, and starts no other 
 wall's honest limits). The model is the coding seat's own (`agents/expert_coder.md`: Model Target and Context): the door
 loads it into Ollama at that window before Aider starts, and a file bigger than the window is refused up front, so
 Aider cannot take most of the big modules (the measurement is WHAT'S LEFT B21's). The edit it makes lands only on a
-line of work, unsaved: the suites and the Land click stay yours. A tree that is copied or tarred for a proof must leave
+line of work, unsaved: the suites, the save and the send, and the merge on GitHub stay yours (since 2026-10-09 main
+takes a change only through a pull request). A tree that is copied or tarred for a proof must leave
 `aider/` out.
 
 **Stop them.** They are servers; they run until stopped. Nothing is lost --
@@ -337,6 +344,14 @@ It refuses rather than guesses: no message, a red proof, nothing to commit, the
 wall shut, not a repository -- each names itself and stops. Nothing half-runs.
 On the main line GitHub refuses its push since 2026-10-09: main takes nothing
 but a pull request whose checks have passed.
+
+**`git_cycle` is the engine's own skill, not the door's (noted 2026-10-16).**
+Nothing in it waits for your card: it saves at once, and in sitting 381 its
+push was stopped only because the line had never been sent (WHAT'S LEFT C72).
+To keep every save and send on your card, ask the door from the Agent tab
+instead -- `mcp_call atlas git_commit {"project": "research", "message":
+"..."}`, then `mcp_call atlas git_push {"project": "research"}` -- each held
+for your click.
 
 **Before you start, and before you tag.** Two read-only reports answer the two
 questions that used to mean opening six files in order. Neither writes
@@ -515,14 +530,14 @@ other.
 
 Two different things, and it is worth keeping them apart.
 
-**Skills** are what a SEAT can do -- 42 of them, declared as markdown in
+**Skills** are what a SEAT can do -- declared as markdown in
 `skills\`, hot-reloaded into a running session at the next turn. A seat asks
 for one by keyword and the engine runs it; the law gate can refuse it, and a
 refusal names the law. Read them in Registry & Docs (its documents, the
 skills kind), or `commands.md` for what can be asked for in words.
 
-**Tools** are what ATLAS serves over MCP -- 82 of them, listed at
-`http://127.0.0.1:8090/tools` and reachable from the glass through
+**Tools** are what ATLAS serves over MCP -- listed in atlas's
+`docs/TOOL_PERMISSIONS.md` and at `http://127.0.0.1:8090/tools` and reachable from the glass through
 `POST /api/tools/call`. They are read-only unless their declaration says
 `Writes: true`. The ones the dashboard itself leans on:
 
@@ -534,10 +549,10 @@ skills kind), or `commands.md` for what can be asked for in words.
     rack_list what the rack holds
     projects  what the maker made: each project's versions, one page served whole
 
-Thirty-one of the eighty-two have no page yet (counted 2026-09-17; `projects`, added
-2026-09-21, has one -- the Dashboard's Projects card) -- the record and law readers,
-the rack commands, the mesh, keys and tenants. They answer over MCP today; they
-have no button.
+Every tool has a Call in the Inspector's Registry & Docs tab, saying what it
+does (since 2026-10-10); until then thirty-one of the eighty-two had no page
+(counted 2026-09-17) -- the record and law readers, the rack commands, the mesh,
+keys and tenants.
 
 ## The dials
 
@@ -856,6 +871,8 @@ error, and the run goes on; change the `**Model:**` line in parity.md to one the
 
 ## The hands ledger is gone (2026-09-09)
 
+The hands ledger (`sessions/hands.jsonl`), the `seatlog` command that opened
+and closed a hand's line, and the release gate's
 refusal over an open hand were removed at the operator's word: "we didnt
 have it 3 days ago". It cost a ritual at both ends of every stretch of work
 and bought a line nobody read.

@@ -16,7 +16,8 @@ until 2026-10-10). Read it there: the tab counts the lines, finds words in them,
 ## Today's working path
 
 Your word, 2026-10-13: this page carries the build path, the build plan, the changelog and every document that fits each area,
-and shows the path we are on. **Today: the functions and capabilities of the dashboard and the core**, the v0.2.6 pass (I2):
+and shows the path we are on. **Today, on your word of 2026-10-16: the driver (H31)** -- "A single simple driver that runs long
+workflows and tool chains to make sure that basically whatever I ask can be done. Fairly simple." -- inside the v0.2.6 pass (I2):
 "making sure all functions are working".
 
 - **The build path.** Cut so far: core and atlas v0.2.5 (A); BUILDPATH.md's ladder has every cut, with its date and commit.
@@ -24,18 +25,24 @@ and shows the path we are on. **Today: the functions and capabilities of the das
 - **The build plan.** The plan by office, below, set with you card by card on 2026-10-13: Manjuel's logic core first (your
   card); then, as proposed and yours to change, the coding loop (I2's plan, steps (1) to (3)), the faults (I2's step (4)),
   Neiro's task list, and the rest of each office's plan; every function measured again before the v0.2.6 cut (I2's step (5)).
-- **Now (2026-10-14, 18:52): C70's record, on the lines `streaming`.** C70's steps (1), (3), (4) and (5) are built, proved live
-  (sitting 380), saved and sent through Steward (sitting 381; your word: "run everything through the engine boot up a new session
-  and do the github flow through it") and merged on your clicks (Manjuel 25, `611dc8e`; Atlas 18, `fd23adb`); four faults found on
-  that road are C71 to C74. The engine's commit also carried `prompts/`, which your card of 2026-10-12 kept untracked: kept, on
-  your word ("keep prompts"). Its record is written, every file read whole first (your card: "Read each whole"): C70's line, C71
-  to C74, E5 and H20 on this page, a CHANGELOG entry in each repository and HANDOFF's note. Now the suites with it in place, then
-  saved and sent through Steward on your cards (your word: "go"), and a second pull request from the same lines for your press.
-  Then the talk: C70's step (2), the window, with H20 beside it -- your words today and the
-  numbers measured with them are on H20's line.
-  H28 is done and merged: the Judge seated last in the court and the estate (sitting 379), where the court ran past its time
-  again (C13; the Router's five passes about 480 s of its 900, the Judge cut at the 322 s left). H29 is done and merged too
-  (pull requests 22 and 23), and its sitting's two new faults are C68 and C69.
+  **Reordered on your word of 2026-10-16: the driver (H31) goes first.** It takes over the coding loop (D18), workflows from a
+  sentence (H23) and Neiro's task list (H25); the rest of the plan follows it.
+- **Now (2026-10-16, ~11:05): the suites are green with the record in place; next the save and send, then Steward drives (H31).**
+  C70 and its record are merged on your clicks (the core's pull requests 25 and 26), and both repositories stand on main. Done
+  today, each on your card: H31 written at the top of H with your answers (the driver `qwen3.5:9b` first, Aider on your card at
+  every run, three proof jobs); SYSTEM_DESIGN.md and atlas's LAUNCH_PLAN.md rewritten as the harness built on the recorder, and
+  SPEC 8.2 superseded, on your word; the documentation pass (I4 pulled forward), F9 to F31 written and mended -- every living
+  document of both repositories brought to the system as it is and every historical one given a dated note, all but atlas's
+  `docs/PIPELINES.md`, which the door refused (C75), F9 to F31 now under Done; and its record: the CHANGELOG entries in both
+  repositories, HANDOFF's note and DAYBOOK's Session 29, each read whole first (your card: "Read each whole"). The suites from
+  your glass with the record in place: smoke 72 of 72 and the two map checks in the Bash tab with no sitting open (10:31); the
+  strokes through Steward's `suite_run`, 3941 of 3942 (10:41, sitting 384: the one red was F9's Done line naming the glass's page
+  by its old name, mended on your card), then 3942 of 3942 (11:01, sitting 385), the call giving up at 295 s each time while the
+  door ran on (C71); your rule of the day in memory.md on your y; and C76 found, an engine gone after its boot report. Next: the
+  save and send on your word (your card: "Now line, then send"), a line of work `docs-pass` and a pull request in each
+  repository, the merge yours on GitHub; then H31's build, its set-up (C71) first, with R1 and R2 (atlas's LAUNCH_PLAN) put to
+  you on cards. `pipelines.md` stays yours (F8), and HANDOFF's finding (bb) is left as it stands for H31's proof. C70's step
+  (2), the window, and H20 wait behind H31: a long chain is where the window matters.
 - **The record behind it.** CHANGELOG.md's Unreleased: what has landed since v0.2.5 (the measure, the visible runs, routing's
   three parts, the answers' piece (1)). HANDOFF.md's newest block: the day's state and the hand's faults. INVENTORY.md: every
   function, its last live run and its time. SPEC.md: what done means (4.9, the coder changing the system's own files).
@@ -240,6 +247,10 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
   *(HANDOFF, 2026-10-14, sitting 381)*
 - **C74. Steward speaks of a held card as if it were you.** Reading the door's answer that `git_commit` was held for your card,
   it said "The decision must be provided by me" (sitting 381). Part of H24, plain by default. *(HANDOFF, 2026-10-14, sitting 381)*
+- **C76. An engine died without a word after its boot report.** On 2026-10-16 sitting 383's engine (pid 14188) wrote its boot
+  report and was then gone: it never closed, the door's error log held only its own startup lines, and the strokes asked through
+  Steward were refused, "no engine is open on research". The next boot reaped it (ended 10:35:51, closed by "reaped") and opened
+  sitting 384. The cause is not found. *(the sitting ledger, sittings 383 and 384, 2026-10-16)*
 
 ### The dashboard and the tool server (atlas)
 
@@ -257,6 +268,10 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
 - **C67. The Bash tab's gate stops plain looks.** `git --version` parked as a write (card 204, 2026-10-10), and a read-only
   measure of your record was refused three times without naming what it matched (sitting 376); H15 promised a refusal by name.
   *(INVENTORY G2)*
+- **C75. The door's edit tool takes any file named PIPELINES.md for the pipelines' law.** On 2026-10-16 it refused a dated
+  note on atlas's `docs/PIPELINES.md` ("pipelines.md is the pipelines' law, the operator's, and hot-reloaded into his live
+  sitting"), a different file in another repository: its guard matches the name in a subfolder and in capitals (C56 is the
+  watcher's same shape). That note (F31) waits on it. *(CHANGELOG, "core: the documentation pass")*
 
 ---
 
@@ -349,6 +364,32 @@ workflows, backed by ollama as a first route then secondarily through additional
 with a modules and plugin system ... a conversational assistant that evolves over time." What the
 disk says is missing, in the order it is worth building. H1 is done (below).
 
+- **H31. Steward drives: one loop that finishes what you ask.** Your words, 2026-10-16: "A single simple driver that runs long
+  workflows and tool chains to make sure that basically whatever I ask can be done. Fairly simple."; "if we get the nigel thing
+  right, we dont need to keep adding in layer after layer of the same shit. i want this to be simple, it is already becoming
+  complex."; and, of Nigel (an open-source loop that keeps a coding agent's change only when a check passes): "someone that
+  actually knows how to code and what they are doing essentially made a Steward before I was able to solidify the whole thing into
+  a deliverable." So the driver is Steward, the body that acts (the plan by office): one loop in the engine. You give it a goal in
+  the Agent tab; it calls a tool (the engine's skills, the door's tools), reads what came back and goes on, step after step; every
+  write waits for your card; it stops when the job's check passes (the suites for code, the job's own test otherwise) or when its
+  budget runs out (passes, minutes, tool calls; LAW_003); the change is kept on a line of work or reset; and the report is written
+  from the record, never from the model's account of itself. The model never says it is done; the check does. Your cards: it
+  starts on `qwen3.5:9b`, already on the rack (SITTING LAW 3), and moves to Nemotron 3.5 Bolt only if its run logs show it
+  failing; it may hand code edits to Aider, every run on your card (H17's "no seat" superseded for it alone); and three real jobs
+  prove it, live on your glass: C71, a save and send of a finished line, and the boot's gate finding no HANDOFF block for the day
+  (HANDOFF's finding (bb), 2026-10-14). It takes over the coding loop (D18), workflows from a sentence (H23) and the system's own
+  task lists (H25), which close with it; and SPEC's first line gains what it never had: it finishes jobs. *(your words in chat,
+  2026-10-16)*
+  **Step (2), planned 2026-10-16 on your answers** ("the checks are named by tasks or some other trackable"; "the tools it needs to
+  see for basics, like read write measure locate"; "we dont need to push for speed initially, we can optimize after we get
+  function"; "the door change, i siad it, we do it"; "let's get set up for success"). (a) Set-up first, C71: a strokes run asked
+  through the door comes back with its tally instead of giving up at 295 s, because the suites are the check for code. (b) A job
+  is a task that names its check -- the suites, a named test, a file that must say a thing, a line GitHub must hold -- written
+  with the task and read by the driver, never picked by the model. (c) Its first tools are the basics: read, write (every write
+  on your card), measure (sizes, counts, the suites) and locate (list, find, search). (d) Its budget is a ceiling against a
+  runaway, not a race: generous passes and minutes, each run's spend written down, tuned once it works. (e) The door change:
+  `aider_run` callable by the driver, every run parked for your card (today only your glass may call it). (f) The loop in the
+  engine, each test shown red first, every edit on your card. Then step (3), the three jobs. *(your words in chat, 2026-10-16)*
 - **H30. The honesty gate on every answer: Manjuel's second piece.** Your card, 2026-10-13: every answer filtered through the
   laws and the founding papers. A claim in an answer is fact only where its distinctive words appear in the record of the turn
   -- what the tools returned, the files read, the law -- and anything else is marked generated, or the answer is "no record"; by
@@ -364,6 +405,9 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   refused at the save without an instruction, its files, or a gate granting Aider on every path before it, and run by the engine; the
   door's half is not, so a flow fired through the door refuses at such a node and nothing runs it yet. *(CHANGELOG, "atlas: the flow
   engine takes an `aider` node"; B21; `flows/coder-tree.json`; `atlas/line/internal/flow`)*
+  **Your card, 2026-10-16** (Steward drives, H31): "Yes, each run on my card" -- the driver may hand code edits to Aider, every run
+  held for your Approve, on a line of work. This supersedes "no seat, agent or role is ever given Aider" for the driver alone;
+  nothing else gains Aider. *(your card in chat, 2026-10-16)*
 - **H19. A self-model card for the front door.** Your idea, 2026-10-05: the Steward "knows the build map, understands the architecture of the system, knows how it's
   wired". One page of plain facts about the system -- the engine (Manjuel), the door and the glass (Atlas), the Rust spine, the law chain, how a line moves, what each
   page and tool does, and where to look for more -- generated from the code and the record the way BUILDMAP is, held current by a stroke, and put at the front of the
@@ -667,6 +711,74 @@ goals". The steps under each are proposed from the disk; each is yours to change
 
 Finished lines, newest first. A number is never used again.
 
+- **F9. SPEC.md is behind what was built since 2026-10-02.** DONE 2026-10-16, on your cards (29, 32, 39, 44, 48, 51, 59, 66, 81 and 86): 8.2 superseded and answered on your word; the Judge in section 1's words, section 2's court row, 4.3 and 8.4; no skill count that rots in section 1 or 2; the workflow row names `flows/`; 4.4 at ten links and sitting laws 1 to 10; 4.9's OPEN line annotated, its words left as you confirmed them (B17); 8.4 with the driver first. The line as it stood: The Judge's rename (H28, 2026-10-14) is not carried: section 1's words
+  still say Manjuel rules last and that the seat carries the name "until" it is renamed, and section 2's court row, 4.3 and 8.4 name
+  Manjuel the ruling seat. Skills are counted 43 (section 1) and 42 (section 2); the disk has 45. "A workflow ... Not yet declared
+  in a file", while `flows/` declares them. 4.4 counts 6 links and four sitting laws; the chain has 10 links and the sitting laws run
+  to ten. 4.9's OPEN line lands a change by `land` on the old page (GitHub since 2026-10-08), where since 2026-10-09 main takes one only through a pull
+  request (the line's words are your ruling, B17). 8.4's order names H28 and H29 next, both done, and not H31. *(CHANGELOG, "core: the documentation pass")*
+- **F10. The core's README counts and draws the system as it was.** DONE 2026-10-16, on your cards (37, 41, 45 and 49): no counts that rot; the turn as it runs since 2026-10-12; WHATS_LEFT, INVENTORY and SYSTEM_DESIGN among the documents; TASKS your list, with this page beside it; a change saved on a line of work and sent, then its pull request merged on GitHub. The line as it stood: It says 82 tools (the door has 95) and forty-three skills
+  (45); its drawing of a turn predates the answers' piece (1) of 2026-10-12; its list of documents leaves out WHATS_LEFT, INVENTORY
+  and SYSTEM_DESIGN; it calls TASKS what the record owes, where TASKS is your list (CLAUDE.md); and it saves and sends "through the
+  council", where since 2026-10-09 a change reaches main through a pull request you merge. *(CHANGELOG, "core: the documentation pass")*
+- **F11. QUICKSTART pulls the old coding model.** DONE 2026-10-16, on your card (38): the coder's pull is `qwen2.5-coder:14b`, 7b a parity reference, the set thirty-seven GB. The line as it stood: Its pulls name `qwen2.5-coder:7b`; the coding seat has sat on `qwen2.5-coder:14b`
+  since your ruling B1 (2026-09-30). *(CHANGELOG, "core: the documentation pass")*
+- **F12. RUNBOOK is behind in nine places.** DONE 2026-10-16, on your cards (46, 50, 52, 60, 67, 82 and 87), all nine: what feels off goes on this page; the Rust spine needed by `atlas-door` and the battery, the chain check Python; no counts that rot; the lock beside your name; the door's start line with both tenants; the PowerShell tab, every line on your card; Aider's road ends at the merge on GitHub; `git_cycle` named the engine's own skill, nothing in it waiting for your card, the door's `git_commit` and `git_push` the road on your cards; the hands ledger's sentence made whole. The line as it stood: It says to write what feels off in TASKS.md (your list; what is out of line goes on
+  this page); it says to build the Rust spine first, though the chain check is Python since B14; it carries counts the disk no longer
+  holds (89, 82, 42); it names the sidebar's Lock button (the sidebar retired 2026-10-07, H16); its door start line names one tenant;
+  its shell paragraph leaves out the PowerShell tab (H26); Aider's road ends at a Land click, where main takes a pull request; it
+  does not warn that the engine's own `git_cycle` saves with no card and, on a line GitHub already has, sends with none; and "The
+  hands ledger is gone" opens mid-sentence. *(CHANGELOG, "core: the documentation pass")*
+- **F13. BUILDPATH is behind in four places.** DONE 2026-10-16, on your cards (53, 68 and 83): twenty events, eleven pins, a dated note on the order since H29 (the driver first), and this page in the reading order. The line as it stood: It counts nineteen events on the wire (twenty since `think`, 2026-10-14) and ten
+  version pins (eleven); its order of 2026-10-13 lists H28 and H29 as next, both done; and its reading order leaves out this page. *(CHANGELOG, "core: the documentation pass")*
+- **F14. TESTING says nothing of the glass.** DONE 2026-10-16, on your cards (43 and 47): the suites from your glass through `suite_run`, a clean clone a look and never the proof; `tests/refusals.py --check` beside the map's in the checks list. The line as it stood: It does not say the suites run from your glass (`suite_run`, RULE 13), and it leaves
+  out `tests/refusals.py --check`, which every save runs beside the map's check. *(CHANGELOG, "core: the documentation pass")*
+- **F15. The core's CONTRIBUTING counts twenty-six numbered refusals;** DONE 2026-10-16, on your card (42): no count; REFUSALS' two parts named, the hand-written and the generated sites. The line as it stood: REFUSALS.md writes up 32. *(CHANGELOG, "core: the documentation pass")*
+- **F16. agents.md's court is the court before H28 and B7.** DONE 2026-10-16, on your card (35): the Judge rules; the door off the table (B7); who sits read live from `pipelines.md`; the note of 2026-09-01 as written. The line as it stood: It names `manjuel` the court that rules (the seat is `judge` since
+  2026-10-14) and the Steward among the counsel (off the court since your ruling B7, 2026-09-30). Its note of 2026-09-01 stays as
+  written. *(CHANGELOG, "core: the documentation pass")*
+- **F17. parity.md's code tier pits the coding seat against itself.** DONE 2026-10-16, on your cards (36 and 40): the tier row seats the Expert Coder on 14b with 7b the reference, and the code case asks 7b, with a note on the runs before. The line as it stood: Its tier table seats the Expert Coder on `qwen2.5-coder:7b`
+  with 14b as the reference, and the code case asks 14b; since B1 the seat is 14b, so the case measures the machinery on one model,
+  not two heads. *(CHANGELOG, "core: the documentation pass")*
+- **F18. DESIGN's reasoning stops at the maker (14.15, 2026-09-21).** DONE 2026-10-16, on your card (94): a dated paragraph in its Status block names what came since 14.15 and points at SYSTEM_DESIGN and the CHANGELOG. The line as it stood: Nothing since has a section: the glass's terminal, routing's
+  three parts (2026-10-12), the PPMI reader (H29), the Judge (H28) and the harness (H31, SYSTEM_DESIGN.md). *(CHANGELOG, "core: the documentation pass")*
+- **F19. Atlas's README describes atlas at 0.1.8.** DONE 2026-10-16, on your cards (61 and 72): the version read off `VERSION`; the forbidden verbs as they stand; `atlas-vc`; the door's and the glass's rows; one command to prove it; a section on the glass; the specs and the docs. The line as it stood: Version 0.1.8 (v0.2.5) and 82 tools (95); its tree and its binaries leave out
+  `atlas-vc`; its prove lines run a `.venv` it says nothing creates; its webapp is the Dashboard, the Trace Log and Messages, not the
+  terminal and its Inspector; and its forbidden verbs "absent by construction" predate the door's git tools and the merge on GitHub
+  you allowed (2026-10-09, I1). *(atlas CHANGELOG, "The documentation pass, atlas's part")*
+- **F20. Atlas's THE_ROAD stops at 2026-09-17.** DONE 2026-10-16, on your card (55): a section of its own for what came since 2026-09-17, pointing at LAUNCH_PLAN and H31; the snapshot above it kept. The line as it stood: Its last table counts 82 tools and v0.1.6, and nothing in it points at the road
+  now (atlas's LAUNCH_PLAN.md, this page's H31). *(atlas CHANGELOG, "The documentation pass, atlas's part")*
+- **F21. Atlas's SECURITY calls atlas "alpha software (0.1.x)"** DONE 2026-10-16, on your card (54): reach the maintainer privately; alpha software, the number in `VERSION`. The line as it stood: and sends a reporter to a `package.json` atlas does not have. *(atlas CHANGELOG, "The documentation pass, atlas's part")*
+- **F22. Atlas's AGENTS is behind.** DONE 2026-10-16, on your cards (58 and 70): the preflight; Python 3.10 or newer, no venv; the tallies; `VERSION`; forty seats. The line as it stood: Its preflight reads THE_ROAD and SEAT_LOG's tail (SEAT_LOG last written 2026-09-09); it names
+  Python 3.14 in a `.venv` (README: 3.10 or newer, no venv); it expects version 0.1.8; and it counts 37 seats where README counts 40,
+  and nine legs to the ball where CONTRIBUTING counts eight. *(atlas CHANGELOG, "The documentation pass, atlas's part")*
+- **F23. Atlas's CHARTER places atlas outside the ground.** DONE 2026-10-16, on your card (56): an addendum dated 2026-10-16, nothing above it changed. The line as it stood: Atlas's CHARTER places atlas outside the ground, where it lived before it was pulled in, and section 5 gives the version
+  as 0.1.0+p0. It is a founding record: a dated note, never a rewrite (ESTATE LAW 1). *(atlas CHANGELOG, "The documentation pass, atlas's part")*
+- **F24. Atlas's CONTRIBUTING** DONE 2026-10-16, on your cards (57 and 69): Python 3.10 or newer; nine legs; decisions on this page and in `docs/ADR`. The line as it stood: names Python 3.14, counts eight provers to the ball (AGENTS: nine legs), and sends a design document
+  to a folder outside the ground. *(atlas CHANGELOG, "The documentation pass, atlas's part")*
+- **F25. Atlas's DELIVERABLE is the deliverable of 0.1.5 (2026-09-12):** DONE 2026-10-16, on your card (62): a dated note at its head says what it is and where the deliverable is written now. The line as it stood: 78 tools, the old pages and the Dashboard, and
+  `release.ps1 patch` as the way to cut (the release flow since H27). It is rewritten at I5; until then a dated note at its head says
+  what it is. *(atlas CHANGELOG, "The documentation pass, atlas's part")*
+- **F26. Atlas's ACCEPTANCE is the sheet of the first stones (P0 to G),** DONE 2026-10-16, on your card (63): a dated note names where acceptance lives now. The line as it stood: all complete and cut over by 2026-09-08, with no rows for
+  anything built since: the front page, the holds, the shell tabs, Aider's wall, the flow engine's loops. A dated note names where
+  acceptance lives now. *(atlas CHANGELOG, "The documentation pass, atlas's part")*
+- **F27. Atlas's STATE_OF_BUILD stopped on 2026-09-09.** DONE 2026-10-16, on your card (93): a dated closing note, nothing above it changed. The line as it stood: Atlas's STATE_OF_BUILD stopped on 2026-09-09, its last line naming a next stone that never opened. It is append-only: a
+  dated closing note says the work since is witnessed in the CHANGELOG, as THE_ROAD already does. *(atlas CHANGELOG, "The documentation pass, atlas's part")*
+- **F28. Atlas's docs index links what atlas does not hold** DONE 2026-10-16, on your cards (64 and 73): LAUNCH_PLAN in it; the core's CLAUDE.md named for what it is; the SDKs answered; the folder's own files listed, SPEC_MCP.json and ADR 006 among them. The line as it stood: (`../CLAUDE.md`, `../sdk/python`, `../sdk/npm`), leaves out seven files
+  of its own folder (ACCEPTANCE, GUI_GAP_ANALYSIS, OLLAMA_PROVER, OPENAPI, PIPELINES, SPEC_CONTROL_CENTER, WORKFLOWS), and calls
+  THE_ROAD the current roadmap. *(atlas CHANGELOG, "The documentation pass, atlas's part")*
+- **F29. Atlas's QUICKSTART would not start atlas.** DONE 2026-10-16, on your card (65): rewritten to start atlas as it is: your repository, the toolchains it needs, the builds, the door, the glass, Ollama and the PIN. The line as it stood: It clones an address that is not your repository, asks for Node 24 and Python
+  3.14, builds with `go build ./...` (which leaves no binary, README), expects version 0.1.0+f1, and never names the door, the glass,
+  Ollama or the PIN. *(atlas CHANGELOG, "The documentation pass, atlas's part")*
+- **F30. Atlas's ARCHITECTURE is the architecture of 2026-09-07.** DONE 2026-10-16, on your cards (71 and 84): a section on what changed since it was written, and the binaries' table. The line as it stood: Its first principle has every hash computed in the Rust core (the
+  door's chain check is Python since B14); its forbidden verbs predate the door's git tools; and its layers and its binaries stop
+  before the glass, the engine and the rack, and leave out `atlas-vc`, `atlas-tui` and `atlas-webapp`. *(atlas CHANGELOG, "The documentation pass, atlas's part")*
+- **F31. The rest of atlas's docs are its documentation phase of 2026-09-07.** DONE 2026-10-16, all but one, on your cards (74 to 80, 85, 88 to 92 and 95): each a dated note at its head (OPENAPI.yaml in comment lines), SPEC_CONTROL_CENTER's leaving to you whether it still governs. `docs/PIPELINES.md`'s note was refused by the door's edit tool (C75), and waits on it. The line as it stood: WORKFLOWS, PIPELINES, OLLAMA_PROVER and
+  docs/ACCEPTANCE are stamped 0.1.8 and OPENAPI 0.1.0+f1; GUIDED_DEMO, PLAN_GUI_IDE and BUILD_PLAN_TUI_AGENTS are dated plans;
+  TUTORIAL, WALKTHROUGH, PARITY_PLAN, CLI_REFERENCE, COMPLIANCE and GUI_GAP_ANALYSIS are of the same phase; and SPEC_CONTROL_CENTER,
+  the glass's spec of 2026-09-08, was written before the front page became one terminal (H14, H16) and before Aurora was kept as it
+  is (2026-10-13). Read in this pass by their heads only: which are brought to the system as it is and which carry a dated note is
+  yours. *(atlas CHANGELOG, "The documentation pass, atlas's part")*
 - **H28. The seat called Manjuel renamed the Judge.** DONE 2026-10-14: its steps on your cards, the live sitting (379) seating the
   Judge last in the court and the estate, ruling in the estate. The line as it stood: Your word, 2026-10-13: "the Gemma seat can just be called Judge". The seat
   on gemma4:12b that rules last on the review panel and sits in the estate pipeline keeps its model and its job and takes the
