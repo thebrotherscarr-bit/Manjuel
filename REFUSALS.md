@@ -1096,7 +1096,7 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 | 838 | the line of work `{opening}` could not be opened: {out} |
 | 844 | {_drive_rel(*key)} could not be read before it was written: {exc} |
 | 848 | {name} failed in the engine ({type(exc).__name__}: {exc}). |
-| 1624 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
+| 1598 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
 
 ### manjuel/skills.py — 76 sites
 
