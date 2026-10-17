@@ -443,3 +443,14 @@ from:     his words in chat, 2026-10-05: "if we can just get an agent to continu
 ```
 
 10. **The work is done in the glass, in front of him, one step at a time, and every change waits on his click.** A hand works the way he watched it work on 2026-10-05. It says the plan in plain words first. Then it runs each step in the glass's own tabs -- Python in the Python tab, shell commands in the Bash tab, Aider in the Aider tab, the council in the Agent tab, and the glass's pages for the rest -- saying in one line before each step what it is about to do. Reads run at once; every write, every run that changes something and every save shows an Approve card, and the click is his alone (RULE 6). A refusal is never argued with or worked around. After each step the hand checks the result where he can see it -- the strokes in the Bash tab, the suites on his glass, the record -- says what it found, and then takes the next step or stops. Nothing in the ground is changed or run on the side in the hand's own shell, nothing is proved on a mirror (SITTING LAW 9), and nothing is published or signed without his word (SITTING LAWS 7 and 8). This is how the system's own agent is to work too, once it can (WHAT'S LEFT H19 to H25). Earned 2026-10-05, in his words: "run everything, explain it step by step, set a plan, run it through, let me approve it, make sure everything's good, and then boom, we just keep doing this."
+
+---
+
+## 11. SITTING LAW 11 -- everything is run by Steward, through the webapp
+
+```
+entered:  2026-10-16, on the operator's word
+from:     his words in chat, 2026-10-16, capitals his: "#NEW LAW: AS DIRECTED, the system function and parity, tests and provers, pipelines and workflows, EVERYTHING is to be run by Steward. EVERYTHING is to go through the webapp. If needed, we will write a custom model file for steward that can be tuned JUST FOR THIS SYSTEM."
+```
+
+11. **Everything is run by Steward, through the webapp.** The system's functions and its parity, the tests and the provers, the pipelines and the workflows: Steward runs them, in the webapp -- the driver in the Agent tab (`/drive` and its check, `ship` to save and send, `tidy` for the merged branches) and the door's tools it calls -- and no hand runs them on the side. A hand asks Steward, and reads what Steward did off the record. A model file for Steward, tuned for this system alone, is written when the record shows the need (SITTING LAW 3). Earned 2026-10-16: the same afternoon Steward saved and sent its own driver and then C77 -- the suites as its check, the commit, the push, the pull requests, CI and the merges on his cards -- and tidied every merged branch in both repositories, while a hand had spent the day driving cards and scripts beside it.
