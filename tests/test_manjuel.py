@@ -22967,6 +22967,8 @@ def test_steward_drives_to_a_check(reg, lib, book):
 
         class SlowDoor:
             def execute(self, name, args, env):
+                if name == "proved":
+                    return "  strokes  7/7  GREEN"
                 return ("Refused: atlas could not run 'suite_run' -- it did not answer inside 295s "
                         "(the skill's bound, less 5).")
         said_on.clear()
@@ -22975,7 +22977,7 @@ def test_steward_drives_to_a_check(reg, lib, book):
         with _cl.redirect_stdout(_io.StringIO()):
             SV.door_call(door3, 'mcp_call atlas suite_run {"set": "strokes", "project": "research"}')
         check("door call: a suites run that outlives the call is reported off its own stamp (C71)",
-              said_on[-1] == ("delivery", "suite_run: strokes 7 of 7 green"), str(said_on[-2:]))
+              said_on[-1] == ("delivery", "suite_run:   strokes  7/7  GREEN"), str(said_on[-2:]))
 
         # THE WIRE IN: /drive reaches the driver from Door.turn, and a line leading with mcp_call the door call.
         src = (ROOT / "manjuel" / "serve.py").read_text(encoding="utf-8")
