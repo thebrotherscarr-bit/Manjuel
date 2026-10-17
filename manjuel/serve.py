@@ -1563,6 +1563,32 @@ def door_hold_wait(ground, hold: str, seconds: float = DOOR_WAIT_SECONDS, tick: 
         time.sleep(tick)
 
 
+def door_suite_wait(ground, since: float, asked: str = "", seconds: float = DOOR_WAIT_SECONDS,
+                    tick: float = 2.0) -> str:
+    """WHAT'S LEFT C71: a suites run outlives the door call's bound (the strokes
+    take longer than it waits), and the door runs it on and stamps it in
+    tests/last_run.json. This waits on that stamp for the sets the call named
+    and says their tally in one line, read off the stamp alone."""
+    import re
+    named = re.search(r'"set"\s*:\s*"(\w+)"', asked)
+    want = {"smoke": ["smoke"], "strokes": ["strokes"]}.get(named.group(1) if named else "",
+                                                          ["smoke", "strokes"])
+    p = Path(ground) / "tests" / "last_run.json"
+    deadline = time.time() + seconds
+    while True:
+        try:
+            row = json.loads(p.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            row = {}
+        sets = [row.get(k) if isinstance(row.get(k), dict) else {} for k in want]
+        if all(s.get("state") == "finished" and float(s.get("at") or 0) >= since for s in sets):
+            return "; ".join(f"{k} {s.get('passed')} of {s.get('total')} "
+                             + ("green" if s.get("green") else "RED") for k, s in zip(want, sets))
+        if time.time() >= deadline:
+            return f"no finished stamp for {', '.join(want)} in {seconds / 60:.0f} minutes"
+        time.sleep(tick)
+
+
 def door_call(door, said: str) -> None:
     """The mcp_call turn: one line of what is asked, the call, and -- when the
     door holds it -- the wait on his card and one line of what became of it."""
@@ -1590,6 +1616,11 @@ def door_call(door, said: str) -> None:
         what = door_hold_wait(door.ground, hold)
         text = f"{tool}: " + (DOOR_OUTCOMES.get(what, what) if what else
                               f"no answer in {DOOR_WAIT_SECONDS / 60:.0f} minutes; the card stays in the dock") + "."
+    elif tool == "suite_run" and "did not answer inside" in result:
+        # C71: the door runs the suites on past the call's bound and stamps them
+        # itself; the tally is read off that stamp, never guessed.
+        report("  the suites run on past the call's bound; waiting on their own stamp")
+        text = "suite_run: " + door_suite_wait(door.ground, started, asked)
     else:
         text = result
     took = time.time() - started

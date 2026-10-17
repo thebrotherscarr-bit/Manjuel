@@ -22959,6 +22959,24 @@ def test_steward_drives_to_a_check(reg, lib, book):
               and events == [("ran", "mcp_call", 'atlas git_branch {"action": "switch", "name": "main"}')],
               str(said_on))
 
+        # C71: a suites run that outlives the call is read off its own stamp, not given up on.
+        (tmp / "tests").mkdir()
+        (tmp / "tests" / "last_run.json").write_text(_json.dumps({"strokes": {
+            "at": time.time() + 5, "state": "finished", "passed": 7, "total": 7, "green": True}}),
+            encoding="utf-8")
+
+        class SlowDoor:
+            def execute(self, name, args, env):
+                return ("Refused: atlas could not run 'suite_run' -- it did not answer inside 295s "
+                        "(the skill's bound, less 5).")
+        said_on.clear()
+        door3 = _NS(ground=tmp, wire=_NS(emit=lambda kind, **kw: said_on.append((kind, kw.get("text")))),
+                    sess=_NS(skills=SlowDoor(), env=env, sitting=_NS(runs=[])))
+        with _cl.redirect_stdout(_io.StringIO()):
+            SV.door_call(door3, 'mcp_call atlas suite_run {"set": "strokes", "project": "research"}')
+        check("door call: a suites run that outlives the call is reported off its own stamp (C71)",
+              said_on[-1] == ("delivery", "suite_run: strokes 7 of 7 green"), str(said_on[-2:]))
+
         # THE WIRE IN: /drive reaches the driver from Door.turn, and a line leading with mcp_call the door call.
         src = (ROOT / "manjuel" / "serve.py").read_text(encoding="utf-8")
         check("door call: Door.turn hands a line that leads with mcp_call to door_call, not to a seat",
