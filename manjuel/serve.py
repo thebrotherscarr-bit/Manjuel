@@ -990,7 +990,7 @@ def _drive_close_lines(d, report, keep_pushed: bool = False) -> None:
     still differs is kept, so nothing of the run's is carried onto the base."""
     for key, r in d.repos.items():
         base, line = r.get("base"), r.get("line")
-        if not base or not line or r.get("closed"):
+        if not base or not line or r.get("closed") or r.get("kept"):
             continue
         repo = Path(key)
         code, ahead = _drive_run(["git", "log", "--oneline", f"{base}..{line}"], repo)
@@ -1043,12 +1043,26 @@ def drive_ship(d, ctx, confirmed: bool = False) -> None:
                 continue
         title = d.goal if len(d.goal) <= 72 else d.goal[:69] + "..."
         body = f"{d.goal}\n\nThe check: {d.check or '(none)'}\n\nCommits on the line:\n{ahead[:3000]}"
-        green = _drive_steps(d, ctx, repo, (
-            ("push", ["git", "push", "-u", "origin", line], 180),
-            ("pull request", ["gh", "pr", "create", "--base", into, "--head", line,
-                              "--title", title, "--body", body], 120),
-            ("ci", ["gh", "pr", "checks", line, "--watch", "--interval", "20"], DRIVE_CI_SECONDS)))
-        if not green:
+        # A line that already has an open pull request (a fix pushed on top of
+        # it) keeps that one: gh refuses a second, and CI runs again on the push.
+        code, seen = _drive_run(["gh", "pr", "view", line, "--json", "url,state", "-q",
+                                 'select(.state == "OPEN") .url'], repo)
+        open_pr = seen.strip() if code == 0 and seen.strip().startswith("https://") else ""
+        steps = [("push", ["git", "push", "-u", "origin", line], 180)]
+        if open_pr:
+            d.prs.append(open_pr)
+            d.n += 1
+            d.steps.append([d.n, "pull request", line, f"already open: {open_pr}"])
+            ctx.report(f"  [{d.n}] pull request: already open -- {open_pr}")
+        else:
+            steps.append(("pull request", ["gh", "pr", "create", "--base", into, "--head", line,
+                                           "--title", title, "--body", body], 120))
+        steps.append(("ci", ["gh", "pr", "checks", line, "--watch", "--interval", "20"],
+                      DRIVE_CI_SECONDS))
+        if not _drive_steps(d, ctx, repo, tuple(steps)):
+            # The send or CI did not pass: the line stays here, so a fix can be
+            # made on it and pushed on top of its pull request.
+            r["kept"] = "its send or its CI did not pass"
             continue
         # THE MERGE IS HIS CLICK (RULE 13): CI is green, and the card asks.
         answer = ctx.ask(f"CI passed on `{line}` in {repo.name}. Merge its pull request into {into} "

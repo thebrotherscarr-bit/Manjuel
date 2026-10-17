@@ -34,7 +34,14 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
-### core: SITTING LAW 11 -- everything is run by Steward, through the webapp (2026-10-16; his words, capitals his: "#NEW LAW: AS DIRECTED, the system function and parity, tests and provers, pipelines and workflows, EVERYTHING is to be run by Steward. EVERYTHING is to go through the webapp. If needed, we will write a custom model file for steward that can be tuned JUST FOR THIS SYSTEM.")
+### core: C71 and the driver's own send, done by Steward on its own code (2026-10-16; his word on watching it: "The engine is working AS EXPECTED, this is PERFECT. it needs to be able to self-edit and self-improve. DO NOT REMOVE this behaviour.")
+
+H31's first proof job, WHAT'S LEFT C71, done by Steward itself on his cards: the driver took the job in the Agent tab, made three ground_edit calls to `manjuel/serve.py` and `tests/test_manjuel.py`, and its check -- the driver's strokes -- passed before anything was saved. When `mcp_call atlas suite_run` outlives the call's bound (295 s; the strokes take longer), `door_call` no longer reports that the door did not answer while the door runs on: it says one line, waits on the suites' own stamp in `tests/last_run.json` for the sets the call named, and says their tally from it. The skill's bound stays, so a wedged door is still a refusal. Its stroke joins `test_steward_drives_to_a_check`.
+
+Then, also by Steward on its own driver: `drive_ship` reuses a line's open pull request when a fix is pushed on top of it (gh refuses a second, and CI runs again on the push), and a line whose send or CI did not pass stays here instead of being closed, so the fix can be made on it. Both were met the same evening: C71's first commit went up without the regenerated map, CI refused it, the line was closed under it, and the door's `git_branch` put it back (6.4 s, one card, no seat: C77 live). Restart required.
+
+### core: SITTING LAW 11
+The check that decides done: python tests/test_manjuel.py steward_drives -- everything is run by Steward, through the webapp (2026-10-16; his words, capitals his: "#NEW LAW: AS DIRECTED, the system function and parity, tests and provers, pipelines and workflows, EVERYTHING is to be run by Steward. EVERYTHING is to go through the webapp. If needed, we will write a custom model file for steward that can be tuned JUST FOR THIS SYSTEM.")
 
 His law, entered as the ledger's entry 11 through the glass's Laws page, a draft below the seal until he seals it there: the system's functions and parity, the tests and the provers, the pipelines and the workflows are run by Steward, in the webapp -- `/drive` and its check, `ship`, `tidy`, and a line leading with `mcp_call` -- and no hand runs them on the side. A model file for Steward tuned for this system is written only when the run logs show the need (SITTING LAW 3). CLAUDE.md is his to change (the door refuses a hand's edit to it), so it does not carry the law as a RULE yet. No code moved: no restart.
 
