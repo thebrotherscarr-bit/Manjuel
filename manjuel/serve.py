@@ -990,7 +990,7 @@ def _drive_close_lines(d, report, keep_pushed: bool = False) -> None:
     still differs is kept, so nothing of the run's is carried onto the base."""
     for key, r in d.repos.items():
         base, line = r.get("base"), r.get("line")
-        if not base or not line or r.get("closed"):
+        if not base or not line or r.get("closed") or r.get("kept"):
             continue
         repo = Path(key)
         code, ahead = _drive_run(["git", "log", "--oneline", f"{base}..{line}"], repo)
@@ -1043,12 +1043,26 @@ def drive_ship(d, ctx, confirmed: bool = False) -> None:
                 continue
         title = d.goal if len(d.goal) <= 72 else d.goal[:69] + "..."
         body = f"{d.goal}\n\nThe check: {d.check or '(none)'}\n\nCommits on the line:\n{ahead[:3000]}"
-        green = _drive_steps(d, ctx, repo, (
-            ("push", ["git", "push", "-u", "origin", line], 180),
-            ("pull request", ["gh", "pr", "create", "--base", into, "--head", line,
-                              "--title", title, "--body", body], 120),
-            ("ci", ["gh", "pr", "checks", line, "--watch", "--interval", "20"], DRIVE_CI_SECONDS)))
-        if not green:
+        # A line that already has an open pull request (a fix pushed on top of
+        # it) keeps that one: gh refuses a second, and CI runs again on the push.
+        code, seen = _drive_run(["gh", "pr", "view", line, "--json", "url,state", "-q",
+                                 'select(.state == "OPEN") .url'], repo)
+        open_pr = seen.strip() if code == 0 and seen.strip().startswith("https://") else ""
+        steps = [("push", ["git", "push", "-u", "origin", line], 180)]
+        if open_pr:
+            d.prs.append(open_pr)
+            d.n += 1
+            d.steps.append([d.n, "pull request", line, f"already open: {open_pr}"])
+            ctx.report(f"  [{d.n}] pull request: already open -- {open_pr}")
+        else:
+            steps.append(("pull request", ["gh", "pr", "create", "--base", into, "--head", line,
+                                           "--title", title, "--body", body], 120))
+        steps.append(("ci", ["gh", "pr", "checks", line, "--watch", "--interval", "20"],
+                      DRIVE_CI_SECONDS))
+        if not _drive_steps(d, ctx, repo, tuple(steps)):
+            # The send or CI did not pass: the line stays here, so a fix can be
+            # made on it and pushed on top of its pull request.
+            r["kept"] = "its send or its CI did not pass"
             continue
         # THE MERGE IS HIS CLICK (RULE 13): CI is green, and the card asks.
         answer = ctx.ask(f"CI passed on `{line}` in {repo.name}. Merge its pull request into {into} "
@@ -1563,6 +1577,32 @@ def door_hold_wait(ground, hold: str, seconds: float = DOOR_WAIT_SECONDS, tick: 
         time.sleep(tick)
 
 
+def door_suite_wait(ground, since: float, asked: str = "", seconds: float = DOOR_WAIT_SECONDS,
+                    tick: float = 2.0) -> str:
+    """WHAT'S LEFT C71: a suites run outlives the door call's bound (the strokes
+    take longer than it waits), and the door runs it on and stamps it in
+    tests/last_run.json. This waits on that stamp for the sets the call named
+    and says their tally in one line, read off the stamp alone."""
+    import re
+    named = re.search(r'"set"\s*:\s*"(\w+)"', asked)
+    want = {"smoke": ["smoke"], "strokes": ["strokes"]}.get(named.group(1) if named else "",
+                                                          ["smoke", "strokes"])
+    p = Path(ground) / "tests" / "last_run.json"
+    deadline = time.time() + seconds
+    while True:
+        try:
+            row = json.loads(p.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            row = {}
+        sets = [row.get(k) if isinstance(row.get(k), dict) else {} for k in want]
+        if all(s.get("state") == "finished" and float(s.get("at") or 0) >= since for s in sets):
+            return "; ".join(f"{k} {s.get('passed')} of {s.get('total')} "
+                             + ("green" if s.get("green") else "RED") for k, s in zip(want, sets))
+        if time.time() >= deadline:
+            return f"no finished stamp for {', '.join(want)} in {seconds / 60:.0f} minutes"
+        time.sleep(tick)
+
+
 def door_call(door, said: str) -> None:
     """The mcp_call turn: one line of what is asked, the call, and -- when the
     door holds it -- the wait on his card and one line of what became of it."""
@@ -1590,6 +1630,11 @@ def door_call(door, said: str) -> None:
         what = door_hold_wait(door.ground, hold)
         text = f"{tool}: " + (DOOR_OUTCOMES.get(what, what) if what else
                               f"no answer in {DOOR_WAIT_SECONDS / 60:.0f} minutes; the card stays in the dock") + "."
+    elif tool == "suite_run" and "did not answer inside" in result:
+        # C71: the door runs the suites on past the call's bound and stamps them
+        # itself; the tally is read off that stamp, never guessed.
+        report("  the suites run on past the call's bound; waiting on their own stamp")
+        text = "suite_run: " + door_suite_wait(door.ground, started, asked)
     else:
         text = result
     took = time.time() - started
