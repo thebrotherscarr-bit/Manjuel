@@ -710,7 +710,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `write_index` | 631-641 | Rewrite SEAT_LOG_INDEX.md from SEAT_LOG.md, in the log's own line endings. None  |
 | def | `index_is_current` | 644-653 | True when SEAT_LOG_INDEX.md is exactly what a regeneration would write (and wher |
 
-### manjuel/serve.py — 2201 lines
+### manjuel/serve.py — 2297 lines
 
 *The headless door: the REPL's turn over stdin/stdout as JSON lines.*
 
@@ -772,25 +772,27 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `_drive_single` | 1113-1139 | ONE JOB: worked; on a pass, what changed, then on his answer the whole |
 | def | `drive_items` | 1142-1222 | PLAN or EACH: the items, one job each, on his answer; each passing item |
 | def | `drive_tidy` | 1225-1274 | TIDY: every branch already merged into main, here and on GitHub, listed |
-| def | `drive_save` | 1277-1357 | SHIP: the work on disk saved and sent (the head of this section). Each |
-| def | `drive` | 1360-1404 | Work one /drive to its end (the head of this section). |
-| def | `drive_report` | 1407-1428 | What happened, read off the record alone. |
-| def | `drive_carry` | 1431-1435 | One line of what a job did, carried into the next. |
-| def | `drive_record` | 1438-1456 | The whole job as a transcript in logs/, every result as it came back. |
-| def | `door_drive` | 1459-1517 | The /drive turn: job after job. Each job's report goes on the wire as it |
-| class | `Door` | 1525-2022 | One sitting, over one wire. `sess` is cli.Session or anything that |
-| def | `Door.__init__` | 1529-1548 |  |
-| def | `Door.ask` | 1552-1584 | Stands where input() stood. One question, one answer, over the |
-| def | `Door._listen` | 1586-1621 | One spoken turn, captured and transcribed, and NOT run. |
-| def | `Door._next` | 1623-1627 |  |
-| def | `Door.serve` | 1631-1745 | cli._loop's shape: take a turn, run it, until close or EOF. |
-| def | `Door._head_plan` | 1749-1802 | Read `model` and `voices` off the wire into a plan, or refuse. |
-| def | `Door._head_words` | 1805-1811 | The plan in the operator's words, for the `note` that says what |
-| def | `Door._close` | 1813-1829 |  |
-| def | `Door.turn` | 1833-2022 | One typed turn, cli._loop's body line for line (the REPL read of |
-| def | `open_wire` | 2030-2047 | The real stdout and stdin as the wire. stdout is swapped for the |
-| def | `main` | 2050-2141 |  |
-| def | `_open_and_serve` | 2144-2194 | Everything after the sitting line: the boot the REPL does, `opened`, |
+| def | `drive_save` | 1277-1359 | SHIP: the work on disk saved and sent (the head of this section). Each |
+| def | `drive` | 1362-1406 | Work one /drive to its end (the head of this section). |
+| def | `drive_report` | 1409-1430 | What happened, read off the record alone. |
+| def | `drive_carry` | 1433-1437 | One line of what a job did, carried into the next. |
+| def | `drive_record` | 1440-1458 | The whole job as a transcript in logs/, every result as it came back. |
+| def | `door_drive` | 1461-1519 | The /drive turn: job after job. Each job's report goes on the wire as it |
+| def | `door_hold_wait` | 1541-1563 | Wait on the door's hold logs until the hold is answered: its outcome, or |
+| def | `door_call` | 1566-1608 | The mcp_call turn: one line of what is asked, the call, and -- when the |
+| class | `Door` | 1616-2118 | One sitting, over one wire. `sess` is cli.Session or anything that |
+| def | `Door.__init__` | 1620-1639 |  |
+| def | `Door.ask` | 1643-1675 | Stands where input() stood. One question, one answer, over the |
+| def | `Door._listen` | 1677-1712 | One spoken turn, captured and transcribed, and NOT run. |
+| def | `Door._next` | 1714-1718 |  |
+| def | `Door.serve` | 1722-1836 | cli._loop's shape: take a turn, run it, until close or EOF. |
+| def | `Door._head_plan` | 1840-1893 | Read `model` and `voices` off the wire into a plan, or refuse. |
+| def | `Door._head_words` | 1896-1902 | The plan in the operator's words, for the `note` that says what |
+| def | `Door._close` | 1904-1920 |  |
+| def | `Door.turn` | 1924-2118 | One typed turn, cli._loop's body line for line (the REPL read of |
+| def | `open_wire` | 2126-2143 | The real stdout and stdin as the wire. stdout is swapped for the |
+| def | `main` | 2146-2237 |  |
+| def | `_open_and_serve` | 2240-2290 | Everything after the sitting line: the boot the REPL does, `opened`, |
 
 ### manjuel/skills.py — 5146 lines
 
@@ -1074,7 +1076,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `GroundWatch.start` | 182-207 |  |
 | def | `GroundWatch.stop` | 209-215 |  |
 
-manjuel/: 31 files, 27007 lines.
+manjuel/: 31 files, 27103 lines.
 
 ## GUARDS — by the failure that earned them
 
@@ -1564,14 +1566,15 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 | 520 | `(module)` | His card, 2026-10-16: the driver starts on qwen3.5:9b (SITTING LAW 3). |
 | 660 | `drive_check` | inherited it hung on it (2026-10-16, a one-line python -c, 400 s). |
 | 865 | `_drive_job` | Thinking is off by default: on 2026-10-16 one step after a write thought |
-| 1636 | `serve` | ...and the colored card's hook beside it (pipeline._ask, 2026-10-12). |
-| 1672 | `serve` | say so is attended, as every turn was before 2026-09-29. |
-| 1674 | `serve` | THE HEAD IS A PROPERTY OF THE TURN (2026-09-23, his ruling: |
-| 1685 | `serve` | `voices` IS THE NARROWER ONE (2026-09-23, "then B underneath |
-| 1815 | `_close` | WHY, ON THE LEDGER LINE AND IN THE TOLL (2026-09-29). The `closed` |
-| 2106 | `main` | A LOCK HELD BY NOBODY IS RELEASED HERE TOO (2026-09-22). cli.main has |
-| 2107 | `main` | reaped since 2026-09-17; this door never did, and it is the one THE LINE |
-| 2117 | `main` | EVERY EXIT FROM HERE ON CLOSES THE SITTING (2026-09-22). The line above |
+| 1522 | `(module)` | A DOOR CALL, SAID PLAINLY (WHAT'S LEFT C77). His words, 2026-10-16: "it |
+| 1727 | `serve` | ...and the colored card's hook beside it (pipeline._ask, 2026-10-12). |
+| 1763 | `serve` | say so is attended, as every turn was before 2026-09-29. |
+| 1765 | `serve` | THE HEAD IS A PROPERTY OF THE TURN (2026-09-23, his ruling: |
+| 1776 | `serve` | `voices` IS THE NARROWER ONE (2026-09-23, "then B underneath |
+| 1906 | `_close` | WHY, ON THE LEDGER LINE AND IN THE TOLL (2026-09-29). The `closed` |
+| 2202 | `main` | A LOCK HELD BY NOBODY IS RELEASED HERE TOO (2026-09-22). cli.main has |
+| 2203 | `main` | reaped since 2026-09-17; this door never did, and it is the one THE LINE |
+| 2213 | `main` | EVERY EXIT FROM HERE ON CLOSES THE SITTING (2026-09-22). The line above |
 
 ### manjuel/skills.py
 
@@ -1990,5 +1993,5 @@ its line range. The suites are the memory (HANDOFF: test discipline).
 | `test_the_maker_speaks_to_a_screen_without_a_file_to_open` | 22141-22386 | `RunContext`, `_cli`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `maker`, `maker.forget`, `maker.new_project`, `maker.report_back`, `maker.report_changed` |
 | `test_a_change_that_comes_back_unchanged_is_asked_for_once_more` | 22389-22558 | `RunContext`, `maker`, `maker.AGAINS`, `maker.RULES`, `maker.again_prompt`, `maker.forget`, `maker.new_project`, `maker.page_of`, `maker.report_unchanged`, `maker.run_page`, `maker.same_page`, `maker.save_version` |
 | `test_the_door_reads_the_law_chain_as_law_py_writes_it` | 22561-22713 | — |
-| `test_steward_drives_to_a_check` | 22716-22940 | `SV`, `SV.DRIVE_IGNORE`, `SV.DRIVE_NEVER`, `SV.DRIVE_STEPS`, `SV.DRIVE_SUITES`, `SV.door_drive`, `SV.drive`, `SV.drive_parse`, `SV.drive_tools`, `WRITING_SKILLS` |
+| `test_steward_drives_to_a_check` | 22716-22971 | `SV`, `SV.DRIVE_IGNORE`, `SV.DRIVE_NEVER`, `SV.DRIVE_STEPS`, `SV.DRIVE_SUITES`, `SV.door_call`, `SV.door_drive`, `SV.drive`, `SV.drive_parse`, `SV.drive_tools`, `WRITING_SKILLS` |
 

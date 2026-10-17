@@ -1279,6 +1279,17 @@ def drive_save(d, spec: dict, ctx) -> None:
     repository's changed and new files become one commit under his message, on a
     line opened from main, and drive_ship takes it from there."""
     message = spec["goal"]
+    # The check first: it may move files itself (a map regenerated, the suites'
+    # stamps), and what it moved belongs in the save.
+    if spec["check"]:
+        ok, out = drive_check(spec["check"], ctx.ground)
+        d.check_out = out
+        d.n += 1
+        d.steps.append([d.n, "check", spec["check"], out])
+        ctx.report(f"  [{d.n}] check {'PASSED' if ok else 'FAILED'}: {_drive_head(out)}")
+        if not ok:
+            d.verdict = "failed"
+            return
     found = []
     for sub in DRIVE_REPOS:
         repo = Path(ctx.ground) / sub if sub else Path(ctx.ground)
@@ -1311,15 +1322,6 @@ def drive_save(d, spec: dict, ctx) -> None:
             ([f"{', '.join(barred)} is a secret or a world, never sent"] if barred else [])
             + ([f"{', '.join(loose)} is not on a branch"] if loose else []))
         return
-    if spec["check"]:
-        ok, out = drive_check(spec["check"], ctx.ground)
-        d.check_out = out
-        d.n += 1
-        d.steps.append([d.n, "check", spec["check"], out])
-        ctx.report(f"  [{d.n}] check {'PASSED' if ok else 'FAILED'}: {_drive_head(out)}")
-        if not ok:
-            d.verdict = "failed"
-            return
     listing = "\n".join(
         f"  {r.name} on {b}: " + (f"{len(fs)} file(s): {', '.join(fs[:30])}" + (" ..." if len(fs) > 30 else "")
                                   if fs else "no files")
@@ -1514,6 +1516,95 @@ def door_drive(door, said: str) -> None:
     print(text)
     door.wire.emit("delivery", text=text, elapsed=round(took, 1),
                    transcript=last, pipeline="drive", flags=[], notes=[],
+                   failures=[], verdicts=[], out_of_time=[], project="", steps=[])
+
+
+# A DOOR CALL, SAID PLAINLY (WHAT'S LEFT C77). His words, 2026-10-16: "it
+# shouldn't take 60 seconds to send a damn approval, and it doesnt make sense
+# that after ive approved the card, the thing is still blabbering on. it sends
+# the card before it even states what its doing it for." A line that leads with
+# mcp_call names its server, its tool and its arguments: it is decided already,
+# so no seat reads it and no model narrates it. The engine says in one line what
+# it asks the door for, then makes the call; when the door holds it for his
+# Approve, the engine waits on the door's own hold log for his answer and says
+# in one line what became of it. Every line is the call's own words or the log's.
+DOOR_WAIT_SECONDS = 900.0
+DOOR_HOLD_LOGS = ("state/holds.jsonl", "atlas/state/holds.jsonl")
+DOOR_OUTCOMES = {
+    "approved_ran": "approved on your card, and it ran",
+    "denied": "denied on your card; nothing ran",
+    "refused": "refused by the door when it was answered; nothing ran",
+    "crossed": "answered elsewhere first; nothing more ran",
+}
+
+
+def door_hold_wait(ground, hold: str, seconds: float = DOOR_WAIT_SECONDS, tick: float = 1.0) -> str:
+    """Wait on the door's hold logs until the hold is answered: its outcome, or
+    '' when no answer came in time."""
+    deadline = time.time() + seconds
+    while True:
+        for rel in DOOR_HOLD_LOGS:
+            p = Path(ground) / rel
+            try:
+                lines = p.read_text(encoding="utf-8").splitlines()[-400:] if p.is_file() else []
+            except OSError:
+                lines = []
+            for line in reversed(lines):
+                if hold not in line:
+                    continue
+                try:
+                    row = json.loads(line)
+                except ValueError:
+                    continue
+                if row.get("id") == hold and row.get("what") not in (None, "", "held"):
+                    return str(row.get("what"))
+        if time.time() >= deadline:
+            return ""
+        time.sleep(tick)
+
+
+def door_call(door, said: str) -> None:
+    """The mcp_call turn: one line of what is asked, the call, and -- when the
+    door holds it -- the wait on his card and one line of what became of it."""
+    import re
+    sess = door.sess
+
+    def report(line):
+        print(line)
+        door.wire.emit("report", text=str(line))
+
+    started = time.time()
+    asked = said.strip()[len("mcp_call"):].strip()
+    words = asked.split(None, 2)
+    tool = words[1] if len(words) > 1 else "the call"
+    report(f"  asking the door: {asked[:400]}")
+    try:
+        result = str(sess.skills.execute("mcp_call", {"content": asked}, sess.env) or "")
+    except Exception as exc:
+        result = f"Refused: mcp_call failed in the engine ({type(exc).__name__}: {exc})."
+    held = re.search(r"parked as (hold_[A-Za-z0-9_]+)", result) if result.startswith("HELD") else None
+    what = ""
+    if held:
+        hold = held.group(1)
+        report(f"  the card is at the foot of the terminal ({hold}); waiting for your click")
+        what = door_hold_wait(door.ground, hold)
+        text = f"{tool}: " + (DOOR_OUTCOMES.get(what, what) if what else
+                              f"no answer in {DOOR_WAIT_SECONDS / 60:.0f} minutes; the card stays in the dock") + "."
+    else:
+        text = result
+    took = time.time() - started
+    failed = text.startswith("Refused") or bool(held and what != "approved_ran")
+    try:
+        sess.sitting.runs.append({
+            "objective": said[:300], "pipeline": "door", "stages": 1, "failed": int(failed),
+            "elapsed": took, "transcript": "", "tools": ["mcp_call"], "guards": [],
+            "seats_failed": [], "out_of_time": [], "delivery": text[:200]})
+    except Exception:
+        pass
+    print(f"\n--- delivery · {took:.1f}s ---\n")
+    print(text)
+    door.wire.emit("delivery", text=text, elapsed=round(took, 1),
+                   transcript="", pipeline="door", flags=[], notes=[],
                    failures=[], verdicts=[], out_of_time=[], project="", steps=[])
 
 
@@ -1860,6 +1951,11 @@ class Door:
         # STEWARD DRIVES (WHAT'S LEFT H31): the goal goes to the driver, above.
         if objective.split(None, 1)[0].lower() == "/drive":
             door_drive(self, objective[len("/drive"):].strip())
+            return True
+        # A DOOR CALL, SAID PLAINLY (WHAT'S LEFT C77): a line that leads with mcp_call is
+        # decided already, so no seat reads it -- door_call, in the driver's section.
+        if objective.split(None, 1)[0].lower() == "mcp_call":
+            door_call(self, objective)
             return True
 
         if _cli._topic_turn(sess, objective):
