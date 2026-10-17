@@ -671,6 +671,12 @@ dropped by operator ruling 2026-09-01 — see the fix log.
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
 
+## HANDOFF FOR 2026-10-16 — read this before anything below it
+
+**Where the day stands.** Steward drives (H31) is built and merged on his clicks: /drive with one job, plan, each, tidy and ship, and What is next after every job (the core's pull request 28 and atlas's 21), then C77, a door call said plainly (the core's 29), and his law of the day, SITTING LAW 11, everything is run by Steward through the webapp (the core's 30; the ledger's entry 11, a draft for his seal). Each was saved and sent by Steward's own ship: the suites as its check, then the commit, the push, the pull request, CI and the merge on his cards; tidy deleted every branch already merged into main in both repositories. This block is Steward's own, H31's proof job (bb): from 2026-10-10 the days' notes had stood under that day's block, so the gate found no block for the day.
+
+**Next.** C71 through Steward, then H31's door change (step (e)). CLAUDE.md's RULE 15 for SITTING LAW 11 is his to write: the door refuses a hand's edit to it.
+
 ## HANDOFF FOR 2026-10-10 — read this before anything below it
 
 **SINCE THE BLOCK BELOW.** The same conversation, carried on from 2026-10-08 through 2026-10-09 into this morning, across context resets; the laws re-read through the glass at each of his messages. Every time below is local (UTC-7), read off git, atlas's own history of every move (`atlas/.git/logs/HEAD`), the sitting ledger, the door's hold record (`state/holds.jsonl`) and the suites' run history. No sitting has opened since 363 (closed 2026-10-08 14:14:44). One sitting the block below does not name stands on the ledger before it: 360 (2026-10-08 11:37:26 to 11:38:27, no turn, closed by the client).
