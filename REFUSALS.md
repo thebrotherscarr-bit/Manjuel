@@ -1051,7 +1051,7 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 ## THE SITES — every `Refused:` in the code, read off the code
 
-32 refusals are written up above, by hand, each with the sitting that earned it. The code refuses at 95 sites. This tail lists every one -- module, line, and the words it says -- regenerated from the code by `python tests/refusals.py` so it cannot drift; `--check` in CI refuses a stale copy. A site is the code's fact; a section above is the account of why. Where a site's words name a law, a rule or a gate, the section is the one that names the same.
+32 refusals are written up above, by hand, each with the sitting that earned it. The code refuses at 96 sites. This tail lists every one -- module, line, and the words it says -- regenerated from the code by `python tests/refusals.py` so it cannot drift; `--check` in CI refuses a stale copy. A site is the code's fact; a section above is the account of why. Where a site's words name a law, a rule or a gate, the section is the one that names the same.
 
 ### manjuel/cli.py — 1 site
 
@@ -1086,7 +1086,7 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 | 4055 | a sub-task may not start another sub-task |
 | 4059 | {SUB_RUNS_MAX} sub-tasks have already run this |
 
-### manjuel/serve.py — 6 sites
+### manjuel/serve.py — 7 sites
 
 | line | says |
 |---|---|
@@ -1096,6 +1096,7 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 | 838 | the line of work `{opening}` could not be opened: {out} |
 | 844 | {_drive_rel(*key)} could not be read before it was written: {exc} |
 | 848 | {name} failed in the engine ({type(exc).__name__}: {exc}). |
+| 1584 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
 
 ### manjuel/skills.py — 76 sites
 

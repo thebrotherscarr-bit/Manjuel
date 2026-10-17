@@ -22908,12 +22908,15 @@ def test_steward_drives_to_a_check(reg, lib, book):
                 (ship / "f.txt").write_text("changed\n", encoding="utf-8")
                 (ship / "new.txt").write_text("new\n", encoding="utf-8")
                 events.clear()
-                d = SV.drive("ship save the work", skills=Lib(), env=env, ground=ship, logs=tmp / "logs",
+                # The check runs first, and what it writes (made.txt here; a map, the stamps) is in the save.
+                d = SV.drive(f"ship save the work | check: {py} -c \"open('made.txt', 'w').write('m')\"",
+                             skills=Lib(), env=env, ground=ship, logs=tmp / "logs",
                              ask=asker("y"), report=lambda line: None, client=Model())
                 saved = sorted(h("show", "--name-only", "--format=", "HEAD").split())
-                check("drive ship: the work on disk is saved on a line of its own on one answer, main untouched",
+                check("drive ship: the work on disk, and what its check wrote, saved on a line of its own on one answer",
                       h("rev-parse", "--abbrev-ref", "HEAD").strip().startswith("drive-")
-                      and saved == ["f.txt", "new.txt"] and h("log", "-1", "--format=%s").strip() == "save the work"
+                      and saved == ["f.txt", "made.txt", "new.txt"]
+                      and h("log", "-1", "--format=%s").strip() == "save the work"
                       and h("rev-list", "--count", "main").strip() == "1"
                       and [e[0] for e in events] == ["ask"] and "new.txt" in events[0][1],
                       f"{saved} -> {d.verdict}")
@@ -22930,8 +22933,36 @@ def test_steward_drives_to_a_check(reg, lib, book):
                     else:
                         os.environ[k] = v
 
-        # THE WIRE IN: /drive reaches the driver from Door.turn.
+        # A DOOR CALL, SAID PLAINLY (C77): one line before the card, the wait on the door's hold log, one
+        # line of what became of it -- and no seat in between.
+        (tmp / "state").mkdir()
+
+        class DoorLib:
+            def execute(self, name, args, env):
+                events.append(("ran", name, args.get("content")))
+                (tmp / "state" / "holds.jsonl").write_text(_json.dumps(
+                    {"id": "hold_1_2_git_branch", "tool": "git_branch", "what": "approved_ran"}) + "\n",
+                    encoding="utf-8")
+                return ('HELD: "git_branch" writes, and this call did not come from the operator\'s own glass '
+                        '(k-x). Nothing has been written.\n\nIt is parked as hold_1_2_git_branch and waits '
+                        'for his hand.')
+        said_on = []
+        door2 = _NS(ground=tmp, wire=_NS(emit=lambda kind, **kw: said_on.append((kind, kw.get("text")))),
+                    sess=_NS(skills=DoorLib(), env=env, sitting=_NS(runs=[])))
+        events.clear()
+        with _cl.redirect_stdout(_io.StringIO()):
+            SV.door_call(door2, 'mcp_call atlas git_branch {"action": "switch", "name": "main"}')
+        check("door call: it says what it asks before the card, waits for his click, and says what became of it",
+              said_on and said_on[0] == ("report", '  asking the door: atlas git_branch {"action": "switch", "name": "main"}')
+              and [k for k, _ in said_on].count("delivery") == 1 and said_on[-1][0] == "delivery"
+              and said_on[-1][1] == "git_branch: approved on your card, and it ran."
+              and events == [("ran", "mcp_call", 'atlas git_branch {"action": "switch", "name": "main"}')],
+              str(said_on))
+
+        # THE WIRE IN: /drive reaches the driver from Door.turn, and a line leading with mcp_call the door call.
         src = (ROOT / "manjuel" / "serve.py").read_text(encoding="utf-8")
+        check("door call: Door.turn hands a line that leads with mcp_call to door_call, not to a seat",
+              'objective.split(None, 1)[0].lower() == "mcp_call"' in src and "door_call(self, objective)" in src)
         check("drive: Door.turn hands /drive to the driver",
               'objective.split(None, 1)[0].lower() == "/drive"' in src
               and 'door_drive(self, objective[len("/drive"):].strip())' in src)
