@@ -38,7 +38,14 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (12:14):** the road's step (1), H32, built on the line `drive-1019-115957` by Steward on your cards, to be
+  **Where it stands (16:24):** step (2), the release faults, built, read twice by reviewers and recorded: C121, C123 and C124
+  under Done, C122's second half ruled to v0.2.7, C125 read, atlas's one annotation written; next, Steward's ship of both
+  repositories (pull request 41 brought up to date, and atlas's own), then step (3), I2's own faults.
+  **At 15:50 it stood:** step (2), the release faults, built and read by reviewers; under C on the page now: C121, C123
+  and C124 taken out to move under Done, C122's second half ruled to v0.2.7, C125 read, C86 seen again, C127 and C128 found.
+  Pull request 41 is open, its first run red on two strokes; the next save puts it right.
+  **At 12:46 it stood:** step (1), H32, sent and merged; step (2), the release faults, planned under I2 and under way.
+  **At 12:14 it stood:** the road's step (1), H32, built on the line `drive-1019-115957` by Steward on your cards, to be
   sent by Steward's ship; restart required; C126 found. Next on the road: step (2), the release faults C121 to C125.
   **At 11:34 it stood:** H5's step (1) done and sent (pull requests 37 and 38); the v0.2.6 and v0.2.7 checklist read off
   the code and the record, its faults C121 to C125, G's list for v0.2.6 and the road to the cut under I2, set on your cards:
@@ -144,7 +151,8 @@ Written whole on 2026-10-13 from the record (your card: "Honest pass first"): ev
 or ruled, and every one found in the sittings since, from I2's own account. One line each, naming the piece that mends it. Not
 repeated here: the glass's mic, ruled to I5 on your card, and the law chain's two checkers disagreeing, which is H7.
 Ruled forward to v0.2.7 on your card of 2026-10-19 ("Release + I2's own"): every line here that is not one of I2's own (C13,
-C38 to C67, C69) and not C121 to C125. Each stays here, carried; the road to v0.2.6 (I2) does not wait on it.
+C38 to C67, C69) and not C121 to C125. Each stays here, carried; the road to v0.2.6 (I2) does not wait on it. C122's second
+half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
 
 ### The models misbehaving
 
@@ -325,6 +333,13 @@ carry the mend; none asks for anything new.
   two lines (the blank line and the C71 entry's heading in CHANGELOG.md), and only the tool's "3 replaced by 5" showed it;
   restored 2026-10-16 in the book's change. Mend: `drive_act` compares the passage written with the job's own `@@ OLD`/`@@ NEW`
   and says so when they differ (`manjuel/serve.py`, through `_edit_passage` in `manjuel/skills.py`).
+  Again 2026-10-19, in the road to v0.2.6's step (2): asked for one passage of `ready` in `tests/cut.py`, the model's first
+  call reached the door with no `@@ NEW` half and was refused; its retry took its own read of the whole definition as the
+  passage and wrote the new text over it, and the refusal of code left unsaved, four lines it was never asked to touch, was
+  gone. The tool said "28 line(s) replaced by 37" and nothing else noticed; the hand found it reading the file and put it
+  back by a job of its own. The same afternoon the CHANGELOG entry for that work lost its body twice the same way (one
+  heading line written where a heading, a body and the next heading were asked); it was put back with `git restore` on your
+  cards and written by adding only after an anchor, a part at a time.
 - **C87. Two of a held call's real outcomes print raw, and one listed outcome can never happen.** A plain door call waits on
   `approved_errored` and `vanished` and prints those words bare; its `crossed` line never matches (a crossed call is never
   held). Mend: `DOOR_OUTCOMES` in `manjuel/serve.py`.
@@ -401,31 +416,49 @@ carry the mend; none asks for anything new.
   each, its edits made, asked to run or write a script of its own before calling done, and was stopped. Mend: a malformed
   call is handed back to the model once, as a refusal is; and the driver refuses running a file the same job wrote (C84's
   own mend).
-- **C121. The release check refuses its own cut when a SPEC section-4 status moved.** Found 2026-10-19 building the v0.2.6 and
-  v0.2.7 checklist, and read in the code: once a tag is cut, the entries under its CHANGELOG heading stop counting for `spec`
-  (`logged_since` in `tests/release.py`; `test_the_release_gate` asserts it), and the flow's last step and GitHub's release
-  check both ask after the tag, so a cut that moves a section-4 line ends FAIL there. It turned v0.2.0's tag red on 4.4.
-  v0.2.7 must move 4.8 and 4.9, so as built it fails by design. Mend: `spec` hands the tag being cut to `logged_since`, which
-  counts that heading as not yet cut.
+- **C127. A job's send carries only its own files, while its check ran on everything on disk.** Found 2026-10-19, at pull
+  request 41: a job's check (the strokes) passed on the working tree, which held a fix another job had left unsaved (the
+  refusal C86's dropped lines took out, put back); the job's commit, push and pull request carried only the file it wrote, so
+  GitHub proved a tree the check never saw, and all four legs went red on the two strokes that test that refusal. Mend:
+  before a job sends, `drive_act` (`manjuel/serve.py`) names what is unsaved outside the job's own files and refuses the
+  send, or the check runs on what the commit carries.
+- **C128. A Steward job's last passage can take the job's own check with it.** Found 2026-10-19, writing the CHANGELOG entry
+  of the road's step (2): twice running, a job whose last passage ended in prose wrote the line after it -- the driver's own
+  "The check that decides done: ..." -- into the file as a line of its own, and the job's check then failed on its own words;
+  the same words split F46's heading on 2026-10-16. That day no job whose last passage ended in code or a marker line did
+  it. Mend: `_drive_job` (`manjuel/serve.py`) sets the check apart from the job's text where the model cannot read it as part
+  of a passage, or `drive_act` refuses a passage that carries the check's own words.
+  The cause, read in the code the same day: the job's goal ends at its last passage, and the very next line of the prompt
+  is "The check that decides done:" (`_drive_job` in `manjuel/serve.py`), so the model's last edit runs on to the end of the
+  message; a closing sentence after the last call was copied in too. A last "Call N: done" with no passage kept it out in
+  the jobs that followed.
+- **C129. The cut's first question judges a carried file by its name, and the record's own save is not asked.** Found
+  2026-10-19 by the re-check of the road's step (2): `ready` in `tests/cut.py` lets `pyproject.toml` and
+  `manjuel/__init__.py` ride unsaved because the bump writes their version line, so a code or dependency edit inside either
+  rides a cut too; and the record's save at gate 3 (`git_commit` with no files, so `git add -A`) is not asked at all. Ruled to
+  v0.2.7 on your card ("Small fixes now"). Mend: in a file that carries a pin only the version line may differ from the last
+  save, and the record step asks `ready` before its save (`tests/cut.py`, `flows/release.json`).
 - **C122. The release flow opens its line from wherever the ground stands, and a refused git step does not stop it.** Found
   2026-10-19, read in the code: the flow opens `release-<tag>` with a bare `git switch -c` from where each repository stands,
   never switching to main first, and after a Steward ship the ground is left on the merged line (C83). A door git tool's
   refusal comes back as a plain answer, not an error, so the run carries on: fired again after a stop, opening the line is
   refused and the cut runs on whatever line the ground stands on. Mend: the flow brings each repository to main, level with
   GitHub, before it opens the line, and a git tool's refusal inside a flow is an error (`atlas/line/internal/tools/gitctl.go`,
-  `flows/release.json`).
-- **C123. The release's save sweeps in everything unsaved.** Found 2026-10-19, read in the code: both save steps name no files,
-  and the door's `git_commit` with none runs `git add -A`, so whatever is loose on the ground at the second gate goes into the
-  release commit and on to GitHub. Mend: G's list checks the ground holds nothing unsaved but the record before firing, or the
-  save names its files (`flows/release.json`).
-- **C124. The cut's own live check leaves out the review panel.** Found 2026-10-19, read in the code: the flow runs the live
-  check's `morning` set only, and I2 asks for 9 of 9 with the review panel inside its turn, which only the `all` set runs.
-  Mend: the `all` set on the cut day before firing (G's list), or the flow's live step asks for `all` (`flows/release.json`).
+  `flows/release.json`). **Its first half mended 2026-10-19** (the road's step (2), by Steward on your cards): the cut's first
+  question (`ready` in `tests/cut.py`, asked by the bump and again by the check) refuses a cut that stands on no release line
+  or off GitHub's main, as last fetched and as GitHub answers now, so a refused opening stops the cut before it writes a byte.
+  **Its second half ruled to v0.2.7** (your card: "Rule it to v0.2.7"): a refused save or send (`git_commit`, `git_push`)
+  answers in words, not as an error, so the run walks on to the merge check, which ends it FAIL there; a refused merge
+  already stops the run at that check.
 - **C125. GitHub's runners move under the provers.** Seen 2026-10-07 (HANDOFF, its (f)) and never put here until 2026-10-19:
   GitHub says `actions/checkout@v4` and `actions/setup-python@v5` run on Node 20, which is deprecated, and that `ubuntu-latest`
   moves to Ubuntu 26 from 2026-10-19; all four workflows of both repositories use them, and the cut's merges and its wait on
   GitHub depend on them. Mend: read the first runs after that day; move the actions to their next versions, each pinned to a
-  commit as the release check's `workflows` rule asks (`.github/workflows/`, `atlas/.github/workflows/`).
+  commit as the release check's `workflows` rule asks (`.github/workflows/`, `atlas/.github/workflows/`). **Read 2026-10-19**
+  (your card: "Watch, move later"): the core's prove runs on pull requests 35 to 40 passed; atlas has not moved since
+  2026-10-16 and the core's release gate runs only on a tag, so both are read at the cut. The two actions move in the 0.2.8
+  pass (I4). The `workflows` rule pins to a commit only the actions from outside GitHub's own `actions/`, so the pin asked
+  above for these two is a choice, not the rule's.
 - **C117. The doctrine check cannot fail.** `python -m manjuel.doctrine --check` exits 0 whatever it finds, so as a job's check it
   passed on 2026-10-16 with 11 findings standing (F45). Mend: its `main()` (`manjuel/doctrine.py`) exits non-zero on a finding.
 
@@ -602,7 +635,9 @@ Found 2026-10-16, re-checked 2026-10-19 (INVENTORY.md section 5 carries each as 
 the road to 0.2.6"). Fired by you through the release flow: its three gates and the publish are yours, and `git_pr` answers your
 glass alone, so Steward cannot run this flow. Not fired until I2's road to the cut is done. On the cut day, in order:
 
-- [ ] 1. C121 to C125 mended, or C125 read off the first runs after 2026-10-19, so the cut can finish COMPLETE.
+- [x] 1. C121 to C125 mended, or C125 read off the first runs after 2026-10-19, so the cut can finish COMPLETE: by Steward
+  on your cards, 2026-10-19 -- C121, C123 and C124 under Done; C122's first half mended and its second half ruled to v0.2.7
+  (your card); C125 read off the core's runs, atlas's and the release gate's read at the cut, its move in the 0.2.8 pass.
 - [ ] 2. Both repositories on main, level with GitHub, no pull request open, and nothing unsaved on the ground but the record
   this list names (C123).
 - [ ] 3. No sitting open, the door started with `--manjuel`, and the send wall open.
@@ -616,6 +651,10 @@ glass alone, so Steward cannot run this flow. Not fired until I2's road to the c
 - [ ] 8. Atlas's draft published or dropped (yours, on GitHub); both tags' own runs read on GitHub, not only main's.
 - [ ] 9. The record after the cut, on a line of its own: I2 to Done, A naming v0.2.7, HANDOFF and DAYBOOK, STATUS.md printed
   last, the release check asked again; INVENTORY's T72 and F3 measured off this run.
+
+A run that stops before gate 2's save is fired again from the start; past that save the bump refuses a re-fire, so a run held
+at a gate is carried on with Resume, and one that stopped past the save is finished by hand through the door -- the tags, then
+`cut.py record` and its save (your card of 2026-10-19: "Resume or by hand").
 
 Undo: before gate 2 nothing has left this machine, and the line is yours to drop; after it, mend forward through a pull request;
 a sent tag is never moved, and only plain numbers are allowed, so a botched v0.2.6 makes the next cut v0.2.7.
@@ -1041,6 +1080,23 @@ goals". The steps under each are proposed from the disk; each is yours to change
   stand and carried to the 0.2.8 pass (your card: "Rule them kept, carry on"), so G23 to G25 take that ruling. (6) The cut, by
   G's list. LAUNCH_PLAN's pieces 6 to 8 are not on this road; where they go is yours, asked when the road reaches (6).
   *(your words and cards in chat, 2026-10-19)*
+  **Step (2), planned 2026-10-19** (your cards: "Record only", "In G's list", "Watch, move later"), by Steward on your cards,
+  each stroke shown red first: C121 -- `spec` in `tests/release.py` counts the tag being cut as not yet cut, so a cut that
+  moves a SPEC line no longer refuses itself after the tag; C122 and C123 -- the cut's first step (`tests/cut.py`, before the
+  bump) refuses unless each repository stands on GitHub's main as last fetched with nothing unsaved but the record and the
+  cut's own outputs, so code reaches main through its own pull request, never inside a cut; C124 -- closed as handled by G's
+  list (its item 6, the live check's `all` set before firing); C125 -- the runs of 2026-10-19 (pull requests 35 to 39) passed
+  on the new runner, and the two actions move in the 0.2.8 pass (I4).
+  **Step (2), built 2026-10-19** on the line `drive-1019-125052` by Steward on your cards, read before its send by three
+  read-only reviewers with a skeptic for each finding (12 of 20 held) and again after the fixes (4 more held, put right on
+  your card "Small fixes now"): C121 as planned; C122's first half and C123 with more than planned -- the cut's first question
+  also refuses a cut on any line but its own tag's, asks GitHub itself where main stands and says git's own reason when it
+  cannot, fails closed when git cannot answer, carries the suites' stamps by the gate's own list and atlas's files by its
+  version.ps1's, and is asked again by the check before the save ("Ask again at check"); a stop past the save is resumed or
+  finished by hand ("Resume or by hand"); C122's second half ruled to v0.2.7; C124 as planned; C125 read off the core's runs
+  only. Corrected here, not above: pull requests 35 to 40 passed, and which runner image each used was not read. The strokes
+  were written with the code, not shown red against the old code first as planned. Sent as pull request 41 on your cards;
+  its first run went red on two strokes (C86 again and C127, under C), put right in the next save. Left for v0.2.7: C129.
 - **I3. v0.2.7: both repositories keep what earlier versions promised.** Every OPEN line in SPEC section 4 met or ruled; every open line on this
   page (B, E, H) built, ruled, or moved to a later version on your word; the found items in HANDOFF from 2026-10-05 on put on this page or ruled;
   the wife test (E1) with her at the glass and nobody helping.
@@ -1082,6 +1138,24 @@ goals". The steps under each are proposed from the disk; each is yours to change
 ## Done
 
 Finished lines, newest first. A number is never used again.
+
+- **C121. The release check refuses its own cut when a SPEC section-4 status moved.** DONE 2026-10-19, by Steward on your
+  cards (the road to v0.2.6, its step (2)): `spec` (`tests/release.py`) hands `logged_since` the marks held less the one being
+  cut, so asked after the tag, as the flow's last read and GitHub's release check ask, the cut's own section still counts. The
+  line as it stood: once a tag is cut, the entries under its CHANGELOG heading stop counting for `spec` (`logged_since` in
+  `tests/release.py`; `test_the_release_gate` asserts it), and the flow's last step and GitHub's release check both ask after
+  the tag, so a cut that moves a section-4 line ends FAIL there. It turned v0.2.0's tag red on 4.4. v0.2.7 must move 4.8 and
+  4.9, so as built it fails by design. *(CHANGELOG, "core: the cut stands on its release line")*
+- **C123. The release's save sweeps in everything unsaved.** DONE 2026-10-19, by Steward on your cards ("Record only", "Ask
+  again at check"): the cut's first question (`ready` in `tests/cut.py`), asked by the bump before it writes a byte and again
+  by the check, the last step before the save, refuses anything unsaved besides the record, the suites' stamps and the cut's
+  own outputs, by name, so the save at the second gate carries the record only, but for what lands during the wait at that
+  gate. The line as it stood: both save steps name no files, and the door's `git_commit` with none runs `git add -A`, so
+  whatever is loose on the ground at the second gate goes into the release commit and on to GitHub. *(CHANGELOG, "core: the cut stands on its release line")*
+- **C124. The cut's own live check leaves out the review panel.** DONE 2026-10-19, on your card ("In G's list"): G's list,
+  its item 6, asks for the live check's `all` set, the review panel inside its turn, on the cut day before the flow is fired.
+  The line as it stood: the flow runs the live check's `morning` set only, and I2 asks for 9 of 9 with the review panel
+  inside its turn, which only the `all` set runs.
 
 - **C101. `ground_read` refuses or mis-reads a definition asked for by name.** DONE 2026-10-19, by Steward on your cards (pull
   request 35): `gate_paths` gates only the file when both are given, and `_windowed_python` shows the two-tag call, drops a line

@@ -4,12 +4,16 @@
 The release flow (flows/release.json) runs these through the door's
 `release_step`, his gates between them, and his Bash tab can run any one:
 
-    python tests/cut.py bump vX.Y.Z     the pins (pyproject.toml, manjuel/__init__.py),
+    python tests/cut.py bump vX.Y.Z     first, each repository on GitHub's main with
+                                        nothing unsaved but the record (C122, C123);
+                                        then the pins (pyproject.toml, manjuel/__init__.py),
                                         atlas's version files (its own version.ps1,
                                         set and then sync), and both changelogs
                                         folded under the mark
     python tests/cut.py index           the toll index rebuilt after the live check
-    python tests/cut.py check vX.Y.Z    STATUS.md printed, then the release gate:
+    python tests/cut.py check vX.Y.Z    the bump's first question asked again, as the
+                                        last step before the save (C123); then
+                                        STATUS.md printed, and the release gate:
                                         every line ok but `remotes` and `ci`, which
                                         wait on the send
     python tests/cut.py ci vX.Y.Z       GitHub's runs waited for in both
@@ -24,7 +28,12 @@ The release flow (flows/release.json) runs these through the door's
                                         reads, so the record's save carries it
 
 Every step can be run again: a ground already where a step leaves it is said
-so and left alone, so a release that stopped is fired again from the start.
+so and left alone, so a release that stopped BEFORE the save at its second
+gate is fired again from the start. Past that save the bump refuses a re-fire
+(the line no longer stands on GitHub's main, C122): a run held at a gate is
+carried on with Resume, and one that stopped past the save is finished by
+hand through the door -- the tags, then `cut.py record` and its save (his
+card of 2026-10-19: "Resume or by hand").
 Exit 0 when the step did what it says, 1 when it refused, 2 when it was not
 asked properly. NOTHING HERE SAVES, SENDS OR CUTS: those are the door's own
 git_commit, git_push and git_tag, each past a gate that grants it (RULE 6,
@@ -91,6 +100,106 @@ def fold(text: str, unreleased: str, head: str, stamp: str) -> str:
     if not any(ln.strip() for ln in lines[at + 1:nxt]):
         raise Refused(f"nothing under {unreleased!r} -- write what the mark carries first")
     return "\n".join(lines[:at + 1] + ["", f"{head} — {stamp}"] + lines[at + 1:])
+
+
+# WHAT A CUT MAY CARRY (WHAT'S LEFT C122 and C123, his card of 2026-10-19: "Record
+# only"). The bump is the cut's first step, so before a byte is written it refuses a
+# repository that stands on no release line, or whose line is not GitHub's main --
+# as last fetched and as GitHub answers now -- (a release line opened from a stale or
+# merged line, or a re-fire left on the wrong one), and anything unsaved besides the
+# record and the cut's own outputs. The check, the last step before the save at the
+# second gate, asks the same again (his card: "Ask again at check"): that save takes
+# everything unsaved, and code reaches main through its own pull request, never
+# inside a cut. The suites' stamps are the gate's own list (release.STAMPS).
+RECORD = ({"CHANGELOG.md", "WHATS_LEFT.md", "HANDOFF.md", "DAYBOOK.md", "STATUS.md", "BUILDPATH.md",
+           "TASKS.md", "pyproject.toml", "manjuel/__init__.py"}
+          | {f"tests/{stamp}" for stamp in release.STAMPS})
+# Atlas's own outputs, named exactly as its version.ps1 writes them (its VERSION_FILES and
+# PIN_PATTERNS), and its changelog folded by the bump: a crate's own Cargo.toml is not one.
+ATLAS_RECORD = {"CHANGELOG.md", "VERSION", "line/VERSION", "line/cmd/atlas-mcp/VERSION", "line/cmd/atlas-tui/VERSION",
+                "line/cmd/atlas-town/VERSION", "line/cmd/atlas-door/VERSION", "line/cmd/atlas-vc/VERSION",
+                "webapp/handlers/VERSION", "Cargo.toml", "core/src/version.rs", "Cargo.lock"}
+
+
+def git_ask(d: Path, *args: str) -> tuple[str | None, str]:
+    """One git answer in `d`, taken without git's optional locks and never waiting on a
+    prompt, and git's own reason when there is none: (None, why)."""
+    import os
+    try:
+        q = subprocess.run(["git", *args], capture_output=True, text=True, cwd=str(d), timeout=60,
+                           stdin=subprocess.DEVNULL,
+                           env={**os.environ, "GIT_OPTIONAL_LOCKS": "0", "GIT_TERMINAL_PROMPT": "0"})
+    except subprocess.TimeoutExpired:
+        return None, "no answer inside 60 seconds"
+    except Exception as exc:
+        return None, str(exc)
+    if q.returncode == 0:
+        return q.stdout, ""
+    said = [ln.strip() for ln in (q.stderr or "").splitlines() if ln.strip()]
+    first = next((ln for ln in said if ln.startswith(("fatal:", "error:"))), said[-1] if said else "")
+    return None, first or f"git exited {q.returncode}"
+
+
+def git_out(d: Path, *args: str) -> str | None:
+    """One git answer in `d`; None when git cannot answer, so a question it could not put
+    is never read as a clean answer."""
+    return git_ask(d, *args)[0]
+
+
+def carried(side: str, path: str) -> bool:
+    """Whether a path left unsaved may ride in the cut: the record and the cut's own outputs."""
+    if side == "core":
+        return path in RECORD
+    return path in ATLAS_RECORD
+
+
+def ready(root: Path, mark: str = "", after_bump: bool = False) -> list[str]:
+    """Each repository on its release line (release-<mark>, when the mark is named), level
+    with GitHub's main -- as last fetched and as GitHub answers now -- with nothing unsaved
+    but the record; or the step refused, this step writing nothing. Asked by the bump, and
+    again by the check, after_bump, when the bump's own writes stand unsaved on the line."""
+    said: list[str] = []
+    sides = [("core", root)] + ([("atlas", root / "atlas")] if (root / "atlas" / ".git").exists() else [])
+    for side, d in sides:
+        head = (git_out(d, "rev-parse", "HEAD") or "").strip()
+        main = (git_out(d, "rev-parse", "origin/main") or "").strip()
+        if not head or not main:
+            raise Refused(f"{side}: git could not say where HEAD and GitHub's main stand -- bring main down first")
+        branch = (git_out(d, "rev-parse", "--abbrev-ref", "HEAD") or "").strip()
+        back = ("this step wrote nothing; the bump's writes stand unsaved on the line, so the way back is "
+                "by hand: put them aside, back to main, level with GitHub, the release line dropped, then "
+                "fire again" if after_bump else
+                "this step wrote nothing; back to main, level with GitHub, the release line dropped if it "
+                "was opened from the wrong place, then fire again")
+        want = f"release-{mark}" if mark else "release-"
+        if not (branch == want if mark else branch.startswith(want)):
+            raise Refused(f"{side}: the cut stands on {branch or 'no line'}, not on "
+                          f"{want if mark else 'a release line'} -- opening it was refused or never ran; {back}")
+        if head != main:
+            raise Refused(f"{side}: {branch} stands on {head[:7]}, not on GitHub's main as last "
+                          f"fetched ({main[:7]}) -- {back}")
+        listed, why = git_ask(d, "ls-remote", "origin", "refs/heads/main")
+        remote = (listed or "").split()
+        if not remote:
+            raise Refused(f"{side}: GitHub could not be asked where main stands ({why or 'no answer'}) -- "
+                          f"this step wrote nothing; fire again once GitHub answers")
+        if remote[0] != head:
+            raise Refused(f"{side}: GitHub's main is at {remote[0][:7]}, not at {head[:7]} where {branch} "
+                          f"stands: main as last fetched is stale -- {back}")
+        listing = git_out(d, "status", "--porcelain", "--untracked-files=all")
+        if listing is None:
+            raise Refused(f"{side}: git could not say what is unsaved -- this step wrote nothing")
+        stray = []
+        for line in listing.splitlines():
+            path = line[3:].split(" -> ")[-1].strip().strip('"')
+            if path and not carried(side, path):
+                stray.append(path)
+        if stray:
+            raise Refused(f"{side}: unsaved besides the record: {', '.join(stray[:12])}"
+                          + (f" and {len(stray) - 12} more" if len(stray) > 12 else "")
+                          + " -- a cut carries the record only; save the rest through its own pull request")
+        said.append(f"{side}: on GitHub's main ({main[:7]}), on {branch}, nothing unsaved but the record")
+    return said
 
 
 def bump(root: Path, mark: str, stamp: str, run=subprocess.run) -> list[str]:
@@ -373,15 +482,18 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     try:
         if step == "bump":
-            said = bump(ROOT, mark, datetime.now().strftime("%Y-%m-%d %H:%M"))
+            said = ready(ROOT, mark) + bump(ROOT, mark, datetime.now().strftime("%Y-%m-%d %H:%M"))
             print("\n".join(said + [f"BUMPED to {mark}"]))
             return 0
         if step == "record":
             print("\n".join(record(ROOT, mark) + [f"RECORDED {mark}"]))
             return 0
+        # The check is the last step before the save at the second gate, and that save
+        # takes everything unsaved, so it asks again what the bump asked (C123).
+        said = ready(ROOT, mark, after_bump=True) if step == "check" else []
         ok, text = {"index": lambda: index(ROOT), "check": lambda: check(ROOT, mark),
                     "ci": lambda: ci(ROOT, mark)}[step]()
-        print(text)
+        print("\n".join(said + [text]))
         return 0 if ok else 1
     except Refused as exc:
         print(f"REFUSED: {exc}")

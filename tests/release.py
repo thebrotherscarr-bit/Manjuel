@@ -404,7 +404,11 @@ def spec(root: Path = ROOT, tag: str | None = None, cutting: str = "") -> Check:
     changed = [s for s in sorted(set(cur) | set(before)) if cur.get(s) != before.get(s)]
     if not changed:
         return Check("spec", True, f"{n_lines} section-4 lines, none changed since {tag}")
-    logged = logged_since(log, tag, held_marks(root))
+    # THE TAG BEING CUT COUNTS ITS OWN HEADING (WHAT'S LEFT C121, 2026-10-19). Asked
+    # after the cut -- the flow's last step, GitHub's release check on the tag -- the
+    # tag is held already, and its section was read as history, so a cut that moved a
+    # section-4 line refused itself.
+    logged = logged_since(log, tag, held_marks(root) - {cutting})
     unlogged = [s for s in changed if s not in logged]
     if unlogged:
         return Check("spec", False, f"changed since {tag} with no CHANGELOG line naming them "

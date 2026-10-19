@@ -3907,6 +3907,9 @@ def test_the_release_gate(reg, lib, book):
             c = _rel.spec(g, "v0.0.1")
             check("   and once that mark is cut, the folded section is history and no longer counts",
                   not c.ok and "4.1" in c.why and "uncut version" in c.why, c.why)
+            c = _rel.spec(g, "v0.0.1", cutting="v0.0.2")
+            check("   but asked for the tag being cut, its own section still counts after the cut (C121)",
+                  c.ok, c.why)
         finally:
             _rel.held_marks = keep_held
         _rel.tagged_file = lambda root, tag, rel: None
@@ -18476,6 +18479,158 @@ def test_the_release_steps_move_the_record_as_one(reg, lib, book):
             del _cut.print_status
         else:
             _cut.print_status = real
+
+    # ---- WHAT A CUT MAY CARRY (WHAT'S LEFT C122 and C123, his card of 2026-10-19: "Record only") ----
+    # The same repository, its door kept out as the ground keeps it (atlas/ is its own repository),
+    # then given an origin whose main is its own. The cut's first step refuses a repository git
+    # cannot place against GitHub's main, and main itself; it stands on a release line opened from
+    # GitHub's main with only the record unsaved, the suites' stamps among it; atlas, beside it, is
+    # asked the same; it refuses code left unsaved, by name, in either; it asks GitHub itself, so a
+    # main moved there since the last fetch is refused; and it refuses a line one commit past
+    # GitHub's main. Then the wire: the bump and the check each ask it before they do anything.
+    (g / ".gitignore").write_text("atlas/\n", encoding="utf-8")
+    gitstate.commit(g, "the door is its own repository")
+    try:
+        _cut.ready(g)
+        lost = ""
+    except _cut.Refused as exc:
+        lost = str(exc)
+    check("the cut's first step refuses a repository git cannot place against GitHub's main (C122)",
+          "could not say" in lost, lost)
+    origin = Path(tempfile.mkdtemp())
+    _sp.run(["git", "init", "-q", "--bare", str(origin)], capture_output=True, stdin=_sp.DEVNULL)
+    _sp.run(["git", "remote", "add", "origin", str(origin)], cwd=g, capture_output=True, stdin=_sp.DEVNULL)
+    _sp.run(["git", "push", "-q", "origin", "main"], cwd=g, capture_output=True, stdin=_sp.DEVNULL)
+    _sp.run(["git", "fetch", "-q", "origin"], cwd=g, capture_output=True, stdin=_sp.DEVNULL)
+    try:
+        _cut.ready(g)
+        bare = ""
+    except _cut.Refused as exc:
+        bare = str(exc)
+    check("the cut's first step refuses main itself: a cut runs on its release line only (C122)",
+          "not on a release line" in bare, bare)
+    _sp.run(["git", "switch", "-q", "-c", "release-v9.9.9"], cwd=g, capture_output=True, stdin=_sp.DEVNULL)
+    (g / "STATUS.md").write_text("# STATUS\n\nprinted again\n", encoding="utf-8")
+    (g / "tests").mkdir()
+    (g / "tests" / "last_audit.md").write_text("# audit\n", encoding="utf-8")
+    try:
+        said, stood = _cut.ready(g), ""
+    except _cut.Refused as exc:
+        said, stood = [], str(exc)
+    check("   and stands on a release line opened from GitHub's main with only the record unsaved (C122, C123)",
+          not stood and any("on GitHub's main" in s for s in said), stood or str(said))
+    try:
+        said, stood = _cut.ready(g, "v9.9.9"), ""
+    except _cut.Refused as exc:
+        said, stood = [], str(exc)
+    try:
+        _cut.ready(g, "v9.9.8")
+        other_tag = ""
+    except _cut.Refused as exc:
+        other_tag = str(exc)
+    check("   and, its tag named, stands on that tag's own line alone: release-v9.9.9 for v9.9.9, never for v9.9.8",
+          not stood and "not on release-v9.9.8" in other_tag, stood or other_tag)
+    gone = Path(tempfile.mkdtemp()) / "gone"
+    _sp.run(["git", "remote", "set-url", "origin", str(gone)], cwd=g, capture_output=True, stdin=_sp.DEVNULL)
+    try:
+        _cut.ready(g)
+        unasked = ""
+    except _cut.Refused as exc:
+        unasked = str(exc)
+    finally:
+        _sp.run(["git", "remote", "set-url", "origin", str(origin)], cwd=g, capture_output=True, stdin=_sp.DEVNULL)
+    check("   and refuses, with git's own reason, when GitHub cannot be asked: no answer is never read as level",
+          "could not be asked" in unasked and "(no answer)" not in unasked, unasked)
+    a, a_origin = g / "atlas", Path(tempfile.mkdtemp())
+    (a / "line").mkdir(parents=True)
+    (a / "CHANGELOG.md").write_text("# atlas\n", encoding="utf-8")
+    (a / "line" / "VERSION").write_text("9.9.8\n", encoding="utf-8")
+    _sp.run(["git", "init", "-q", "--bare", str(a_origin)], capture_output=True, stdin=_sp.DEVNULL)
+    for args in (["init", "-q"], ["config", "user.email", "t@t"], ["config", "user.name", "t"],
+                 ["checkout", "-q", "-b", "main"]):
+        _sp.run(["git", *args], cwd=a, capture_output=True, stdin=_sp.DEVNULL)
+    gitstate.commit(a, "the door")
+    for args in (["remote", "add", "origin", str(a_origin)], ["push", "-q", "origin", "main"],
+                 ["fetch", "-q", "origin"], ["switch", "-q", "-c", "release-v9.9.9"]):
+        _sp.run(["git", *args], cwd=a, capture_output=True, stdin=_sp.DEVNULL)
+    (a / "line" / "VERSION").write_text("9.9.9\n", encoding="utf-8")
+    try:
+        said, stood = _cut.ready(g), ""
+    except _cut.Refused as exc:
+        said, stood = [], str(exc)
+    check("   and atlas, its own repository beside it, is asked the same, its version files riding",
+          not stood and any(s.startswith("atlas: on GitHub's main") for s in said), stood or str(said))
+    (a / "line" / "notes.go").write_text("package line\n", encoding="utf-8")
+    try:
+        _cut.ready(g)
+        a_stray = ""
+    except _cut.Refused as exc:
+        a_stray = str(exc)
+    check("   and refuses atlas's code left unsaved, by name",
+          a_stray.startswith("atlas:") and "line/notes.go" in a_stray, a_stray)
+    (a / "line" / "notes.go").unlink()
+    (a / "line" / "Cargo.toml").write_text("[package]\n", encoding="utf-8")
+    try:
+        _cut.ready(g)
+        crate = ""
+    except _cut.Refused as exc:
+        crate = str(exc)
+    check("   and refuses a crate's own manifest: atlas carries only the files its version.ps1 writes",
+          crate.startswith("atlas:") and "line/Cargo.toml" in crate, crate)
+    (a / "line" / "Cargo.toml").unlink()
+    (g / "manjuel.py").write_text("X = 1\n", encoding="utf-8")
+    try:
+        _cut.ready(g)
+        stray = ""
+    except _cut.Refused as exc:
+        stray = str(exc)
+    check("   and refuses code left unsaved, by name: a cut carries the record only",
+          "manjuel.py" in stray and "record only" in stray, stray)
+    (g / "manjuel.py").unlink()
+    other = Path(tempfile.mkdtemp()) / "other"
+    _sp.run(["git", "clone", "-q", "--branch", "main", str(origin), str(other)], capture_output=True,
+            stdin=_sp.DEVNULL)
+    for args in (["config", "user.email", "t@t"], ["config", "user.name", "t"],
+                 ["commit", "-q", "--allow-empty", "-m", "merged on GitHub meanwhile"],
+                 ["push", "-q", "origin", "HEAD:main"]):
+        _sp.run(["git", *args], cwd=other, capture_output=True, stdin=_sp.DEVNULL)
+    try:
+        _cut.ready(g)
+        stale = ""
+    except _cut.Refused as exc:
+        stale = str(exc)
+    check("   and asks GitHub itself: a main moved there since the last fetch is refused, never passed",
+          "GitHub's main is at" in stale and "stale" in stale, stale)
+    gitstate.commit(g, "a commit GitHub does not have")
+    try:
+        _cut.ready(g)
+        off = ""
+    except _cut.Refused as exc:
+        off = str(exc)
+    check("   and refuses a line that does not stand on GitHub's main as last fetched",
+          "not on GitHub's main" in off, off)
+    # THE WIRE (RULE 11): the bump and the check each ask ready() before they do a thing, so a
+    # refusal there writes nothing and checks nothing. Held on cut.py's own main(), its three
+    # parts stood in for and put back.
+    import contextlib
+    import io
+    calls: list[str] = []
+    kept = (_cut.ready, _cut.bump, _cut.check)
+
+    def refuse(*args, **kwargs):
+        calls.append("ready" + (" after the bump" if kwargs.get("after_bump") else ""))
+        raise _cut.Refused("not on a release line")
+
+    _cut.ready = refuse
+    _cut.bump = lambda *a, **k: (calls.append("bump"), ["bumped"])[1]
+    _cut.check = lambda *a, **k: (calls.append("check"), (True, "checked"))[1]
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            rc_bump, rc_check = _cut.main(["bump", "v9.9.9"]), _cut.main(["check", "v9.9.9"])
+    finally:
+        _cut.ready, _cut.bump, _cut.check = kept
+    check("   and the bump and the check each ask it first: a refusal there writes and checks nothing (the wire)",
+          rc_bump == 1 and rc_check == 1 and calls == ["ready", "ready after the bump"], f"{rc_bump} {rc_check} {calls}")
 
 
 def test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book):
