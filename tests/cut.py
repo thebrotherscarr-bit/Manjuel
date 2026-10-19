@@ -136,6 +136,10 @@ def ready(root: Path) -> list[str]:
         main = git_out(d, "rev-parse", "origin/main").strip()
         if not head or not main:
             raise Refused(f"{side}: git could not say where HEAD and GitHub's main stand -- bring main down first")
+        branch = git_out(d, "rev-parse", "--abbrev-ref", "HEAD").strip()
+        if not branch.startswith("release-"):
+            raise Refused(f"{side}: the cut stands on {branch or 'no line'}, not on a release line -- "
+                          f"opening release-<tag> was refused or never ran; open it from main first")
         if head != main:
             raise Refused(f"{side}: the release line stands on {head[:7]}, not on GitHub's main as last "
                           f"fetched ({main[:7]}) -- open it from main, level with GitHub")

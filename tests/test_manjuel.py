@@ -3907,6 +3907,9 @@ def test_the_release_gate(reg, lib, book):
             c = _rel.spec(g, "v0.0.1")
             check("   and once that mark is cut, the folded section is history and no longer counts",
                   not c.ok and "4.1" in c.why and "uncut version" in c.why, c.why)
+            c = _rel.spec(g, "v0.0.1", cutting="v0.0.2")
+            check("   but asked for the tag being cut, its own section still counts after the cut (C121)",
+                  c.ok, c.why)
         finally:
             _rel.held_marks = keep_held
         _rel.tagged_file = lambda root, tag, rel: None
@@ -18476,6 +18479,47 @@ def test_the_release_steps_move_the_record_as_one(reg, lib, book):
             del _cut.print_status
         else:
             _cut.print_status = real
+
+    # ---- WHAT A CUT MAY CARRY (WHAT'S LEFT C122 and C123, his card of 2026-10-19: "Record only") ----
+    # The same repository given an origin whose main is its own: the cut's first step refuses main
+    # itself; it stands on a release line opened from GitHub's main with only the record unsaved; it
+    # refuses code left unsaved, by name; and it refuses a line one commit past GitHub's main.
+    origin = Path(tempfile.mkdtemp())
+    _sp.run(["git", "init", "-q", "--bare", str(origin)], capture_output=True, stdin=_sp.DEVNULL)
+    _sp.run(["git", "remote", "add", "origin", str(origin)], cwd=g, capture_output=True, stdin=_sp.DEVNULL)
+    _sp.run(["git", "push", "-q", "origin", "main"], cwd=g, capture_output=True, stdin=_sp.DEVNULL)
+    _sp.run(["git", "fetch", "-q", "origin"], cwd=g, capture_output=True, stdin=_sp.DEVNULL)
+    try:
+        _cut.ready(g)
+        bare = ""
+    except _cut.Refused as exc:
+        bare = str(exc)
+    check("the cut's first step refuses main itself: a cut runs on its release line only (C122)",
+          "not on a release line" in bare, bare)
+    _sp.run(["git", "switch", "-q", "-c", "release-v9.9.9"], cwd=g, capture_output=True, stdin=_sp.DEVNULL)
+    try:
+        said, stood = _cut.ready(g), ""
+    except _cut.Refused as exc:
+        said, stood = [], str(exc)
+    check("   and stands on a release line opened from GitHub's main with only the record unsaved (C122, C123)",
+          not stood and any("on GitHub's main" in s for s in said), stood or str(said))
+    (g / "manjuel.py").write_text("X = 1\n", encoding="utf-8")
+    try:
+        _cut.ready(g)
+        stray = ""
+    except _cut.Refused as exc:
+        stray = str(exc)
+    check("   and refuses code left unsaved, by name: a cut carries the record only",
+          "manjuel.py" in stray and "record only" in stray, stray)
+    (g / "manjuel.py").unlink()
+    gitstate.commit(g, "a commit GitHub does not have")
+    try:
+        _cut.ready(g)
+        off = ""
+    except _cut.Refused as exc:
+        off = str(exc)
+    check("   and refuses a line that does not stand on GitHub's main as last fetched",
+          "not on GitHub's main" in off, off)
 
 
 def test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book):
