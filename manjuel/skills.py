@@ -677,6 +677,15 @@ def gate_paths(spec, args: dict, env) -> str:
         raw = (args.get(name) or "").strip().strip("'\"`")
         if not raw:
             continue                    # absent is the handler's business
+        # A PART IS NOT A PATH (WHAT'S LEFT C101, 2026-10-19). With both tags,
+        # ground_read's <content> is the part of <filepath> to read -- a
+        # number, a heading, a definition's name -- and only the file is
+        # gated. Judged as a path, "drive (lines 1376-1420)" was refused as
+        # "a description of" one, three times in one job
+        # (logs/2026-10-16_210001_drive.md).
+        if (spec.keyword == "ground_read" and name == "content"
+                and (args.get("filepath") or "").strip()):
+            continue
         # PROSE IS NOT A PATH (sitting 70, and the third time this month).
         # The Router asked ground_list for the folder 'list available files
         # in ground'; earlier it asked ground_read for 'review sitting 63
