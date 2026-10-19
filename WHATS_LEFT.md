@@ -38,7 +38,12 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (08:35):** (1) done; (2) done -- pull request 34 merged on your click, main at `2e62e7b`, the line closed
+  **Where it stands (09:40):** (1) and (2) done; (3)'s first half done -- C101 saved and sent by Steward on your cards (pull
+  request 35, merged on your click), the ground brought back to main by the door on your cards (C119, found at that send),
+  and the engine restarted so Steward has it (sitting 405); its second half, LAUNCH_PLAN's item 4 given to Steward again,
+  waits. **Your word after it:** "lets start with it writing up the skills and agents, that i believe is the smallest and
+  simplest step forward" -- so next is H5's step (1), Steward may write `skills/` and `agents/`, planned in full under H5;
+  then H32 by Steward through it; then the talk. **At 08:35 it stood:** (1) done; (2) done -- pull request 34 merged on your click, main at `2e62e7b`, the line closed
   and main brought down by `ship` itself; (3) under way on the line `drive-1019-082501`: the path gate's change is on the line,
   unsaved; the next four edits were refused, first on an anchor that appeared twice (the hand's), then by the guard against
   changes a job did not make (C118); a card from that job waits on you. Next: that card denied and the job stopped, the gate's
@@ -370,6 +375,14 @@ carry the mend; none asks for anything new.
   changes it did not make; what is missing is a way through: a cancelled or closed job ends with no card to save or put back
   what it wrote, and nothing tells the next job why. Mend: `drive_act`'s guard (`manjuel/serve.py`) names the way through in
   its refusal, and a job cut short offers the save-or-put-back card it offers when it ends.
+- **C119. A ship on a line an earlier job opened leaves the ground on that line.** Found 2026-10-19, at C101's send: pull
+  request 35 merged on your click and its branch was deleted on GitHub, but the ground stayed on `drive-1019-082501` and main
+  was not brought down; pull request 34's ship, on a line it opened itself, came home. `_drive_close_lines`
+  (`manjuel/serve.py`) goes back only to a base the run itself recorded, and a ship on a line an earlier job opened records
+  none (the same reason its card said "2 of them were not made by this run"). Put right through the door on your cards: back
+  to main, the pull (refused once, git's record of GitHub's main moved under it by a fetch at the same moment, then caught
+  up), and the line closed. Mend: a ship takes the line's base from the line itself (main, when it was opened from main) and
+  comes home as it does from a line it opened.
 - **C117. The doctrine check cannot fail.** `python -m manjuel.doctrine --check` exits 0 whatever it finds, so as a job's check it
   passed on 2026-10-16 with 11 findings standing (F45). Mend: its `main()` (`manjuel/doctrine.py`) exits non-zero on a finding.
 
@@ -691,6 +704,23 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   click (`coder-tree`), but nothing turns a repeated correction into a proposed change to a seat's
   prompt or a skill, scores it before and after on the live check's cases, and brings it to you with
   the numbers. *(SPEC 4.9; `tests/standup.py`)*
+  **Your word, 2026-10-19, and the plan.** "lets start with it writing up the skills and agents, that i believe is the smallest
+  and simplest step forward, and can easily give us parity checks we are looking for. as we can plausibly weigh outcomes of
+  iteration through the CI pipeline and github integrations. we already have the parity tab, so we can actually wire that in,
+  there is a bunch of stuff still not wired in." Each step is planned here in full before it runs. (1) Steward may write
+  `skills/` and `agents/`. Today the tree doors refuse both to every writer (`never_written` in `manjuel/skills.py`; REFUSALS,
+  section 27). The change lets the driver alone into those two folders; nothing else on that list opens to it (the law,
+  `foundation/`, `pipelines.md`, `commands.md`, CLAUDE.md, the keys), and every seat is still refused. The driver is known by
+  a mark a seat's name cannot be: a type, not the word "driver". Each write waits on your card, lands on a line of work, and
+  is reloaded into the sitting at the next turn; a file the engine cannot load says "the reload FAILED" out loud. By Steward
+  on your cards: one job for the code and its strokes, one for the book's lines (INVENTORY, REFUSALS, RUNBOOK, and the
+  CHANGELOG, with C101's entry, which its send left out), then Steward's ship; restart required. What goes red if it comes
+  unplugged: the tree doors' stroke. The first live proof after the restart: Steward corrects `skills/ground_write.md` and
+  `skills/ground_edit.md`, which still say both folders are refused. (2) A change Steward makes to a seat or a skill is
+  weighed before and after on the Parity tab, its numbers on the card: planned here once the Parity tab and its cases are
+  read whole. (3) Each round's outcome is read back from GitHub, the checks on its pull request, beside the parity numbers,
+  so a change is kept or put back on a measure. The parts still not wired in go on this page under their letters as they
+  are found. *(your words in chat, 2026-10-19)*
 - **H6. Only the law's ledger and now the memory are chained.** The sitting ledger, the flow runs, the
   proof history and the tolls are append-only by custom, not by a chain; and a chain deleted whole
   looks like a chain never begun. Needed: the same seal for each, the tolls first and one at a time,
