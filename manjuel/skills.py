@@ -1008,7 +1008,7 @@ def _windowed_python(text: str, rel: str, want: str):
         # A NAME IS ASKED BARE (WHAT'S LEFT C101, 2026-10-19). The map's rows
         # read "name  (lines a-b)", and a seat copies a row whole: the line
         # range is dropped, and the name is matched exactly before it is
-        # matched without case -- `drive` is serve.py's function, not class
+        # matched without case -- `drive` is the driver's function, not class
         # `Drive`, which an earlier read handed back.
         want = re.sub(r"\s*\(lines \d+-\d+\)\s*$", "", want).strip() or want
         low = want.lower()

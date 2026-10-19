@@ -794,7 +794,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `main` | 2173-2264 |  |
 | def | `_open_and_serve` | 2267-2317 | Everything after the sitting line: the boot the REPL does, `opened`, |
 
-### manjuel/skills.py — 5146 lines
+### manjuel/skills.py — 5165 lines
 
 *Skills: markdown declares the interface, Python registers the implementation.*
 
@@ -822,112 +822,112 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `unjail` | 596-608 | Strip the jail's own name(s) off the front of a relative path. |
 | def | `find_by_name` | 611-640 | Real files in the ground whose basename matches `name`, case- |
 | def | `_inside_ground` | 643-652 | Resolve a relative path and refuse anything that escapes the ground. |
-| def | `gate_paths` | 655-730 | LAW 8 -- one write-path per chain. Refuse a declared path argument that |
-| def | `declared_path` | 733-763 | The file a call NAMES, resolved the way gate_paths resolves it -- or None. |
-| def | `_git_worlds` | 799-816 | The repositories this ground carries, named the way the argument wants |
-| def | `_git_world` | 819-866 | (the repository to act in, what to call it, a refusal). |
-| def | `_world_said` | 869-874 | Name the world in the answer. A reader sees the ANSWER, never the |
-| def | `_ground_list` | 878-942 | The ground as it stands on disk. Live, read-only. |
-| def | `_windowed_python` | 950-1039 | A .py cut by definition. None => caller falls back to the char path. |
-| def | `_windowed_chars` | 1042-1054 | The original character-window path, unchanged, reachable on its own. |
-| def | `windowed` | 1057-1144 | A big file as a MOVABLE WINDOW, never a silent first slice. |
-| def | `_sitting` | 1156-1223 | Resolve a SITTING NUMBER to the runs it held and their transcripts. |
-| def | `_when` | 1246-1330 | What ran in a WINDOW OF TIME, from the transcript filenames. |
-| def | `_describe` | 1333-1337 | A skill's own words about itself, whole -- not the routing stub. |
-| def | `_skill_search` | 1341-1391 | What the chain can do about a subject, from the skills' own files. |
-| def | `_symbols_in` | 1442-1471 | (name, line, kind) a file DECLARES. Never what it merely mentions. |
-| def | `_walk_code` | 1474-1490 | Every code file in the ground, jails and client ground excluded. |
-| def | `symbol_table` | 1493-1519 | ({rel path: [(name, line, kind)...]}, {rel path: {word, ...}}). |
-| def | `_countable` | 1522-1529 | Whether a declared name can stand as evidence that a file leans on it. |
-| def | `map_rows` | 1532-1587 | (path, weight, symbol count, top names) for every file, ranked. |
-| def | `_symbols` | 1591-1674 | Where a name is DEFINED -- or, named nothing, the shape of the ground. |
-| def | `_subtask` | 1678-1700 | Hand one scoped piece of work to a fresh run of its own. |
-| def | `_ground_read` | 1704-1754 | One real file, as it is right now. Read-only; secrets refused. |
-| def | `_file_type` | 1775-1787 |  |
-| def | `_terminator` | 1790-1799 |  |
-| def | `_git_tracks` | 1802-1811 |  |
-| def | `_indexed` | 1814-1825 |  |
-| def | `_age` | 1828-1837 |  |
-| def | `inspect_file` | 1840-1914 | The facts about one file, as a block. The workspace is tried first, |
-| def | `inspect_line` | 1917-1931 | One line of the facts, for the stamp a workspace read carries. |
-| def | `_inspect` | 1935-1971 |  |
-| def | `_skill_report` | 1975-1996 | The chain's actual reach, read from the loaded library. |
-| def | `_ground_report` | 2000-2019 | Where the chain stands. Read, not generated -- a guessed path is a |
-| def | `_list_directory` | 2023-2033 |  |
-| def | `_read_file` | 2037-2087 |  |
-| def | `_write_file` | 2091-2157 | Write one file into the workspace. |
-| def | `_embed_text` | 2161-2208 | Index ONE workspace file now, without a full sweep. |
-| def | `_remember` | 2212-2237 | PROPOSE a memory entry. Staged, not landed. |
-| def | `_git_status` | 2241-2277 |  |
-| def | `operator_message` | 2329-2369 | (the message the OPERATOR quoted, the world he named beside it). |
-| def | `_commit_subject` | 2372-2535 | Pick a commit subject a human will still understand in six months. |
-| def | `_git_commit` | 2539-2569 | Local, additive, recoverable -- so a seat may do it. |
-| def | `_proved` | 2573-2696 | What the suites last proved, read from what they stamped. |
-| def | `_speak` | 2700-2722 |  |
-| def | `_git_init` | 2726-2737 |  |
-| def | `_git_pull` | 2741-2748 |  |
-| def | `_git_push` | 2752-2763 |  |
-| def | `_git_cycle` | 2767-2923 | The whole version-control turn: prove, status, commit, push, VERIFY. |
-| def | `_linear_regression` | 2927-2960 | Ordinary least squares over numbers found in the text. |
-| def | `_statistics` | 2964-2982 | Descriptive statistics over numbers found in the text. |
-| def | `_pipeline_models` | 2992-2994 | Tags this ground declares -- seats, prompt skills, and the embedder. |
-| def | `_rack_list` | 2998-3066 | Read-only: the shelf and the card. |
-| def | `_rack_report` | 3070-3140 | The rack's OBSERVED state. FACTS ONLY unless a judgement is asked for. |
-| def | `_rack_sync` | 3144-3175 | Pull a current list from Ollama and rewrite rack.md. |
-| def | `_rack_load` | 3179-3191 | Bring a model into VRAM so the next call does not pay the load. |
-| def | `_rack_unload` | 3195-3214 | Free VRAM. REFUSES a model this ground does not declare, because it |
-| def | `_rack_pull` | 3218-3233 | Download a model. Crosses the wall and can move gigabytes, so it is |
-| def | `_index_busy` | 3248-3256 | The refusal for a second build while one is running, or "". |
-| def | `_open_index` | 3259-3279 |  |
-| def | `_wants_rebuild` | 3282-3300 | Did the operator ask for the index to be built from scratch? |
-| def | `index_roots` | 3303-3310 | What the index is told to hold: index_roots.txt, read against the ground. |
-| def | `_index_ground` | 3314-3336 | Build or refresh the semantic index over the configured roots. |
-| def | `_index_ground_locked` | 3339-3398 | The build itself; the caller holds _INDEX_BUSY for its whole life. |
-| def | `_age_of` | 3401-3419 | How old a file is, in the units a person thinks in. |
-| def | `_semantic_search` | 3423-3424 |  |
-| def | `_search_transcripts` | 3428-3442 | What was SAID on a past run, as opposed to what the estate holds. |
-| def | `_search_scoped` | 3445-3557 |  |
-| def | `_deep_research` | 3561-3583 | Delegate to the Deep Researcher persona defined in agents.md. |
-| def | `_mcp_wait` | 3631-3634 | Seconds a door call waits: the skill bound, less the margin, never |
-| def | `_mcp_servers` | 3646-3654 | {name: url} for every server this ground declares. Names only ever |
-| def | `_mcp_key` | 3657-3660 | The bearer this ground holds for server `name`, or "". It leaves this |
-| def | `_mcp_hint` | 3663-3670 | What a 401 from `name` is asking for, in words that name the dial and |
-| def | `_mcp_rpc` | 3673-3704 | One JSON-RPC call. Returns (result, error-in-plain-words). |
-| def | `_mcp_text` | 3707-3714 | An MCP result's own words. The content blocks are the answer; the |
-| def | `_mcp_named` | 3717-3729 | The first candidate NAMED IN `text` as a whole word, or "". |
-| def | `_mcp_braced` | 3732-3741 | The `{...}` a sentence carries, first brace to last, or "". |
-| def | `mcp_spelled_out` | 3744-3778 | Does `text` spell a door call out WHOLE -- a declared server named as a |
-| def | `_mcp_call` | 3782-3947 | Call one tool on a local MCP server this ground declares. |
-| def | `_one_terminator` | 3973-3979 | CRLF if the file is CRLF, LF if it is LF. Refuses to guess for MIXED. |
-| def | `_edit_file` | 3983-4021 | Replace one exact passage in a workspace file. |
-| def | `_edit_passage` | 4024-4049 | The two-marker shape, read: (old, new, refusal). ONE READER for every |
-| def | `_apply_passage` | 4052-4120 | Replace `old` with `new` in the file at `path`, or refuse and write |
-| def | `never_written` | 4211-4241 | Why a seat may never write THIS path in the ground, or "" when it may. |
-| def | `repo_of` | 4244-4254 | The nearest repository the path belongs to, inside the ground: the first |
-| def | `line_of_work` | 4257-4276 | (refusal, branch): the branch the file's repository stands on, or why a |
-| def | `terminator_for` | 4279-4289 | The terminator a write must use: the file's own (None when MIXED), or |
-| def | `checked_python` | 4292-4312 | The structural gate for a whole file about to be written: parse, then |
-| def | `_tree_target` | 4315-4330 | The resolved file a tree door was asked for: (path, rel, branch, refusal). |
-| def | `_ground_write` | 4334-4362 | Write one whole file into the ground, on a line of work. |
-| def | `_ground_edit` | 4366-4380 | Replace one exact passage in a file in the ground, on a line of work. |
-| def | `_run_python` | 4539-4620 | Run one Python file from the workspace and report what it said. |
-| class | `SkillLibrary` | 4629-5031 |  |
-| def | `SkillLibrary.__init__` | 4635-4638 |  |
-| def | `SkillLibrary.load` | 4641-4684 |  |
-| def | `SkillLibrary.validate` | 4686-4722 | Return (errors, warnings) for the md <-> handler binding. |
-| def | `SkillLibrary.manifest` | 4724-4735 | Compact by default -- this is what the router reads to pick a tool. |
-| def | `SkillLibrary.shortlist` | 4737-4793 | The manifest, narrowed to what bears on THIS objective. |
-| def | `SkillLibrary.keywords` | 4795-4796 |  |
-| def | `SkillLibrary.spec` | 4798-4800 |  |
-| def | `SkillLibrary.models` | 4802-4804 | Model tags prompt skills depend on, for the startup check. |
-| def | `SkillLibrary.tool_schemas` | 4806-4885 | Ollama `tools=` schemas -- each skill offered ONLY what it declares. |
-| def | `SkillLibrary.hooks_for` | 4887-4896 | Every skill declaring `point`, in NAME ORDER. |
-| def | `SkillLibrary._fire` | 4898-4949 | Run the hooks for one point. They watch and they act; they do not |
-| def | `SkillLibrary.execute` | 4951-4970 | Every skill call in this estate, with its declared hooks around it. |
-| def | `SkillLibrary._call` | 4972-5031 |  |
-| def | `_run_prompt_skill` | 5034-5086 | Send <content> to the skill's own model, with its markdown as the rules. |
-| def | `_json_call` | 5112-5130 |  |
-| def | `extract_tool_call` | 5133-5146 |  |
+| def | `gate_paths` | 655-739 | LAW 8 -- one write-path per chain. Refuse a declared path argument that |
+| def | `declared_path` | 742-772 | The file a call NAMES, resolved the way gate_paths resolves it -- or None. |
+| def | `_git_worlds` | 808-825 | The repositories this ground carries, named the way the argument wants |
+| def | `_git_world` | 828-875 | (the repository to act in, what to call it, a refusal). |
+| def | `_world_said` | 878-883 | Name the world in the answer. A reader sees the ANSWER, never the |
+| def | `_ground_list` | 887-951 | The ground as it stands on disk. Live, read-only. |
+| def | `_windowed_python` | 959-1058 | A .py cut by definition. None => caller falls back to the char path. |
+| def | `_windowed_chars` | 1061-1073 | The original character-window path, unchanged, reachable on its own. |
+| def | `windowed` | 1076-1163 | A big file as a MOVABLE WINDOW, never a silent first slice. |
+| def | `_sitting` | 1175-1242 | Resolve a SITTING NUMBER to the runs it held and their transcripts. |
+| def | `_when` | 1265-1349 | What ran in a WINDOW OF TIME, from the transcript filenames. |
+| def | `_describe` | 1352-1356 | A skill's own words about itself, whole -- not the routing stub. |
+| def | `_skill_search` | 1360-1410 | What the chain can do about a subject, from the skills' own files. |
+| def | `_symbols_in` | 1461-1490 | (name, line, kind) a file DECLARES. Never what it merely mentions. |
+| def | `_walk_code` | 1493-1509 | Every code file in the ground, jails and client ground excluded. |
+| def | `symbol_table` | 1512-1538 | ({rel path: [(name, line, kind)...]}, {rel path: {word, ...}}). |
+| def | `_countable` | 1541-1548 | Whether a declared name can stand as evidence that a file leans on it. |
+| def | `map_rows` | 1551-1606 | (path, weight, symbol count, top names) for every file, ranked. |
+| def | `_symbols` | 1610-1693 | Where a name is DEFINED -- or, named nothing, the shape of the ground. |
+| def | `_subtask` | 1697-1719 | Hand one scoped piece of work to a fresh run of its own. |
+| def | `_ground_read` | 1723-1773 | One real file, as it is right now. Read-only; secrets refused. |
+| def | `_file_type` | 1794-1806 |  |
+| def | `_terminator` | 1809-1818 |  |
+| def | `_git_tracks` | 1821-1830 |  |
+| def | `_indexed` | 1833-1844 |  |
+| def | `_age` | 1847-1856 |  |
+| def | `inspect_file` | 1859-1933 | The facts about one file, as a block. The workspace is tried first, |
+| def | `inspect_line` | 1936-1950 | One line of the facts, for the stamp a workspace read carries. |
+| def | `_inspect` | 1954-1990 |  |
+| def | `_skill_report` | 1994-2015 | The chain's actual reach, read from the loaded library. |
+| def | `_ground_report` | 2019-2038 | Where the chain stands. Read, not generated -- a guessed path is a |
+| def | `_list_directory` | 2042-2052 |  |
+| def | `_read_file` | 2056-2106 |  |
+| def | `_write_file` | 2110-2176 | Write one file into the workspace. |
+| def | `_embed_text` | 2180-2227 | Index ONE workspace file now, without a full sweep. |
+| def | `_remember` | 2231-2256 | PROPOSE a memory entry. Staged, not landed. |
+| def | `_git_status` | 2260-2296 |  |
+| def | `operator_message` | 2348-2388 | (the message the OPERATOR quoted, the world he named beside it). |
+| def | `_commit_subject` | 2391-2554 | Pick a commit subject a human will still understand in six months. |
+| def | `_git_commit` | 2558-2588 | Local, additive, recoverable -- so a seat may do it. |
+| def | `_proved` | 2592-2715 | What the suites last proved, read from what they stamped. |
+| def | `_speak` | 2719-2741 |  |
+| def | `_git_init` | 2745-2756 |  |
+| def | `_git_pull` | 2760-2767 |  |
+| def | `_git_push` | 2771-2782 |  |
+| def | `_git_cycle` | 2786-2942 | The whole version-control turn: prove, status, commit, push, VERIFY. |
+| def | `_linear_regression` | 2946-2979 | Ordinary least squares over numbers found in the text. |
+| def | `_statistics` | 2983-3001 | Descriptive statistics over numbers found in the text. |
+| def | `_pipeline_models` | 3011-3013 | Tags this ground declares -- seats, prompt skills, and the embedder. |
+| def | `_rack_list` | 3017-3085 | Read-only: the shelf and the card. |
+| def | `_rack_report` | 3089-3159 | The rack's OBSERVED state. FACTS ONLY unless a judgement is asked for. |
+| def | `_rack_sync` | 3163-3194 | Pull a current list from Ollama and rewrite rack.md. |
+| def | `_rack_load` | 3198-3210 | Bring a model into VRAM so the next call does not pay the load. |
+| def | `_rack_unload` | 3214-3233 | Free VRAM. REFUSES a model this ground does not declare, because it |
+| def | `_rack_pull` | 3237-3252 | Download a model. Crosses the wall and can move gigabytes, so it is |
+| def | `_index_busy` | 3267-3275 | The refusal for a second build while one is running, or "". |
+| def | `_open_index` | 3278-3298 |  |
+| def | `_wants_rebuild` | 3301-3319 | Did the operator ask for the index to be built from scratch? |
+| def | `index_roots` | 3322-3329 | What the index is told to hold: index_roots.txt, read against the ground. |
+| def | `_index_ground` | 3333-3355 | Build or refresh the semantic index over the configured roots. |
+| def | `_index_ground_locked` | 3358-3417 | The build itself; the caller holds _INDEX_BUSY for its whole life. |
+| def | `_age_of` | 3420-3438 | How old a file is, in the units a person thinks in. |
+| def | `_semantic_search` | 3442-3443 |  |
+| def | `_search_transcripts` | 3447-3461 | What was SAID on a past run, as opposed to what the estate holds. |
+| def | `_search_scoped` | 3464-3576 |  |
+| def | `_deep_research` | 3580-3602 | Delegate to the Deep Researcher persona defined in agents.md. |
+| def | `_mcp_wait` | 3650-3653 | Seconds a door call waits: the skill bound, less the margin, never |
+| def | `_mcp_servers` | 3665-3673 | {name: url} for every server this ground declares. Names only ever |
+| def | `_mcp_key` | 3676-3679 | The bearer this ground holds for server `name`, or "". It leaves this |
+| def | `_mcp_hint` | 3682-3689 | What a 401 from `name` is asking for, in words that name the dial and |
+| def | `_mcp_rpc` | 3692-3723 | One JSON-RPC call. Returns (result, error-in-plain-words). |
+| def | `_mcp_text` | 3726-3733 | An MCP result's own words. The content blocks are the answer; the |
+| def | `_mcp_named` | 3736-3748 | The first candidate NAMED IN `text` as a whole word, or "". |
+| def | `_mcp_braced` | 3751-3760 | The `{...}` a sentence carries, first brace to last, or "". |
+| def | `mcp_spelled_out` | 3763-3797 | Does `text` spell a door call out WHOLE -- a declared server named as a |
+| def | `_mcp_call` | 3801-3966 | Call one tool on a local MCP server this ground declares. |
+| def | `_one_terminator` | 3992-3998 | CRLF if the file is CRLF, LF if it is LF. Refuses to guess for MIXED. |
+| def | `_edit_file` | 4002-4040 | Replace one exact passage in a workspace file. |
+| def | `_edit_passage` | 4043-4068 | The two-marker shape, read: (old, new, refusal). ONE READER for every |
+| def | `_apply_passage` | 4071-4139 | Replace `old` with `new` in the file at `path`, or refuse and write |
+| def | `never_written` | 4230-4260 | Why a seat may never write THIS path in the ground, or "" when it may. |
+| def | `repo_of` | 4263-4273 | The nearest repository the path belongs to, inside the ground: the first |
+| def | `line_of_work` | 4276-4295 | (refusal, branch): the branch the file's repository stands on, or why a |
+| def | `terminator_for` | 4298-4308 | The terminator a write must use: the file's own (None when MIXED), or |
+| def | `checked_python` | 4311-4331 | The structural gate for a whole file about to be written: parse, then |
+| def | `_tree_target` | 4334-4349 | The resolved file a tree door was asked for: (path, rel, branch, refusal). |
+| def | `_ground_write` | 4353-4381 | Write one whole file into the ground, on a line of work. |
+| def | `_ground_edit` | 4385-4399 | Replace one exact passage in a file in the ground, on a line of work. |
+| def | `_run_python` | 4558-4639 | Run one Python file from the workspace and report what it said. |
+| class | `SkillLibrary` | 4648-5050 |  |
+| def | `SkillLibrary.__init__` | 4654-4657 |  |
+| def | `SkillLibrary.load` | 4660-4703 |  |
+| def | `SkillLibrary.validate` | 4705-4741 | Return (errors, warnings) for the md <-> handler binding. |
+| def | `SkillLibrary.manifest` | 4743-4754 | Compact by default -- this is what the router reads to pick a tool. |
+| def | `SkillLibrary.shortlist` | 4756-4812 | The manifest, narrowed to what bears on THIS objective. |
+| def | `SkillLibrary.keywords` | 4814-4815 |  |
+| def | `SkillLibrary.spec` | 4817-4819 |  |
+| def | `SkillLibrary.models` | 4821-4823 | Model tags prompt skills depend on, for the startup check. |
+| def | `SkillLibrary.tool_schemas` | 4825-4904 | Ollama `tools=` schemas -- each skill offered ONLY what it declares. |
+| def | `SkillLibrary.hooks_for` | 4906-4915 | Every skill declaring `point`, in NAME ORDER. |
+| def | `SkillLibrary._fire` | 4917-4968 | Run the hooks for one point. They watch and they act; they do not |
+| def | `SkillLibrary.execute` | 4970-4989 | Every skill call in this estate, with its declared hooks around it. |
+| def | `SkillLibrary._call` | 4991-5050 |  |
+| def | `_run_prompt_skill` | 5053-5105 | Send <content> to the skill's own model, with its markdown as the rules. |
+| def | `_json_call` | 5131-5149 |  |
+| def | `extract_tool_call` | 5152-5165 |  |
 
 ### manjuel/spelling.py — 171 lines
 
@@ -1076,7 +1076,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `GroundWatch.start` | 182-207 |  |
 | def | `GroundWatch.stop` | 209-215 |  |
 
-manjuel/: 31 files, 27130 lines.
+manjuel/: 31 files, 27149 lines.
 
 ## GUARDS — by the failure that earned them
 
@@ -1604,70 +1604,72 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 | 577 | `safe_path` | legs were red and both Ubuntu legs passed (2026-09-10). |
 | 586 | `(module)` | THE JAIL'S OWN NAME IS NOT A PATH INTO IT (sitting 88, 2026-09-07). The |
 | 614 | `find_by_name` | file" error (sitting 88: the Router asked for `estate_laws.md` at the |
-| 680 | `gate_paths` | PROSE IS NOT A PATH (sitting 70, and the third time this month). |
-| 682 | `gate_paths` | in ground'; earlier it asked ground_read for 'review sitting 63 |
-| 717 | `gate_paths` | ESTATE LAW 2 AS A GATE (his ruling 2026-09-30, WHAT'S LEFT B4; SPEC |
-| 770 | `(module)` | Added 2026-09-18 on his word: "add a world parameter to the git skills." |
-| 873 | `_world_said` | bitten by before (sitting 81's count, which direction it pointed).""" |
-| 885 | `_ground_list` | Sitting 77: the Router passed the WHOLE OBJECTIVE as the folder -- |
-| 931 | `_ground_list` | the lines itself, and on 2026-09-08 and 2026-09-09 it counted 35 and |
-| 968 | `_windowed_python` | MODULE-LEVEL NAMES ARE ADDRESSABLE TOO (2026-09-28). The first firing |
-| 1159 | `_sitting` | Sitting 63 asked the chain to review sitting 63 and it could not: runs |
-| 1347 | `_skill_search` | than by RUNNING it -- which is what sitting 69 did, before reporting |
-| 1399 | `(module)` | EARNED 2026-09-17, by the operator, about every agent that has worked this |
-| 1719 | `_ground_read` | Sitting 30: the Router quoted the filename -- '"pipelines.md"' -- and |
-| 1736 | `_ground_read` | NAME THE CURE (sitting 88). The file may exist elsewhere in the |
-| 1757 | `(module)` | THE INSPECTION (2026-09-07, the operator: "a skill that is able to review |
-| 1762 | `(module)` | github"). The ruling it makes into a tool is from 2026-08-29, sittings |
-| 1870 | `inspect_file` | A REFUSAL BEGINS WITH THE WORD (2026-09-25, the harm list). These two |
-| 2043 | `_read_file` | 2026-09-29). A seat that wants a file of the ground and reaches for this |
-| 2080 | `_read_file` | names the part when both are given. THE STAMP (2026-09-07): a |
-| 2189 | `_embed_text` | (vectors.VectorIndex.build, 2026-09-15). |
-| 2246 | `_git_status` | Sitting 38: the closer read counts from two moments and narrated a |
-| 2280 | `(module)` | THE MESSAGE TRAVELS AS AN ARGUMENT, NOT AS THE INSTRUCTION (2026-09-18). |
-| 2292 | `(module)` | QUOTED, AND ONLY QUOTED. The 2026-09-08 ruling stands -- a writer's argument |
-| 2306 | `(module)` | (2026-09-18, his word: "teach it to carry both"). |
-| 2378 | `_commit_subject` | another's message, which is the same class of fault as sitting 72's |
-| 2394 | `_commit_subject` | SITTING 72: the previous subject was in the Router's results (git_status |
-| 2397 | `_commit_subject` | description of different work. Same disease as sitting 61's lifted |
-| 2415 | `_commit_subject` | ever made and tells a reader nothing. Sitting 6's guard caught a bare |
-| 2449 | `_commit_subject` | SITTING 80, and the operator caught it from the transcripts: two |
-| 2495 | `_commit_subject` | Sitting 81: `git commit " i ran a session, found a bug in the router.` |
-| 2511 | `_commit_subject` | SITTING 85 (2026-09-04): `git commit -m parity ran, review the models |
-| 2557 | `_git_commit` | SAY WHICH DIRECTION THE COUNT POINTS. Sitting 81: the result carried |
-| 2576 | `_proved` | SITTING 81. The operator asked "have you run a full test suite on these |
-| 2710 | `_speak` | SITTING 70, THE OPERATOR: "speak ran, it just doesnt put the output |
-| 2800 | `_git_cycle` | AND IT SHIPS THIS GROUND, NOT A WORLD IN IT (2026-09-18). The world |
-| 3011 | `_rack_list` | TWO QUANTITIES, NAMED AS TWO (sitting 82, built 2026-09-29). The size |
-| 3079 | `_rack_report` | labelled after sitting 59, but the Router still summarised THE READING |
-| 3080 | `_rack_report` | rather than the facts, three times in sitting 85. A reading nobody asked |
-| 3120 | `_rack_report` | 2026-09-02, sitting 59: this returned ONLY the Quartermaster's prose, and |
-| 3236 | `(module)` | ONE BUILD AT A TIME (sitting 94, 2026-09-08). `_run_bounded` cannot kill |
-| 3254 | `_index_busy` | "vectors.db corrupt both (sitting 94). Wait for it, or " |
-| 3271 | `_open_index` | HELD. Sitting 94: this was `pass`, the old file stayed |
-| 3285 | `_wants_rebuild` | Sitting 66, and this is the fault worth naming: the index refused -- |
-| 3347 | `_index_ground_locked` | SITTING 81: this banner was appended to `lines` -- which is then |
-| 3358 | `_index_ground_locked` | account of it. Same fault as git_commit's count (sitting 80). |
-| 3433 | `_search_transcripts` | 2026-09-10 for the same reason transcripts did: a CHANGELOG entry ABOUT |
-| 3448 | `_search_scoped` | Sitting 26: the Router called search with no query, the error came |
-| 3471 | `_search_scoped` | THE QUERY'S OWN WORDS GO DOWN TOO (2026-09-17). The vector is what |
-| 3480 | `_search_scoped` | Doctrine outranks plumbing. Sitting 28 asked "what is the covenant" |
-| 3495 | `_rank` | RECENCY, added 2026-09-02. Age was DISPLAYED on every hit and |
-| 3519 | `_search_scoped` | Sitting 26: passages from an old run transcript were narrated as if |
-| 3569 | `_deep_research` | The standing ruling: the objective IS the payload. Sitting 39 |
-| 3615 | `(module)` | OWN DIAL, not by a number of its own (2026-09-28). This was `_MCP_TIMEOUT |
-| 3635 | `(module)` | THE KEY RIDES BESIDE THE DIAL (2026-09-25, his ruling: the core learns a key |
-| 3942 | `_mcp_call` | 2026-09-11 (ADR-006 item 2): a tool that fails has usually said why, and |
-| 4097 | `_apply_passage` | HELD TO WHAT IT ADDS (2026-09-29, coder-tree run five): a file |
-| 4124 | `(module)` | THE TREE DOORS (2026-09-28) |
-| 4167 | `(module)` | beside CRLF files is CRLF (the terminator ruling, 2026-09-03). |
-| 4397 | `(module)` | THE CHILD'S WALL (2026-09-22, on his word: "sandbox the python"). |
-| 4668 | `load` | 2026-09-10 `doc_pass` claimed 35 phrases where 8 were declared, |
-| 4978 | `_call` | SAY WHAT WAS CHECKED, AND NOTHING ELSE (sitting 82, built |
-| 4979 | `_call` | 2026-09-29). The gate is an allowlist and that is the whole test: |
-| 5046 | `_run_prompt_skill` | sitting 39 waiting for a <content> nobody was going to type twice. |
-| 5052 | `_run_prompt_skill` | 2026-09-08). Sitting 95: "time align the logs" -- four words, no log |
-| 5102 | `(module)` | `<|python_tag|>`. Sitting 84 (2026-09-04): the closing Steward on llama3.2 |
+| 680 | `gate_paths` | A PART IS NOT A PATH (WHAT'S LEFT C101, 2026-10-19). With both tags, |
+| 689 | `gate_paths` | PROSE IS NOT A PATH (sitting 70, and the third time this month). |
+| 691 | `gate_paths` | in ground'; earlier it asked ground_read for 'review sitting 63 |
+| 726 | `gate_paths` | ESTATE LAW 2 AS A GATE (his ruling 2026-09-30, WHAT'S LEFT B4; SPEC |
+| 779 | `(module)` | Added 2026-09-18 on his word: "add a world parameter to the git skills." |
+| 882 | `_world_said` | bitten by before (sitting 81's count, which direction it pointed).""" |
+| 894 | `_ground_list` | Sitting 77: the Router passed the WHOLE OBJECTIVE as the folder -- |
+| 940 | `_ground_list` | the lines itself, and on 2026-09-08 and 2026-09-09 it counted 35 and |
+| 977 | `_windowed_python` | MODULE-LEVEL NAMES ARE ADDRESSABLE TOO (2026-09-28). The first firing |
+| 1008 | `_windowed_python` | A NAME IS ASKED BARE (WHAT'S LEFT C101, 2026-10-19). The map's rows |
+| 1178 | `_sitting` | Sitting 63 asked the chain to review sitting 63 and it could not: runs |
+| 1366 | `_skill_search` | than by RUNNING it -- which is what sitting 69 did, before reporting |
+| 1418 | `(module)` | EARNED 2026-09-17, by the operator, about every agent that has worked this |
+| 1738 | `_ground_read` | Sitting 30: the Router quoted the filename -- '"pipelines.md"' -- and |
+| 1755 | `_ground_read` | NAME THE CURE (sitting 88). The file may exist elsewhere in the |
+| 1776 | `(module)` | THE INSPECTION (2026-09-07, the operator: "a skill that is able to review |
+| 1781 | `(module)` | github"). The ruling it makes into a tool is from 2026-08-29, sittings |
+| 1889 | `inspect_file` | A REFUSAL BEGINS WITH THE WORD (2026-09-25, the harm list). These two |
+| 2062 | `_read_file` | 2026-09-29). A seat that wants a file of the ground and reaches for this |
+| 2099 | `_read_file` | names the part when both are given. THE STAMP (2026-09-07): a |
+| 2208 | `_embed_text` | (vectors.VectorIndex.build, 2026-09-15). |
+| 2265 | `_git_status` | Sitting 38: the closer read counts from two moments and narrated a |
+| 2299 | `(module)` | THE MESSAGE TRAVELS AS AN ARGUMENT, NOT AS THE INSTRUCTION (2026-09-18). |
+| 2311 | `(module)` | QUOTED, AND ONLY QUOTED. The 2026-09-08 ruling stands -- a writer's argument |
+| 2325 | `(module)` | (2026-09-18, his word: "teach it to carry both"). |
+| 2397 | `_commit_subject` | another's message, which is the same class of fault as sitting 72's |
+| 2413 | `_commit_subject` | SITTING 72: the previous subject was in the Router's results (git_status |
+| 2416 | `_commit_subject` | description of different work. Same disease as sitting 61's lifted |
+| 2434 | `_commit_subject` | ever made and tells a reader nothing. Sitting 6's guard caught a bare |
+| 2468 | `_commit_subject` | SITTING 80, and the operator caught it from the transcripts: two |
+| 2514 | `_commit_subject` | Sitting 81: `git commit " i ran a session, found a bug in the router.` |
+| 2530 | `_commit_subject` | SITTING 85 (2026-09-04): `git commit -m parity ran, review the models |
+| 2576 | `_git_commit` | SAY WHICH DIRECTION THE COUNT POINTS. Sitting 81: the result carried |
+| 2595 | `_proved` | SITTING 81. The operator asked "have you run a full test suite on these |
+| 2729 | `_speak` | SITTING 70, THE OPERATOR: "speak ran, it just doesnt put the output |
+| 2819 | `_git_cycle` | AND IT SHIPS THIS GROUND, NOT A WORLD IN IT (2026-09-18). The world |
+| 3030 | `_rack_list` | TWO QUANTITIES, NAMED AS TWO (sitting 82, built 2026-09-29). The size |
+| 3098 | `_rack_report` | labelled after sitting 59, but the Router still summarised THE READING |
+| 3099 | `_rack_report` | rather than the facts, three times in sitting 85. A reading nobody asked |
+| 3139 | `_rack_report` | 2026-09-02, sitting 59: this returned ONLY the Quartermaster's prose, and |
+| 3255 | `(module)` | ONE BUILD AT A TIME (sitting 94, 2026-09-08). `_run_bounded` cannot kill |
+| 3273 | `_index_busy` | "vectors.db corrupt both (sitting 94). Wait for it, or " |
+| 3290 | `_open_index` | HELD. Sitting 94: this was `pass`, the old file stayed |
+| 3304 | `_wants_rebuild` | Sitting 66, and this is the fault worth naming: the index refused -- |
+| 3366 | `_index_ground_locked` | SITTING 81: this banner was appended to `lines` -- which is then |
+| 3377 | `_index_ground_locked` | account of it. Same fault as git_commit's count (sitting 80). |
+| 3452 | `_search_transcripts` | 2026-09-10 for the same reason transcripts did: a CHANGELOG entry ABOUT |
+| 3467 | `_search_scoped` | Sitting 26: the Router called search with no query, the error came |
+| 3490 | `_search_scoped` | THE QUERY'S OWN WORDS GO DOWN TOO (2026-09-17). The vector is what |
+| 3499 | `_search_scoped` | Doctrine outranks plumbing. Sitting 28 asked "what is the covenant" |
+| 3514 | `_rank` | RECENCY, added 2026-09-02. Age was DISPLAYED on every hit and |
+| 3538 | `_search_scoped` | Sitting 26: passages from an old run transcript were narrated as if |
+| 3588 | `_deep_research` | The standing ruling: the objective IS the payload. Sitting 39 |
+| 3634 | `(module)` | OWN DIAL, not by a number of its own (2026-09-28). This was `_MCP_TIMEOUT |
+| 3654 | `(module)` | THE KEY RIDES BESIDE THE DIAL (2026-09-25, his ruling: the core learns a key |
+| 3961 | `_mcp_call` | 2026-09-11 (ADR-006 item 2): a tool that fails has usually said why, and |
+| 4116 | `_apply_passage` | HELD TO WHAT IT ADDS (2026-09-29, coder-tree run five): a file |
+| 4143 | `(module)` | THE TREE DOORS (2026-09-28) |
+| 4186 | `(module)` | beside CRLF files is CRLF (the terminator ruling, 2026-09-03). |
+| 4416 | `(module)` | THE CHILD'S WALL (2026-09-22, on his word: "sandbox the python"). |
+| 4687 | `load` | 2026-09-10 `doc_pass` claimed 35 phrases where 8 were declared, |
+| 4997 | `_call` | SAY WHAT WAS CHECKED, AND NOTHING ELSE (sitting 82, built |
+| 4998 | `_call` | 2026-09-29). The gate is an allowlist and that is the whole test: |
+| 5065 | `_run_prompt_skill` | sitting 39 waiting for a <content> nobody was going to type twice. |
+| 5071 | `_run_prompt_skill` | 2026-09-08). Sitting 95: "time align the logs" -- four words, no log |
+| 5121 | `(module)` | `<|python_tag|>`. Sitting 84 (2026-09-04): the closing Steward on llama3.2 |
 
 ### manjuel/spelling.py
 
@@ -1892,106 +1894,106 @@ its line range. The suites are the memory (HANDOFF: test discipline).
 | `test_the_boot_reports_what_was_proved` | 11214-11344 | `suite_tally` |
 | `test_the_chain_writes_declared_newlines` | 11347-11429 | `seatlog`, `seatlog.SEAT_LOG`, `seatlog.pay` |
 | `test_the_suites_write_the_record_in_crlf_too` | 11432-11524 | — |
-| `test_a_python_file_is_cut_by_definition_not_by_character` | 11527-11621 | `READ_WINDOW`, `windowed` |
-| `test_parity_reads_the_seat_map_not_a_constant` | 11633-11684 | `Outcome`, `Report`, `parity`, `parity.Case`, `parity.DEFAULT_REFERENCE_MODEL` |
-| `test_index_ground_says_which_mode_it_ran` | 11687-11716 | — |
-| `test_one_turn_gives_one_account_of_how_a_tool_was_chosen` | 11719-11762 | `RunContext`, `run_pipeline` |
-| `test_every_branch_that_chooses_a_tool_says_so` | 11765-11877 | `RunContext`, `StepResult`, `recompose`, `run_pipeline` |
-| `test_a_courtesy_preamble_does_not_bury_the_question` | 11880-11950 | `REVIEW_ONLY_SKILLS`, `intent`, `intent._after_courtesy`, `intent.asks_the_ground`, `intent.names_a_tool` |
-| `test_the_chain_can_say_what_it_has_proved` | 11953-12058 | `REVIEW_ONLY_SKILLS`, `WRITING_SKILLS` |
-| `test_a_malformed_flag_is_still_read_and_still_stripped` | 12066-12148 | `RunContext`, `read_flags`, `run_pipeline`, `strip_control` |
-| `test_prune_evicts_undeclared_roots_but_refuses_a_large_one` | 12151-12231 | `VectorIndex`, `VectorIndex.ORPHAN_CEILING` |
-| `test_what_feeds_the_index_keeps_to_its_roots` | 12234-12469 | `EMBED_MODEL`, `_V`, `_V.VectorIndex`, `_V.prune`, `_cli`, `_cli.ROOT`, `_cli._apply_ground_changes`, `_cli.set_ground`, `_watch`, `_watch.GroundWatch`, `_watch.is_protected`, `index_roots` |
-| `test_a_dial_in_env_is_read_and_the_transports_stay_few` | 12472-12642 | `RunContext`, `_dotenv`, `_dotenv.load`, `_pkg`, `_pkg.read_dials`, `_pl`, `_pl.TURN_DEADLINE`, `_pl._within_deadline`, `_rt`, `_rt.BOUND_TRANSPORTS`, `_rt.KEEP_ALIVE`, `_rt.OllamaRuntime` |
-| `test_an_idle_engine_closes_its_own_sitting` | 12645-12833 | `_cli`, `_cli._loop`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.IDLE_CLOSE`, `_sv.Inbox`, `_sv.TextChannel`, `_sv.Wire`, `_sv.__doc__`, `_sv.main` |
-| `test_a_hang_up_is_heard_at_once` | 12836-12941 | `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.Inbox`, `_sv.TextChannel`, `_sv.Wire` |
-| `test_a_commit_subject_is_the_operators_or_gits_never_the_models` | 12944-13028 | `_commit_subject` |
-| `test_a_git_skill_acts_in_the_world_it_is_given` | 13031-13188 | `_git_commit`, `_git_cycle`, `_git_init`, `_git_status`, `gitstate`, `gitstate.read` |
-| `test_a_quoted_message_is_handed_over_as_the_argument` | 13191-13386 | `MESSAGE_IS_THE_OPERATORS`, `RunContext`, `gitstate`, `gitstate.read`, `operator_message`, `run_pipeline`, `spelling` |
-| `test_the_deliberation_renders_as_prose_not_a_column` | 13389-13432 | `RunContext`, `_write`, `run_pipeline` |
-| `test_the_manifest_reconciles_to_the_disk` | 13435-13618 | `WRITING_SKILLS`, `us`, `us.load`, `us.rack_tags`, `us.reconcile` |
-| `test_the_flags_are_a_closed_set` | 13621-13719 | `FLAGS`, `FLAGS_ENGINE`, `FLAGS_RAISED`, `us`, `us.reconcile`, `wake_flags` |
-| `test_the_release_gate_runs_on_a_mark` | 13722-14013 | — |
-| `test_version_control_matches_the_record` | 14016-14161 | — |
-| `test_the_gate_asks_githubs_verdict` | 14164-14326 | — |
-| `test_the_flows_and_workflows_are_read_before_a_mark` | 14329-14719 | — |
-| `test_every_manifest_field_is_read_by_something` | 14722-14880 | `_us`, `_us.READ_ELSEWHERE`, `_us.get`, `_us.items`, `_us.reconcile`, `_us.report`, `drift` |
-| `test_loose_is_declared_and_read_by_nothing` | 14883-15021 | `_pl`, `_pl.FLAGS`, `_pl.FLAGS_ENGINE`, `_us`, `_us.BOOKKEEPING_FIELDS`, `_us.CHECKED_FIELDS`, `_us.Finding`, `_us.reconcile`, `_us.report` |
-| `test_a_greeting_never_reaches_the_reader` | 15024-15084 | `_RO`, `intent`, `intent._GREETING_LEADS`, `intent.asks_the_ground`, `intent.names_a_tool` |
-| `test_the_deliberation_is_kept_and_never_spoken` | 15087-15192 | `RunContext`, `_write`, `run_pipeline` |
-| `test_the_dedup_keys_on_the_declared_call` | 15204-15249 | `_Spec` |
-| `test_ground_list_names_which_mistake_was_made` | 15259-15297 | — |
-| `test_only_byte_hashed_law_files_are_eol_frozen` | 15300-15356 | — |
-| `test_no_skill_is_dead_surface` | 15359-15413 | — |
-| `test_fixtures_mirror_the_runtime` | 15416-15463 | `OllamaRuntime`, `OllamaRuntime.chat` |
-| `test_the_citation_check` | 15466-15537 | `RunContext`, `bogus_citations`, `intent`, `intent.search_result_pairs`, `run_pipeline` |
-| `test_sitting48_no_router_for_greetings` | 15540-15585 | `RunContext`, `run_pipeline` |
-| `test_the_council_carries_its_key_to_the_door` | 15588-15683 | `_FAILED_HEADS`, `_sk`, `_sk._HANDLERS`, `_sk._mcp_servers` |
-| `test_the_mcp_skill_never_leaves_this_machine` | 15686-15848 | `_FAILED_HEADS`, `_declares`, `_mcp_named`, `_sk`, `_sk.TAKES_ARGS`, `_sk._HANDLERS`, `_sk._mcp_wait`, `_sk.read_dials` |
-| `test_a_keyword_whose_argument_is_a_number_wants_one` | 15851-15919 | `intent`, `intent._wants_a_number`, `intent.names_a_tool` |
-| `test_a_keyword_that_is_grammar_must_be_named` | 15922-15975 | `intent`, `intent.names_a_tool` |
-| `test_an_order_to_run_a_script_is_arithmetic` | 15978-16019 | `intent`, `intent.names_a_file`, `intent.wants_running` |
-| `test_a_turn_that_wanted_hands_and_used_none_says_so` | 16022-16075 | `RunContext`, `StepResult`, `recompose` |
-| `test_the_tools_own_words_leave_the_turn` | 16078-16166 | `StepResult`, `tool_verdicts` |
-| `test_a_write_refuses_python_that_will_not_parse` | 16169-16214 | — |
-| `test_an_edit_refuses_an_anchor_that_does_not_say_which` | 16217-16305 | — |
-| `test_a_run_is_bounded_jailed_and_blind_to_the_keys` | 16308-16403 | `_sk`, `_sk.RUN_TIMEOUT` |
-| `test_both_doors_into_the_workspace_hold_the_same_line` | 16406-16450 | — |
-| `test_the_edit_door_holds_the_same_line_as_the_write_door` | 16453-16508 | — |
-| `test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name` | 16511-16662 | `_sk`, `_sk.REVIEW_ONLY_SKILLS`, `_sk.WRITING_SKILLS`, `gitstate`, `gitstate.commit` |
-| `test_the_coder_lands_an_edit_on_the_tree` | 16665-16769 | `RunContext`, `SkillExecutionEnv`, `StepResult`, `gitstate`, `gitstate.commit`, `land_code`, `tool_verdicts` |
-| `test_the_coders_window_on_the_tree` | 16772-17081 | `RunContext`, `_maker_route`, `_tree_window`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.is_big_objective`, `intent.names_a_tool`, `intent.wants_a_tree_change`, `run_pipeline` |
-| `test_a_seat_that_holds_tools_has_room_to_answer` | 17084-17162 | `AgentRegistry`, `AgentRegistry.load`, `READ_WINDOW`, `RunContext`, `SkillLibrary`, `SkillLibrary.load`, `build_prompt`, `carried_blocks` |
-| `test_a_reply_the_rack_cut_is_said_so` | 17165-17332 | `CUT_MARGIN`, `OllamaRuntime`, `RunContext`, `note_cut_reply`, `run_pipeline`, `seatlog`, `seatlog.GUARD_MARKS`, `seatlog.note_for`, `usage_of` |
-| `test_the_watchers_reindex_waits_for_a_build` | 17335-17441 | `GroundWatch`, `_cli`, `_cli.ROOT`, `_cli._apply_ground_changes`, `_cli.set_ground`, `_sk`, `_sk._INDEX_BUSY`, `_sk.acquire`, `_sk.locked`, `_sk.release`, `runtime` |
-| `test_every_root_document_is_in_the_index_list` | 17444-17463 | — |
-| `test_the_small_honesty_of_the_record_keepers` | 17466-17628 | `MEM`, `MEM.Entry`, `MEM.MEMORY_FILE`, `MEM.PENDING_FILE`, `MEM.drop_pending`, `MEM.land_pending`, `MEM.pending`, `MEM.stage`, `MEM.unread_pending`, `_rt`, `_rt.OllamaRuntime`, `dotenv` |
-| `test_the_example_offers_only_dials_the_code_reads` | 17631-17665 | — |
-| `test_the_small_honesty_of_the_engine` | 17668-17859 | `Agent`, `DriftChecker`, `M`, `RunContext`, `RunContext.history_block`, `V`, `V.SPEAK_DEADLINE`, `V._key_pressed`, `V._reap`, `V._speech_backend`, `V._speech_cmd`, `V.speak` |
-| `test_an_unattended_turn_is_not_asked` | 17862-17937 | `Aborted`, `RunContext`, `RuntimeError_`, `_handle_failure`, `run_pipeline` |
-| `test_the_workspaces_reader_reads_the_ground_when_it_is_named` | 17940-18003 | — |
-| `test_the_greeting_case_asks_for_the_seats_own_words` | 18006-18059 | `rack` |
-| `test_the_status_page_is_read_off_the_record` | 18062-18210 | `gitstate`, `gitstate.commit` |
-| `test_the_map_says_how_to_ask` | 18213-18235 | `intent`, `intent.wants_a_tree_change` |
-| `test_the_refusals_document_lists_every_site_in_the_code` | 18238-18265 | — |
-| `test_the_plan_names_every_mark_where_it_sits` | 18268-18323 | — |
-| `test_the_release_steps_move_the_record_as_one` | 18326-18442 | `gitstate`, `gitstate.commit` |
-| `test_the_list_of_what_is_left_reads_whole_and_is_not_stale` | 18445-18519 | — |
-| `test_the_docs_call_the_page_what_the_glass_calls_it` | 18522-18674 | `D`, `D.living` |
-| `test_the_inventory_lists_every_function` | 18677-18750 | `skills`, `skills.append` |
-| `test_the_code_calls_the_pages_what_the_glass_calls_them` | 18753-18814 | `gitstate`, `gitstate.commit` |
-| `test_no_file_is_mixed_and_the_root_documents_are_crlf` | 18817-18852 | — |
-| `test_the_aider_door_keeps_what_the_seats_keep` | 18855-18901 | `_sk`, `_sk._NEVER_WRITTEN_FILES`, `_sk._NEVER_WRITTEN_STAMPS`, `_sk._NEVER_WRITTEN_SUFFIXES`, `_sk._NEVER_WRITTEN_TOP` |
-| `test_the_toll_index_is_read_off_the_log` | 18904-18943 | — |
-| `test_a_toll_refreshes_the_index_beside_it` | 18946-19001 | `_sl`, `_sl.index_is_current`, `_sl.index_text`, `_sl.pay`, `_sl.write_index` |
-| `test_a_listing_the_closing_seat_shortened_is_completed` | 19004-19126 | `RunContext`, `StepResult`, `_in`, `_in.dropped_items`, `_in.listing_items`, `_in.listing_lines`, `_vram`, `_vram.installed_sizes`, `rack`, `recompose` |
-| `test_the_phrasing_matrix_finds_nothing_and_has_teeth` | 19129-19210 | `_in`, `_in._INJECTION_MARKERS`, `_in.injection_markers`, `_lg`, `_lg._REACH_RE`, `_lg._REMOTE_RE`, `_lg._SECRET_VERB_RE` |
-| `test_a_run_python_child_is_walled_into_the_workspace` | 19213-19298 | `_sk`, `_sk.JAIL_MARK` |
-| `test_a_hook_watches_a_call_without_taking_it_over` | 19301-19405 | `_sk`, `_sk.SkillSpec`, `_sk._HANDLERS`, `_sk.hook_faults`, `_sk.parse_hooks`, `_sk.pop` |
-| `test_a_run_in_flight_can_be_interrupted` | 19408-19480 | `SV`, `SV.ASKING`, `SV.COMMANDS`, `SV.IDLE`, `SV.Inbox`, `SV.RUNNING`, `SV.TERMINAL`, `SV.Wire`, `SV._thread`, `_cli`, `_cli._loop`, `_in` |
-| `test_a_skill_cannot_hang_the_repl` | 19483-19525 | `_sk`, `_sk.SKILL_TIMEOUT`, `_sk._HANDLERS`, `_sk._run_bounded`, `_sk.pop` |
-| `test_native_tool_calling` | 19528-19656 | `REVIEW_ONLY`, `calls_to_action_xml`, `declares`, `extract_tool_call` |
-| `test_the_router_is_told_how_not_just_what` | 19659-19726 | `RunContext`, `_router_prompt`, `_steward_prompt` |
-| `test_a_thinking_router_is_never_silent` | 19729-19788 | `OllamaRuntime`, `_salvage`, `thinking_of` |
-| `test_write_read_and_speak_about_it` | 19791-19881 | `REVIEW_ONLY_SKILLS`, `RunContext`, `intent`, `intent.names_a_tool`, `run_pipeline` |
-| `test_model_override` | 19884-20195 | `AgentRegistry`, `AgentRegistry.load`, `RegistryError`, `RuntimeError_`, `_cli`, `_cli.COMMANDS`, `_cli._cmd_model`, `_ctx`, `_ctx.redirect_stdout`, `rack`, `spelling` |
-| `test_path_gate` | 20198-20341 | `RunContext`, `SkillSpec`, `gate_paths`, `parse_path_args`, `run_pipeline` |
-| `test_flags_are_not_speech` | 20344-20384 | `RunContext`, `build_prompt`, `read_flags`, `run_pipeline`, `strip_control` |
-| `test_the_maker` | 20387-20681 | `RunContext`, `_maker_route`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.wants_changing`, `intent.wants_going_back`, `intent.wants_making`, `maker`, `maker.AUTHOR_NAME`, `maker.MakerRefused` |
-| `test_the_maker_runs_the_page_before_it_keeps_it` | 20684-20972 | `RunContext`, `maker`, `maker.CHECK_BUDGET`, `maker.PROFILE_PREFIX`, `maker.PROFILE_STALE`, `maker.REPAIRS`, `maker.SETTLE`, `maker._BROWSERS`, `maker._CATCH`, `maker._inject`, `maker._made_at`, `maker._sweep_profiles` |
-| `test_the_maker_picks_up_and_puts_down` | 20975-21208 | `RunContext`, `_maker_route`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `intent`, `intent.wants_going_back`, `intent.wants_picking_up`, `intent.wants_putting_down`, `maker` |
-| `test_ink` | 21211-21259 | `ink`, `ink.RESET`, `ink.Spinner`, `ink._STATE`, `ink.bad`, `ink.body`, `ink.dim`, `ink.enabled`, `ink.good`, `ink.seat`, `ink.seat_color`, `ink.warn` |
-| `test_math` | 21262-21285 | `M`, `M.MathError`, `M.cosine`, `M.linear_regression`, `M.matmul`, `M.parse_numbers`, `M.stdev`, `M.transpose`, `M.variance` |
-| `test_a_commit_is_not_a_tag` | 21288-21329 | `_HANDLERS` |
-| `test_says_is_a_phrase_list_not_a_paragraph` | 21332-21397 | `SkillLibrary`, `SkillLibrary.load`, `parse_says` |
-| `test_the_stamp_is_not_an_edit` | 21400-21508 | `_BOOT_STAMPS`, `_H`, `_sf`, `suite_tally` |
-| `test_doctrine` | 21511-21685 | `D`, `D.dead_paths`, `D.doc_pass_report`, `D.doctrine_report`, `D.living`, `D.open_tasks`, `D.sittings`, `D.skills_axis`, `D.stale_tallies`, `D.versions`, `_H`, `_SL` |
-| `test_the_core_sees_its_own_repository` | 21688-21835 | `gitstate`, `gitstate.GitRefused`, `gitstate._bad_branch_name`, `gitstate._host_of`, `gitstate._jailed`, `gitstate.branches`, `gitstate.close_branch`, `gitstate.commit`, `gitstate.diff`, `gitstate.read`, `gitstate.remotes`, `gitstate.switch` |
-| `test_record_and_git` | 21838-21942 | `RunContext`, `_cli`, `_cli._toll_answer`, `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.pull`, `gitstate.push`, `gitstate.read`, `seatlog`, `seatlog.RunNote` |
-| `test_the_councils_push_sends_no_main_origin_has` | 21945-22062 | `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.push`, `gitstate.switch` |
-| `test_the_pack_is_wired` | 22077-22138 | — |
-| `test_the_maker_speaks_to_a_screen_without_a_file_to_open` | 22141-22386 | `RunContext`, `_cli`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `maker`, `maker.forget`, `maker.new_project`, `maker.report_back`, `maker.report_changed` |
-| `test_a_change_that_comes_back_unchanged_is_asked_for_once_more` | 22389-22558 | `RunContext`, `maker`, `maker.AGAINS`, `maker.RULES`, `maker.again_prompt`, `maker.forget`, `maker.new_project`, `maker.page_of`, `maker.report_unchanged`, `maker.run_page`, `maker.same_page`, `maker.save_version` |
-| `test_the_door_reads_the_law_chain_as_law_py_writes_it` | 22561-22713 | — |
-| `test_steward_drives_to_a_check` | 22716-22991 | `SV`, `SV.DRIVE_IGNORE`, `SV.DRIVE_NEVER`, `SV.DRIVE_STEPS`, `SV.DRIVE_SUITES`, `SV.door_call`, `SV.door_drive`, `SV.drive`, `SV.drive_parse`, `SV.drive_tools`, `WRITING_SKILLS` |
+| `test_a_python_file_is_cut_by_definition_not_by_character` | 11527-11634 | `READ_WINDOW`, `windowed` |
+| `test_parity_reads_the_seat_map_not_a_constant` | 11646-11697 | `Outcome`, `Report`, `parity`, `parity.Case`, `parity.DEFAULT_REFERENCE_MODEL` |
+| `test_index_ground_says_which_mode_it_ran` | 11700-11729 | — |
+| `test_one_turn_gives_one_account_of_how_a_tool_was_chosen` | 11732-11775 | `RunContext`, `run_pipeline` |
+| `test_every_branch_that_chooses_a_tool_says_so` | 11778-11890 | `RunContext`, `StepResult`, `recompose`, `run_pipeline` |
+| `test_a_courtesy_preamble_does_not_bury_the_question` | 11893-11963 | `REVIEW_ONLY_SKILLS`, `intent`, `intent._after_courtesy`, `intent.asks_the_ground`, `intent.names_a_tool` |
+| `test_the_chain_can_say_what_it_has_proved` | 11966-12071 | `REVIEW_ONLY_SKILLS`, `WRITING_SKILLS` |
+| `test_a_malformed_flag_is_still_read_and_still_stripped` | 12079-12161 | `RunContext`, `read_flags`, `run_pipeline`, `strip_control` |
+| `test_prune_evicts_undeclared_roots_but_refuses_a_large_one` | 12164-12244 | `VectorIndex`, `VectorIndex.ORPHAN_CEILING` |
+| `test_what_feeds_the_index_keeps_to_its_roots` | 12247-12482 | `EMBED_MODEL`, `_V`, `_V.VectorIndex`, `_V.prune`, `_cli`, `_cli.ROOT`, `_cli._apply_ground_changes`, `_cli.set_ground`, `_watch`, `_watch.GroundWatch`, `_watch.is_protected`, `index_roots` |
+| `test_a_dial_in_env_is_read_and_the_transports_stay_few` | 12485-12655 | `RunContext`, `_dotenv`, `_dotenv.load`, `_pkg`, `_pkg.read_dials`, `_pl`, `_pl.TURN_DEADLINE`, `_pl._within_deadline`, `_rt`, `_rt.BOUND_TRANSPORTS`, `_rt.KEEP_ALIVE`, `_rt.OllamaRuntime` |
+| `test_an_idle_engine_closes_its_own_sitting` | 12658-12846 | `_cli`, `_cli._loop`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.IDLE_CLOSE`, `_sv.Inbox`, `_sv.TextChannel`, `_sv.Wire`, `_sv.__doc__`, `_sv.main` |
+| `test_a_hang_up_is_heard_at_once` | 12849-12954 | `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.Inbox`, `_sv.TextChannel`, `_sv.Wire` |
+| `test_a_commit_subject_is_the_operators_or_gits_never_the_models` | 12957-13041 | `_commit_subject` |
+| `test_a_git_skill_acts_in_the_world_it_is_given` | 13044-13201 | `_git_commit`, `_git_cycle`, `_git_init`, `_git_status`, `gitstate`, `gitstate.read` |
+| `test_a_quoted_message_is_handed_over_as_the_argument` | 13204-13399 | `MESSAGE_IS_THE_OPERATORS`, `RunContext`, `gitstate`, `gitstate.read`, `operator_message`, `run_pipeline`, `spelling` |
+| `test_the_deliberation_renders_as_prose_not_a_column` | 13402-13445 | `RunContext`, `_write`, `run_pipeline` |
+| `test_the_manifest_reconciles_to_the_disk` | 13448-13631 | `WRITING_SKILLS`, `us`, `us.load`, `us.rack_tags`, `us.reconcile` |
+| `test_the_flags_are_a_closed_set` | 13634-13732 | `FLAGS`, `FLAGS_ENGINE`, `FLAGS_RAISED`, `us`, `us.reconcile`, `wake_flags` |
+| `test_the_release_gate_runs_on_a_mark` | 13735-14026 | — |
+| `test_version_control_matches_the_record` | 14029-14174 | — |
+| `test_the_gate_asks_githubs_verdict` | 14177-14339 | — |
+| `test_the_flows_and_workflows_are_read_before_a_mark` | 14342-14732 | — |
+| `test_every_manifest_field_is_read_by_something` | 14735-14893 | `_us`, `_us.READ_ELSEWHERE`, `_us.get`, `_us.items`, `_us.reconcile`, `_us.report`, `drift` |
+| `test_loose_is_declared_and_read_by_nothing` | 14896-15034 | `_pl`, `_pl.FLAGS`, `_pl.FLAGS_ENGINE`, `_us`, `_us.BOOKKEEPING_FIELDS`, `_us.CHECKED_FIELDS`, `_us.Finding`, `_us.reconcile`, `_us.report` |
+| `test_a_greeting_never_reaches_the_reader` | 15037-15097 | `_RO`, `intent`, `intent._GREETING_LEADS`, `intent.asks_the_ground`, `intent.names_a_tool` |
+| `test_the_deliberation_is_kept_and_never_spoken` | 15100-15205 | `RunContext`, `_write`, `run_pipeline` |
+| `test_the_dedup_keys_on_the_declared_call` | 15217-15262 | `_Spec` |
+| `test_ground_list_names_which_mistake_was_made` | 15272-15310 | — |
+| `test_only_byte_hashed_law_files_are_eol_frozen` | 15313-15369 | — |
+| `test_no_skill_is_dead_surface` | 15372-15426 | — |
+| `test_fixtures_mirror_the_runtime` | 15429-15476 | `OllamaRuntime`, `OllamaRuntime.chat` |
+| `test_the_citation_check` | 15479-15550 | `RunContext`, `bogus_citations`, `intent`, `intent.search_result_pairs`, `run_pipeline` |
+| `test_sitting48_no_router_for_greetings` | 15553-15598 | `RunContext`, `run_pipeline` |
+| `test_the_council_carries_its_key_to_the_door` | 15601-15696 | `_FAILED_HEADS`, `_sk`, `_sk._HANDLERS`, `_sk._mcp_servers` |
+| `test_the_mcp_skill_never_leaves_this_machine` | 15699-15861 | `_FAILED_HEADS`, `_declares`, `_mcp_named`, `_sk`, `_sk.TAKES_ARGS`, `_sk._HANDLERS`, `_sk._mcp_wait`, `_sk.read_dials` |
+| `test_a_keyword_whose_argument_is_a_number_wants_one` | 15864-15932 | `intent`, `intent._wants_a_number`, `intent.names_a_tool` |
+| `test_a_keyword_that_is_grammar_must_be_named` | 15935-15988 | `intent`, `intent.names_a_tool` |
+| `test_an_order_to_run_a_script_is_arithmetic` | 15991-16032 | `intent`, `intent.names_a_file`, `intent.wants_running` |
+| `test_a_turn_that_wanted_hands_and_used_none_says_so` | 16035-16088 | `RunContext`, `StepResult`, `recompose` |
+| `test_the_tools_own_words_leave_the_turn` | 16091-16179 | `StepResult`, `tool_verdicts` |
+| `test_a_write_refuses_python_that_will_not_parse` | 16182-16227 | — |
+| `test_an_edit_refuses_an_anchor_that_does_not_say_which` | 16230-16318 | — |
+| `test_a_run_is_bounded_jailed_and_blind_to_the_keys` | 16321-16416 | `_sk`, `_sk.RUN_TIMEOUT` |
+| `test_both_doors_into_the_workspace_hold_the_same_line` | 16419-16463 | — |
+| `test_the_edit_door_holds_the_same_line_as_the_write_door` | 16466-16521 | — |
+| `test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name` | 16524-16675 | `_sk`, `_sk.REVIEW_ONLY_SKILLS`, `_sk.WRITING_SKILLS`, `gitstate`, `gitstate.commit` |
+| `test_the_coder_lands_an_edit_on_the_tree` | 16678-16782 | `RunContext`, `SkillExecutionEnv`, `StepResult`, `gitstate`, `gitstate.commit`, `land_code`, `tool_verdicts` |
+| `test_the_coders_window_on_the_tree` | 16785-17094 | `RunContext`, `_maker_route`, `_tree_window`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.is_big_objective`, `intent.names_a_tool`, `intent.wants_a_tree_change`, `run_pipeline` |
+| `test_a_seat_that_holds_tools_has_room_to_answer` | 17097-17175 | `AgentRegistry`, `AgentRegistry.load`, `READ_WINDOW`, `RunContext`, `SkillLibrary`, `SkillLibrary.load`, `build_prompt`, `carried_blocks` |
+| `test_a_reply_the_rack_cut_is_said_so` | 17178-17345 | `CUT_MARGIN`, `OllamaRuntime`, `RunContext`, `note_cut_reply`, `run_pipeline`, `seatlog`, `seatlog.GUARD_MARKS`, `seatlog.note_for`, `usage_of` |
+| `test_the_watchers_reindex_waits_for_a_build` | 17348-17454 | `GroundWatch`, `_cli`, `_cli.ROOT`, `_cli._apply_ground_changes`, `_cli.set_ground`, `_sk`, `_sk._INDEX_BUSY`, `_sk.acquire`, `_sk.locked`, `_sk.release`, `runtime` |
+| `test_every_root_document_is_in_the_index_list` | 17457-17476 | — |
+| `test_the_small_honesty_of_the_record_keepers` | 17479-17641 | `MEM`, `MEM.Entry`, `MEM.MEMORY_FILE`, `MEM.PENDING_FILE`, `MEM.drop_pending`, `MEM.land_pending`, `MEM.pending`, `MEM.stage`, `MEM.unread_pending`, `_rt`, `_rt.OllamaRuntime`, `dotenv` |
+| `test_the_example_offers_only_dials_the_code_reads` | 17644-17678 | — |
+| `test_the_small_honesty_of_the_engine` | 17681-17872 | `Agent`, `DriftChecker`, `M`, `RunContext`, `RunContext.history_block`, `V`, `V.SPEAK_DEADLINE`, `V._key_pressed`, `V._reap`, `V._speech_backend`, `V._speech_cmd`, `V.speak` |
+| `test_an_unattended_turn_is_not_asked` | 17875-17950 | `Aborted`, `RunContext`, `RuntimeError_`, `_handle_failure`, `run_pipeline` |
+| `test_the_workspaces_reader_reads_the_ground_when_it_is_named` | 17953-18016 | — |
+| `test_the_greeting_case_asks_for_the_seats_own_words` | 18019-18072 | `rack` |
+| `test_the_status_page_is_read_off_the_record` | 18075-18223 | `gitstate`, `gitstate.commit` |
+| `test_the_map_says_how_to_ask` | 18226-18248 | `intent`, `intent.wants_a_tree_change` |
+| `test_the_refusals_document_lists_every_site_in_the_code` | 18251-18278 | — |
+| `test_the_plan_names_every_mark_where_it_sits` | 18281-18336 | — |
+| `test_the_release_steps_move_the_record_as_one` | 18339-18455 | `gitstate`, `gitstate.commit` |
+| `test_the_list_of_what_is_left_reads_whole_and_is_not_stale` | 18458-18532 | — |
+| `test_the_docs_call_the_page_what_the_glass_calls_it` | 18535-18687 | `D`, `D.living` |
+| `test_the_inventory_lists_every_function` | 18690-18763 | `skills`, `skills.append` |
+| `test_the_code_calls_the_pages_what_the_glass_calls_them` | 18766-18827 | `gitstate`, `gitstate.commit` |
+| `test_no_file_is_mixed_and_the_root_documents_are_crlf` | 18830-18865 | — |
+| `test_the_aider_door_keeps_what_the_seats_keep` | 18868-18914 | `_sk`, `_sk._NEVER_WRITTEN_FILES`, `_sk._NEVER_WRITTEN_STAMPS`, `_sk._NEVER_WRITTEN_SUFFIXES`, `_sk._NEVER_WRITTEN_TOP` |
+| `test_the_toll_index_is_read_off_the_log` | 18917-18956 | — |
+| `test_a_toll_refreshes_the_index_beside_it` | 18959-19014 | `_sl`, `_sl.index_is_current`, `_sl.index_text`, `_sl.pay`, `_sl.write_index` |
+| `test_a_listing_the_closing_seat_shortened_is_completed` | 19017-19139 | `RunContext`, `StepResult`, `_in`, `_in.dropped_items`, `_in.listing_items`, `_in.listing_lines`, `_vram`, `_vram.installed_sizes`, `rack`, `recompose` |
+| `test_the_phrasing_matrix_finds_nothing_and_has_teeth` | 19142-19223 | `_in`, `_in._INJECTION_MARKERS`, `_in.injection_markers`, `_lg`, `_lg._REACH_RE`, `_lg._REMOTE_RE`, `_lg._SECRET_VERB_RE` |
+| `test_a_run_python_child_is_walled_into_the_workspace` | 19226-19311 | `_sk`, `_sk.JAIL_MARK` |
+| `test_a_hook_watches_a_call_without_taking_it_over` | 19314-19418 | `_sk`, `_sk.SkillSpec`, `_sk._HANDLERS`, `_sk.hook_faults`, `_sk.parse_hooks`, `_sk.pop` |
+| `test_a_run_in_flight_can_be_interrupted` | 19421-19493 | `SV`, `SV.ASKING`, `SV.COMMANDS`, `SV.IDLE`, `SV.Inbox`, `SV.RUNNING`, `SV.TERMINAL`, `SV.Wire`, `SV._thread`, `_cli`, `_cli._loop`, `_in` |
+| `test_a_skill_cannot_hang_the_repl` | 19496-19538 | `_sk`, `_sk.SKILL_TIMEOUT`, `_sk._HANDLERS`, `_sk._run_bounded`, `_sk.pop` |
+| `test_native_tool_calling` | 19541-19669 | `REVIEW_ONLY`, `calls_to_action_xml`, `declares`, `extract_tool_call` |
+| `test_the_router_is_told_how_not_just_what` | 19672-19739 | `RunContext`, `_router_prompt`, `_steward_prompt` |
+| `test_a_thinking_router_is_never_silent` | 19742-19801 | `OllamaRuntime`, `_salvage`, `thinking_of` |
+| `test_write_read_and_speak_about_it` | 19804-19894 | `REVIEW_ONLY_SKILLS`, `RunContext`, `intent`, `intent.names_a_tool`, `run_pipeline` |
+| `test_model_override` | 19897-20208 | `AgentRegistry`, `AgentRegistry.load`, `RegistryError`, `RuntimeError_`, `_cli`, `_cli.COMMANDS`, `_cli._cmd_model`, `_ctx`, `_ctx.redirect_stdout`, `rack`, `spelling` |
+| `test_path_gate` | 20211-20361 | `RunContext`, `SkillSpec`, `gate_paths`, `parse_path_args`, `run_pipeline` |
+| `test_flags_are_not_speech` | 20364-20404 | `RunContext`, `build_prompt`, `read_flags`, `run_pipeline`, `strip_control` |
+| `test_the_maker` | 20407-20701 | `RunContext`, `_maker_route`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.wants_changing`, `intent.wants_going_back`, `intent.wants_making`, `maker`, `maker.AUTHOR_NAME`, `maker.MakerRefused` |
+| `test_the_maker_runs_the_page_before_it_keeps_it` | 20704-20992 | `RunContext`, `maker`, `maker.CHECK_BUDGET`, `maker.PROFILE_PREFIX`, `maker.PROFILE_STALE`, `maker.REPAIRS`, `maker.SETTLE`, `maker._BROWSERS`, `maker._CATCH`, `maker._inject`, `maker._made_at`, `maker._sweep_profiles` |
+| `test_the_maker_picks_up_and_puts_down` | 20995-21228 | `RunContext`, `_maker_route`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `intent`, `intent.wants_going_back`, `intent.wants_picking_up`, `intent.wants_putting_down`, `maker` |
+| `test_ink` | 21231-21279 | `ink`, `ink.RESET`, `ink.Spinner`, `ink._STATE`, `ink.bad`, `ink.body`, `ink.dim`, `ink.enabled`, `ink.good`, `ink.seat`, `ink.seat_color`, `ink.warn` |
+| `test_math` | 21282-21305 | `M`, `M.MathError`, `M.cosine`, `M.linear_regression`, `M.matmul`, `M.parse_numbers`, `M.stdev`, `M.transpose`, `M.variance` |
+| `test_a_commit_is_not_a_tag` | 21308-21349 | `_HANDLERS` |
+| `test_says_is_a_phrase_list_not_a_paragraph` | 21352-21417 | `SkillLibrary`, `SkillLibrary.load`, `parse_says` |
+| `test_the_stamp_is_not_an_edit` | 21420-21528 | `_BOOT_STAMPS`, `_H`, `_sf`, `suite_tally` |
+| `test_doctrine` | 21531-21705 | `D`, `D.dead_paths`, `D.doc_pass_report`, `D.doctrine_report`, `D.living`, `D.open_tasks`, `D.sittings`, `D.skills_axis`, `D.stale_tallies`, `D.versions`, `_H`, `_SL` |
+| `test_the_core_sees_its_own_repository` | 21708-21855 | `gitstate`, `gitstate.GitRefused`, `gitstate._bad_branch_name`, `gitstate._host_of`, `gitstate._jailed`, `gitstate.branches`, `gitstate.close_branch`, `gitstate.commit`, `gitstate.diff`, `gitstate.read`, `gitstate.remotes`, `gitstate.switch` |
+| `test_record_and_git` | 21858-21962 | `RunContext`, `_cli`, `_cli._toll_answer`, `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.pull`, `gitstate.push`, `gitstate.read`, `seatlog`, `seatlog.RunNote` |
+| `test_the_councils_push_sends_no_main_origin_has` | 21965-22082 | `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.push`, `gitstate.switch` |
+| `test_the_pack_is_wired` | 22097-22158 | — |
+| `test_the_maker_speaks_to_a_screen_without_a_file_to_open` | 22161-22406 | `RunContext`, `_cli`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `maker`, `maker.forget`, `maker.new_project`, `maker.report_back`, `maker.report_changed` |
+| `test_a_change_that_comes_back_unchanged_is_asked_for_once_more` | 22409-22578 | `RunContext`, `maker`, `maker.AGAINS`, `maker.RULES`, `maker.again_prompt`, `maker.forget`, `maker.new_project`, `maker.page_of`, `maker.report_unchanged`, `maker.run_page`, `maker.same_page`, `maker.save_version` |
+| `test_the_door_reads_the_law_chain_as_law_py_writes_it` | 22581-22733 | — |
+| `test_steward_drives_to_a_check` | 22736-23011 | `SV`, `SV.DRIVE_IGNORE`, `SV.DRIVE_NEVER`, `SV.DRIVE_STEPS`, `SV.DRIVE_SUITES`, `SV.door_call`, `SV.door_drive`, `SV.drive`, `SV.drive_parse`, `SV.drive_tools`, `WRITING_SKILLS` |
 

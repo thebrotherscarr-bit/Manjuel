@@ -38,6 +38,11 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
+  **Where it stands (08:35):** (1) done; (2) done -- pull request 34 merged on your click, main at `2e62e7b`, the line closed
+  and main brought down by `ship` itself; (3) under way on the line `drive-1019-082501`: the path gate's change is on the line,
+  unsaved; the next four edits were refused, first on an anchor that appeared twice (the hand's), then by the guard against
+  changes a job did not make (C118); a card from that job waits on you. Next: that card denied and the job stopped, the gate's
+  change saved on the line with the door's `git_commit` on your card, the four edits sent again, then `ship`.
 - **Done since 2026-10-16 (~17:15):** C77, a door call said plainly (pull request 29); SITTING LAW 11 set as entry 11 of the
   law ledger, a draft below the seal (B29: the seal is yours); H31's three jobs, each done by Steward on your cards -- HANDOFF's
   (bb) (pull request 31), C71 and the driver's own send (pull request 32), and C71 put back onto the engine's own `proved`
@@ -358,6 +363,13 @@ carry the mend; none asks for anything new.
   though both files say the words around the numbers are ignored. Mend: `parse_numbers` in `manjuel/mathkit.py`, or the files.
 - **C106. `embed_text` answers "0 passages" where it should refuse** a file it will not index (not text, too big, secret,
   client). Mend: `_embed_text` refuses by name (`manjuel/skills.py`).
+- **C118. A Steward job left unsaved blocks the next job on the same file.** Found 2026-10-19, on C101's way: the first
+  job was cancelled after its second passage was refused (its anchor appeared twice, the hand's fault), with its first edit
+  unsaved on the line `drive-1019-082501`; the next job's first write to that file was refused, "carries changes that are not
+  the Steward's (not saved, or not in git)", and the model went round reading the map. The guard is right to keep a job off
+  changes it did not make; what is missing is a way through: a cancelled or closed job ends with no card to save or put back
+  what it wrote, and nothing tells the next job why. Mend: `drive_act`'s guard (`manjuel/serve.py`) names the way through in
+  its refusal, and a job cut short offers the save-or-put-back card it offers when it ends.
 - **C117. The doctrine check cannot fail.** `python -m manjuel.doctrine --check` exits 0 whatever it finds, so as a job's check it
   passed on 2026-10-16 with 11 findings standing (F45). Mend: its `main()` (`manjuel/doctrine.py`) exits non-zero on a finding.
 

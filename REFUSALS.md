@@ -1102,81 +1102,81 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 | line | says |
 |---|---|
-| 692 | `{name}` must be a PATH, and {raw!r} is a |
-| 832 | {raw!r} is not a place in this ground. A world is a folder |
-| 840 | that is not a world a seat may act in. Nothing under |
-| 846 | {raw!r} is a file, not a world. A world is the folder a |
-| 862 | {label} is not a repository of its own -- it is a folder |
-| 1730 | '{path.name}' is a secret and is never read aloud (LAW 9). |
-| 1732 | that is CLIENT DATA — tagged protected, never read |
-| 1877 | {shown} is a SECRET by name. Nothing about it is read, |
-| 1880 | {shown} is CLIENT DATA by tag. Never read into the chain, |
-| 2055 | '{filename}' names the GROUND, and this seat is cleared |
-| 2062 | that is CLIENT DATA — tagged protected, never read |
-| 2143 | that content is not parseable Python -- |
-| 2150 | {path.name} {why}. NOTHING WAS WRITTEN. This is the |
-| 2181 | an index build is already running. |
-| 2556 | {exc} |
-| 2737 | {exc} |
-| 2748 | {exc} |
-| 2763 | {exc} |
-| 2796 | git_cycle needs a commit message. The message is the |
-| 2811 | git_cycle ships THIS ground and no other. What it |
-| 2835 | the proofs could not be read |
-| 2879 | this ground is not a git repository. |
-| 2897 | the head did not move, so no |
-| 3207 | '{tag}' is loaded but is NOT declared in this |
-| 3225 | pulling reaches the network and can move gigabytes |
-| 3251 | an index build is still running behind an earlier |
-| 3332 | an index build is already running. |
-| 3829 | this ground declares no MCP server. Declare one |
-| 3840 | this ground declares no MCP server called |
-| 3856 | the address declared for {name!r} is not on this |
-| 3877 | {name} could not be read -- {err}. |
-| 3903 | the arguments for {tool!r} must be a JSON |
-| 3907 | the arguments for {tool!r} must be a JSON |
-| 3915 | {raw[:80]!r} sits in that request |
-| 3936 | {name} carries no tool called {tool!r}. |
-| 3938 | {name} could not run {tool!r} -- {err}. |
-| 3945 | {name}'s {tool!r} refused -- |
-| 4005 | edit_file needs the file to edit as <filepath>, and |
-| 4012 | {rel!r} is not a path this skill may touch ({exc}). |
-| 4014 | there is no {path.name!r} in the workspace to edit. |
-| 4033 | the edit needs exactly one `{_EDIT_OLD}` line and |
-| 4046 | the text after `{_EDIT_OLD}` is empty; nothing to find. |
-| 4048 | the old and new text are identical. Nothing to do. |
-| 4064 | {path.name} has MIXED line endings, so an edit |
-| 4072 | that passage is not in {path.name}. Nothing was |
-| 4076 | that passage appears {hits} times in {path.name}, |
-| 4093 | that edit would leave {path.name} unparseable |
-| 4104 | that edit would leave {path.name} {added}. |
-| 4218 | '{path}' is outside the ground. Nothing was written. |
-| 4222 | '{rel.as_posix()}' is a secret, and keys are silent -- never |
-| 4225 | that is CLIENT DATA -- tagged protected, never read into the |
-| 4228 | a `.git/` is the history, and the history is git's to write |
-| 4231 | {_NEVER_WRITTEN_TOP[parts[0]]}. Nothing was written. |
-| 4233 | '{rel.as_posix()}' is a proof stamp, written by the suite that |
-| 4237 | {_NEVER_WRITTEN_FILES[path.name.lower()]}. Nothing was written. |
-| 4239 | '{path.name}' is a binary, and a binary is placed on the |
-| 4263 | the ground is not under version control here, so a line of |
-| 4268 | git could not be asked ({g.error}). Nothing was written. |
-| 4272 | the repository at `{repo.name or repo}` stands {where}, and the |
-| 4304 | that content is not parseable Python -- {exc.msg} at line |
-| 4309 | {path.name} {why}. NOTHING WAS WRITTEN. This is the same |
-| 4319 | {verb} needs the file as <filepath>, relative to the |
-| 4323 | '{rel}' is outside the ground. Nothing was written. |
-| 4340 | '{rel}' is a folder, not a file. Nothing was written. |
-| 4342 | '{path.parent.name}/' is not a folder in the ground, and a seat |
-| 4351 | {path.name} has MIXED line endings, so a write cannot keep what |
-| 4372 | there is no '{rel}' in the ground to edit. ground_write makes a |
-| 4563 | run_python needs the file to run as <filepath> -- a |
-| 4568 | {rel!r} is not a path this skill may run ({exc}). |
-| 4570 | run_python runs Python, and {path.name!r} is not a |
-| 4573 | there is no {path.name!r} in the workspace to run. |
-| 4594 | {path.name} did not finish inside {RUN_TIMEOUT:.0f}s |
-| 4599 | {path.name} could not be started -- {type(exc).__name__}: {exc} |
-| 4988 | the table reviews; it does not act. {why} |
-| 4998 | {who} is not cleared to call '{key}'. |
-| 5024 | '{action}' did not finish within |
+| 701 | `{name}` must be a PATH, and {raw!r} is a |
+| 841 | {raw!r} is not a place in this ground. A world is a folder |
+| 849 | that is not a world a seat may act in. Nothing under |
+| 855 | {raw!r} is a file, not a world. A world is the folder a |
+| 871 | {label} is not a repository of its own -- it is a folder |
+| 1749 | '{path.name}' is a secret and is never read aloud (LAW 9). |
+| 1751 | that is CLIENT DATA — tagged protected, never read |
+| 1896 | {shown} is a SECRET by name. Nothing about it is read, |
+| 1899 | {shown} is CLIENT DATA by tag. Never read into the chain, |
+| 2074 | '{filename}' names the GROUND, and this seat is cleared |
+| 2081 | that is CLIENT DATA — tagged protected, never read |
+| 2162 | that content is not parseable Python -- |
+| 2169 | {path.name} {why}. NOTHING WAS WRITTEN. This is the |
+| 2200 | an index build is already running. |
+| 2575 | {exc} |
+| 2756 | {exc} |
+| 2767 | {exc} |
+| 2782 | {exc} |
+| 2815 | git_cycle needs a commit message. The message is the |
+| 2830 | git_cycle ships THIS ground and no other. What it |
+| 2854 | the proofs could not be read |
+| 2898 | this ground is not a git repository. |
+| 2916 | the head did not move, so no |
+| 3226 | '{tag}' is loaded but is NOT declared in this |
+| 3244 | pulling reaches the network and can move gigabytes |
+| 3270 | an index build is still running behind an earlier |
+| 3351 | an index build is already running. |
+| 3848 | this ground declares no MCP server. Declare one |
+| 3859 | this ground declares no MCP server called |
+| 3875 | the address declared for {name!r} is not on this |
+| 3896 | {name} could not be read -- {err}. |
+| 3922 | the arguments for {tool!r} must be a JSON |
+| 3926 | the arguments for {tool!r} must be a JSON |
+| 3934 | {raw[:80]!r} sits in that request |
+| 3955 | {name} carries no tool called {tool!r}. |
+| 3957 | {name} could not run {tool!r} -- {err}. |
+| 3964 | {name}'s {tool!r} refused -- |
+| 4024 | edit_file needs the file to edit as <filepath>, and |
+| 4031 | {rel!r} is not a path this skill may touch ({exc}). |
+| 4033 | there is no {path.name!r} in the workspace to edit. |
+| 4052 | the edit needs exactly one `{_EDIT_OLD}` line and |
+| 4065 | the text after `{_EDIT_OLD}` is empty; nothing to find. |
+| 4067 | the old and new text are identical. Nothing to do. |
+| 4083 | {path.name} has MIXED line endings, so an edit |
+| 4091 | that passage is not in {path.name}. Nothing was |
+| 4095 | that passage appears {hits} times in {path.name}, |
+| 4112 | that edit would leave {path.name} unparseable |
+| 4123 | that edit would leave {path.name} {added}. |
+| 4237 | '{path}' is outside the ground. Nothing was written. |
+| 4241 | '{rel.as_posix()}' is a secret, and keys are silent -- never |
+| 4244 | that is CLIENT DATA -- tagged protected, never read into the |
+| 4247 | a `.git/` is the history, and the history is git's to write |
+| 4250 | {_NEVER_WRITTEN_TOP[parts[0]]}. Nothing was written. |
+| 4252 | '{rel.as_posix()}' is a proof stamp, written by the suite that |
+| 4256 | {_NEVER_WRITTEN_FILES[path.name.lower()]}. Nothing was written. |
+| 4258 | '{path.name}' is a binary, and a binary is placed on the |
+| 4282 | the ground is not under version control here, so a line of |
+| 4287 | git could not be asked ({g.error}). Nothing was written. |
+| 4291 | the repository at `{repo.name or repo}` stands {where}, and the |
+| 4323 | that content is not parseable Python -- {exc.msg} at line |
+| 4328 | {path.name} {why}. NOTHING WAS WRITTEN. This is the same |
+| 4338 | {verb} needs the file as <filepath>, relative to the |
+| 4342 | '{rel}' is outside the ground. Nothing was written. |
+| 4359 | '{rel}' is a folder, not a file. Nothing was written. |
+| 4361 | '{path.parent.name}/' is not a folder in the ground, and a seat |
+| 4370 | {path.name} has MIXED line endings, so a write cannot keep what |
+| 4391 | there is no '{rel}' in the ground to edit. ground_write makes a |
+| 4582 | run_python needs the file to run as <filepath> -- a |
+| 4587 | {rel!r} is not a path this skill may run ({exc}). |
+| 4589 | run_python runs Python, and {path.name!r} is not a |
+| 4592 | there is no {path.name!r} in the workspace to run. |
+| 4613 | {path.name} did not finish inside {RUN_TIMEOUT:.0f}s |
+| 4618 | {path.name} could not be started -- {type(exc).__name__}: {exc} |
+| 5007 | the table reviews; it does not act. {why} |
+| 5017 | {who} is not cleared to call '{key}'. |
+| 5043 | '{action}' did not finish within |
 
 <!-- /THE SITES -->

@@ -722,3 +722,7 @@
 {"suite": "strokes", "at": 1792422670.0753496, "state": "finished", "passed": 3965, "total": 3966, "green": false, "failed": ["no living doc on this ground calls the glass's page Version control: it is GitHub"]}
 {"suite": "smoke", "at": 1792422735.5438347, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "strokes", "at": 1792422975.2796202, "state": "finished", "passed": 3966, "total": 3966, "green": true, "failed": []}
+{"suite": "smoke", "at": 1792424402.4672005, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1792424648.7736902, "state": "finished", "passed": 3970, "total": 3971, "green": false, "failed": ["the engine is not edited for it: pipeline, runtime, cli and skills know nothing of the door"]}
+{"suite": "smoke", "at": 1792424979.2319245, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1792425230.1436749, "state": "finished", "passed": 3971, "total": 3971, "green": true, "failed": []}
