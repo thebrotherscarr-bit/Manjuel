@@ -581,6 +581,10 @@ Found 2026-10-16, re-checked 2026-10-19 (INVENTORY.md section 5 carries each as 
   tell from a claim about now. The one really stale is STATUS.md, printed 2026-10-10 and not since (`tests/status.py`). C117:
   the check passes whatever it finds.
 
+- **F46. One CHANGELOG heading is split in two.** Found 2026-10-19: the entry of 2026-10-16 on the law that everything is run
+  by Steward has the second half of its title on the line below it, with a job's own words written into its middle. A Steward
+  job asked to join the two lines the same day lost its way on those words and was stopped. Mend: the two lines joined.
+
 ---
 
 ## G. The release checklist, in order
