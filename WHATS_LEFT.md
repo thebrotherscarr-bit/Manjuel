@@ -692,6 +692,18 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   already gets the body), and the after-tool hook writes one line per use (the tool, whether it worked, how long) that Steward
   reads back; the weighing, and folding idle tools away, after that. The book's section 5 cards have no wire to the code yet
   (a changed tool does not red its card): part of this piece. *(your words in chat, 2026-10-16 and 2026-10-19)*
+  **The plan, 2026-10-19** (the road's step (1), your card "H32 first, then the road"), built by Steward on your cards in one
+  save: (a) the whole file on first use -- the first time a job of Steward's uses a tool, that tool's whole skill file comes
+  back with what it returned, once a job (`_drive_job` in `manjuel/serve.py`); the tools list keeps each description cut to
+  400 characters for every seat. (b) Every use marked -- `SkillLibrary.execute` times each call and hands the after-tool hooks
+  whether it answered or refused and how long it took; a new skill, `use_record`, hooked after every tool, writes one line per
+  use to `logs/uses.jsonl` (when, the tool, ok or failed, milliseconds, who called); asked for by name it refuses. It is the
+  engine's own record, so it alone runs past a seat's clearance (`ENGINE_HOOKS`); every other hook meets the seat's gates, as a
+  hook has no card of its own (C120); and it writes only for a library the engine loaded for a sitting, never for the
+  strokes. (c) Weighed through `skill_report` (your card): each skill's uses, failures and median time, and the ones never
+  used. Its record in `us/manjuel.us`, its row and card in INVENTORY, its strokes. Code first and the skill file last: the
+  engine running at the time says once that its reload FAILED, until the restart after the merge. (d) After these: folding
+  idle tools away, and the book's cards wired to the code, each planned here when (a) to (c) have run a while.
 - **H30. The honesty gate on every answer: Manjuel's second piece.** Your card, 2026-10-13: every answer filtered through the
   laws and the founding papers. A claim in an answer is fact only where its distinctive words appear in the record of the turn
   -- what the tools returned, the files read, the law -- and anything else is marked generated, or the answer is "no record"; by
