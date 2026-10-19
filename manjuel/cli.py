@@ -240,6 +240,9 @@ class Session:
             return False
 
         self.skills = SkillLibrary.load(SKILLS_DIR)
+        # A library loaded for a sitting marks every use (WHAT'S LEFT H32); the
+        # strokes load their own, which records nothing.
+        self.skills.record_uses = True
 
         for w in self.registry.warnings:
             print(f"  warn: {w}")

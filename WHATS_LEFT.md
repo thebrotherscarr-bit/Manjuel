@@ -38,7 +38,9 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (11:34):** H5's step (1) done and sent (pull requests 37 and 38); the v0.2.6 and v0.2.7 checklist read off
+  **Where it stands (12:14):** the road's step (1), H32, built on the line `drive-1019-115957` by Steward on your cards, to be
+  sent by Steward's ship; restart required; C126 found. Next on the road: step (2), the release faults C121 to C125.
+  **At 11:34 it stood:** H5's step (1) done and sent (pull requests 37 and 38); the v0.2.6 and v0.2.7 checklist read off
   the code and the record, its faults C121 to C125, G's list for v0.2.6 and the road to the cut under I2, set on your cards:
   H32 first, then the road. **At 10:28 it stood:** H5's step (1) built on the line `drive-1019-094920` by Steward on your cards and read by three
   reviewers before the send (C120 found); next, Steward's ship, the ground brought home (C83), the restart, and Steward's
@@ -392,6 +394,13 @@ carry the mend; none asks for anything new.
   (`Edited x.md`). Now that the card is all that stands between the driver and a seat's or a skill's declaration, that
   matters more: a skill file that adds a hook line would also run, later, with no card of its own. Mend: the card for a
   tree write names the file first, says when it is a seat or a skill reloaded at the next turn, and shows the whole passage.
+- **C126. A Steward job ends on a malformed tool call, and still tests its own work on the side.** Found 2026-10-19 in H32's
+  work: Ollama answered one model call with an error (an XML syntax error in the model's own tool call, status 500), and
+  `_drive_job` (`manjuel/serve.py`) ended the job ("the model call failed") instead of handing the error back for another
+  try; that short job, told to call done at once, read three files first. And C84 came back in three of H32's jobs running:
+  each, its edits made, asked to run or write a script of its own before calling done, and was stopped. Mend: a malformed
+  call is handed back to the model once, as a refusal is; and the driver refuses running a file the same job wrote (C84's
+  own mend).
 - **C121. The release check refuses its own cut when a SPEC section-4 status moved.** Found 2026-10-19 building the v0.2.6 and
   v0.2.7 checklist, and read in the code: once a tag is cut, the entries under its CHANGELOG heading stop counting for `spec`
   (`logged_since` in `tests/release.py`; `test_the_release_gate` asserts it), and the flow's last step and GitHub's release
@@ -704,6 +713,10 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   used. Its record in `us/manjuel.us`, its row and card in INVENTORY, its strokes. Code first and the skill file last: the
   engine running at the time says once that its reload FAILED, until the restart after the merge. (d) After these: folding
   idle tools away, and the book's cards wired to the code, each planned here when (a) to (c) have run a while.
+  **(a) to (c) built 2026-10-19** on the line `drive-1019-115957` by Steward on your cards: the plan, then the engine's part,
+  the driver's and the sitting's parts, the strokes, and the declarations, the new skill file written by Steward through
+  H5's opening; the last job's proof ran the new stroke against the real library, green. To be sent by Steward's ship;
+  restart required. C126 found on the way.
 - **H30. The honesty gate on every answer: Manjuel's second piece.** Your card, 2026-10-13: every answer filtered through the
   laws and the founding papers. A claim in an answer is fact only where its distinctive words appear in the record of the turn
   -- what the tools returned, the files read, the law -- and anything else is marked generated, or the answer is "no record"; by
