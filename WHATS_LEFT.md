@@ -38,7 +38,9 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (10:28):** H5's step (1) built on the line `drive-1019-094920` by Steward on your cards and read by three
+  **Where it stands (11:34):** H5's step (1) done and sent (pull requests 37 and 38); the v0.2.6 and v0.2.7 checklist read off
+  the code and the record, its faults C121 to C125, G's list for v0.2.6 and the road to the cut under I2, set on your cards:
+  H32 first, then the road. **At 10:28 it stood:** H5's step (1) built on the line `drive-1019-094920` by Steward on your cards and read by three
   reviewers before the send (C120 found); next, Steward's ship, the ground brought home (C83), the restart, and Steward's
   first write of a skill file as the live proof; then H32 and the talk. **At 09:40 it stood:** (1) and (2) done; (3)'s first half done -- C101 saved and sent by Steward on your cards (pull
   request 35, merged on your click), the ground brought back to main by the door on your cards (C119, found at that send),
@@ -139,6 +141,8 @@ Nothing here gets built until you say which way.
 Written whole on 2026-10-13 from the record (your card: "Honest pass first"): every fault INVENTORY.md marks that is not mended
 or ruled, and every one found in the sittings since, from I2's own account. One line each, naming the piece that mends it. Not
 repeated here: the glass's mic, ruled to I5 on your card, and the law chain's two checkers disagreeing, which is H7.
+Ruled forward to v0.2.7 on your card of 2026-10-19 ("Release + I2's own"): every line here that is not one of I2's own (C13,
+C38 to C67, C69) and not C121 to C125. Each stays here, carried; the road to v0.2.6 (I2) does not wait on it.
 
 ### The models misbehaving
 
@@ -356,13 +360,6 @@ carry the mend; none asks for anything new.
   `SkillLibrary._call` runs them through `_run_bounded` (`manjuel/skills.py`).
 - **C100. `when` refuses "what ran last week", which its own file offers,** and given two dates it answers for the first alone.
   Mend: `_when` (`manjuel/skills.py`), or its file's Says line.
-- **C101. `ground_read` refuses or mis-reads a definition asked for by name -- the cause of LAUNCH_PLAN item 4's failed run.**
-  With a file named, a part of three or more words ("drive (lines 1376-1420)", copied off the map's own row) is refused by the
-  path gate as "a description of" a path, with advice to "Name the folder or file itself" that is wrong for this field; the
-  map of a big Python file never shows the exact next call; and the name is matched without regard to case, so `drive` returned
-  the class `Drive` (2026-10-16, logs/2026-10-16_210001_drive.md). Mend, today's third piece: `gate_paths` gates only the file
-  when both are given, and `_windowed_python` shows the two-tag call, sets the line range apart from the name, and matches the
-  exact name first (`manjuel/skills.py`).
 - **C102. `rack_sync` reports the same models as new, or gone, on every sync,** because it reads the last list only from the
   declared table. Mend: `diff` in `manjuel/rack.py`.
 - **C103. `write_file` always writes Windows line endings,** and a body that already has them comes out doubled (CR CR LF).
@@ -395,6 +392,31 @@ carry the mend; none asks for anything new.
   (`Edited x.md`). Now that the card is all that stands between the driver and a seat's or a skill's declaration, that
   matters more: a skill file that adds a hook line would also run, later, with no card of its own. Mend: the card for a
   tree write names the file first, says when it is a seat or a skill reloaded at the next turn, and shows the whole passage.
+- **C121. The release check refuses its own cut when a SPEC section-4 status moved.** Found 2026-10-19 building the v0.2.6 and
+  v0.2.7 checklist, and read in the code: once a tag is cut, the entries under its CHANGELOG heading stop counting for `spec`
+  (`logged_since` in `tests/release.py`; `test_the_release_gate` asserts it), and the flow's last step and GitHub's release
+  check both ask after the tag, so a cut that moves a section-4 line ends FAIL there. It turned v0.2.0's tag red on 4.4.
+  v0.2.7 must move 4.8 and 4.9, so as built it fails by design. Mend: `spec` hands the tag being cut to `logged_since`, which
+  counts that heading as not yet cut.
+- **C122. The release flow opens its line from wherever the ground stands, and a refused git step does not stop it.** Found
+  2026-10-19, read in the code: the flow opens `release-<tag>` with a bare `git switch -c` from where each repository stands,
+  never switching to main first, and after a Steward ship the ground is left on the merged line (C83). A door git tool's
+  refusal comes back as a plain answer, not an error, so the run carries on: fired again after a stop, opening the line is
+  refused and the cut runs on whatever line the ground stands on. Mend: the flow brings each repository to main, level with
+  GitHub, before it opens the line, and a git tool's refusal inside a flow is an error (`atlas/line/internal/tools/gitctl.go`,
+  `flows/release.json`).
+- **C123. The release's save sweeps in everything unsaved.** Found 2026-10-19, read in the code: both save steps name no files,
+  and the door's `git_commit` with none runs `git add -A`, so whatever is loose on the ground at the second gate goes into the
+  release commit and on to GitHub. Mend: G's list checks the ground holds nothing unsaved but the record before firing, or the
+  save names its files (`flows/release.json`).
+- **C124. The cut's own live check leaves out the review panel.** Found 2026-10-19, read in the code: the flow runs the live
+  check's `morning` set only, and I2 asks for 9 of 9 with the review panel inside its turn, which only the `all` set runs.
+  Mend: the `all` set on the cut day before firing (G's list), or the flow's live step asks for `all` (`flows/release.json`).
+- **C125. GitHub's runners move under the provers.** Seen 2026-10-07 (HANDOFF, its (f)) and never put here until 2026-10-19:
+  GitHub says `actions/checkout@v4` and `actions/setup-python@v5` run on Node 20, which is deprecated, and that `ubuntu-latest`
+  moves to Ubuntu 26 from 2026-10-19; all four workflows of both repositories use them, and the cut's merges and its wait on
+  GitHub depend on them. Mend: read the first runs after that day; move the actions to their next versions, each pinned to a
+  commit as the release check's `workflows` rule asks (`.github/workflows/`, `atlas/.github/workflows/`).
 - **C117. The doctrine check cannot fail.** `python -m manjuel.doctrine --check` exits 0 whatever it finds, so as a job's check it
   passed on 2026-10-16 with 11 findings standing (F45). Mend: its `main()` (`manjuel/doctrine.py`) exits non-zero on a finding.
 
@@ -562,6 +584,30 @@ Found 2026-10-16, re-checked 2026-10-19 (INVENTORY.md section 5 carries each as 
 ---
 
 ## G. The release checklist, in order
+
+**v0.2.6, next** (I2), set 2026-10-19 from the checklist read off the code and the record (your word: "write it up, then begin
+the road to 0.2.6"). Fired by you through the release flow: its three gates and the publish are yours, and `git_pr` answers your
+glass alone, so Steward cannot run this flow. Not fired until I2's road to the cut is done. On the cut day, in order:
+
+- [ ] 1. C121 to C125 mended, or C125 read off the first runs after 2026-10-19, so the cut can finish COMPLETE.
+- [ ] 2. Both repositories on main, level with GitHub, no pull request open, and nothing unsaved on the ground but the record
+  this list names (C123).
+- [ ] 3. No sitting open, the door started with `--manjuel`, and the send wall open.
+- [ ] 4. This list's first line given the version words the page's stroke reads, with 0.2.6 twice, just before firing: the
+  stroke reads the first such words on this page, and the pin moves only at the bump.
+- [ ] 5. The day's HANDOFF block and DAYBOOK entry, with its At close; CHANGELOG's Unreleased whole, naming by its number any
+  SPEC 4.x whose status moved.
+- [ ] 6. The suites green after the newest edit, and the live check's `all` set with the review panel inside its turn (C124).
+- [ ] 7. The flow fired with the tag `v0.2.6`: gate 1 (the bump, the live check, the suites, the release check 17 of 17), gate 2
+  (saved, sent, merged on GitHub, CI read), gate 3 (the tags, the record); the verdict COMPLETE, the flow's first.
+- [ ] 8. Atlas's draft published or dropped (yours, on GitHub); both tags' own runs read on GitHub, not only main's.
+- [ ] 9. The record after the cut, on a line of its own: I2 to Done, A naming v0.2.7, HANDOFF and DAYBOOK, STATUS.md printed
+  last, the release check asked again; INVENTORY's T72 and F3 measured off this run.
+
+Undo: before gate 2 nothing has left this machine, and the line is yours to drop; after it, mend forward through a pull request;
+a sent tag is never moved, and only plain numbers are allowed, so a botched v0.2.6 makes the next cut v0.2.7.
+
+**v0.2.5, cut 2026-10-10**, kept here until v0.2.6's record moves it under Done:
 
 v0.2.5, the full GitHub integration (I1), on your word of 2026-10-08 ("0.2.5 will be the full github integration release") and your card of 2026-10-10
 (I1's ninth step is the cut, "Prep, plus a DAYBOOK entry"): cut by the release flow v5 (H27), its first real run, whose first gate sets the version
@@ -737,7 +783,9 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   driver alone may write a .md directly in `agents/` or `skills/` (`DriverMark`, a type `drive()` sets), and nothing else on
   the list opens to it. Three read-only reviewers and a skeptic for each finding read it before the send (15 held, 1 did
   not): the mark had no wire to `drive()`, the opening was wider than the declarations, and the record said otherwise in
-  places; all put right on the line. C120 found and written down. To be sent by Steward's ship; restart required.
+  places; all put right on the line. C120 found and written down. Sent by Steward's ship: pull request 37, merged on your click
+  (main `bed327c`), the engine restarted (sitting 406); the first live proof, Steward correcting `skills/ground_write.md` and
+  `skills/ground_edit.md`, pull request 38 (main `5316795`).
 - **H6. Only the law's ledger and now the memory are chained.** The sitting ledger, the flow runs, the
   proof history and the tolls are append-only by custom, not by a chain; and a chain deleted whole
   looks like a chain never begun. Needed: the same seal for each, the tolls first and one at a time,
@@ -951,6 +999,19 @@ goals". The steps under each are proposed from the disk; each is yours to change
   `version-tag` retired, every version kept (built the same day: the door fires neither again and keeps every version, the Workflows tab says why
   and offers no Fire, and the release check names both retired) *(CHANGELOG, "core: the release check names a retired flow retired")*
   *(atlas CHANGELOG, "A flow is retired by a version of its own")*.
+  **The road to the cut, set 2026-10-19** (your words: "write it up, then begin the road to 0.2.6, we need to get this done";
+  your four cards the same hour). In order, each piece planned in full here before it runs, built by Steward on your cards:
+  (1) H32 first (your card: "H32 first, then the road"): Steward handed each skill whole, and every use marked, catalogued and
+  weighed. (2) The release machinery, so the cut can finish COMPLETE: C121 to C125. (3) I2's own faults, by cause (your card:
+  "Release + I2's own"): the review panel's bounds (C13); the answers' caps, clock and room (C38, C47, C48, C69); the seats and
+  routing (C39 to C42, C45, C46, C49 to C56); grounding (C43, C44, C58); the commands that print and run nothing (C57); the
+  mic's two commands (C59); the slow routes (C60); the door's tools (C61 to C67). Every other line under C is ruled forward to
+  v0.2.7 on the same card, and stays there. (4) R1 run again live on your glass once (3) is in; what is still faulty, and every
+  route still over its budget, put to you on a card to rule or mend (your card: "Re-run after fixes, rule rest"). (5) Every line
+  of INVENTORY.md (250 today) measured again or ruled, the six never run among them; (i), the three pages, ruled kept as they
+  stand and carried to the 0.2.8 pass (your card: "Rule them kept, carry on"), so G23 to G25 take that ruling. (6) The cut, by
+  G's list. LAUNCH_PLAN's pieces 6 to 8 are not on this road; where they go is yours, asked when the road reaches (6).
+  *(your words and cards in chat, 2026-10-19)*
 - **I3. v0.2.7: both repositories keep what earlier versions promised.** Every OPEN line in SPEC section 4 met or ruled; every open line on this
   page (B, E, H) built, ruled, or moved to a later version on your word; the found items in HANDOFF from 2026-10-05 on put on this page or ruled;
   the wife test (E1) with her at the glass and nobody helping.
@@ -992,6 +1053,12 @@ goals". The steps under each are proposed from the disk; each is yours to change
 ## Done
 
 Finished lines, newest first. A number is never used again.
+
+- **C101. `ground_read` refuses or mis-reads a definition asked for by name.** DONE 2026-10-19, by Steward on your cards (pull
+  request 35): `gate_paths` gates only the file when both are given, and `_windowed_python` shows the two-tag call, drops a line
+  range copied off the map, and matches the exact name first. The line as it stood: with a file named, a part of three or more
+  words ("drive (lines 1376-1420)") was refused by the path gate as a description of a path; the map never showed the exact
+  next call; and `drive` returned the class `Drive`. *(CHANGELOG, "core: ground_read takes a definition's name as asked")*
 
 - **E5. The tool server's own save, take and send have not run in this version.** DONE 2026-10-16: all three have run on your
   cards through the council's door calls -- `git_commit` and `git_push` on 2026-10-14 (sitting 381), and `git_pull` on 2026-10-16
