@@ -18519,6 +18519,28 @@ def test_the_release_steps_move_the_record_as_one(reg, lib, book):
         said, stood = [], str(exc)
     check("   and stands on a release line opened from GitHub's main with only the record unsaved (C122, C123)",
           not stood and any("on GitHub's main" in s for s in said), stood or str(said))
+    try:
+        said, stood = _cut.ready(g, "v9.9.9"), ""
+    except _cut.Refused as exc:
+        said, stood = [], str(exc)
+    try:
+        _cut.ready(g, "v9.9.8")
+        other_tag = ""
+    except _cut.Refused as exc:
+        other_tag = str(exc)
+    check("   and, its tag named, stands on that tag's own line alone: release-v9.9.9 for v9.9.9, never for v9.9.8",
+          not stood and "not on release-v9.9.8" in other_tag, stood or other_tag)
+    gone = Path(tempfile.mkdtemp()) / "gone"
+    _sp.run(["git", "remote", "set-url", "origin", str(gone)], cwd=g, capture_output=True, stdin=_sp.DEVNULL)
+    try:
+        _cut.ready(g)
+        unasked = ""
+    except _cut.Refused as exc:
+        unasked = str(exc)
+    finally:
+        _sp.run(["git", "remote", "set-url", "origin", str(origin)], cwd=g, capture_output=True, stdin=_sp.DEVNULL)
+    check("   and refuses, with git's own reason, when GitHub cannot be asked: no answer is never read as level",
+          "could not be asked" in unasked and "(no answer)" not in unasked, unasked)
     a, a_origin = g / "atlas", Path(tempfile.mkdtemp())
     (a / "line").mkdir(parents=True)
     (a / "CHANGELOG.md").write_text("# atlas\n", encoding="utf-8")
@@ -18547,6 +18569,15 @@ def test_the_release_steps_move_the_record_as_one(reg, lib, book):
     check("   and refuses atlas's code left unsaved, by name",
           a_stray.startswith("atlas:") and "line/notes.go" in a_stray, a_stray)
     (a / "line" / "notes.go").unlink()
+    (a / "line" / "Cargo.toml").write_text("[package]\n", encoding="utf-8")
+    try:
+        _cut.ready(g)
+        crate = ""
+    except _cut.Refused as exc:
+        crate = str(exc)
+    check("   and refuses a crate's own manifest: atlas carries only the files its version.ps1 writes",
+          crate.startswith("atlas:") and "line/Cargo.toml" in crate, crate)
+    (a / "line" / "Cargo.toml").unlink()
     (g / "manjuel.py").write_text("X = 1\n", encoding="utf-8")
     try:
         _cut.ready(g)
@@ -18586,8 +18617,8 @@ def test_the_release_steps_move_the_record_as_one(reg, lib, book):
     calls: list[str] = []
     kept = (_cut.ready, _cut.bump, _cut.check)
 
-    def refuse(root):
-        calls.append("ready")
+    def refuse(*args, **kwargs):
+        calls.append("ready" + (" after the bump" if kwargs.get("after_bump") else ""))
         raise _cut.Refused("not on a release line")
 
     _cut.ready = refuse
@@ -18599,7 +18630,7 @@ def test_the_release_steps_move_the_record_as_one(reg, lib, book):
     finally:
         _cut.ready, _cut.bump, _cut.check = kept
     check("   and the bump and the check each ask it first: a refusal there writes and checks nothing (the wire)",
-          rc_bump == 1 and rc_check == 1 and calls == ["ready", "ready"], f"{rc_bump} {rc_check} {calls}")
+          rc_bump == 1 and rc_check == 1 and calls == ["ready", "ready after the bump"], f"{rc_bump} {rc_check} {calls}")
 
 
 def test_the_list_of_what_is_left_reads_whole_and_is_not_stale(reg, lib, book):

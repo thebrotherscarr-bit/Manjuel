@@ -114,34 +114,50 @@ def fold(text: str, unreleased: str, head: str, stamp: str) -> str:
 RECORD = ({"CHANGELOG.md", "WHATS_LEFT.md", "HANDOFF.md", "DAYBOOK.md", "STATUS.md", "BUILDPATH.md",
            "TASKS.md", "pyproject.toml", "manjuel/__init__.py"}
           | {f"tests/{stamp}" for stamp in release.STAMPS})
-ATLAS_RECORD = ("CHANGELOG.md", "Cargo.toml", "Cargo.lock", "VERSION", "core/src/version.rs")
+# Atlas's own outputs, named exactly as its version.ps1 writes them (its VERSION_FILES and
+# PIN_PATTERNS), and its changelog folded by the bump: a crate's own Cargo.toml is not one.
+ATLAS_RECORD = {"CHANGELOG.md", "VERSION", "line/VERSION", "line/cmd/atlas-mcp/VERSION", "line/cmd/atlas-tui/VERSION",
+                "line/cmd/atlas-town/VERSION", "line/cmd/atlas-door/VERSION", "line/cmd/atlas-vc/VERSION",
+                "webapp/handlers/VERSION", "Cargo.toml", "core/src/version.rs", "Cargo.lock"}
 
 
-def git_out(d: Path, *args: str) -> str | None:
+def git_ask(d: Path, *args: str) -> tuple[str | None, str]:
     """One git answer in `d`, taken without git's optional locks and never waiting on a
-    prompt; None when git cannot answer, so a question it could not put is never read as
-    a clean answer."""
+    prompt, and git's own reason when there is none: (None, why)."""
     import os
     try:
         q = subprocess.run(["git", *args], capture_output=True, text=True, cwd=str(d), timeout=60,
                            stdin=subprocess.DEVNULL,
                            env={**os.environ, "GIT_OPTIONAL_LOCKS": "0", "GIT_TERMINAL_PROMPT": "0"})
-    except Exception:
-        return None
-    return q.stdout if q.returncode == 0 else None
+    except subprocess.TimeoutExpired:
+        return None, "no answer inside 60 seconds"
+    except Exception as exc:
+        return None, str(exc)
+    if q.returncode == 0:
+        return q.stdout, ""
+    said = [ln.strip() for ln in (q.stderr or "").splitlines() if ln.strip()]
+    first = next((ln for ln in said if ln.startswith(("fatal:", "error:"))), said[-1] if said else "")
+    return None, first or f"git exited {q.returncode}"
+
+
+def git_out(d: Path, *args: str) -> str | None:
+    """One git answer in `d`; None when git cannot answer, so a question it could not put
+    is never read as a clean answer."""
+    return git_ask(d, *args)[0]
 
 
 def carried(side: str, path: str) -> bool:
     """Whether a path left unsaved may ride in the cut: the record and the cut's own outputs."""
     if side == "core":
         return path in RECORD
-    return path in ATLAS_RECORD or path.endswith("/VERSION") or path.endswith("/Cargo.toml")
+    return path in ATLAS_RECORD
 
 
-def ready(root: Path) -> list[str]:
-    """Each repository on its release line, level with GitHub's main -- as last fetched
-    and as GitHub answers now -- with nothing unsaved but the record; or the step
-    refused, nothing written. Asked by the bump, and again by the check."""
+def ready(root: Path, mark: str = "", after_bump: bool = False) -> list[str]:
+    """Each repository on its release line (release-<mark>, when the mark is named), level
+    with GitHub's main -- as last fetched and as GitHub answers now -- with nothing unsaved
+    but the record; or the step refused, this step writing nothing. Asked by the bump, and
+    again by the check, after_bump, when the bump's own writes stand unsaved on the line."""
     said: list[str] = []
     sides = [("core", root)] + ([("atlas", root / "atlas")] if (root / "atlas" / ".git").exists() else [])
     for side, d in sides:
@@ -150,24 +166,29 @@ def ready(root: Path) -> list[str]:
         if not head or not main:
             raise Refused(f"{side}: git could not say where HEAD and GitHub's main stand -- bring main down first")
         branch = (git_out(d, "rev-parse", "--abbrev-ref", "HEAD") or "").strip()
-        back = ("nothing was written; back to main, level with GitHub, the release line dropped if it "
+        back = ("this step wrote nothing; the bump's writes stand unsaved on the line, so the way back is "
+                "by hand: put them aside, back to main, level with GitHub, the release line dropped, then "
+                "fire again" if after_bump else
+                "this step wrote nothing; back to main, level with GitHub, the release line dropped if it "
                 "was opened from the wrong place, then fire again")
-        if not branch.startswith("release-"):
-            raise Refused(f"{side}: the cut stands on {branch or 'no line'}, not on a release line -- "
-                          f"opening release-<tag> was refused or never ran; {back}")
+        want = f"release-{mark}" if mark else "release-"
+        if not (branch == want if mark else branch.startswith(want)):
+            raise Refused(f"{side}: the cut stands on {branch or 'no line'}, not on "
+                          f"{want if mark else 'a release line'} -- opening it was refused or never ran; {back}")
         if head != main:
             raise Refused(f"{side}: {branch} stands on {head[:7]}, not on GitHub's main as last "
                           f"fetched ({main[:7]}) -- {back}")
-        remote = (git_out(d, "ls-remote", "origin", "refs/heads/main") or "").split()
+        listed, why = git_ask(d, "ls-remote", "origin", "refs/heads/main")
+        remote = (listed or "").split()
         if not remote:
-            raise Refused(f"{side}: GitHub could not be asked where main stands -- nothing was written; "
-                          f"open the send wall, then fire again")
+            raise Refused(f"{side}: GitHub could not be asked where main stands ({why or 'no answer'}) -- "
+                          f"this step wrote nothing; fire again once GitHub answers")
         if remote[0] != head:
             raise Refused(f"{side}: GitHub's main is at {remote[0][:7]}, not at {head[:7]} where {branch} "
                           f"stands: main as last fetched is stale -- {back}")
         listing = git_out(d, "status", "--porcelain", "--untracked-files=all")
         if listing is None:
-            raise Refused(f"{side}: git could not say what is unsaved -- nothing was written")
+            raise Refused(f"{side}: git could not say what is unsaved -- this step wrote nothing")
         stray = []
         for line in listing.splitlines():
             path = line[3:].split(" -> ")[-1].strip().strip('"')
@@ -461,7 +482,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     try:
         if step == "bump":
-            said = ready(ROOT) + bump(ROOT, mark, datetime.now().strftime("%Y-%m-%d %H:%M"))
+            said = ready(ROOT, mark) + bump(ROOT, mark, datetime.now().strftime("%Y-%m-%d %H:%M"))
             print("\n".join(said + [f"BUMPED to {mark}"]))
             return 0
         if step == "record":
@@ -469,7 +490,7 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         # The check is the last step before the save at the second gate, and that save
         # takes everything unsaved, so it asks again what the bump asked (C123).
-        said = ready(ROOT) if step == "check" else []
+        said = ready(ROOT, mark, after_bump=True) if step == "check" else []
         ok, text = {"index": lambda: index(ROOT), "check": lambda: check(ROOT, mark),
                     "ci": lambda: ci(ROOT, mark)}[step]()
         print("\n".join(said + [text]))
