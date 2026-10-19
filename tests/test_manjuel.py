@@ -16631,6 +16631,28 @@ def test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name(reg, lib, boo
     check("no folder was made by a refused write",
           not (g / "worlds" / "w").exists() and not (g / "projects" / "p").exists())
 
+    # THE DRIVER MAY WRITE THE SEATS AND THE SKILLS (WHAT'S LEFT H5, 2026-10-19), and nothing else on
+    # the list: Steward's /drive carries a mark a seat's name cannot be (skills.DRIVER, a type), and
+    # each write of its own waits on his card first (drive_act).
+    env.caller = "driver"
+    out = w("skills/x.md", "# x\nold line\n")
+    check("a seat whose name is the word 'driver' is still refused skills/",
+          out.startswith("Refused") and "hot-reloaded" in out and not (g / "skills" / "x.md").exists(), out[:140])
+    env.caller = _sk.DRIVER
+    out = w("skills/x.md", "# x\nold line\n")
+    check("the driver writes a skill file on a line of work",
+          out.startswith("Wrote skills/x.md on line of work `piece-x`"), out[:140])
+    out = w("agents/x.md", "# x\n")
+    check("   and a seat's file", out.startswith("Wrote agents/x.md on line of work `piece-x`"), out[:140])
+    out = e("skills/x.md", "old line", "new line")
+    check("   and edits a skill file in place",
+          out.startswith("Edited x.md") and (g / "skills" / "x.md").read_bytes() == b"# x\nnew line\n", out[:140])
+    for rel, mark in (("law/LAW.md", "sealed"), ("pipelines.md", "hot-reloaded"), ("CLAUDE.md", "standing rules"),
+                      (".env", "RULE 7"), ("skills/x.exe", "allowance")):
+        out = w(rel, "x\n")
+        check(f"   and is still refused {rel}", out.startswith("Refused") and mark in out, out[:140])
+    env.caller = ""
+
     # OUTSIDE THE GROUND: refused at the gate, before the handler (LAW 8).
     out = lib.execute("ground_write", {"filepath": "../escape.py", "content": "Y = 1\n"}, env)
     check("a path out of the ground is refused",

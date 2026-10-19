@@ -949,6 +949,13 @@ RBAC: the tree doors are skills inside the engine, and the door's holds do not
 see them -- what lands is gated by the branch and, once folded, by the coder's
 flow and its gate.
 
+**The driver's opening** (2026-10-19, WHAT'S LEFT H5, on his word: "lets start
+with it writing up the skills and agents"). Steward's /drive alone may write
+`agents/` and `skills/`; nothing else on the list opens to it, and every seat is
+still refused. Each write waits on his card first and lands on a line of work.
+The driver is known by a mark a seat's name cannot be -- `DriverMark`, a type --
+so a seat named "driver" is refused like any other. Stroked in the same test.
+
 Stroked: `test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name`
 (60): no repository refuses; main refuses at both doors and names the cure; on
 a line a new .py takes LF and a new root .md CRLF, and an edit keeps its own;

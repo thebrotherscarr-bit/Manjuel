@@ -1392,7 +1392,8 @@ def drive(spec, *, skills, env, ground, ask, report,
                           logs=Path(logs) if logs else ground / "logs", carry=carry)
     kept = (getattr(env, "caller", ""), getattr(env, "caller_allowed", None),
             getattr(env, "objective", ""))
-    env.caller, env.caller_allowed, env.objective = "driver", set(allowed), spec["goal"]
+    from .skills import DRIVER
+    env.caller, env.caller_allowed, env.objective = DRIVER, set(allowed), spec["goal"]
     mode = "" if spec["mode"] == "goal" else " " + spec["mode"]
     report(f"  drive{mode}: {spec['goal']}")
     report(f"  check: {spec['check'] or 'none named (unchecked)'} | model {model}")

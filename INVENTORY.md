@@ -597,7 +597,8 @@ reads wait 5 s and git writes 60 s (gitstate.py:44, 186). As it stands, several 
   WRITTEN list -- a secret ("Refused: '{rel}' is a secret, and keys are silent -- never written by a seat (RULE 7). Nothing was
   written."), client data ("Refused: that is CLIENT DATA -- ..."), `.git/` ("... the history is git's to write (LAW 8) ..."),
   the top folders worlds, law, foundation, agents, skills, sessions, logs, index, state, flows, memory, projects,
-  agent_workspace, bin ("Refused: {reason}. Nothing was written."), the proof stamps tests/last_run.json, last_run.md,
+  agent_workspace, bin ("Refused: {reason}. Nothing was written."; agents and skills are open to the driver alone, Steward's
+  /drive, since 2026-10-19 -- WHAT'S LEFT H5 -- and every seat is still refused), the proof stamps tests/last_run.json, last_run.md,
   run_history.jsonl, last_audit.md ("... a seat never writes its own proof ..."), the files CLAUDE.md, .gitignore,
   .gitattributes, index_roots.txt, pipelines.md, commands.md, .env.example, memory.md, SEAT_LOG.md, BUILDMAP.md, and binaries
   .exe .dll .bin .pyc .pyd .so .bundle .obj ("... a binary is placed on the operator's allowance, never written by a seat

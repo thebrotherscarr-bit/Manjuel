@@ -530,6 +530,11 @@ as typed.
   `git_init`, `remember`, `rack_sync`, `rack_load`, `rack_unload`,
   `rack_pull`, `index_ground`, `embed_text`, `speak`. Saving and sending are
   the driver's own steps, on his cards, never the model's.
+- What its hands may write: what the tree doors allow any writer (REFUSALS,
+  section 27), and -- the driver alone, since 2026-10-19 (WHAT'S LEFT H5) -- the
+  seats in `agents/` and the skills in `skills/`, each write on his card. A seat
+  or a skill it writes is reloaded into the sitting at the next turn, and the
+  rest of the never-written list stays closed to it.
 
 **The loop.** One model call per step. A reply with no tool call counts as
 `done`, its first line the summary. `done` runs the check: a pass ends the job
