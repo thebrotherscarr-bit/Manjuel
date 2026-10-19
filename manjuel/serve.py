@@ -868,6 +868,7 @@ def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float
     # for over three minutes. MANJUEL_DRIVER_THINK=1 turns it back on.
     think = os.environ.get("MANJUEL_DRIVER_THINK", "").strip().lower() in ("1", "true", "yes")
     steps = 0
+    shown: set = set()          # the tools whose whole file this job has handed over (H32)
 
     def spent() -> bool:
         return steps >= max_steps or time.time() - started > max_minutes * 60
@@ -914,8 +915,17 @@ def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float
             result = drive_act(name, args, ctx, d)
             d.steps.append([n, name, args, result])
             ctx.report(f"  [{n}] {name} {_drive_brief(args)} -> {_drive_head(result)}")
-            messages.append({"role": "tool", "tool_name": name,
-                             "content": result[:DRIVE_RESULT_CHARS]})
+            said = result[:DRIVE_RESULT_CHARS]
+            # THE WHOLE FILE ON FIRST USE (WHAT'S LEFT H32, his card of 2026-10-19):
+            # the tools list carries each description cut to 400 characters, so
+            # the first time a job uses a tool its whole skill file comes back
+            # with what it returned, once a job.
+            spec = ctx.skills.spec(name) if hasattr(ctx.skills, "spec") else None
+            if spec is not None and name not in shown:
+                shown.add(name)
+                said = (f"How `{name}` works -- its whole skill file, once in this job:\n"
+                        f"{spec.body.strip()}\n\nWhat it returned:\n{said}")
+            messages.append({"role": "tool", "tool_name": name, "content": said})
 
 
 def _drive_changes(d) -> str:

@@ -58,7 +58,7 @@ each slow route mended or ruled, one piece at a time. (4) The v0.2.6 cut through
 | P4 | court | The review panel: every counsel is heard, then the Judge rules; its turn may take 900 s. | sitting 366: FAULT, Jesster and Manjuel past their bounds, Neiro's last word; 368: /table ruled with all five | 900 s; 779 s |
 | P5 | quick | One seat past the gate, for a throwaway question. | sitting 373: ok, "two plus two" said four; the search its words chose set aside, with no Router to run it | 3.9 s |
 
-### Skills (skills/, 45): what a seat can call
+### Skills (skills/, 46): what a seat can call
 
 | # | name | what it does | live run | time |
 |---|---|---|---|---|
@@ -107,6 +107,7 @@ each slow route mended or ruled, one piece at a time. (4) The v0.2.6 cut through
 | K43 | time_align | Parses loose task lists or historical log entries and aligns them onto an ordered timeline. | sitting 370: ok | 58.9 s |
 | K44 | when | Lists what ran in a WINDOW OF TIME, read from the transcript stamps in logs/. | sitting 373: ok, called by its own words | 33.7 s |
 | K45 | write_file | Writes text, scripts, or markdown data to a file inside the workspace. | sitting 370: ok, measure.py in the workspace | 39.8 s |
+| K46 | use_record | The engine's own after-tool hook: one line per use in logs/uses.jsonl (the tool, whether it answered, how long, who called), which skill_report weighs. Never called by name. | not run live yet (built 2026-10-19, WHAT'S LEFT H32) | -- |
 
 ### Commands (the engine's palette, 31, and commands.md's own, 3): typed as /name
 
@@ -914,6 +915,19 @@ reads wait 5 s and git writes 60 s (gitstate.py:44, 186). As it stands, several 
 - **CARE** No disk; in no set. The runner's refusals (asked for "the logs" with no material it refuses: sitting 95 spent 900 s
   twice before that refusal existed).
 - **MAINTENANCE** skills/time_aligner.md:1-7.  **TIME** sitting 370: 58.9 s.  **USES** ordering dated text; not "the logs" by name.
+
+#### use_record (skills/use_record.md; the engine's own after-tool hook)
+- **AUTHOR** "The engine's own after-tool hook: after every skill or tool call it appends one line to logs/uses.jsonl ... It is
+  never called by name."
+- **USE** none: it fires after every call through the library's execute, handed the tool, ok or failed, and milliseconds.
+- **CARE** In ENGINE_HOOKS, so it runs past a seat's clearance; it writes only when the library was loaded for a sitting
+  (record_uses, set in cli's Session.load). Called by name: "Refused: use_record is the engine's own after-tool hook ...
+  Nothing was written."; else "Not recorded: this library was not loaded for a sitting."; "Not recorded: no tool named, or
+  no logs/ folder in this ground."; "Error: the use of {tool} could not be written: {exc}"; "Recorded: {tool}". Each line
+  carries ts, tool, ok, ms, caller and session. skill_report reads it: "Use, from logs/uses.jsonl (since {first}):", then
+  "  {name:20} used {n}, failed {f}, median {m} ms" and "  never used: ...".
+- **MAINTENANCE** skills.py: _use_record, _uses_weighed, ENGINE_HOOKS, the library's execute and _call.  **TIME** not
+  measured yet.  **USES** every call, read back through skill_report.
 
 #### when (skills/when.md)
 - **AUTHOR** "Lists what ran in a WINDOW OF TIME, read from the transcript stamps in logs/."

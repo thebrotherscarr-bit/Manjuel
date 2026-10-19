@@ -229,6 +229,15 @@ TAKES_ARGS = ("content", "filepath")
 # one by name rather than accepting it silently and never calling it.
 HOOK_POINTS = ("before_tool", "after_tool")
 
+# THE ENGINE'S OWN HOOKS (WHAT'S LEFT H32, 2026-10-19). A hook watches every
+# call; the ones named here are the engine's own record of the call, so they
+# run past the clearance of the seat whose call they watch (a counsel turn,
+# the driver's tool list). Every other hook meets that seat's gates as any
+# call does: a hook runs with no card of its own (C120).
+ENGINE_HOOKS = frozenset({"use_record"})
+# Where `use_record` writes, one line per use, and `skill_report` reads.
+USES_LOG = "logs/uses.jsonl"
+
 _HOOKS_RE = re.compile(r"\*\*Hooks:\*\*\s*(?P<p>.*?)(?=\n[ \t]*[-*][ \t]*\*\*|\Z)",
                        re.DOTALL)
 
@@ -492,6 +501,8 @@ WRITING_SKILLS = {
     # 2026-09-28: the tree doors write into the ground itself, on a line of
     # work (see THE TREE DOORS, beside them).
     "ground_write", "ground_edit",
+    # 2026-10-19 (H32): one line per use, appended to logs/uses.jsonl.
+    "use_record",
 }
 
 # THE WRITERS WHOSE ARGUMENT IS A MESSAGE ONLY THE OPERATOR CAN SUPPLY.
@@ -1047,8 +1058,8 @@ def _windowed_python(text: str, rel: str, want: str):
             + (f"\n  ... and {len(top) - 60} more" if len(top) > 60 else "")
             + (f"\n\nModule-level names, addressable the same way "
                f"({len(names)}):\n  "
-               + "\n  ".join(f"{n}  (lines {a}-{b})" for n, a, b in names[:60])
-               + (f"\n  ... and {len(names) - 60} more" if len(names) > 60 else "")
+               + "\n  ".join(f"{n}  (lines {a}-{b})" for n, a, b in names[:100])
+               + (f"\n  ... and {len(names) - 100} more" if len(names) > 100 else "")
                if names else "")
             + (f"\n\nMethods are addressable too, as Class.method — "
                f"{len(defs) - len(top) - len(names)} of them."
@@ -2012,7 +2023,66 @@ def _skill_report(env: SkillExecutionEnv, args: dict) -> str:
     lines.append("")
     lines.append("Each is declared in skills/*.md; the operator also has "
                  "/skills for binding status.")
+    lines.extend(_uses_weighed(env, [s.keyword for s in lib.specs]))
     return "\n".join(lines)
+
+
+def _uses_weighed(env, keywords: list) -> list:
+    """Each skill weighed off logs/uses.jsonl (WHAT'S LEFT H32): its uses, its
+    failures and its median time, then the skills never used. Nothing while
+    the record holds no line."""
+    import json as _json
+    p = Path(env.ground or ".") / USES_LOG
+    if not p.is_file():
+        return []
+    seen: dict = {}
+    first = ""
+    for line in p.read_text(encoding="utf-8", errors="replace").splitlines():
+        try:
+            row = _json.loads(line)
+        except ValueError:
+            continue
+        first = first or str(row.get("ts", ""))
+        seen.setdefault(str(row.get("tool", "")), []).append(row)
+    if not seen:
+        return []
+    out = ["", f"Use, from {USES_LOG} (since {first}):"]
+    for kw in sorted(seen):
+        rows = seen[kw]
+        ms = sorted(int(r.get("ms") or 0) for r in rows)
+        failed = sum(1 for r in rows if not r.get("ok"))
+        out.append(f"  {kw:20} used {len(rows)}, failed {failed}, median {ms[len(ms) // 2]} ms")
+    idle = [k for k in sorted(keywords) if k not in seen]
+    if idle:
+        out.append(f"  never used: {', '.join(idle)}")
+    return out
+
+
+@skill("use_record")
+def _use_record(env: SkillExecutionEnv, args: dict) -> str:
+    """One line per use, written by the after-tool hook alone (WHAT'S LEFT H32)."""
+    import json as _json
+    import time as _time
+    if not getattr(env, "in_hook", False):
+        return (f"Refused: use_record is the engine's own after-tool hook: it writes one "
+                f"line per use to {USES_LOG} and is never called by name. Nothing was "
+                f"written.")
+    if not getattr(getattr(env, "skills_ref", None), "record_uses", False):
+        return "Not recorded: this library was not loaded for a sitting."
+    tool = str(args.get("content") or "").strip()
+    p = Path(env.ground or ".") / USES_LOG
+    if not tool or not p.parent.is_dir():
+        return "Not recorded: no tool named, or no logs/ folder in this ground."
+    row = {"ts": _time.strftime("%Y-%m-%dT%H:%M:%S"), "tool": tool,
+           "ok": str(args.get("ok", "")) == "1", "ms": int(str(args.get("ms") or "0")),
+           "caller": str(getattr(env, "caller", "") or ""),
+           "session": str(getattr(env, "session", "") or "")}
+    try:
+        with open(p, "a", encoding="utf-8", newline="\r\n") as f:
+            f.write(_json.dumps(row, ensure_ascii=False) + "\n")
+    except OSError as exc:
+        return f"Error: the use of {tool} could not be written: {exc}"
+    return f"Recorded: {tool}"
 
 
 @skill("ground_report")
@@ -4670,6 +4740,10 @@ class SkillLibrary:
     # turn down, and a failure that is swallowed without a name is how a
     # broken hook runs for weeks looking installed.
     last_hook_fault: tuple | None = None
+    # Whether `use_record` writes (WHAT'S LEFT H32): the engine turns it on
+    # where it loads the library for a sitting (cli's Session.load), so a
+    # library the strokes load records nothing into his record.
+    record_uses: bool = False
 
     def __init__(self, specs: list[SkillSpec], warnings: list[str], source: Path):
         self.specs = specs
@@ -4934,7 +5008,7 @@ class SkillLibrary:
         return [s for s in sorted(self.specs, key=lambda x: x.keyword)
                 if point in (getattr(s, "hooks", ()) or ())]
 
-    def _fire(self, specs: list, action: str, env) -> None:
+    def _fire(self, specs: list, action: str, env, said: dict | None = None) -> None:
         """Run the hooks for one point. They watch and they act; they do not
         decide.
 
@@ -4962,7 +5036,7 @@ class SkillLibrary:
             prev = getattr(env, "in_hook", False)
             try:
                 setattr(env, "in_hook", True)
-                text = str(self._call(s.keyword, {"content": action}, env) or "")
+                text = str(self._call(s.keyword, {"content": action, **(said or {})}, env) or "")
                 # A BROKEN HOOK ARRIVES AS TEXT, NOT AS A RAISE. _call already
                 # converts a raising handler into "Skill 'x' raised ..." so
                 # that nothing a handler does can take a turn down -- the right
@@ -5004,8 +5078,15 @@ class SkillLibrary:
 
         key = (action or "").strip().lower()
         self._fire(before, key, env)
+        import time as _time
+        started = _time.monotonic()
         out = self._call(action, args, env)
-        self._fire(after, key, env)
+        # WHAT THE AFTER-TOOL HOOKS ARE HANDED (WHAT'S LEFT H32): the tool,
+        # whether it answered or refused, and how long it took.
+        text = str(out or "")
+        ok = not (text.startswith(FAILED_HEADS) or text.startswith("Skill '"))
+        ms = int((_time.monotonic() - started) * 1000)
+        self._fire(after, key, env, {"ok": "1" if ok else "0", "ms": str(ms)})
         return out
 
     def _call(self, action: str, args: dict, env: SkillExecutionEnv) -> str:
@@ -5013,7 +5094,11 @@ class SkillLibrary:
 
         # A prompt skill runs the model named in its own markdown, using its
         # body as the system prompt. Adding one is writing a file -- no Python.
-        if getattr(env, "review_only", False) and key not in REVIEW_ONLY_SKILLS:
+        # The engine's own hooks run as the engine, not as the seat whose call
+        # they watch (ENGINE_HOOKS): neither gate below applies to them.
+        engine_hook = getattr(env, "in_hook", False) and key in ENGINE_HOOKS
+        if (getattr(env, "review_only", False) and key not in REVIEW_ONLY_SKILLS
+                and not engine_hook):
             # SAY WHAT WAS CHECKED, AND NOTHING ELSE (sitting 82, built
             # 2026-09-29). The gate is an allowlist and that is the whole test:
             # `key` is not on it. This used to add "'{key}' changes things" to
@@ -5032,7 +5117,7 @@ class SkillLibrary:
         # review_only refusal above, resolved per seat: the Steward may read
         # the ground and nothing else until the record shows he handles it.
         allowed = getattr(env, "caller_allowed", None)
-        if allowed is not None and key not in allowed:
+        if allowed is not None and key not in allowed and not engine_hook:
             who = getattr(env, "caller", "") or "this seat"
             return (f"Refused: {who} is not cleared to call '{key}'. "
                     f"Cleared: {', '.join(sorted(allowed)) or 'nothing'}. "

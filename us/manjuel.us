@@ -795,6 +795,21 @@ other (LAW 5); now a record that lies is a finding.
 {
   "can_approve": false,
   "covenant": "1512741580b7239b",
+  "id": "use_record",
+  "kind": "skill",
+  "office": "MANJUEL",
+  "reports_to": "manjuel",
+  "source": "skills/use_record.md",
+  "us": 1,
+  "wall": "logs/uses.jsonl alone, one line appended per use, and only as the engine's after-tool hook for a library loaded for a sitting; asked for by name it refuses and writes nothing",
+  "writes": true
+}
+```
+
+```json
+{
+  "can_approve": false,
+  "covenant": "1512741580b7239b",
   "id": "when",
   "kind": "skill",
   "office": "MANJUEL",

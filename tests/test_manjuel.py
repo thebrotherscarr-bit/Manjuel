@@ -19358,8 +19358,9 @@ def test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book):
     from manjuel import skills as _sk
 
     # ---- inert until asked for -------------------------------------------
-    check("nothing on disk declares a hook, so the engine is unchanged",
-          not lib.hooks_for("before_tool") and not lib.hooks_for("after_tool"),
+    check("on disk only the engine's own use record declares a hook (WHAT'S LEFT H32)",
+          not lib.hooks_for("before_tool")
+          and [s.keyword for s in lib.hooks_for("after_tool")] == sorted(_sk.ENGINE_HOOKS),
           f"{[s.keyword for s in lib.hooks_for('before_tool')]} / "
           f"{[s.keyword for s in lib.hooks_for('after_tool')]}")
 
@@ -19439,6 +19440,57 @@ def test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book):
         _sk._HANDLERS.pop("_hooktest", None)
         _sk._HANDLERS.pop("_probe", None)
         lib.last_hook_fault = None
+
+
+def test_every_use_is_marked_and_weighed(reg, lib, book):
+    """WHAT'S LEFT H32, his cards of 2026-10-19: every use of a skill is marked by the
+    engine's own after-tool hook -- one line in logs/uses.jsonl: the tool, whether it
+    answered, how long, who called -- and weighed by skill_report. Only a library loaded
+    for a sitting writes; asked for by name it refuses; a caller's clearance does not
+    stop the engine's own record."""
+    import json as _json
+    import re as _re
+    from manjuel import skills as _sk
+    g = Path(tempfile.mkdtemp())
+    (g / "logs").mkdir()
+    env = env_for(g, reg, Stub(), skills=lib)
+    uses = g / "logs" / "uses.jsonl"
+
+    def rows():
+        return [_json.loads(x) for x in uses.read_text(encoding="utf-8").splitlines()]
+    check("use_record is declared on disk, hooked after every tool, and named the engine's own",
+          "use_record" in lib.keywords() and "use_record" in _sk.ENGINE_HOOKS
+          and [s.keyword for s in lib.hooks_for("after_tool")] == ["use_record"])
+    kept = lib.record_uses
+    try:
+        lib.record_uses = False
+        lib.execute("ground_list", {}, env)
+        check("a library not loaded for a sitting writes nothing", not uses.exists())
+        lib.record_uses = True
+        lib.execute("ground_list", {}, env)
+        lib.execute("ground_read", {"filepath": ".env"}, env)
+        got = rows()
+        check("one line per use: the tool and how long",
+              [r["tool"] for r in got] == ["ground_list", "ground_read"]
+              and all(isinstance(r["ms"], int) for r in got), str(got))
+        check("   and whether it answered: a refusal is marked failed",
+              got[0]["ok"] is True and got[1]["ok"] is False, str(got))
+        env.caller, env.caller_allowed = _sk.DRIVER, {"ground_list"}
+        lib.execute("ground_list", {}, env)
+        got = rows()
+        check("   and a caller's clearance does not stop the engine's own record",
+              len(got) == 3 and got[2]["caller"] == "driver", str(got[-1:]))
+        env.caller, env.caller_allowed = "", None
+        out = lib.execute("use_record", {"content": "ground_list"}, env)
+        check("asked for by name it refuses, and writes nothing",
+              out.startswith("Refused") and len(rows()) == 3, out[:120])
+        rep = lib.execute("skill_report", {}, env)
+        check("skill_report weighs each skill used, and names the ones never used",
+              _re.search(r"ground_list\s+used 2, failed 0", rep) is not None
+              and _re.search(r"ground_read\s+used 1, failed 1", rep) is not None
+              and "never used:" in rep, rep[-400:])
+    finally:
+        lib.record_uses = kept
 
 
 def test_a_run_in_flight_can_be_interrupted(reg, lib, book):
@@ -22806,6 +22858,9 @@ def test_steward_drives_to_a_check(reg, lib, book):
             marked.append(isinstance(getattr(env, "caller", None), DriverMark))
             return "Saved to workspace: " + str(args.get("filepath"))
 
+        def spec(self, name):
+            return _NS(body="# the whole write_file file") if name == "write_file" else None
+
     def call(name, **args):
         return {"role": "assistant", "content": "", "tool_calls": [{"function": {"name": name, "arguments": args}}]}
 
@@ -22849,6 +22904,15 @@ def test_steward_drives_to_a_check(reg, lib, book):
         check("drive: the driver gives the caller back as it found it", env.caller == "" and env.caller_allowed is None)
         check("drive: the call it made carried the driver's mark, and the mark left with it",
               marked == [True] and not isinstance(env.caller, DriverMark), str(marked))
+        twice = Model(call("write_file", filepath="a.txt", content="a"),
+                      call("write_file", filepath="b.txt", content="b"), call("done", summary="wrote both"))
+        SV.drive(f"write two | check: {py} -c pass", skills=Lib(), env=env, ground=tmp, logs=tmp / "logs",
+                 ask=asker("y", "y"), report=lambda line: None, client=twice)
+        handed = [m.get("content", "") for m in twice.seen[-1] if isinstance(m, dict) and m.get("role") == "tool"]
+        check("drive: a tool's first use hands Steward its whole skill file with what it returned, once a job (H32)",
+              len(handed) == 2 and handed[0].startswith("How `write_file` works")
+              and "# the whole write_file file" in handed[0] and "Saved to workspace: a.txt" in handed[0]
+              and not handed[1].startswith("How"), str(handed)[:300])
 
         events.clear()
         SV.DRIVE_STEPS = 4
@@ -23285,6 +23349,7 @@ def main() -> int:
     test_the_phrasing_matrix_finds_nothing_and_has_teeth(reg, lib, book)
     test_a_run_python_child_is_walled_into_the_workspace(reg, lib, book)
     test_a_hook_watches_a_call_without_taking_it_over(reg, lib, book)
+    test_every_use_is_marked_and_weighed(reg, lib, book)
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)
     test_the_mcp_skill_never_leaves_this_machine(reg, lib, book)
     test_the_council_carries_its_key_to_the_door(reg, lib, book)
