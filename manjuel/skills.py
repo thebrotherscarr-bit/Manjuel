@@ -677,6 +677,15 @@ def gate_paths(spec, args: dict, env) -> str:
         raw = (args.get(name) or "").strip().strip("'\"`")
         if not raw:
             continue                    # absent is the handler's business
+        # A PART IS NOT A PATH (WHAT'S LEFT C101, 2026-10-19). With both tags,
+        # ground_read's <content> is the part of <filepath> to read -- a
+        # number, a heading, a definition's name -- and only the file is
+        # gated. Judged as a path, "drive (lines 1376-1420)" was refused as
+        # "a description of" one, three times in one job
+        # (logs/2026-10-16_210001_drive.md).
+        if (spec.keyword == "ground_read" and name == "content"
+                and (args.get("filepath") or "").strip()):
+            continue
         # PROSE IS NOT A PATH (sitting 70, and the third time this month).
         # The Router asked ground_list for the folder 'list available files
         # in ground'; earlier it asked ground_read for 'review sitting 63
@@ -996,10 +1005,17 @@ def _windowed_python(text: str, rel: str, want: str):
     defs = defs + names
 
     if want and not want.isdigit():
+        # A NAME IS ASKED BARE (WHAT'S LEFT C101, 2026-10-19). The map's rows
+        # read "name  (lines a-b)", and a seat copies a row whole: the line
+        # range is dropped, and the name is matched exactly before it is
+        # matched without case -- `drive` is the driver's function, not class
+        # `Drive`, which an earlier read handed back.
+        want = re.sub(r"\s*\(lines \d+-\d+\)\s*$", "", want).strip() or want
         low = want.lower()
         # Exact name first, then a containing match -- so `execute` finds
         # `execute` and not `SkillLibrary.execute_all` by accident.
-        hit = next((d for d in defs if d[0].lower() == low), None) \
+        hit = next((d for d in defs if d[0] == want), None) \
+            or next((d for d in defs if d[0].lower() == low), None) \
             or next((d for d in defs if low in d[0].lower()), None)
         if hit:
             name, lo, hi = hit
@@ -1023,7 +1039,10 @@ def _windowed_python(text: str, rel: str, want: str):
     top = [d for d in defs if "." not in d[0] and d[0] not in bound]
     return (f"{rel} — {len(lines)} lines, {len(defs)} definitions. THIS IS "
             f"THE MAP, NOT THE FILE.\n\n"
-            f"Ask for any one BY NAME and get the whole definition:\n  "
+            f"Ask for any one BY NAME and get the whole definition -- the file "
+            f"as <filepath> and the name ALONE as <content>, e.g. <filepath>"
+            f"{rel}</filepath><content>{(top or defs)[0][0]}</content> "
+            f"(the line range is not part of the name):\n  "
             + "\n  ".join(f"{n}  (lines {a}-{b})" for n, a, b in top[:60])
             + (f"\n  ... and {len(top) - 60} more" if len(top) > 60 else "")
             + (f"\n\nModule-level names, addressable the same way "

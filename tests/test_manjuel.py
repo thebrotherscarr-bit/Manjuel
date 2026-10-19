@@ -11569,6 +11569,19 @@ def test_a_python_file_is_cut_by_definition_not_by_character(reg, lib, book):
     ex = windowed(src, "manjuel/skills.py", "windowed")
     check("an EXACT name wins over a longer one containing it",
           "`windowed`," in ex, ex[:80])
+    # WHAT'S LEFT C101 (2026-10-19): a row copied off the map, line range and all,
+    # still names the definition; the exact name beats one that differs only in
+    # case (serve.py's `drive` is the function, not class `Drive`); and the map
+    # shows the exact two-tag call.
+    row = windowed(src, "manjuel/skills.py", "windowed  (lines 1057-1144)")
+    check("a name copied off the map with its line range still finds the definition",
+          "`windowed`," in row, row[:80])
+    sv = (ROOT / "manjuel" / "serve.py").read_text(encoding="utf-8")
+    dv = windowed(sv, "manjuel/serve.py", "drive")
+    check("the exact name wins over one that differs only in case",
+          "`drive`," in dv and dv.splitlines()[2].startswith("def drive("), dv[:80])
+    check("   and the map shows the exact two-tag call",
+          "<filepath>manjuel/skills.py</filepath><content>" in m, m[:300])
 
     miss = windowed(src, "manjuel/skills.py", "no_such_function")
     check("an unknown name lists what IS declared",
@@ -20253,6 +20266,13 @@ def test_path_gate(reg, lib, book):
     check("   while a path in the ground's own folders passes the gate",
           gate_paths(gr, {"content": "manjuel/intent.py"}, env) == "",
           gate_paths(gr, {"content": "manjuel/intent.py"}, env)[:60])
+    # WHAT'S LEFT C101 (2026-10-19): with both tags, ground_read's <content> is the
+    # PART -- a name, a heading, a number -- and only the file is gated.
+    check("a part named in words, with the file given, is not judged as a path",
+          gate_paths(gr, {"filepath": "manjuel/serve.py", "content": "drive (lines 1376-1420)"}, env) == "",
+          gate_paths(gr, {"filepath": "manjuel/serve.py", "content": "drive (lines 1376-1420)"}, env)[:80])
+    check("   while the file beside it is still gated",
+          "ESTATE LAW 2" in gate_paths(gr, {"filepath": "worlds/x/notes.md", "content": "a part"}, env))
     check("   and a write under worlds/ is refused at the same gate",
           "ESTATE LAW 2" in gate_paths(lib.spec("ground_write"), {"filepath": "worlds/x/y.md", "content": "x"}, env),
           gate_paths(lib.spec("ground_write"), {"filepath": "worlds/x/y.md", "content": "x"}, env)[:80])
