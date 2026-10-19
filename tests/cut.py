@@ -4,7 +4,9 @@
 The release flow (flows/release.json) runs these through the door's
 `release_step`, his gates between them, and his Bash tab can run any one:
 
-    python tests/cut.py bump vX.Y.Z     the pins (pyproject.toml, manjuel/__init__.py),
+    python tests/cut.py bump vX.Y.Z     first, each repository on GitHub's main with
+                                        nothing unsaved but the record (C122, C123);
+                                        then the pins (pyproject.toml, manjuel/__init__.py),
                                         atlas's version files (its own version.ps1,
                                         set and then sync), and both changelogs
                                         folded under the mark
@@ -91,6 +93,63 @@ def fold(text: str, unreleased: str, head: str, stamp: str) -> str:
     if not any(ln.strip() for ln in lines[at + 1:nxt]):
         raise Refused(f"nothing under {unreleased!r} -- write what the mark carries first")
     return "\n".join(lines[:at + 1] + ["", f"{head} — {stamp}"] + lines[at + 1:])
+
+
+# WHAT A CUT MAY CARRY (WHAT'S LEFT C122 and C123, his card of 2026-10-19: "Record
+# only"). The bump is the cut's first step, so before a byte is written it refuses a
+# repository whose line does not stand on GitHub's main as last fetched -- a release
+# line opened from a stale or merged line, or a re-fire left on the wrong one -- and
+# anything unsaved besides the record and the cut's own outputs: the save at the
+# second gate takes everything unsaved, and code reaches main through its own pull
+# request, never inside a cut.
+RECORD = {"CHANGELOG.md", "WHATS_LEFT.md", "HANDOFF.md", "DAYBOOK.md", "STATUS.md", "BUILDPATH.md",
+          "TASKS.md", "pyproject.toml", "manjuel/__init__.py", "tests/last_run.json",
+          "tests/last_run.md", "tests/run_history.jsonl"}
+ATLAS_RECORD = ("CHANGELOG.md", "Cargo.toml", "Cargo.lock", "VERSION", "core/src/version.rs")
+
+
+def git_out(d: Path, *args: str) -> str:
+    """One git answer in `d`, taken without git's optional locks; "" when git cannot answer."""
+    import os
+    try:
+        q = subprocess.run(["git", *args], capture_output=True, text=True, cwd=str(d), timeout=60,
+                           stdin=subprocess.DEVNULL, env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"})
+    except Exception:
+        return ""
+    return q.stdout if q.returncode == 0 else ""
+
+
+def carried(side: str, path: str) -> bool:
+    """Whether a path left unsaved may ride in the cut: the record and the cut's own outputs."""
+    if side == "core":
+        return path in RECORD
+    return path in ATLAS_RECORD or path.endswith("/VERSION") or path.endswith("/Cargo.toml")
+
+
+def ready(root: Path) -> list[str]:
+    """Each repository on GitHub's main as last fetched, with nothing unsaved but the
+    record, or the cut refused before its first byte."""
+    said: list[str] = []
+    sides = [("core", root)] + ([("atlas", root / "atlas")] if (root / "atlas" / ".git").exists() else [])
+    for side, d in sides:
+        head = git_out(d, "rev-parse", "HEAD").strip()
+        main = git_out(d, "rev-parse", "origin/main").strip()
+        if not head or not main:
+            raise Refused(f"{side}: git could not say where HEAD and GitHub's main stand -- bring main down first")
+        if head != main:
+            raise Refused(f"{side}: the release line stands on {head[:7]}, not on GitHub's main as last "
+                          f"fetched ({main[:7]}) -- open it from main, level with GitHub")
+        stray = []
+        for line in git_out(d, "status", "--porcelain", "--untracked-files=all").splitlines():
+            path = line[3:].split(" -> ")[-1].strip().strip('"')
+            if path and not carried(side, path):
+                stray.append(path)
+        if stray:
+            raise Refused(f"{side}: unsaved besides the record: {', '.join(stray[:12])}"
+                          + (f" and {len(stray) - 12} more" if len(stray) > 12 else "")
+                          + " -- a cut carries the record only; save the rest through its own pull request")
+        said.append(f"{side}: on GitHub's main ({main[:7]}), nothing unsaved but the record")
+    return said
 
 
 def bump(root: Path, mark: str, stamp: str, run=subprocess.run) -> list[str]:
@@ -373,7 +432,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     try:
         if step == "bump":
-            said = bump(ROOT, mark, datetime.now().strftime("%Y-%m-%d %H:%M"))
+            said = ready(ROOT) + bump(ROOT, mark, datetime.now().strftime("%Y-%m-%d %H:%M"))
             print("\n".join(said + [f"BUMPED to {mark}"]))
             return 0
         if step == "record":
