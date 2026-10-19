@@ -1005,10 +1005,17 @@ def _windowed_python(text: str, rel: str, want: str):
     defs = defs + names
 
     if want and not want.isdigit():
+        # A NAME IS ASKED BARE (WHAT'S LEFT C101, 2026-10-19). The map's rows
+        # read "name  (lines a-b)", and a seat copies a row whole: the line
+        # range is dropped, and the name is matched exactly before it is
+        # matched without case -- `drive` is serve.py's function, not class
+        # `Drive`, which an earlier read handed back.
+        want = re.sub(r"\s*\(lines \d+-\d+\)\s*$", "", want).strip() or want
         low = want.lower()
         # Exact name first, then a containing match -- so `execute` finds
         # `execute` and not `SkillLibrary.execute_all` by accident.
-        hit = next((d for d in defs if d[0].lower() == low), None) \
+        hit = next((d for d in defs if d[0] == want), None) \
+            or next((d for d in defs if d[0].lower() == low), None) \
             or next((d for d in defs if low in d[0].lower()), None)
         if hit:
             name, lo, hi = hit
@@ -1032,7 +1039,10 @@ def _windowed_python(text: str, rel: str, want: str):
     top = [d for d in defs if "." not in d[0] and d[0] not in bound]
     return (f"{rel} — {len(lines)} lines, {len(defs)} definitions. THIS IS "
             f"THE MAP, NOT THE FILE.\n\n"
-            f"Ask for any one BY NAME and get the whole definition:\n  "
+            f"Ask for any one BY NAME and get the whole definition -- the file "
+            f"as <filepath> and the name ALONE as <content>, e.g. <filepath>"
+            f"{rel}</filepath><content>{(top or defs)[0][0]}</content> "
+            f"(the line range is not part of the name):\n  "
             + "\n  ".join(f"{n}  (lines {a}-{b})" for n, a, b in top[:60])
             + (f"\n  ... and {len(top) - 60} more" if len(top) > 60 else "")
             + (f"\n\nModule-level names, addressable the same way "
