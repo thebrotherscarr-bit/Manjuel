@@ -38,7 +38,9 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (09:40):** (1) and (2) done; (3)'s first half done -- C101 saved and sent by Steward on your cards (pull
+  **Where it stands (10:28):** H5's step (1) built on the line `drive-1019-094920` by Steward on your cards and read by three
+  reviewers before the send (C120 found); next, Steward's ship, the ground brought home (C83), the restart, and Steward's
+  first write of a skill file as the live proof; then H32 and the talk. **At 09:40 it stood:** (1) and (2) done; (3)'s first half done -- C101 saved and sent by Steward on your cards (pull
   request 35, merged on your click), the ground brought back to main by the door on your cards (C119, found at that send),
   and the engine restarted so Steward has it (sitting 405); its second half, LAUNCH_PLAN's item 4 given to Steward again,
   waits. **Your word after it:** "lets start with it writing up the skills and agents, that i believe is the smallest and
@@ -301,11 +303,14 @@ carry the mend; none asks for anything new.
   base on record, so after the merge the line is not closed here and main is not brought down (seen 2026-10-16, pull request
   33: put right by hand with the door's `git_branch` and `git_pull`, then `/drive tidy`). Mend: record main as the base in
   `drive_save` and `drive_act`, or fall back to the merged line in `_drive_close_lines` (`manjuel/serve.py`).
+  Recurred 2026-10-19 at C101's send (pull request 35), put right the same way, and written again by the hand as C119.
 - **C84. A job with no work still gets the writing tools, and fills its steps with them.** Asked only to run its check (sitting
   403), the model wrote two stand-in tests into the workspace and ran them, each on your card; the real check then decided, so
   the result was not faked, but steps were spent and two files left behind (`agent_workspace/smoke_cli.py`,
   `agent_workspace/test_manjuel.py`). Mend: `drive_tools` offers a job the tools it needs, or `drive_act` refuses running a file
   the same job wrote (`manjuel/serve.py`).
+  Again 2026-10-19, in H5's fix job: before calling done the model asked to run a `verify_done.py` of its own, then wrote
+  it into the workspace, then asked to run it and the strokes; you declined the runs, and the job's own check decided.
 - **C85. The next job carries the last job's goal words, even when it failed.** "What is next?" puts each earlier job of the turn
   above the new goal: its first 200 characters, its verdict word, its commits; a failed job's orders sit over the new ones with
   only "failed" beside them, under a label that says "in this sitting". Mend: `drive_carry` carries what was done and marks what
@@ -382,7 +387,14 @@ carry the mend; none asks for anything new.
   none (the same reason its card said "2 of them were not made by this run"). Put right through the door on your cards: back
   to main, the pull (refused once, git's record of GitHub's main moved under it by a fetch at the same moment, then caught
   up), and the line closed. Mend: a ship takes the line's base from the line itself (main, when it was opened from main) and
-  comes home as it does from a line it opened.
+  comes home as it does from a line it opened. **The same fault as C83**, written a second time by the hand, which did not
+  search this page first (2026-10-19); C83 carries the mend, and this line keeps the day it recurred.
+- **C120. Steward's Approve card does not show which file it writes.** Found 2026-10-19 by the read-only review of H5's
+  step (1): the card is the call cut to 120 characters (`_drive_brief` in `manjuel/serve.py`), and the tools' arguments are
+  sorted, so `content` comes before `filepath` and the path is usually cut off; the reply names the file without its folder
+  (`Edited x.md`). Now that the card is all that stands between the driver and a seat's or a skill's declaration, that
+  matters more: a skill file that adds a hook line would also run, later, with no card of its own. Mend: the card for a
+  tree write names the file first, says when it is a seat or a skill reloaded at the next turn, and shows the whole passage.
 - **C117. The doctrine check cannot fail.** `python -m manjuel.doctrine --check` exits 0 whatever it finds, so as a job's check it
   passed on 2026-10-16 with 11 findings standing (F45). Mend: its `main()` (`manjuel/doctrine.py`) exits non-zero on a finding.
 
@@ -721,6 +733,11 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   read whole. (3) Each round's outcome is read back from GitHub, the checks on its pull request, beside the parity numbers,
   so a change is kept or put back on a measure. The parts still not wired in go on this page under their letters as they
   are found. *(your words in chat, 2026-10-19)*
+  **Step (1), built 2026-10-19** on the line `drive-1019-094920` by Steward on your cards, every job's check passing: the
+  driver alone may write a .md directly in `agents/` or `skills/` (`DriverMark`, a type `drive()` sets), and nothing else on
+  the list opens to it. Three read-only reviewers and a skeptic for each finding read it before the send (15 held, 1 did
+  not): the mark had no wire to `drive()`, the opening was wider than the declarations, and the record said otherwise in
+  places; all put right on the line. C120 found and written down. To be sent by Steward's ship; restart required.
 - **H6. Only the law's ledger and now the memory are chained.** The sitting ledger, the flow runs, the
   proof history and the tolls are append-only by custom, not by a chain; and a chain deleted whole
   looks like a chain never begun. Needed: the same seal for each, the tolls first and one at a time,

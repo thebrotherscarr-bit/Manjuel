@@ -4209,6 +4209,22 @@ _NEVER_WRITTEN_TOP = {
     "agent_workspace": "agent_workspace/ has doors of its own: write_file and edit_file",
     "bin": "bin/ holds binaries, which are placed on the operator's allowance",
 }
+
+
+# THE DRIVER MAY WRITE THE SEATS AND THE SKILLS (WHAT'S LEFT H5, his word of
+# 2026-10-19: "lets start with it writing up the skills and agents"). Steward's
+# /drive alone is let into agents/ and skills/, and nothing else above opens to
+# it: each write it makes waits on his card first (drive_act), lands on a line
+# of work, and is reloaded into his sitting at the next turn. Every seat is
+# still refused. The mark is a type, not a word: a seat's name is a plain str,
+# so a seat called "driver" is not the driver.
+class DriverMark(str):
+    """The caller mark the driver alone sets on the env, in drive()."""
+
+
+DRIVER = DriverMark("driver")
+_DRIVER_WRITES = {"agents", "skills"}
+
 _NEVER_WRITTEN_FILES = {
     "claude.md": "CLAUDE.md is the operator's standing rules",
     ".gitignore": ".gitignore says what is not part of the work, and is the operator's",
@@ -4246,7 +4262,11 @@ def never_written(env, path: Path) -> str:
     if ".git" in parts:
         return ("Refused: a `.git/` is the history, and the history is git's to write "
                 "(LAW 8). Nothing was written.")
-    if parts and parts[0] in _NEVER_WRITTEN_TOP:
+    # The driver's opening is for the declarations alone: one .md directly in
+    # agents/ or skills/, the only files the loaders read there.
+    driver = isinstance(getattr(env, "caller", None), DriverMark)
+    opened = driver and len(parts) == 2 and parts[0] in _DRIVER_WRITES and rel.suffix.lower() == ".md"
+    if parts and parts[0] in _NEVER_WRITTEN_TOP and not opened:
         return f"Refused: {_NEVER_WRITTEN_TOP[parts[0]]}. Nothing was written."
     if posix in _NEVER_WRITTEN_STAMPS:
         return (f"Refused: '{rel.as_posix()}' is a proof stamp, written by the suite that "

@@ -16631,6 +16631,29 @@ def test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name(reg, lib, boo
     check("no folder was made by a refused write",
           not (g / "worlds" / "w").exists() and not (g / "projects" / "p").exists())
 
+    # THE DRIVER MAY WRITE THE SEATS AND THE SKILLS (WHAT'S LEFT H5, 2026-10-19), and nothing else on
+    # the list: Steward's /drive carries a mark a seat's name cannot be (skills.DRIVER, a type), and
+    # each write of its own waits on his card first (drive_act).
+    env.caller = "driver"
+    out = w("skills/x.md", "# x\nold line\n")
+    check("a seat whose name is the word 'driver' is still refused skills/",
+          out.startswith("Refused") and "hot-reloaded" in out and not (g / "skills" / "x.md").exists(), out[:140])
+    env.caller = _sk.DRIVER
+    out = w("skills/x.md", "# x\nold line\n")
+    check("the driver writes a skill file on a line of work",
+          out.startswith("Wrote skills/x.md on line of work `piece-x`"), out[:140])
+    out = w("agents/x.md", "# x\n")
+    check("   and a seat's file", out.startswith("Wrote agents/x.md on line of work `piece-x`"), out[:140])
+    out = e("skills/x.md", "old line", "new line")
+    check("   and edits a skill file in place",
+          out.startswith("Edited x.md") and (g / "skills" / "x.md").read_bytes() == b"# x\nnew line\n", out[:140])
+    for rel, mark in (("law/LAW.md", "sealed"), ("pipelines.md", "hot-reloaded"), ("CLAUDE.md", "standing rules"),
+                      (".env", "RULE 7"), ("skills/x.exe", "hot-reloaded"), ("skills/x.py", "hot-reloaded"),
+                      ("agents/sub/x.md", "hot-reloaded")):
+        out = w(rel, "x\n")
+        check(f"   and is still refused {rel}", out.startswith("Refused") and mark in out, out[:140])
+    env.caller = ""
+
     # OUTSIDE THE GROUND: refused at the gate, before the handler (LAW 8).
     out = lib.execute("ground_write", {"filepath": "../escape.py", "content": "Y = 1\n"}, env)
     check("a path out of the ground is refused",
@@ -22752,6 +22775,10 @@ def test_steward_drives_to_a_check(reg, lib, book):
     from manjuel import serve as SV
     from manjuel.skills import WRITING_SKILLS
 
+    from manjuel.skills import DriverMark
+    # THE DRIVER'S MARK (WHAT'S LEFT H5, 2026-10-19): every call drive() makes carries skills.DriverMark, the
+    # type never_written opens agents/ and skills/ to; nothing but drive() itself sets it.
+    marked = []
     py = f'"{sys.executable}"'
 
     # THE PARSE: three modes, the fields cut from the end, "suites" naming the strokes.
@@ -22776,6 +22803,7 @@ def test_steward_drives_to_a_check(reg, lib, book):
 
         def execute(self, name, args, env):
             events.append(("ran", name))
+            marked.append(isinstance(getattr(env, "caller", None), DriverMark))
             return "Saved to workspace: " + str(args.get("filepath"))
 
     def call(name, **args):
@@ -22819,6 +22847,8 @@ def test_steward_drives_to_a_check(reg, lib, book):
               and "write_file" in events[0][1] and d.verdict == "passed",
               f"{events} -> {d.verdict}")
         check("drive: the driver gives the caller back as it found it", env.caller == "" and env.caller_allowed is None)
+        check("drive: the call it made carried the driver's mark, and the mark left with it",
+              marked == [True] and not isinstance(env.caller, DriverMark), str(marked))
 
         events.clear()
         SV.DRIVE_STEPS = 4

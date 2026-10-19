@@ -507,7 +507,9 @@ def _watch_skills(skills, wire: Wire) -> None:
 # Each item has its own budget of steps and minutes. The report is built from
 # the record of the steps, never from the model's account of them (LAW 5). It
 # drives the skills the engine already has, through SkillLibrary.execute, so
-# every law gate, jail and refusal they carry applies to it unchanged.
+# every law gate, jail and refusal they carry applies to it unchanged -- save
+# one, since 2026-10-19 (WHAT'S LEFT H5): it alone may write a .md directly in
+# agents/ or skills/, through skills.DriverMark, each write on his card.
 
 
 def _drive_dial(name: str, default: float) -> float:
@@ -1392,7 +1394,8 @@ def drive(spec, *, skills, env, ground, ask, report,
                           logs=Path(logs) if logs else ground / "logs", carry=carry)
     kept = (getattr(env, "caller", ""), getattr(env, "caller_allowed", None),
             getattr(env, "objective", ""))
-    env.caller, env.caller_allowed, env.objective = "driver", set(allowed), spec["goal"]
+    from .skills import DRIVER
+    env.caller, env.caller_allowed, env.objective = DRIVER, set(allowed), spec["goal"]
     mode = "" if spec["mode"] == "goal" else " " + spec["mode"]
     report(f"  drive{mode}: {spec['goal']}")
     report(f"  check: {spec['check'] or 'none named (unchecked)'} | model {model}")
