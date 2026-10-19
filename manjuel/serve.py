@@ -507,7 +507,9 @@ def _watch_skills(skills, wire: Wire) -> None:
 # Each item has its own budget of steps and minutes. The report is built from
 # the record of the steps, never from the model's account of them (LAW 5). It
 # drives the skills the engine already has, through SkillLibrary.execute, so
-# every law gate, jail and refusal they carry applies to it unchanged.
+# every law gate, jail and refusal they carry applies to it unchanged -- save
+# one, since 2026-10-19 (WHAT'S LEFT H5): it alone may write a .md directly in
+# agents/ or skills/, through skills.DriverMark, each write on his card.
 
 
 def _drive_dial(name: str, default: float) -> float:

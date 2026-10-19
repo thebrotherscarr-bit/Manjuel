@@ -4262,8 +4262,11 @@ def never_written(env, path: Path) -> str:
     if ".git" in parts:
         return ("Refused: a `.git/` is the history, and the history is git's to write "
                 "(LAW 8). Nothing was written.")
+    # The driver's opening is for the declarations alone: one .md directly in
+    # agents/ or skills/, the only files the loaders read there.
     driver = isinstance(getattr(env, "caller", None), DriverMark)
-    if parts and parts[0] in _NEVER_WRITTEN_TOP and not (driver and parts[0] in _DRIVER_WRITES):
+    opened = driver and len(parts) == 2 and parts[0] in _DRIVER_WRITES and rel.suffix.lower() == ".md"
+    if parts and parts[0] in _NEVER_WRITTEN_TOP and not opened:
         return f"Refused: {_NEVER_WRITTEN_TOP[parts[0]]}. Nothing was written."
     if posix in _NEVER_WRITTEN_STAMPS:
         return (f"Refused: '{rel.as_posix()}' is a proof stamp, written by the suite that "

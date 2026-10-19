@@ -377,7 +377,7 @@ other (LAW 5); now a record that lies is a finding.
   "reports_to": "manjuel",
   "source": "skills/ground_edit.md",
   "us": 1,
-  "wall": "the ground itself, on a line of work only -- the main line is refused (RULE 6); refuses by name a secret, client material, worlds/, any .git/, law/, the governing files (CLAUDE.md, .gitignore, .gitattributes, index_roots.txt, agents/, skills/, pipelines.md, commands.md, .env.example), the record and runtime stores (sessions/, logs/, index/, state/, flows/, memory/, memory.md, SEAT_LOG.md, agent_workspace/), a proof stamp under tests/, BUILDMAP.md, a binary, projects/; a MIXED file; and an edit that ADDS what the structural gate refuses (the file's own carrying is said, never refused). Replaces ONE uniquely-anchored passage and keeps the file's terminator; unsaved until git_commit lands it on that line.",
+  "wall": "the ground itself, on a line of work only -- the main line is refused (RULE 6); refuses by name a secret, client material, worlds/, any .git/, law/, the governing files (CLAUDE.md, .gitignore, .gitattributes, index_roots.txt, agents/, skills/, pipelines.md, commands.md, .env.example; a .md directly in agents/ or skills/ is open to the driver alone, Steward's /drive, each write on his card: WHAT'S LEFT H5), the record and runtime stores (sessions/, logs/, index/, state/, flows/, memory/, memory.md, SEAT_LOG.md, agent_workspace/), a proof stamp under tests/, BUILDMAP.md, a binary, projects/; a MIXED file; and an edit that ADDS what the structural gate refuses (the file's own carrying is said, never refused). Replaces ONE uniquely-anchored passage and keeps the file's terminator; unsaved until git_commit lands it on that line.",
   "writes": true
 }
 ```

@@ -901,7 +901,8 @@ Stated plainly, because a security page that only lists wins is marketing.
 **Trigger.** `ground_write` or `ground_edit` is given a path in the ground that
 is a secret or `.env`, client data, under `worlds/`, inside any `.git/`, under
 `law/`, one of the governing files (CLAUDE.md, .gitignore, .gitattributes,
-index_roots.txt, agents/, skills/, pipelines.md, commands.md, .env.example),
+index_roots.txt, agents/ and skills/ (but see the driver's opening, below),
+pipelines.md, commands.md, .env.example),
 the record or a runtime store (sessions/, logs/, index/, state/, flows/,
 memory/, memory.md, SEAT_LOG.md, agent_workspace/), a proof stamp under
 tests/, BUILDMAP.md, a binary, or under projects/; or the file's repository
@@ -951,13 +952,17 @@ flow and its gate.
 
 **The driver's opening** (2026-10-19, WHAT'S LEFT H5, on his word: "lets start
 with it writing up the skills and agents"). Steward's /drive alone may write
-`agents/` and `skills/`; nothing else on the list opens to it, and every seat is
-still refused. Each write waits on his card first and lands on a line of work.
-The driver is known by a mark a seat's name cannot be -- `DriverMark`, a type --
-so a seat named "driver" is refused like any other. Stroked in the same test.
+a .md directly in `agents/` or `skills/` -- a seat's or a skill's declaration,
+the only files the loaders read there; nothing else on the list opens to it, a
+.py or a folder under either stays closed, and every seat is still refused.
+Each write waits on his card first and lands on a line of work. The driver is
+known by a mark a seat's name cannot be -- `DriverMark`, a type `drive()` sets
+-- so a seat named "driver" is refused like any other. Stroked in the same
+test, and `test_steward_drives_to_a_check` holds that every call `drive()`
+makes carries the mark and that the mark leaves with it.
 
 Stroked: `test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name`
-(60): no repository refuses; main refuses at both doors and names the cure; on
+(60 on 2026-09-28, more since): no repository refuses; main refuses at both doors and names the cure; on
 a line a new .py takes LF and a new root .md CRLF, and an edit keeps its own;
 the gate at both doors; a folder that does not exist; sixteen never-written
 names, each with the file as it was; a path out of the ground; MIXED at both
@@ -1097,13 +1102,13 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 | line | says |
 |---|---|
-| 815 | '{name}' is not one of the driver's tools. |
-| 819 | {tgt[0].name} is not on a branch (a detached HEAD), so there is no |
-| 824 | {_drive_rel(*key)} carries changes that are not the Steward's (not |
-| 838 | the line of work `{opening}` could not be opened: {out} |
-| 844 | {_drive_rel(*key)} could not be read before it was written: {exc} |
-| 848 | {name} failed in the engine ({type(exc).__name__}: {exc}). |
-| 1598 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
+| 817 | '{name}' is not one of the driver's tools. |
+| 821 | {tgt[0].name} is not on a branch (a detached HEAD), so there is no |
+| 826 | {_drive_rel(*key)} carries changes that are not the Steward's (not |
+| 840 | the line of work `{opening}` could not be opened: {out} |
+| 846 | {_drive_rel(*key)} could not be read before it was written: {exc} |
+| 850 | {name} failed in the engine ({type(exc).__name__}: {exc}). |
+| 1601 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
 
 ### manjuel/skills.py — 76 sites
 
@@ -1157,33 +1162,33 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 | 4095 | that passage appears {hits} times in {path.name}, |
 | 4112 | that edit would leave {path.name} unparseable |
 | 4123 | that edit would leave {path.name} {added}. |
-| 4237 | '{path}' is outside the ground. Nothing was written. |
-| 4241 | '{rel.as_posix()}' is a secret, and keys are silent -- never |
-| 4244 | that is CLIENT DATA -- tagged protected, never read into the |
-| 4247 | a `.git/` is the history, and the history is git's to write |
-| 4250 | {_NEVER_WRITTEN_TOP[parts[0]]}. Nothing was written. |
-| 4252 | '{rel.as_posix()}' is a proof stamp, written by the suite that |
-| 4256 | {_NEVER_WRITTEN_FILES[path.name.lower()]}. Nothing was written. |
-| 4258 | '{path.name}' is a binary, and a binary is placed on the |
-| 4282 | the ground is not under version control here, so a line of |
-| 4287 | git could not be asked ({g.error}). Nothing was written. |
-| 4291 | the repository at `{repo.name or repo}` stands {where}, and the |
-| 4323 | that content is not parseable Python -- {exc.msg} at line |
-| 4328 | {path.name} {why}. NOTHING WAS WRITTEN. This is the same |
-| 4338 | {verb} needs the file as <filepath>, relative to the |
-| 4342 | '{rel}' is outside the ground. Nothing was written. |
-| 4359 | '{rel}' is a folder, not a file. Nothing was written. |
-| 4361 | '{path.parent.name}/' is not a folder in the ground, and a seat |
-| 4370 | {path.name} has MIXED line endings, so a write cannot keep what |
-| 4391 | there is no '{rel}' in the ground to edit. ground_write makes a |
-| 4582 | run_python needs the file to run as <filepath> -- a |
-| 4587 | {rel!r} is not a path this skill may run ({exc}). |
-| 4589 | run_python runs Python, and {path.name!r} is not a |
-| 4592 | there is no {path.name!r} in the workspace to run. |
-| 4613 | {path.name} did not finish inside {RUN_TIMEOUT:.0f}s |
-| 4618 | {path.name} could not be started -- {type(exc).__name__}: {exc} |
-| 5007 | the table reviews; it does not act. {why} |
-| 5017 | {who} is not cleared to call '{key}'. |
-| 5043 | '{action}' did not finish within |
+| 4253 | '{path}' is outside the ground. Nothing was written. |
+| 4257 | '{rel.as_posix()}' is a secret, and keys are silent -- never |
+| 4260 | that is CLIENT DATA -- tagged protected, never read into the |
+| 4263 | a `.git/` is the history, and the history is git's to write |
+| 4270 | {_NEVER_WRITTEN_TOP[parts[0]]}. Nothing was written. |
+| 4272 | '{rel.as_posix()}' is a proof stamp, written by the suite that |
+| 4276 | {_NEVER_WRITTEN_FILES[path.name.lower()]}. Nothing was written. |
+| 4278 | '{path.name}' is a binary, and a binary is placed on the |
+| 4302 | the ground is not under version control here, so a line of |
+| 4307 | git could not be asked ({g.error}). Nothing was written. |
+| 4311 | the repository at `{repo.name or repo}` stands {where}, and the |
+| 4343 | that content is not parseable Python -- {exc.msg} at line |
+| 4348 | {path.name} {why}. NOTHING WAS WRITTEN. This is the same |
+| 4358 | {verb} needs the file as <filepath>, relative to the |
+| 4362 | '{rel}' is outside the ground. Nothing was written. |
+| 4379 | '{rel}' is a folder, not a file. Nothing was written. |
+| 4381 | '{path.parent.name}/' is not a folder in the ground, and a seat |
+| 4390 | {path.name} has MIXED line endings, so a write cannot keep what |
+| 4411 | there is no '{rel}' in the ground to edit. ground_write makes a |
+| 4602 | run_python needs the file to run as <filepath> -- a |
+| 4607 | {rel!r} is not a path this skill may run ({exc}). |
+| 4609 | run_python runs Python, and {path.name!r} is not a |
+| 4612 | there is no {path.name!r} in the workspace to run. |
+| 4633 | {path.name} did not finish inside {RUN_TIMEOUT:.0f}s |
+| 4638 | {path.name} could not be started -- {type(exc).__name__}: {exc} |
+| 5027 | the table reviews; it does not act. {why} |
+| 5037 | {who} is not cleared to call '{key}'. |
+| 5063 | '{action}' did not finish within |
 
 <!-- /THE SITES -->
