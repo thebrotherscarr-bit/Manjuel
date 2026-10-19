@@ -38,7 +38,11 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (12:46):** step (1), H32, sent and merged; step (2), the release faults, planned under I2 and under way.
+  **Where it stands (15:50):** step (2), the release faults, built and read by reviewers; under C on the page now: C121, C123
+  and C124 taken out to move under Done, C122's second half ruled to v0.2.7, C125 read, C86 seen again, C127 and C128 found.
+  Pull request 41 is open, its first run red on two strokes; the next save puts it right.
+  **At 12:46 it stood:**
+The check that decides done: python -c "import sys; t=open('WHATS_LEFT.md',encoding='utf-8').read(); c=open('CHANGELOG.md',encoding='utf-8').read(); sys.exit(0 if t.count('**C121. ') == 0 and t.count('**C123. ') == 0 and t.count('**C124. ') == 0 and t.count('**C127. ') == 1 and t.count('**C128. ') == 1 and 'Its second half ruled to v0.2.7' in t and 'half joined them on your card' in t and 'is a choice, not the rule' in t and '28 line(s) replaced by 37' in t and 'At 12:46 it stood' in t and 'Where it stands (TIME)' not in t and c.count('The check that decides done') == 1 else 1)" && python tests/test_manjuel.py what_is_left step (1), H32, sent and merged; step (2), the release faults, planned under I2 and under way.
   **At 12:14 it stood:** the road's step (1), H32, built on the line `drive-1019-115957` by Steward on your cards, to be
   sent by Steward's ship; restart required; C126 found. Next on the road: step (2), the release faults C121 to C125.
   **At 11:34 it stood:** H5's step (1) done and sent (pull requests 37 and 38); the v0.2.6 and v0.2.7 checklist read off
@@ -145,7 +149,8 @@ Written whole on 2026-10-13 from the record (your card: "Honest pass first"): ev
 or ruled, and every one found in the sittings since, from I2's own account. One line each, naming the piece that mends it. Not
 repeated here: the glass's mic, ruled to I5 on your card, and the law chain's two checkers disagreeing, which is H7.
 Ruled forward to v0.2.7 on your card of 2026-10-19 ("Release + I2's own"): every line here that is not one of I2's own (C13,
-C38 to C67, C69) and not C121 to C125. Each stays here, carried; the road to v0.2.6 (I2) does not wait on it.
+C38 to C67, C69) and not C121 to C125. Each stays here, carried; the road to v0.2.6 (I2) does not wait on it. C122's second
+half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
 
 ### The models misbehaving
 
@@ -326,6 +331,13 @@ carry the mend; none asks for anything new.
   two lines (the blank line and the C71 entry's heading in CHANGELOG.md), and only the tool's "3 replaced by 5" showed it;
   restored 2026-10-16 in the book's change. Mend: `drive_act` compares the passage written with the job's own `@@ OLD`/`@@ NEW`
   and says so when they differ (`manjuel/serve.py`, through `_edit_passage` in `manjuel/skills.py`).
+  Again 2026-10-19, in the road to v0.2.6's step (2): asked for one passage of `ready` in `tests/cut.py`, the model's first
+  call reached the door with no `@@ NEW` half and was refused; its retry took its own read of the whole definition as the
+  passage and wrote the new text over it, and the refusal of code left unsaved, four lines it was never asked to touch, was
+  gone. The tool said "28 line(s) replaced by 37" and nothing else noticed; the hand found it reading the file and put it
+  back by a job of its own. The same afternoon the CHANGELOG entry for that work lost its body twice the same way (one
+  heading line written where a heading, a body and the next heading were asked); it was put back with `git restore` on your
+  cards and written by adding only after an anchor, a part at a time.
 - **C87. Two of a held call's real outcomes print raw, and one listed outcome can never happen.** A plain door call waits on
   `approved_errored` and `vanished` and prints those words bare; its `crossed` line never matches (a crossed call is never
   held). Mend: `DOOR_OUTCOMES` in `manjuel/serve.py`.
@@ -402,31 +414,39 @@ carry the mend; none asks for anything new.
   each, its edits made, asked to run or write a script of its own before calling done, and was stopped. Mend: a malformed
   call is handed back to the model once, as a refusal is; and the driver refuses running a file the same job wrote (C84's
   own mend).
-- **C121. The release check refuses its own cut when a SPEC section-4 status moved.** Found 2026-10-19 building the v0.2.6 and
-  v0.2.7 checklist, and read in the code: once a tag is cut, the entries under its CHANGELOG heading stop counting for `spec`
-  (`logged_since` in `tests/release.py`; `test_the_release_gate` asserts it), and the flow's last step and GitHub's release
-  check both ask after the tag, so a cut that moves a section-4 line ends FAIL there. It turned v0.2.0's tag red on 4.4.
-  v0.2.7 must move 4.8 and 4.9, so as built it fails by design. Mend: `spec` hands the tag being cut to `logged_since`, which
-  counts that heading as not yet cut.
+- **C127. A job's send carries only its own files, while its check ran on everything on disk.** Found 2026-10-19, at pull
+  request 41: a job's check (the strokes) passed on the working tree, which held a fix another job had left unsaved (the
+  refusal C86's dropped lines took out, put back); the job's commit, push and pull request carried only the file it wrote, so
+  GitHub proved a tree the check never saw, and all four legs went red on the two strokes that test that refusal. Mend:
+  before a job sends, `drive_act` (`manjuel/serve.py`) names what is unsaved outside the job's own files and refuses the
+  send, or the check runs on what the commit carries.
+- **C128. A Steward job's last passage can take the job's own check with it.** Found 2026-10-19, writing the CHANGELOG entry
+  of the road's step (2): twice running, a job whose last passage ended in prose wrote the line after it -- the driver's own
+  "The check that decides done: ..." -- into the file as a line of its own, and the job's check then failed on its own words;
+  the same words split F46's heading on 2026-10-16. That day no job whose last passage ended in code or a marker line did
+  it. Mend: `_drive_job` (`manjuel/serve.py`) sets the check apart from the job's text where the model cannot read it as part
+  of a passage, or `drive_act` refuses a passage that carries the check's own words.
 - **C122. The release flow opens its line from wherever the ground stands, and a refused git step does not stop it.** Found
   2026-10-19, read in the code: the flow opens `release-<tag>` with a bare `git switch -c` from where each repository stands,
   never switching to main first, and after a Steward ship the ground is left on the merged line (C83). A door git tool's
   refusal comes back as a plain answer, not an error, so the run carries on: fired again after a stop, opening the line is
   refused and the cut runs on whatever line the ground stands on. Mend: the flow brings each repository to main, level with
   GitHub, before it opens the line, and a git tool's refusal inside a flow is an error (`atlas/line/internal/tools/gitctl.go`,
-  `flows/release.json`).
-- **C123. The release's save sweeps in everything unsaved.** Found 2026-10-19, read in the code: both save steps name no files,
-  and the door's `git_commit` with none runs `git add -A`, so whatever is loose on the ground at the second gate goes into the
-  release commit and on to GitHub. Mend: G's list checks the ground holds nothing unsaved but the record before firing, or the
-  save names its files (`flows/release.json`).
-- **C124. The cut's own live check leaves out the review panel.** Found 2026-10-19, read in the code: the flow runs the live
-  check's `morning` set only, and I2 asks for 9 of 9 with the review panel inside its turn, which only the `all` set runs.
-  Mend: the `all` set on the cut day before firing (G's list), or the flow's live step asks for `all` (`flows/release.json`).
+  `flows/release.json`). **Its first half mended 2026-10-19** (the road's step (2), by Steward on your cards): the cut's first
+  question (`ready` in `tests/cut.py`, asked by the bump and again by the check) refuses a cut that stands on no release line
+  or off GitHub's main, as last fetched and as GitHub answers now, so a refused opening stops the cut before it writes a byte.
+  **Its second half ruled to v0.2.7** (your card: "Rule it to v0.2.7"): a refused save or send (`git_commit`, `git_push`)
+  answers in words, not as an error, so the run walks on to the merge check, which ends it FAIL there; a refused merge
+  already stops the run at that check.
 - **C125. GitHub's runners move under the provers.** Seen 2026-10-07 (HANDOFF, its (f)) and never put here until 2026-10-19:
   GitHub says `actions/checkout@v4` and `actions/setup-python@v5` run on Node 20, which is deprecated, and that `ubuntu-latest`
   moves to Ubuntu 26 from 2026-10-19; all four workflows of both repositories use them, and the cut's merges and its wait on
   GitHub depend on them. Mend: read the first runs after that day; move the actions to their next versions, each pinned to a
-  commit as the release check's `workflows` rule asks (`.github/workflows/`, `atlas/.github/workflows/`).
+  commit as the release check's `workflows` rule asks (`.github/workflows/`, `atlas/.github/workflows/`). **Read 2026-10-19**
+  (your card: "Watch, move later"): the core's prove runs on pull requests 35 to 40 passed; atlas has not moved since
+  2026-10-16 and the core's release gate runs only on a tag, so both are read at the cut. The two actions move in the 0.2.8
+  pass (I4). The `workflows` rule pins to a commit only the actions from outside GitHub's own `actions/`, so the pin asked
+  above for these two is a choice, not the rule's.
 - **C117. The doctrine check cannot fail.** `python -m manjuel.doctrine --check` exits 0 whatever it finds, so as a job's check it
   passed on 2026-10-16 with 11 findings standing (F45). Mend: its `main()` (`manjuel/doctrine.py`) exits non-zero on a finding.
 
