@@ -173,6 +173,10 @@ def ready(root: Path) -> list[str]:
             path = line[3:].split(" -> ")[-1].strip().strip('"')
             if path and not carried(side, path):
                 stray.append(path)
+        if stray:
+            raise Refused(f"{side}: unsaved besides the record: {', '.join(stray[:12])}"
+                          + (f" and {len(stray) - 12} more" if len(stray) > 12 else "")
+                          + " -- a cut carries the record only; save the rest through its own pull request")
         said.append(f"{side}: on GitHub's main ({main[:7]}), on {branch}, nothing unsaved but the record")
     return said
 
