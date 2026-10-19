@@ -41,8 +41,7 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   **Where it stands (15:50):** step (2), the release faults, built and read by reviewers; under C on the page now: C121, C123
   and C124 taken out to move under Done, C122's second half ruled to v0.2.7, C125 read, C86 seen again, C127 and C128 found.
   Pull request 41 is open, its first run red on two strokes; the next save puts it right.
-  **At 12:46 it stood:**
-The check that decides done: python -c "import sys; t=open('WHATS_LEFT.md',encoding='utf-8').read(); c=open('CHANGELOG.md',encoding='utf-8').read(); sys.exit(0 if t.count('**C121. ') == 0 and t.count('**C123. ') == 0 and t.count('**C124. ') == 0 and t.count('**C127. ') == 1 and t.count('**C128. ') == 1 and 'Its second half ruled to v0.2.7' in t and 'half joined them on your card' in t and 'is a choice, not the rule' in t and '28 line(s) replaced by 37' in t and 'At 12:46 it stood' in t and 'Where it stands (TIME)' not in t and c.count('The check that decides done') == 1 else 1)" && python tests/test_manjuel.py what_is_left step (1), H32, sent and merged; step (2), the release faults, planned under I2 and under way.
+  **At 12:46 it stood:** step (1), H32, sent and merged; step (2), the release faults, planned under I2 and under way.
   **At 12:14 it stood:** the road's step (1), H32, built on the line `drive-1019-115957` by Steward on your cards, to be
   sent by Steward's ship; restart required; C126 found. Next on the road: step (2), the release faults C121 to C125.
   **At 11:34 it stood:** H5's step (1) done and sent (pull requests 37 and 38); the v0.2.6 and v0.2.7 checklist read off
