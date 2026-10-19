@@ -1058,8 +1058,8 @@ def _windowed_python(text: str, rel: str, want: str):
             + (f"\n  ... and {len(top) - 60} more" if len(top) > 60 else "")
             + (f"\n\nModule-level names, addressable the same way "
                f"({len(names)}):\n  "
-               + "\n  ".join(f"{n}  (lines {a}-{b})" for n, a, b in names[:60])
-               + (f"\n  ... and {len(names) - 60} more" if len(names) > 60 else "")
+               + "\n  ".join(f"{n}  (lines {a}-{b})" for n, a, b in names[:100])
+               + (f"\n  ... and {len(names) - 100} more" if len(names) > 100 else "")
                if names else "")
             + (f"\n\nMethods are addressable too, as Class.method — "
                f"{len(defs) - len(top) - len(names)} of them."

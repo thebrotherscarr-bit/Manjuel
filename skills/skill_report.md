@@ -1,7 +1,7 @@
 ## Skill Report
 
 - **Action Keyword:** skill_report
-- **Description:** Lists every skill the chain can actually execute, with what each one does — read from the loaded library, never generated; and, from logs/uses.jsonl, how often each has been used, how often it failed, its median time, and which were never used. Use for "what skills do you have", "what are your tools", "what can you do".
+- **Description:** Lists every skill the chain can actually execute, with what each one does — read from the loaded library, never generated; and, from logs/uses.jsonl, how often each has been used, how often it failed, how long it usually takes, and which were never used. Use for "what skills do you have", "what are your tools", "what can you do".
 - **Parameters Needed:** None
 - **Says:** list every skill, every skill you can, skills you can actually execute
 

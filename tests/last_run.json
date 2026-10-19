@@ -1,6 +1,6 @@
 {
   "smoke": {
-    "at": 1792437805.496928,
+    "at": 1792438321.5547082,
     "failures": [],
     "green": true,
     "passed": 72,
@@ -8,21 +8,10 @@
     "total": 72
   },
   "strokes": {
-    "at": 1792437987.034682,
-    "failures": [
-      {
-        "detail": "'' ['law: no ledger in this ground -- gate ran on the rules alone; objective passed 4 checks', 'intent: the PPMI reader names nothing -- its best is under its line, 0.6: `statistics` 0.42, `use_record` 0.17, `run_python` 0.122', 'level: Steward']",
-        "name": "on a follow-up the reader's pick is withdrawn like any guess, and the door answers",
-        "where": "test_manjuel_reads_the_request:10527"
-      },
-      {
-        "detail": "_PULL_ENV  (lines 3078-3078)\n  _INDEX_BUSY  (lines 3334-3334)\n  _MCP_DIAL  (lines 3702-3702)\n  _MCP_WAIT_MARGIN  (lines 3716-3716)\n  _MCP_LOOPBACK  (lines 3717-3717)\n  _MCP_KEY  (lines 3732-3732)\n  _EDIT_OLD  (lines 4058-4058)\n  _EDIT_NEW  (lines 4059-4059)\n  ... and 13 more\n\nMethods are addressable too, as Class.method \u2014 19 of them.\n\nOr ask for a numbered part, 1 to 21, for raw character windows.",
-        "name": "the map lists module-level names under their own heading",
-        "where": "test_a_python_file_is_cut_by_definition_not_by_character:11595"
-      }
-    ],
-    "green": false,
-    "passed": 3990,
+    "at": 1792438492.637596,
+    "failures": [],
+    "green": true,
+    "passed": 3992,
     "state": "finished",
     "total": 3992
   }
