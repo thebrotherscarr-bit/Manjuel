@@ -1,5 +1,20 @@
 # Runbook
 
+**THE BOOK, PART III: DRIVING IT, AND KEEPING IT RUNNING.** Part I (README.md)
+says what the system is and Part II (QUICKSTART.md) takes a fresh machine to a
+first job. This part is the daily work: starting the system; Steward driving
+(every mode, every card, every bound, every record it writes); the glass's
+tabs and pages; a change's road to GitHub; the dials; and what to do when the
+machine misbehaves. Every part named here has its full card in Part IV
+(INVENTORY.md).
+
+**SITTING LAW 11 governs everything below:** "EVERYTHING is to be run by
+Steward. EVERYTHING is to go through the webapp." Where this page shows a
+`python tests\...` line, that is WHAT RUNS -- the way it is run is as a
+Steward job's check (`/drive <job> | check: <that line>`) or as the door's own
+tool from the Agent tab (`mcp_call atlas suite_run {...}`, `mcp_call atlas
+standup_run {...}`), on the glass, where he watches.
+
 The machine misbehaving, not a seat misbehaving. For a seat that said
 something wrong, read `logs/` — HANDOFF.md's *Debugging a sitting* is that
 procedure, and it starts with **check the disk before the transcript**: a
@@ -171,8 +186,23 @@ to the door at `127.0.0.1:8090`.
     ATLAS_SERVICE=<wire> the door's service wire, from .env as above; the boot
                          line then says "service wire held"
     ATLAS_WEB_PORT=<n>   serve on another port
-    OLLAMA_HOST=<url>    if the rack is not on the default loopback; a host with no port means
-                         Ollama's own, 11434 (since 2026-10-03)
+
+The glass reads those two and nothing else (`atlas/webapp/main.go`). It must be
+started FROM `atlas\webapp`: its data -- `data\user.json` (the PIN's hash),
+`data\sessions.json` (sign-ins, twelve hours each, kept across a restart),
+`data\webapp.db\` (settings, the kept conversation, and `traces.jsonl`, every
+tool call it made, which nothing ever trims) -- is found relative to the folder
+it starts in. `OLLAMA_HOST`, if the rack is not on the default loopback, is the
+DOOR's (its rack tools read it, loopback only; a host with no port means
+Ollama's own 11434), and goes in the door's shell before it starts.
+
+**Is it up?** The door's boot line (in `atlas\line\mcp.log`) reads
+`atlas-mcp <version> listening on 127.0.0.1:8090 (auth=true, holds ARMED ...)`;
+the glass's (`atlas\webapp\web.log`) reads `atlas-webapp listening on
+127.0.0.1:8091 -- this PC only, opened with a PIN, service wire held`.
+`http://127.0.0.1:8090/health` and `http://127.0.0.1:8091/api/health` answer
+`{"status":"ok", ...}`. After a reboot NOTHING is up -- Ollama, the door and
+the glass are each started again, in that order.
 
 **Open it.** `http://127.0.0.1:8091`
 
@@ -230,7 +260,7 @@ The glass keeps its sessions across a restart, so stopping and starting it does
 not sign you out; the door holds none, and a restart of it ends nothing but
 itself -- close the sitting first if one is open.
 
-## Running it from the dashboard
+## Running it from the glass
 
 The glass is one page since 2026-10-07: the front page, a terminal with five
 tabs (Agent, Bash, Python, PowerShell, Aider) and an Inspector beside it whose
@@ -263,28 +293,21 @@ What waits for your hand -- the council's question, a shell line that asks
 first, any call the door parked -- is a card pinned at the foot of the
 terminal, in every tab.
 
-**The loop, four clicks.**
+**The loop (since 2026-10-16: Steward drives).**
 
     1. Boot            opens an engine AND a sitting. Nothing opens one for
                        you; a sitting nobody meant to start is what every
-                       refusal in this system guards against.
-    2. type and Run    the turn runs in the terminal's Agent tab, the answer
-                       lands in the thread, and the whole turn -- each seat's
-                       words, every tool call, every event -- is in the
-                       Inspector's Run tab.
-    3. Commit / Push   type the message in THE REPOSITORY's field first. Both
-                       go THROUGH THE COUNCIL, not around it: the law gate
-                       stamps the act, the Router runs `git_commit`, and the
-                       commit body carries the sitting id. A button that
-                       shelled out to git would be a second write-path past
-                       everything the estate checks.
-                       (Annotated 2026-10-10: THE REPOSITORY card retired
-                       with the Dashboard on 2026-10-07. Through the
-                       council, ask in the terminal's Agent tab; the GitHub
-                       tab's Save the work and Send to GitHub are the door's
-                       own tools, on your press -- "GitHub, from the glass",
-                       below. Since 2026-10-09 main takes a change only
-                       through a pull request.)
+                       refusal in this system guards against. Boot is four
+                       steps the page runs: env_close (if one is open),
+                       env_open, `/warm`, `/status`; the report is kept.
+    2. the job         in the Agent tab: `/drive <job> | check: <command>`.
+                       Steward works it, every write a red [y/n] card, until
+                       the check passes. "Steward drives", below, is all of it.
+    3. the send        on the passing check, the cards that commit, push,
+                       open the pull request, wait on CI, and merge on your
+                       click; or `/drive ship <message> | check: <command>`
+                       for work already on disk. Then "What is next?" --
+                       another job, or blank to stop.
     4. Close sitting   writes `ended` and reaps the engine, and pays the toll
                        -- unattended -- if the sitting ran anything. A sitting
                        that ran nothing closes with no toll: sitting 220,
@@ -308,8 +331,10 @@ terminal, in every tab.
                        Ctrl-C in the engine's boot closes its sitting on the
                        way out.
 
-**Or the whole turn in one act.** `git_cycle` is step 3's commit and push as a
-single skill, with the proofs read first and the push verified after. Type it
+**The older road: `git_cycle`.** (Kept, and described as it stands; it is
+NOT how the work is sent under SITTING LAW 11 -- `/drive ship` is, below. The
+driver never offers `git_cycle` to its model.) `git_cycle` is a commit and push
+as a single skill, with the proofs read first and the push verified after. Type it
 in the terminal's Agent tab (on the Dashboard until it retired, 2026-10-07)
 the way you would any objective, and give it the message --
 that is the one part it cannot read off the ground:
@@ -348,10 +373,10 @@ but a pull request whose checks have passed.
 **`git_cycle` is the engine's own skill, not the door's (noted 2026-10-16).**
 Nothing in it waits for your card: it saves at once, and in sitting 381 its
 push was stopped only because the line had never been sent (WHAT'S LEFT C72).
-To keep every save and send on your card, ask the door from the Agent tab
-instead -- `mcp_call atlas git_commit {"project": "research", "message":
-"..."}`, then `mcp_call atlas git_push {"project": "research"}` -- each held
-for your click.
+To keep every save and send on your card, use `/drive ship <message> | check:
+<command>` (below), or ask the door from the Agent tab -- `mcp_call atlas
+git_commit {"project": "research", "message": "..."}`, then `mcp_call atlas
+git_push {"project": "research"}` -- each held for your click.
 
 **Before you start, and before you tag.** Two read-only reports answer the two
 questions that used to mean opening six files in order. Neither writes
@@ -425,6 +450,232 @@ still takes an edit that adds none of it. Type the request without a tool's
 own words in it ("the founding documents" names semantic_search, and the
 window shuts). REFUSALS §28 lists what the engine answers with no seat.
 
+## Steward drives
+
+His target, 2026-10-16 (WHAT'S LEFT H31): "A single simple driver that runs
+long workflows and tool chains to make sure that basically whatever I ask can
+be done. Fairly simple." It is the `/drive` section of `manjuel/serve.py`, and
+it is reached only through the glass's Agent tab (the door's headless engine);
+the REPL has no `/drive`. Its rule, in the code's own words: the check --
+never the model -- decides that a job is done.
+
+**The line he types.** `/drive [plan|each|tidy|ship] <goal> [| do: <prompt>]
+[| check: <command>]`. The first word alone names the mode ("plan tidy the
+docs" is a plan). `| check:` is cut at its LAST occurrence and `| do:` at its
+last occurrence before that, so a pipe inside a command stays in it. A check of
+`suites`, `the suites`, `strokes` or `the strokes` becomes `python
+tests/test_manjuel.py` (the strokes only, not the smoke). A goal with no words
+(except `tidy`), or `each` without `| do:`, prints the usage and runs nothing.
+
+    /drive <goal> | check: <command>          ONE JOB, worked until the check passes
+    /drive plan <goal> | check: <command>     the goal broken into 2 to 8 items, each its
+                                              own job, then the whole checked once more
+    /drive each <command> | do: <prompt with $ITEM> | check: <command>
+                                              one job per item the command lists (JSON, or
+                                              one per line); an item is done only when the
+                                              check passes AND the command no longer lists it;
+                                              an item tried is logged (`logs/drive_ignore.jsonl`)
+                                              and not tried blindly again
+    /drive tidy                               every branch already merged into main deleted,
+                                              here and on GitHub, in the ground and in atlas/,
+                                              on one card; main and the line you stand on never
+    /drive ship <message> [| check: <command>]   the work on disk saved, sent, through CI,
+                                              and merged on your card
+
+`plan` and `each` refuse to run without a check ("<mode> needs a check (|
+check: <command>) to decide each item"). A single job with no check runs and
+ends UNCHECKED, its change left unsaved. Examples:
+
+    /drive Add a one-line docstring to enabled() in manjuel/ink.py | check: suites
+    /drive ship Fold today's driver notes | check: python tests/buildmap.py && python tests/test_manjuel.py
+
+**The check runs where the driver runs: in cmd.exe on Windows** (it is
+started with `shell=True`, in the ground, stdin closed, bounded at 900 s; exit
+0 passes). Write checks in `python`; `grep`, `test` and the other Git Bash
+words are not there (2026-10-16: a `grep -q` check failed fifteen times with
+"'grep' is not recognized"). A check must FAIL before the work and PASS after
+it: a check that already passes proves nothing, and the model will call a job
+done that it never did. The check runs with no card -- it is his own words, run
+as typed.
+
+**What Steward is handed.** A model call (`ollama.Client`, 600 s per call) to
+`qwen3.5:9b` with a 16384-token window, thinking off, and:
+
+- The system text, verbatim: "You are the Steward, driving one job to its end
+  on the operator's machine. Work in steps: call one tool, read what it
+  returned, then decide the next call. Use only the tools you are given, and
+  never claim a result a tool did not return. A file in the ground (the code
+  and the documents) is changed with ground_edit (one exact passage) or
+  ground_write (a whole file); write_file writes only the workspace. Tools that
+  write wait for the operator's approval; if he declines, find another way or
+  call done. Do not write or run scripts to test your own work: the job's check
+  runs by itself when you call done. When you believe the goal is met, call
+  done with a one-line summary. Only a passing check ends the job; if it fails
+  you are given its output -- fix what it names and call done again."
+- The job: `[What was done before in this sitting:\n<carry>\n\n]Goal: <job>\nThe
+  check that decides done: <check, or "none named: the job is unchecked and ends
+  when you call done">`. The carry is one line per earlier job this turn, cut to
+  its newest 3000 characters; a job typed fresh with `/drive` starts with none.
+- The tools: the engine's reading skills (`semantic_search`,
+  `search_transcripts`, `ground_read`, `ground_list`, `ground_report`,
+  `read_file`, `list_directory`, `git_status`, `rack_list`, `skill_report`,
+  `extract_facts`, `classify_sentiment`, `statistics`, `sitting`, `when`,
+  `skill_search`, `symbols`, `proved`, `inspect`), its six hands
+  (`ground_write`, `ground_edit`, `write_file`, `edit_file`, `run_python`,
+  `mcp_call`), and `done`. Each tool's description reaches it cut to 400
+  characters and each argument's to 200; ten of the twenty-five are cut
+  mid-sentence today (INVENTORY.md, Part IV, says which).
+- NEVER offered, and refused twice over if asked (by the driver and by the
+  skill library): `git_commit`, `git_cycle`, `git_push`, `git_pull`,
+  `git_init`, `remember`, `rack_sync`, `rack_load`, `rack_unload`,
+  `rack_pull`, `index_ground`, `embed_text`, `speak`. Saving and sending are
+  the driver's own steps, on his cards, never the model's.
+
+**The loop.** One model call per step. A reply with no tool call counts as
+`done`, its first line the summary. `done` runs the check: a pass ends the job
+("passed"); a fail goes back to the model as "The check failed:\n<output>" and
+the loop goes on. Any other call goes through the card (below) and its result,
+cut to 4000 characters, goes back. Before every step the budget is checked; past
+it, the job ends "budget".
+
+**The cards, word for word.** Red unless said. A yes is any of `y`, `yes`,
+`approve`, `approved`, `ok`, `go`; anything else is a no.
+
+    a write (every writing skill, run_python and mcp_call):
+        The Steward wants to run <tool> <its arguments, to 120 characters>[ (first
+        opening the line of work `drive-MMDD-HHMMSS` in <repo>)]
+        Approve? [y/n]
+      -- on a no the tool does not run, and the model is told "Declined by the
+         operator: <tool> did not run." A ground write on main or master first
+         opens the line `drive-MMDD-HHMMSS` (`git switch -c`); main is never
+         written. The file's bytes before its first write are kept, so a job
+         that fails can be put back.
+    the check passed (a single job):
+        The check passed. Commit these N file(s) on the line of work, push it,
+        open a pull request and wait on CI?
+        <git diff --stat, and the new files>
+        Approve? [y/n]
+    the check did not pass:
+        The check did not pass. Put back the N file(s) the Steward changed, and
+        close the line it opened?
+        Approve? [y/n]
+    the push (when the line holds a commit this run did not make, or the run
+    did not open the line):
+        Push `<line>` in <repo> (N commit(s)), open a pull request into <base>
+        and wait on CI?[ K of them were not made by this run.]
+        <git log --oneline>
+        Approve? [y/n]
+    the merge:
+        CI passed on `<line>` in <repo>. Merge its pull request into <base> and
+        delete the branch on GitHub? [y/n]
+    after every job (green):
+        What is next? Type the next goal (plan ..., each ..., tidy and ship ...
+        work too), or leave it blank to stop.
+      -- blank, stop, no, n, done, nothing, exit or quit ends the turn in one
+         delivery; a leading "/drive" is dropped. Typing the next job here
+         CARRIES what this one did into it; to start clean, end the turn and type
+         a fresh `/drive`.
+
+A card whose question ends in `[y/n]` shows two buttons, Approve and Deny
+(sending "y" or "n"); any other question shows a field and Answer.
+
+**The send, in order** (each step on the record with its exit and output; the
+first that fails stops it):
+
+    ship only, first:  the check; the files changed in the ground and in atlas/
+                       listed (it refuses `.env` and `.env.*` other than
+                       `.example`, anything under `worlds/`, and a detached HEAD);
+                       one card; then per repository `git switch -c drive-<stamp>`
+                       when on main, `git add -A -- <files>`, `git commit -m
+                       <message> -- <files>`
+    1. git log --oneline <base>..<line>, and git rev-list (whose commits are these?)
+    2. gh pr view <line> --json url,state      an open pull request is REUSED
+    3. git push -u origin <line>               180 s
+    4. gh pr create --base <base> --head <line> --title <job, to 72 characters>
+       --body "<job>\n\nThe check: ...\n\nCommits on the line:\n..."   120 s
+    5. after 15 s: gh pr checks <line> --watch --interval 20         up to 1800 s
+       -- if the send or CI fails, the line is KEPT here for the fix, and a
+          fix pushed on it later reuses its pull request
+    6. the merge card; gh pr merge <line> --merge                    180 s
+    7. git push origin --delete <line>                               120 s
+    8. back on the base: git switch <base>; git branch -D <line>
+    9. git pull --ff-only origin <base>                              180 s
+
+`gh` must be signed in. The driver's sends do not read `MANJUEL_GIT_REMOTE`,
+and a `/drive` line does not pass the pipeline's law gate: his cards are their
+gate.
+
+**The verdicts**, as the delivery says them:
+
+    DONE: the check passed
+    UNCHECKED: no check was named, so nothing proves the goal is met.
+    NOT DONE: the budget ran out before the check passed.
+    NOT DONE: the check did not pass.
+    PART DONE: some items passed and some did not.
+    NOTHING TO DO: every item listed was tried before (logs/drive_ignore.jsonl).
+    NOT RUN: the run was declined.
+    TIDY: every branch already merged into main is deleted.
+    TIDY: some branches could not be deleted (the record says which).
+    TIDY: no branch merged into main is left, here or on GitHub.
+    SHIPPED: saved and sent; the steps say what CI and the merge did.
+    NOT SENT: saved on its line of work, but the send did not go through (the steps say why).
+    STOPPED: <what stopped it>
+
+Then the steps from the record, one line each, the check's last output when it
+did not pass, the pull request, and `Record: logs/<stamp>_drive.md`.
+
+**The bounds** (the code's defaults; `MANJUEL_DRIVER_*` in the door's
+environment moves them -- see the note in "The dials, in one place"):
+
+    one job        30 steps or 45 minutes     MANJUEL_DRIVER_STEPS, _MINUTES
+    one item       15 steps or 15 minutes     MANJUEL_DRIVER_ITEM_STEPS, _ITEM_MINUTES
+    items          25 at most                 MANJUEL_DRIVER_ITEMS
+    window         16384 tokens               MANJUEL_DRIVER_CTX
+    carry          3000 characters            MANJUEL_DRIVER_CARRY
+    the check      900 s                      MANJUEL_DRIVER_CHECK_SECONDS
+    CI             1800 s                     MANJUEL_DRIVER_CI_SECONDS
+    the model      qwen3.5:9b                 MANJUEL_DRIVER_MODEL
+    thinking       off                        MANJUEL_DRIVER_THINK=1 turns it on
+    one model call 600 s; one tool result 4000 characters
+
+**What it records.** `logs/<YYYY-MM-DD_HHMMSS>_drive.md` when the job ends:
+`# drive -- <goal>`, `- check:`, `- model:`, `- verdict:`, `- elapsed:`, a line
+per item, then `## <n>. <tool>`, `args: <to 120 characters>` and the whole
+result indented, for every step, the driver's own steps (check, diff, commit,
+push, pull request, ci, merge, close line, put back) included. One run row in
+the sitting (`sessions/sessions.jsonl`, pipeline "drive", `tools` = every step's
+name). `report` events on the wire as it goes, and one `delivery`.
+
+**A door call, said plainly (WHAT'S LEFT C77).** A line that leads with
+`mcp_call` -- `mcp_call atlas <tool> {json}` -- goes to `door_call`, not to a
+seat: the engine says one line ("asking the door: ..."), calls the `mcp_call`
+skill, and if the door HOLDS the call it says "the card is at the foot of the
+terminal (<hold id>); waiting for your click", then watches `state/holds.jsonl`
+and `atlas/state/holds.jsonl` every second, up to 900 s, for that hold's answer,
+and says what became of it in one line:
+
+    <tool>: approved on your card, and it ran.
+    <tool>: denied on your card; nothing ran.
+    <tool>: refused by the door when it was answered; nothing ran.
+    <tool>: no answer in 15 minutes; the card stays in the dock.
+
+A reader runs at once and its answer is said whole. A `suite_run` that runs
+past the skill's 295 s wait is read back off the suites' own stamp through the
+engine's `proved` skill, once it no longer says DID NOT FINISH (C71). The
+door's tool name is the longest name on its roster that appears as a whole
+word in the line, JSON included -- keep other tool names out of the arguments.
+
+**Seams found on 2026-10-16, as they stand.** A `ship` run on a line opened in
+an earlier sitting does not know the line's base, so after the merge it does not
+go back to main or pull (do that with `mcp_call atlas git_branch
+{"project":"research","action":"switch","name":"main"}` and `mcp_call atlas
+git_pull {"project":"research"}`, then `/drive tidy`). The sitting's run row
+counts a SHIPPED run as failed. The `MANJUEL_DRIVER_*` dials are read when the
+engine starts, before `.env`, so a value in `.env` does nothing (except
+`MANJUEL_DRIVER_THINK`). `ground_read` asked for a definition by a name with
+words after it ("drive (lines 1376-1420)") is refused by its path gate as "a
+description of" a path; ask by the bare name.
+
 ## GitHub, from the glass
 
 The GitHub tab in the front page's Inspector -- the GitHub door in the top
@@ -486,9 +737,18 @@ Land onto main, and a Send of main, are refused by name where GitHub has the
 main line, and greyed on the tab with that sentence. The council's own push
 (the `git_push` skill, `git_cycle`, the REPL's /git push) refuses the same way
 before anything leaves -- but `git_cycle` still saves on main first, and that
-save has to be moved onto a line by hand. Sending, fetching and merging all
-stay behind the wall, `MANJUEL_GIT_REMOTE` in `.env`: while it is shut they
-refuse by name.
+save has to be moved onto a line by hand. The tab's sending, fetching and
+merging, and the door's and the REPL's own git verbs, stay behind the wall,
+`MANJUEL_GIT_REMOTE` in `.env`: while it is shut they refuse by name. Steward's
+send (`/drive ship`, and the send after a job) does not read the wall; each of
+its steps is his card instead ("Steward drives", above).
+
+**The same road, driven by Steward.** Under SITTING LAW 11 the road above is
+walked by Steward from the Agent tab, every step on a card: the job (or `/drive
+ship <message> | check: <command>` for work already on disk) opens the line,
+saves, sends, opens or reuses the pull request, waits on CI, and asks to merge;
+`/drive tidy` then deletes every line merged into main, here and on GitHub. The
+tab's buttons remain his own hand, for anything he wants to do himself.
 
 **What waits for your hand.** The tab's buttons act when you press them. A
 write the door holds for anything but your glass -- a save, a send, a mark, a
@@ -552,7 +812,46 @@ skills kind), or `commands.md` for what can be asked for in words.
 Every tool has a Call in the Inspector's Registry & Docs tab, saying what it
 does (since 2026-10-10); until then thirty-one of the eighty-two had no page
 (counted 2026-09-17) -- the record and law readers, the rack commands, the mesh,
-keys and tenants.
+keys and tenants. A Call from the glass runs as him: a writing tool called
+there is NOT held, because the glass holds the service wire.
+
+**Every skill and every door tool, in full** -- what it is, the exact call,
+every argument, what it reads and writes, whether it waits on a card, every
+refusal in its own words, where it lives, and when to reach for it -- is Part
+IV, INVENTORY.md, "Every part, in full". Who may call what: a door tool called
+from the glass runs at once; a writing door tool called by the engine or any
+keyed caller is HELD for his card (the door runs with `--auth`); seven tools
+are the glass's alone and refused to every other caller by name (`shell_run`,
+`aider_run`, `aider_undo`, `law_add`, `law_seal`, `file_edit`, `git_pr`).
+
+## The wire: every event, with its fields
+
+The engine speaks JSON lines; the door streams them to the glass as
+server-sent events (`event: engine`, the kind inside as `event`), framed by
+the door's own `stream_open {world, objective, answering}`, `stream_end
+{waiting, tokens, dropped}` and `stream_error {error}`. The kinds, and the
+fields the glass reads:
+
+    opened        the engine is up: its sitting and session
+    text          printed text: {text}
+    run           a council run starts: {pipeline, transcript}
+    seat          a seat sits: {seat, model, timeout}
+    token         a seat's words as they come: {seat, text}
+    think         a seat's thought, shown dimmed and folded after: {seat, text}
+    tool          a tool is called: {action|tool|name, args (each to 200 characters)}
+    tool_result   what it said: {action, failed, chars, head (to 400 characters)}
+    report        one line of a Steward job or a door call: {text}
+    needs_answer  a CARD: {prompt, color (green|red|amber)}; the turn waits
+    delivery      the end of the turn: {text, pipeline, transcript, steps[{seat,
+                  model, elapsed, skipped, error}], failures[], out_of_time[],
+                  elapsed, project}
+    refused, aborted, cancelled, unreachable, command   other ends of a turn
+    error, note, heard, closed (the sitting closed: why, sitting, runs, toll_paid)
+
+A card's answer goes back as `GET /api/council/stream?answer=<text>`, which the
+door hands the engine as `{"cmd":"answer","text":...}`. Other commands on the
+engine's stdin: `objective` (with optional `feed`, `method`, `model`,
+`voices`, `unattended`), `cancel`, `close`, `listen`.
 
 ## The dials
 
@@ -574,10 +873,20 @@ downloaded), `MANJUEL_VRAM_GB`, `MANJUEL_KEEP_ALIVE`, `MANJUEL_SEAT_TIMEOUT`,
         judged; if one is open with nothing behind it, it is closed by
         APPENDING a closing line, never by editing the one already written.
 
-    the dashboard shows something that is not true
-        It repaints every 15s and confesses when it is over a minute stale.
-        If a page still looks old after a rebuild, that was the missing-ETag
-        fault -- fixed 2026-09-09; every static file now revalidates.
+    the glass shows something that is not true
+        It re-reads the engine's state every 30 s (and when the page becomes
+        visible again), and the hold queue every 3 s while the page is
+        visible. If a page still looks old after a rebuild, check that the
+        NEW binary is the one running: the page is built into
+        atlas-webapp.exe, so a changed page does nothing until the glass is
+        rebuilt and restarted. Every static file revalidates (the
+        missing-ETag fault, fixed 2026-09-09).
+
+    a card shows a text field, not Approve and Deny
+        Only a question that ends in [y/n] gets the two buttons; any other
+        question is answered in the field. If a [y/n] question shows a field,
+        the running glass is older than its page: rebuild and place it
+        (placing a built binary is his act).
 
     "mcp unreachable"
         The door is not running, or not on 8090. Check `atlas\line\mcp.log`.
@@ -837,6 +1146,28 @@ boot report says which took effect) or the shell. Nothing else is a dial.
                                    route's is MANJUEL_ROUTE_<NAME>_KEY). OFF without it: nothing is
                                    sent. With it, only `/parity hosted` uses the route, and it says
                                    what leaves and asks first (routes.py)
+    MANJUEL_MCP_<NAME>_KEY  --     the bearer the engine presents to that server (the door's
+                                   key for the council, minted with auth_key_create) (skills.py)
+    MANJUEL_DRIVER_MODEL    qwen3.5:9b   the model Steward drives with (serve.py)
+    MANJUEL_DRIVER_STEPS    30     the most tool calls one job may make
+    MANJUEL_DRIVER_MINUTES  45     the most minutes one job may take
+    MANJUEL_DRIVER_ITEM_STEPS 15   the same, for one item of a plan or an each
+    MANJUEL_DRIVER_ITEM_MINUTES 15
+    MANJUEL_DRIVER_ITEMS    25     the most items a plan or an each works
+    MANJUEL_DRIVER_CTX      16384  the driver model's window
+    MANJUEL_DRIVER_CARRY    3000   how much of what earlier jobs did is carried into the next
+    MANJUEL_DRIVER_CHECK_SECONDS 900   the most a job's check may run
+    MANJUEL_DRIVER_CI_SECONDS 1800     the most the send waits on CI
+    MANJUEL_DRIVER_THINK    off    1 lets the driver's model think before it answers
+
+THE DRIVER'S DIALS ARE READ WHEN THE ENGINE STARTS, BEFORE `.env` IS (found
+2026-10-16): serve.py is imported before `.env` is read, and it is not among
+the modules that read their dials again after. So a `MANJUEL_DRIVER_*` line in
+`.env` does nothing today, except `MANJUEL_DRIVER_THINK`, which is read at each
+call. Set them in the environment of the shell that starts the door. The door's
+own bounds are in its code: a held call waits up to 900 s for his click (the
+engine's `door_call`), and the engine waits 295 s for any one door call
+(`MANJUEL_SKILL_TIMEOUT` less five).
 
 THREE NAMES THAT ARE NOT DIALS, struck from `.env.example` on 2026-09-29.
 `MANJUEL_OLLAMA_HOST` was read nowhere -- the runtime binds 127.0.0.1:11434
@@ -902,9 +1233,11 @@ tag: the gate refuses a page older than the record it reads.
 
 ## Before a tag: the release gate
 
-    python tests\release.py --check 0.1.11
+    python tests\release.py --check <version>
 
-One command, run ON YOUR TERMINAL before every tag, that refuses by name:
+One command, run before every tag -- under SITTING LAW 11 as a Steward job's
+check, `/drive <job> | check: python tests/release.py --check <version>`, or
+by the release flow's own `release_step check` -- that refuses by name:
 the suites green and stamped after the newest edit; buildmap clean; the
 standup run LIVE and green after the newest edit; the law proves; the
 manifest agrees with the disk; every SPEC section-4 line whose status
