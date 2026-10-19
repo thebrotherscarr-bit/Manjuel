@@ -38,7 +38,8 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (12:14):** the road's step (1), H32, built on the line `drive-1019-115957` by Steward on your cards, to be
+  **Where it stands (12:46):** step (1), H32, sent and merged; step (2), the release faults, planned under I2 and under way.
+  **At 12:14 it stood:** the road's step (1), H32, built on the line `drive-1019-115957` by Steward on your cards, to be
   sent by Steward's ship; restart required; C126 found. Next on the road: step (2), the release faults C121 to C125.
   **At 11:34 it stood:** H5's step (1) done and sent (pull requests 37 and 38); the v0.2.6 and v0.2.7 checklist read off
   the code and the record, its faults C121 to C125, G's list for v0.2.6 and the road to the cut under I2, set on your cards:
@@ -1041,6 +1042,13 @@ goals". The steps under each are proposed from the disk; each is yours to change
   stand and carried to the 0.2.8 pass (your card: "Rule them kept, carry on"), so G23 to G25 take that ruling. (6) The cut, by
   G's list. LAUNCH_PLAN's pieces 6 to 8 are not on this road; where they go is yours, asked when the road reaches (6).
   *(your words and cards in chat, 2026-10-19)*
+  **Step (2), planned 2026-10-19** (your cards: "Record only", "In G's list", "Watch, move later"), by Steward on your cards,
+  each stroke shown red first: C121 -- `spec` in `tests/release.py` counts the tag being cut as not yet cut, so a cut that
+  moves a SPEC line no longer refuses itself after the tag; C122 and C123 -- the cut's first step (`tests/cut.py`, before the
+  bump) refuses unless each repository stands on GitHub's main as last fetched with nothing unsaved but the record and the
+  cut's own outputs, so code reaches main through its own pull request, never inside a cut; C124 -- closed as handled by G's
+  list (its item 6, the live check's `all` set before firing); C125 -- the runs of 2026-10-19 (pull requests 35 to 39) passed
+  on the new runner, and the two actions move in the 0.2.8 pass (I4).
 - **I3. v0.2.7: both repositories keep what earlier versions promised.** Every OPEN line in SPEC section 4 met or ruled; every open line on this
   page (B, E, H) built, ruled, or moved to a later version on your word; the found items in HANDOFF from 2026-10-05 on put on this page or ruled;
   the wife test (E1) with her at the glass and nobody helping.
