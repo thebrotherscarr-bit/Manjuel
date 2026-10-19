@@ -27,12 +27,23 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   Neiro's task list, and the rest of each office's plan; every function measured again before the v0.2.6 cut (I2's step (5)).
   **Reordered on your word of 2026-10-16: the driver (H31) goes first.** It takes over the coding loop (D18), workflows from a
   sentence (H23) and Neiro's task list (H25); the rest of the plan follows it.
-- **Now (2026-10-16, ~17:15): Steward drives (H31) is built and merged -- the core's pull request 28 and atlas's 21, saved,
-  sent, checked by CI and merged by `/drive ship` on your cards -- and `/drive tidy` deleted every branch already merged into main,
-  here and on GitHub, in both repositories. Next: C77, a door call said plainly (a line leading with `mcp_call` goes to the door
-  with no seat narrating), saved and sent the same way; then H31's three jobs (C71, a save and send -- done by `ship` -- and
-  HANDOFF's (bb)).** Your new law of the day, to be entered in the ledger: everything is run by Steward, through the webapp.
-  C70's step (2), the window, and H20 wait behind H31: a long chain is where the window matters.
+- **Now (2026-10-19): the record made whole, then three pieces, then we sit and talk.** Your words today: "your file tool in
+  one go, helpers for the re-check. Then we sit and talk once you are done with these fixes. make sure you are updating the whats
+  left so nothing is lost." In order: (1) this page: every fault the read-only readers found on 2026-10-16, re-checked against
+  the code on 2026-10-19 by read-only helpers (71 checked: 52 hold, 14 hold in part, 2 are not faults, 1 was false), one line
+  each under its letter -- C78 to C117, D20 to D25, E6, F32 to F45, B29, H32 -- and the ones already here noted where they
+  stand (C40, C57, C66, E5, I4); (2) the book (README, QUICKSTART, RUNBOOK and INVENTORY folded into one, every part in full)
+  and this page saved and sent by `/drive ship` on your cards (your card: "Ship it"); (3) C101, `ground_read`'s replies, mended
+  by Steward on your cards, then LAUNCH_PLAN's item 4 given to Steward again in plain words (your card: "Fix ground_read
+  first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
+  pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
+  after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
+- **Done since 2026-10-16 (~17:15):** C77, a door call said plainly (pull request 29); SITTING LAW 11 set as entry 11 of the
+  law ledger, a draft below the seal (B29: the seal is yours); H31's three jobs, each done by Steward on your cards -- HANDOFF's
+  (bb) (pull request 31), C71 and the driver's own send (pull request 32), and C71 put back onto the engine's own `proved`
+  (pull request 33); `/drive tidy` and the door's own `git_branch` and `git_pull` putting the ground back on main. Steward's
+  first plain-words job, LAUNCH_PLAN's item 4, spent its budget reading and changed nothing (C101 is why). C70's step (2), the
+  window, and H20 still wait behind H31.
 - **The record behind it.** CHANGELOG.md's Unreleased: what has landed since v0.2.5 (the measure, the visible runs, routing's
   three parts, the answers' piece (1)). HANDOFF.md's newest block: the day's state and the hand's faults. INVENTORY.md: every
   function, its last live run and its time. SPEC.md: what done means (4.9, the coder changing the system's own files).
@@ -103,6 +114,11 @@ Nothing here gets built until you say which way.
   v0.1.15 and v0.1.16, atlas v0.1.5 to v0.1.9), and a mark sent again starts atlas's release workflow and the core's release gate. atlas's
   other branches on GitHub were not looked at. Your glass cannot do it as it stands: the door's `git_tag` refuses to move a mark and
   `git_push` never forces. Nothing is done until you say how, in chat, for that act. *(CHANGELOG, "core: RULE 12 and SITTING LAWS 7 and 8")*
+- **B29. Seal SITTING LAW 11, and give it a line in CLAUDE.md.** Your law of 2026-10-16 ("EVERYTHING is to be run by Steward.
+  EVERYTHING is to go through the webapp.") is entry 11 of `law/LAW_LEDGER.md`, set from the Laws page as a draft below the seal
+  (the chain's last link seals the ledger to byte 23632; entry 11 starts at 23638). Sealing it is your click on the Laws page,
+  as entries 9 and 10 were; CLAUDE.md carries SITTING LAWS 7 to 10 as RULES 12 to 14, and the door refuses a hand's edit to
+  CLAUDE.md, so a RULE line for it is yours to write. *(law/LAW_LEDGER.md, entry 11; re-checked 2026-10-19)*
 
 ---
 
@@ -130,6 +146,10 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
   (b). *(INVENTORY P1)*
 - **C40. The Router rebuilt the whole search index unasked, twice.** After `embed_text` refused a ground file (sitting 373, 291
   seconds), and after "what I could change" was read as a write (376). *(INVENTORY K5)*
+  A cause found 2026-10-16, re-checked 2026-10-19: `index_ground` looks for its rebuild words (rebuild, reindex, from scratch,
+  start over, fresh) as plain pieces of the whole request, so any request that reaches it carrying "refresh" (or "freshly", "a
+  fresh look") deletes the index and builds it from nothing. The mend is in `_wants_rebuild` (`manjuel/skills.py`): match whole
+  words, as the skill's own Takes reader already does. *(INVENTORY.md section 5.2, index_ground)*
 - **C41. The Router names no task.** Told which seat waits behind it and asked to name the task, it named none in any turn of
   sittings 375 and 376; your own words went as the task each time, which is the fallback. In 375 it also ran `skill_search`
   three times on one ask. *(CHANGELOG, "core: routing, its second part, the Router's package")*
@@ -177,6 +197,10 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
   (`manjuel/watch.py`); the cause is not found. *(HANDOFF, 2026-10-12, sitting 373)*
 - **C57. Three of your own commands print their expansion and run nothing:** `/morning`, `/sitting` and `/covenant` (sitting
   368). I2's (e). *(INVENTORY M32, M33, M34)*
+  The cause, read off the code 2026-10-16 and re-checked 2026-10-19: in the glass the command puts what it would run into
+  `sess.pending_spoken`, which only the REPL's own loop reads, so the glass never runs it; a typed `/listen` drops what it heard
+  the same way; and `/sitting`'s Method stays behind and rides on the next turn that runs the council. The mend is in `Door.turn`
+  (`manjuel/serve.py`): run what the command left, as the REPL does, and clear the Method when a command turn runs nothing.
 - **C58. The coder flow's brief answered beside the question.** In sitting 371, asked to make HANDOFF.md's header name its
   newest block, `coder-tree`'s brief named tests/HANDOFF.md and a different change; it stopped at its first gate on your card.
   Grounding, I2's (g). *(INVENTORY F2)*
@@ -225,9 +249,6 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
   were your press (the door keeps `git_pr` to your glass alone): Manjuel 25 and Atlas 18, merged on your click (`611dc8e`,
   `fd23adb`, 18:28). **Left: step (2)**, the window, for the talk beside H20.
   *(CHANGELOG, "core: a seat's thought, live in the terminal")* *(atlas CHANGELOG, "A seat's thought, live on the glass")*
-- **C71. Steward's call to the door gives up before a strokes run ends.** `mcp_call` waits 295 seconds (the skill's bound, less
-  five) and the strokes take longer (313 s in sitting 381), so the turn said `suite_run` "did not answer" and "no output or data
-  was produced", while the door ran on and stamped 3942 of 3942 green 18 seconds later. *(HANDOFF, 2026-10-14, sitting 381)*
 - **C72. The engine's own push cannot send a line GitHub has never had.** In sitting 381 `git_cycle` saved the core's line
   `streaming` and its push was refused, "no upstream"; the door's `git_push` sets the upstream the first time and says so. Since
   main was protected (2026-10-09) every save goes on a new line, so the engine's own send fails every time.
@@ -242,6 +263,104 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
   Steward were refused, "no engine is open on research". The next boot reaped it (ended 10:35:51, closed by "reaped") and opened
   sitting 384. The cause is not found. *(the sitting ledger, sittings 383 and 384, 2026-10-16)*
 
+Found on 2026-10-16 by the read-only readers who wrote the book (INVENTORY.md section 5), each re-checked against the code on
+2026-10-19 by a second reader and written here as the code shows it. None is mended yet. Each names the existing piece that would
+carry the mend; none asks for anything new.
+
+- **C78. Steward's jobs and a plain door call skip the law gate, and Steward's sends ignore the send wall.** A `/drive` line and a
+  line leading with `mcp_call` never pass `lawgate.run`, and none of the driver's own `git push`, `git fetch`, `git pull` and
+  `gh` steps reads `MANJUEL_GIT_REMOTE`. Your cards are the only gate, and some steps have none of their own: `/drive tidy`
+  fetches from GitHub before it asks you anything; a passed job's push rides on its commit card; deleting the branch and
+  bringing main down ride on the merge card. (A door call to the door's own git tools is still walled by the door.) Mend:
+  `drive_ship`, `drive_tidy` and `drive_save` ask `gitstate.remote_allowed()` before reaching GitHub; `door_drive` and
+  `door_call` run the law gate first, as `run_pipeline` does (`manjuel/serve.py`).
+- **C79. Steward's settings written in `.env` do nothing.** Every `MANJUEL_DRIVER_*` setting but THINK is read once, when the
+  engine starts, before `.env` is read, and the driver's module is not among those that read their settings again. Set in the
+  door's own shell they work. Mend: a `read_dials()` in `manjuel/serve.py`, and "serve" added to the list in
+  `manjuel/__init__.py`.
+- **C80. A finished `/drive ship` is recorded as failed.** The sitting's row counts only passed, tidy and clean as not failed, so
+  "shipped" (and unchecked, partial, nothing, declined, unsent) reads "1 stage(s) FAILED" in the sitting's story and its toll.
+  Mend: the row's `failed` line in `door_drive` (`manjuel/serve.py`), each verdict counted on purpose.
+- **C81. Inside a Steward job, a door call held for your card is not waited for.** The model is handed "HELD ... parked as
+  hold_..." and goes on, and may call done and run the check before you have clicked the door's card; only a plain `mcp_call`
+  line waits. Mend: `drive_act` (`manjuel/serve.py`) waits on the hold the way `door_call` does and hands the model the outcome.
+- **C82. A Steward job you close or cancel leaves an empty verdict and no row.** Its record says "- verdict: " (five such on
+  2026-10-16), and the sitting gets no row for it. Mend: `drive()` names the close or the cancel before the record is written,
+  and `door_drive` writes the row for an interrupted job too (`manjuel/serve.py`).
+- **C83. After a merge, the ground stays on the merged line when Steward did not open it.** A line Steward did not open has no
+  base on record, so after the merge the line is not closed here and main is not brought down (seen 2026-10-16, pull request
+  33: put right by hand with the door's `git_branch` and `git_pull`, then `/drive tidy`). Mend: record main as the base in
+  `drive_save` and `drive_act`, or fall back to the merged line in `_drive_close_lines` (`manjuel/serve.py`).
+- **C84. A job with no work still gets the writing tools, and fills its steps with them.** Asked only to run its check (sitting
+  403), the model wrote two stand-in tests into the workspace and ran them, each on your card; the real check then decided, so
+  the result was not faked, but steps were spent and two files left behind (`agent_workspace/smoke_cli.py`,
+  `agent_workspace/test_manjuel.py`). Mend: `drive_tools` offers a job the tools it needs, or `drive_act` refuses running a file
+  the same job wrote (`manjuel/serve.py`).
+- **C85. The next job carries the last job's goal words, even when it failed.** "What is next?" puts each earlier job of the turn
+  above the new goal: its first 200 characters, its verdict word, its commits; a failed job's orders sit over the new ones with
+  only "failed" beside them, under a label that says "in this sitting". Mend: `drive_carry` carries what was done and marks what
+  was not, labelled "earlier in this /drive turn" (`manjuel/serve.py`).
+- **C86. A passage Steward copies can lose a line, and nothing notices.** In pull request 33 the model's copy dropped the last
+  two lines (the blank line and the C71 entry's heading in CHANGELOG.md), and only the tool's "3 replaced by 5" showed it;
+  restored 2026-10-16 in the book's change. Mend: `drive_act` compares the passage written with the job's own `@@ OLD`/`@@ NEW`
+  and says so when they differ (`manjuel/serve.py`, through `_edit_passage` in `manjuel/skills.py`).
+- **C87. Two of a held call's real outcomes print raw, and one listed outcome can never happen.** A plain door call waits on
+  `approved_errored` and `vanished` and prints those words bare; its `crossed` line never matches (a crossed call is never
+  held). Mend: `DOOR_OUTCOMES` in `manjuel/serve.py`.
+- **C88. Runs after a toll paid mid-sitting are never written to the sitting ledger.** After `/toll` or "pay the toll" with the
+  sitting still open, later runs live only in memory: at exit nothing more is written because the toll is paid, and the toll
+  already stamped the sitting `ended`. Their transcripts are kept. Mend: `_close` and `_cmd_toll` in `manjuel/cli.py`.
+- **C89. Six seats cannot be asked by name.** `@` takes only the first word, so Deep Researcher, Delivery Agent, Expert Coder,
+  Morning Reviewer, Quality Evaluator and Security Guardian answer "no seat called ...". Mend: `_address_seat` in
+  `manjuel/cli.py` tries the longest run of words that names a seat.
+- **C90. The unknown-tool refusal still counts "thirty-seven" skills;** there are 45. Mend: the message in `run_pipeline`
+  (`manjuel/pipeline.py`) counts them.
+- **C91. The index's report hides what the prune refused and removed.** The lines "REFUSED as too large for a refresh" and every
+  eviction are built and thrown away; the answer shows only the counts. Mend: `_index_ground_locked` in `manjuel/skills.py`.
+- **C92. The engine's one-act save and send commits the message unchecked.** `git_cycle` takes its message as given, without
+  `git_commit`'s checks against empty or tool-name subjects, and adds no trailer, then pushes. Mend: `_git_cycle` builds its
+  message through `_commit_subject` (`manjuel/skills.py`).
+- **C93. `git_init` cannot start a repository in a folder inside the ground,** while `git_status` says it would. Mend:
+  `gitstate.init` (`manjuel/gitstate.py`) asks whether the folder has its own `.git`, as `_git_world` does.
+- **C94. The engine's and the door's own git reads can take git's index lock.** `git status --porcelain` runs without
+  `GIT_OPTIONAL_LOCKS=0` in the engine (`git_status`, `git_commit`, `git_cycle`, `ground_write`, `ground_edit`) and in the
+  door (`git`, and the check before a branch, land, pull request or send); only the typed shell tabs set it. On this machine the
+  lock clears itself, so the risk is two git commands at once (a save while the glass polls `git`). Mend: `_run` in
+  `manjuel/gitstate.py`, and `gitEnv` in atlas's `line/internal/tools/spawn.go`.
+- **C95. `git_cycle` sends to GitHub but is not on the list of skills that reach out,** and its capability record does not say
+  it does. Mend: `REMOTE_SKILLS` in `manjuel/us.py` and its record in `us/manjuel.us`.
+- **C96. The refusal for writing on main points at a road the engine does not have.** It says to run `git_branch new <name>`
+  "through the door", but a seat reaches the door only through `mcp_call` with `{"action":"new","name":...}`. Mend: the words in
+  `line_of_work` (`manjuel/skills.py`).
+- **C97. `read_file` reads a secret-named file in the workspace.** It refuses client material but has no secret-name check, so
+  `credentials.json` or `api_key.txt` there is read out. Mend: `_read_file` adds the same `is_secret` refusal `ground_read`
+  and `inspect` make (`manjuel/skills.py`).
+- **C98. `list_directory` names everything in the workspace,** secret, client-tagged and hidden names included; `ground_list`
+  drops them. Mend: `_list_directory` applies `ground_list`'s filters (`manjuel/skills.py`).
+- **C99. The five prompt skills are outside the 300-second skill limit;** they stop only at the seat limit, 600 s. Mend:
+  `SkillLibrary._call` runs them through `_run_bounded` (`manjuel/skills.py`).
+- **C100. `when` refuses "what ran last week", which its own file offers,** and given two dates it answers for the first alone.
+  Mend: `_when` (`manjuel/skills.py`), or its file's Says line.
+- **C101. `ground_read` refuses or mis-reads a definition asked for by name -- the cause of LAUNCH_PLAN item 4's failed run.**
+  With a file named, a part of three or more words ("drive (lines 1376-1420)", copied off the map's own row) is refused by the
+  path gate as "a description of" a path, with advice to "Name the folder or file itself" that is wrong for this field; the
+  map of a big Python file never shows the exact next call; and the name is matched without regard to case, so `drive` returned
+  the class `Drive` (2026-10-16, logs/2026-10-16_210001_drive.md). Mend, today's third piece: `gate_paths` gates only the file
+  when both are given, and `_windowed_python` shows the two-tag call, sets the line range apart from the name, and matches the
+  exact name first (`manjuel/skills.py`).
+- **C102. `rack_sync` reports the same models as new, or gone, on every sync,** because it reads the last list only from the
+  declared table. Mend: `diff` in `manjuel/rack.py`.
+- **C103. `write_file` always writes Windows line endings,** and a body that already has them comes out doubled (CR CR LF).
+  Mend: `_write_file` uses `ground_write`'s rule (`manjuel/skills.py`).
+- **C104. A prompt skill's refusal asks for a file it will never open.** "name a file in the workspace with <filepath>", but the
+  runner never reads one. Mend: `_run_prompt_skill`'s words, or a real read through `read_file`'s checks (`manjuel/skills.py`).
+- **C105. `linear_regression` and `statistics` count the numbers inside labels and dates** ("2023: 100" becomes 2023 and 100),
+  though both files say the words around the numbers are ignored. Mend: `parse_numbers` in `manjuel/mathkit.py`, or the files.
+- **C106. `embed_text` answers "0 passages" where it should refuse** a file it will not index (not text, too big, secret,
+  client). Mend: `_embed_text` refuses by name (`manjuel/skills.py`).
+- **C117. The doctrine check cannot fail.** `python -m manjuel.doctrine --check` exits 0 whatever it finds, so as a job's check it
+  passed on 2026-10-16 with 11 findings standing (F45). Mend: its `main()` (`manjuel/doctrine.py`) exits non-zero on a finding.
+
 ### The dashboard and the tool server (atlas)
 
 - **C61. `read_plan` reads nothing in the core.** All five plan names map to atlas's documents, and none reads; in atlas, the
@@ -255,6 +374,11 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
   `--engine`. *(INVENTORY T4)*
 - **C66. The tool server's list describes every argument of every tool as "the ground this call names".** *(HANDOFF, the
   measure's first pass)*
+  Wider, found 2026-10-16 and re-checked 2026-10-19: the list also types every argument as text, and the tools that read a
+  number or a yes/no (`rack_pull`'s confirm, `rack_open`'s depth, every prompt and flow `version`, `prompt_compare`'s two
+  versions -- C63 is this --, `mesh_read`'s last and reveal, `chat_list`'s and `team_history`'s last) refuse the text or quietly
+  take the latest, zero or all. Mend: those readers take a number written as text, as the shell tools already do, or the list
+  says each argument's real type (atlas's `line/internal/protocol/protocol.go`).
 - **C67. The Bash tab's gate stops plain looks.** `git --version` parked as a write (card 204, 2026-10-10), and a read-only
   measure of your record was refused three times without naming what it matched (sitting 376); H15 promised a refusal by name.
   *(INVENTORY G2)*
@@ -262,6 +386,37 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
   note on atlas's `docs/PIPELINES.md` ("pipelines.md is the pipelines' law, the operator's, and hot-reloaded into his live
   sitting"), a different file in another repository: its guard matches the name in a subfolder and in capitals (C56 is the
   watcher's same shape). That note (F31) waits on it. *(CHANGELOG, "core: the documentation pass")*
+- **C107. The door's streams skip the role check and the hold queue.** With `--auth` on, `/run/stream` (a turn, or an answer to
+  the council's question), `/run/listen` and `/chat/stream` only check that the key carries the world; a key that is not your
+  glass can start a turn or answer the pending card there, where the same act through the door's tools would be held for you.
+  `/run/state` (it carries the pending question's text), `/tools`, `/health` and `/metrics` ask for no key at all. Mend:
+  `gateCall` in atlas's `line/internal/httpserver/auth.go` judges as `Registry.Call` does, and `handleRunState` calls it.
+- **C108. Three cancels are never held, and two of them reach other worlds.** `run_cancel`, `flow_cancel` and `chat_cancel` are
+  declared readers, so any allowed key can stop your turn; `flow_cancel` and `chat_cancel` cancel by id across every world the
+  door carries. (`suite_run` writing its stamps while declared a reader is on purpose.) Mend: declare the three writers (or
+  your glass's alone), and check the run or session belongs to the world asked (atlas's `line/internal/tools/tools.go`).
+- **C109. `git_remote` hands back a remote's whole address, any password or token in it included.** Its `host` field strips it;
+  its `url` field does not. Mend: `toolGitRemote` in atlas's `line/internal/tools/gitctl.go` strips the part before the `@`.
+- **C110. `us_to_vc` and `verify_chain` read outside the ground.** Neither jails its path: `us_to_vc` returns the prose of any
+  file with the right block, and `verify_chain` confirms any file's existence and shape (RULE 1). Mend: both refuse with the
+  existing `jailed` check (atlas's `line/internal/tools/tools.go`).
+- **C111. `tenant_trust` lets the forbidden verbs through and records grants nothing reads.** Its check compares whole tool
+  names to bare verbs (so `git_commit` passes), it never checks the tool exists, and `Registry.Call` never reads a grant. Mend:
+  the door's own `ForbiddenWord` and a look-up on the registry in `toolTenantTrustReg`; enforcing grants is unbuilt.
+- **C112. A door call names the wrong tool when another tool's name is in its arguments.** The engine picks the longest tool name
+  anywhere in the line, JSON included: `mcp_call atlas tenant_rbac_check {"tool": "tenant_rbac_assign"}` calls
+  `tenant_rbac_assign`, a writer. Mend: `_mcp_call` in `manjuel/skills.py` names the tool from the words before the braces.
+- **C113. A model download freezes every world's model calls for up to thirty minutes.** `rack_pull` holds the door-wide ask
+  lock across the whole pull: chat, prompts, seats, memory, the mesh, the team bridge, key changes and every flow's model step
+  wait. Mend: `toolRackPull` does not hold that lock (atlas's `line/internal/tools/tools.go`).
+- **C114. `chat_list` with no session prints every session's turns, unlabelled,** where it says it reads one. Mend: `List` in
+  atlas's `line/internal/chat/chat.go` reads the latest session.
+- **C115. `rack_warm` says WARM and loads nothing.** Its description is honest (present, and its footprint); its name and its
+  answer's first word are not. Mend: `toolRackWarm` warms the model as Aider's start does, or says "present".
+- **C116. The glass's trace record grows without end, and paints failures green.** atlas's
+  `webapp/data/webapp.db/traces.jsonl` is 455 MB (49,549 lines), read whole at every start; every trace's status is written "ok", a refusal or an error
+  included. The status is a mend in `CallTool` (atlas's `webapp/handlers/handlers.go`); trimming the record would override the
+  ruling written in its code ("keep every trace"), which is yours.
 
 ---
 
@@ -281,6 +436,27 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
   addresses, and no menu, palette or link reaches them. Your card of 2026-10-12: "Retire them" (I2's (i)). Not done, and it had
   fallen out of the plan's step (4); it goes back in with I2's card today. Held later the same day by your word on the webapp:
   "NO REBUILDING" (the plan by office, Aurora). *(INVENTORY G23, G24, G25)*
+- **D20. `/drive` is in no palette.** It works only in the glass's Agent tab; `/help` never lists it, and in the REPL `/drive x`
+  answers "nothing in the palette matches 'drive'". Mend: a `drive` row in `COMMANDS`, and the REPL saying it runs in the glass
+  (`manjuel/cli.py`). *(INVENTORY.md section 5.7; re-checked 2026-10-19)*
+- **D21. The failing-seat card's "retry" skips the seat.** Any answer but abort skips it; the comment says the caller re-runs
+  it, and nothing does. Mend: `_handle_failure` returns the choice and the seat loop re-runs on retry, or retry comes off the
+  card (`manjuel/pipeline.py`). *(re-checked 2026-10-19)*
+- **D22. `EMBED_CHAR_LIMIT` is declared and read by nothing** (`manjuel/skills.py`, line 45); the index's real limit is its
+  1,200-character passage. Wire it or take it out, giving that reason. *(re-checked 2026-10-19)*
+- **D23. The door's `remember` writes a store nothing reads.** It appends to `state/remembered.jsonl` and says "staged for
+  operator ascend", but no lander reads that file; the engine's memory is staged in `memory/pending.jsonl` and landed with
+  `/memory`. Its description, "sole write tool", is stale. Mend: `toolRemember` writes where `/memory` reads, in its shape
+  (atlas's `line/internal/tools/tools.go`). *(re-checked 2026-10-19)*
+- **D24. Parts of the glass wired to nothing.** Seventeen of the page's call helpers (agents, messages, chat sessions, the town,
+  flow compare and replay, search, the socket chat) have no caller, though the glass still answers them; `App.runProve`,
+  `Run.off` and `Run.drop` are never called; the engine's "code changed" flag and a turn's notes are kept and never shown; the
+  Discord, Slack and WhatsApp adapters are empty and never built. Removing any is yours, each user named first; showing the two
+  kept-and-hidden ones is the webapp's, held by "NO REBUILDING". *(INVENTORY.md section 5.5; re-checked 2026-10-19)*
+- **D25. The rack does not know Steward's model.** `rack.md` lists `qwen3.5:9b` for the Reasoner and the Deep Researcher only,
+  and `rack_sync` never reads the driver's model, so it would not report it missing, and would call it unused weight if the
+  seats moved off it. Mend: `survey()` in `manjuel/rack.py` counts `serve.DRIVE_MODEL` under "driver", as it counts the
+  embedder. *(re-checked 2026-10-19)*
 
 ---
 
@@ -300,12 +476,8 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
   still asks for is her at the glass with nobody helping, once these are mended. *(CHANGELOG, "atlas: the front page plays what the maker made", "core: the maker speaks to a person at a screen" and "core: a change the Coder sent back unchanged"; SPEC 4.8)*
 - **E4. `prompt_eval` has never run.** It scores a prompt over `evals/<name>.json`, and the core has no `evals/` folder; a
   folder is yours to name (RULE 8). *(INVENTORY T55)*
-- **E5. The tool server's own save, take and send have not run in this version.** `git_commit`, `git_pull` and
-  `git_push`: the saves and sends since v0.2.5 went through the Bash tab, so each is measured at the next save, take and send
-  made through it. *(INVENTORY T33, T36, T37)*
-  Two of the three ran 2026-10-14, through the council's `mcp_call` (sitting 381), each held for your card: `git_commit` saved
-  atlas's line `streaming` (`96f1dd8`), and `git_push` sent both repositories' `streaming`, each never sent before, setting its
-  upstream and saying so. `git_pull` has not run. *(HANDOFF, 2026-10-14, sitting 381)*
+- **E6. `/drive plan` has never run live.** Steward's plan mode (the goal broken into items, each its own job, the whole checked
+  again) is held by its strokes only; its first live run is still to come. *(INVENTORY.md, D2)*
 
 ---
 
@@ -315,6 +487,40 @@ repeated here: the glass's mic, ruled to I5 on your card, and the law chain's tw
   before 2026-10-12; since then a big seat's answer is the delivery as written, and every closing answer is written from the turn
   alone (the answers' piece (1), in I2). The tool server's edit tool refuses pipelines.md, the pipelines' law and yours, so the
   change is yours, or it opens with the plan's step (3). *(I2, the answers' piece 1)*
+
+Found 2026-10-16, re-checked 2026-10-19 (INVENTORY.md section 5 carries each as it stands):
+
+- **F32. `skills/git_commit.md` says its message is `<content>`;** the code never reads it -- the subject is your quoted words,
+  else your words, else the changed folders. The code is right on purpose (sitting 80); the file's Parameters line is not.
+- **F33. `semantic_search` still says it finds "past runs";** it searches the sources only (no transcripts, no ledgers).
+  `skills/semantic_search.md`, and the shared result header in `manjuel/skills.py`.
+- **F34. A comment in `symbols` gives the old cut-off** (a quarter of the files); the rule is a twentieth (`manjuel/skills.py`).
+- **F35. `ground_write`'s and `ground_edit`'s files do not name everything they refuse:** `foundation/`, the whole of `bin/`,
+  `.gitattributes`. The code's own `.env.example` entry never fires (the secret rule takes it first).
+- **F36. `skill_search` promises each description "in full";** it cuts each at 700 characters, unmarked, and shows five.
+- **F37. The door's comment on who a caller is, is wrong twice:** a keyed caller is named by its key's id, not its name, and
+  stdio is always "stdio client" (atlas's `line/internal/tools/holds.go`). What the role check keys on is right.
+- **F38. Stale tool counts in code comments:** "75 of 78" and "78 tools"; the door has 95, 85 of them core
+  (atlas's `line/internal/tools/tools.go`; `manjuel/skills.py`).
+- **F39. `aider_status`'s comment says it starts no process;** it asks git for the branch and Ollama for the rack.
+- **F40. `tenant_list` says it lists the tenants "and their roles";** it prints counts, no roles.
+- **F41. The glass's own words that no longer match it:** "all four are wired" (five tabs), a banner that leaves out
+  PowerShell, "five doors" (seven), unsent work "on the Aider Pair door" (the GitHub door), the GitHub tab called by the name
+  it had before 2026-10-08 (in `agent.js`), "NOTHING
+  HERE ACTS" over the GitHub panel's save, send and take, Evals and Dashboard in three scripts, a covenant read marked background
+  that is still traced and toasted, and a "New trace recorded" toast on every kept call. Words only; the webapp is held by "NO
+  REBUILDING", so each waits on your word.
+- **F42. atlas's LAUNCH_PLAN says the driver is not built and C71 stands in its way;** both were done and merged on 2026-10-16.
+  Its pieces 2 and 4 are built; piece 3, the door letting the driver call `aider_run`, is not.
+- **F43. SYSTEM_DESIGN says the driver hands code edits to Aider;** the driver edits with `ground_edit` and `ground_write` on your
+  cards, and the door still keeps `aider_run` to your glass. If you still want Aider for the driver, that is H31's step (2)(e).
+- **F44. DAYBOOK's standing check sequence names the old strokes file, test_chainkit.py** (gone since the rename) and a hand-run commit; and
+  the book has no entry for 2026-10-16's afternoon (Steward drives, C77, SITTING LAW 11, C71 by Steward, sittings 383 to 403)
+  nor for today.
+- **F45. The doctrine check's eleven standing findings:** suite tallies in `pipelines.md` (two), STATUS.md (four) and this page
+  (one, in Done), and four paths in this page's history that no longer exist; most are dated history the arithmetic cannot
+  tell from a claim about now. The one really stale is STATUS.md, printed 2026-10-10 and not since (`tests/status.py`). C117:
+  the check passes whatever it finds.
 
 ---
 
@@ -380,6 +586,25 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   runaway, not a race: generous passes and minutes, each run's spend written down, tuned once it works. (e) The door change:
   `aider_run` callable by the driver, every run parked for your card (today only your glass may call it). (f) The loop in the
   engine, each test shown red first, every edit on your card. Then step (3), the three jobs. *(your words in chat, 2026-10-16)*
+  **Where it stands, 2026-10-19.** Built and merged 2026-10-16: the loop (pull request 28, `/drive` with `plan`, `each`,
+  `tidy` and `ship`), a door call said plainly (C77, pull request 29), and step (3)'s three jobs, each done by Steward on your
+  cards -- HANDOFF's (bb) (pull request 31), C71 with the driver's own send (pull request 32), and C71 put back onto the engine's
+  own `proved` (pull request 33). Not built: (b)'s rule that a job with no check is refused (LAUNCH_PLAN's item 4: Steward's
+  plain-words run spent its budget reading, C101); (d)'s spend written down per run; (e), the door letting the driver call
+  `aider_run` (F43); the open faults of the driver are C78 to C87. *(INVENTORY.md, D1 to D6)*
+- **H32. Every use of a skill or a tool marked, catalogued, weighed, and handed to Steward whole.** Your words, 2026-10-16:
+  "before and after a skill or tool is used, its marked down, catalogued, weighed for usefulness, and then set aside for steward
+  to use with ZERO QUESTIONS on how it works, what it does, EVERYTHING ABOUT IT"; and of the book, "so detailed ... that you can
+  essentially reverse engineer the whole system piece by piece". The doctrine has it already (the Forge Road's stations, test,
+  verify, use, confirm, field report; S5: a tool is tested before it is relied on; S6's card for every skill). What stands,
+  read 2026-10-16: Steward is handed each skill's description cut to 400 characters (ten of its twenty-five tools cut
+  mid-sentence) and nothing of its body; the engine's before-tool and after-tool hooks are built and no skill declares one;
+  a use is recorded only as a tool's name on the sitting's row and its whole result in the job's transcript, with no time or
+  outcome per call; nothing weighs a tool across runs, and nothing folds away an idle one. Your card, 2026-10-19 ("Whole card +
+  after_tool hook"): through the two pieces already built -- `tool_schemas` hands Steward each skill's whole file (the Router
+  already gets the body), and the after-tool hook writes one line per use (the tool, whether it worked, how long) that Steward
+  reads back; the weighing, and folding idle tools away, after that. The book's section 5 cards have no wire to the code yet
+  (a changed tool does not red its card): part of this piece. *(your words in chat, 2026-10-16 and 2026-10-19)*
 - **H30. The honesty gate on every answer: Manjuel's second piece.** Your card, 2026-10-13: every answer filtered through the
   laws and the founding papers. A claim in an answer is fact only where its distinctive words appear in the record of the turn
   -- what the tools returned, the files read, the law -- and anything else is marked generated, or the answer is "no record"; by
@@ -684,6 +909,10 @@ goals". The steps under each are proposed from the disk; each is yours to change
   buttons by the docs stroke (your card: "Add the check"). *(CHANGELOG, "core: RUNBOOK says how GitHub works from the glass")*
   A second pass on the references, here and in I5, on your word of 2026-10-12 ("on the document and packaging pass on the road to 0.3.0 we will
   make a second pass on the references").
+  Seen again 2026-10-19 (re-checked): HANDOFF's header still tells a new hand to run the old strokes file (test_chainkit.py)
+  and to start at the 2026-09-29 block; the doctrine check skips HANDOFF as a ledger, so only this line holds it. The book of
+  2026-10-16 brought README, QUICKSTART, RUNBOOK and INVENTORY up to the disk; atlas's LAUNCH_PLAN and the core's SYSTEM_DESIGN
+  and DAYBOOK are F42 to F44.
 - **I5. v0.2.9: packaging and the deliverable.** The Settings page set up for every API integration: each hosted route's state shown (on or off,
   never the key), its key placed by you in `.env` (RULE 4, amended; RULE 7); the local Ollama models set up: the models the seats name, pulled and
   checked by the rack's own report; the rack checked: what is loaded, what fits the card, what no seat names; a first run on a machine that has none
@@ -692,6 +921,10 @@ goals". The steps under each are proposed from the disk; each is yours to change
   (`atlas.bundle`, `atlas-mcp.exe`, `chain_original.py.bak`); a backup for the record (named 2026-09-23: it exists once, on one disk).
   The voice: the glass's mic (INVENTORY G19), which heard nothing in the measure (your word: "that parts not working for right now"), ruled
   for v0.2.6 and carried here on your card ("Rule it for v0.2.6").
+  Found 2026-10-16, re-checked 2026-10-19: fourteen earlier glass builds (`atlas-webapp.old*.exe`, about 11 MB each, 156 MB in
+  all, 2026-10-08 to 2026-10-16) sit beside the running one in atlas's `webapp/`, each left as a way back when a new build was
+  placed; nothing reports or clears them. `tests/status.py` already reports the running binary and could count these; clearing
+  them is yours.
 - **I6. v0.3.0: a full release, packaged and ready to deploy.** I1 to I5 done or ruled; the release installed on a clean machine from the release
   alone, following only its documents; the release check green with the live check and the review panel; both repositories' releases published by you.
 
@@ -700,6 +933,24 @@ goals". The steps under each are proposed from the disk; each is yours to change
 ## Done
 
 Finished lines, newest first. A number is never used again.
+
+- **E5. The tool server's own save, take and send have not run in this version.** DONE 2026-10-16: all three have run on your
+  cards through the council's door calls -- `git_commit` and `git_push` on 2026-10-14 (sitting 381), and `git_pull` on 2026-10-16
+  (sittings 402 and 403, main brought down after pull request 33). The line as it stood: `git_commit`, `git_pull` and `git_push`:
+  the saves and sends since v0.2.5 went through the Bash tab, so each is measured at the next save, take and send made through
+  it; two of the three ran 2026-10-14, through the council's `mcp_call` (sitting 381), each held for your card: `git_commit`
+  saved atlas's line `streaming` (`96f1dd8`), and `git_push` sent both repositories' `streaming`, setting its upstream and saying
+  so. *(INVENTORY T33, T36, T37; HANDOFF, 2026-10-14, sitting 381)*
+- **C77. A door call said plainly.** DONE 2026-10-16 (pull request 29): a line that leads with `mcp_call` goes to the door with no
+  seat: one line before, the wait on your card when the door holds it, one line after saying what became of it. The line as it
+  stood (on the working path, never given a line of its own): the turn narrated a held call instead of waiting for your click.
+  Two of its outcomes still print raw: C87. *(CHANGELOG, "core: a door call said plainly (WHAT'S LEFT C77)")*
+- **C71. Steward's call to the door gives up before a strokes run ends.** DONE 2026-10-16, by Steward on its own code, on your
+  cards (pull request 32), then put back onto the engine's own `proved` skill on your word "THEN PUT IT BACK" (pull request
+  33): a suites run that outlives the door call's 295-second wait is read back off the suites' own stamp. The line as it stood:
+  `mcp_call` waits 295 seconds (the skill's bound, less five) and the strokes take longer (313 s in sitting 381), so the turn said
+  `suite_run` "did not answer" and "no output or data was produced", while the door ran on and stamped 3942 of 3942 green 18
+  seconds later. *(HANDOFF, 2026-10-14, sitting 381)*
 
 - **F9. SPEC.md is behind what was built since 2026-10-02.** DONE 2026-10-16, on your cards (29, 32, 39, 44, 48, 51, 59, 66, 81 and 86): 8.2 superseded and answered on your word; the Judge in section 1's words, section 2's court row, 4.3 and 8.4; no skill count that rots in section 1 or 2; the workflow row names `flows/`; 4.4 at ten links and sitting laws 1 to 10; 4.9's OPEN line annotated, its words left as you confirmed them (B17); 8.4 with the driver first. The line as it stood: The Judge's rename (H28, 2026-10-14) is not carried: section 1's words
   still say Manjuel rules last and that the seat carries the name "until" it is renamed, and section 2's court row, 4.3 and 8.4 name

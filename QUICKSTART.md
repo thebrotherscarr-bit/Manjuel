@@ -1,8 +1,10 @@
 # Quickstart
 
-This is the first hour with the REPL. If what you want is the DASHBOARD --
-building and starting the two atlas servers, the four-click loop, the skills
-and the tools -- that is RUNBOOK.md, "Starting the system".
+**THE BOOK, PART II: THE FIRST HOUR.** Part I (README.md) says what this is.
+This part takes a fresh machine to a first job done by Steward in the glass,
+in order. The exact build and start commands are Part III's (RUNBOOK.md,
+"Starting the system") and are not copied here; this part says when to run
+them. The REPL, for when the glass is down, is at the end.
 
 ## You need
 
@@ -92,7 +94,12 @@ the DOCTRINE and nothing that was earned on someone else's machine.
     logs/             no transcripts. Yours start at your first turn.
     sessions/         no sittings. Your first boot is sitting 1.
     agent_workspace/  made on demand.
-    .env              copy `.env.example`. Remote git stays OFF without it.
+    .env              copy `.env.example` and fill it in by hand. Without
+                      `MANJUEL_GIT_REMOTE` the REPL's `/git` and the door's own
+                      git tools will not send; `/drive ship` does not read
+                      that wall (his cards are its gate; README.md, "The rules").
+    atlas/            not in this repository. Clone it into the ground:
+                      `git clone https://github.com/thebrotherscarr-bit/Atlas.git atlas`
 
 **Your first boot will show a RED GATE, and that is correct.** It reads
 something like `gate 3/6 -- REFUSED: strokes, smoke, standup`. Nothing is
@@ -115,7 +122,81 @@ and then mark them STALE against your files. Treat any tally you did not run
 as hearsay — the estate's own rule is that a proof older than the code is not
 a proof.
 
-## Run
+## The first hour, at the glass
+
+**1. The glass's own needs.** Beyond Python and Ollama above: Go 1.26, Rust
+and cargo, Git for Windows, PowerShell 7, the GitHub CLI `gh` (run `gh auth
+login` once, by hand; `/drive ship` and the GitHub tab use it), and, for the
+Aider tab, Aider in `aider/venv`. README.md, "Install", is the one list.
+
+**2. Build the door and the glass**, once, and again after any change to
+atlas's Go code or its page: RUNBOOK.md, "Starting the system", the three build
+lines. The page is built into the glass's binary, so a changed page does
+nothing until the glass is rebuilt and restarted, and placing a newly built
+binary is the operator's own act.
+
+**3. Start the stack, in this order:** Ollama (usually already a service), then
+the door on 127.0.0.1:8090 with `--auth` (without it nothing can be held for
+his card, and the glass is refused its own tools), then the glass on
+127.0.0.1:8091, started from `atlas\webapp` (its data paths are relative to
+it). Both read the same `ATLAS_SERVICE` wire from the environment of the shell
+that starts them, never from a command line. RUNBOOK.md has each line. Nothing
+starts by itself after a reboot, and nothing opens a sitting by itself.
+
+**4. Open http://127.0.0.1:8091.** The first time, it asks for a name and a
+PIN of four to eight digits, and remembers them (hashed) in
+`atlas\webapp\data\user.json`; after that, the PIN. Five wrong PINs in a row
+lock it for a minute. Forgot it: delete that file and reload.
+
+**5. The front page** is one terminal and an Inspector. The terminal's tabs:
+**Agent** (the engine: Steward and the council), **Bash** (Git Bash, as you;
+a plain look runs at once, anything that writes asks first), **Python** (one
+session that keeps its names), **PowerShell** (every line asks first), and
+**Aider** (edits the files you name, on a line of work). Cards -- the
+questions and the Approve/Deny asks -- sit in the dock at the foot of the
+terminal in every tab. The bar at the top says whether the door answers,
+whether an engine is open, and how many models the rack holds.
+
+**6. Boot.** In the Agent tab, press Boot in the title (or type `/boot`). The
+door opens the engine on this ground (about half a minute), warms the models
+and prints the boot report: GROUND, RACK, RECORD, GATE, VOICE. The title then
+says "sitting N". A first boot shows a red GATE (below); that is correct.
+
+**7. A first look.** In the Bash tab type `git log --oneline -5`: it runs at
+once and says "read". Type `touch x.txt` and it does not run: a card says "This
+asks first" with Approve and Deny. Deny it. That is the gate, and it is the
+same for every write in this system.
+
+**8. A first door call.** In the Agent tab type
+`mcp_call atlas git {}` -- the door's read of the repository, answered in one
+line, no model asked. Type `mcp_call atlas suite_run {"set":"smoke"}` and the
+door runs the smoke suite and the engine reads the tally back.
+
+**9. A first job for Steward.** In the Agent tab, a job and the check that
+decides it is done, for example:
+
+    /drive Add a one-line docstring to enabled() in manjuel/ink.py | check: suites
+
+What happens, in order: Steward reads what it needs (no card for a read); the
+first write it wants comes as a red card -- "The Steward wants to run
+ground_edit ... Approve? [y/n]" -- and on your yes it first opens a line of
+work `drive-MMDD-HHMMSS` (main is never written); when it says it is done, the
+CHECK runs, and only a passing check ends the job. Then one card offers to
+commit, push, open a pull request and wait on CI; another, once CI is green,
+to merge it on GitHub and delete the branch; then the ground goes back to main
+and catches up. Finally a green card: "What is next?" -- type the next job, or
+leave it blank to stop. Every `[y/n]` card is two buttons, Approve and Deny.
+
+A job with no check runs and ends UNCHECKED, its change left unsaved;
+`plan` and `each` refuse to run without one. RUNBOOK.md, "Steward drives",
+has every mode.
+
+**10. Close.** Type `/close` (or Close in the title). The engine writes the
+sitting's close and pays the toll if a turn ran. An engine left idle closes
+itself after 30 minutes; the title warns from 5. Lock the page with the icon by
+your name.
+
+## Without the glass: the REPL
 
     cd Desktop\Research
     python manjuel.py
@@ -124,8 +205,10 @@ a proof.
 
 Boot prints the report: GROUND, RACK (with real sizes and what is warm),
 RECORD, GATE, VOICE. If a needed model is missing it says which and stops.
+`/drive` and `mcp_call` lines do not exist in the REPL; everything else below
+works in both.
 
-## First five minutes
+### First five minutes
 
     what can you do            → the skill table, read from the harness
     what is in this repo       → the ground, live from disk
@@ -153,8 +236,11 @@ Pay the sitting's toll with `/toll`.
 Each prints its own tally when it finishes. That tally is the only honest
 one — the suites grow with the system, so no count is written into a doc.
 
-Both offline, both finish in seconds. Run them after any edit to agents/,
-skills/ or manjuel/. Red blocks; the failing stroke names what broke.
+Both offline; the smoke takes about a minute and the strokes a few. Run them
+after any edit to agents/, skills/ or manjuel/. Red blocks; the failing stroke
+names what broke. Under SITTING LAW 11 they are run by Steward from the glass
+-- as a job's check, or `mcp_call atlas suite_run {"set":"both"}` -- and the
+lines above are what those run.
 
 ## Extending
 
@@ -172,7 +258,9 @@ skills/ or manjuel/. Red blocks; the failing stroke names what broke.
 - **New command:** a block in `commands.md` — `**Runs:**` is the objective
   (with `$ARGS` where what you type after the command belongs), and an
   optional `**Method:**` line makes everything after it a procedure that
-  rides with the run and is shown to every seat. `/reload`.
+  rides with the run and is shown to every seat. `/reload`. (Today a
+  command runs in the REPL only: in the glass the engine stores what it would
+  run and never runs it.)
 
 ## When the machine misbehaves
 
@@ -183,5 +271,7 @@ estate refused on purpose, and why.
 ## When a seat misbehaves
 
 Every run is transcribed in `logs/` with per-stage timings, prompts kept
-apart in `logs/_prompts/`. Read the transcript before blaming a seat — the
-record outranks any model's account of itself, including Manjuel's own.
+apart in `logs/_prompts/`; every Steward job is `logs/<stamp>_drive.md`, each
+tool call and its whole result in order. Read the transcript before blaming a
+seat — the record outranks any model's account of itself, including Manjuel's
+own.
