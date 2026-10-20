@@ -3426,8 +3426,11 @@ def test_the_seat_bound(reg, lib, book):
     # at 4,500 tokens, the measured median of its finished answers (B15).
     check("the Expert Coder sits on qwen2.5-coder:14b (B1)", reg.get("Expert Coder").model == "qwen2.5-coder:14b",
           reg.get("Expert Coder").model)
-    check("Jesster carries a 4,500-token cap, which the runtime hands Ollama as num_predict (B15)",
-          reg.get("Jesster").max_tokens == 4500, str(reg.get("Jesster").max_tokens))
+    # SUPERSEDED 2026-10-20 (WHAT'S LEFT C38, his card: "Lift the four caps"): Jesster
+    # was cut at its 4,500 three times, its thought taking 78 to 84% of the room. It
+    # carries no cap now, bounded by its stage's Timeout (C13) and its window.
+    check("Jesster carries no cap: its Timeout and its window bound it (C38, superseding B15)",
+          reg.get("Jesster").max_tokens is None, str(reg.get("Jesster").max_tokens))
     check("the door is bound at his 180", reg.get("Steward").timeout == 180.0)
     check("and the judge at his 600, the most any seat is given",
           reg.get("Judge").timeout == 600.0 == max(a.timeout or 0 for a in reg.all()))
@@ -9199,11 +9202,34 @@ def test_sitting46_regressions(reg, lib, book):
     #
     # Still bounded, per LAW 7 -- the guard is now two-sided, because "no
     # ceiling" and "a ceiling below the floor" are both failures.
+    #
+    # RAISED 2026-10-20 (WHAT'S LEFT C38, his card: "Raise its cap to 2,000"): the
+    # 900 cut the Router eleven times in 197 thinking turns. Its ceiling is now the
+    # window's: what it is sent, its cap and one read coming back must fit its
+    # window (test_a_seat_that_holds_tools_has_room_to_answer).
     cap = reg.get("Router").max_tokens
-    check("the Router is still token-capped -- bounded everything (LAW 7)",
-          cap is not None and cap <= 1200, str(cap))
+    check("the Router is still token-capped -- bounded everything (LAW 7), at his 2,000 (C38)",
+          cap == 2000, str(cap))
     check("and the cap leaves room to think AND then emit the call",
           cap >= 600, str(cap))
+    # THE THREE LIFTED (C38, his card: "Lift the four caps"): the Reasoner, the
+    # Quality Evaluator and Jesster carry no cap, and Ollama is handed no
+    # num_predict for them -- a lifted seat is bounded by its Timeout and window.
+    handed = {}
+
+    class Seen:
+        def chat(self, **kw):
+            handed[len(handed)] = dict(kw.get("options") or {})
+            return {"message": {"content": "ruled"}}
+
+    rt3 = OllamaRuntime()
+    rt3._client = Seen()
+    lifted = ("Reasoner", "Quality Evaluator", "Jesster")
+    for name in lifted:
+        rt3.chat(reg.get(name), "rule on this")
+    check("the three seats C38 lifted carry no cap, and Ollama is handed no num_predict for them",
+          all(reg.get(n).max_tokens is None for n in lifted) and len(handed) == 3
+          and not any("num_predict" in o for o in handed.values()), str(handed))
 
     # 3. a baked seat's casual turn is dialogue + words, nothing else
     from manjuel.registry import Agent

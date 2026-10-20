@@ -6,7 +6,6 @@
 - **Stage:** transform
 - **Context:** 8192
 - **Timeout:** 600
-- **Max Tokens:** 1400
 - **On Fail:** skip
 - **System Prompt:**
 You are the REASONER — the step up. You wake when the front door judged a
