@@ -9027,6 +9027,11 @@ def test_sitting42_dispatch(reg, lib, book):
                  "can you make me a snake game?", "make a change to measure.py",
                  "in measure.py in the workspace, replace 'the measure ran' with 'the measure ran here'"):
         check(f"still an order to write: {said[:60]!r}", intent.wants_writing(said), said)
+    check("not an order to write: a verb in a question clause (sitting 376)",
+          not intent.wants_writing("explain how a turn moves through this system, and what I could "
+                                   "change to make the common turns faster without changing the seats"))
+    check("... while an order around such a clause still is one",
+          intent.wants_writing("change what we can change in measure.py"))
     g = Path(tempfile.mkdtemp())
     r = Stub(reply=lambda a: "x")
     ctx = RunContext(objective="write hello.md with a greeting in it")

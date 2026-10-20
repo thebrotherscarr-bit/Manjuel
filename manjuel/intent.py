@@ -985,6 +985,10 @@ _AS_NOUN = re.compile(rf"(?i)\b(?:the|a|an|my|our|your|this|that|these|those|its
 _COMPOUND = re.compile(r"(?i)\bbuild\s+(?:plans?|paths?|maps?|order|steps?|logs?)\b")
 _HOW = re.compile(rf"(?i)\bhow\s+(?:would|could|do|does|did|can|should|might|to)\b[^.?!]*?\b{_VERB}\b")
 _YOU_CAN = re.compile(rf"(?i)\byou\s+(?:can|could)\s+{_VERB}\b[^.!]*\?")
+# ...and a verb in a question clause, to the clause's end (sitting 376: "what I could change
+# to make the common turns faster", inside an ask to explain -- missed in the first count).
+_WH_CLAUSE = re.compile(rf"(?i)\b(?:what|which|where|whether)\s+(?:i|we|you)\s+"
+                        rf"(?:could|can|should|might|would)\s+{_VERB}\b[^.?!]*")
 _PROSE = re.compile(r"(?i)\b(?:write|make|compose|create)\s+(?:me\s+|us\s+)?"
                     r"(?:a\s+|an\s+|some\s+)?(another\s+)?(?:short\s+|little\s+|quick\s+)?"
                     r"(?:poem|haiku|story|song|limerick|sonnet|verse|joke|riddle)s?\b")
@@ -1017,7 +1021,7 @@ def wants_writing(objective: str) -> bool:
     text = own_words(objective)
     if _PROSE.search(text) and not _A_PLACE.search(text):
         return False
-    for rx in (_AS_NOUN, _COMPOUND, _HOW, _YOU_CAN):
+    for rx in (_AS_NOUN, _COMPOUND, _HOW, _YOU_CAN, _WH_CLAUSE):
         text = rx.sub(" ", text)
     return bool(_WRITE_VERBS.search(text))
 
