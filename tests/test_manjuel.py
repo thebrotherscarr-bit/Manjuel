@@ -7399,7 +7399,7 @@ def test_the_estate_is_heard_correctly(reg, lib, book):
           "return correct_hearing(said)" in src)
 
     check("'who is steward' routes to search, so no seat invents his fate",
-          intent.names_a_tool("who is steward", lib.keywords())
+          intent.names_a_tool("who is steward", lib)
           == "semantic_search")
 
 
@@ -7726,7 +7726,7 @@ def test_the_card_is_priced_live(reg, lib, book):
     for q in ("whats on the card", "is opencode running", "whats warm",
               "what is available"):
         check(f"{q!r} routes to rack_list",
-              intent.names_a_tool(q, lib.keywords()) == "rack_list")
+              intent.names_a_tool(q, lib) == "rack_list")
 
     SZ = {"llama3.2:latest": 2_000_000_000, "qwen2.5-coder:7b": 4_700_000_000,
           "qwen3.5:9b": 6_600_000_000, "nomic-embed-text:latest": 274_000_000}
@@ -7804,10 +7804,10 @@ def test_nothing_is_happening_unless_it_happened(reg, lib, book):
           "never treat earlier speculation as fact" in p)
 
     check("'review the logs' reaches a real tool, not a narrator",
-          intent.names_a_tool("review the logs", lib.keywords())
+          intent.names_a_tool("review the logs", lib)
           == "ground_list")
     check("'check the logs' too",
-          intent.names_a_tool("check the logs", lib.keywords())
+          intent.names_a_tool("check the logs", lib)
           == "ground_list")
 
 
@@ -7917,7 +7917,7 @@ def test_foundation_folder(reg, lib, book):
     for q in ("what are the founding documents", "the covenant",
               "the doctrine", "founding docs"):
         check(f"{q!r} routes to search",
-              intent.names_a_tool(q, lib.keywords()) == "semantic_search")
+              intent.names_a_tool(q, lib) == "semantic_search")
 
 
 def test_seats_cut_from_the_founding_cloth(reg, lib, book):
@@ -7962,7 +7962,7 @@ def test_seats_cut_from_the_founding_cloth(reg, lib, book):
     for q in ("what is manjuel", "what is jesster", "the mythos",
               "the temper", "the weighing"):
         check(f"{q!r} routes to search",
-              intent.names_a_tool(q, lib.keywords()) == "semantic_search")
+              intent.names_a_tool(q, lib) == "semantic_search")
 
     src = (ROOT / "manjuel" / "skills.py").read_text(encoding="utf-8")
     check("doctrine outranks plumbing in retrieval",
@@ -8999,7 +8999,7 @@ def test_sitting42_dispatch(reg, lib, book):
     """Talk stays talk; the obvious dispatches; the ambiguous is thought
     about by the Router; leaving works in casual clothes."""
     from manjuel import intent
-    kws = lib.keywords()
+    kws = lib
 
     # here-words point at the floor
     for q in ("whats in this archive", "review this place",
