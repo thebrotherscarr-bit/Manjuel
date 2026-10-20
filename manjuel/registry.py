@@ -261,6 +261,12 @@ _STEP_WHEN_RE = re.compile(r"when[ \t]*:[ \t]*(?P<flag>[A-Za-z0-9_\-]+)", re.IGN
 _DEADLINE_RE = re.compile(
     r"^[ \t]*\*\*Deadline:?\*\*:?[ \t]*(?P<val>\S.*?)[ \t]*$",
     re.MULTILINE | re.IGNORECASE)
+# "**Kept for the Judge:** 360", on a line of its own inside a pipeline's section
+# (WHAT'S LEFT C13 (b), his cards of 2026-10-19: "360 s", "pipelines.md"): the
+# seconds of one turn the seats before the Judge may not spend, so it can rule.
+_KEPT_RE = re.compile(
+    r"^[ \t]*\*\*Kept for the Judge:?\*\*:?[ \t]*(?P<val>\S.*?)[ \t]*$",
+    re.MULTILINE | re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -289,10 +295,14 @@ class Steps(list):
     11: a convention is not a wire).
     """
 
-    def __init__(self, steps=(), name: str = "", deadline: float | None = None):
+    def __init__(self, steps=(), name: str = "", deadline: float | None = None,
+                 kept: float | None = None):
         super().__init__(steps)
         self.name = name
         self.deadline = deadline
+        # The seconds kept for the Judge when pipelines.md says so (`**Kept for the
+        # Judge:**`, WHAT'S LEFT C13 (b)), else None and nothing is kept.
+        self.kept = kept
 
 
 class PipelineBook:
@@ -303,7 +313,8 @@ class PipelineBook:
     """
 
     def __init__(self, order: dict[str, list[str]], default: str, source: Path,
-                 warnings: list[str], deadlines: dict[str, float] | None = None):
+                 warnings: list[str], deadlines: dict[str, float] | None = None,
+                 kept: dict[str, float] | None = None):
         self.order = order
         self.default = default
         self.source = source
@@ -311,6 +322,9 @@ class PipelineBook:
         # pipeline name -> the seconds one turn on it may take, for the
         # pipelines that declare one (`**Deadline:**`). The rest take the dial.
         self.deadlines = dict(deadlines or {})
+        # pipeline name -> the seconds of its turn kept for the Judge, for the
+        # pipelines that declare it (`**Kept for the Judge:**`, WHAT'S LEFT C13 (b)).
+        self.kept = dict(kept or {})
 
     @classmethod
     def load(cls, path: str | Path, registry: "AgentRegistry" | None = None) -> "PipelineBook":
@@ -330,6 +344,7 @@ class PipelineBook:
         stops = [m.start() for m in re.finditer(r"^##+[ \t]", text, re.MULTILINE)]
         order: dict[str, list[str]] = {}
         deadlines: dict[str, float] = {}
+        kept: dict[str, float] = {}
         warnings: list[str] = []
 
         for m in marks:
@@ -350,6 +365,18 @@ class PipelineBook:
                 except ValueError:
                     warnings.append(f"pipeline '{name}': deadline '{raw}' is not a "
                                     f"positive number of seconds; ignoring.")
+            # THE TIME KEPT FOR THE JUDGE, read as the deadline is (WHAT'S LEFT C13 (b)).
+            km = _KEPT_RE.search(text[m.end():end])
+            if km:
+                raw = km.group("val").strip()
+                try:
+                    secs = float(raw.replace("_", "").replace(",", "").rstrip("s"))
+                    if secs <= 0:
+                        raise ValueError
+                    kept[name] = secs
+                except ValueError:
+                    warnings.append(f"pipeline '{name}': the time kept for the Judge '{raw}' "
+                                    f"is not a positive number of seconds; ignoring.")
             # Only the FIRST contiguous run of step lines counts. Prose
             # bullets below the list are commentary, not seats -- without this
             # a line like "- an ordinary question: Guardian -> Steward" is read
@@ -374,7 +401,14 @@ class PipelineBook:
             if not steps:
                 warnings.append(f"pipeline '{name}' lists no seats; ignored")
                 deadlines.pop(name, None)
+                kept.pop(name, None)
                 continue
+            # TIME KEPT FOR A JUDGE THE PIPELINE DOES NOT SEAT is refused by name, never
+            # obeyed: every seat would be cut for a ruling that never comes.
+            if name in kept and not any(st.seat.strip().lower() == "judge" for st in steps):
+                warnings.append(f"pipeline '{name}' keeps time for the Judge and seats no "
+                                f"Judge; ignoring.")
+                kept.pop(name)
             if name in order:
                 raise RegistryError(f"{path.name}: pipeline '{name}' is defined twice.")
             order[name] = steps
@@ -393,7 +427,7 @@ class PipelineBook:
                         )
 
         default = "default" if "default" in order else next(iter(order))
-        return cls(order, default, path, warnings, deadlines)
+        return cls(order, default, path, warnings, deadlines, kept)
 
     def get(self, name: str) -> list[Step]:
         key = name.strip().lower()
@@ -402,7 +436,8 @@ class PipelineBook:
             raise RegistryError(
                 f"Unknown pipeline '{name}'. Available: {', '.join(sorted(self.order))}"
             )
-        return Steps(steps, name=key, deadline=self.deadlines.get(key))
+        return Steps(steps, name=key, deadline=self.deadlines.get(key),
+                     kept=self.kept.get(key))
 
     def names(self) -> list[str]:
         return sorted(self.order)

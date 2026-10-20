@@ -196,6 +196,11 @@ MAX_TOOL_STEPS = 5
 # clock, not by the count.
 MAX_RULING_TURNS = 12
 
+# THE LEAST A STAGE MUST HAVE LEFT TO START ANOTHER CALL IN IT (WHAT'S LEFT C13 (a)):
+# a hop or a press handed less is cut before it can answer, so it is not started --
+# the maker's own floor before a repair, the same number.
+STAGE_FLOOR = 15.0
+
 # THE TURN DEADLINE (the operator, 2026-09-08, in his words: "600 max for
 # the whole system. there should never be more than 10 minutes between a
 # response, thats absurd"). The seat bound (runtime.SEAT_TIMEOUT) caps ONE
@@ -312,12 +317,51 @@ def note_cut_reply(runtime, seat: Agent, ctx: RunContext, report=print) -> str:
     return note
 
 
-def _budget(ctx: RunContext) -> float | None:
-    """Seconds left in this turn, or None when the run has no deadline."""
+def _budget(ctx: RunContext, seat: Agent | None = None) -> float | None:
+    """Seconds left in this turn, or None when the run has no deadline -- less, for a
+    seat that sits before the Judge, the time its pipeline keeps for the Judge."""
     at = getattr(ctx, "deadline_at", None)
     if at is None:
         return None
+    return at - time.time() - _kept_back(ctx, seat)
+
+
+def _kept_back(ctx: RunContext, seat: Agent | None) -> float:
+    """The seconds of this turn `seat` may not spend: the time its pipeline keeps for
+    the Judge (pipelines.md `**Kept for the Judge:**`; WHAT'S LEFT C13 (b), his cards
+    of 2026-10-19: "360 s", "pipelines.md"). The Judge was cut three times in seven
+    courts, twice after Jesster's one call ran its whole 600 s. Nothing is kept from
+    the Judge itself, from the guard (the input is judged first, always), from a seat
+    after the Judge has sat, or on a turn that keeps none."""
+    kept = getattr(ctx, "kept_s", None)
+    if not kept or seat is None or getattr(seat, "key", "") == "judge":
+        return 0.0
+    if getattr(seat, "stage", "") == "guard":
+        return 0.0
+    if any(s.agent.strip().lower() == "judge" and not s.skipped for s in ctx.steps):
+        return 0.0
+    return float(kept)
+
+
+def _stage_left(ctx: RunContext) -> float | None:
+    """Seconds left in the stage of the seat sitting now, or None before the first.
+
+    A SEAT'S `Timeout:` BOUNDS ITS WHOLE STAGE (WHAT'S LEFT C13 (a), his card of
+    2026-10-19: "Whole stage, every pipeline"). It bounded each call: sitting
+    379's Router took five passes and 480 s on a 300 s Timeout, and the Judge,
+    seated last, was cut and did not rule. The clock starts as the seat sits
+    (run_pipeline) and every call in its stage is handed what is left of it."""
+    at = getattr(ctx, "stage_at", None)
+    if at is None:
+        return None
     return at - time.time()
+
+
+def _time_left(ctx: RunContext) -> float | None:
+    """What a call about to start may take: the smaller of the turn's time left and
+    its stage's, or None for neither (WHAT'S LEFT C13 (a))."""
+    left = [x for x in (_budget(ctx), _stage_left(ctx)) if x is not None]
+    return min(left) if left else None
 
 
 def _within_deadline(seat: Agent, ctx: RunContext) -> Agent:
@@ -328,14 +372,22 @@ def _within_deadline(seat: Agent, ctx: RunContext) -> Agent:
     of turns, so the cut is made here, on a copy. A seat with no time left
     is never handed to the runtime -- the loop above skips it by name.
     """
-    left = _budget(ctx)
-    if left is None:
+    left = _budget(ctx, seat)          # less the Judge's kept time, before it sits (C13 (b))
+    stage = _stage_left(ctx)
+    if left is None and stage is None:
         return seat
     own = float(getattr(seat, "timeout", None) or _runtime.SEAT_TIMEOUT)
-    left = max(1.0, left)
+    # THE STAGE'S OWN CLOCK FIRST (WHAT'S LEFT C13 (a)): a later call in a stage --
+    # a tool-loop hop, a press of the ruling loop, a repair -- is handed what the
+    # seat's `Timeout:` has left, and a refusal at it names the seat's own dial.
+    bound, turn = own, False
+    if stage is not None and max(1.0, stage) < bound:
+        bound = max(1.0, stage)
     # `cut_to_turn` says whose number the bound now is, so a refusal at it
     # names the turn's dial and not the seat's (runtime._seat_refusal).
-    return replace(seat, timeout=left, cut_to_turn=True) if left < own else seat
+    if left is not None and max(1.0, left) < bound:
+        bound, turn = max(1.0, left), True
+    return replace(seat, timeout=bound, cut_to_turn=turn) if bound < own else seat
 
 # The first line of a windowed read (skills.windowed): the shapes that mean
 # "you were handed PART of this file". Read by the tool loop so the record
@@ -1550,6 +1602,16 @@ def _press_for_ruling(seat: Agent, prompt: str, output: str, thoughts: list,
     built, and the note says the turns were spent."""
     turn = 1
     while output.startswith(SALVAGE_MARK) and turn < MAX_RULING_TURNS:
+        # THE STAGE IS SPENT (WHAT'S LEFT C13 (a)): no press starts once the seat's
+        # `Timeout:` is gone or too little of it is left to rule in -- sitting 366's
+        # Jesster and Manjuel ran past their bounds this way, a whole Timeout a press.
+        spent = _stage_left(ctx)
+        if spent is not None and spent < STAGE_FLOOR:
+            note = (f"{seat.name}'s stage spent its `Timeout:` after {turn} of "
+                    f"{MAX_RULING_TURNS} turns; no further press")
+            ctx.notes.append(note)
+            report("      " + ink.warn(note))
+            break
         turn += 1
         note = (f"{seat.name} deliberated without ruling ({time.time() - started:.0f}s); "
                 f"turn {turn} of {MAX_RULING_TURNS} -- asked to rule on its own "
@@ -2102,7 +2164,7 @@ def _maker_prove(ctx: RunContext, env, page: str, report) -> tuple[str, str]:
     for attempt in range(1, maker.REPAIRS + 1):
         # A repair is a model call, so a turn with no room for one does not
         # start it -- it says the page errors and saves it.
-        left = _budget(ctx)
+        left = _time_left(ctx)          # the turn's or the stage's, the smaller (C13 (a))
         if seat is None or (left is not None and left <= 15):
             ctx.notes.append("maker: no repair attempted -- "
                              + ("no time left in this turn" if seat is not None
@@ -2170,7 +2232,7 @@ def _maker_again(ctx: RunContext, env, make: dict, page: str, report) -> tuple[s
     seat = env.registry.get(MAKER_SEAT) if env.registry.has(MAKER_SEAT) else None
     tries = 1
     for attempt in range(1, maker.AGAINS + 1):
-        left = _budget(ctx)
+        left = _time_left(ctx)          # the turn's or the stage's, the smaller (C13 (a))
         if seat is None or (left is not None and left <= 15):
             ctx.notes.append("maker: no second try -- "
                              + ("no time left in this turn" if seat is not None
@@ -2300,6 +2362,9 @@ def _ask(prompt: str, color: str = "amber", ctx: RunContext | None = None) -> st
             ctx.deadline_at += waited
             ctx.notes.append(f"deadline: {waited:.1f}s at the card do not count -- the "
                              f"turn's clock stood still while it waited")
+        # ...and the stage's (WHAT'S LEFT C13 (a)): a card asked mid-stage is his time.
+        if ctx is not None and getattr(ctx, "stage_at", None) is not None:
+            ctx.stage_at += waited
 
 
 def _ask_which_tool(ctx: RunContext, choices: list, skills: SkillLibrary,
@@ -2386,6 +2451,7 @@ def run_pipeline(
     # (registry.Steps). Read here, first: every rebinding of `steps` below --
     # the maker's, the skipped front door's -- makes a plain list of them.
     declared = getattr(steps, "deadline", None)
+    kept = getattr(steps, "kept", None)         # the time kept for the Judge (C13 (b))
 
     # A request that literally names a tool reaches the Router without needing
     # the Steward to raise the flag. The Router still chooses; this only opens
@@ -2408,6 +2474,12 @@ def run_pipeline(
                          f"turn takes the dial's {TURN_DEADLINE:.0f}s")
     if getattr(ctx, "deadline_at", None) is None and _turn_limit(ctx) > 0:
         ctx.deadline_at = time.time() + _turn_limit(ctx)
+    # THE TIME KEPT FOR THE JUDGE (WHAT'S LEFT C13 (b)): its pipeline declares it, and
+    # every seat before the Judge is seated and bound within the turn less it.
+    if kept and getattr(ctx, "kept_s", None) is None:
+        ctx.kept_s = float(kept)
+        ctx.notes.append(f"deadline: {kept:.0f}s of this turn are kept for the Judge -- its "
+                         f"pipeline declares it (pipelines.md); no seat before it may spend them")
 
     # THE LAW GATE (the operator's ruling, 2026-09-04): every run passes
     # through the law before any seat sits. The chain is walked, the
@@ -3022,20 +3094,33 @@ def run_pipeline(
         # seated, named in the record, and (via the recompose) in the
         # delivery. The loop keeps draining the queue so every unseated
         # seat is named, not just the first.
-        left = _budget(ctx)
+        left = _budget(ctx, agent)          # less the Judge's kept time, before it sits (C13 (b))
         if left is not None and left <= 0:
             ctx.out_of_time.append(agent.name)
             ctx.steps.append(
                 StepResult(agent=agent.name, model=agent.model, output="", skipped=True)
             )
-            over = _turn_limit(ctx) - left      # the clock's seconds, a card's wait not among them (C47)
-            note = (f"{agent.name} not seated: the turn's deadline passed "
-                    f"({over:.0f}s of {_turn_limit(ctx):.0f}s)")
+            held = _kept_back(ctx, agent)
+            over = _turn_limit(ctx) - left - held   # the clock's seconds, a card's wait not among them (C47)
+            if held and left + held > 0:
+                # WHAT IS LEFT IS THE JUDGE'S (WHAT'S LEFT C13 (b)), said as such.
+                note = (f"{agent.name} not seated: what is left of the turn ({left + held:.0f}s) "
+                        f"is the Judge's -- its pipeline keeps {held:.0f}s for the ruling "
+                        f"(pipelines.md)")
+            else:
+                note = (f"{agent.name} not seated: the turn's deadline passed "
+                        f"({over:.0f}s of {_turn_limit(ctx):.0f}s)")
             if note not in ctx.notes:
                 ctx.notes.append(note)
             report("  " + ink.warn(f"[{i}/{total}] {note}"))
             continue
 
+        held = _kept_back(ctx, agent)
+        if held and left is not None and left < float(getattr(agent, "timeout", None) or _runtime.SEAT_TIMEOUT):
+            note = (f"{agent.name} seated with {left:.0f}s: its pipeline keeps {held:.0f}s of the "
+                    f"turn for the Judge (pipelines.md), and the seats before it may not spend them")
+            ctx.notes.append(note)
+            report("  " + ink.dim(note))
         report(f"  [{i}/{total}] {ink.seat(agent.name)}  {ink.dim(agent.model)}")
         # WHO WAITS BEHIND THE ROUTER, told to it before it sits (2026-10-12):
         # the woken seats queued after it that are handed its package.
@@ -3054,6 +3139,9 @@ def run_pipeline(
                           if f in FLAGS_RAISED and (a.key, f) not in seats.summoned]
         prompt = build_prompt(agent, ctx, skills)
         started = time.time()
+        # THE STAGE CLOCK STARTS (WHAT'S LEFT C13 (a)): this seat's `Timeout:` is its
+        # whole stage's -- its first call, every hop, press and repair in it together.
+        ctx.stage_at = started + float(getattr(agent, "timeout", None) or _runtime.SEAT_TIMEOUT)
 
         try:
             # The spinner runs until the FIRST token, then erases itself and
@@ -3513,6 +3601,18 @@ def run_pipeline(
                             "If the objective still needs another skill, emit the XML "
                             "block for it. Otherwise write the prose answer, with no XML."
                         )
+                    # THE STAGE IS SPENT (WHAT'S LEFT C13 (a)): no further hop starts once the
+                    # seat's `Timeout:` is gone or too little of it is left to answer in --
+                    # sitting 379's Router took five passes, 480 s, on a 300 s Timeout. The
+                    # results in hand stand.
+                    spent = _stage_left(ctx)
+                    if spent is not None and spent < STAGE_FLOOR:
+                        note = (f"{agent.name}'s stage spent its `Timeout:` after {hop + 1} "
+                                f"call(s); no further hop -- the results in hand stand")
+                        ctx.notes.append(note)
+                        report("      " + ink.warn(note))
+                        output = ""
+                        break
                     # The follow-up hops think too, and a tool loop's
                     # deliberation is where a wrong route is decided.
                     output = runtime.chat(_within_deadline(seat, ctx), follow,
@@ -4078,6 +4178,7 @@ def _sub_runner(parent: RunContext, registry, runtime, skills, env, report):
                            depth=getattr(parent, "depth", 0) + 1)
         child.deadline_at = getattr(parent, "deadline_at", None)
         child.deadline_s = getattr(parent, "deadline_s", None)
+        child.kept_s = getattr(parent, "kept_s", None)      # ...and the Judge's time (C13 (b))
         child.flags.add("needs_tool")
         report("      " + ink.dim(f"→ sub-task: {objective[:60]}"))
 
@@ -4409,6 +4510,9 @@ def recompose(ctx: RunContext, report=print) -> bool:
                 if getattr(ctx, "deadline_s", None) else "MANJUEL_TURN_DEADLINE")
         lines.append(f"What is above is the seats that sat. Ask again for the "
                      f"rest, or raise {dial}.")
+        if getattr(ctx, "kept_s", None):
+            lines.append(f"{ctx.kept_s:.0f}s of the turn are kept for the Judge's ruling "
+                         f"(pipelines.md); no seat before it may spend them.")
         blocks.append("\n".join(lines))
     block = "\n\n".join(blocks)
 

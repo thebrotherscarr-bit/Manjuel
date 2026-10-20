@@ -3665,6 +3665,28 @@ def test_the_turn_deadline(reg, lib, book):
     check("a copy of the steps is a plain list: the deadline is read before anything slices them",
           not hasattr(list(bk.get("a")), "deadline") and not hasattr(bk.get("d")[1:], "deadline"))
 
+    # TIME KEPT FOR THE JUDGE (WHAT'S LEFT C13 (b), his cards of 2026-10-19: "360 s",
+    # "pipelines.md"): declared beside the deadline and read the same way; a pipeline that
+    # seats no Judge keeps none, said by name; a number that is not one is ignored.
+    kd = Path(tempfile.mkdtemp())
+    (kd / "p.md").write_text(
+        "## Pipeline: k\n\n**Deadline:** 900\n**Kept for the Judge:** 360\n\n1. Jesster\n2. Judge\n\n"
+        "## Pipeline: n\n\n**Kept for the Judge:** 360\n\n1. Steward\n\n"
+        "## Pipeline: w\n\n**Kept for the Judge:** later\n\n1. Judge\n",
+        encoding="utf-8")
+    kb = PipelineBook.load(kd / "p.md", reg)
+    kept_of = lambda steps: getattr(steps, "kept", None)      # noqa: E731
+    check("a pipeline keeps time for the Judge with `**Kept for the Judge:**`, beside its deadline (C13)",
+          kept_of(kb.get("k")) == 360.0 and declared_of(kb.get("k")) == 900.0
+          and [str(s) for s in kb.get("k")] == ["Jesster", "Judge"],
+          f"{kept_of(kb.get('k'))} {declared_of(kb.get('k'))}")
+    check("... a pipeline that seats no Judge keeps none, and says so by name (C13)",
+          kept_of(kb.get("n")) is None
+          and any("pipeline 'n'" in w and "Judge" in w for w in kb.warnings), str(kb.warnings))
+    check("... and a number that is not one is ignored with a warning (C13)",
+          kept_of(kb.get("w")) is None and any("pipeline 'w'" in w for w in kb.warnings),
+          str(kb.warnings))
+
     # THE DEADLINE MID-TURN: the seats before it sit, the seats after are
     # named, and the delivery is the last seat that sat plus the block.
     class Slow(Stub):
@@ -3760,6 +3782,141 @@ def test_the_turn_deadline(reg, lib, book):
           f"{waits.deadline_at - was:.2f} {waits.notes}")
     check("... and a real turn's wake card stops its clock the same way (the wire)",
           any("at the card do not count" in n for n in woke.notes), str(woke.notes)[-400:])
+
+    # THE STAGE CLOCK (WHAT'S LEFT C13 (a), his card "Whole stage, every pipeline"): a seat's
+    # `Timeout:` bounds its whole stage. A call late in it is handed what the stage has left and
+    # its refusal names the seat's own dial; the turn's time, when smaller, is still the turn's;
+    # a card's wait stops the stage clock too; and a real turn starts it as each seat sits.
+    from manjuel.pipeline import _stage_left
+    st = RunContext(objective="x")
+    check("a run context carries the stage clock, unset before a seat sits (C13)",
+          getattr(st, "stage_at", "absent") is None and _stage_left(st) is None,
+          repr(getattr(st, "stage_at", "absent")))
+    st.stage_at, st.deadline_at = _t.time() + 40, _t.time() + 500
+    staged = _within_deadline(seat, st)
+    check("a call late in its stage is bound at what the stage has left, the seat's own dial (C13)",
+          35 <= (staged.timeout or 0) <= 40 and staged.cut_to_turn is False,
+          repr((staged.timeout, staged.cut_to_turn)))
+    st.deadline_at = _t.time() + 20
+    turned = _within_deadline(seat, st)
+    check("... and the turn's time, when it is the smaller, is still the turn's (C13)",
+          (turned.timeout or 0) <= 20 and turned.cut_to_turn is True,
+          repr((turned.timeout, turned.cut_to_turn)))
+    st.stage_at, st.deadline_at = _t.time() + 100, _t.time() + 100
+    stage_was = st.stage_at
+    _b.ask_card = lambda prompt, color="amber": (_t.sleep(0.3), "n")[1]
+    try:
+        _ask("  wake it? [y/N]: ", "green", st)
+    finally:
+        if had:
+            _b.ask_card = saved
+        else:
+            del _b.ask_card
+    check("a card's wait stops the stage clock too (C13)",
+          st.stage_at - stage_was >= 0.3, f"{st.stage_at - stage_was:.2f}")
+    sc = RunContext(objective="a plain question with no tools needed")
+    run_pipeline(sc, reg, rc, lib, ec, steps=book.get("default"), report=lambda s: None)
+    check("a real turn starts each seat's stage clock as it sits (C13)",
+          getattr(sc, "stage_at", None) is not None and 0 < sc.stage_at - _t.time() <= 600,
+          repr(getattr(sc, "stage_at", None)))
+    from manjuel.pipeline import _time_left
+    from manjuel.runtime import SALVAGE_MARK
+    tl = RunContext(objective="x")
+    tl_none = _time_left(tl)
+    tl.deadline_at, tl.stage_at = _t.time() + 50, _t.time() + 20
+    check("what a call may take is the smaller of the turn's and the stage's, or none (C13)",
+          tl_none is None and 15 <= (_time_left(tl) or 0) <= 20, f"{tl_none} {_time_left(tl)}")
+    gh = Path(tempfile.mkdtemp())
+    hops = {"n": 0}
+    spent_ctx = RunContext(objective="loop forever", feed="")
+    spent_ctx.flags.add("needs_tool")
+
+    def _spends(a):
+        if a.key != "router":
+            return "x"
+        hops["n"] += 1
+        if hops["n"] >= 2:
+            spent_ctx.stage_at = _t.time() - 1          # its stage's Timeout runs out here
+        return f"<action>ground_list</action><content>corner{hops['n']}</content>"
+    rh = Stub(reply=_spends)
+    run_pipeline(spent_ctx, reg, rh, lib, env_for(gh, reg, rh),
+                 steps=["Security Guardian", "Router"], report=lambda s: None)
+    calls_h = [c for s in spent_ctx.steps for c in s.tool_calls]
+    check("a Router whose stage is spent makes no further hop, and the record says so (C13)",
+          len(calls_h) == 2 and any("stage spent its `Timeout:` after 2 call(s)" in n
+                                    for n in spent_ctx.notes), f"{len(calls_h)} {spent_ctx.notes[-3:]}")
+
+    class Ponders(Stub):
+        def __init__(self):
+            super().__init__(reply="[seat] counsel")
+            self.judge_calls = 0
+
+        def chat(self, agent, prompt, stream_to=None, tools=None, think_to=None, think=None):
+            if agent.key == "judge":
+                self.judge_calls += 1
+                if self.judge_calls >= 2:
+                    pondered.stage_at = _t.time() - 1   # its stage's Timeout runs out here
+                return f"{SALVAGE_MARK} still thinking {self.judge_calls}"
+            return super().chat(agent, prompt, stream_to, tools, think_to, think)
+    rp = Ponders()
+    pondered = RunContext(objective="should the court sit on one model?", review_only=True)
+    ep = env_for(g / "agent_workspace", reg, rp)
+    ep.ground = g
+    run_pipeline(pondered, reg, rp, lib, ep, steps=book.get("court"), report=lambda s: None)
+    check("a seat whose stage is spent is pressed no further, and the record says so (C13)",
+          rp.judge_calls == 2 and any("stage spent its `Timeout:` after 2 of" in n for n in pondered.notes),
+          f"{rp.judge_calls} {[n for n in pondered.notes if 'stage' in n or 'turn' in n][-3:]}")
+
+    # THE TIME KEPT FOR THE JUDGE, AT WORK (WHAT'S LEFT C13 (b), his cards: "360 s",
+    # "pipelines.md"): the court keeps 360 s of its 900 for the ruling. A counsel seat is
+    # bound within the turn less it; the Judge and the guard are not; a sub-task keeps it.
+    court_k = book.get("court")
+    check("the court keeps 360 s of its turn for the Judge, declared in pipelines.md (C13)",
+          getattr(court_k, "kept", None) == 360.0, repr(getattr(court_k, "kept", None)))
+    kc = RunContext(objective="x")
+    kc.deadline_at, kc.kept_s = _t.time() + 400, 360.0
+    jb = _within_deadline(reg.get("Jesster"), kc)
+    check("a counsel seat with 400 s of the turn left is bound at what is not the Judge's (C13)",
+          (jb.timeout or 0) <= 40 and jb.cut_to_turn is True, repr(jb.timeout))
+    jg = _within_deadline(reg.get("Judge"), kc)
+    gd = _within_deadline(reg.get("Security Guardian"), kc)
+    check("... and the Judge and the guard are bound by the turn alone (C13)",
+          (jg.timeout or 0) >= 395 and gd is reg.get("Security Guardian"),
+          repr((jg.timeout, gd.timeout)))
+    kp = RunContext(objective="p")
+    kp.deadline_at, kp.kept_s = _t.time() + 400, 360.0
+    seen_k = {}
+    ek2 = env_for(g / "agent_workspace", reg, Stub(reply="x"))
+    ek2.ground = g
+
+    class Peek(Stub):
+        def chat(self, agent, prompt, stream_to=None, tools=None, think_to=None, think=None):
+            seen_k[agent.name] = agent.timeout
+            return super().chat(agent, prompt, stream_to, tools, think_to, think)
+    _sub_runner(kp, reg, Peek(reply="x"), lib, ek2, lambda m: None)("list the ground")
+    check("a sub-task keeps the Judge's time too: its seats are bound within the turn less it (C13)",
+          seen_k and all((v or 0) <= 45 for v in seen_k.values()), repr(seen_k))
+    rk = Stub(reply="[seat] counsel")
+    kt = RunContext(objective="should the court sit on one model?", review_only=True)
+    kt.deadline_at = _t.time() + 100
+    ek = env_for(g / "agent_workspace", reg, rk)
+    ek.ground = g
+    run_pipeline(kt, reg, rk, lib, ek, steps=book.get("court"), report=lambda s: None)
+    sat_k = [n for n, _ in rk.seen]
+    check("a court with less left than the Judge's time seats the guard and the Judge, names the rest (C13)",
+          sat_k == ["Security Guardian", "Judge"] and "Jesster" in kt.out_of_time
+          and any("is the Judge's" in n for n in kt.notes), f"sat={sat_k} late={kt.out_of_time}")
+    check("... and the delivery says the time was kept for the ruling (C13)",
+          "kept for the Judge's ruling" in kt.last_output(), kt.last_output()[-300:])
+    rs = Stub(reply="[seat] counsel")
+    ks = RunContext(objective="should the court sit on one model?", review_only=True)
+    ks.deadline_at = _t.time() + 450
+    es = env_for(g / "agent_workspace", reg, rs)
+    es.ground = g
+    run_pipeline(ks, reg, rs, lib, es, steps=book.get("court"), report=lambda s: None)
+    check("a counsel seat seated short of its own bound by the Judge's time is told why (C13)",
+          any("seated with" in n and "keeps 360s" in n for n in ks.notes),
+          str([n for n in ks.notes if "Judge" in n]))
 
 
 def test_the_loops_of_2026_09_08(reg, lib, book):
