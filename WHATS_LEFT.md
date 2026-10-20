@@ -38,7 +38,13 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (16:24):** step (2), the release faults, built, read twice by reviewers and recorded: C121, C123 and C124
+  **Where it stands (17:22):** step (3)'s first two pieces, C47 and C55, built by Steward on your cards with their strokes
+  and recorded; next, Steward's ship of both, the restart, then C46.
+  **At 17:12 it stood:** step (3)'s first piece, C47 (the turn's clock stops while a card waits), built by Steward on your
+  cards with its stroke and recorded; next, Steward's ship of it, the restart, then C55.
+  **At 17:03 it stood:** step (2) sent and merged in both repositories (pull requests 41 and atlas's 22), the ground home
+  on main; step (3), I2's own faults, planned on your cards under I2, its first piece C47 next.
+  **At 16:24 it stood:** step (2), the release faults, built, read twice by reviewers and recorded: C121, C123 and C124
   under Done, C122's second half ruled to v0.2.7, C125 read, atlas's one annotation written; next, Steward's ship of both
   repositories (pull request 41 brought up to date, and atlas's own), then step (3), I2's own faults.
   **At 15:50 it stood:** step (2), the release faults, built and read by reviewers; under C on the page now: C121, C123
@@ -194,9 +200,6 @@ half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
 
 ### The engine
 
-- **C47. The turn's 600-second clock counts the time a card waits for you.** An ask whose card you answered after ten minutes
-  ran out of time (sitting 375); after a big seat, the closing Steward was left 48 seconds (376). The answers' piece (3), the
-  clock. *(CHANGELOG, "core: routing, its second part, the Router's package")*
 - **C48. The conversation is cut to its newest 2,400 characters, and the Router never sees it.** What you said a few turns back
   is gone when it matters (your word of 2026-10-12: "losing context"). The answers' piece (4), the room. *(I2, the causes
   measured 2026-10-12)*
@@ -215,8 +218,6 @@ half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
 - **C54. Two questions no tool answers brought the Router, and the answer missed both.** The Router paged through SEAT_LOG.md
   (sitting 376); the level-2 line, over 200 characters, is to be checked. *(CHANGELOG, "core: routing, its third part, the
   levels")*
-- **C55. The engine's note on what it added to an answer was empty.** When only a named tool had not run, the record said the
-  recompose appended and named nothing (sitting 377). *(HANDOFF, 2026-10-12, sitting 377)*
 - **C56. The REPL reloaded with nothing changed.** At `/use default` in sitting 373 it said "ground changed on disk — seats,
   skills and pipelines reloaded", with nothing written under agents/ or skills/, nor to pipelines.md or commands.md, since 09:32.
   The watcher takes a file named agents.md, commands.md or pipelines.md anywhere in the ground for a declaration
@@ -1097,6 +1098,17 @@ goals". The steps under each are proposed from the disk; each is yours to change
   only. Corrected here, not above: pull requests 35 to 40 passed, and which runner image each used was not read. The strokes
   were written with the code, not shown red against the old code first as planned. Sent as pull request 41 on your cards;
   its first run went red on two strokes (C86 again and C127, under C), put right in the next save. Left for v0.2.7: C129.
+  **Sent and merged 2026-10-19** by Steward's ship on your cards: the core's pull request 41 and atlas's 22, both green on
+  GitHub, the ground brought home to main by the door's three calls in each repository (C83).
+  **Step (3), planned 2026-10-19** (your cards: "No-ruling first", "Whole stage, every pipeline"), its faults re-checked
+  against the code the same evening by eight read-only readers (all still hold, some in part; none large), each piece its
+  own job on your cards with its stroke red first: (i) the five that need no ruling -- C47 (the turn's clock stops while a
+  card waits), C55 (the note on what the engine added), C46 (the closing count), C43 (the Deep Researcher kept to the
+  question), C57 (`/morning`, `/sitting` and `/covenant` run, not only print); (ii) C13, the court's time: (a) a seat's
+  `Timeout:` bounds its whole stage, every hop and every retry, in every pipeline; (b) time kept back for the Judge, on your
+  ruling; (iii) the answers (C38, C48, C69); (iv) the seats and routing (C39 to C42, C45, C49 to C54, C56); (v) grounding
+  (C44, C58), the mic (C59) and the slow routes (C60); (vi) atlas's door tools (C61 to C67) in one atlas pass, one rebuild,
+  the binary placed on your card. Each group's rulings are asked when it comes up; every change to manjuel/ needs a restart.
 - **I3. v0.2.7: both repositories keep what earlier versions promised.** Every OPEN line in SPEC section 4 met or ruled; every open line on this
   page (B, E, H) built, ruled, or moved to a later version on your word; the found items in HANDOFF from 2026-10-05 on put on this page or ruled;
   the wife test (E1) with her at the glass and nobody helping.
@@ -1138,6 +1150,17 @@ goals". The steps under each are proposed from the disk; each is yours to change
 ## Done
 
 Finished lines, newest first. A number is never used again.
+
+- **C55. The engine's note on what it added to an answer was empty.** DONE 2026-10-19, by Steward on your cards (the road to
+  v0.2.6, its step (3), its second piece): the note names every block the recompose adds -- a named tool that did not run, no
+  tool run, a number no tool returned -- as it named the other five. The line as it stood: when only a named tool had not
+  run, the record said the recompose appended and named nothing (sitting 377). *(CHANGELOG, "core: the engine's note on what it added")*
+
+- **C47. The turn's 600-second clock counts the time a card waits for you.** DONE 2026-10-19, by Steward on your cards (the
+  road to v0.2.6, its step (3), its first piece): a card's open seconds are added to the turn's deadline and said, at the tool
+  card, the wake card and a failed seat's retry, skip or abort; a sub-task's stopped clock carries back to its parent. The line
+  as it stood: an ask whose card you answered after ten minutes ran out of time (sitting 375); after a big seat, the closing
+  Steward was left 48 seconds (376); its second case no longer comes up since the answers' piece (1). *(CHANGELOG, "core: the turn's clock stops while a card waits")*
 
 - **C121. The release check refuses its own cut when a SPEC section-4 status moved.** DONE 2026-10-19, by Steward on your
   cards (the road to v0.2.6, its step (2)): `spec` (`tests/release.py`) hands `logged_since` the marks held less the one being

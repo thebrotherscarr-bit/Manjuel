@@ -2010,6 +2010,8 @@ def test_a_named_tool_that_did_not_run(reg, lib, book):
     check("and the stamp names BOTH what was asked and what ran instead",
           "git_push" in out and "git_status" in out
           and "THE NAMED TOOL DID NOT RUN" in out, out[-200:])
+    check("... and the record's note names it, never an empty list (C55)",
+          any(n.startswith("recompose:") and "git_push" in n for n in ctx.notes), str(ctx.notes))
 
     ran = turn("git_push", ["git_status", "git_push"])
     check("a named tool that DID run is not stamped",
@@ -2061,6 +2063,8 @@ def test_a_number_no_tool_returned(reg, lib, book):
     check("and the stamp names the invented numbers, not the true one",
           "300" in out and "1200" in out and "A NUMBER NO TOOL RETURNED" in out,
           out[-160:])
+    check("... and the record's note counts them (C55)",
+          any(n.startswith("recompose:") and "number" in n for n in ctx.notes), str(ctx.notes))
 
     clean = turn("The skills dir holds 37 markdown files.", [tool])
     check("a number the tool DID return is not stamped",
@@ -3723,6 +3727,39 @@ def test_the_turn_deadline(reg, lib, book):
     got9 = _sub_runner(parent9, reg, Stub(reply="x"), lib, e9, lambda m: None)("list the ground")
     check("... and a sub-task of the court names the court's 900, not the dial",
           "the turn's 900s deadline" in got9, got9[:300])
+
+    # THE CLOCK STOPS WHILE A CARD WAITS (WHAT'S LEFT C47; his card of 2026-10-12): the
+    # seconds a card stands open for him are added to the turn's deadline, and said --
+    # asked of _ask itself, and of a real turn whose wake card is answered.
+    import builtins as _b
+    from manjuel.pipeline import _ask
+    waits = RunContext(objective="x")
+    waits.deadline_at = _t.time() + 100
+    was = waits.deadline_at
+    had = hasattr(_b, "ask_card")
+    saved = getattr(_b, "ask_card", None)
+    _b.ask_card = lambda prompt, color="amber": (_t.sleep(0.3), "n")[1]
+    try:
+        try:
+            said = _ask("  wake it? [y/N]: ", "green", waits)
+        except TypeError:
+            said = ""
+        woke = RunContext(objective="proofread this sentence: their going too the store")
+        r5 = Stub(reply="x")
+        g5 = Path(tempfile.mkdtemp())
+        run_pipeline(woke, reg, r5, lib, env_for(g5, reg, r5, skills=lib),
+                     steps=book.get("default"), report=lambda m: None)
+    finally:
+        if had:
+            _b.ask_card = saved
+        else:
+            del _b.ask_card
+    check("a card's wait is added to the turn's deadline, and the record says so (C47)",
+          said == "n" and waits.deadline_at - was >= 0.3
+          and any("at the card do not count" in n for n in waits.notes),
+          f"{waits.deadline_at - was:.2f} {waits.notes}")
+    check("... and a real turn's wake card stops its clock the same way (the wire)",
+          any("at the card do not count" in n for n in woke.notes), str(woke.notes)[-400:])
 
 
 def test_the_loops_of_2026_09_08(reg, lib, book):
@@ -16069,6 +16106,8 @@ def test_a_turn_that_wanted_hands_and_used_none_says_so(reg, lib, book):
     check("and the delivery says no tool ran", "NO TOOL RAN" in said, said[:120])
     check("naming where the words came from instead",
           "came from a seat, not from the estate" in said, said[-160:])
+    check("... and the record's note says no tool ran (C55)",
+          any(n.startswith("recompose:") and "no tool ran" in n for n in c.notes), str(c.notes))
 
     # AND THE WAYS IT MUST NOT
     c = turn("action-shaped", ["run_python"])

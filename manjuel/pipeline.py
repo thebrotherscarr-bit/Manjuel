@@ -2279,13 +2279,27 @@ def _maker_deliver(ctx: RunContext) -> None:
 CARD_COLORS = ("amber", "green", "red")
 
 
-def _ask(prompt: str, color: str = "amber") -> str:
-    """One question, its card colored by what it is for."""
-    card = getattr(builtins, "ask_card", None)
-    if card is not None:
-        return card(prompt, color)
-    tint = {"green": ink.good, "red": ink.bad}.get(color, ink.warn)
-    return input(tint(prompt))
+def _ask(prompt: str, color: str = "amber", ctx: RunContext | None = None) -> str:
+    """One question, its card colored by what it is for.
+
+    THE CLOCK STOPS WHILE A CARD WAITS (WHAT'S LEFT C47; his card of 2026-10-12,
+    HANDOFF: "the clock stopped while a card waits"). Sitting 375's ask was
+    answered on its card after ten minutes, and every seat after it was out of
+    time. Handed the turn's context, the seconds the card stood open for him are
+    added to its deadline, and the record says how many."""
+    asked = time.time()
+    try:
+        card = getattr(builtins, "ask_card", None)
+        if card is not None:
+            return card(prompt, color)
+        tint = {"green": ink.good, "red": ink.bad}.get(color, ink.warn)
+        return input(tint(prompt))
+    finally:
+        waited = time.time() - asked
+        if ctx is not None and getattr(ctx, "deadline_at", None) is not None:
+            ctx.deadline_at += waited
+            ctx.notes.append(f"deadline: {waited:.1f}s at the card do not count -- the "
+                             f"turn's clock stood still while it waited")
 
 
 def _ask_which_tool(ctx: RunContext, choices: list, skills: SkillLibrary,
@@ -2313,7 +2327,7 @@ def _ask_which_tool(ctx: RunContext, choices: list, skills: SkillLibrary,
     plain_no = len(choices) + 1
     lines.append(f"    {plain_no}  just answer, no tool")
     try:
-        said = _ask("\n".join(lines) + "\n  [1]: ", "amber").strip().lower()
+        said = _ask("\n".join(lines) + "\n  [1]: ", "amber", ctx).strip().lower()
     except (EOFError, KeyboardInterrupt):
         ctx.notes.append(f"intent: not sure between {names} -- no answer at the card, "
                          f"so the best match, `{best}`")
@@ -2344,7 +2358,7 @@ def _ask_to_wake(ctx: RunContext, flag: str, seats: list, report=print) -> bool:
         return False
     try:
         said = _ask(f"  Your words ask for the {who} ({flag}). Wake it for this? "
-                    f"[y/N]: ", "green").strip().lower()
+                    f"[y/N]: ", "green", ctx).strip().lower()
     except (EOFError, KeyboardInterrupt):
         ctx.notes.append(f"rack: his words ask for the {who} ({flag}) -- no answer at "
                          f"the card, so it was not woken")
@@ -3014,7 +3028,7 @@ def run_pipeline(
             ctx.steps.append(
                 StepResult(agent=agent.name, model=agent.model, output="", skipped=True)
             )
-            over = time.time() - ctx.started_at
+            over = _turn_limit(ctx) - left      # the clock's seconds, a card's wait not among them (C47)
             note = (f"{agent.name} not seated: the turn's deadline passed "
                     f"({over:.0f}s of {_turn_limit(ctx):.0f}s)")
             if note not in ctx.notes:
@@ -4086,6 +4100,9 @@ def _sub_runner(parent: RunContext, registry, runtime, skills, env, report):
 
         # Whatever failed down there failed in this run.
         parent.failures.extend(child.failures)
+        # ...and a card the sub-task waited on stopped the parent's clock too (C47).
+        if child.deadline_at is not None and parent.deadline_at is not None:
+            parent.deadline_at = max(parent.deadline_at, child.deadline_at)
         parent.out_of_time.extend(f"{n} (sub-task)" for n in child.out_of_time)
         parent.sub_runs.append((objective, child))
         ran = [k for s in child.steps for k in (s.tool_calls or ())]
@@ -4407,6 +4424,14 @@ def recompose(ctx: RunContext, report=print) -> bool:
         what.append(f"{len(cut)} seat(s) failed")
     if abridged:
         what.append(f"{len(abridged)} shortened listing(s)")
+    # ...and the three blocks this note left out (WHAT'S LEFT C55): the record said
+    # "recompose:  appended" with nothing named on a turn whose one block was one of them.
+    if missed:
+        what.append(f"the named tool `{missed}`, which did not run")
+    if nothing_ran:
+        what.append("the note that no tool ran")
+    if made_up:
+        what.append(f"{len(made_up)} number(s) no tool returned")
     note = (f"recompose: {' and '.join(what)} appended to the delivery; "
             f"the closing seat's words were not the whole record")
     if note not in ctx.notes:
@@ -4442,7 +4467,7 @@ def _handle_failure(agent: Agent, exc: Exception, report, ctx=None) -> None:
         return
 
     try:
-        choice = input("      retry / skip / abort? [s] ").strip().lower()
+        choice = _ask("      retry / skip / abort? [s] ", "amber", ctx).strip().lower()
     except (EOFError, KeyboardInterrupt):
         raise Aborted("cancelled at failure prompt")
 
