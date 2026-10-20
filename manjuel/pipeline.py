@@ -872,11 +872,19 @@ def read_verdict(text: str) -> tuple[bool, str]:
 # THE ROUTER'S PACKAGE (2026-10-12, his cards: "Router packs, big seats think",
 # "Engine packs, Router names task"). The estate budgets a prompt in characters
 # (no tokenizer rides the engine), and three characters to a token keeps a
-# package inside the window it is cut for. A seat that declares no Context or
-# no Max Tokens is packed for these.
+# package inside the window it is cut for. A seat that declares no Context is
+# packed for PACKAGE_DEFAULT_CONTEXT, and its answer's room is answer_room's.
 PACKAGE_CHARS_PER_TOKEN = 3
 PACKAGE_DEFAULT_CONTEXT = 4096
-PACKAGE_DEFAULT_ANSWER = 1024
+
+
+def answer_room(agent: Agent) -> int:
+    """The tokens a seat keeps free in its window to think and answer in: its
+    `Max Tokens:`, or half its window when it declares none (WHAT'S LEFT C38, his
+    card of 2026-10-20: "Pack uncapped seats for half"). Until then a seat with
+    no cap was packed leaving 1,024 tokens, less than the Reasoner's 1,400 that
+    cut it six times, so lifting its cap would have left it less room, not more."""
+    return int(agent.max_tokens or (agent.context or PACKAGE_DEFAULT_CONTEXT) // 2)
 
 
 def _package(agent: Agent, ctx: RunContext) -> str:
@@ -910,7 +918,7 @@ def _package(agent: Agent, ctx: RunContext) -> str:
         for i, name in enumerate(s.tool_calls or []):
             facts.append((name, str(results[i] if i < len(results) else "").strip()))
     window = agent.context or PACKAGE_DEFAULT_CONTEXT
-    answer = agent.max_tokens or PACKAGE_DEFAULT_ANSWER
+    answer = answer_room(agent)
     head = ctx.source_block()
     task = (getattr(ctx, "router_task", "") or "").strip()
     if not task:

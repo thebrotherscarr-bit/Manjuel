@@ -10360,7 +10360,8 @@ def test_a_seat_after_the_router_is_handed_the_package(reg, lib, book):
     under its tool's name and as returned, cut by arithmetic to fit the seat's
     window with the cut marked, the task and its limits; the door's own words,
     which are testimony, stay out. A turn with no Router is as it was."""
-    from manjuel.pipeline import build_prompt
+    from dataclasses import replace as _replace
+    from manjuel.pipeline import answer_room, build_prompt
     big = "the line that matters " * 3000
     ctx = RunContext(objective="think hard about what pipelines.md says")
     ctx.steps.append(StepResult(agent="Steward", model="m", output="the door's own words, which are not facts"))
@@ -10375,12 +10376,24 @@ def test_a_seat_after_the_router_is_handed_the_package(reg, lib, book):
           p.startswith("## Original Objective") and p.splitlines()[1] == "think hard about what pipelines.md says", p[:120])
     check("... each result under its tool's name, cut to fit the seat's window, the cut marked",
           "### `ground_read`" in p and "pipelines.md -- read whole" in p and "cut to fit the Reasoner's window" in p
-          and len(p) < (seat.context - seat.max_tokens) * 3, f"{len(p)} characters")
+          and len(p) < (seat.context - answer_room(seat)) * 3, f"{len(p)} characters")
     check("... the task and its limits",
           "## The task" in p and "## Limits" in p and "You cannot run tools" in p, p[-600:])
     check("... and the record says how big the package was against the window",
           any(n.startswith("package for the Reasoner") and "8192-token window" in n for n in ctx.notes),
           str(ctx.notes))
+    # AN UNCAPPED SEAT IS PACKED FOR HALF ITS WINDOW (WHAT'S LEFT C38, his card of
+    # 2026-10-20: "Pack uncapped seats for half"). The package was cut to leave a
+    # seat's cap free, and 1,024 tokens when it had none -- less than the Reasoner's
+    # 1,400 that cut it six times. A capped seat is packed for its cap, as before.
+    capped, free = _replace(seat, max_tokens=1400), _replace(seat, max_tokens=None)
+    pc, pf = build_prompt(capped, ctx, lib), build_prompt(free, ctx, lib)
+    check("an uncapped seat keeps half its window to think and answer in; a capped one keeps its cap",
+          answer_room(free) == seat.context // 2 and answer_room(capped) == 1400,
+          f"{answer_room(free)}, {answer_room(capped)}")
+    check("... and its package is cut to leave that half free, smaller than its cap left",
+          len(pf) < (seat.context // 2) * 3 and len(pf) < len(pc) < (seat.context - 1400) * 3
+          and "cut to fit the Reasoner's window" in pf, f"{len(pf)} and {len(pc)} characters")
     ctx2 = RunContext(objective="brief me on the feed")
     ctx2.steps.append(StepResult(agent="Morning Reviewer", model="m", output="the feed, compressed"))
     p2 = build_prompt(reg.get("Reasoner"), ctx2, lib)
