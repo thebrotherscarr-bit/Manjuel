@@ -16,9 +16,10 @@ until 2026-10-10). Read it there: the tab counts the lines, finds words in them,
 ## Today's working path
 
 Your word, 2026-10-13: this page carries the build path, the build plan, the changelog and every document that fits each area,
-and shows the path we are on. **Today, on your word of 2026-10-16: the driver (H31)** -- "A single simple driver that runs long
-workflows and tool chains to make sure that basically whatever I ask can be done. Fairly simple." -- inside the v0.2.6 pass (I2):
-"making sure all functions are working".
+and shows the path we are on. **Today, on your cards of 2026-10-20: the harness study (H33)**, the road to v0.2.6 paused for
+it. **Before it, on your word of 2026-10-16: the driver (H31)** -- "A single simple driver that runs long workflows and tool
+chains to make sure that basically whatever I ask can be done. Fairly simple." -- inside the v0.2.6 pass (I2): "making sure
+all functions are working".
 
 - **The build path.** Cut so far: core and atlas v0.2.5 (A); BUILDPATH.md's ladder has every cut, with its date and commit.
   Next: v0.2.6 (I2), then the road to 0.3.0 (I3 to I6).
@@ -38,7 +39,10 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (2026-10-20, 12:19):** step (3)'s group 4, routing: C49, C39 and C51 recorded; C51's ship ran the core
+  **Where it stands (2026-10-20, 12:45):** routing's C49, C39 and C51, with C51's follow-up, sent and merged (pull request
+  47), the ground home on main and restarted. Then, on your cards, the road to v0.2.6 paused for H33, the harness study:
+  next, its three clones on your cards, then its capability page.
+  **At 12:19 it stood:** step (3)'s group 4, routing: C49, C39 and C51 recorded; C51's ship ran the core
   suite whole and found ten strokes it had moved, mended on your four cards ("Name or table only", "Own words
   win; restate", "run one after the other", "Name outranks a phrase") with their strokes and recorded; next, the
   ship again, the restart, then routing's last: C50, C53, C54.
@@ -666,6 +670,21 @@ Your word, 2026-10-02: "an autonomous second brain with hash chain verification 
 workflows, backed by ollama as a first route then secondarily through additional API as added, all
 with a modules and plugin system ... a conversational assistant that evolves over time." What the
 disk says is missing, in the order it is worth building. H1 is done (below).
+
+- **H33. The harness study: Steward set in a proven harness, choosing its own tools.** Your words, 2026-10-20, after C51's ship
+  found ten strokes the routing layer had moved: "we need to take a BIG step back and look at the whole thing.. use [REA] to
+  diff opencode and basically clone it within manjuel so we arent fighting these little issues"; and "openshell ... Cline ...
+  all of these essentially work as harnesses, we can diff them all with REA and make Steward the perfect agent that is set in a
+  perfect harness." Your cards the same minute: the road to v0.2.6 paused (I2's C50, C53 and C54, groups 5 and 6, the R1
+  re-run, INVENTORY and the cut wait); opencode (anomalyco/opencode), Cline (cline/cline) and OpenShell (NVIDIA/OpenShell)
+  cloned shallow into worlds/harnesses/, gitignored and never sent; their source read first, and REA's command line run on
+  your installed opencode for the build you run; and the turn itself: **Steward chooses its own tools in a loop, the harness
+  enforcing permissions around it** (opencode's and Cline's shape), and the regex and PPMI layer (H29's logic core) becomes a
+  fast path in front of it, no longer the decider. The plan: (1) the three clones, each on your card with its size; (2) one
+  capability page -- each harness against manjuel and Steward: the loop and how a tool is chosen, the edit tool and how it
+  matches text, permissions and approvals, context and compaction, sessions and undo, sub-agents, recovery after a failed
+  step -- with the gaps ranked by what we keep fighting; (3) no code until you rule on the page; then one piece at a time on
+  your cards, each job's check ending with the ship's step. *(your words and cards in chat, 2026-10-20)*
 
 - **H31. Steward drives: one loop that finishes what you ask.** Your words, 2026-10-16: "A single simple driver that runs long
   workflows and tool chains to make sure that basically whatever I ask can be done. Fairly simple."; "if we get the nigel thing
