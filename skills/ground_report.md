@@ -1,6 +1,7 @@
 ## Ground Report
 
 - **Action Keyword:** ground_report
+- **Says:** where are we working, working dir, working directory, what ground, which folder, what directory are
 - **Description:** States where the chain is standing: the ground path, the agent workspace, the active session, and what is resident on the card right now. Deterministic — read from the harness, never from a model. Use for "where are we", "what is the working dir", "what ground is this".
 - **Parameters Needed:** None
 
