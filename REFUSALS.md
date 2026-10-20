@@ -1095,8 +1095,8 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 | line | says |
 |---|---|
-| 4169 | a sub-task may not start another sub-task |
-| 4173 | {SUB_RUNS_MAX} sub-tasks have already run this |
+| 4177 | a sub-task may not start another sub-task |
+| 4181 | {SUB_RUNS_MAX} sub-tasks have already run this |
 
 ### manjuel/serve.py — 7 sites
 
