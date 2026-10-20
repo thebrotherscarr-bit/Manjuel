@@ -6746,6 +6746,14 @@ def test_proofreader_is_racked(reg, lib, book):
           "backticks" in pr.system_prompt.lower())
     check("an unnecessary rewrite is named a failure",
           "is a failure" in pr.system_prompt.lower())
+    # THE SOUND-ALIKES (WHAT'S LEFT C42, 2026-10-20, his card: "Mend its task"): in
+    # sitting 373 the Proofreader fixed "too" and kept "their" for "they're" -- a
+    # real word in the wrong place, which the dictionary pass cannot see. Its task
+    # names the pairs to check, and each is held here.
+    for pair in ("their / they're / there", "its / it's", "your / you're",
+                 "to / too / two", "then / than"):
+        check(f"the Proofreader's task names the sound-alikes {pair!r}",
+              f"- {pair}" in pr.system_prompt, pair)
 
 
 
