@@ -38,7 +38,9 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (16:24):** step (2), the release faults, built, read twice by reviewers and recorded: C121, C123 and C124
+  **Where it stands (17:03):** step (2) sent and merged in both repositories (pull requests 41 and atlas's 22), the ground home
+  on main; step (3), I2's own faults, planned on your cards under I2, its first piece C47 next.
+  **At 16:24 it stood:** step (2), the release faults, built, read twice by reviewers and recorded: C121, C123 and C124
   under Done, C122's second half ruled to v0.2.7, C125 read, atlas's one annotation written; next, Steward's ship of both
   repositories (pull request 41 brought up to date, and atlas's own), then step (3), I2's own faults.
   **At 15:50 it stood:** step (2), the release faults, built and read by reviewers; under C on the page now: C121, C123
@@ -1097,6 +1099,17 @@ goals". The steps under each are proposed from the disk; each is yours to change
   only. Corrected here, not above: pull requests 35 to 40 passed, and which runner image each used was not read. The strokes
   were written with the code, not shown red against the old code first as planned. Sent as pull request 41 on your cards;
   its first run went red on two strokes (C86 again and C127, under C), put right in the next save. Left for v0.2.7: C129.
+  **Sent and merged 2026-10-19** by Steward's ship on your cards: the core's pull request 41 and atlas's 22, both green on
+  GitHub, the ground brought home to main by the door's three calls in each repository (C83).
+  **Step (3), planned 2026-10-19** (your cards: "No-ruling first", "Whole stage, every pipeline"), its faults re-checked
+  against the code the same evening by eight read-only readers (all still hold, some in part; none large), each piece its
+  own job on your cards with its stroke red first: (i) the five that need no ruling -- C47 (the turn's clock stops while a
+  card waits), C55 (the note on what the engine added), C46 (the closing count), C43 (the Deep Researcher kept to the
+  question), C57 (`/morning`, `/sitting` and `/covenant` run, not only print); (ii) C13, the court's time: (a) a seat's
+  `Timeout:` bounds its whole stage, every hop and every retry, in every pipeline; (b) time kept back for the Judge, on your
+  ruling; (iii) the answers (C38, C48, C69); (iv) the seats and routing (C39 to C42, C45, C49 to C54, C56); (v) grounding
+  (C44, C58), the mic (C59) and the slow routes (C60); (vi) atlas's door tools (C61 to C67) in one atlas pass, one rebuild,
+  the binary placed on your card. Each group's rulings are asked when it comes up; every change to manjuel/ needs a restart.
 - **I3. v0.2.7: both repositories keep what earlier versions promised.** Every OPEN line in SPEC section 4 met or ruled; every open line on this
   page (B, E, H) built, ruled, or moved to a later version on your word; the found items in HANDOFF from 2026-10-05 on put on this page or ruled;
   the wife test (E1) with her at the glass and nobody helping.
