@@ -38,7 +38,16 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (2026-10-20, 09:43):** step (3)'s group 4, its clear mends built by Steward on your cards with their
+  **Where it stands (2026-10-20, 12:19):** step (3)'s group 4, routing: C49, C39 and C51 recorded; C51's ship ran the core
+  suite whole and found ten strokes it had moved, mended on your four cards ("Name or table only", "Own words
+  win; restate", "run one after the other", "Name outranks a phrase") with their strokes and recorded; next, the
+  ship again, the restart, then routing's last: C50, C53, C54.
+  **At 11:45 it stood:** step (3)'s group 4: its clear mends sent and merged (pull request 46); routing's
+  first three built by Steward on your cards with their strokes and recorded -- C49 (an order to write read from
+  your own words), C39 (the Router reads while a coder waits), C51 (every skill declares its phrases, the table
+  keeps only the words of no single skill) -- on the line of work, its pull request 47 open and red only on the map and the
+  refusals' tail, which its ship regenerates; next, that ship, the restart, then routing's last: C50, C53, C54.
+  **At 09:43 it stood:** step (3)'s group 4, its clear mends built by Steward on your cards with their
   strokes and recorded: C40 (whole rebuild words), C56 (declarations in their place, the reload named), C52 (flags from
   a seat's own words), C45 (a quoted flag taken out whole) and C42 (the Proofreader's sound-alikes); C41 ruled. C38 sent
   and merged (pull request 45); these on the line of work, its pull request 46 open and red only on the map and the
@@ -181,22 +190,14 @@ half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
 
 ### The models misbehaving
 
-- **C39. The Router makes the change itself before the coding model sits.** Asked to "lint this python and fix it", it read "fix
-  it" as a write and wrote the fix with `write_file` before the Expert Coder was woken (sitting 377). Routing's next part, I2's
-  (b). *(INVENTORY P1)*
 - **C44. The estate turn cannot read the covenant.** Asked about the covenant, it answered with the Steward's description of
   itself, and Manjuel ruled that SUPPORTED after six and a half minutes on gemma4:12b (sitting 373): C3's question, failing
   another way. Grounding and the slow routes, I2's (g) and (h). *(INVENTORY P3)*
 
 ### The engine
 
-- **C49. Words read as an order to write where none was given.** "add" inside code sent to be linted (sitting 373) and "what I
-  could change" (376) were each read as a write; C39 and C40 came of that shape. Routing's next part, I2's (b).
-  *(CHANGELOG, "core: routing, its first part, the front face")*
 - **C50. A search of the ground chosen where nothing needs one.** A sum and a riddle were each sent to `semantic_search`
   (sitting 373). *(INVENTORY K35)*
-- **C51. "lint the code in measure.py from the workspace" named `list_directory`, not the linter** (sitting 375).
-  *(CHANGELOG, "core: routing, its second part, the Router's package")*
 - **C53. A long new question taken for a follow-up.** In sitting 376 a fresh question was read as a follow-up ("check what you
   tell me"), so its level only tagged it. *(CHANGELOG, "core: routing, its third part, the levels")*
 - **C54. Two questions no tool answers brought the Router, and the answer missed both.** The Router paged through SEAT_LOG.md
@@ -1124,6 +1125,21 @@ goals". The steps under each are proposed from the disk; each is yours to change
 ## Done
 
 Finished lines, newest first. A number is never used again.
+
+- **C51. "lint the code in measure.py from the workspace" named `list_directory`, not the linter.** DONE 2026-10-20,
+  by Steward on your cards ("Every skill declares them", "Require it, move the table", "As drafted"): every skill
+  declares its own phrases in its own file, a stroke holds that each does and that no phrase is claimed twice, and the
+  shared table keeps only the words that belong to no single skill. Measured over the 752 requests on the record:
+  18 route differently, each a fault mended. *(CHANGELOG, "core: every skill declares its own phrases")*
+- **C39. The Router made the change itself before the coding model sat.** DONE 2026-10-20, by Steward on your card
+  ("Reads only; coder writes"): when a coder waits behind the Router, the Router is handed no tool that writes, and a
+  write it names anyway is refused. The line as it stood: "lint this python and fix it" (sitting 377).
+  *(CHANGELOG, "core: the Router reads and packs while a coder waits behind it")*
+- **C49. Words read as an order to write where none was given.** DONE 2026-10-20, by Steward on your card ("All that,
+  and prose in chat"): an order to write is read from your own words, as a verb, not in a question, and a poem you
+  ask for comes in chat. The line as it stood: "add" inside code sent to be linted (sitting 373) and "what I could
+  change" (376); measured, twelve of 54 write-shaped turns ordered none.
+  *(CHANGELOG, "core: an order to write is read from his own words")*
 
 - **C56. The REPL reloaded with nothing changed.** DONE 2026-10-20, by Steward on your cards (step (3), group 4;
   "Clear mends first"): a seat or skill file counts only in its own place, and the reload line names the file that

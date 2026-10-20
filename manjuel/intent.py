@@ -20,92 +20,32 @@ import re
 
 from .context import POINTING_WORDS
 
-# Natural phrasings that map to a keyword the operator will not type verbatim.
-# Deliberately short: a wrong guess here costs one Router turn, but a missing
-# one costs the whole request.
+# THE WORDS THAT BELONG TO NO SINGLE SKILL (WHAT'S LEFT C51, 2026-10-20, his cards: "Every skill
+# declares them", "Require it, move the table"). Each skill declares its own phrases in its own file
+# (`**Says:**`), and a stroke holds that every one does; this table keeps only the here-words, the
+# generic file words, the forms the number rule still guards, and the bare words a skill may not
+# claim as its own (a declared phrase is two words or more, test_a_skill_owns_its_own_dispatch).
+# Every other phrase moved into its skill's file that day, measured over the 752 requests on the
+# record: the 18 that route differently were the faults (the linter, a trendline, "say aloud" and
+# the rest), and nothing else moved.
 ALIASES: dict[str, tuple[str, ...]] = {
-    "git_commit": ("commit", "check in", "check it in"),
-    "git_status": ("git status", "dirty", "untracked", "what changed",
-                   "the repo like", "state of the repo", "repo status",
-                   "hows the repo", "how is the repo"),
+    # The bare words worth the risk, read as a judgment call below every skill's own words.
+    "git_commit": ("commit",),
     "git_push":   ("push",),
     "git_pull":   ("pull",),
-    "git_init":   ("init the repo", "initialise the repo", "initialize the repo"),
-    "rack_list":  ("what models", "which models", "list models", "the rack",
-                   "whats on the card", "whats loaded", "what is loaded",
-                   "whats in vram", "is opencode running", "whats warm",
-                   "what is available"),
-    "rack_sync":  ("sync the rack", "refresh the rack", "update the rack"),
+    "git_status": ("dirty", "untracked"),
     # A sitting is named by NUMBER and its runs are filed by timestamp, so
     # without this the Router guesses at filenames (sitting 63 guessed
     # `logs/sitting_63.md`, twice). The word is the whole alias -- the
     # skill pulls the number out of the objective itself.
     "sitting":    ("sitting", "the sitting"),
-    # Periods, not sittings. "what ran yesterday" was unanswerable: the
-    # estate stamped every transcript and nothing read the stamps as a
-    # range.
-    #
-    # EVERY FORM CARRIES A VERB, and that is the whole point. The bare
-    # adverbs were aliased first -- "yesterday", "recently", "lately" --
-    # and they match ANYWHERE in an objective, so "yesterday was rough,
-    # let's fix the router" would have listed transcripts. That is the
-    # estate's oldest recurring fault (s23 "cool" -> classify_sentiment,
-    # s31 "heloo stewy" -> the coder): a word is not an intent. A period
-    # only asks for the record when something is said to have HAPPENED in
-    # it.
-    # "what did we DO yesterday" is how a person actually asks, and "did
-    # yesterday" does not match it -- the words are "did we do". `we do
-    # <period>` is the exact discriminator: "what did we do today" carries
-    # it, and "what do we have to do today" -- a question about the FUTURE,
-    # which this skill cannot answer -- does not.
-    "when":       ("we do yesterday", "we do today", "we do last night",
-                   "ran yesterday", "ran today", "ran this week",
-                   "ran last week", "ran this month", "ran lately",
-                   "ran recently", "ran on",
-                   "did yesterday", "did today", "did this week",
-                   "did lately", "did recently",
-                   "happened yesterday", "happened today",
-                   "happened this week", "happened last night",
-                   "happened on", "happened lately", "happened recently",
-                   "been doing lately", "been doing recently",
-                   "went on yesterday", "went on this week"),
-    "list_directory": ("the workspace", "list the workspace"),
+    "list_directory": ("the workspace",),
     "ground_list": ("this place", "this archive", "this folder",
-                    "this directory", "this repo", "in here", "around here",
-                    "review the logs", "check the logs", "read the logs",
-                    "look at the logs", "the logs",
-                    "can you list it", "list it", "the full repo",
-                    "list the repo", "list the full repo", "review the repo",
-                    "what files", "list the files", "list the dir",
-                    "list the directory", "list dir", "in this repo",
-                    "in the repo", "whats in the repo", "what is in this repo",
-                    "list the ground", "whats in the ground"),
+                    "this directory", "this repo", "in here", "around here"),
     "ground_read": ("read the file", "open the file", "show me the file",
                     "this file", "that file", "the file",
                     "read pipelines", "read memory.md"),
-    "skill_report": ("what skills", "your skills", "what tools", "your tools",
-                     "available tools", "what can you do", "what can you actually do",
-                     "list your tools", "list the skills"),
-    "ground_report": ("working dir", "working directory", "where are we",
-                      "where am i", "what ground", "which folder",
-                      "what directory are"),
-    "semantic_search": ("search for", "find anything about", "look up",
-                        "who is manjuel", "who is jesster", "who is neiro",
-                        "who is steward", "what is manjuel",
-                        "who is the coder", "what is the coder",
-                        "who is the smith", "who is the router",
-                        "who is the guardian", "who is the reasoner",
-                        "who is the evaluator", "who is the proofreader",
-                        "who is the delivery agent",
-                        "what is jesster", "what is neiro", "what is steward",
-                        "who is aurora", "what is aurora",
-                        "the mythos", "the creed", "the temper", "the veil",
-                        "the glass", "the forge", "the weighing",
-                        "the servants law", "the servant's law", "the dictum",
-                        "what do you know about",
-                        "founding documents", "the foundation",
-                        "the covenant", "the covenants", "the doctrine",
-                        "the estate laws", "founding docs"),
+    "ground_report": ("where are we", "where am i"),
     # index_ground's phrases MOVED OUT of this table on 2026-09-02 and into
     # skills/index_ground.md, where a person editing the skill can see them
     # (`**Says:**`). It is the first skill to own its own dispatch, and the
@@ -399,8 +339,17 @@ def asks_about_a_tool(objective: str, keywords) -> str:
 
     A question about a tool is answered FROM THE SKILL'S OWN MARKDOWN,
     which is authoritative and already written: facts read, not generated.
+
+    A QUESTION IS ABOUT A SKILL WHEN IT SAYS THE SKILL'S NAME (WHAT'S LEFT C51,
+    its follow-up, 2026-10-20; his card: "Name or table only"). A declared
+    `**Says:**` phrase is the act itself: "what are the mean, median and
+    standard deviation of 4, 8, 15?" asks for the numbers, not about
+    `statistics`. So the naming here is read off the names and the shared
+    table alone. Measured over the 748 asks on the record: that ask moved, and
+    nothing else did.
     """
-    named = names_a_tool(objective, keywords)
+    named = names_a_tool(objective, keywords.keywords() if hasattr(keywords, "keywords")
+                         else keywords)
     if not named:
         return ""
     text = " ".join((objective or "").lower().split())
@@ -636,6 +585,7 @@ def _tool_hits(objective: str, keywords) -> tuple[list, object, str]:
     # Each hit is ranked (own, leads, length): OWN is a skill's own words
     # against the shared table; LEADS is the form opening what he said.
     hits: list[tuple[tuple[bool, bool, int], str]] = []
+    spans: list[tuple[list, bool, str]] = []    # where each hit stands, is it a name, whose
     for kw in kws:
         declared: tuple = ()
         spec = None
@@ -653,7 +603,9 @@ def _tool_hits(objective: str, keywords) -> tuple[list, object, str]:
             f = _norm(form)
             if not f:
                 continue
-            if not re.search(rf"(?<![a-z0-9_]){re.escape(f)}(?![a-z0-9_])", hay):
+            at = [m.span() for m in re.finditer(
+                rf"(?<![a-z0-9_]){re.escape(f)}(?![a-z0-9_])", hay)]
+            if not at:
                 continue
             if (not is_phrase and f in _FUNCTION_WORDS
                     and not _named_not_used(f, hay, objective or "")):
@@ -667,7 +619,20 @@ def _tool_hits(objective: str, keywords) -> tuple[list, object, str]:
                 continue
             leads = lead == f or lead.startswith(f + " ")
             hits.append(((is_own, leads, len(f)), kw))
-    return hits, kws, hay
+            spans.append((at, is_own and not is_phrase, kw))
+    # A SKILL'S NAME OUTRANKS ANOTHER SKILL'S PHRASE IN THE SAME WORDS (WHAT'S LEFT
+    # C51, its follow-up, 2026-10-20; his card: "Name outranks a phrase"). "give me
+    # the rack report" says rack_report's name, and rack_list's "the rack" lies
+    # across it: one naming, not two, so he is not asked which. A phrase or table
+    # word that stands only where another skill's name stands is dropped. Measured
+    # over the 748 asks on the record: the two rack-report cards ended and nothing
+    # else moved; the wider reading, a name over any phrase anywhere, named
+    # git_commit outright for a question that asked "how does he know when to git
+    # commit".
+    names = [(s, e, kw) for at, is_name, kw in spans if is_name for s, e in at]
+    across = [not is_name and all(any(ns < e and s < ne and nk != kw for ns, ne, nk in names)
+                                  for s, e in at) for at, is_name, kw in spans]
+    return [h for h, gone in zip(hits, across) if not gone], kws, hay
 
 
 def tool_choices(objective: str, keywords) -> tuple[list[str], bool]:
@@ -1028,9 +993,31 @@ def cue_only(objective: str) -> bool:
 # with NO named tool.
 # `replace` joined 2026-10-12 (sitting 370: "in measure.py in the workspace,
 # replace 'x' with 'y'" was not write-shaped, so list_directory, a reader, took it).
-_WRITE_VERBS = re.compile(
-    r"(?i)\b(write|make|create|save|generate|build|add|append|update|edit|"
-    r"fix|change|modify|refactor|implement|delete|remove|rename|replace)\b")
+_VERB = (r"(?:write|make|create|save|generate|build|add|append|update|edit|"
+         r"fix|change|modify|refactor|implement|delete|remove|rename|replace)")
+_WRITE_VERBS = re.compile(rf"(?i)\b{_VERB}\b")
+
+# WHAT COUNTS AS AN ORDER TO WRITE (WHAT'S LEFT C49, 2026-10-20, his card: "All that, and
+# prose in chat"). Of the 54 turns read as writes since 2026-09-01, eleven ordered none: a
+# verb inside pasted code ("lint this python: def add(a, b)"), a verb used as a noun ("the
+# build plan", "land a change safely"), a question about what the system can do ("how would
+# you build a skill?", "you can make things for me?"). And "write me a poem" wants words in
+# chat, not a file, unless a file or the workspace is named.
+_PASTED = re.compile(r"```.*?(?:```|$)|`[^`\n]*`", re.S)
+_CODE_MARK = re.compile(r"\b(?:def|class|return|import|lambda|print)\b|[(){};=<>]")
+_AS_NOUN = re.compile(rf"(?i)\b(?:the|a|an|my|our|your|this|that|these|those|its|his|her|"
+                      rf"their|any|each|every)\s+{_VERB}\b")
+_COMPOUND = re.compile(r"(?i)\bbuild\s+(?:plans?|paths?|maps?|order|steps?|logs?)\b")
+_HOW = re.compile(rf"(?i)\bhow\s+(?:would|could|do|does|did|can|should|might|to)\b[^.?!]*?\b{_VERB}\b")
+_YOU_CAN = re.compile(rf"(?i)\byou\s+(?:can|could)\s+{_VERB}\b[^.!]*\?")
+# ...and a verb in a question clause, to the clause's end (sitting 376: "what I could change
+# to make the common turns faster", inside an ask to explain -- missed in the first count).
+_WH_CLAUSE = re.compile(rf"(?i)\b(?:what|which|where|whether)\s+(?:i|we|you)\s+"
+                        rf"(?:could|can|should|might|would)\s+{_VERB}\b[^.?!]*")
+_PROSE = re.compile(r"(?i)\b(?:write|make|compose|create)\s+(?:me\s+|us\s+)?"
+                    r"(?:a\s+|an\s+|some\s+)?(another\s+)?(?:short\s+|little\s+|quick\s+)?"
+                    r"(?:poem|haiku|story|song|limerick|sonnet|verse|joke|riddle)s?\b")
+_A_PLACE = re.compile(r"(?i)\b(?:workspace|file|folder|disk|save)\b|\.\w{1,5}\b")
 
 # Action-verb + object shapes that plainly want hands, without naming which.
 _ACTION_SHAPE = re.compile(
@@ -1040,9 +1027,28 @@ _ACTION_SHAPE = re.compile(
     r"logs|index|record|this|it|that)\b")
 
 
+def own_words(objective: str) -> str:
+    """His words with what he pasted taken out: fenced and backticked code, and
+    the tail after a colon that is followed by code."""
+    text = _PASTED.sub(" ", objective or "")
+    i = text.find(":")
+    while i != -1:
+        if _CODE_MARK.search(text[i + 1:]):
+            return text[:i]
+        i = text.find(":", i + 1)
+    return text
+
+
 def wants_writing(objective: str) -> bool:
-    """A write-shaped verb near the request. Router decides the rest."""
-    return bool(_WRITE_VERBS.search(objective or ""))
+    """An order to write, in his own words: a write verb used as a verb -- not a
+    noun, not in a question about what the system can do, and not prose to be
+    written in chat. Router decides the rest."""
+    text = own_words(objective)
+    if _PROSE.search(text) and not _A_PLACE.search(text):
+        return False
+    for rx in (_AS_NOUN, _COMPOUND, _HOW, _YOU_CAN, _WH_CLAUSE):
+        text = rx.sub(" ", text)
+    return bool(_WRITE_VERBS.search(text))
 
 
 def wants_action(objective: str) -> bool:

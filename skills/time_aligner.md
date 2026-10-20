@@ -1,5 +1,6 @@
 # Skill: Chronological Time Alignment
 - **Action Keyword:** time_align
+- **Says:** put these on a timeline, on a timeline, time align
 - **Model Target:** phi4-mini:latest
 - **Description:** Parses loose task lists or historical log entries and aligns them onto an ordered timeline. Use when sequencing milestones, checking what is overdue, or mapping work onto sprints or quarters.
 - **CRITICAL CONSTRAINT:** Today's date is given to you above the material, under `## Now`. Use THAT and nothing else — never a date from memory, never one inferred from the content. If no `## Now` block is present, say `DATE UNKNOWN` and order events only relative to each other. Where an item carries no date of its own, say `NO DATE` rather than guessing one; an item is `overdue` only when a stated date is earlier than the given today.

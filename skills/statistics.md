@@ -1,4 +1,5 @@
 # Skill: Descriptive Statistics
 - **Action Keyword:** statistics
+- **Says:** standard deviation, the mean, the median, the average of
 - **Description:** Computes n, mean, median, min, max, standard deviation and variance over a series of numbers. Use it to summarise a set of figures before drawing conclusions about them.
 - **Parameters Needed:** <content>The numbers to summarise. Any separator; text around them is ignored.</content>

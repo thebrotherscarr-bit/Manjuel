@@ -2562,7 +2562,19 @@ def run_pipeline(
     plain = False
     if named and not make and not by and any(str(s).strip().lower() == "router" for s in steps):
         choices, sure = intent.tool_choices(ctx.objective, skills)
-        if not sure and len(choices) > 1:
+        if not sure and len(choices) > 1 and intent.is_big_objective(ctx.objective):
+            # SEVERAL ACTS, AND HIS WORDS NAME TWO SKILLS EQUALLY (WHAT'S LEFT C51, its
+            # follow-up, 2026-10-20; his card: "it should just run one after the other"):
+            # no one skill is the request, so none is put to him -- the route below comes
+            # first and the acts are worked in their turn. "read the rack, then write a
+            # note about it, then commit it" named git_commit on its own "commit it", tied
+            # with rack_list's "the rack", and would only have committed.
+            tied = ", ".join(f"`{c}`" for c in choices)
+            ctx.notes.append(f"intent: his words name {tied} equally, and the request "
+                             "holds several acts -- no one of them is the request, so "
+                             "it is routed first")
+            named = ""
+        elif not sure and len(choices) > 1:
             named, plain = _ask_which_tool(ctx, choices, skills, report)
 
     # AN UNKNOWN SKILL NAME IS SAID SO (the review of 2026-09-08). Sitting
@@ -3224,6 +3236,22 @@ def run_pipeline(
             # for one anyway (in markup), the handoff below carries the ask
             # to the Router instead of printing it. One executor, kept.
             allowed = agent.callable_set(skills.keywords())
+            # THE CODER WRITES (WHAT'S LEFT C39, 2026-10-20, his card: "Reads only; coder
+            # writes"). Sitting 377's Router wrote the fix with write_file before the Expert
+            # Coder sat, and the coder wrote over it. When a seat that writes code waits
+            # behind the Router this turn, the Router reads and packs and is handed no tool
+            # that writes; env.caller_allowed, below, refuses one it names anyway.
+            if agent.key == "router" and any(
+                    registry.has(s) and _BUILDERS.get(registry.get(s).key) is _coder_prompt
+                    for s in (getattr(ctx, "package_for", None) or [])):
+                held_back = sorted(allowed & WRITING_SKILLS)
+                allowed = allowed - WRITING_SKILLS
+                if held_back:
+                    note = (f"the Router reads and packs: a coder waits behind it, so it is "
+                            f"handed no tool that writes ({', '.join(held_back)})")
+                    if note not in ctx.notes:
+                        ctx.notes.append(note)
+                    report("      " + ink.dim(note))
             executes = agent.stage == "route" or agent.key == "router"
             tools = (skills.tool_schemas(allowed)
                      if allowed and executes and runtime.supports_tools(agent.model)

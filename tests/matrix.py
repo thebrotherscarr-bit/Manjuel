@@ -229,7 +229,7 @@ class Result:
 
 def run(ground: Path = ROOT, skills_dir: Path | None = None) -> Result:
     lib = SkillLibrary.load(str(skills_dir or (ground / "skills")))
-    keywords = lib.keywords()
+    keywords = lib
     res = Result()
     for v in variants():
         res.total += 1

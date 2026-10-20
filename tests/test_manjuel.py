@@ -6275,7 +6275,7 @@ def test_what_is_in_the_x_dir_is_a_listing(reg, lib, book):
 def test_intent_and_empty_replies(reg, lib, book):
     """Session 5c: three runs of `git commit` never reached the Router."""
     from manjuel import intent
-    kws = lib.keywords()
+    kws = lib
 
     check("`git commit` names the git_commit skill",
           intent.names_a_tool("git commit", kws) == "git_commit",
@@ -7158,7 +7158,7 @@ def test_ollama_responses_read_in_both_shapes(reg, lib, book):
 def test_sitting21_regressions(reg, lib, book):
     """The Steward's three mouth-failures, pinned."""
     from manjuel import intent
-    kws = lib.keywords()
+    kws = lib
 
     # near-phrases route without the Steward's cooperation
     check("'what is in this repo' routes to the live ground (superseded)",
@@ -7290,7 +7290,7 @@ def test_sitting24_regressions(reg, lib, book):
     overruled the intent hint; the closer copied bracket labels."""
     from manjuel import intent
     from manjuel.pipeline import build_prompt
-    kws = lib.keywords()
+    kws = lib
 
     check("'what is the repo like' routes to git_status",
           intent.names_a_tool("cool cool, what is the repo like", kws)
@@ -7347,7 +7347,7 @@ def test_sitting24_regressions(reg, lib, book):
 def test_environment_facts_are_read_not_generated(reg, lib, book):
     """'What is the working dir' must come from the harness, never a model."""
     from manjuel import intent
-    kws = lib.keywords()
+    kws = lib
 
     for q in ("what is the working dir", "working directory", "where are we",
               "where am i"):
@@ -7399,7 +7399,7 @@ def test_the_estate_is_heard_correctly(reg, lib, book):
           "return correct_hearing(said)" in src)
 
     check("'who is steward' routes to search, so no seat invents his fate",
-          intent.names_a_tool("who is steward", lib.keywords())
+          intent.names_a_tool("who is steward", lib)
           == "semantic_search")
 
 
@@ -7503,7 +7503,7 @@ def test_capability_questions_are_read_not_generated(reg, lib, book):
     """Sitting 25: 'what skills do you have' got a shrug, twice. The manifest
     was in memory the whole time."""
     from manjuel import intent
-    kws = lib.keywords()
+    kws = lib
 
     for q in ("what skills do you have access to", "what do your tools do",
               "what can you do", "list your tools"):
@@ -7691,7 +7691,7 @@ def test_the_landing_gate_parses_before_it_writes(reg, lib, book):
 def test_ground_eyes_are_live_readonly_and_jailed(reg, lib, book):
     """The index is a snapshot; these are the floor. Read-only, in-ground."""
     from manjuel import intent
-    kws = lib.keywords()
+    kws = lib
     check("'what is in this repo' now shows the GROUND, not scratch",
           intent.names_a_tool("what is in this repo", kws) == "ground_list")
     check("'the workspace' still shows scratch",
@@ -7726,7 +7726,7 @@ def test_the_card_is_priced_live(reg, lib, book):
     for q in ("whats on the card", "is opencode running", "whats warm",
               "what is available"):
         check(f"{q!r} routes to rack_list",
-              intent.names_a_tool(q, lib.keywords()) == "rack_list")
+              intent.names_a_tool(q, lib) == "rack_list")
 
     SZ = {"llama3.2:latest": 2_000_000_000, "qwen2.5-coder:7b": 4_700_000_000,
           "qwen3.5:9b": 6_600_000_000, "nomic-embed-text:latest": 274_000_000}
@@ -7804,10 +7804,10 @@ def test_nothing_is_happening_unless_it_happened(reg, lib, book):
           "never treat earlier speculation as fact" in p)
 
     check("'review the logs' reaches a real tool, not a narrator",
-          intent.names_a_tool("review the logs", lib.keywords())
+          intent.names_a_tool("review the logs", lib)
           == "ground_list")
     check("'check the logs' too",
-          intent.names_a_tool("check the logs", lib.keywords())
+          intent.names_a_tool("check the logs", lib)
           == "ground_list")
 
 
@@ -7917,7 +7917,7 @@ def test_foundation_folder(reg, lib, book):
     for q in ("what are the founding documents", "the covenant",
               "the doctrine", "founding docs"):
         check(f"{q!r} routes to search",
-              intent.names_a_tool(q, lib.keywords()) == "semantic_search")
+              intent.names_a_tool(q, lib) == "semantic_search")
 
 
 def test_seats_cut_from_the_founding_cloth(reg, lib, book):
@@ -7962,7 +7962,7 @@ def test_seats_cut_from_the_founding_cloth(reg, lib, book):
     for q in ("what is manjuel", "what is jesster", "the mythos",
               "the temper", "the weighing"):
         check(f"{q!r} routes to search",
-              intent.names_a_tool(q, lib.keywords()) == "semantic_search")
+              intent.names_a_tool(q, lib) == "semantic_search")
 
     src = (ROOT / "manjuel" / "skills.py").read_text(encoding="utf-8")
     check("doctrine outranks plumbing in retrieval",
@@ -8243,7 +8243,7 @@ def test_counsel_rules_on_counsel_not_furniture(reg, lib, book):
     for q in ("who is the coder", "who is the smith", "who is the guardian",
               "what is the coder"):
         check(f"{q!r} routes to the record, not a guess",
-              intent.names_a_tool(q, lib.keywords()) == "semantic_search")
+              intent.names_a_tool(q, lib) == "semantic_search")
 
     ctx = RunContext(objective="who is the coder?")
     ctx.steps.append(StepResult(agent="Steward", model="m",
@@ -8365,7 +8365,7 @@ def test_sitting38_regressions(reg, lib, book):
     """Repo near-misses reached a guesser; git counts read as a mystery."""
     from manjuel import intent
     from manjuel.pipeline import build_prompt
-    kws = lib.keywords()
+    kws = lib
 
     for q in ("what about the full repo, can you list it", "list it",
               "review the repo", "list the full repo"):
@@ -8999,7 +8999,7 @@ def test_sitting42_dispatch(reg, lib, book):
     """Talk stays talk; the obvious dispatches; the ambiguous is thought
     about by the Router; leaving works in casual clothes."""
     from manjuel import intent
-    kws = lib.keywords()
+    kws = lib
 
     # here-words point at the floor
     for q in ("whats in this archive", "review this place",
@@ -9010,6 +9010,28 @@ def test_sitting42_dispatch(reg, lib, book):
     # write-shaped never presumes read
     check("'write hello.md' is write-shaped", intent.wants_writing("write hello.md"))
     check("'read hello.md' is not", not intent.wants_writing("read hello.md"))
+    # AN ORDER TO WRITE IS IN HIS OWN WORDS (WHAT'S LEFT C49, 2026-10-20, his card: "All
+    # that, and prose in chat"): of 54 turns read as writes since 2026-09-01, eleven ordered
+    # none, and five wanted a poem in chat. Each measured shape is held, and the orders still are.
+    for said in ("lint this python: def add(a, b): return a - b",
+                 "what is the build plan?",
+                 "review the docs, where are we at on the build path and build plan?",
+                 "which of your skills bear on git, and in what order should they run to land a change safely?",
+                 "how would you build a skill for auto-storing memories under direct guidance?",
+                 "hi! my husband said you can make things for me?",
+                 "Write me a haiku about Jesster.",
+                 "I would like you to write me a poem about the Jesster."):
+        check(f"not an order to write: {said[:60]!r}", not intent.wants_writing(said), said)
+    for said in ("write me a poem put it in the workspace.",
+                 "lint this python and fix it: def add(a, b): return a - b",
+                 "can you make me a snake game?", "make a change to measure.py",
+                 "in measure.py in the workspace, replace 'the measure ran' with 'the measure ran here'"):
+        check(f"still an order to write: {said[:60]!r}", intent.wants_writing(said), said)
+    check("not an order to write: a verb in a question clause (sitting 376)",
+          not intent.wants_writing("explain how a turn moves through this system, and what I could "
+                                   "change to make the common turns faster without changing the seats"))
+    check("... while an order around such a clause still is one",
+          intent.wants_writing("change what we can change in measure.py"))
     g = Path(tempfile.mkdtemp())
     r = Stub(reply=lambda a: "x")
     ctx = RunContext(objective="write hello.md with a greeting in it")
@@ -9470,6 +9492,13 @@ def test_several_acts_get_a_route_first(reg, lib, book):
           ctx.named_tool == "decompose_task", str(ctx.named_tool))
     check("and the record says why it was decomposed",
           any("several acts" in n for n in ctx.notes))
+    # SEVERAL ACTS SETTLE A TIE (WHAT'S LEFT C51, its follow-up, 2026-10-20; his card: "it
+    # should just run one after the other"): since every skill declares its phrases, his
+    # words name git_commit ("commit it") and rack_list ("the rack") equally here, and
+    # neither is the request -- so it is routed first, not put to him.
+    check("... where his words name two skills equally, neither is put to him: routed first",
+          any("equally, and the request holds several acts" in n for n in ctx.notes),
+          str(ctx.notes)[-300:])
     single = RunContext(objective="read the rack and tell me what is loaded")
     run_pipeline(single, reg, r, lib, env_for(g, reg, r),
                  steps=book.get("default"), report=lambda m: None)
@@ -9632,7 +9661,7 @@ def test_the_estate_can_reason_about_time(reg, lib, book):
     check("`when` reads and never writes",
           "when" in REVIEW_ONLY_SKILLS)
     check("'what ran yesterday' routes to `when`, not to a guess",
-          intent.names_a_tool("what ran yesterday", lib.keywords()) == "when")
+          intent.names_a_tool("what ran yesterday", lib) == "when")
     # A WORD IS NOT AN INTENT. The bare adverbs were aliased first, and
     # they match anywhere in an objective -- so ordinary talk that merely
     # MENTIONS a period would have listed transcripts. Same fault as s23
@@ -9641,7 +9670,7 @@ def test_the_estate_can_reason_about_time(reg, lib, book):
                   "what happened on 2026-09-01", "what have we been doing lately",
                   "what ran this week"):
         check(f"{asked!r} asks the record for a period",
-              intent.names_a_tool(asked, lib.keywords()) == "when", asked)
+              intent.names_a_tool(asked, lib) == "when", asked)
     for talk in ("yesterday was rough, lets fix the router",
                  "i was thinking about this last night",
                  "recently the coder has been slow",
@@ -9652,7 +9681,7 @@ def test_the_estate_can_reason_about_time(reg, lib, book):
                  "what do we have to do today",
                  "what do we need to do this week"):
         check(f"{talk!r} is conversation, not a query",
-              intent.names_a_tool(talk, lib.keywords()) != "when", talk)
+              intent.names_a_tool(talk, lib) != "when", talk)
 
     # --- 2b. a PROMPT SKILL gets the clock too, or it cannot do its job
     # time_align promised to find what is OVERDUE while its own CRITICAL
@@ -10058,6 +10087,11 @@ def test_asking_about_a_tool_is_not_asking_for_it(reg, lib, book):
               "write a note about the rack"):
         check(f"an order is still an order: {q[:34]!r}",
               not intent.asks_about_a_tool(q, lib), q)
+    # A SKILL'S OWN PHRASE ASKS FOR THE ACT (WHAT'S LEFT C51, its follow-up, 2026-10-20; his
+    # card: "Name or table only"): the numbers are asked for, not the skill's declaration.
+    q = "what are the mean, median and standard deviation of 4, 8, 15, 16, 23, 42?"
+    check(f"a skill's own phrase asks for the act, not about the skill: {q[:34]!r}",
+          not intent.asks_about_a_tool(q, lib), repr(intent.asks_about_a_tool(q, lib)))
 
     g = Path(tempfile.mkdtemp())
     r = Stub(reply="x")
@@ -10168,6 +10202,50 @@ def test_a_skill_asked_for_in_its_own_words_is_the_one_named(reg, lib, book):
                     ("git commit", "git_commit")):
         got = intent.names_a_tool(q, lib)
         check(f"the table still names {want}: {q!r}", got == want, f"named {got!r}")
+
+    # EVERY SKILL DECLARES ITS OWN PHRASES (WHAT'S LEFT C51, 2026-10-20, his cards: "Every skill
+    # declares them", "Require it, move the table"). The linter declared none, so "lint the code in
+    # measure.py from the workspace" named list_directory on the table's "the workspace". Now every
+    # skill file carries `**Says:**`, no phrase is claimed by two, and the shared table keeps only
+    # the here-words, the generic file words, the number-guarded forms and the bare words.
+    check("every skill declares its own phrases in its own file (**Says:**)",
+          all(s.says for s in lib.specs), str(sorted(s.keyword for s in lib.specs if not s.says)))
+    owners = {}
+    for s in lib.specs:
+        for p in s.says:
+            owners.setdefault(" ".join(p.split()).lower(), set()).add(s.keyword)
+    check("no phrase is claimed by two skills",
+          not {p: k for p, k in owners.items() if len(k) > 1},
+          str({p: sorted(k) for p, k in owners.items() if len(k) > 1}))
+    check("the shared table keeps only the words that belong to no single skill",
+          sorted(intent.ALIASES) == ['git_commit', 'git_pull', 'git_push', 'git_status', 'ground_list', 'ground_read', 'ground_report', 'list_directory', 'sitting'],
+          str(sorted(intent.ALIASES)))
+    # The record's own asks, each naming its skill now (measured that day: these were the faults),
+    # and the coder flow's order still reaching ground_write.
+    for q, want in (
+                    ('lint the code in measure.py from the workspace', 'lint_code'),
+                    ('lint this python: def add(a, b): return a - b', 'lint_code'),
+                    ('fit a trendline through 3, 5, 7, 9 and project the next two', 'linear_regression'),
+                    ('load phi4-mini:latest into VRAM now', 'rack_load'),
+                    ('say aloud: the skills are measured', 'speak'),
+                    ('put these on a timeline: lunch at noon, standup at 9am, merge at 3pm', 'time_align'),
+                    ('what are the mean, median and standard deviation of 4, 8, 15, 16, 23, 42?', 'statistics'),
+                    ('classify the sentiment of this feedback: the glass is slow but I love it', 'classify_sentiment'),
+                    ('propose a note for later sessions: the measure ran today', 'remember'),
+                    ('write a file called hello.md contents are i am steward', 'write_file'),
+                    ('Make this change to the harness itself, on the line of work already open. Read the file first with ground_read, then change it with ground_edit (one exact passage, quoted exactly as it stands) or ground_write (a whole new file) -- never write_file or edit_file, which reach only the workspace. If an earlier pass is quoted below, it FAILED the suites: read what they said and change the file so that they pass.', "ground_write")):
+        got = intent.names_a_tool(q, lib)
+        check(f"his words name {want}: {q[:50]!r}", got == want, f"named {got!r}")
+    # A NAME OUTRANKS A PHRASE IN THE SAME WORDS (WHAT'S LEFT C51, its follow-up, 2026-10-20;
+    # his card: "Name outranks a phrase"): "the rack report" is rack_report's name, and
+    # rack_list's "the rack" lies across it -- one naming, so no card. Phrases of two
+    # skills in different words still tie, and are put to him.
+    ch, sure = intent.tool_choices("give me the rack report: installed, loaded and declared", lib)
+    check("a skill's name outranks another's phrase across the same words: no card",
+          sure and ch == ["rack_report"], f"{ch} {sure}")
+    ch, sure = intent.tool_choices("read the rack, then write a note about it, then commit it", lib)
+    check("... phrases of two skills in different words still tie",
+          not sure and ch == ["git_commit", "rack_list"], f"{ch} {sure}")
 
 
 def test_no_router_in_the_order_means_no_tool(reg, lib, book):
@@ -10522,6 +10600,25 @@ def test_the_router_names_the_task_it_packs(reg, lib, book):
     check("with no task named, the task is his words, and the record says so",
           "Answer the Original Objective above" in seen.get("Reasoner", "")
           and any("named no task" in n for n in ctx.notes), str(ctx.notes)[-300:])
+    # THE CODER WRITES (WHAT'S LEFT C39, 2026-10-20, his card: "Reads only; coder writes"):
+    # sitting 377's Router wrote the fix with write_file before the Expert Coder sat. With a
+    # coder waiting behind it, the Router is handed no tool that writes, and a write it names
+    # anyway is refused.
+    g39 = Path(tempfile.mkdtemp())
+    r39 = Stub(reply=lambda a: ("<action>write_file</action><filepath>fix.py</filepath>"
+                                "<content>print(1)</content>") if a.key == "router" else "x")
+    ctx39 = RunContext(objective="which running order is slowest?")
+    ctx39.flags |= {"technical", "needs_tool"}
+    run_pipeline(ctx39, reg, r39, lib, env_for(g39, reg, r39, skills=lib),
+                 steps=book.get("default"), report=lambda m: None)
+    # The Router sits again after its refused write (the follow-up hop), so the prompt
+    # that carries "AFTER YOU" is its first.
+    router39 = next((p for n, p in r39.seen if n == "Router"), "")
+    check("a Router with a coder waiting behind it is handed no tool that writes (C39)",
+          "AFTER YOU: Expert Coder" in router39
+          and any("a coder waits behind it" in n for n in ctx39.notes), str(ctx39.notes)[-400:])
+    check("... and the write it names anyway is refused: nothing lands",
+          not (g39 / "agent_workspace" / "fix.py").exists(), str(ctx39.notes)[-300:])
 
 
 def test_the_router_moves_up_on_its_own(reg, lib, book):
@@ -10827,19 +10924,29 @@ def test_manjuel_reads_the_request(reg, lib, book):
           str(intent._ppmi_signs("statistics", 16)))
     by = intent.PPMI_BY
     note = "propose a note for later sessions: the measure ran today"
+    # OWN WORDS WIN, RESTATED (WHAT'S LEFT C51, its follow-up, 2026-10-20; his card: "Own
+    # words win; restate"). Since every skill declares its phrases, sentiment, the stats
+    # ask and the note are named by the skills' own words and the reader is not asked;
+    # the reader's own paths are held on asks no skill's words are in, measured that day.
+    variance = "the variance of 4, 8, 15, 16, 23, 42?"
+    jot = "propose a note for the sessions to come: the measure was green"
     for q, want, who, writes in (
-            # the table's "the glass" gives way to the reader
+            # its own "classify the sentiment" stands; the table's "the glass" names nothing
             ("classify the sentiment of this feedback: the glass is slow but I love it",
-             "classify_sentiment", by, False),
+             "classify_sentiment", "", False),
             # symbols' own "where is" stands, and the reader is not asked
             ("where is the chain standing right now: ground, workspace, session, card?",
              "symbols", "", False),
-            (stats, "statistics", by, False),
+            (stats, "statistics", "", False),
+            # no skill's own words: the reader reads statistics at its line
+            (variance, "statistics", by, False),
             ("run measure.py from the workspace and tell me what it printed", "", "", False),
             ("git status", "git_status", "", False),
             ("what models are on the rack?", "rack_list", "", False),
-            # the table's "ran today" gives way, and the write is the Router's
-            (note, "", "", True)):
+            # remember's own "a note for later" stands, over when's shorter "ran today"
+            (note, "remember", "", False),
+            # no skill's own words: the reader reads a write, and the write is the Router's
+            (jot, "", "", True)):
         named, chose, reading, said, wants = intent.read_the_request(q, lib)
         check(f"his rule: {want or 'no tool'} by {who or 'his words'}: {q[:36]!r}",
               named == want and chose == who and wants == writes,
@@ -10858,25 +10965,35 @@ def test_manjuel_reads_the_request(reg, lib, book):
         return ctx
 
     ctx = turn(stats)
+    check("in a turn, his words for the numbers name statistics, not a question about it",
+          ctx.named_tool == "statistics" and ctx.named_by != "asks_about_a_tool",
+          f"{ctx.named_tool!r} {ctx.named_by!r} {str(ctx.notes)[:300]}")
+    ctx = turn(variance)
     check("in a turn, the reader's pick is the tool, chosen by the PPMI reader and said so",
           ctx.named_tool == "statistics" and ctx.named_by == by
           and any("chosen by the PPMI reader" in n for n in ctx.notes),
           f"{ctx.named_tool!r} {ctx.named_by!r} {str(ctx.notes)[:300]}")
     check("... the reading in the record, its score and the next best",
-          any(n.startswith("intent: the PPMI reader reads `statistics`") and "`rack_pull`" in n
-              for n in ctx.notes), str(ctx.notes)[:300])
+          any(n.startswith("intent: the PPMI reader reads `statistics`")
+              and n.split("request: ")[-1].count("`") == 6 for n in ctx.notes),
+          str(ctx.notes)[:300])
     check("... and a reading is not a decided call: the Router still writes it",
           not any("decided by arithmetic" in n for n in ctx.notes), str(ctx.notes)[:300])
-    ctx = turn(note)
+    ctx = turn(jot)
     check("a write the reader reads names no tool and wakes the Router to decide it",
           not ctx.named_tool and "needs_tool" in ctx.flags
           and any("a skill that writes" in n for n in ctx.notes),
           f"{ctx.named_tool!r} {sorted(ctx.flags)} {str(ctx.notes)[:300]}")
-    ctx = turn("what about the mean and median of those?",
-               (("operator", "what are the numbers in the measure?"),
-                ("steward", "4, 8, 15, 16, 23 and 42.")))
+    thread = (("operator", "what are the numbers in the measure?"),
+              ("steward", "4, 8, 15, 16, 23 and 42."))
+    ctx = turn("what about the variance of those?", thread)
     check("on a follow-up the reader's pick is withdrawn like any guess, and the door answers",
           not ctx.named_tool and any("withdrawn" in n for n in ctx.notes),
+          f"{ctx.named_tool!r} {str(ctx.notes)[:300]}")
+    ctx = turn("what about the mean and median of those?", thread)
+    check("... but a skill his own words name is his naming, and is kept on a follow-up",
+          ctx.named_tool == "statistics"
+          and not any("`statistics` withdrawn" in n for n in ctx.notes),
           f"{ctx.named_tool!r} {str(ctx.notes)[:300]}")
 
 
@@ -11279,7 +11396,7 @@ def test_a_skill_owns_its_own_dispatch(reg, lib, book):
         check(f"a declared phrase dispatches: {said!r}",
               intent.names_a_tool(said, lib) == "index_ground", said)
     check("names_a_tool still accepts a bare keyword set, as it always did",
-          intent.names_a_tool("git status", lib.keywords()) == "git_status")
+          intent.names_a_tool("git status", lib) == "git_status")
 
     # SITTING 68, AND THE LESSON IS OLD: "alright boys, new index new day"
     # matched the bare word `index`, dispatched a full reindex, and ran 326
@@ -11451,7 +11568,7 @@ def test_a_sitting_number_resolves_to_its_runs(reg, lib, book):
 
     # it routes deterministically now, instead of the Router guessing
     check("'review sitting 63' names the `sitting` skill",
-          intent.names_a_tool("review sitting 63", lib.keywords()) == "sitting")
+          intent.names_a_tool("review sitting 63", lib) == "sitting")
     check("and it reads, never writes",
           "sitting" in REVIEW_ONLY_SKILLS)
 
@@ -12112,7 +12229,11 @@ def test_one_turn_gives_one_account_of_how_a_tool_was_chosen(reg, lib, book):
 
     g = Path(tempfile.mkdtemp())
     r = Stub(reply=lambda a: "answered")
-    ctx = RunContext(objective="tell me about your skills", feed="")
+    # THE VEHICLE, RESTATED (WHAT'S LEFT C51, its follow-up, 2026-10-20; his card: "Name or
+    # table only"): "tell me about your skills" names skill_report by its own phrase, so it
+    # now runs the report rather than reading its declaration; the one account is held on
+    # a question that says the skill's name.
+    ctx = RunContext(objective="tell me about the skill report", feed="")
     run_pipeline(ctx, reg, r, lib, env_for(g, reg, r),
                  steps=book.get("default"), report=lambda s: None)
     notes = " || ".join(ctx.notes)
@@ -12127,6 +12248,9 @@ def test_one_turn_gives_one_account_of_how_a_tool_was_chosen(reg, lib, book):
     check("   so the two notes no longer contradict",
           not ("objective names" in notes and "ASKS ABOUT" in notes),
           notes[:240])
+    check("   and 'tell me about your skills' is his words for the report, not a question about it",
+          intent.names_a_tool("tell me about your skills", lib) == "skill_report"
+          and not intent.asks_about_a_tool("tell me about your skills", lib))
 
     # NOT FIRING: when the objective really does name a tool, the note is
     # the plain one and nothing pretends a branch intervened.
@@ -20448,7 +20572,7 @@ def test_write_read_and_speak_about_it(reg, lib, book):
     for phrasing in ("write a note about the rack, then read it back",
                      "save a summary of the rack to a file",
                      "write down what models we have and read it back"):
-        named = intent.names_a_tool(phrasing, lib.keywords())
+        named = intent.names_a_tool(phrasing, lib)
         check(f"still matches a reading skill: {phrasing[:34]!r}",
               named in REVIEW_ONLY_SKILLS, named or "-")
 
