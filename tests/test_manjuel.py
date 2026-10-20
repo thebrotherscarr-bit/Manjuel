@@ -8877,6 +8877,30 @@ def test_the_ground_watches_itself(reg, lib, book):
     w.note(g / "notes.txt")
     check("material alone does not force a reload",
           w.drain()[0] is False)
+    # IN ITS OWN PLACE, AND NAMED (WHAT'S LEFT C56, 2026-10-20): a file that only
+    # shares a declaration's name, or sits deeper than the loaders read, reloads
+    # nothing; a reload says which file moved, on the line the REPL and the door print.
+    for rel in (("atlas", "pipelines.md"), ("projects", "x", "agents.md"),
+                ("agents", "old", "steward.md"), ("skills", "drafts", "x.md")):
+        w.note(g.joinpath(*rel))
+        check(f"{'/'.join(rel)} is not a declaration: no reload",
+              w.drain()[0] is False, "/".join(rel))
+    w.note(g / "agents" / "router.md")
+    w.note(g / "commands.md")
+    check("a declaration in its own place reloads, and the drain names it",
+          w.drain()[0] is True
+          and {p.name for p in w.last_declarations} == {"commands.md", "router.md"},
+          str(w.last_declarations))
+    import contextlib as _cl
+    import io as _io
+    from types import SimpleNamespace as _NS
+    from manjuel import cli as _cli
+    w.note(g / "agents" / "router.md")
+    said = _io.StringIO()
+    with _cl.redirect_stdout(said):
+        _cli._apply_ground_changes(_NS(watcher=w, load=lambda: True, rack_ok=False))
+    check("... and the line that says it reloaded names the file",
+          "router.md" in said.getvalue() and "reloaded" in said.getvalue(), said.getvalue())
 
     check("availability is a probe, not an import crash",
           available() in (True, False))

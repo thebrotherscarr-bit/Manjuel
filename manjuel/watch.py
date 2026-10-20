@@ -67,6 +67,11 @@ class GroundWatch:
         self._lock = threading.Lock()
         self._reload_needed = False
         self._changed: set[Path] = set()
+        # WHICH DECLARATION MOVED (WHAT'S LEFT C56, 2026-10-20): kept with the
+        # reload and handed out by the drain, so the line that says "reloaded"
+        # can say what moved.
+        self._declared: set[Path] = set()
+        self.last_declarations: list[Path] = []
         self._observer = None
         # WHAT THE INDEX IS TOLD TO HOLD (2026-09-15). The doors hand in
         # index_roots.txt as index_ground reads it (skills.index_roots), once,
@@ -126,8 +131,15 @@ class GroundWatch:
             return                        # the record's own hand
         if is_secret(p.name):
             return                        # a secret: touched is ignored
-        declaration = ((rel.parts[0] in _DECLARATION_DIRS and p.suffix == ".md")
-                       or rel.name in _DECLARATION_FILES)
+        # A DECLARATION IN ITS OWN PLACE (WHAT'S LEFT C56, 2026-10-20). This took
+        # any .md at any depth under agents/ or skills/, and a file named
+        # pipelines.md, commands.md or agents.md anywhere in the ground; sitting
+        # 373 reloaded with nothing written to the files the loaders read. A
+        # declaration is one .md directly in agents/ or skills/ -- the only files
+        # the loaders read there -- or one of the three at the ground's root.
+        declaration = ((len(rel.parts) == 2 and rel.parts[0] in _DECLARATION_DIRS
+                        and p.suffix == ".md")
+                       or (len(rel.parts) == 1 and rel.name in _DECLARATION_FILES))
         # logs are indexed too, but they change every turn by our own hand --
         # indexing them stays with /index, not the watcher.
         material = (p.suffix.lower() in TEXT_SUFFIXES and rel.parts[0] != "logs"
@@ -143,6 +155,7 @@ class GroundWatch:
         with self._lock:
             if declaration:
                 self._reload_needed = True
+                self._declared.add(p)
             if material:
                 self._changed.add(p)
 
@@ -155,6 +168,8 @@ class GroundWatch:
             changed = sorted(self._changed)
             self._reload_needed = False
             self._changed.clear()
+            self.last_declarations = sorted(self._declared)
+            self._declared.clear()
         return reload_needed, changed
 
     def requeue(self, paths) -> None:

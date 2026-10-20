@@ -378,7 +378,10 @@ def _apply_ground_changes(sess: Session) -> None:
     reload_needed, changed = sess.watcher.drain()
     if reload_needed:
         if sess.load():
-            print(ink.dim("  ground changed on disk — seats, skills and "
+            # WHICH FILE (WHAT'S LEFT C56, 2026-10-20): the line names what moved.
+            moved = [p.name for p in getattr(sess.watcher, "last_declarations", [])]
+            said = f" ({', '.join(moved)})" if moved else ""
+            print(ink.dim(f"  ground changed on disk{said} — seats, skills and "
                           "pipelines reloaded"))
         else:
             print("  ground changed on disk and the reload FAILED — "
