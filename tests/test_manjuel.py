@@ -3761,6 +3761,43 @@ def test_the_turn_deadline(reg, lib, book):
     check("... and a real turn's wake card stops its clock the same way (the wire)",
           any("at the card do not count" in n for n in woke.notes), str(woke.notes)[-400:])
 
+    # THE STAGE CLOCK (WHAT'S LEFT C13 (a), his card "Whole stage, every pipeline"): a seat's
+    # `Timeout:` bounds its whole stage. A call late in it is handed what the stage has left and
+    # its refusal names the seat's own dial; the turn's time, when smaller, is still the turn's;
+    # a card's wait stops the stage clock too; and a real turn starts it as each seat sits.
+    from manjuel.pipeline import _stage_left
+    st = RunContext(objective="x")
+    check("a run context carries the stage clock, unset before a seat sits (C13)",
+          getattr(st, "stage_at", "absent") is None and _stage_left(st) is None,
+          repr(getattr(st, "stage_at", "absent")))
+    st.stage_at, st.deadline_at = _t.time() + 40, _t.time() + 500
+    staged = _within_deadline(seat, st)
+    check("a call late in its stage is bound at what the stage has left, the seat's own dial (C13)",
+          35 <= (staged.timeout or 0) <= 40 and staged.cut_to_turn is False,
+          repr((staged.timeout, staged.cut_to_turn)))
+    st.deadline_at = _t.time() + 20
+    turned = _within_deadline(seat, st)
+    check("... and the turn's time, when it is the smaller, is still the turn's (C13)",
+          (turned.timeout or 0) <= 20 and turned.cut_to_turn is True,
+          repr((turned.timeout, turned.cut_to_turn)))
+    st.stage_at, st.deadline_at = _t.time() + 100, _t.time() + 100
+    stage_was = st.stage_at
+    _b.ask_card = lambda prompt, color="amber": (_t.sleep(0.3), "n")[1]
+    try:
+        _ask("  wake it? [y/N]: ", "green", st)
+    finally:
+        if had:
+            _b.ask_card = saved
+        else:
+            del _b.ask_card
+    check("a card's wait stops the stage clock too (C13)",
+          st.stage_at - stage_was >= 0.3, f"{st.stage_at - stage_was:.2f}")
+    sc = RunContext(objective="a plain question with no tools needed")
+    run_pipeline(sc, reg, rc, lib, ec, steps=book.get("default"), report=lambda s: None)
+    check("a real turn starts each seat's stage clock as it sits (C13)",
+          getattr(sc, "stage_at", None) is not None and 0 < sc.stage_at - _t.time() <= 600,
+          repr(getattr(sc, "stage_at", None)))
+
 
 def test_the_loops_of_2026_09_08(reg, lib, book):
     """The REPL read of 2026-09-08 (TASKS "From the REPL read"), the

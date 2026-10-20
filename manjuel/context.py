@@ -410,6 +410,11 @@ class RunContext:
     # Set by run_pipeline beside deadline_at and inherited by a sub-run, so the
     # record and the OUT OF TIME block name the limit that actually held.
     deadline_s: float | None = None
+    # THE STAGE CLOCK (WHAT'S LEFT C13 (a), his card of 2026-10-19: "Whole stage, every
+    # pipeline"): the moment the seat sitting now has spent its own `Timeout:` -- its first
+    # call, every tool-loop hop, every press of the ruling loop and every repair together.
+    # Set by run_pipeline as each seat sits; None before the first.
+    stage_at: float | None = None
     # Seats that were NOT seated because the deadline had passed -- one
     # name per seat, recorded as it happens so the recompose can say OUT OF
     # TIME without any seat remembering to. Same arithmetic as failures.

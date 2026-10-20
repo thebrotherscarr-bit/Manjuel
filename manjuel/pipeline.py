@@ -320,6 +320,20 @@ def _budget(ctx: RunContext) -> float | None:
     return at - time.time()
 
 
+def _stage_left(ctx: RunContext) -> float | None:
+    """Seconds left in the stage of the seat sitting now, or None before the first.
+
+    A SEAT'S `Timeout:` BOUNDS ITS WHOLE STAGE (WHAT'S LEFT C13 (a), his card of
+    2026-10-19: "Whole stage, every pipeline"). It bounded each call: sitting
+    379's Router took five passes and 480 s on a 300 s Timeout, and the Judge,
+    seated last, was cut and did not rule. The clock starts as the seat sits
+    (run_pipeline) and every call in its stage is handed what is left of it."""
+    at = getattr(ctx, "stage_at", None)
+    if at is None:
+        return None
+    return at - time.time()
+
+
 def _within_deadline(seat: Agent, ctx: RunContext) -> Agent:
     """The seat with its `timeout` cut to the seconds left in the turn.
 
@@ -329,13 +343,21 @@ def _within_deadline(seat: Agent, ctx: RunContext) -> Agent:
     is never handed to the runtime -- the loop above skips it by name.
     """
     left = _budget(ctx)
-    if left is None:
+    stage = _stage_left(ctx)
+    if left is None and stage is None:
         return seat
     own = float(getattr(seat, "timeout", None) or _runtime.SEAT_TIMEOUT)
-    left = max(1.0, left)
+    # THE STAGE'S OWN CLOCK FIRST (WHAT'S LEFT C13 (a)): a later call in a stage --
+    # a tool-loop hop, a press of the ruling loop, a repair -- is handed what the
+    # seat's `Timeout:` has left, and a refusal at it names the seat's own dial.
+    bound, turn = own, False
+    if stage is not None and max(1.0, stage) < bound:
+        bound = max(1.0, stage)
     # `cut_to_turn` says whose number the bound now is, so a refusal at it
     # names the turn's dial and not the seat's (runtime._seat_refusal).
-    return replace(seat, timeout=left, cut_to_turn=True) if left < own else seat
+    if left is not None and max(1.0, left) < bound:
+        bound, turn = max(1.0, left), True
+    return replace(seat, timeout=bound, cut_to_turn=turn) if bound < own else seat
 
 # The first line of a windowed read (skills.windowed): the shapes that mean
 # "you were handed PART of this file". Read by the tool loop so the record
@@ -2300,6 +2322,9 @@ def _ask(prompt: str, color: str = "amber", ctx: RunContext | None = None) -> st
             ctx.deadline_at += waited
             ctx.notes.append(f"deadline: {waited:.1f}s at the card do not count -- the "
                              f"turn's clock stood still while it waited")
+        # ...and the stage's (WHAT'S LEFT C13 (a)): a card asked mid-stage is his time.
+        if ctx is not None and getattr(ctx, "stage_at", None) is not None:
+            ctx.stage_at += waited
 
 
 def _ask_which_tool(ctx: RunContext, choices: list, skills: SkillLibrary,
@@ -3054,6 +3079,9 @@ def run_pipeline(
                           if f in FLAGS_RAISED and (a.key, f) not in seats.summoned]
         prompt = build_prompt(agent, ctx, skills)
         started = time.time()
+        # THE STAGE CLOCK STARTS (WHAT'S LEFT C13 (a)): this seat's `Timeout:` is its
+        # whole stage's -- its first call, every hop, press and repair in it together.
+        ctx.stage_at = started + float(getattr(agent, "timeout", None) or _runtime.SEAT_TIMEOUT)
 
         try:
             # The spinner runs until the FIRST token, then erases itself and
