@@ -3224,6 +3224,22 @@ def run_pipeline(
             # for one anyway (in markup), the handoff below carries the ask
             # to the Router instead of printing it. One executor, kept.
             allowed = agent.callable_set(skills.keywords())
+            # THE CODER WRITES (WHAT'S LEFT C39, 2026-10-20, his card: "Reads only; coder
+            # writes"). Sitting 377's Router wrote the fix with write_file before the Expert
+            # Coder sat, and the coder wrote over it. When a seat that writes code waits
+            # behind the Router this turn, the Router reads and packs and is handed no tool
+            # that writes; env.caller_allowed, below, refuses one it names anyway.
+            if agent.key == "router" and any(
+                    registry.has(s) and _BUILDERS.get(registry.get(s).key) is _coder_prompt
+                    for s in (getattr(ctx, "package_for", None) or [])):
+                held_back = sorted(allowed & WRITING_SKILLS)
+                allowed = allowed - WRITING_SKILLS
+                if held_back:
+                    note = (f"the Router reads and packs: a coder waits behind it, so it is "
+                            f"handed no tool that writes ({', '.join(held_back)})")
+                    if note not in ctx.notes:
+                        ctx.notes.append(note)
+                    report("      " + ink.dim(note))
             executes = agent.stage == "route" or agent.key == "router"
             tools = (skills.tool_schemas(allowed)
                      if allowed and executes and runtime.supports_tools(agent.model)

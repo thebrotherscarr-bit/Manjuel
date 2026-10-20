@@ -10539,6 +10539,23 @@ def test_the_router_names_the_task_it_packs(reg, lib, book):
     check("with no task named, the task is his words, and the record says so",
           "Answer the Original Objective above" in seen.get("Reasoner", "")
           and any("named no task" in n for n in ctx.notes), str(ctx.notes)[-300:])
+    # THE CODER WRITES (WHAT'S LEFT C39, 2026-10-20, his card: "Reads only; coder writes"):
+    # sitting 377's Router wrote the fix with write_file before the Expert Coder sat. With a
+    # coder waiting behind it, the Router is handed no tool that writes, and a write it names
+    # anyway is refused.
+    g39 = Path(tempfile.mkdtemp())
+    r39 = Stub(reply=lambda a: ("<action>write_file</action><filepath>fix.py</filepath>"
+                                "<content>print(1)</content>") if a.key == "router" else "x")
+    ctx39 = RunContext(objective="which running order is slowest?")
+    ctx39.flags |= {"technical", "needs_tool"}
+    run_pipeline(ctx39, reg, r39, lib, env_for(g39, reg, r39, skills=lib),
+                 steps=book.get("default"), report=lambda m: None)
+    router39 = {n: p for n, p in r39.seen}.get("Router", "")
+    check("a Router with a coder waiting behind it is handed no tool that writes (C39)",
+          "AFTER YOU: Expert Coder" in router39
+          and any("a coder waits behind it" in n for n in ctx39.notes), str(ctx39.notes)[-400:])
+    check("... and the write it names anyway is refused: nothing lands",
+          not (g39 / "agent_workspace" / "fix.py").exists(), str(ctx39.notes)[-300:])
 
 
 def test_the_router_moves_up_on_its_own(reg, lib, book):
