@@ -38,7 +38,13 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (2026-10-20, 07:59):** step (3)'s group 3 built by Steward on your cards with its strokes and recorded: C38's
+  **Where it stands (2026-10-20, 09:43):** step (3)'s group 4, its clear mends built by Steward on your cards with their
+  strokes and recorded: C40 (whole rebuild words), C56 (declarations in their place, the reload named), C52 (flags from
+  a seat's own words), C45 (a quoted flag taken out whole) and C42 (the Proofreader's sound-alikes); C41 ruled. C38 sent
+  and merged (pull request 45); these on the line of work, its pull request 46 open and red only on the map and the
+  refusals' tail, which its ship regenerates; next, that ship, the restart, then routing (C39, C49 to C51, C53, C54),
+  one piece at a time, each measured on the record first.
+  **At 07:59 it stood:** step (3)'s group 3 built by Steward on your cards with its strokes and recorded: C38's
   caps (the Reasoner, the Quality Evaluator and Jesster uncapped, the Router at 2,000, a seat with no cap packed for half
   its window), and C48 and C69 ruled to H20. C13 sent and merged (pull request 44); C38 on the line of work, its pull
   request 45 open and red only on the map and the refusals' tail, which its ship regenerates; next, that ship, the
@@ -181,8 +187,6 @@ half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
 - **C44. The estate turn cannot read the covenant.** Asked about the covenant, it answered with the Steward's description of
   itself, and Manjuel ruled that SUPPORTED after six and a half minutes on gemma4:12b (sitting 373): C3's question, failing
   another way. Grounding and the slow routes, I2's (g) and (h). *(INVENTORY P3)*
-- **C45. The Steward narrates a flag it raised, with the flag taken out.** "I raise `` to enable the chain to perform the task",
-  in a follow-up answered at the door (sitting 377). Part of H24, plain by default. *(INVENTORY S14)*
 
 ### The engine
 
@@ -193,18 +197,11 @@ half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
   (sitting 373). *(INVENTORY K35)*
 - **C51. "lint the code in measure.py from the workspace" named `list_directory`, not the linter** (sitting 375).
   *(CHANGELOG, "core: routing, its second part, the Router's package")*
-- **C52. A file's own words woke a seat.** pipelines.md, read for an answer, raised `technical` with its own example tags
-  (sitting 375): a seat woken by what a tool returned, not by your words. *(CHANGELOG, "core: routing, its second part, the
-  Router's package")*
 - **C53. A long new question taken for a follow-up.** In sitting 376 a fresh question was read as a follow-up ("check what you
   tell me"), so its level only tagged it. *(CHANGELOG, "core: routing, its third part, the levels")*
 - **C54. Two questions no tool answers brought the Router, and the answer missed both.** The Router paged through SEAT_LOG.md
   (sitting 376); the level-2 line, over 200 characters, is to be checked. *(CHANGELOG, "core: routing, its third part, the
   levels")*
-- **C56. The REPL reloaded with nothing changed.** At `/use default` in sitting 373 it said "ground changed on disk — seats,
-  skills and pipelines reloaded", with nothing written under agents/ or skills/, nor to pipelines.md or commands.md, since 09:32.
-  The watcher takes a file named agents.md, commands.md or pipelines.md anywhere in the ground for a declaration
-  (`manjuel/watch.py`); the cause is not found. *(HANDOFF, 2026-10-12, sitting 373)*
 - **C58. The coder flow's brief answered beside the question.** In sitting 371, asked to make HANDOFF.md's header name its
   newest block, `coder-tree`'s brief named tests/HANDOFF.md and a different change; it stopped at its first gate on your card.
   Grounding, I2's (g). *(INVENTORY F2)*
@@ -1127,6 +1124,20 @@ goals". The steps under each are proposed from the disk; each is yours to change
 ## Done
 
 Finished lines, newest first. A number is never used again.
+
+- **C56. The REPL reloaded with nothing changed.** DONE 2026-10-20, by Steward on your cards (step (3), group 4;
+  "Clear mends first"): a seat or skill file counts only in its own place, and the reload line names the file that
+  moved. The line as it stood: `/use default` in sitting 373 said seats, skills and pipelines were reloaded with
+  nothing written to them; the cause was not found, and the line now names what moved if it comes again.
+  *(CHANGELOG, "core: a seat or skill file counts only in its own place")*
+- **C52. A file's own words woke a seat.** DONE 2026-10-20, by Steward on your cards (step (3), group 4; "Clear mends
+  first"): a flag is read from a seat's own words, never from a tool's text inside its reply. The line as it stood:
+  pipelines.md, read for an answer, raised `technical` with its own example tags (sitting 375).
+  *(CHANGELOG, "core: a flag is read from a seat's own words")*
+- **C45. The Steward narrated a flag it raised, with the flag taken out.** DONE 2026-10-20, by Steward on your cards
+  (step (3), group 4; "Clear mends first"): a flag in quote marks is taken out of the shown text whole, marks and all.
+  The line as it stood: "I raise `` to enable the chain to perform the task" (sitting 377); the narrating is H24's.
+  *(CHANGELOG, "core: a flag in quote marks")*
 
 - **C40. The Router rebuilt the whole search index unasked.** DONE 2026-10-20, by Steward on your cards (the road to
   v0.2.6, its step (3), group 4; your card "Clear mends first"): index_ground's rebuild words count only as whole
