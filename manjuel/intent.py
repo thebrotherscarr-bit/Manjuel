@@ -339,8 +339,17 @@ def asks_about_a_tool(objective: str, keywords) -> str:
 
     A question about a tool is answered FROM THE SKILL'S OWN MARKDOWN,
     which is authoritative and already written: facts read, not generated.
+
+    A QUESTION IS ABOUT A SKILL WHEN IT SAYS THE SKILL'S NAME (WHAT'S LEFT C51,
+    its follow-up, 2026-10-20; his card: "Name or table only"). A declared
+    `**Says:**` phrase is the act itself: "what are the mean, median and
+    standard deviation of 4, 8, 15?" asks for the numbers, not about
+    `statistics`. So the naming here is read off the names and the shared
+    table alone. Measured over the 748 asks on the record: that ask moved, and
+    nothing else did.
     """
-    named = names_a_tool(objective, keywords)
+    named = names_a_tool(objective, keywords.keywords() if hasattr(keywords, "keywords")
+                         else keywords)
     if not named:
         return ""
     text = " ".join((objective or "").lower().split())
@@ -576,6 +585,7 @@ def _tool_hits(objective: str, keywords) -> tuple[list, object, str]:
     # Each hit is ranked (own, leads, length): OWN is a skill's own words
     # against the shared table; LEADS is the form opening what he said.
     hits: list[tuple[tuple[bool, bool, int], str]] = []
+    spans: list[tuple[list, bool, str]] = []    # where each hit stands, is it a name, whose
     for kw in kws:
         declared: tuple = ()
         spec = None
@@ -593,7 +603,9 @@ def _tool_hits(objective: str, keywords) -> tuple[list, object, str]:
             f = _norm(form)
             if not f:
                 continue
-            if not re.search(rf"(?<![a-z0-9_]){re.escape(f)}(?![a-z0-9_])", hay):
+            at = [m.span() for m in re.finditer(
+                rf"(?<![a-z0-9_]){re.escape(f)}(?![a-z0-9_])", hay)]
+            if not at:
                 continue
             if (not is_phrase and f in _FUNCTION_WORDS
                     and not _named_not_used(f, hay, objective or "")):
@@ -607,7 +619,20 @@ def _tool_hits(objective: str, keywords) -> tuple[list, object, str]:
                 continue
             leads = lead == f or lead.startswith(f + " ")
             hits.append(((is_own, leads, len(f)), kw))
-    return hits, kws, hay
+            spans.append((at, is_own and not is_phrase, kw))
+    # A SKILL'S NAME OUTRANKS ANOTHER SKILL'S PHRASE IN THE SAME WORDS (WHAT'S LEFT
+    # C51, its follow-up, 2026-10-20; his card: "Name outranks a phrase"). "give me
+    # the rack report" says rack_report's name, and rack_list's "the rack" lies
+    # across it: one naming, not two, so he is not asked which. A phrase or table
+    # word that stands only where another skill's name stands is dropped. Measured
+    # over the 748 asks on the record: the two rack-report cards ended and nothing
+    # else moved; the wider reading, a name over any phrase anywhere, named
+    # git_commit outright for a question that asked "how does he know when to git
+    # commit".
+    names = [(s, e, kw) for at, is_name, kw in spans if is_name for s, e in at]
+    across = [not is_name and all(any(ns < e and s < ne and nk != kw for ns, ne, nk in names)
+                                  for s, e in at) for at, is_name, kw in spans]
+    return [h for h, gone in zip(hits, across) if not gone], kws, hay
 
 
 def tool_choices(objective: str, keywords) -> tuple[list[str], bool]:

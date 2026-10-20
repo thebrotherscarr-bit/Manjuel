@@ -2562,7 +2562,19 @@ def run_pipeline(
     plain = False
     if named and not make and not by and any(str(s).strip().lower() == "router" for s in steps):
         choices, sure = intent.tool_choices(ctx.objective, skills)
-        if not sure and len(choices) > 1:
+        if not sure and len(choices) > 1 and intent.is_big_objective(ctx.objective):
+            # SEVERAL ACTS, AND HIS WORDS NAME TWO SKILLS EQUALLY (WHAT'S LEFT C51, its
+            # follow-up, 2026-10-20; his card: "it should just run one after the other"):
+            # no one skill is the request, so none is put to him -- the route below comes
+            # first and the acts are worked in their turn. "read the rack, then write a
+            # note about it, then commit it" named git_commit on its own "commit it", tied
+            # with rack_list's "the rack", and would only have committed.
+            tied = ", ".join(f"`{c}`" for c in choices)
+            ctx.notes.append(f"intent: his words name {tied} equally, and the request "
+                             "holds several acts -- no one of them is the request, so "
+                             "it is routed first")
+            named = ""
+        elif not sure and len(choices) > 1:
             named, plain = _ask_which_tool(ctx, choices, skills, report)
 
     # AN UNKNOWN SKILL NAME IS SAID SO (the review of 2026-09-08). Sitting
