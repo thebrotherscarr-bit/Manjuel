@@ -10186,6 +10186,40 @@ def test_a_skill_asked_for_in_its_own_words_is_the_one_named(reg, lib, book):
         got = intent.names_a_tool(q, lib)
         check(f"the table still names {want}: {q!r}", got == want, f"named {got!r}")
 
+    # EVERY SKILL DECLARES ITS OWN PHRASES (WHAT'S LEFT C51, 2026-10-20, his cards: "Every skill
+    # declares them", "Require it, move the table"). The linter declared none, so "lint the code in
+    # measure.py from the workspace" named list_directory on the table's "the workspace". Now every
+    # skill file carries `**Says:**`, no phrase is claimed by two, and the shared table keeps only
+    # the here-words, the generic file words, the number-guarded forms and the bare words.
+    check("every skill declares its own phrases in its own file (**Says:**)",
+          all(s.says for s in lib.specs), str(sorted(s.keyword for s in lib.specs if not s.says)))
+    owners = {}
+    for s in lib.specs:
+        for p in s.says:
+            owners.setdefault(" ".join(p.split()).lower(), set()).add(s.keyword)
+    check("no phrase is claimed by two skills",
+          not {p: k for p, k in owners.items() if len(k) > 1},
+          str({p: sorted(k) for p, k in owners.items() if len(k) > 1}))
+    check("the shared table keeps only the words that belong to no single skill",
+          sorted(intent.ALIASES) == ['git_commit', 'git_pull', 'git_push', 'git_status', 'ground_list', 'ground_read', 'ground_report', 'list_directory', 'sitting'],
+          str(sorted(intent.ALIASES)))
+    # The record's own asks, each naming its skill now (measured that day: these were the faults),
+    # and the coder flow's order still reaching ground_write.
+    for q, want in (
+                    ('lint the code in measure.py from the workspace', 'lint_code'),
+                    ('lint this python: def add(a, b): return a - b', 'lint_code'),
+                    ('fit a trendline through 3, 5, 7, 9 and project the next two', 'linear_regression'),
+                    ('load phi4-mini:latest into VRAM now', 'rack_load'),
+                    ('say aloud: the skills are measured', 'speak'),
+                    ('put these on a timeline: lunch at noon, standup at 9am, merge at 3pm', 'time_align'),
+                    ('what are the mean, median and standard deviation of 4, 8, 15, 16, 23, 42?', 'statistics'),
+                    ('classify the sentiment of this feedback: the glass is slow but I love it', 'classify_sentiment'),
+                    ('propose a note for later sessions: the measure ran today', 'remember'),
+                    ('write a file called hello.md contents are i am steward', 'write_file'),
+                    ('Make this change to the harness itself, on the line of work already open. Read the file first with ground_read, then change it with ground_edit (one exact passage, quoted exactly as it stands) or ground_write (a whole new file) -- never write_file or edit_file, which reach only the workspace. If an earlier pass is quoted below, it FAILED the suites: read what they said and change the file so that they pass.', "ground_write")):
+        got = intent.names_a_tool(q, lib)
+        check(f"his words name {want}: {q[:50]!r}", got == want, f"named {got!r}")
+
 
 def test_no_router_in_the_order_means_no_tool(reg, lib, book):
     """SITTING 369 (2026-10-10, the measure). quick and estate carry no Router,
