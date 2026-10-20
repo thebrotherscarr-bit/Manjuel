@@ -8243,7 +8243,7 @@ def test_counsel_rules_on_counsel_not_furniture(reg, lib, book):
     for q in ("who is the coder", "who is the smith", "who is the guardian",
               "what is the coder"):
         check(f"{q!r} routes to the record, not a guess",
-              intent.names_a_tool(q, lib.keywords()) == "semantic_search")
+              intent.names_a_tool(q, lib) == "semantic_search")
 
     ctx = RunContext(objective="who is the coder?")
     ctx.steps.append(StepResult(agent="Steward", model="m",
@@ -9649,7 +9649,7 @@ def test_the_estate_can_reason_about_time(reg, lib, book):
     check("`when` reads and never writes",
           "when" in REVIEW_ONLY_SKILLS)
     check("'what ran yesterday' routes to `when`, not to a guess",
-          intent.names_a_tool("what ran yesterday", lib.keywords()) == "when")
+          intent.names_a_tool("what ran yesterday", lib) == "when")
     # A WORD IS NOT AN INTENT. The bare adverbs were aliased first, and
     # they match anywhere in an objective -- so ordinary talk that merely
     # MENTIONS a period would have listed transcripts. Same fault as s23
@@ -9658,7 +9658,7 @@ def test_the_estate_can_reason_about_time(reg, lib, book):
                   "what happened on 2026-09-01", "what have we been doing lately",
                   "what ran this week"):
         check(f"{asked!r} asks the record for a period",
-              intent.names_a_tool(asked, lib.keywords()) == "when", asked)
+              intent.names_a_tool(asked, lib) == "when", asked)
     for talk in ("yesterday was rough, lets fix the router",
                  "i was thinking about this last night",
                  "recently the coder has been slow",
@@ -9669,7 +9669,7 @@ def test_the_estate_can_reason_about_time(reg, lib, book):
                  "what do we have to do today",
                  "what do we need to do this week"):
         check(f"{talk!r} is conversation, not a query",
-              intent.names_a_tool(talk, lib.keywords()) != "when", talk)
+              intent.names_a_tool(talk, lib) != "when", talk)
 
     # --- 2b. a PROMPT SKILL gets the clock too, or it cannot do its job
     # time_align promised to find what is OVERDUE while its own CRITICAL
@@ -11315,7 +11315,7 @@ def test_a_skill_owns_its_own_dispatch(reg, lib, book):
         check(f"a declared phrase dispatches: {said!r}",
               intent.names_a_tool(said, lib) == "index_ground", said)
     check("names_a_tool still accepts a bare keyword set, as it always did",
-          intent.names_a_tool("git status", lib.keywords()) == "git_status")
+          intent.names_a_tool("git status", lib) == "git_status")
 
     # SITTING 68, AND THE LESSON IS OLD: "alright boys, new index new day"
     # matched the bare word `index`, dispatched a full reindex, and ran 326
@@ -11487,7 +11487,7 @@ def test_a_sitting_number_resolves_to_its_runs(reg, lib, book):
 
     # it routes deterministically now, instead of the Router guessing
     check("'review sitting 63' names the `sitting` skill",
-          intent.names_a_tool("review sitting 63", lib.keywords()) == "sitting")
+          intent.names_a_tool("review sitting 63", lib) == "sitting")
     check("and it reads, never writes",
           "sitting" in REVIEW_ONLY_SKILLS)
 
@@ -20484,7 +20484,7 @@ def test_write_read_and_speak_about_it(reg, lib, book):
     for phrasing in ("write a note about the rack, then read it back",
                      "save a summary of the rack to a file",
                      "write down what models we have and read it back"):
-        named = intent.names_a_tool(phrasing, lib.keywords())
+        named = intent.names_a_tool(phrasing, lib)
         check(f"still matches a reading skill: {phrasing[:34]!r}",
               named in REVIEW_ONLY_SKILLS, named or "-")
 
