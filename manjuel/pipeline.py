@@ -3857,7 +3857,12 @@ def run_pipeline(
             report("      " + ink.warn(note))
 
         # Any seat may raise a flag; flags gate `When:` steps later in the run.
-        raised = read_flags(output)
+        # FROM THE SEAT'S OWN WORDS (WHAT'S LEFT C52, 2026-10-20): a reply carries
+        # its tools' results above the boundary, and pipelines.md, read for an
+        # answer in sitting 375, raised `technical` with its own example tags. The
+        # flags are read where the law guard reads (`own`, above), and a reply
+        # discarded as a recital raises none.
+        raised = read_flags("" if lifted else own)
         if raised:
             ctx.flags |= raised
             report("      " + ink.dim(f"flags raised: {', '.join(sorted(raised))}"))

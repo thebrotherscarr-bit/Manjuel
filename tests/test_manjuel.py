@@ -671,6 +671,36 @@ def test_tool_loop(reg, lib):
     check("and the SAME call, however often emitted, runs exactly once",
           len(same) == 1, f"{len(same)} calls")
 
+    # A TOOL'S TEXT RAISES NO FLAG (WHAT'S LEFT C52, 2026-10-20). pipelines.md, read
+    # for an answer in sitting 375, carried its own example tags, and the Router's
+    # reply -- its tools' results above its own words -- raised `technical` from
+    # them. A flag is read from the seat's own words only, as the law guard reads.
+    hop3 = {"n": 0}
+
+    def _reads_then_speaks(a):
+        if a.key != "router":
+            return "x"
+        hop3["n"] += 1
+        return ("<action>list_directory</action>" if hop3["n"] == 1
+                else "Read it. <flags>hard</flags>")
+
+    real = lib.execute
+    lib.execute = lambda action, args, e: "an example: <flags>technical</flags> wakes the coder"
+    try:
+        g3 = Path(tempfile.mkdtemp())
+        r3 = Stub(reply=_reads_then_speaks)
+        ctx3 = RunContext(objective="loop forever", feed="")
+        ctx3.flags.add("needs_tool")
+        run_pipeline(ctx3, reg, r3, lib, env_for(g3, reg, r3),
+                     steps=["Security Guardian", "Router"], report=lambda s: None)
+    finally:
+        lib.execute = real
+    check("a flag inside a tool's result is not raised by the seat that read it (C52)",
+          "technical" not in ctx3.flags and hop3["n"] >= 2,
+          f"{sorted(ctx3.flags)}, {hop3['n']} Router calls")
+    check("... while a flag in the seat's own words still is",
+          "hard" in ctx3.flags, str(sorted(ctx3.flags)))
+
     a, args = extract_tool_call(
         "<action>write_file</action><filepath>x.py</filepath><content>if a<b: pass</content>")
     check("xml tool call parses with angle brackets in the payload",
