@@ -463,7 +463,8 @@ def _watch_skills(skills, wire: Wire) -> None:
 #   /drive <goal> | check: <command>
 #       ONE JOB. The model works the goal through the skills, step by step; the
 #       check -- never the model -- decides it is done. A pass shows what changed
-#       and, on his answer, commits the job's own files on its line of work,
+#       and, on his answer, commits the job's own files, with what its passing
+#       check rewrote (the suites' stamps, a map regenerated), on its line of work,
 #       pushes, opens the pull request and waits on CI; green, it asks him to
 #       merge, and his yes merges, deletes the branch on GitHub, closes the line
 #       here and brings main up to date. A job whose check never passed puts its
@@ -626,6 +627,8 @@ class Drive:
         self.item_files: set = set() # (repo, path) the item in hand wrote, not yet saved
         self.touched: set = set()    # (repo, path) the run ever wrote
         self.before: dict = {}       # (repo, path) -> its bytes before the item wrote it (None: new)
+        self.taken: set = set()      # (repo, path) a passing check rewrote, saved with the item (C130)
+        self.baseline: dict = {}     # repo -> {path: digest} unsaved when the run began, or None (C130)
         self.made: dict = {}         # repo -> the commits this run made there
         self.items: list = []        # [item, verdict]
         self.prs: list = []          # pull requests opened
@@ -808,6 +811,71 @@ def _drive_by_repo(files) -> dict:
     return by
 
 
+def _drive_unsaved(repo):
+    """Every changed or new file in one repository, with a digest of its bytes, or
+    None when git cannot say (fail closed: then nothing is taken, C130). Read off
+    git's stdout alone, so a warning is never taken for a file; a world, a secret or
+    client material is never read and never listed."""
+    import hashlib
+    import subprocess
+    from .vectors import is_protected, is_secret
+    seen: dict = {}
+    for argv in (["git", "ls-files", "-m", "-z"],
+                 ["git", "ls-files", "--others", "--exclude-standard", "-z"]):
+        try:
+            p = subprocess.run(argv, cwd=str(repo), capture_output=True,
+                               stdin=subprocess.DEVNULL, timeout=120)
+        except (OSError, subprocess.TimeoutExpired):
+            return None
+        if p.returncode:
+            return None
+        for raw in p.stdout.split(b"\0"):
+            rel = raw.decode("utf-8", "replace").strip()
+            path = Path(repo) / rel
+            if not rel or rel.split("/")[0] == "worlds" or is_secret(rel) or is_protected(path):
+                continue
+            try:
+                seen[rel] = hashlib.sha1(path.read_bytes()).hexdigest() if path.is_file() else "gone"
+            except OSError:
+                return None
+    return seen
+
+
+def _drive_take_check_files(d, report) -> int:
+    """WHAT THE CHECK REWROTE GOES WITH THE JOB (WHAT'S LEFT C130, 2026-10-20, his
+    word: "fix it"). A job's commit took only the files it wrote, so what its own
+    check rewrote -- the suites' stamps, a map regenerated -- was left unsaved, and the
+    switch home was refused. After a pass, every file on the run's lines that is unsaved
+    now, was not when the run began, and is not the job's own joins the item, so the
+    card lists it and the commit takes it. While anything was unsaved when the run
+    began, nothing is taken and the record says why: what the check regenerated may
+    carry that work (C127). Returns how many joined."""
+    have = {(k[0], _drive_rel(*k)) for k in d.item_files | d.taken}
+    took, held = [], []
+    for key, r in d.repos.items():
+        if not r.get("line") or r.get("line") in DRIVE_MAIN or r.get("closed"):
+            continue
+        before = d.baseline.get(key)
+        now = _drive_unsaved(key) if before is not None else None
+        if before is None or now is None:
+            held.append(f"{Path(key).name}: git could not say what was unsaved, so nothing was taken")
+            continue
+        made = sorted(rel for rel in now if rel not in before and (key, rel) not in have)
+        if made and before:
+            held.append(f"{Path(key).name}: {', '.join(made)[:200]} left unsaved -- "
+                        f"{', '.join(sorted(before))[:200]} was unsaved when the run began (C127)")
+            continue
+        for rel in made:
+            d.taken.add((key, str(Path(key) / rel)))
+            took.append(rel)
+    if took or held:
+        d.n += 1
+        d.steps.append([d.n, "check rewrote", "", "\n".join(took + held)])
+        report(f"  [{d.n}] the check rewrote: " + (f"{', '.join(took)[:200]}, saved with the job's own"
+               if took else "nothing taken") + "".join(f"; {h}" for h in held))
+    return len(took)
+
+
 def drive_act(name: str, args: dict, ctx, d) -> str:
     """One call. A writer waits for his answer first and runs only on a yes,
     every time. A tree write on the main line opens the job's own line of work
@@ -911,6 +979,8 @@ def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float
                 d.steps.append([n, "check", check, out])
                 ctx.report(f"  [{n}] check {'PASSED' if ok else 'FAILED'}: {_drive_head(out)}")
                 if ok:
+                    if d.item_files:
+                        _drive_take_check_files(d, ctx.report)    # C130
                     return "passed"
                 messages.append({"role": "tool", "tool_name": "done",
                                  "content": f"The check failed:\n{out}"})
@@ -934,7 +1004,7 @@ def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float
 def _drive_changes(d) -> str:
     """What the item in hand changed, read off git."""
     parts = []
-    for repo, rels in _drive_by_repo(d.item_files).items():
+    for repo, rels in _drive_by_repo(d.item_files | d.taken).items():
         _, stat = _drive_run(["git", "diff", "--stat", "--"] + rels, repo)
         new = [x for x in rels if _drive_run(["git", "ls-files", "--error-unmatch", "--", x], repo)[0]]
         parts.append(f"{Path(repo).name}:" + (("\n" + stat) if stat else "")
@@ -952,7 +1022,7 @@ def _drive_commit_item(d, label: str, report) -> bool:
     title = " ".join(str(label).split())
     title = title if len(title) <= 72 else title[:69] + "..."
     ok = True
-    for repo, rels in _drive_by_repo(d.item_files).items():
+    for repo, rels in _drive_by_repo(d.item_files | d.taken).items():
         c1, o1 = _drive_run(["git", "add", "--"] + rels, repo)
         c2, o2 = _drive_run(["git", "commit", "-m", title, "--"] + rels, repo) if c1 == 0 else (c1, o1)
         d.n += 1
@@ -961,8 +1031,9 @@ def _drive_commit_item(d, label: str, report) -> bool:
         if c2 == 0:
             _, sha = _drive_run(["git", "rev-parse", "HEAD"], repo)
             d.made.setdefault(repo, []).append(sha.strip())
-            for k in [k for k in d.item_files if k[0] == repo]:
+            for k in [k for k in d.item_files | d.taken if k[0] == repo]:
                 d.item_files.discard(k)
+                d.taken.discard(k)
                 d.before.pop(k, None)
         else:
             ok = False
@@ -975,6 +1046,9 @@ def _drive_put_back(d, report, label: str = "") -> None:
     """Put back exactly the item's own files, byte for byte as they were before it
     first wrote them (Nigel's reset, held to them); a file it made is removed."""
     done, kept = [], set()
+    # What a passing check rewrote is not the Steward's to put back: it stays as the check left it (C130).
+    done += [f"{_drive_rel(*k)}: left as the check wrote it" for k in sorted(d.taken)]
+    d.taken.clear()
     for key in sorted(d.item_files):
         x = _drive_rel(*key)
         if key not in d.before:
@@ -1147,7 +1221,7 @@ def _drive_single(d, ctx) -> None:
         said = _drive_changes(d)
         if d.verdict == "unchecked":
             return              # nothing proves it: the change stays, unsaved, for his eyes
-        answer = ctx.ask(f"The check passed. Commit these {len(d.item_files)} file(s) on the line of "
+        answer = ctx.ask(f"The check passed. Commit these {len(d.item_files | d.taken)} file(s) on the line of "
                          f"work, push it, open a pull request and wait on CI?\n{said}\n"
                          f"Approve? [y/n] ")
         if not _drive_yes(answer):
@@ -1239,6 +1313,9 @@ def drive_items(d, spec: dict, ctx) -> None:
         d.n += 1
         d.steps.append([d.n, "check (all)", check, out])
         ctx.report(f"  [{d.n}] the whole, checked once more: {'PASSED' if whole else 'FAILED'}")
+        # What this last check rewrote is saved on the line before the send (C130).
+        if whole and not (d.item_files or d.taken) and _drive_take_check_files(d, ctx.report):
+            whole = _drive_commit_item(d, "What its check rewrote: " + goal, ctx.report)
     if passed == len(todo) and whole:
         d.verdict = "passed"
     elif passed and whole:
@@ -1413,6 +1490,12 @@ def drive(spec, *, skills, env, ground, ask, report,
     report(f"  drive{mode}: {spec['goal']}")
     report(f"  check: {spec['check'] or 'none named (unchecked)'} | model {model}")
     try:
+        # WHAT IS UNSAVED BEFORE THE RUN (C130): noted once, before any write or check, so
+        # what a check later rewrites is told apart from work that was here already.
+        for sub in DRIVE_REPOS:
+            repo = ground / sub if sub else ground
+            if (repo / ".git").exists():
+                d.baseline[str(repo.resolve())] = _drive_unsaved(repo)
         if spec["mode"] in ("plan", "each") and not spec["check"]:
             d.verdict, d.error = "error", f"{spec['mode']} needs a check (| check: <command>) to decide each item"
         elif spec["mode"] == "goal":
