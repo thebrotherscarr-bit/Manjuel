@@ -23,10 +23,17 @@ from .context import POINTING_WORDS
 # THE WORDS THAT BELONG TO NO SINGLE SKILL (WHAT'S LEFT C51, 2026-10-20, his cards: "Every skill
 # declares them", "Require it, move the table"). Each skill declares its own phrases in its own file
 # (`**Says:**`), and a stroke holds that every one does; this table keeps only the here-words, the
-# generic file words, and the forms the number rule still guards. Every other phrase moved into its
-# skill's file that day, measured over the 752 requests on the record: the 18 that route differently
-# were the faults (the linter, a trendline, "say aloud" and the rest), and nothing else moved.
+# generic file words, the forms the number rule still guards, and the bare words a skill may not
+# claim as its own (a declared phrase is two words or more, test_a_skill_owns_its_own_dispatch).
+# Every other phrase moved into its skill's file that day, measured over the 752 requests on the
+# record: the 18 that route differently were the faults (the linter, a trendline, "say aloud" and
+# the rest), and nothing else moved.
 ALIASES: dict[str, tuple[str, ...]] = {
+    # The bare words worth the risk, read as a judgment call below every skill's own words.
+    "git_commit": ("commit",),
+    "git_push":   ("push",),
+    "git_pull":   ("pull",),
+    "git_status": ("dirty", "untracked"),
     # A sitting is named by NUMBER and its runs are filed by timestamp, so
     # without this the Router guesses at filenames (sitting 63 guessed
     # `logs/sitting_63.md`, twice). The word is the whole alias -- the
