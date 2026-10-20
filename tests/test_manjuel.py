@@ -3896,6 +3896,27 @@ def test_the_turn_deadline(reg, lib, book):
     _sub_runner(kp, reg, Peek(reply="x"), lib, ek2, lambda m: None)("list the ground")
     check("a sub-task keeps the Judge's time too: its seats are bound within the turn less it (C13)",
           seen_k and all((v or 0) <= 45 for v in seen_k.values()), repr(seen_k))
+    rk = Stub(reply="[seat] counsel")
+    kt = RunContext(objective="should the court sit on one model?", review_only=True)
+    kt.deadline_at = _t.time() + 100
+    ek = env_for(g / "agent_workspace", reg, rk)
+    ek.ground = g
+    run_pipeline(kt, reg, rk, lib, ek, steps=book.get("court"), report=lambda s: None)
+    sat_k = [n for n, _ in rk.seen]
+    check("a court with less left than the Judge's time seats the guard and the Judge, names the rest (C13)",
+          sat_k == ["Security Guardian", "Judge"] and "Jesster" in kt.out_of_time
+          and any("is the Judge's" in n for n in kt.notes), f"sat={sat_k} late={kt.out_of_time}")
+    check("... and the delivery says the time was kept for the ruling (C13)",
+          "kept for the Judge's ruling" in kt.last_output(), kt.last_output()[-300:])
+    rs = Stub(reply="[seat] counsel")
+    ks = RunContext(objective="should the court sit on one model?", review_only=True)
+    ks.deadline_at = _t.time() + 450
+    es = env_for(g / "agent_workspace", reg, rs)
+    es.ground = g
+    run_pipeline(ks, reg, rs, lib, es, steps=book.get("court"), report=lambda s: None)
+    check("a counsel seat seated short of its own bound by the Judge's time is told why (C13)",
+          any("seated with" in n and "keeps 360s" in n for n in ks.notes),
+          str([n for n in ks.notes if "Judge" in n]))
 
 
 def test_the_loops_of_2026_09_08(reg, lib, book):

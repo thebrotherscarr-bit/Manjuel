@@ -3094,20 +3094,33 @@ def run_pipeline(
         # seated, named in the record, and (via the recompose) in the
         # delivery. The loop keeps draining the queue so every unseated
         # seat is named, not just the first.
-        left = _budget(ctx)
+        left = _budget(ctx, agent)          # less the Judge's kept time, before it sits (C13 (b))
         if left is not None and left <= 0:
             ctx.out_of_time.append(agent.name)
             ctx.steps.append(
                 StepResult(agent=agent.name, model=agent.model, output="", skipped=True)
             )
-            over = _turn_limit(ctx) - left      # the clock's seconds, a card's wait not among them (C47)
-            note = (f"{agent.name} not seated: the turn's deadline passed "
-                    f"({over:.0f}s of {_turn_limit(ctx):.0f}s)")
+            held = _kept_back(ctx, agent)
+            over = _turn_limit(ctx) - left - held   # the clock's seconds, a card's wait not among them (C47)
+            if held and left + held > 0:
+                # WHAT IS LEFT IS THE JUDGE'S (WHAT'S LEFT C13 (b)), said as such.
+                note = (f"{agent.name} not seated: what is left of the turn ({left + held:.0f}s) "
+                        f"is the Judge's -- its pipeline keeps {held:.0f}s for the ruling "
+                        f"(pipelines.md)")
+            else:
+                note = (f"{agent.name} not seated: the turn's deadline passed "
+                        f"({over:.0f}s of {_turn_limit(ctx):.0f}s)")
             if note not in ctx.notes:
                 ctx.notes.append(note)
             report("  " + ink.warn(f"[{i}/{total}] {note}"))
             continue
 
+        held = _kept_back(ctx, agent)
+        if held and left is not None and left < float(getattr(agent, "timeout", None) or _runtime.SEAT_TIMEOUT):
+            note = (f"{agent.name} seated with {left:.0f}s: its pipeline keeps {held:.0f}s of the "
+                    f"turn for the Judge (pipelines.md), and the seats before it may not spend them")
+            ctx.notes.append(note)
+            report("  " + ink.dim(note))
         report(f"  [{i}/{total}] {ink.seat(agent.name)}  {ink.dim(agent.model)}")
         # WHO WAITS BEHIND THE ROUTER, told to it before it sits (2026-10-12):
         # the woken seats queued after it that are handed its package.
@@ -4497,6 +4510,9 @@ def recompose(ctx: RunContext, report=print) -> bool:
                 if getattr(ctx, "deadline_s", None) else "MANJUEL_TURN_DEADLINE")
         lines.append(f"What is above is the seats that sat. Ask again for the "
                      f"rest, or raise {dial}.")
+        if getattr(ctx, "kept_s", None):
+            lines.append(f"{ctx.kept_s:.0f}s of the turn are kept for the Judge's ruling "
+                         f"(pipelines.md); no seat before it may spend them.")
         blocks.append("\n".join(lines))
     block = "\n\n".join(blocks)
 
