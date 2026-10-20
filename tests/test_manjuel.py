@@ -9492,6 +9492,13 @@ def test_several_acts_get_a_route_first(reg, lib, book):
           ctx.named_tool == "decompose_task", str(ctx.named_tool))
     check("and the record says why it was decomposed",
           any("several acts" in n for n in ctx.notes))
+    # SEVERAL ACTS SETTLE A TIE (WHAT'S LEFT C51, its follow-up, 2026-10-20; his card: "it
+    # should just run one after the other"): since every skill declares its phrases, his
+    # words name git_commit ("commit it") and rack_list ("the rack") equally here, and
+    # neither is the request -- so it is routed first, not put to him.
+    check("... where his words name two skills equally, neither is put to him: routed first",
+          any("equally, and the request holds several acts" in n for n in ctx.notes),
+          str(ctx.notes)[-300:])
     single = RunContext(objective="read the rack and tell me what is loaded")
     run_pipeline(single, reg, r, lib, env_for(g, reg, r),
                  steps=book.get("default"), report=lambda m: None)
@@ -10080,6 +10087,11 @@ def test_asking_about_a_tool_is_not_asking_for_it(reg, lib, book):
               "write a note about the rack"):
         check(f"an order is still an order: {q[:34]!r}",
               not intent.asks_about_a_tool(q, lib), q)
+    # A SKILL'S OWN PHRASE ASKS FOR THE ACT (WHAT'S LEFT C51, its follow-up, 2026-10-20; his
+    # card: "Name or table only"): the numbers are asked for, not the skill's declaration.
+    q = "what are the mean, median and standard deviation of 4, 8, 15, 16, 23, 42?"
+    check(f"a skill's own phrase asks for the act, not about the skill: {q[:34]!r}",
+          not intent.asks_about_a_tool(q, lib), repr(intent.asks_about_a_tool(q, lib)))
 
     g = Path(tempfile.mkdtemp())
     r = Stub(reply="x")
@@ -10224,6 +10236,16 @@ def test_a_skill_asked_for_in_its_own_words_is_the_one_named(reg, lib, book):
                     ('Make this change to the harness itself, on the line of work already open. Read the file first with ground_read, then change it with ground_edit (one exact passage, quoted exactly as it stands) or ground_write (a whole new file) -- never write_file or edit_file, which reach only the workspace. If an earlier pass is quoted below, it FAILED the suites: read what they said and change the file so that they pass.', "ground_write")):
         got = intent.names_a_tool(q, lib)
         check(f"his words name {want}: {q[:50]!r}", got == want, f"named {got!r}")
+    # A NAME OUTRANKS A PHRASE IN THE SAME WORDS (WHAT'S LEFT C51, its follow-up, 2026-10-20;
+    # his card: "Name outranks a phrase"): "the rack report" is rack_report's name, and
+    # rack_list's "the rack" lies across it -- one naming, so no card. Phrases of two
+    # skills in different words still tie, and are put to him.
+    ch, sure = intent.tool_choices("give me the rack report: installed, loaded and declared", lib)
+    check("a skill's name outranks another's phrase across the same words: no card",
+          sure and ch == ["rack_report"], f"{ch} {sure}")
+    ch, sure = intent.tool_choices("read the rack, then write a note about it, then commit it", lib)
+    check("... phrases of two skills in different words still tie",
+          not sure and ch == ["git_commit", "rack_list"], f"{ch} {sure}")
 
 
 def test_no_router_in_the_order_means_no_tool(reg, lib, book):
@@ -10902,19 +10924,29 @@ def test_manjuel_reads_the_request(reg, lib, book):
           str(intent._ppmi_signs("statistics", 16)))
     by = intent.PPMI_BY
     note = "propose a note for later sessions: the measure ran today"
+    # OWN WORDS WIN, RESTATED (WHAT'S LEFT C51, its follow-up, 2026-10-20; his card: "Own
+    # words win; restate"). Since every skill declares its phrases, sentiment, the stats
+    # ask and the note are named by the skills' own words and the reader is not asked;
+    # the reader's own paths are held on asks no skill's words are in, measured that day.
+    variance = "the variance of 4, 8, 15, 16, 23, 42?"
+    jot = "propose a note for the sessions to come: the measure was green"
     for q, want, who, writes in (
-            # the table's "the glass" gives way to the reader
+            # its own "classify the sentiment" stands; the table's "the glass" names nothing
             ("classify the sentiment of this feedback: the glass is slow but I love it",
-             "classify_sentiment", by, False),
+             "classify_sentiment", "", False),
             # symbols' own "where is" stands, and the reader is not asked
             ("where is the chain standing right now: ground, workspace, session, card?",
              "symbols", "", False),
-            (stats, "statistics", by, False),
+            (stats, "statistics", "", False),
+            # no skill's own words: the reader reads statistics at its line
+            (variance, "statistics", by, False),
             ("run measure.py from the workspace and tell me what it printed", "", "", False),
             ("git status", "git_status", "", False),
             ("what models are on the rack?", "rack_list", "", False),
-            # the table's "ran today" gives way, and the write is the Router's
-            (note, "", "", True)):
+            # remember's own "a note for later" stands, over when's shorter "ran today"
+            (note, "remember", "", False),
+            # no skill's own words: the reader reads a write, and the write is the Router's
+            (jot, "", "", True)):
         named, chose, reading, said, wants = intent.read_the_request(q, lib)
         check(f"his rule: {want or 'no tool'} by {who or 'his words'}: {q[:36]!r}",
               named == want and chose == who and wants == writes,
@@ -10933,25 +10965,35 @@ def test_manjuel_reads_the_request(reg, lib, book):
         return ctx
 
     ctx = turn(stats)
+    check("in a turn, his words for the numbers name statistics, not a question about it",
+          ctx.named_tool == "statistics" and ctx.named_by != "asks_about_a_tool",
+          f"{ctx.named_tool!r} {ctx.named_by!r} {str(ctx.notes)[:300]}")
+    ctx = turn(variance)
     check("in a turn, the reader's pick is the tool, chosen by the PPMI reader and said so",
           ctx.named_tool == "statistics" and ctx.named_by == by
           and any("chosen by the PPMI reader" in n for n in ctx.notes),
           f"{ctx.named_tool!r} {ctx.named_by!r} {str(ctx.notes)[:300]}")
     check("... the reading in the record, its score and the next best",
-          any(n.startswith("intent: the PPMI reader reads `statistics`") and "`rack_pull`" in n
-              for n in ctx.notes), str(ctx.notes)[:300])
+          any(n.startswith("intent: the PPMI reader reads `statistics`")
+              and n.split("request: ")[-1].count("`") == 6 for n in ctx.notes),
+          str(ctx.notes)[:300])
     check("... and a reading is not a decided call: the Router still writes it",
           not any("decided by arithmetic" in n for n in ctx.notes), str(ctx.notes)[:300])
-    ctx = turn(note)
+    ctx = turn(jot)
     check("a write the reader reads names no tool and wakes the Router to decide it",
           not ctx.named_tool and "needs_tool" in ctx.flags
           and any("a skill that writes" in n for n in ctx.notes),
           f"{ctx.named_tool!r} {sorted(ctx.flags)} {str(ctx.notes)[:300]}")
-    ctx = turn("what about the mean and median of those?",
-               (("operator", "what are the numbers in the measure?"),
-                ("steward", "4, 8, 15, 16, 23 and 42.")))
+    thread = (("operator", "what are the numbers in the measure?"),
+              ("steward", "4, 8, 15, 16, 23 and 42."))
+    ctx = turn("what about the variance of those?", thread)
     check("on a follow-up the reader's pick is withdrawn like any guess, and the door answers",
           not ctx.named_tool and any("withdrawn" in n for n in ctx.notes),
+          f"{ctx.named_tool!r} {str(ctx.notes)[:300]}")
+    ctx = turn("what about the mean and median of those?", thread)
+    check("... but a skill his own words name is his naming, and is kept on a follow-up",
+          ctx.named_tool == "statistics"
+          and not any("`statistics` withdrawn" in n for n in ctx.notes),
           f"{ctx.named_tool!r} {str(ctx.notes)[:300]}")
 
 
