@@ -20,92 +20,25 @@ import re
 
 from .context import POINTING_WORDS
 
-# Natural phrasings that map to a keyword the operator will not type verbatim.
-# Deliberately short: a wrong guess here costs one Router turn, but a missing
-# one costs the whole request.
+# THE WORDS THAT BELONG TO NO SINGLE SKILL (WHAT'S LEFT C51, 2026-10-20, his cards: "Every skill
+# declares them", "Require it, move the table"). Each skill declares its own phrases in its own file
+# (`**Says:**`), and a stroke holds that every one does; this table keeps only the here-words, the
+# generic file words, and the forms the number rule still guards. Every other phrase moved into its
+# skill's file that day, measured over the 752 requests on the record: the 18 that route differently
+# were the faults (the linter, a trendline, "say aloud" and the rest), and nothing else moved.
 ALIASES: dict[str, tuple[str, ...]] = {
-    "git_commit": ("commit", "check in", "check it in"),
-    "git_status": ("git status", "dirty", "untracked", "what changed",
-                   "the repo like", "state of the repo", "repo status",
-                   "hows the repo", "how is the repo"),
-    "git_push":   ("push",),
-    "git_pull":   ("pull",),
-    "git_init":   ("init the repo", "initialise the repo", "initialize the repo"),
-    "rack_list":  ("what models", "which models", "list models", "the rack",
-                   "whats on the card", "whats loaded", "what is loaded",
-                   "whats in vram", "is opencode running", "whats warm",
-                   "what is available"),
-    "rack_sync":  ("sync the rack", "refresh the rack", "update the rack"),
     # A sitting is named by NUMBER and its runs are filed by timestamp, so
     # without this the Router guesses at filenames (sitting 63 guessed
     # `logs/sitting_63.md`, twice). The word is the whole alias -- the
     # skill pulls the number out of the objective itself.
     "sitting":    ("sitting", "the sitting"),
-    # Periods, not sittings. "what ran yesterday" was unanswerable: the
-    # estate stamped every transcript and nothing read the stamps as a
-    # range.
-    #
-    # EVERY FORM CARRIES A VERB, and that is the whole point. The bare
-    # adverbs were aliased first -- "yesterday", "recently", "lately" --
-    # and they match ANYWHERE in an objective, so "yesterday was rough,
-    # let's fix the router" would have listed transcripts. That is the
-    # estate's oldest recurring fault (s23 "cool" -> classify_sentiment,
-    # s31 "heloo stewy" -> the coder): a word is not an intent. A period
-    # only asks for the record when something is said to have HAPPENED in
-    # it.
-    # "what did we DO yesterday" is how a person actually asks, and "did
-    # yesterday" does not match it -- the words are "did we do". `we do
-    # <period>` is the exact discriminator: "what did we do today" carries
-    # it, and "what do we have to do today" -- a question about the FUTURE,
-    # which this skill cannot answer -- does not.
-    "when":       ("we do yesterday", "we do today", "we do last night",
-                   "ran yesterday", "ran today", "ran this week",
-                   "ran last week", "ran this month", "ran lately",
-                   "ran recently", "ran on",
-                   "did yesterday", "did today", "did this week",
-                   "did lately", "did recently",
-                   "happened yesterday", "happened today",
-                   "happened this week", "happened last night",
-                   "happened on", "happened lately", "happened recently",
-                   "been doing lately", "been doing recently",
-                   "went on yesterday", "went on this week"),
-    "list_directory": ("the workspace", "list the workspace"),
+    "list_directory": ("the workspace",),
     "ground_list": ("this place", "this archive", "this folder",
-                    "this directory", "this repo", "in here", "around here",
-                    "review the logs", "check the logs", "read the logs",
-                    "look at the logs", "the logs",
-                    "can you list it", "list it", "the full repo",
-                    "list the repo", "list the full repo", "review the repo",
-                    "what files", "list the files", "list the dir",
-                    "list the directory", "list dir", "in this repo",
-                    "in the repo", "whats in the repo", "what is in this repo",
-                    "list the ground", "whats in the ground"),
+                    "this directory", "this repo", "in here", "around here"),
     "ground_read": ("read the file", "open the file", "show me the file",
                     "this file", "that file", "the file",
                     "read pipelines", "read memory.md"),
-    "skill_report": ("what skills", "your skills", "what tools", "your tools",
-                     "available tools", "what can you do", "what can you actually do",
-                     "list your tools", "list the skills"),
-    "ground_report": ("working dir", "working directory", "where are we",
-                      "where am i", "what ground", "which folder",
-                      "what directory are"),
-    "semantic_search": ("search for", "find anything about", "look up",
-                        "who is manjuel", "who is jesster", "who is neiro",
-                        "who is steward", "what is manjuel",
-                        "who is the coder", "what is the coder",
-                        "who is the smith", "who is the router",
-                        "who is the guardian", "who is the reasoner",
-                        "who is the evaluator", "who is the proofreader",
-                        "who is the delivery agent",
-                        "what is jesster", "what is neiro", "what is steward",
-                        "who is aurora", "what is aurora",
-                        "the mythos", "the creed", "the temper", "the veil",
-                        "the glass", "the forge", "the weighing",
-                        "the servants law", "the servant's law", "the dictum",
-                        "what do you know about",
-                        "founding documents", "the foundation",
-                        "the covenant", "the covenants", "the doctrine",
-                        "the estate laws", "founding docs"),
+    "ground_report": ("where are we", "where am i"),
     # index_ground's phrases MOVED OUT of this table on 2026-09-02 and into
     # skills/index_ground.md, where a person editing the skill can see them
     # (`**Says:**`). It is the first skill to own its own dispatch, and the
