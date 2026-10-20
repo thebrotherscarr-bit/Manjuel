@@ -23851,6 +23851,18 @@ def test_steward_drives_to_a_check(reg, lib, book):
                       "stamp.txt" in m("ls-files", "-m").split() and "last.txt" in held and "C127" in held, held[:300])
                 m("reset", "-q", "--", "last.txt")
                 m("checkout", "--", "last.txt", "stamp.txt")
+                # An each item that passes but is still listed is put back; what its check wrote is left as written.
+                # (the spec is built in parts: the driver's own parse would cut a job text that names its fields)
+                listed = "each " + py + ' -c "print(chr(121))" ' + "|" + " do: edit $ITEM " + "|" + " check: " + stamp
+                d = SV.drive(listed, skills=TreeLib(), env=tree, ground=moved, logs=tmp / "logs",
+                             ask=asker("y", "y"), report=lambda line: None,
+                             client=Model(call("ground_edit", filepath="f.txt", content="x"),
+                                          call("done", summary="edited y")))
+                back = " ".join(str(s[3]) for s in d.steps if s[1] == "put back")
+                check("drive each: a put back leaves what the check wrote as written, and keeps none of it",
+                      d.items == [["y", "still listed"]] and "stamp.txt: left as the check wrote it" in back
+                      and not d.taken and not m("diff", "--name-only", "--", "f.txt").strip(), back[:300])
+                m("checkout", "--", "stamp.txt")
             finally:
                 for k, v in kept_env.items():
                     if v is None:
