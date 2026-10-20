@@ -11297,6 +11297,20 @@ def test_an_error_message_is_a_promise(reg, lib, book):
     check("an ordinary index is NOT a rebuild -- it must be asked for",
           not _wants_rebuild(type("E4", (), {"objective": "index the ground"})(),
                              {}))
+    # WHOLE WORDS (WHAT'S LEFT C40, 2026-10-20): "refresh" held "fresh", so the
+    # ordinary refresh deleted the index. A rebuild word counts standing alone,
+    # and the words are the skill's own Takes words, so the two cannot drift.
+    for said in ("refresh the index", "index the ground freshly", "take a refreshed look"):
+        check(f"a word that only holds a rebuild word is not one: {said!r}",
+              not _wants_rebuild(type("E5", (), {"objective": said})(), {}), said)
+    check("... while the word standing alone still is: 'build a fresh index'",
+          _wants_rebuild(type("E6", (), {"objective": "build a fresh index"})(), {}))
+    from manjuel.skills import REBUILD_WORDS
+    spec = lib.spec("index_ground")
+    check("the rebuild words are index_ground's own Takes words",
+          spec is not None
+          and set(REBUILD_WORDS) == {w for words, _ in spec.takes for w in words},
+          f"{REBUILD_WORDS} against {spec.takes if spec else None}")
 
     # SUPERSEDED 2026-09-02 by sitting 68. This once required the BARE word
     # "index" to dispatch, because in sitting 66 it had answered with the

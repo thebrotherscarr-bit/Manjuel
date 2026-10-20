@@ -3368,6 +3368,11 @@ def _open_index(env: SkillExecutionEnv, rebuild: bool = False) -> VectorIndex:
     return VectorIndex(path, EMBED_MODEL)
 
 
+# The words that ask index_ground to discard its vectors and build from nothing:
+# its own **Takes:** words, held to skills/index_ground.md by a stroke.
+REBUILD_WORDS = ("rebuild", "reindex", "from scratch", "start over", "fresh")
+
+
 def _wants_rebuild(env: SkillExecutionEnv, args: dict) -> bool:
     """Did the operator ask for the index to be built from scratch?
 
@@ -3385,8 +3390,13 @@ def _wants_rebuild(env: SkillExecutionEnv, args: dict) -> bool:
         str(args.get("content") or ""), str(args.get("filepath") or ""),
         str(getattr(env, "objective", "") or ""),
     ]).lower()
-    return any(w in said for w in ("rebuild", "reindex", "from scratch",
-                                   "start over", "fresh"))
+    # WHOLE WORDS (WHAT'S LEFT C40, 2026-10-20). Each word was taken as a plain
+    # piece of the request, so "refresh" -- the ordinary run's own word -- held
+    # "fresh", and the index was deleted and built from nothing. A word counts
+    # only standing alone, as the skill's own Takes reader counts it
+    # (args_from_words).
+    return any(re.search(rf"(?<![a-z0-9_]){re.escape(w)}(?![a-z0-9_])", said)
+               for w in REBUILD_WORDS)
 
 
 def index_roots(env: SkillExecutionEnv) -> list[Path]:
