@@ -171,7 +171,6 @@ half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
 ### The models misbehaving
 
 - **C38. Answers cut at their length limit.** In sittings 373, 375, 376 and 377: the Reasoner at 1,400 tokens (twice in 375 and
-- **C38. Answers cut at their length limit.** In sittings 373, 375, 376 and 377: the Reasoner at 1,400 tokens (twice in 375 and
   in 376; in 377 its visible answer was whole, so the limit is spent on its hidden thinking), the Router at 900 (three times in
   376), the Quality Evaluator at 700. The engine says so in the record each time. The mend is the answers' piece (2), the caps.
   Seen again in sitting 379: the Router at 900 in the court, and Jesster at its 4,500 in both turns, spent deliberating (C70).
