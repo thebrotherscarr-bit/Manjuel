@@ -38,7 +38,9 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (17:12):** step (3)'s first piece, C47 (the turn's clock stops while a card waits), built by Steward on your
+  **Where it stands (17:22):** step (3)'s first two pieces, C47 and C55, built by Steward on your cards with their strokes
+  and recorded; next, Steward's ship of both, the restart, then C46.
+  **At 17:12 it stood:** step (3)'s first piece, C47 (the turn's clock stops while a card waits), built by Steward on your
   cards with its stroke and recorded; next, Steward's ship of it, the restart, then C55.
   **At 17:03 it stood:** step (2) sent and merged in both repositories (pull requests 41 and atlas's 22), the ground home
   on main; step (3), I2's own faults, planned on your cards under I2, its first piece C47 next.
@@ -216,8 +218,6 @@ half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
 - **C54. Two questions no tool answers brought the Router, and the answer missed both.** The Router paged through SEAT_LOG.md
   (sitting 376); the level-2 line, over 200 characters, is to be checked. *(CHANGELOG, "core: routing, its third part, the
   levels")*
-- **C55. The engine's note on what it added to an answer was empty.** When only a named tool had not run, the record said the
-  recompose appended and named nothing (sitting 377). *(HANDOFF, 2026-10-12, sitting 377)*
 - **C56. The REPL reloaded with nothing changed.** At `/use default` in sitting 373 it said "ground changed on disk — seats,
   skills and pipelines reloaded", with nothing written under agents/ or skills/, nor to pipelines.md or commands.md, since 09:32.
   The watcher takes a file named agents.md, commands.md or pipelines.md anywhere in the ground for a declaration
@@ -1150,6 +1150,11 @@ goals". The steps under each are proposed from the disk; each is yours to change
 ## Done
 
 Finished lines, newest first. A number is never used again.
+
+- **C55. The engine's note on what it added to an answer was empty.** DONE 2026-10-19, by Steward on your cards (the road to
+  v0.2.6, its step (3), its second piece): the note names every block the recompose adds -- a named tool that did not run, no
+  tool run, a number no tool returned -- as it named the other five. The line as it stood: when only a named tool had not
+  run, the record said the recompose appended and named nothing (sitting 377). *(CHANGELOG, "core: the engine's note on what it added")*
 
 - **C47. The turn's 600-second clock counts the time a card waits for you.** DONE 2026-10-19, by Steward on your cards (the
   road to v0.2.6, its step (3), its first piece): a card's open seconds are added to the turn's deadline and said, at the tool
