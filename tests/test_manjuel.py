@@ -2010,6 +2010,8 @@ def test_a_named_tool_that_did_not_run(reg, lib, book):
     check("and the stamp names BOTH what was asked and what ran instead",
           "git_push" in out and "git_status" in out
           and "THE NAMED TOOL DID NOT RUN" in out, out[-200:])
+    check("... and the record's note names it, never an empty list (C55)",
+          any(n.startswith("recompose:") and "git_push" in n for n in ctx.notes), str(ctx.notes))
 
     ran = turn("git_push", ["git_status", "git_push"])
     check("a named tool that DID run is not stamped",
@@ -2061,6 +2063,8 @@ def test_a_number_no_tool_returned(reg, lib, book):
     check("and the stamp names the invented numbers, not the true one",
           "300" in out and "1200" in out and "A NUMBER NO TOOL RETURNED" in out,
           out[-160:])
+    check("... and the record's note counts them (C55)",
+          any(n.startswith("recompose:") and "number" in n for n in ctx.notes), str(ctx.notes))
 
     clean = turn("The skills dir holds 37 markdown files.", [tool])
     check("a number the tool DID return is not stamped",
@@ -16102,6 +16106,8 @@ def test_a_turn_that_wanted_hands_and_used_none_says_so(reg, lib, book):
     check("and the delivery says no tool ran", "NO TOOL RAN" in said, said[:120])
     check("naming where the words came from instead",
           "came from a seat, not from the estate" in said, said[-160:])
+    check("... and the record's note says no tool ran (C55)",
+          any(n.startswith("recompose:") and "no tool ran" in n for n in c.notes), str(c.notes))
 
     # AND THE WAYS IT MUST NOT
     c = turn("action-shaped", ["run_python"])

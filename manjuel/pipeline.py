@@ -4424,6 +4424,14 @@ def recompose(ctx: RunContext, report=print) -> bool:
         what.append(f"{len(cut)} seat(s) failed")
     if abridged:
         what.append(f"{len(abridged)} shortened listing(s)")
+    # ...and the three blocks this note left out (WHAT'S LEFT C55): the record said
+    # "recompose:  appended" with nothing named on a turn whose one block was one of them.
+    if missed:
+        what.append(f"the named tool `{missed}`, which did not run")
+    if nothing_ran:
+        what.append("the note that no tool ran")
+    if made_up:
+        what.append(f"{len(made_up)} number(s) no tool returned")
     note = (f"recompose: {' and '.join(what)} appended to the delivery; "
             f"the closing seat's words were not the whole record")
     if note not in ctx.notes:

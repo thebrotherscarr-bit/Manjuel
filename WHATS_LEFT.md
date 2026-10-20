@@ -38,7 +38,9 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (17:03):** step (2) sent and merged in both repositories (pull requests 41 and atlas's 22), the ground home
+  **Where it stands (17:12):** step (3)'s first piece, C47 (the turn's clock stops while a card waits), built by Steward on your
+  cards with its stroke and recorded; next, Steward's ship of it, the restart, then C55.
+  **At 17:03 it stood:** step (2) sent and merged in both repositories (pull requests 41 and atlas's 22), the ground home
   on main; step (3), I2's own faults, planned on your cards under I2, its first piece C47 next.
   **At 16:24 it stood:** step (2), the release faults, built, read twice by reviewers and recorded: C121, C123 and C124
   under Done, C122's second half ruled to v0.2.7, C125 read, atlas's one annotation written; next, Steward's ship of both
@@ -196,9 +198,6 @@ half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
 
 ### The engine
 
-- **C47. The turn's 600-second clock counts the time a card waits for you.** An ask whose card you answered after ten minutes
-  ran out of time (sitting 375); after a big seat, the closing Steward was left 48 seconds (376). The answers' piece (3), the
-  clock. *(CHANGELOG, "core: routing, its second part, the Router's package")*
 - **C48. The conversation is cut to its newest 2,400 characters, and the Router never sees it.** What you said a few turns back
   is gone when it matters (your word of 2026-10-12: "losing context"). The answers' piece (4), the room. *(I2, the causes
   measured 2026-10-12)*
@@ -1151,6 +1150,12 @@ goals". The steps under each are proposed from the disk; each is yours to change
 ## Done
 
 Finished lines, newest first. A number is never used again.
+
+- **C47. The turn's 600-second clock counts the time a card waits for you.** DONE 2026-10-19, by Steward on your cards (the
+  road to v0.2.6, its step (3), its first piece): a card's open seconds are added to the turn's deadline and said, at the tool
+  card, the wake card and a failed seat's retry, skip or abort; a sub-task's stopped clock carries back to its parent. The line
+  as it stood: an ask whose card you answered after ten minutes ran out of time (sitting 375); after a big seat, the closing
+  Steward was left 48 seconds (376); its second case no longer comes up since the answers' piece (1). *(CHANGELOG, "core: the turn's clock stops while a card waits")*
 
 - **C121. The release check refuses its own cut when a SPEC section-4 status moved.** DONE 2026-10-19, by Steward on your
   cards (the road to v0.2.6, its step (2)): `spec` (`tests/release.py`) hands `logged_since` the marks held less the one being
