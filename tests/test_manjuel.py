@@ -9010,6 +9010,23 @@ def test_sitting42_dispatch(reg, lib, book):
     # write-shaped never presumes read
     check("'write hello.md' is write-shaped", intent.wants_writing("write hello.md"))
     check("'read hello.md' is not", not intent.wants_writing("read hello.md"))
+    # AN ORDER TO WRITE IS IN HIS OWN WORDS (WHAT'S LEFT C49, 2026-10-20, his card: "All
+    # that, and prose in chat"): of 54 turns read as writes since 2026-09-01, eleven ordered
+    # none, and five wanted a poem in chat. Each measured shape is held, and the orders still are.
+    for said in ("lint this python: def add(a, b): return a - b",
+                 "what is the build plan?",
+                 "review the docs, where are we at on the build path and build plan?",
+                 "which of your skills bear on git, and in what order should they run to land a change safely?",
+                 "how would you build a skill for auto-storing memories under direct guidance?",
+                 "hi! my husband said you can make things for me?",
+                 "Write me a haiku about Jesster.",
+                 "I would like you to write me a poem about the Jesster."):
+        check(f"not an order to write: {said[:60]!r}", not intent.wants_writing(said), said)
+    for said in ("write me a poem put it in the workspace.",
+                 "lint this python and fix it: def add(a, b): return a - b",
+                 "can you make me a snake game?", "make a change to measure.py",
+                 "in measure.py in the workspace, replace 'the measure ran' with 'the measure ran here'"):
+        check(f"still an order to write: {said[:60]!r}", intent.wants_writing(said), said)
     g = Path(tempfile.mkdtemp())
     r = Stub(reply=lambda a: "x")
     ctx = RunContext(objective="write hello.md with a greeting in it")

@@ -1028,9 +1028,27 @@ def cue_only(objective: str) -> bool:
 # with NO named tool.
 # `replace` joined 2026-10-12 (sitting 370: "in measure.py in the workspace,
 # replace 'x' with 'y'" was not write-shaped, so list_directory, a reader, took it).
-_WRITE_VERBS = re.compile(
-    r"(?i)\b(write|make|create|save|generate|build|add|append|update|edit|"
-    r"fix|change|modify|refactor|implement|delete|remove|rename|replace)\b")
+_VERB = (r"(?:write|make|create|save|generate|build|add|append|update|edit|"
+         r"fix|change|modify|refactor|implement|delete|remove|rename|replace)")
+_WRITE_VERBS = re.compile(rf"(?i)\b{_VERB}\b")
+
+# WHAT COUNTS AS AN ORDER TO WRITE (WHAT'S LEFT C49, 2026-10-20, his card: "All that, and
+# prose in chat"). Of the 54 turns read as writes since 2026-09-01, eleven ordered none: a
+# verb inside pasted code ("lint this python: def add(a, b)"), a verb used as a noun ("the
+# build plan", "land a change safely"), a question about what the system can do ("how would
+# you build a skill?", "you can make things for me?"). And "write me a poem" wants words in
+# chat, not a file, unless a file or the workspace is named.
+_PASTED = re.compile(r"```.*?(?:```|$)|`[^`\n]*`", re.S)
+_CODE_MARK = re.compile(r"\b(?:def|class|return|import|lambda|print)\b|[(){};=<>]")
+_AS_NOUN = re.compile(rf"(?i)\b(?:the|a|an|my|our|your|this|that|these|those|its|his|her|"
+                      rf"their|any|each|every)\s+{_VERB}\b")
+_COMPOUND = re.compile(r"(?i)\bbuild\s+(?:plans?|paths?|maps?|order|steps?|logs?)\b")
+_HOW = re.compile(rf"(?i)\bhow\s+(?:would|could|do|does|did|can|should|might|to)\b[^.?!]*?\b{_VERB}\b")
+_YOU_CAN = re.compile(rf"(?i)\byou\s+(?:can|could)\s+{_VERB}\b[^.!]*\?")
+_PROSE = re.compile(r"(?i)\b(?:write|make|compose|create)\s+(?:me\s+|us\s+)?"
+                    r"(?:a\s+|an\s+|some\s+)?(another\s+)?(?:short\s+|little\s+|quick\s+)?"
+                    r"(?:poem|haiku|story|song|limerick|sonnet|verse|joke|riddle)s?\b")
+_A_PLACE = re.compile(r"(?i)\b(?:workspace|file|folder|disk|save)\b|\.\w{1,5}\b")
 
 # Action-verb + object shapes that plainly want hands, without naming which.
 _ACTION_SHAPE = re.compile(
@@ -1040,9 +1058,28 @@ _ACTION_SHAPE = re.compile(
     r"logs|index|record|this|it|that)\b")
 
 
+def own_words(objective: str) -> str:
+    """His words with what he pasted taken out: fenced and backticked code, and
+    the tail after a colon that is followed by code."""
+    text = _PASTED.sub(" ", objective or "")
+    i = text.find(":")
+    while i != -1:
+        if _CODE_MARK.search(text[i + 1:]):
+            return text[:i]
+        i = text.find(":", i + 1)
+    return text
+
+
 def wants_writing(objective: str) -> bool:
-    """A write-shaped verb near the request. Router decides the rest."""
-    return bool(_WRITE_VERBS.search(objective or ""))
+    """An order to write, in his own words: a write verb used as a verb -- not a
+    noun, not in a question about what the system can do, and not prose to be
+    written in chat. Router decides the rest."""
+    text = own_words(objective)
+    if _PROSE.search(text) and not _A_PLACE.search(text):
+        return False
+    for rx in (_AS_NOUN, _COMPOUND, _HOW, _YOU_CAN):
+        text = rx.sub(" ", text)
+    return bool(_WRITE_VERBS.search(text))
 
 
 def wants_action(objective: str) -> bool:
