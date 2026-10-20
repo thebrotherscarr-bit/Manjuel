@@ -6275,7 +6275,7 @@ def test_what_is_in_the_x_dir_is_a_listing(reg, lib, book):
 def test_intent_and_empty_replies(reg, lib, book):
     """Session 5c: three runs of `git commit` never reached the Router."""
     from manjuel import intent
-    kws = lib.keywords()
+    kws = lib
 
     check("`git commit` names the git_commit skill",
           intent.names_a_tool("git commit", kws) == "git_commit",
@@ -7158,7 +7158,7 @@ def test_ollama_responses_read_in_both_shapes(reg, lib, book):
 def test_sitting21_regressions(reg, lib, book):
     """The Steward's three mouth-failures, pinned."""
     from manjuel import intent
-    kws = lib.keywords()
+    kws = lib
 
     # near-phrases route without the Steward's cooperation
     check("'what is in this repo' routes to the live ground (superseded)",
@@ -7290,7 +7290,7 @@ def test_sitting24_regressions(reg, lib, book):
     overruled the intent hint; the closer copied bracket labels."""
     from manjuel import intent
     from manjuel.pipeline import build_prompt
-    kws = lib.keywords()
+    kws = lib
 
     check("'what is the repo like' routes to git_status",
           intent.names_a_tool("cool cool, what is the repo like", kws)
@@ -7347,7 +7347,7 @@ def test_sitting24_regressions(reg, lib, book):
 def test_environment_facts_are_read_not_generated(reg, lib, book):
     """'What is the working dir' must come from the harness, never a model."""
     from manjuel import intent
-    kws = lib.keywords()
+    kws = lib
 
     for q in ("what is the working dir", "working directory", "where are we",
               "where am i"):
@@ -7503,7 +7503,7 @@ def test_capability_questions_are_read_not_generated(reg, lib, book):
     """Sitting 25: 'what skills do you have' got a shrug, twice. The manifest
     was in memory the whole time."""
     from manjuel import intent
-    kws = lib.keywords()
+    kws = lib
 
     for q in ("what skills do you have access to", "what do your tools do",
               "what can you do", "list your tools"):
@@ -7691,7 +7691,7 @@ def test_the_landing_gate_parses_before_it_writes(reg, lib, book):
 def test_ground_eyes_are_live_readonly_and_jailed(reg, lib, book):
     """The index is a snapshot; these are the floor. Read-only, in-ground."""
     from manjuel import intent
-    kws = lib.keywords()
+    kws = lib
     check("'what is in this repo' now shows the GROUND, not scratch",
           intent.names_a_tool("what is in this repo", kws) == "ground_list")
     check("'the workspace' still shows scratch",
@@ -8365,7 +8365,7 @@ def test_sitting38_regressions(reg, lib, book):
     """Repo near-misses reached a guesser; git counts read as a mystery."""
     from manjuel import intent
     from manjuel.pipeline import build_prompt
-    kws = lib.keywords()
+    kws = lib
 
     for q in ("what about the full repo, can you list it", "list it",
               "review the repo", "list the full repo"):
