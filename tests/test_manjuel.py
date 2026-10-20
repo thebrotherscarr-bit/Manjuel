@@ -10550,7 +10550,9 @@ def test_the_router_names_the_task_it_packs(reg, lib, book):
     ctx39.flags |= {"technical", "needs_tool"}
     run_pipeline(ctx39, reg, r39, lib, env_for(g39, reg, r39, skills=lib),
                  steps=book.get("default"), report=lambda m: None)
-    router39 = {n: p for n, p in r39.seen}.get("Router", "")
+    # The Router sits again after its refused write (the follow-up hop), so the prompt
+    # that carries "AFTER YOU" is its first.
+    router39 = next((p for n, p in r39.seen if n == "Router"), "")
     check("a Router with a coder waiting behind it is handed no tool that writes (C39)",
           "AFTER YOU: Expert Coder" in router39
           and any("a coder waits behind it" in n for n in ctx39.notes), str(ctx39.notes)[-400:])
