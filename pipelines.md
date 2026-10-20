@@ -104,6 +104,8 @@ that changes the ground is refused at the table, by the engine, whatever
 any seat asks for. Counsel has eyes, not hands.
 
 **Deadline:** 900
+**Kept for the Judge:** 360
+
 
 One turn at the table may take 900 seconds where every other turn takes 600.
 His ruling, 2026-09-28, the evening the court was measured cut at its turn

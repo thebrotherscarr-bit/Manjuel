@@ -38,7 +38,11 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (18:23):** step (3)'s first group, the five with no ruling, built by Steward on your cards with their
+  **Where it stands (2026-10-20, 06:48):** step (3)'s group 2, C13, built by Steward on your cards with its strokes and recorded: a seat's
+  Timeout bounds its whole stage, and the court keeps 360 s for the Judge (your line in pipelines.md). Group 1 sent and merged
+  (pull requests 42 and 43); C13 on the line of work, its pull request 44 open and red only on the map and the refusals' tail,
+  which its ship regenerates; next, that ship, the restart, then group 3, the answers (C38, C48, C69), their rulings put to you.
+  **At 18:23 it stood:** step (3)'s first group, the five with no ruling, built by Steward on your cards with their
   strokes and recorded: C47 and C55 sent and merged (pull request 42); C46, C43 and C57 on the line of work, its pull
   request 43 open and red only on the map and the refusals' tail, which its ship regenerates; next, that ship, the
   restart, then group 2, C13, with its (b) put to you (time kept back for the Judge).
@@ -166,12 +170,7 @@ half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
 
 ### The models misbehaving
 
-- **C13. The review panel does not fit its time limit.** Reopened 2026-10-13. It was closed 2026-09-30 on one measured run (the
-  panel 561 seconds of its 900, Jesster 207, the judge 317, and ruled inside the turn). In sitting 366 (2026-10-10) Jesster and
-  Manjuel ran past their bounds, Neiro had the last word, and the live check's review-panel case missed: 9 of 10. The mend is
-  I2's (f), the review panel's bounds. *(INVENTORY P4, S4, S5, R4, R5; logs/standup_2026-09-30_155756.md)*
-  Seen again in sitting 379 (2026-10-14, H28's live sitting): the court took its whole 900 s, the Router's five passes about
-  480 s of it, and the Judge, seated last, was cut at the 322 s left and did not rule. *(HANDOFF, 2026-10-14, sitting 379)*
+- **C38. Answers cut at their length limit.** In sittings 373, 375, 376 and 377: the Reasoner at 1,400 tokens (twice in 375 and
 - **C38. Answers cut at their length limit.** In sittings 373, 375, 376 and 377: the Reasoner at 1,400 tokens (twice in 375 and
   in 376; in 377 its visible answer was whole, so the limit is spent on its hidden thinking), the Router at 900 (three times in
   376), the Quality Evaluator at 700. The engine says so in the record each time. The mend is the answers' piece (2), the caps.
@@ -1143,6 +1142,14 @@ goals". The steps under each are proposed from the disk; each is yours to change
 ## Done
 
 Finished lines, newest first. A number is never used again.
+
+- **C13. The review panel did not fit its time limit.** DONE 2026-10-19, by Steward on your cards (the road to v0.2.6, its
+  step (3), group 2; your cards "Whole stage, every pipeline", "360 s", "pipelines.md"): a seat's `Timeout:` bounds its whole
+  stage -- every hop, press and repair in it -- in every pipeline, and the court keeps 360 s of its 900 for the Judge, the
+  line in pipelines.md typed by your hand. Whether a live court now rules inside its turn is step (4)'s, R1 re-run live. The
+  line as it stood: closed 2026-09-30 on one measured run and reopened 2026-10-13; in sitting 366 Jesster and Manjuel ran past
+  their bounds; in sitting 379 the Router's five passes took about 480 s and the Judge was cut at the 322 s left.
+  *(CHANGELOG, "core: the court's time")*
 
 - **C57. Three of your own commands printed their expansion and ran nothing.** DONE 2026-10-19, by Steward on your cards (the
   road to v0.2.6, its step (3), its fifth piece): in the glass a command of yours and a typed `/listen` run what they leave to
