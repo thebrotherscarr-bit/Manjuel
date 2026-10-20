@@ -178,17 +178,6 @@ half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
 - **C39. The Router makes the change itself before the coding model sits.** Asked to "lint this python and fix it", it read "fix
   it" as a write and wrote the fix with `write_file` before the Expert Coder was woken (sitting 377). Routing's next part, I2's
   (b). *(INVENTORY P1)*
-- **C40. The Router rebuilt the whole search index unasked, twice.** After `embed_text` refused a ground file (sitting 373, 291
-  seconds), and after "what I could change" was read as a write (376). *(INVENTORY K5)*
-  A cause found 2026-10-16, re-checked 2026-10-19: `index_ground` looks for its rebuild words (rebuild, reindex, from scratch,
-  start over, fresh) as plain pieces of the whole request, so any request that reaches it carrying "refresh" (or "freshly", "a
-  fresh look") deletes the index and builds it from nothing. The mend is in `_wants_rebuild` (`manjuel/skills.py`): match whole
-  words, as the skill's own Takes reader already does. *(INVENTORY.md section 5.2, index_ground)*
-- **C41. The Router names no task.** Told which seat waits behind it and asked to name the task, it named none in any turn of
-  sittings 375 and 376; your own words went as the task each time, which is the fallback. In 375 it also ran `skill_search`
-  three times on one ask. *(CHANGELOG, "core: routing, its second part, the Router's package")*
-- **C42. The Proofreader mended "too" and kept "their" for "they're".** Woken on your word at a green card (sitting 373).
-  *(INVENTORY S8)*
 - **C44. The estate turn cannot read the covenant.** Asked about the covenant, it answered with the Steward's description of
   itself, and Manjuel ruled that SUPPORTED after six and a half minutes on gemma4:12b (sitting 373): C3's question, failing
   another way. Grounding and the slow routes, I2's (g) and (h). *(INVENTORY P3)*
@@ -1138,6 +1127,19 @@ goals". The steps under each are proposed from the disk; each is yours to change
 ## Done
 
 Finished lines, newest first. A number is never used again.
+
+- **C40. The Router rebuilt the whole search index unasked.** DONE 2026-10-20, by Steward on your cards (the road to
+  v0.2.6, its step (3), group 4; your card "Clear mends first"): index_ground's rebuild words count only as whole
+  words, so a request carrying "refresh" no longer deletes the index. The line as it stood: rebuilt twice unasked
+  (sittings 373 and 376), and "fresh" matched inside "refresh" (found 2026-10-16).
+  *(CHANGELOG, "core: index_ground's rebuild words")*
+- **C41. The Router names no task.** RULED 2026-10-20, on your card ("Fallback stands; close it"): when the Router
+  names no task, your own words go as the task, which is what the package does and the record says each time
+  (sittings 375 and 376). *(CHANGELOG, "core: routing, its second part, the Router's package")*
+- **C42. The Proofreader mended "too" and kept "their" for "they're".** DONE 2026-10-20, by Steward on your card
+  ("Mend its task"): its seat file names five sound-alike pairs to check in every sentence, each held by a stroke.
+  The line as it stood: woken on your word at a green card (sitting 373).
+  *(CHANGELOG, "core: the Proofreader's task names the sound-alikes")*
 
 - **C38. Answers were cut at their length limit.** DONE 2026-10-20, by Steward on your cards (the road to v0.2.6, its
   step (3), group 3; your cards "Lift the four caps", "Pack uncapped seats for half", "Raise its cap to 2,000"): the
