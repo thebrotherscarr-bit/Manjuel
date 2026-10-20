@@ -12229,7 +12229,11 @@ def test_one_turn_gives_one_account_of_how_a_tool_was_chosen(reg, lib, book):
 
     g = Path(tempfile.mkdtemp())
     r = Stub(reply=lambda a: "answered")
-    ctx = RunContext(objective="tell me about your skills", feed="")
+    # THE VEHICLE, RESTATED (WHAT'S LEFT C51, its follow-up, 2026-10-20; his card: "Name or
+    # table only"): "tell me about your skills" names skill_report by its own phrase, so it
+    # now runs the report rather than reading its declaration; the one account is held on
+    # a question that says the skill's name.
+    ctx = RunContext(objective="tell me about the skill report", feed="")
     run_pipeline(ctx, reg, r, lib, env_for(g, reg, r),
                  steps=book.get("default"), report=lambda s: None)
     notes = " || ".join(ctx.notes)
@@ -12244,6 +12248,9 @@ def test_one_turn_gives_one_account_of_how_a_tool_was_chosen(reg, lib, book):
     check("   so the two notes no longer contradict",
           not ("objective names" in notes and "ASKS ABOUT" in notes),
           notes[:240])
+    check("   and 'tell me about your skills' is his words for the report, not a question about it",
+          intent.names_a_tool("tell me about your skills", lib) == "skill_report"
+          and not intent.asks_about_a_tool("tell me about your skills", lib))
 
     # NOT FIRING: when the objective really does name a tool, the note is
     # the plain one and nothing pretends a branch intervened.
