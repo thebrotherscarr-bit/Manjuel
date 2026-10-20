@@ -1102,13 +1102,13 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 | line | says |
 |---|---|
-| 820 | '{name}' is not one of the driver's tools. |
-| 824 | {tgt[0].name} is not on a branch (a detached HEAD), so there is no |
-| 829 | {_drive_rel(*key)} carries changes that are not the Steward's (not |
-| 843 | the line of work `{opening}` could not be opened: {out} |
-| 849 | {_drive_rel(*key)} could not be read before it was written: {exc} |
-| 853 | {name} failed in the engine ({type(exc).__name__}: {exc}). |
-| 1614 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
+| 888 | '{name}' is not one of the driver's tools. |
+| 892 | {tgt[0].name} is not on a branch (a detached HEAD), so there is no |
+| 897 | {_drive_rel(*key)} carries changes that are not the Steward's (not |
+| 911 | the line of work `{opening}` could not be opened: {out} |
+| 917 | {_drive_rel(*key)} could not be read before it was written: {exc} |
+| 921 | {name} failed in the engine ({type(exc).__name__}: {exc}). |
+| 1697 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
 
 ### manjuel/skills.py — 77 sites
 

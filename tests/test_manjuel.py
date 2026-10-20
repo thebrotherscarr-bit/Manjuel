@@ -23809,6 +23809,48 @@ def test_steward_drives_to_a_check(reg, lib, book):
                       and m("log", "-1", "--format=%s").startswith("What its check rewrote")
                       and shown == [["stamp.txt"], ["f.txt", "stamp.txt"], ["f.txt", "stamp.txt"]]
                       and not m("ls-files", "-m").strip(), f"{planned.items} -> {planned.verdict}; {shown}")
+                # The second review's wires. A file a failing check already regenerated is still saved
+                # when the passing check writes the same bytes again.
+                class TwoLib(TreeLib):
+                    def execute(self, name, args, env):
+                        (moved / "f.txt").write_text(str(args.get("content")), encoding="utf-8")
+                        return "Edited f.txt at line 1: 1 line(s) replaced by 1."
+                twice = (f"{py} -c \"import sys; open('map.txt', 'w').write('m'); "
+                         f"sys.exit(0 if open('f.txt').read() == 'two' else 1)\"")
+                d = SV.drive(f"edit f twice | check: {twice}", skills=TwoLib(), env=tree, ground=moved,
+                             logs=tmp / "logs", ask=asker("y", "y", "y"), report=lambda line: None,
+                             client=Model(call("ground_edit", filepath="f.txt", content="one"),
+                                          call("done", summary="one"),
+                                          call("ground_edit", filepath="f.txt", content="two"),
+                                          call("done", summary="two")))
+                check("drive: what a failing check regenerated is saved when the passing check writes it again",
+                      sorted(m("show", "--name-only", "--format=", "HEAD").split()) == ["f.txt", "map.txt"],
+                      f"{d.verdict}; {m('show', '--name-only', '--format=', 'HEAD')}")
+                # A secret or client file the check writes is never taken, nor named.
+                leaky = (f"{py} -c \"open('x_secrets.json', 'w').write('k'); open('n.client.md', 'w').write('c'); "
+                         f"open('map.txt', 'w').write('m2')\"")
+                d = SV.drive(f"edit f with care | check: {leaky}", skills=TreeLib(), env=tree, ground=moved,
+                             logs=tmp / "logs", ask=asker("y", "y"), report=lambda line: None,
+                             client=Model(call("ground_edit", filepath="f.txt", content="x"),
+                                          call("done", summary="careful")))
+                said = " ".join(str(s[3]) for s in d.steps if s[1] == "check rewrote")
+                check("drive: a secret or client file a check writes is never taken, and never named",
+                      sorted(m("show", "--name-only", "--format=", "HEAD").split()) == ["f.txt", "map.txt"]
+                      and "x_secrets" not in said and "client" not in said, said[:300])
+                (moved / "x_secrets.json").unlink()
+                (moved / "n.client.md").unlink()
+                # Work staged before the run holds the take, as unsaved work does (C127).
+                (moved / "last.txt").write_text("staged by him\n", encoding="utf-8")
+                m("add", "last.txt")
+                d = SV.drive(f"edit f past his staging | check: {stamp}", skills=TreeLib(), env=tree, ground=moved,
+                             logs=tmp / "logs", ask=asker("y", "y"), report=lambda line: None,
+                             client=Model(call("ground_edit", filepath="f.txt", content="x"),
+                                          call("done", summary="past staging")))
+                held = " ".join(str(s[3]) for s in d.steps if s[1] == "check rewrote")
+                check("drive: work staged before the run holds the take, and is named",
+                      "stamp.txt" in m("ls-files", "-m").split() and "last.txt" in held and "C127" in held, held[:300])
+                m("reset", "-q", "--", "last.txt")
+                m("checkout", "--", "last.txt", "stamp.txt")
             finally:
                 for k, v in kept_env.items():
                     if v is None:
