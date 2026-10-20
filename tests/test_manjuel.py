@@ -8286,6 +8286,21 @@ def test_objective_is_the_payload_for_prompt_skills(reg, lib, book):
           "researched" in out and "code and coding" in seen[-1][1],
           out[:40])
 
+    # THE GROUND'S OWN WORDS (WHAT'S LEFT C43; sitting 370, asked about the court, it
+    # answered with a law court). The question carries the running orders read off
+    # pipelines.md and the seats off agents/, in front of it.
+    env.ground = ROOT
+    env.objective = "deep research: what does the court do"
+    lib.execute("deep_research", {}, env)
+    asked = seen[-1][1]
+    check("the Deep Researcher is told this ground's running orders and seats before the question (C43)",
+          "running order `court`" in asked and "Deep Researcher" in asked
+          and asked.index("running order") < asked.index("what does the court do"), asked[:400])
+    env.ground = g
+    lib.execute("deep_research", {"content": "the court"}, env)
+    check("... and a ground with no pipelines.md still asks, its seats named (C43)",
+          "running order" not in seen[-1][1] and "  seats: " in seen[-1][1], seen[-1][1][:300])
+
 
 def test_sitting40_regressions(reg, lib, book):
     """A failed read was narrated as success with invented contents; a
