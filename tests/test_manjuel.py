@@ -3665,6 +3665,28 @@ def test_the_turn_deadline(reg, lib, book):
     check("a copy of the steps is a plain list: the deadline is read before anything slices them",
           not hasattr(list(bk.get("a")), "deadline") and not hasattr(bk.get("d")[1:], "deadline"))
 
+    # TIME KEPT FOR THE JUDGE (WHAT'S LEFT C13 (b), his cards of 2026-10-19: "360 s",
+    # "pipelines.md"): declared beside the deadline and read the same way; a pipeline that
+    # seats no Judge keeps none, said by name; a number that is not one is ignored.
+    kd = Path(tempfile.mkdtemp())
+    (kd / "p.md").write_text(
+        "## Pipeline: k\n\n**Deadline:** 900\n**Kept for the Judge:** 360\n\n1. Jesster\n2. Judge\n\n"
+        "## Pipeline: n\n\n**Kept for the Judge:** 360\n\n1. Steward\n\n"
+        "## Pipeline: w\n\n**Kept for the Judge:** later\n\n1. Judge\n",
+        encoding="utf-8")
+    kb = PipelineBook.load(kd / "p.md", reg)
+    kept_of = lambda steps: getattr(steps, "kept", None)      # noqa: E731
+    check("a pipeline keeps time for the Judge with `**Kept for the Judge:**`, beside its deadline (C13)",
+          kept_of(kb.get("k")) == 360.0 and declared_of(kb.get("k")) == 900.0
+          and [str(s) for s in kb.get("k")] == ["Jesster", "Judge"],
+          f"{kept_of(kb.get('k'))} {declared_of(kb.get('k'))}")
+    check("... a pipeline that seats no Judge keeps none, and says so by name (C13)",
+          kept_of(kb.get("n")) is None
+          and any("pipeline 'n'" in w and "Judge" in w for w in kb.warnings), str(kb.warnings))
+    check("... and a number that is not one is ignored with a warning (C13)",
+          kept_of(kb.get("w")) is None and any("pipeline 'w'" in w for w in kb.warnings),
+          str(kb.warnings))
+
     # THE DEADLINE MID-TURN: the seats before it sit, the seats after are
     # named, and the delivery is the last seat that sat plus the block.
     class Slow(Stub):
