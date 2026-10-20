@@ -19355,6 +19355,35 @@ def test_a_listing_the_closing_seat_shortened_is_completed(reg, lib, book):
     check("a delivery naming every model is met", judged("All: " + ", ".join(SZ)) == [])
     check("a dry run's stub is not judged for it", judged("Six models are installed.", live=False) == [])
 
+    # THE SKILLS' TWO LISTINGS (WHAT'S LEFT C46; sitting 373 named four of skill_search's five). The
+    # real handlers' output, read by the guard's own patterns -- every skill each printed, skill_report's
+    # use lines not among them -- and a closing seat that left one matching skill out, completed.
+    gs = Path(tempfile.mkdtemp())
+    (gs / "logs").mkdir()
+    (gs / "logs" / "uses.jsonl").write_text(
+        '{"ts": "2026-10-19T00:00:00", "tool": "git_status", "ok": true, "ms": 5}\n', encoding="utf-8")
+    es = env_for(gs, reg, Stub(reply="x"), skills=lib)
+    report = lib.execute("skill_report", {}, es)
+    got = _in.listing_items("skill_report", report)
+    check("the guard reads every skill the real skill_report printed, and not its use lines (C46)",
+          sorted(got) == sorted(lib.keywords()) and "used" in report, f"{len(got)} of {len(lib.keywords())}")
+    found = lib.execute("skill_search", {"content": "git"}, es)
+    shown = [ln.split()[0] for ln in found.splitlines()
+             if ln.startswith("  ") and not ln.startswith("   ") and not ln.strip().startswith("...")]
+    check("... and every skill the real skill_search printed (C46)",
+          _in.listing_items("skill_search", found) == shown and len(shown) >= 2, f"{shown} {found[:300]}")
+    c = RunContext(objective="for this, which of your skills bear on git")
+    c.named_tool = "skill_search"
+    c.ran_calls[("skill_search", "[]")] = found
+    c.steps.append(StepResult(agent="Router", model="qwen3.5:4b", elapsed=1.0,
+                              output="Tool executed: skill_search", tool_calls=["skill_search"],
+                              tool_results=[found]))
+    c.steps.append(StepResult(agent="Steward", model="llama3.2", elapsed=1.0,
+                              output="Git: " + ", ".join(shown[:-1]) + "."))
+    check("a closing seat that left a matching skill out is completed, the one it left out listed (C46)",
+          recompose(c, report=lambda *a, **k: None) is True and "WHOLE" in c.steps[-1].output
+          and shown[-1] in c.steps[-1].output, c.steps[-1].output[-400:])
+
 
 def test_the_phrasing_matrix_finds_nothing_and_has_teeth(reg, lib, book):
     """D11 PART 2 (WHAT'S LEFT, 2026-10-02): THE PHRASING MATRIX. `tests/matrix.py` says each ask many ways
