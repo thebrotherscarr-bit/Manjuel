@@ -196,6 +196,11 @@ MAX_TOOL_STEPS = 5
 # clock, not by the count.
 MAX_RULING_TURNS = 12
 
+# THE LEAST A STAGE MUST HAVE LEFT TO START ANOTHER CALL IN IT (WHAT'S LEFT C13 (a)):
+# a hop or a press handed less is cut before it can answer, so it is not started --
+# the maker's own floor before a repair, the same number.
+STAGE_FLOOR = 15.0
+
 # THE TURN DEADLINE (the operator, 2026-09-08, in his words: "600 max for
 # the whole system. there should never be more than 10 minutes between a
 # response, thats absurd"). The seat bound (runtime.SEAT_TIMEOUT) caps ONE
@@ -332,6 +337,13 @@ def _stage_left(ctx: RunContext) -> float | None:
     if at is None:
         return None
     return at - time.time()
+
+
+def _time_left(ctx: RunContext) -> float | None:
+    """What a call about to start may take: the smaller of the turn's time left and
+    its stage's, or None for neither (WHAT'S LEFT C13 (a))."""
+    left = [x for x in (_budget(ctx), _stage_left(ctx)) if x is not None]
+    return min(left) if left else None
 
 
 def _within_deadline(seat: Agent, ctx: RunContext) -> Agent:
@@ -1572,6 +1584,16 @@ def _press_for_ruling(seat: Agent, prompt: str, output: str, thoughts: list,
     built, and the note says the turns were spent."""
     turn = 1
     while output.startswith(SALVAGE_MARK) and turn < MAX_RULING_TURNS:
+        # THE STAGE IS SPENT (WHAT'S LEFT C13 (a)): no press starts once the seat's
+        # `Timeout:` is gone or too little of it is left to rule in -- sitting 366's
+        # Jesster and Manjuel ran past their bounds this way, a whole Timeout a press.
+        spent = _stage_left(ctx)
+        if spent is not None and spent < STAGE_FLOOR:
+            note = (f"{seat.name}'s stage spent its `Timeout:` after {turn} of "
+                    f"{MAX_RULING_TURNS} turns; no further press")
+            ctx.notes.append(note)
+            report("      " + ink.warn(note))
+            break
         turn += 1
         note = (f"{seat.name} deliberated without ruling ({time.time() - started:.0f}s); "
                 f"turn {turn} of {MAX_RULING_TURNS} -- asked to rule on its own "
@@ -2124,7 +2146,7 @@ def _maker_prove(ctx: RunContext, env, page: str, report) -> tuple[str, str]:
     for attempt in range(1, maker.REPAIRS + 1):
         # A repair is a model call, so a turn with no room for one does not
         # start it -- it says the page errors and saves it.
-        left = _budget(ctx)
+        left = _time_left(ctx)          # the turn's or the stage's, the smaller (C13 (a))
         if seat is None or (left is not None and left <= 15):
             ctx.notes.append("maker: no repair attempted -- "
                              + ("no time left in this turn" if seat is not None
@@ -2192,7 +2214,7 @@ def _maker_again(ctx: RunContext, env, make: dict, page: str, report) -> tuple[s
     seat = env.registry.get(MAKER_SEAT) if env.registry.has(MAKER_SEAT) else None
     tries = 1
     for attempt in range(1, maker.AGAINS + 1):
-        left = _budget(ctx)
+        left = _time_left(ctx)          # the turn's or the stage's, the smaller (C13 (a))
         if seat is None or (left is not None and left <= 15):
             ctx.notes.append("maker: no second try -- "
                              + ("no time left in this turn" if seat is not None
@@ -3541,6 +3563,18 @@ def run_pipeline(
                             "If the objective still needs another skill, emit the XML "
                             "block for it. Otherwise write the prose answer, with no XML."
                         )
+                    # THE STAGE IS SPENT (WHAT'S LEFT C13 (a)): no further hop starts once the
+                    # seat's `Timeout:` is gone or too little of it is left to answer in --
+                    # sitting 379's Router took five passes, 480 s, on a 300 s Timeout. The
+                    # results in hand stand.
+                    spent = _stage_left(ctx)
+                    if spent is not None and spent < STAGE_FLOOR:
+                        note = (f"{agent.name}'s stage spent its `Timeout:` after {hop + 1} "
+                                f"call(s); no further hop -- the results in hand stand")
+                        ctx.notes.append(note)
+                        report("      " + ink.warn(note))
+                        output = ""
+                        break
                     # The follow-up hops think too, and a tool loop's
                     # deliberation is where a wrong route is decided.
                     output = runtime.chat(_within_deadline(seat, ctx), follow,

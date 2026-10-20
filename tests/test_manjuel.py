@@ -3797,6 +3797,53 @@ def test_the_turn_deadline(reg, lib, book):
     check("a real turn starts each seat's stage clock as it sits (C13)",
           getattr(sc, "stage_at", None) is not None and 0 < sc.stage_at - _t.time() <= 600,
           repr(getattr(sc, "stage_at", None)))
+    from manjuel.pipeline import _time_left
+    from manjuel.runtime import SALVAGE_MARK
+    tl = RunContext(objective="x")
+    tl_none = _time_left(tl)
+    tl.deadline_at, tl.stage_at = _t.time() + 50, _t.time() + 20
+    check("what a call may take is the smaller of the turn's and the stage's, or none (C13)",
+          tl_none is None and 15 <= (_time_left(tl) or 0) <= 20, f"{tl_none} {_time_left(tl)}")
+    gh = Path(tempfile.mkdtemp())
+    hops = {"n": 0}
+    spent_ctx = RunContext(objective="loop forever", feed="")
+    spent_ctx.flags.add("needs_tool")
+
+    def _spends(a):
+        if a.key != "router":
+            return "x"
+        hops["n"] += 1
+        if hops["n"] >= 2:
+            spent_ctx.stage_at = _t.time() - 1          # its stage's Timeout runs out here
+        return f"<action>ground_list</action><content>corner{hops['n']}</content>"
+    rh = Stub(reply=_spends)
+    run_pipeline(spent_ctx, reg, rh, lib, env_for(gh, reg, rh),
+                 steps=["Security Guardian", "Router"], report=lambda s: None)
+    calls_h = [c for s in spent_ctx.steps for c in s.tool_calls]
+    check("a Router whose stage is spent makes no further hop, and the record says so (C13)",
+          len(calls_h) == 2 and any("stage spent its `Timeout:` after 2 call(s)" in n
+                                    for n in spent_ctx.notes), f"{len(calls_h)} {spent_ctx.notes[-3:]}")
+
+    class Ponders(Stub):
+        def __init__(self):
+            super().__init__(reply="[seat] counsel")
+            self.judge_calls = 0
+
+        def chat(self, agent, prompt, stream_to=None, tools=None, think_to=None, think=None):
+            if agent.key == "judge":
+                self.judge_calls += 1
+                if self.judge_calls >= 2:
+                    pondered.stage_at = _t.time() - 1   # its stage's Timeout runs out here
+                return f"{SALVAGE_MARK} still thinking {self.judge_calls}"
+            return super().chat(agent, prompt, stream_to, tools, think_to, think)
+    rp = Ponders()
+    pondered = RunContext(objective="should the court sit on one model?", review_only=True)
+    ep = env_for(g / "agent_workspace", reg, rp)
+    ep.ground = g
+    run_pipeline(pondered, reg, rp, lib, ep, steps=book.get("court"), report=lambda s: None)
+    check("a seat whose stage is spent is pressed no further, and the record says so (C13)",
+          rp.judge_calls == 2 and any("stage spent its `Timeout:` after 2 of" in n for n in pondered.notes),
+          f"{rp.judge_calls} {[n for n in pondered.notes if 'stage' in n or 'turn' in n][-3:]}")
 
 
 def test_the_loops_of_2026_09_08(reg, lib, book):
