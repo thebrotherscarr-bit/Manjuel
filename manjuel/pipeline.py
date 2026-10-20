@@ -67,6 +67,12 @@ from . import gitstate as _gitstate
 # short run and never the rest of the answer. `.*?` to `$` would have.
 _FLAGS_RE = re.compile(r"<flags>([^<\n]{0,80})(?:</flags>)?",
                        re.IGNORECASE)
+# A FLAG IN QUOTE MARKS IS A MENTION, AND IT GOES WHOLE (WHAT'S LEFT C45,
+# 2026-10-20). strip_control took the tag and left its marks: sitting 377 showed
+# "I raise `` to enable the chain". The marks, matched on both sides, and one
+# space before them come out with it.
+_QUOTED_FLAGS_RE = re.compile(r"[ \t]?([`'\"])<flags>[^<\n]{0,80}(?:</flags>)?\1",
+                              re.IGNORECASE)
 
 # THE FLAGS ARE A CLOSED SET (2026-09-23, on his word: "build the flags closed
 # set and the reconcile checks").
@@ -754,7 +760,7 @@ def strip_control(text: str) -> str:
     purpose: no wording makes a 3B reliably silent about a tag it was told to
     emit, but the engine can make an emitted tag never reach a person.
     """
-    cleaned = _TASK_RE.sub("", _FLAGS_RE.sub("", text or ""))
+    cleaned = _TASK_RE.sub("", _FLAGS_RE.sub("", _QUOTED_FLAGS_RE.sub("", text or "")))
     # The action block goes too -- but ONLY when there is an <action>. The
     # Expert Coder declares a bare <filepath> line that land_code() reads
     # AFTER this strip; a <filepath> with no <action> is a declaration, not

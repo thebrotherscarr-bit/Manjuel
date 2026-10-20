@@ -20997,6 +20997,16 @@ def test_flags_are_not_speech(reg, lib, book):
           strip_control("`<flags>needs_tool</flags>`") == "")
     check("ordinary prose is untouched by the strip",
           strip_control("The ground is clean.") == "The ground is clean.")
+    # A MENTIONED FLAG GOES WHOLE (WHAT'S LEFT C45, 2026-10-20): sitting 377 showed
+    # "I raise `` to enable the chain" -- the tag stripped, its backticks left.
+    said = strip_control("I raise `<flags>needs_tool</flags>` to enable the chain to perform the task")
+    check("a flag in quote marks is taken out with its marks, leaving no empty ``",
+          said == "I raise to enable the chain to perform the task", repr(said))
+    check("... in single or double quotes alike, and marks that do not pair are left",
+          strip_control("say '<flags>hard</flags>' then") == "say then"
+          and strip_control('say "<flags>hard</flags>" then') == "say then"
+          and strip_control("it's `x` and '<flags>hard</flags> now") == "it's `x` and ' now",
+          repr(strip_control("it's `x` and '<flags>hard</flags> now")))
     check("reading still works -- the strip did not eat the channel",
           read_flags("x <flags>technical, urgent</flags> y") == {"technical", "urgent"})
 
