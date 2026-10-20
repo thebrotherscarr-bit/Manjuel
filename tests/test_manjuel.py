@@ -3426,8 +3426,11 @@ def test_the_seat_bound(reg, lib, book):
     # at 4,500 tokens, the measured median of its finished answers (B15).
     check("the Expert Coder sits on qwen2.5-coder:14b (B1)", reg.get("Expert Coder").model == "qwen2.5-coder:14b",
           reg.get("Expert Coder").model)
-    check("Jesster carries a 4,500-token cap, which the runtime hands Ollama as num_predict (B15)",
-          reg.get("Jesster").max_tokens == 4500, str(reg.get("Jesster").max_tokens))
+    # SUPERSEDED 2026-10-20 (WHAT'S LEFT C38, his card: "Lift the four caps"): Jesster
+    # was cut at its 4,500 three times, its thought taking 78 to 84% of the room. It
+    # carries no cap now, bounded by its stage's Timeout (C13) and its window.
+    check("Jesster carries no cap: its Timeout and its window bound it (C38, superseding B15)",
+          reg.get("Jesster").max_tokens is None, str(reg.get("Jesster").max_tokens))
     check("the door is bound at his 180", reg.get("Steward").timeout == 180.0)
     check("and the judge at his 600, the most any seat is given",
           reg.get("Judge").timeout == 600.0 == max(a.timeout or 0 for a in reg.all()))
@@ -9199,11 +9202,34 @@ def test_sitting46_regressions(reg, lib, book):
     #
     # Still bounded, per LAW 7 -- the guard is now two-sided, because "no
     # ceiling" and "a ceiling below the floor" are both failures.
+    #
+    # RAISED 2026-10-20 (WHAT'S LEFT C38, his card: "Raise its cap to 2,000"): the
+    # 900 cut the Router eleven times in 197 thinking turns. Its ceiling is now the
+    # window's: what it is sent, its cap and one read coming back must fit its
+    # window (test_a_seat_that_holds_tools_has_room_to_answer).
     cap = reg.get("Router").max_tokens
-    check("the Router is still token-capped -- bounded everything (LAW 7)",
-          cap is not None and cap <= 1200, str(cap))
+    check("the Router is still token-capped -- bounded everything (LAW 7), at his 2,000 (C38)",
+          cap == 2000, str(cap))
     check("and the cap leaves room to think AND then emit the call",
           cap >= 600, str(cap))
+    # THE THREE LIFTED (C38, his card: "Lift the four caps"): the Reasoner, the
+    # Quality Evaluator and Jesster carry no cap, and Ollama is handed no
+    # num_predict for them -- a lifted seat is bounded by its Timeout and window.
+    handed = {}
+
+    class Seen:
+        def chat(self, **kw):
+            handed[len(handed)] = dict(kw.get("options") or {})
+            return {"message": {"content": "ruled"}}
+
+    rt3 = OllamaRuntime()
+    rt3._client = Seen()
+    lifted = ("Reasoner", "Quality Evaluator", "Jesster")
+    for name in lifted:
+        rt3.chat(reg.get(name), "rule on this")
+    check("the three seats C38 lifted carry no cap, and Ollama is handed no num_predict for them",
+          all(reg.get(n).max_tokens is None for n in lifted) and len(handed) == 3
+          and not any("num_predict" in o for o in handed.values()), str(handed))
 
     # 3. a baked seat's casual turn is dialogue + words, nothing else
     from manjuel.registry import Agent
@@ -10360,7 +10386,8 @@ def test_a_seat_after_the_router_is_handed_the_package(reg, lib, book):
     under its tool's name and as returned, cut by arithmetic to fit the seat's
     window with the cut marked, the task and its limits; the door's own words,
     which are testimony, stay out. A turn with no Router is as it was."""
-    from manjuel.pipeline import build_prompt
+    from dataclasses import replace as _replace
+    from manjuel.pipeline import answer_room, build_prompt
     big = "the line that matters " * 3000
     ctx = RunContext(objective="think hard about what pipelines.md says")
     ctx.steps.append(StepResult(agent="Steward", model="m", output="the door's own words, which are not facts"))
@@ -10375,12 +10402,24 @@ def test_a_seat_after_the_router_is_handed_the_package(reg, lib, book):
           p.startswith("## Original Objective") and p.splitlines()[1] == "think hard about what pipelines.md says", p[:120])
     check("... each result under its tool's name, cut to fit the seat's window, the cut marked",
           "### `ground_read`" in p and "pipelines.md -- read whole" in p and "cut to fit the Reasoner's window" in p
-          and len(p) < (seat.context - seat.max_tokens) * 3, f"{len(p)} characters")
+          and len(p) < (seat.context - answer_room(seat)) * 3, f"{len(p)} characters")
     check("... the task and its limits",
           "## The task" in p and "## Limits" in p and "You cannot run tools" in p, p[-600:])
     check("... and the record says how big the package was against the window",
           any(n.startswith("package for the Reasoner") and "8192-token window" in n for n in ctx.notes),
           str(ctx.notes))
+    # AN UNCAPPED SEAT IS PACKED FOR HALF ITS WINDOW (WHAT'S LEFT C38, his card of
+    # 2026-10-20: "Pack uncapped seats for half"). The package was cut to leave a
+    # seat's cap free, and 1,024 tokens when it had none -- less than the Reasoner's
+    # 1,400 that cut it six times. A capped seat is packed for its cap, as before.
+    capped, free = _replace(seat, max_tokens=1400), _replace(seat, max_tokens=None)
+    pc, pf = build_prompt(capped, ctx, lib), build_prompt(free, ctx, lib)
+    check("an uncapped seat keeps half its window to think and answer in; a capped one keeps its cap",
+          answer_room(free) == seat.context // 2 and answer_room(capped) == 1400,
+          f"{answer_room(free)}, {answer_room(capped)}")
+    check("... and its package is cut to leave that half free, smaller than its cap left",
+          len(pf) < (seat.context // 2) * 3 and len(pf) < len(pc) < (seat.context - 1400) * 3
+          and "cut to fit the Reasoner's window" in pf, f"{len(pf)} and {len(pc)} characters")
     ctx2 = RunContext(objective="brief me on the feed")
     ctx2.steps.append(StepResult(agent="Morning Reviewer", model="m", output="the feed, compressed"))
     p2 = build_prompt(reg.get("Reasoner"), ctx2, lib)

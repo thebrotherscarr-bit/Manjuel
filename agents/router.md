@@ -4,7 +4,7 @@
 - **Stage:** route
 - **On Fail:** skip
 - **When:** needs_tool
-- **Max Tokens:** 900
+- **Max Tokens:** 2000
 - **Context:** 16384
 - **Timeout:** 300
 - **System Prompt:**

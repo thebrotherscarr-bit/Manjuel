@@ -4,7 +4,6 @@
 - **Wakes:** after Router
 - **Stage:** gate
 - **On Fail:** skip
-- **Max Tokens:** 700
 - **Context:** 16384
 - **Timeout:** 300
 - **System Prompt:**
