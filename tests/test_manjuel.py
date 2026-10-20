@@ -3867,6 +3867,36 @@ def test_the_turn_deadline(reg, lib, book):
           rp.judge_calls == 2 and any("stage spent its `Timeout:` after 2 of" in n for n in pondered.notes),
           f"{rp.judge_calls} {[n for n in pondered.notes if 'stage' in n or 'turn' in n][-3:]}")
 
+    # THE TIME KEPT FOR THE JUDGE, AT WORK (WHAT'S LEFT C13 (b), his cards: "360 s",
+    # "pipelines.md"): the court keeps 360 s of its 900 for the ruling. A counsel seat is
+    # bound within the turn less it; the Judge and the guard are not; a sub-task keeps it.
+    court_k = book.get("court")
+    check("the court keeps 360 s of its turn for the Judge, declared in pipelines.md (C13)",
+          getattr(court_k, "kept", None) == 360.0, repr(getattr(court_k, "kept", None)))
+    kc = RunContext(objective="x")
+    kc.deadline_at, kc.kept_s = _t.time() + 400, 360.0
+    jb = _within_deadline(reg.get("Jesster"), kc)
+    check("a counsel seat with 400 s of the turn left is bound at what is not the Judge's (C13)",
+          (jb.timeout or 0) <= 40 and jb.cut_to_turn is True, repr(jb.timeout))
+    jg = _within_deadline(reg.get("Judge"), kc)
+    gd = _within_deadline(reg.get("Security Guardian"), kc)
+    check("... and the Judge and the guard are bound by the turn alone (C13)",
+          (jg.timeout or 0) >= 395 and gd is reg.get("Security Guardian"),
+          repr((jg.timeout, gd.timeout)))
+    kp = RunContext(objective="p")
+    kp.deadline_at, kp.kept_s = _t.time() + 400, 360.0
+    seen_k = {}
+    ek2 = env_for(g / "agent_workspace", reg, Stub(reply="x"))
+    ek2.ground = g
+
+    class Peek(Stub):
+        def chat(self, agent, prompt, stream_to=None, tools=None, think_to=None, think=None):
+            seen_k[agent.name] = agent.timeout
+            return super().chat(agent, prompt, stream_to, tools, think_to, think)
+    _sub_runner(kp, reg, Peek(reply="x"), lib, ek2, lambda m: None)("list the ground")
+    check("a sub-task keeps the Judge's time too: its seats are bound within the turn less it (C13)",
+          seen_k and all((v or 0) <= 45 for v in seen_k.values()), repr(seen_k))
+
 
 def test_the_loops_of_2026_09_08(reg, lib, book):
     """The REPL read of 2026-09-08 (TASKS "From the REPL read"), the

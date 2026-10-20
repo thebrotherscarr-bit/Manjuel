@@ -317,12 +317,30 @@ def note_cut_reply(runtime, seat: Agent, ctx: RunContext, report=print) -> str:
     return note
 
 
-def _budget(ctx: RunContext) -> float | None:
-    """Seconds left in this turn, or None when the run has no deadline."""
+def _budget(ctx: RunContext, seat: Agent | None = None) -> float | None:
+    """Seconds left in this turn, or None when the run has no deadline -- less, for a
+    seat that sits before the Judge, the time its pipeline keeps for the Judge."""
     at = getattr(ctx, "deadline_at", None)
     if at is None:
         return None
-    return at - time.time()
+    return at - time.time() - _kept_back(ctx, seat)
+
+
+def _kept_back(ctx: RunContext, seat: Agent | None) -> float:
+    """The seconds of this turn `seat` may not spend: the time its pipeline keeps for
+    the Judge (pipelines.md `**Kept for the Judge:**`; WHAT'S LEFT C13 (b), his cards
+    of 2026-10-19: "360 s", "pipelines.md"). The Judge was cut three times in seven
+    courts, twice after Jesster's one call ran its whole 600 s. Nothing is kept from
+    the Judge itself, from the guard (the input is judged first, always), from a seat
+    after the Judge has sat, or on a turn that keeps none."""
+    kept = getattr(ctx, "kept_s", None)
+    if not kept or seat is None or getattr(seat, "key", "") == "judge":
+        return 0.0
+    if getattr(seat, "stage", "") == "guard":
+        return 0.0
+    if any(s.agent.strip().lower() == "judge" and not s.skipped for s in ctx.steps):
+        return 0.0
+    return float(kept)
 
 
 def _stage_left(ctx: RunContext) -> float | None:
@@ -354,7 +372,7 @@ def _within_deadline(seat: Agent, ctx: RunContext) -> Agent:
     of turns, so the cut is made here, on a copy. A seat with no time left
     is never handed to the runtime -- the loop above skips it by name.
     """
-    left = _budget(ctx)
+    left = _budget(ctx, seat)          # less the Judge's kept time, before it sits (C13 (b))
     stage = _stage_left(ctx)
     if left is None and stage is None:
         return seat
@@ -2433,6 +2451,7 @@ def run_pipeline(
     # (registry.Steps). Read here, first: every rebinding of `steps` below --
     # the maker's, the skipped front door's -- makes a plain list of them.
     declared = getattr(steps, "deadline", None)
+    kept = getattr(steps, "kept", None)         # the time kept for the Judge (C13 (b))
 
     # A request that literally names a tool reaches the Router without needing
     # the Steward to raise the flag. The Router still chooses; this only opens
@@ -2455,6 +2474,12 @@ def run_pipeline(
                          f"turn takes the dial's {TURN_DEADLINE:.0f}s")
     if getattr(ctx, "deadline_at", None) is None and _turn_limit(ctx) > 0:
         ctx.deadline_at = time.time() + _turn_limit(ctx)
+    # THE TIME KEPT FOR THE JUDGE (WHAT'S LEFT C13 (b)): its pipeline declares it, and
+    # every seat before the Judge is seated and bound within the turn less it.
+    if kept and getattr(ctx, "kept_s", None) is None:
+        ctx.kept_s = float(kept)
+        ctx.notes.append(f"deadline: {kept:.0f}s of this turn are kept for the Judge -- its "
+                         f"pipeline declares it (pipelines.md); no seat before it may spend them")
 
     # THE LAW GATE (the operator's ruling, 2026-09-04): every run passes
     # through the law before any seat sits. The chain is walked, the
@@ -4140,6 +4165,7 @@ def _sub_runner(parent: RunContext, registry, runtime, skills, env, report):
                            depth=getattr(parent, "depth", 0) + 1)
         child.deadline_at = getattr(parent, "deadline_at", None)
         child.deadline_s = getattr(parent, "deadline_s", None)
+        child.kept_s = getattr(parent, "kept_s", None)      # ...and the Judge's time (C13 (b))
         child.flags.add("needs_tool")
         report("      " + ink.dim(f"→ sub-task: {objective[:60]}"))
 

@@ -415,6 +415,11 @@ class RunContext:
     # call, every tool-loop hop, every press of the ruling loop and every repair together.
     # Set by run_pipeline as each seat sits; None before the first.
     stage_at: float | None = None
+    # THE SECONDS OF THIS TURN KEPT FOR THE JUDGE, when its pipeline declares them
+    # (pipelines.md `**Kept for the Judge:**`; WHAT'S LEFT C13 (b), his cards of
+    # 2026-10-19: "360 s", "pipelines.md"). No seat before the Judge may spend them.
+    # Set by run_pipeline and inherited by a sub-run; None = nothing is kept.
+    kept_s: float | None = None
     # Seats that were NOT seated because the deadline had passed -- one
     # name per seat, recorded as it happens so the recompose can say OUT OF
     # TIME without any seat remembering to. Same arithmetic as failures.
