@@ -38,7 +38,11 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (17:22):** step (3)'s first two pieces, C47 and C55, built by Steward on your cards with their strokes
+  **Where it stands (18:23):** step (3)'s first group, the five with no ruling, built by Steward on your cards with their
+  strokes and recorded: C47 and C55 sent and merged (pull request 42); C46, C43 and C57 on the line of work, its pull
+  request 43 open and red only on the map and the refusals' tail, which its ship regenerates; next, that ship, the
+  restart, then group 2, C13, with its (b) put to you (time kept back for the Judge).
+  **At 17:22 it stood:** step (3)'s first two pieces, C47 and C55, built by Steward on your cards with their strokes
   and recorded; next, Steward's ship of both, the restart, then C46.
   **At 17:12 it stood:** step (3)'s first piece, C47 (the turn's clock stops while a card waits), built by Steward on your
   cards with its stroke and recorded; next, Steward's ship of it, the restart, then C55.
@@ -187,16 +191,11 @@ half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
   three times on one ask. *(CHANGELOG, "core: routing, its second part, the Router's package")*
 - **C42. The Proofreader mended "too" and kept "their" for "they're".** Woken on your word at a green card (sitting 373).
   *(INVENTORY S8)*
-- **C43. The Deep Researcher answered beside the question.** Asked about the court, it answered with a law court's meaning, not
-  the ground's review panel (sitting 370). Grounding, I2's (g). *(INVENTORY S1, K3)*
 - **C44. The estate turn cannot read the covenant.** Asked about the covenant, it answered with the Steward's description of
   itself, and Manjuel ruled that SUPPORTED after six and a half minutes on gemma4:12b (sitting 373): C3's question, failing
   another way. Grounding and the slow routes, I2's (g) and (h). *(INVENTORY P3)*
 - **C45. The Steward narrates a flag it raised, with the flag taken out.** "I raise `` to enable the chain to perform the task",
   in a follow-up answered at the door (sitting 377). Part of H24, plain by default. *(INVENTORY S14)*
-- **C46. The closing answer miscounts a tool's list.** It told `skill_report`'s 45 skills as 43 and dropped `git_pull` from
-  `skill_search`'s five (sitting 373). C7's mend, the whole list added from the record, was made for the rack's list.
-  *(HANDOFF, 2026-10-12, sitting 373)*
 
 ### The engine
 
@@ -222,12 +221,6 @@ half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
   skills and pipelines reloaded", with nothing written under agents/ or skills/, nor to pipelines.md or commands.md, since 09:32.
   The watcher takes a file named agents.md, commands.md or pipelines.md anywhere in the ground for a declaration
   (`manjuel/watch.py`); the cause is not found. *(HANDOFF, 2026-10-12, sitting 373)*
-- **C57. Three of your own commands print their expansion and run nothing:** `/morning`, `/sitting` and `/covenant` (sitting
-  368). I2's (e). *(INVENTORY M32, M33, M34)*
-  The cause, read off the code 2026-10-16 and re-checked 2026-10-19: in the glass the command puts what it would run into
-  `sess.pending_spoken`, which only the REPL's own loop reads, so the glass never runs it; a typed `/listen` drops what it heard
-  the same way; and `/sitting`'s Method stays behind and rides on the next turn that runs the council. The mend is in `Door.turn`
-  (`manjuel/serve.py`): run what the command left, as the REPL does, and clear the Method when a command turn runs nothing.
 - **C58. The coder flow's brief answered beside the question.** In sitting 371, asked to make HANDOFF.md's header name its
   newest block, `coder-tree`'s brief named tests/HANDOFF.md and a different change; it stopped at its first gate on your card.
   Grounding, I2's (g). *(INVENTORY F2)*
@@ -1150,6 +1143,20 @@ goals". The steps under each are proposed from the disk; each is yours to change
 ## Done
 
 Finished lines, newest first. A number is never used again.
+
+- **C57. Three of your own commands printed their expansion and ran nothing.** DONE 2026-10-19, by Steward on your cards (the
+  road to v0.2.6, its step (3), its fifth piece): in the glass a command of yours and a typed `/listen` run what they leave to
+  run, as the REPL does, the Method riding, and a command turn that runs nothing leaves no Method behind. The line as it stood:
+  `/morning`, `/sitting` and `/covenant` printed their expansion and ran nothing (sitting 368). *(CHANGELOG, "core: in the glass
+  his own commands")*
+- **C43. The Deep Researcher answered beside the question.** DONE 2026-10-19, by Steward on your cards (step (3), its fourth
+  piece): it is told this ground's own words before the question -- each running order with its seats, and every seat -- read
+  off the disk; a live ask is step (4)'s, R1 re-run live. The line as it stood: asked about the court, it answered with a law
+  court's meaning, not the ground's review panel (sitting 370). *(CHANGELOG, "core: the Deep Researcher is told")*
+- **C46. The closing answer miscounted a tool's list.** DONE 2026-10-19, by Steward on your cards (step (3), its third piece):
+  `skill_report`'s and `skill_search`'s lists join the rack's as listings the engine completes when the closing words leave an
+  item out. The line as it stood: it told `skill_report`'s 45 skills as 43 and dropped `git_pull` from `skill_search`'s five
+  (sitting 373). *(CHANGELOG, "core: the closing answer no longer shortens")*
 
 - **C55. The engine's note on what it added to an answer was empty.** DONE 2026-10-19, by Steward on your cards (the road to
   v0.2.6, its step (3), its second piece): the note names every block the recompose adds -- a named tool that did not run, no

@@ -4829,6 +4829,44 @@ def test_the_headless_door(reg, lib, book):
           and not any(r["event"] in ("run", "delivery") for r in rows))
     check("no model sat for a command", not sess.runtime._inner.seen)
 
+    # ---- what a command leaves to run, the door runs (WHAT'S LEFT C57) -------
+    #
+    # Sitting 368: /morning, /sitting and /covenant printed their expansion in
+    # the glass and ran nothing -- the command left its objective in
+    # pending_spoken, which only the REPL's own loop read. The door runs it now,
+    # its Method riding; a typed /listen's words the same, once he says yes; and
+    # a command turn that runs nothing leaves no Method for the next turn.
+    from types import SimpleNamespace
+    from manjuel import cli as _cl
+    from manjuel import voice as _vo
+    keep_cc, keep_cl, keep_li = _cl.custom_commands, _vo.can_listen, _vo.listen
+    _cl.custom_commands = lambda: {"zqmorning": ("a stand-in", "zq read the morning", "zq-method-mark")}
+    try:
+        rows, sess, text, rc = drive([{"cmd": "objective", "text": "/zqmorning"},
+                                      {"cmd": "close"}], Stub(reply="[Steward] morning."))
+        check("a command of his runs what it expands to in the door, as the REPL does (C57)",
+              sum(1 for r in rows if r["event"] == "delivery") == 1 and len(sess.sitting.runs) == 1
+              and sess.sitting.runs[0]["objective"] == "zq read the morning"
+              and sess.pending_spoken == "", str([r["event"] for r in rows]))
+        check("... its Method riding with that run, and spent after it (C57)",
+              any("zq-method-mark" in p for _, p in sess.runtime._inner.seen)
+              and sess.pending_method == "", str(len(sess.runtime._inner.seen)))
+        rows, sess, text, rc = drive([{"cmd": "objective", "text": "/pipelines", "method": "zq-stale"},
+                                      {"cmd": "close"}], Stub())
+        check("a command turn that runs nothing leaves no Method for the next turn (C57)",
+              sess.pending_method == "" and not any(r["event"] == "delivery" for r in rows),
+              repr(sess.pending_method))
+        _vo.can_listen = lambda: SimpleNamespace(ok=True, how="a stand-in")
+        _vo.listen = lambda seconds, report=None: "zq heard words"
+        rows, sess, text, rc = drive([{"cmd": "objective", "text": "/listen"},
+                                      {"cmd": "answer", "text": "y"},
+                                      {"cmd": "close"}], Stub(reply="[Steward] heard."))
+        check("a typed /listen runs what it heard once he says yes (C57)",
+              len(sess.sitting.runs) == 1 and sess.sitting.runs[0]["objective"] == "zq heard words",
+              str([r["event"] for r in rows]))
+    finally:
+        _cl.custom_commands, _vo.can_listen, _vo.listen = keep_cc, keep_cl, keep_li
+
     # ---- the tool eyes ----------------------------------------------------
     rows, sess, text, rc = drive([{"cmd": "objective", "text": "what is in the skills dir"},
                                   {"cmd": "close"}], Stub(reply="[Router] read it."))
@@ -8285,6 +8323,21 @@ def test_objective_is_the_payload_for_prompt_skills(reg, lib, book):
     check("a starved skill borrows the objective as its payload",
           "researched" in out and "code and coding" in seen[-1][1],
           out[:40])
+
+    # THE GROUND'S OWN WORDS (WHAT'S LEFT C43; sitting 370, asked about the court, it
+    # answered with a law court). The question carries the running orders read off
+    # pipelines.md and the seats off agents/, in front of it.
+    env.ground = ROOT
+    env.objective = "deep research: what does the court do"
+    lib.execute("deep_research", {}, env)
+    asked = seen[-1][1]
+    check("the Deep Researcher is told this ground's running orders and seats before the question (C43)",
+          "running order `court`" in asked and "Deep Researcher" in asked
+          and asked.index("running order") < asked.index("what does the court do"), asked[:400])
+    env.ground = g
+    lib.execute("deep_research", {"content": "the court"}, env)
+    check("... and a ground with no pipelines.md still asks, its seats named (C43)",
+          "running order" not in seen[-1][1] and "  seats: " in seen[-1][1], seen[-1][1][:300])
 
 
 def test_sitting40_regressions(reg, lib, book):
@@ -19354,6 +19407,35 @@ def test_a_listing_the_closing_seat_shortened_is_completed(reg, lib, book):
           len(f1) == 1 and "leaves out 7 of 7" in f1[0] and "llama3.2:latest" in f1[0], str(f1))
     check("a delivery naming every model is met", judged("All: " + ", ".join(SZ)) == [])
     check("a dry run's stub is not judged for it", judged("Six models are installed.", live=False) == [])
+
+    # THE SKILLS' TWO LISTINGS (WHAT'S LEFT C46; sitting 373 named four of skill_search's five). The
+    # real handlers' output, read by the guard's own patterns -- every skill each printed, skill_report's
+    # use lines not among them -- and a closing seat that left one matching skill out, completed.
+    gs = Path(tempfile.mkdtemp())
+    (gs / "logs").mkdir()
+    (gs / "logs" / "uses.jsonl").write_text(
+        '{"ts": "2026-10-19T00:00:00", "tool": "git_status", "ok": true, "ms": 5}\n', encoding="utf-8")
+    es = env_for(gs, reg, Stub(reply="x"), skills=lib)
+    report = lib.execute("skill_report", {}, es)
+    got = _in.listing_items("skill_report", report)
+    check("the guard reads every skill the real skill_report printed, and not its use lines (C46)",
+          sorted(got) == sorted(lib.keywords()) and "used" in report, f"{len(got)} of {len(lib.keywords())}")
+    found = lib.execute("skill_search", {"content": "git"}, es)
+    shown = [ln.split()[0] for ln in found.splitlines()
+             if ln.startswith("  ") and not ln.startswith("   ") and not ln.strip().startswith("...")]
+    check("... and every skill the real skill_search printed (C46)",
+          _in.listing_items("skill_search", found) == shown and len(shown) >= 2, f"{shown} {found[:300]}")
+    c = RunContext(objective="for this, which of your skills bear on git")
+    c.named_tool = "skill_search"
+    c.ran_calls[("skill_search", "[]")] = found
+    c.steps.append(StepResult(agent="Router", model="qwen3.5:4b", elapsed=1.0,
+                              output="Tool executed: skill_search", tool_calls=["skill_search"],
+                              tool_results=[found]))
+    c.steps.append(StepResult(agent="Steward", model="llama3.2", elapsed=1.0,
+                              output="Git: " + ", ".join(shown[:-1]) + "."))
+    check("a closing seat that left a matching skill out is completed, the one it left out listed (C46)",
+          recompose(c, report=lambda *a, **k: None) is True and "WHOLE" in c.steps[-1].output
+          and shown[-1] in c.steps[-1].output, c.steps[-1].output[-400:])
 
 
 def test_the_phrasing_matrix_finds_nothing_and_has_teeth(reg, lib, book):

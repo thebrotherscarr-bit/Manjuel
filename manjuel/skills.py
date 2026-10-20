@@ -3646,6 +3646,32 @@ def _search_scoped(env: SkillExecutionEnv, args: dict, scope: str) -> str:
     return "\n".join(lines)
 
 
+def ground_terms(env) -> str:
+    """This ground's own words, read off its files for a seat that answers out
+    of its own head (WHAT'S LEFT C43): each running order in pipelines.md with
+    its seats, then every seat in agents/. "" when neither can be read."""
+    from .registry import PipelineBook
+    lines = []
+    try:
+        book = PipelineBook.load(Path(env.ground) / "pipelines.md")
+        for name in book.names():
+            lines.append(f"  running order `{name}`: "
+                         + " -> ".join(str(s) for s in book.get(name)))
+    except Exception:
+        pass                    # no pipelines.md here: the seats alone
+    try:
+        seats = sorted(a.name for a in env.registry.all())
+    except Exception:
+        seats = []
+    if seats:
+        lines.append("  seats: " + ", ".join(seats))
+    if not lines:
+        return ""
+    return ("This ground's own words, read off its files. Where the question uses one "
+            "of them, it means this ground's, not the word's everyday sense:\n"
+            + "\n".join(lines) + "\n\n")
+
+
 @skill("deep_research")
 def _deep_research(env: SkillExecutionEnv, args: dict) -> str:
     """Delegate to the Deep Researcher persona defined in agents.md.
@@ -3665,8 +3691,11 @@ def _deep_research(env: SkillExecutionEnv, args: dict) -> str:
         return "Error: no 'Deep Researcher' agent defined in agents.md."
 
     agent = env.registry.get("Deep Researcher")
+    # THE GROUND'S OWN WORDS FIRST (WHAT'S LEFT C43, sitting 370). Asked about the
+    # court, it answered with a law court's meaning: nothing told it that here
+    # "court" is a running order. ground_terms puts them in front of the question.
     try:
-        out = env.runtime.chat(agent, f"Investigate the following in depth:\n\n{payload}")
+        out = env.runtime.chat(agent, f"{ground_terms(env)}Investigate the following in depth:\n\n{payload}")
     except Exception as exc:
         return f"Deep research failed: {exc}"
     return f"Deep research findings:\n{out}"

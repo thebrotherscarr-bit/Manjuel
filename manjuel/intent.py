@@ -289,6 +289,14 @@ LISTING_TOOLS = {
     # tool: (what the operator calls it, what one item is, the pattern)
     "rack_list": ("the rack", "model", re.compile(
         r"^[ \t]*(?:LOADED[ \t]+)?(?P<item>[A-Za-z0-9][\w.\-]*:[\w.\-]+)[ \t]+[\d?]", re.M)),
+    # THE SKILLS' TWO LISTINGS (WHAT'S LEFT C46, sitting 373: four of skill_search's five named,
+    # git_pull dropped). Their item lines as the handlers write them: skill_report's "  name   its
+    # first sentence" -- never its use lines ("used N", "never used:") -- and skill_search's
+    # "  name   (file.md)". A stroke reads both handlers' real output with these.
+    "skill_report": ("the skills", "skill", re.compile(
+        r"^  (?P<item>[a-z][a-z0-9_]*) +(?!used \d|used:)\S", re.M)),
+    "skill_search": ("the matching skills", "skill", re.compile(
+        r"^  (?P<item>[a-z][a-z0-9_]*) +\([^)\n]+\)[ \t]*$", re.M)),
 }
 
 
