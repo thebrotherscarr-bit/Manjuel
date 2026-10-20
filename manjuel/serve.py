@@ -86,6 +86,9 @@ run, command for a `/command` or any other turn that finished without
 running one, or refused / aborted / cancelled / unreachable. A client
 pumps until one arrives, so a turn that ended silently hung the wire
 forever -- which is what every command did until this was added.
+A command that leaves words to run -- one of his from commands.md, a
+typed `/listen` -- runs them in the same turn, as the REPL's loop does,
+and the turn ends in that run's event (WHAT'S LEFT C57, 2026-10-19).
 
 AN ENGINE NOBODY USES CLOSES ITSELF (2026-09-16). With no command for
 IDLE_CLOSE seconds -- thirty minutes -- between turns, the door closes the
@@ -2016,6 +2019,16 @@ class Door:
         try:
             if _cli.handle_command(objective, sess):
                 _watch_skills(sess.skills, self.wire)      # /reload rebuilt it
+                # WHAT THE COMMAND LEFT TO RUN (WHAT'S LEFT C57, sitting 368): a command of his
+                # (/morning, /sitting, /covenant) and a typed /listen leave their words in
+                # pending_spoken, which only the REPL's own loop read, so in the glass they ran
+                # nothing. They run here as there, a Method riding with them; a command turn
+                # that runs nothing leaves no Method behind for the next turn.
+                left = sess.pending_spoken
+                if left:
+                    sess.pending_spoken = ""
+                    return self.turn(left)
+                sess.pending_method = ""
                 return True
         except SystemExit:
             self._close("/exit")

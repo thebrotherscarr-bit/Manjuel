@@ -4829,6 +4829,44 @@ def test_the_headless_door(reg, lib, book):
           and not any(r["event"] in ("run", "delivery") for r in rows))
     check("no model sat for a command", not sess.runtime._inner.seen)
 
+    # ---- what a command leaves to run, the door runs (WHAT'S LEFT C57) -------
+    #
+    # Sitting 368: /morning, /sitting and /covenant printed their expansion in
+    # the glass and ran nothing -- the command left its objective in
+    # pending_spoken, which only the REPL's own loop read. The door runs it now,
+    # its Method riding; a typed /listen's words the same, once he says yes; and
+    # a command turn that runs nothing leaves no Method for the next turn.
+    from types import SimpleNamespace
+    from manjuel import cli as _cl
+    from manjuel import voice as _vo
+    keep_cc, keep_cl, keep_li = _cl.custom_commands, _vo.can_listen, _vo.listen
+    _cl.custom_commands = lambda: {"zqmorning": ("a stand-in", "zq read the morning", "zq-method-mark")}
+    try:
+        rows, sess, text, rc = drive([{"cmd": "objective", "text": "/zqmorning"},
+                                      {"cmd": "close"}], Stub(reply="[Steward] morning."))
+        check("a command of his runs what it expands to in the door, as the REPL does (C57)",
+              sum(1 for r in rows if r["event"] == "delivery") == 1 and len(sess.sitting.runs) == 1
+              and sess.sitting.runs[0]["objective"] == "zq read the morning"
+              and sess.pending_spoken == "", str([r["event"] for r in rows]))
+        check("... its Method riding with that run, and spent after it (C57)",
+              any("zq-method-mark" in p for _, p in sess.runtime._inner.seen)
+              and sess.pending_method == "", str(len(sess.runtime._inner.seen)))
+        rows, sess, text, rc = drive([{"cmd": "objective", "text": "/pipelines", "method": "zq-stale"},
+                                      {"cmd": "close"}], Stub())
+        check("a command turn that runs nothing leaves no Method for the next turn (C57)",
+              sess.pending_method == "" and not any(r["event"] == "delivery" for r in rows),
+              repr(sess.pending_method))
+        _vo.can_listen = lambda: SimpleNamespace(ok=True, how="a stand-in")
+        _vo.listen = lambda seconds, report=None: "zq heard words"
+        rows, sess, text, rc = drive([{"cmd": "objective", "text": "/listen"},
+                                      {"cmd": "answer", "text": "y"},
+                                      {"cmd": "close"}], Stub(reply="[Steward] heard."))
+        check("a typed /listen runs what it heard once he says yes (C57)",
+              len(sess.sitting.runs) == 1 and sess.sitting.runs[0]["objective"] == "zq heard words",
+              str([r["event"] for r in rows]))
+    finally:
+        _cl.custom_commands, _vo.can_listen, _vo.listen = keep_cc, keep_cl, keep_li
+
     # ---- the tool eyes ----------------------------------------------------
     rows, sess, text, rc = drive([{"cmd": "objective", "text": "what is in the skills dir"},
                                   {"cmd": "close"}], Stub(reply="[Router] read it."))
