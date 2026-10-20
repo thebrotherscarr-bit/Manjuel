@@ -23729,6 +23729,147 @@ def test_steward_drives_to_a_check(reg, lib, book):
                     else:
                         os.environ[k] = v
 
+        # WHAT THE CHECK REWROTE GOES WITH THE JOB (WHAT'S LEFT C130, 2026-10-20, his word: "fix it"): a
+        # job's commit took only the files it wrote, so the stamps its check rewrote were left unsaved and the
+        # switch home was refused. Now what a passing check made or changed goes with the job's own -- and
+        # nothing is taken while anything was unsaved when the run began (C127).
+        if HAVE_GIT:
+            moved = tmp / "moved"
+            moved.mkdir()
+
+            def m(*a):
+                return subprocess.run(["git", *a], cwd=str(moved), capture_output=True, text=True,
+                                      stdin=subprocess.DEVNULL).stdout
+            who = {"GIT_AUTHOR_NAME": "stroke", "GIT_AUTHOR_EMAIL": "stroke@example.invalid",
+                   "GIT_COMMITTER_NAME": "stroke", "GIT_COMMITTER_EMAIL": "stroke@example.invalid"}
+            kept_env = {k: os.environ.get(k) for k in who}
+            os.environ.update(who)
+            try:
+                m("init", "-q", "-b", "main")
+                for name in ("f.txt", "last.txt"):
+                    (moved / name).write_text("a\n", encoding="utf-8")
+                m("add", "f.txt", "last.txt")
+                m("commit", "-qm", "one")
+
+                class TreeLib:
+                    made = [0]
+
+                    def keywords(self):
+                        return ["ground_edit"]
+
+                    def tool_schemas(self, allowed):
+                        return [{"type": "function", "function": {"name": n}} for n in sorted(allowed)]
+
+                    def execute(self, name, args, env):
+                        self.made[0] += 1
+                        (moved / "f.txt").write_text(f"the job {self.made[0]}\n", encoding="utf-8")
+                        return "Edited f.txt at line 1: 1 line(s) replaced by 1."
+
+                    def spec(self, name):
+                        return None
+                tree = _NS(caller="", caller_allowed=None, objective="", ground=moved)
+                writes = f"{py} -c \"open('stamp.txt', 'w').write('s'); open('last.txt', 'w').write('this run')\""
+                stamp = f"{py} -c \"import time; open('stamp.txt', 'w').write(str(time.time()))\""
+                events.clear()
+                d = SV.drive(f"edit f | check: {writes}", skills=TreeLib(), env=tree, ground=moved,
+                             logs=tmp / "logs", ask=asker("y", "y"), report=lambda line: None,
+                             client=Model(call("ground_edit", filepath="f.txt", content="x"),
+                                          call("done", summary="edited f")))
+                saved = sorted(m("show", "--name-only", "--format=", "HEAD").split())
+                card = next((e[1] for e in events if e[0] == "ask" and "Commit these" in e[1]), "")
+                check("drive: what a passing check made or changed is committed with the job's own (C130)",
+                      saved == ["f.txt", "last.txt", "stamp.txt"] and "Commit these 3 file(s)" in card
+                      and "stamp.txt" in card, f"{saved} -> {d.verdict}; {card[:200]}")
+                # Something unsaved when the run began: the check's files are named and left, the job's own saved.
+                (moved / "theirs.txt").write_text("not the job's\n", encoding="utf-8")
+                events.clear()
+                d = SV.drive(f"edit f again | check: {stamp}", skills=TreeLib(), env=tree, ground=moved,
+                             logs=tmp / "logs", ask=asker("y", "y"), report=lambda line: None,
+                             client=Model(call("ground_edit", filepath="f.txt", content="x"),
+                                          call("done", summary="edited f again")))
+                held = [str(s[3]) for s in d.steps if s[1] == "check rewrote"]
+                check("drive: while anything was unsaved when the run began, nothing the check rewrote is taken",
+                      m("show", "--name-only", "--format=", "HEAD").split() == ["f.txt"]
+                      and "stamp.txt" in m("ls-files", "-m").split()
+                      and "theirs.txt" in m("ls-files", "--others", "--exclude-standard").split()
+                      and held and "theirs.txt" in held[0] and "C127" in held[0], str(held)[:300])
+                (moved / "theirs.txt").unlink()
+                m("checkout", "--", "stamp.txt")
+                # A plan: each item commits what its check rewrote, and the whole's last check is saved too.
+                planned = SV.drive(f"plan two edits | check: {stamp}", skills=TreeLib(), env=tree, ground=moved,
+                                   logs=tmp / "logs", ask=asker("y", "y", "y"), report=lambda line: None,
+                                   client=Model({"role": "assistant", "content": '["one edit", "two edits"]'},
+                                                call("ground_edit", filepath="f.txt", content="x"),
+                                                call("done", summary="one"),
+                                                call("ground_edit", filepath="f.txt", content="y"),
+                                                call("done", summary="two")))
+                shown = [sorted(m("show", "--name-only", "--format=", ref).split()) for ref in ("HEAD", "HEAD~1", "HEAD~2")]
+                check("drive plan: each item and the whole's last check save what the check rewrote (C130)",
+                      [v for _, v in planned.items] == ["passed", "passed"]
+                      and m("log", "-1", "--format=%s").startswith("What its check rewrote")
+                      and shown == [["stamp.txt"], ["f.txt", "stamp.txt"], ["f.txt", "stamp.txt"]]
+                      and not m("ls-files", "-m").strip(), f"{planned.items} -> {planned.verdict}; {shown}")
+                # The second review's wires. A file a failing check already regenerated is still saved
+                # when the passing check writes the same bytes again.
+                class TwoLib(TreeLib):
+                    def execute(self, name, args, env):
+                        (moved / "f.txt").write_text(str(args.get("content")), encoding="utf-8")
+                        return "Edited f.txt at line 1: 1 line(s) replaced by 1."
+                twice = (f"{py} -c \"import sys; open('map.txt', 'w').write('m'); "
+                         f"sys.exit(0 if open('f.txt').read() == 'two' else 1)\"")
+                d = SV.drive(f"edit f twice | check: {twice}", skills=TwoLib(), env=tree, ground=moved,
+                             logs=tmp / "logs", ask=asker("y", "y", "y"), report=lambda line: None,
+                             client=Model(call("ground_edit", filepath="f.txt", content="one"),
+                                          call("done", summary="one"),
+                                          call("ground_edit", filepath="f.txt", content="two"),
+                                          call("done", summary="two")))
+                check("drive: what a failing check regenerated is saved when the passing check writes it again",
+                      sorted(m("show", "--name-only", "--format=", "HEAD").split()) == ["f.txt", "map.txt"],
+                      f"{d.verdict}; {m('show', '--name-only', '--format=', 'HEAD')}")
+                # A secret or client file the check writes is never taken, nor named.
+                leaky = (f"{py} -c \"open('x_secrets.json', 'w').write('k'); open('n.client.md', 'w').write('c'); "
+                         f"open('map.txt', 'w').write('m2')\"")
+                d = SV.drive(f"edit f with care | check: {leaky}", skills=TreeLib(), env=tree, ground=moved,
+                             logs=tmp / "logs", ask=asker("y", "y"), report=lambda line: None,
+                             client=Model(call("ground_edit", filepath="f.txt", content="x"),
+                                          call("done", summary="careful")))
+                said = " ".join(str(s[3]) for s in d.steps if s[1] == "check rewrote")
+                check("drive: a secret or client file a check writes is never taken, and never named",
+                      sorted(m("show", "--name-only", "--format=", "HEAD").split()) == ["f.txt", "map.txt"]
+                      and "x_secrets" not in said and "client" not in said, said[:300])
+                (moved / "x_secrets.json").unlink()
+                (moved / "n.client.md").unlink()
+                # Work staged before the run holds the take, as unsaved work does (C127).
+                (moved / "last.txt").write_text("staged by him\n", encoding="utf-8")
+                m("add", "last.txt")
+                d = SV.drive(f"edit f past his staging | check: {stamp}", skills=TreeLib(), env=tree, ground=moved,
+                             logs=tmp / "logs", ask=asker("y", "y"), report=lambda line: None,
+                             client=Model(call("ground_edit", filepath="f.txt", content="x"),
+                                          call("done", summary="past staging")))
+                held = " ".join(str(s[3]) for s in d.steps if s[1] == "check rewrote")
+                check("drive: work staged before the run holds the take, and is named",
+                      "stamp.txt" in m("ls-files", "-m").split() and "last.txt" in held and "C127" in held, held[:300])
+                m("reset", "-q", "--", "last.txt")
+                m("checkout", "--", "last.txt", "stamp.txt")
+                # An each item that passes but is still listed is put back; what its check wrote is left as written.
+                # (the spec is built in parts: the driver's own parse would cut a job text that names its fields)
+                listed = "each " + py + ' -c "print(chr(121))" ' + "|" + " do: edit $ITEM " + "|" + " check: " + stamp
+                d = SV.drive(listed, skills=TreeLib(), env=tree, ground=moved, logs=tmp / "logs",
+                             ask=asker("y", "y"), report=lambda line: None,
+                             client=Model(call("ground_edit", filepath="f.txt", content="x"),
+                                          call("done", summary="edited y")))
+                back = " ".join(str(s[3]) for s in d.steps if s[1] == "put back")
+                check("drive each: a put back leaves what the check wrote as written, and keeps none of it",
+                      d.items == [["y", "still listed"]] and "stamp.txt: left as the check wrote it" in back
+                      and not d.taken and not m("diff", "--name-only", "--", "f.txt").strip(), back[:300])
+                m("checkout", "--", "stamp.txt")
+            finally:
+                for k, v in kept_env.items():
+                    if v is None:
+                        os.environ.pop(k, None)
+                    else:
+                        os.environ[k] = v
+
         # A DOOR CALL, SAID PLAINLY (C77): one line before the card, the wait on the door's hold log, one
         # line of what became of it -- and no seat in between.
         (tmp / "state").mkdir()

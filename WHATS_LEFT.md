@@ -39,7 +39,10 @@ all functions are working".
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (2026-10-20, 12:45):** routing's C49, C39 and C51, with C51's follow-up, sent and merged (pull request
+  **Where it stands (2026-10-20, 13:48):** H33's plan merged (pull request 48), its three clones in
+  worlds/harnesses/ and its four readers back; first, on your word, C130 mended (a job's commit takes what its own
+  check rewrote, never what was unsaved when the run began), then the study's page.
+  **At 12:45 it stood:** routing's C49, C39 and C51, with C51's follow-up, sent and merged (pull request
   47), the ground home on main and restarted. Then, on your cards, the road to v0.2.6 paused for H33, the harness study:
   next, its three clones on your cards, then its capability page.
   **At 12:19 it stood:** step (3)'s group 4, routing: C49, C39 and C51 recorded; C51's ship ran the core
@@ -1144,6 +1147,13 @@ goals". The steps under each are proposed from the disk; each is yours to change
 ## Done
 
 Finished lines, newest first. A number is never used again.
+
+- **C130. A Steward job's commit left behind what its own check rewrote.** Found and DONE 2026-10-20, by Steward on your
+  word ("fix it"): the job's commit took only the files it wrote, so the suites' stamps and a regenerated map were left
+  unsaved after every job, and the switch home after pull request 48 was refused. Every file a passing check made or
+  changed now goes into the job's commit, and a plan's last check is saved before the send; while anything was unsaved
+  when the run began, nothing the check rewrote is taken, and the record names what held it (C127).
+  *(CHANGELOG, "core: what a passing check rewrote goes into the job's commit")*
 
 - **C51. "lint the code in measure.py from the workspace" named `list_directory`, not the linter.** DONE 2026-10-20,
   by Steward on your cards ("Every skill declares them", "Require it, move the table", "As drafted"): every skill
