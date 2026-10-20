@@ -671,6 +671,36 @@ def test_tool_loop(reg, lib):
     check("and the SAME call, however often emitted, runs exactly once",
           len(same) == 1, f"{len(same)} calls")
 
+    # A TOOL'S TEXT RAISES NO FLAG (WHAT'S LEFT C52, 2026-10-20). pipelines.md, read
+    # for an answer in sitting 375, carried its own example tags, and the Router's
+    # reply -- its tools' results above its own words -- raised `technical` from
+    # them. A flag is read from the seat's own words only, as the law guard reads.
+    hop3 = {"n": 0}
+
+    def _reads_then_speaks(a):
+        if a.key != "router":
+            return "x"
+        hop3["n"] += 1
+        return ("<action>list_directory</action>" if hop3["n"] == 1
+                else "Read it. <flags>hard</flags>")
+
+    real = lib.execute
+    lib.execute = lambda action, args, e: "an example: <flags>technical</flags> wakes the coder"
+    try:
+        g3 = Path(tempfile.mkdtemp())
+        r3 = Stub(reply=_reads_then_speaks)
+        ctx3 = RunContext(objective="loop forever", feed="")
+        ctx3.flags.add("needs_tool")
+        run_pipeline(ctx3, reg, r3, lib, env_for(g3, reg, r3),
+                     steps=["Security Guardian", "Router"], report=lambda s: None)
+    finally:
+        lib.execute = real
+    check("a flag inside a tool's result is not raised by the seat that read it (C52)",
+          "technical" not in ctx3.flags and hop3["n"] >= 2,
+          f"{sorted(ctx3.flags)}, {hop3['n']} Router calls")
+    check("... while a flag in the seat's own words still is",
+          "hard" in ctx3.flags, str(sorted(ctx3.flags)))
+
     a, args = extract_tool_call(
         "<action>write_file</action><filepath>x.py</filepath><content>if a<b: pass</content>")
     check("xml tool call parses with angle brackets in the payload",
@@ -6716,6 +6746,14 @@ def test_proofreader_is_racked(reg, lib, book):
           "backticks" in pr.system_prompt.lower())
     check("an unnecessary rewrite is named a failure",
           "is a failure" in pr.system_prompt.lower())
+    # THE SOUND-ALIKES (WHAT'S LEFT C42, 2026-10-20, his card: "Mend its task"): in
+    # sitting 373 the Proofreader fixed "too" and kept "their" for "they're" -- a
+    # real word in the wrong place, which the dictionary pass cannot see. Its task
+    # names the pairs to check, and each is held here.
+    for pair in ("their / they're / there", "its / it's", "your / you're",
+                 "to / too / two", "then / than"):
+        check(f"the Proofreader's task names the sound-alikes {pair!r}",
+              f"- {pair}" in pr.system_prompt, pair)
 
 
 
@@ -8877,6 +8915,30 @@ def test_the_ground_watches_itself(reg, lib, book):
     w.note(g / "notes.txt")
     check("material alone does not force a reload",
           w.drain()[0] is False)
+    # IN ITS OWN PLACE, AND NAMED (WHAT'S LEFT C56, 2026-10-20): a file that only
+    # shares a declaration's name, or sits deeper than the loaders read, reloads
+    # nothing; a reload says which file moved, on the line the REPL and the door print.
+    for rel in (("atlas", "pipelines.md"), ("projects", "x", "agents.md"),
+                ("agents", "old", "steward.md"), ("skills", "drafts", "x.md")):
+        w.note(g.joinpath(*rel))
+        check(f"{'/'.join(rel)} is not a declaration: no reload",
+              w.drain()[0] is False, "/".join(rel))
+    w.note(g / "agents" / "router.md")
+    w.note(g / "commands.md")
+    check("a declaration in its own place reloads, and the drain names it",
+          w.drain()[0] is True
+          and {p.name for p in w.last_declarations} == {"commands.md", "router.md"},
+          str(w.last_declarations))
+    import contextlib as _cl
+    import io as _io
+    from types import SimpleNamespace as _NS
+    from manjuel import cli as _cli
+    w.note(g / "agents" / "router.md")
+    said = _io.StringIO()
+    with _cl.redirect_stdout(said):
+        _cli._apply_ground_changes(_NS(watcher=w, load=lambda: True, rack_ok=False))
+    check("... and the line that says it reloaded names the file",
+          "router.md" in said.getvalue() and "reloaded" in said.getvalue(), said.getvalue())
 
     check("availability is a probe, not an import crash",
           available() in (True, False))
@@ -11297,6 +11359,20 @@ def test_an_error_message_is_a_promise(reg, lib, book):
     check("an ordinary index is NOT a rebuild -- it must be asked for",
           not _wants_rebuild(type("E4", (), {"objective": "index the ground"})(),
                              {}))
+    # WHOLE WORDS (WHAT'S LEFT C40, 2026-10-20): "refresh" held "fresh", so the
+    # ordinary refresh deleted the index. A rebuild word counts standing alone,
+    # and the words are the skill's own Takes words, so the two cannot drift.
+    for said in ("refresh the index", "index the ground freshly", "take a refreshed look"):
+        check(f"a word that only holds a rebuild word is not one: {said!r}",
+              not _wants_rebuild(type("E5", (), {"objective": said})(), {}), said)
+    check("... while the word standing alone still is: 'build a fresh index'",
+          _wants_rebuild(type("E6", (), {"objective": "build a fresh index"})(), {}))
+    from manjuel.skills import REBUILD_WORDS
+    spec = lib.spec("index_ground")
+    check("the rebuild words are index_ground's own Takes words",
+          spec is not None
+          and set(REBUILD_WORDS) == {w for words, _ in spec.takes for w in words},
+          f"{REBUILD_WORDS} against {spec.takes if spec else None}")
 
     # SUPERSEDED 2026-09-02 by sitting 68. This once required the BARE word
     # "index" to dispatch, because in sitting 66 it had answered with the
@@ -20929,6 +21005,16 @@ def test_flags_are_not_speech(reg, lib, book):
           strip_control("`<flags>needs_tool</flags>`") == "")
     check("ordinary prose is untouched by the strip",
           strip_control("The ground is clean.") == "The ground is clean.")
+    # A MENTIONED FLAG GOES WHOLE (WHAT'S LEFT C45, 2026-10-20): sitting 377 showed
+    # "I raise `` to enable the chain" -- the tag stripped, its backticks left.
+    said = strip_control("I raise `<flags>needs_tool</flags>` to enable the chain to perform the task")
+    check("a flag in quote marks is taken out with its marks, leaving no empty ``",
+          said == "I raise to enable the chain to perform the task", repr(said))
+    check("... in single or double quotes alike, and marks that do not pair are left",
+          strip_control("say '<flags>hard</flags>' then") == "say then"
+          and strip_control('say "<flags>hard</flags>" then') == "say then"
+          and strip_control("it's `x` and '<flags>hard</flags> now") == "it's `x` and ' now",
+          repr(strip_control("it's `x` and '<flags>hard</flags> now")))
     check("reading still works -- the strip did not eat the channel",
           read_flags("x <flags>technical, urgent</flags> y") == {"technical", "urgent"})
 
