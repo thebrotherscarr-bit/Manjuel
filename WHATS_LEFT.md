@@ -38,7 +38,11 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (2026-10-20, 11:45):** step (3)'s group 4: its clear mends sent and merged (pull request 46); routing's
+  **Where it stands (2026-10-20, 12:19):** step (3)'s group 4, routing: C49, C39 and C51 recorded; C51's ship ran the core
+  suite whole and found ten strokes it had moved, mended on your four cards ("Name or table only", "Own words
+  win; restate", "run one after the other", "Name outranks a phrase") with their strokes and recorded; next, the
+  ship again, the restart, then routing's last: C50, C53, C54.
+  **At 11:45 it stood:** step (3)'s group 4: its clear mends sent and merged (pull request 46); routing's
   first three built by Steward on your cards with their strokes and recorded -- C49 (an order to write read from
   your own words), C39 (the Router reads while a coder waits), C51 (every skill declares its phrases, the table
   keeps only the words of no single skill) -- on the line of work, its pull request 47 open and red only on the map and the
