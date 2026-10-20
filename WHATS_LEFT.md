@@ -38,7 +38,12 @@ workflows and tool chains to make sure that basically whatever I ask can be done
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (2026-10-20, 06:48):** step (3)'s group 2, C13, built by Steward on your cards with its strokes and recorded: a seat's
+  **Where it stands (2026-10-20, 07:59):** step (3)'s group 3 built by Steward on your cards with its strokes and recorded: C38's
+  caps (the Reasoner, the Quality Evaluator and Jesster uncapped, the Router at 2,000, a seat with no cap packed for half
+  its window), and C48 and C69 ruled to H20. C13 sent and merged (pull request 44); C38 on the line of work, its pull
+  request 45 open and red only on the map and the refusals' tail, which its ship regenerates; next, that ship, the
+  restart, then group 4, seats and routing (C39 to C42, C45, C49 to C54, C56).
+  **At 06:48 it stood:** step (3)'s group 2, C13, built by Steward on your cards with its strokes and recorded: a seat's
   Timeout bounds its whole stage, and the court keeps 360 s for the Judge (your line in pipelines.md). Group 1 sent and merged
   (pull requests 42 and 43); C13 on the line of work, its pull request 44 open and red only on the map and the refusals' tail,
   which its ship regenerates; next, that ship, the restart, then group 3, the answers (C38, C48, C69), their rulings put to you.
@@ -777,6 +782,10 @@ disk says is missing, in the order it is worth building. H1 is done (below).
   reads it (the conversation's newest 2,400 characters, C48; the Router's package; the index; the memory, H2) -- then both levers
   side by side on those numbers: each seat's window and caps (C70's step (2)), and what a cache, a truncation and the index would
   give each seat's room. *(your words in chat, 2026-10-14)*
+  **C48 and C69 ride with it** (your card of 2026-10-20, "Rule both to H20"): the conversation a seat is handed is
+  its newest 2,400 characters, and the door's alone -- the Router never sees it, so a follow-up such as "what about
+  the mean and median of those?" (sitting 378) came back with nothing. The caps measured above are mended (C38).
+  *(CHANGELOG, "core: the answers' caps")*
 - **H21. A baked Steward.** A local model of its own: an Ollama Modelfile with the self-model card and the Steward's character built in, rebuilt when the card changes,
   measured like any seat. It needs a folder you name (RULE 8). A model trained on your transcripts is for later, and only on a measured need: it would learn the
   behaviour (plain words, the right tool), not the facts, which change with every commit. *(your words in chat, 2026-10-05)*
@@ -1602,6 +1611,8 @@ Finished lines, newest first. A number is never used again.
 - **B15. The review panel's two thinking seats have no limit.** RULED and BUILT 2026-09-30:
   Jesster capped at 4,500 tokens, the measured middle of its finished answers; the judge as it
   was. *(CHANGELOG, "His rulings of the afternoon, built")*
+  Superseded 2026-10-20 on your card (C38, "Lift the four caps"): Jesster carries no cap now, bounded by its
+  stage's Timeout and its window. *(CHANGELOG, "core: the answers' caps")*
 - **B10. The Router's prompt says "the objective names the skill X".** RULED and BUILT
   2026-09-30: the prompt now says who chose the tool. *(CHANGELOG, "His rulings of the
   afternoon, built")*
