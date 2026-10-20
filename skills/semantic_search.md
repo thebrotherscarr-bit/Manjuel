@@ -1,4 +1,5 @@
 # Skill: Semantic Vector Search
 - **Action Keyword:** semantic_search
+- **Says:** search the record, search the index, search for, find anything about, look up, who is manjuel, who is jesster, who is neiro, who is steward, what is manjuel, who is the coder, what is the coder, who is the smith, who is the router, who is the guardian, who is the reasoner, who is the evaluator, who is the proofreader, who is the delivery agent, what is jesster, what is neiro, what is steward, who is aurora, what is aurora, the mythos, the creed, the temper, the veil, the glass, the forge, the weighing, the servants law, the servant's law, the dictum, what do you know about, founding documents, the foundation, the covenant, the covenants, the doctrine, the estate laws, founding docs
 - **Description:** Searches the indexed ground by meaning rather than keywords, returning the matching passages with their file, location and similarity score. Use this to find prior work, past runs, doctrine, or notes on a concept. Requires index_ground to have been run.
 - **Parameters Needed:** <content>The descriptive search query or concept to look up</content>

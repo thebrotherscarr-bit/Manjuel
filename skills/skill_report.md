@@ -3,7 +3,7 @@
 - **Action Keyword:** skill_report
 - **Description:** Lists every skill the chain can actually execute, with what each one does — read from the loaded library, never generated; and, from logs/uses.jsonl, how often each has been used, how often it failed, how long it usually takes, and which were never used. Use for "what skills do you have", "what are your tools", "what can you do".
 - **Parameters Needed:** None
-- **Says:** list every skill, every skill you can, skills you can actually execute
+- **Says:** list every skill, every skill you can, skills you can actually execute, what skills, your skills, what tools, your tools, available tools, what can you do, what can you actually do, list your tools, list the skills
 
 "What can you do" is a harness fact. Sitting 25 asked it twice and got a
 shrug both times, because the manifest sat in memory and no seat could reach
