@@ -170,11 +170,6 @@ half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
 
 ### The models misbehaving
 
-- **C38. Answers cut at their length limit.** In sittings 373, 375, 376 and 377: the Reasoner at 1,400 tokens (twice in 375 and
-  in 376; in 377 its visible answer was whole, so the limit is spent on its hidden thinking), the Router at 900 (three times in
-  376), the Quality Evaluator at 700. The engine says so in the record each time. The mend is the answers' piece (2), the caps.
-  Seen again in sitting 379: the Router at 900 in the court, and Jesster at its 4,500 in both turns, spent deliberating (C70).
-  *(CHANGELOG, "core: routing, its third part, the levels")*
 - **C39. The Router makes the change itself before the coding model sits.** Asked to "lint this python and fix it", it read "fix
   it" as a write and wrote the fix with `write_file` before the Expert Coder was woken (sitting 377). Routing's next part, I2's
   (b). *(INVENTORY P1)*
@@ -197,9 +192,6 @@ half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
 
 ### The engine
 
-- **C48. The conversation is cut to its newest 2,400 characters, and the Router never sees it.** What you said a few turns back
-  is gone when it matters (your word of 2026-10-12: "losing context"). The answers' piece (4), the room. *(I2, the causes
-  measured 2026-10-12)*
 - **C49. Words read as an order to write where none was given.** "add" inside code sent to be linted (sitting 373) and "what I
   could change" (376) were each read as a write; C39 and C40 came of that shape. Routing's next part, I2's (b).
   *(CHANGELOG, "core: routing, its first part, the front face")*
@@ -231,10 +223,6 @@ half joined them on your card of 2026-10-19 ("Rule it to v0.2.7").
 - **C68. The check of numbers no tool returned counts your own numbers.** In sitting 378 the statistics of 4, 8, 15, 16, 23 and
   42 were answered right, and the engine appended "A NUMBER NO TOOL RETURNED" for 15, 16 and 23, the numbers of your own ask
   (its words: they appear "in none of this run's tool results"). *(HANDOFF, 2026-10-14, sitting 378)*
-- **C69. A follow-up the door hands to the Router comes back with nothing.** "what about the mean and median of those?", asked
-  right after the statistics: the door raised `needs_tool`, the Router, which never sees the conversation, said it had no
-  numbers, and the closing answer, written from the turn alone, said they were not available (sitting 378). C48's shape; the
-  answers' piece (4), the room. *(HANDOFF, 2026-10-14, sitting 378)*
 - **C70. The terminal is blank while a seat thinks, and then its words come at once.** Your word, 2026-10-14: "I would like the
   streaming of the processes instead of just chunks of text being dumped. thats for all seats and models ... let's tune that, so i
   can actually see the turns within the terminal"; and "the thinking models show their CoT as they go". They do: `runtime.chat`
@@ -1141,6 +1129,19 @@ goals". The steps under each are proposed from the disk; each is yours to change
 ## Done
 
 Finished lines, newest first. A number is never used again.
+
+- **C38. Answers were cut at their length limit.** DONE 2026-10-20, by Steward on your cards (the road to v0.2.6, its
+  step (3), group 3; your cards "Lift the four caps", "Pack uncapped seats for half", "Raise its cap to 2,000"): the
+  Reasoner, the Quality Evaluator and Jesster carry no cap, bounded by their stage's Timeout (C13) and their window; the
+  Router's cap is 2,000, which its window holds with its request and one read (15,407 of 16,384); and a seat with no cap
+  is packed leaving half its window. The line as it stood: the Reasoner cut at 1,400 (sittings 375 to 377, its hidden
+  thinking spending it), the Router at 900, the Quality Evaluator at 700, Jesster at 4,500 (sitting 379).
+  *(CHANGELOG, "core: the answers' caps")*
+- **C48. The conversation is cut to its newest 2,400 characters, and the Router never sees it.** RULED 2026-10-20, on
+  your card ("Rule both to H20"): left to H20, the context cache, which carries it now. *(I2, the causes measured
+  2026-10-12)*
+- **C69. A follow-up the door hands to the Router comes back with nothing.** RULED 2026-10-20, on your card ("Rule
+  both to H20"): C48's shape (sitting 378), left to H20 with it. *(HANDOFF, 2026-10-14, sitting 378)*
 
 - **C13. The review panel did not fit its time limit.** DONE 2026-10-19, by Steward on your cards (the road to v0.2.6, its
   step (3), group 2; your cards "Whole stage, every pipeline", "360 s", "pipelines.md"): a seat's `Timeout:` bounds its whole
