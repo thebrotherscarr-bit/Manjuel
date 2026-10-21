@@ -770,3 +770,7 @@
 {"suite": "strokes", "at": 1792601740.1198468, "state": "finished", "passed": 4347, "total": 4347, "green": true, "failed": []}
 {"suite": "smoke", "at": 1792601746.9242473, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "smoke", "at": 1792601759.6657183, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1792604614.3083973, "state": "finished", "passed": 4345, "total": 4353, "green": false, "failed": ["every seat carries the operator's number: its model's size, or its own by name", "the door is bound at his 180", "a transport timeout is the same named refusal", "the door's file carries the number this stroke rewrites", "a timeout that is not a number is ignored with a warning, not obeyed", "... and the door's own 180 is cut to 100", "/model <seat> <tag> moves that seat and says what it was", "and marks a moved seat against what agents/*.md declares"]}
+{"suite": "smoke", "at": 1792604620.6988218, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1792604875.1917143, "state": "finished", "passed": 4353, "total": 4353, "green": true, "failed": []}
+{"suite": "smoke", "at": 1792604893.1727693, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}

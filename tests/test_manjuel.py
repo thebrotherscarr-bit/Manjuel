@@ -20825,7 +20825,7 @@ def test_model_override(reg, lib, book):
     check("/model <seat> <tag> moves that seat and says what it was",
           ms.registry.get("Steward").model == "phi4-mini:latest"
           and "Steward now runs phi4-mini:latest" in said
-          and "llama3.2:latest" in said, said)
+          and "gpt-oss:20b" in said, said)
     check("and it says out loud that nothing else moved",
           "every other seat is where it was" in said
           and ms.registry.get("Router").model == "qwen3.5:4b", said)
@@ -20874,7 +20874,7 @@ def test_model_override(reg, lib, book):
           "override: Steward on phi4-mini:latest" in said
           and "override: Deep Researcher on phi4:latest" in said, said)
     check("and marks a moved seat against what agents/*.md declares",
-          "phi4-mini:latest   (declared llama3.2:latest)" in said, said)
+          "phi4-mini:latest   (declared gpt-oss:20b)" in said, said)
     check("an unmoved seat carries no mark",
           "Router                 qwen3.5:4b\n" in said, said)
 
@@ -23969,6 +23969,8 @@ def test_steward_harness(reg, lib, book):
     sub-agents, a plan asked for as JSON, a model driven in its own tongue when its native calls fail, the job
     written down as it goes and carried on after a crash, a lesson staged for his hand, a card nobody answers
     taken as no, and each new module proving itself."""
+    import contextlib as _cl
+    import io as _io
     import json as _json
     import shutil as _sh
     from types import SimpleNamespace as _NS
@@ -24247,6 +24249,49 @@ def test_steward_harness(reg, lib, book):
         told = [str(x.get("content", "")) for x in m.seen[-1] if isinstance(x, dict) and x.get("role") == "tool"]
         check("harness: a no with words goes back to the Steward as the operator's reason",
               any("His reason: no -- write it to b.txt instead" in t for t in told), str(told)[:300])
+
+        # THE SWAP AND THE FACE (2026-10-21, his word: "go ahead with the swap and the face").
+        seat = reg.get("Steward")
+        check("face: the Steward seat and the driver run on gpt-oss:20b, its own reasoning at low",
+              seat.model == "gpt-oss:20b" and SV.DRIVE_MODEL == "gpt-oss:20b"
+              and SV.drive_think("gpt-oss:20b") == "low" and SV.drive_think("qwen3.5:9b") is False,
+              f"{seat.model} {SV.DRIVE_MODEL}")
+        stub_reg = _NS(get=lambda name: _NS(model="gpt-oss:20b", system_prompt=(
+            "THE BEARING\nGround before you speak.\n\nTHE DICTUM -- you talk, the chain acts\n"
+            "raise <flags>needs_tool</flags>\n\nCONVERSATION\nMost turns are talk.")),
+                       all=lambda: [_NS(name="Steward"), _NS(name="Reasoner")])
+        sysp = SV.face_system(_NS(registry=stub_reg))
+        check("face: his prompt keeps his bearing and his conversation, the hand-off flags give way to the tools",
+              "Ground before you speak." in sysp and "Most turns are talk." in sysp
+              and "THE FACE" in sysp and "<flags>needs_tool</flags>" not in sysp, sysp[:300])
+        said, dialogue = [], [("operator", "earlier question", 1.0), ("steward", "earlier answer", 2.0)]
+        fsess = _NS(registry=stub_reg, runtime=_NS(), skills=Lib(), env=env, dialogue=dialogue,
+                    sitting=None, session="S1", standing="", speaking=False)
+        fdoor = _NS(sess=fsess, ground=tmp, unattended=False,
+                    wire=_NS(emit=lambda kind, **kw: said.append((kind, kw.get("text", "")))),
+                    ask=lambda prompt, color="red", timeout=None: "")
+        reply = {"role": "assistant", "content": "The answer is 42.", "thinking": "I should read notes first."}
+        fdoor.face_client = Model(call("read_file", {"filepath": "notes.txt"}), reply)
+        with _cl.redirect_stdout(_io.StringIO()):
+            took = SV.door_face(fdoor, "what is in my notes?")
+        kinds = [k for k, _ in said]
+        sent = fdoor.face_client.seen[0]
+        check("face: an ordinary turn is Steward's -- he reads with a tool, his reasoning is shown, his words are the delivery",
+              took and ("think", "I should read notes first.") in said and kinds[-1] == "delivery"
+              and said[-1][1] == "The answer is 42." and ("ran", "read_file", {"filepath": "notes.txt"}) in events
+              and any(m.get("content") == "earlier answer" for m in sent if isinstance(m, dict))
+              and dialogue[-1][1] == "The answer is 42.", str(said)[-300:])
+        fdoor.face_client = Model(raises=99)
+        fdoor.face_client.chat = lambda **kw: (_ for _ in ()).throw(ValueError("model gone"))
+        with _cl.redirect_stdout(_io.StringIO()):
+            took = SV.door_face(fdoor, "what is in my notes?")
+        check("face: when Steward cannot answer, the turn goes to the council", took is False)
+        del fdoor.face_client
+        check("face: a session on a stand-in runtime keeps the council in front",
+              SV.door_face(fdoor, "hello there") is False)
+        src = (ROOT / "manjuel" / "serve.py").read_text(encoding="utf-8")
+        check("face: Door.turn hands an ordinary turn to the face first, and /face switches it",
+              'door_face(self, objective)' in src and '"/face"' in src)
     finally:
         SV.DRIVE_STEPS = kept
         _sh.rmtree(tmp, ignore_errors=True)

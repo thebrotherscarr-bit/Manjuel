@@ -1,6 +1,6 @@
 # Steward - manjuel stage
 
-Stage `transform` on model `llama3.2:latest`. Prompt of record: `agents/steward.md`.
+Stage `transform` on model `gpt-oss:20b` (since 2026-10-21, on his word: "we put steward as the main man, load him up with gpt oss"). Prompt of record: `agents/steward.md`.
 
 RECONCILED 2026-09-03 (TASKS 8.1). `permission` is DERIVED from this
 seat's `May Call` clearance and the declared wall of every skill it may
@@ -47,7 +47,7 @@ his sitting-39 ruling, "review, never write". No writer, so `edit` stays denied.
     "when"
   ],
   "mode": "spine",
-  "model": "llama3.2:latest",
+  "model": "gpt-oss:20b",
   "office": "MANJUEL",
   "permission": {
     "bash": "deny",
