@@ -673,7 +673,10 @@ dropped by operator ruling 2026-09-01 — see the fix log.
 
 ## HANDOFF FOR 2026-10-21 — read this before anything below it
 
-**Where the day stands.** The harness study (H33) is built into Steward and merged on his clicks. In the core: the driver made capable (pull request 51), Steward on gpt-oss:20b and as the face of ordinary turns (52), and the full feature list from the eight harnesses (53, with its Linux fix in the run_shell stroke). In atlas: the desktop app (23) and the secret card (24). Then, on his word "publish it 0.2.6": the reconciler taught that `reports_to: manjuel` is the core (his card "Manjuel, the core"; pull request 54), this record, and the release flow, fired by him.
+**Where the day stands.** The harness study (H33) is built into Steward and merged on his clicks. In the core: the driver made capable (pull request 51), Steward on gpt-oss:20b and as the face of ordinary turns (52), and the full feature list from the eight harnesses (53, with its Linux fix in the run_shell stroke). In atlas: the desktop app (23) and the secret card (24). Then, on his word "publish it 0.2.6": the reconciler taught that `reports_to: manjuel` is the core (his card "Manjuel, the core"; pull request 54), this record, and the release flow, fired by him. Its first run stopped at the live
+check: both number guards read a tool's `13.8GB` as no number and called Steward's true "13.8 GB" invented. It was unwound
+before gate 2 on his card, the guard was mended (his card "Fix the guard, re-cut"; pull request 55), and the flow was fired
+again.
 
 **Placing.** The door and the glass running today were built before the secret card. atlas-mcp.exe, atlas-webapp.exe and atlas-desktop.exe are to be rebuilt from main and restarted (his card) before the Discord test, which needs the card.
 

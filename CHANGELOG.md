@@ -34,6 +34,8 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+## v0.2.6 — 2026-10-21 15:38
+
 ### core: a number glued to its unit in a tool's result is a source, so the release's live check passes the rack again (2026-10-21, his card: "Fix the guard, re-cut")
 
 The first run of the v0.2.6 cut stopped at its live check. The morning standup met 8 of 9 cases, twice, and the release flow stopped with FAIL before its second gate, so nothing was saved or sent.
