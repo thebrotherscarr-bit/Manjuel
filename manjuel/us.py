@@ -33,6 +33,10 @@ from pathlib import Path
 
 US_DIR = "us"
 
+# The core's own name, which a record's `reports_to` may give: since H28 it is
+# no seat's name (the seat that had it is the Judge), so it names the core.
+CORE = "manjuel"
+
 # A record is a fenced json block. The prose around it is for people; the
 # block is the declaration. Both are kept in one file on purpose -- a
 # machine-readable field with no argument beside it is how a manifest
@@ -354,10 +358,14 @@ def reconcile(ground, registry, library, installed: set | None = None
                                         f"the manifest's other {cited.count(common)} "
                                         f"record(s) cite {common}"))
     # `reports_to` -- "Manjuel of answerability" (BUILDPATH Layer 8): a seat
-    # that exists, by id. The door builds a DID from it too.
+    # that exists, by id, or the core itself. The door builds a DID from it too.
+    # Since the seat called Manjuel became the Judge (H28), `manjuel` names the
+    # core alone, and a record that reports to it answers to the core (his card
+    # of 2026-10-21: "Manjuel, the core").
+    answerable = seats_on_disk | {CORE}
     for r in records:
         to = r.get("reports_to")
-        if to and str(to).strip().lower().replace(" ", "_") not in seats_on_disk:
+        if to and str(to).strip().lower().replace(" ", "_") not in answerable:
             findings.append(Finding("DRIFT", f"us/{r['id']}", "reports_to", str(to),
                                     "no such seat in agents/"))
     # `lands` -- may it write the operator's record. "False everywhere

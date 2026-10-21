@@ -34,6 +34,16 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: `reports_to: manjuel` answers to the core, and the release gate's manifest line is green again (2026-10-21, his card: "Manjuel, the core")
+
+The 66 us/ records say `"reports_to": "manjuel"`. Since H28 renamed that seat to the Judge, the reconciler had read the name as a missing seat, and the release gate's manifest line was red. That would have stopped the 0.2.6 cut at its check.
+
+`manjuel/us.py` now accepts `CORE = "manjuel"` beside the seats in agents/, as H28 said: Manjuel means the core alone. No record was rewritten, and the DIDs the door builds from `reports_to` are unchanged. A stroke in `test_every_manifest_field_is_read_by_something` checks that `manjuel` passes and a stranger still drifts.
+
+What goes red if it comes unplugged: that stroke, and the gate's manifest line.
+
+Also: run_shell's own stroke builds Git Bash's spelling of the ground only when the ground has a drive letter, so its path table holds on Linux too. That was the two Ubuntu legs of PR 53.
+
 ### core: the full feature list built into Steward (2026-10-21, on his word)
 
 His words: "diff the full feature list from all the other harnesses, and add them to stewards abilities", then "merged, go ahead and build them all". Sixty-two features across opencode, Cline, OpenShell, Pi, oh-my-pi, Hermes, OpenClaw and his REA Studio, each set against Steward as HAVE, BUILD or NOT TAKEN (HARNESS_STUDY.md, "The full feature list"). What was BUILD, built:

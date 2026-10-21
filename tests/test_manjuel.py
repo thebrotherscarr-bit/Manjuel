@@ -15335,6 +15335,12 @@ def test_every_manifest_field_is_read_by_something(reg, lib, book):
           [x.where for x in drift(f, "reports_to")] == ["us/seat_steward"]
           and "no such seat" in drift(f, "reports_to")[0].disk,
           str([x.line() for x in f]))
+    # Since H28 the seat called Manjuel is the Judge, and `manjuel` names the core (his card of
+    # 2026-10-21: "Manjuel, the core"): a record that reports to it is not DRIFT, with no seat of that name.
+    f = findings_for([steward], {"a.us": [dict(BARE, reports_to="manjuel")]})
+    check("   and reports_to `manjuel` answers to the core itself, which needs no seat file",
+          not drift(f, "reports_to") and _us.CORE == "manjuel"
+          and not (ROOT / "agents" / "manjuel.md").exists(), str([x.line() for x in f]))
 
     # ---- lands: false everywhere except the operator's path -----------------
     f = findings_for([], {"a.us": [dict(BARE, id="a", lands=True),
