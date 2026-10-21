@@ -4301,6 +4301,20 @@ def test_the_p0_of_the_review(reg, lib, book):
     check("a date a TOOL returned still sources its numbers",
           _su.unsourced_numbers("the log says 2026-09-09 and 37 files",
                                 ["2026-09-09", "37"], "") == [])
+    #    A NUMBER GLUED TO ITS UNIT IN A TOOL'S RESULT IS A SOURCE (2026-10-21, the cut of v0.2.6).
+    #    rack_list prints "13.8GB", gpt-oss writes "13.8 GB", and both guards called the true answer
+    #    invented, twice, which stopped the release at its live check. Only the SOURCE side is loosened:
+    #    a number said and found nowhere is still named.
+    from manjuel import intent as _in
+    rack = "  LOADED  gpt-oss:20b   13.8GB on disk  in memory 12.8GB\nCard: 13.4GB of ~16.2GB in use, 45s"
+    said = "gpt-oss:20b (13.8 GB on disk, 12.8 GB in memory); 13.4 GB of 16.2 GB, in 45 s"
+    check("a number glued to its unit in a tool's result sources it, in both guards (the cut of v0.2.6)",
+          _su.unsourced_numbers(said, [rack], "") == [] and _in.unsourced_numbers(said, rack) == [],
+          f"{_su.unsourced_numbers(said, [rack], '')} {_in.unsourced_numbers(said, rack)}")
+    check("   and a number no tool returned is still named, beside them",
+          _su.unsourced_numbers("about 14.2 GB in use", [rack], "") == ["14.2"]
+          and _in.unsourced_numbers("about 14.2 GB in use", rack) == ["14.2"],
+          f"{_su.unsourced_numbers('about 14.2 GB in use', [rack], '')}")
     o4 = _su.Outcome(case=next(c for c in _su.CASES if c.name == "a folder"))
     o4.seats = ["Router", "Steward"]; o4.tools = ["ground_list"]; o4.notes = ["law: ok"]
     o4.results = ["37 entries"]; o4.delivery = "The skills directory contains 34 files."

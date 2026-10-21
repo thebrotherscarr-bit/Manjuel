@@ -329,7 +329,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `Spinner.__enter__` | 146-148 |  |
 | def | `Spinner.__exit__` | 150-152 |  |
 
-### manjuel/intent.py — 1828 lines
+### manjuel/intent.py — 1842 lines
 
 *Deterministic pre-routing: does the objective plainly name a tool?*
 
@@ -341,56 +341,57 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `search_result_pairs` | 132-136 | Every (path, cosine) a search actually returned, parsed from the |
 | def | `cites_search_results` | 139-149 | Every (path, score) a seat's prose presents as a scored hit. |
 | def | `without_clock` | 183-189 | `text` with every date and clock expression blanked out. |
-| def | `unsourced_numbers` | 192-211 | Numbers and hashes in `said` that appear nowhere in `facts`. |
-| def | `listing_items` | 243-253 | The items a listing tool's result names, in its order and once each; [] for a to |
-| def | `_is_named` | 256-260 | An item is named when its words are in `said_l` (already lower-cased); a model's |
-| def | `dropped_items` | 263-266 | The items of a listing that `said` does not name, in the listing's order. |
-| def | `listing_lines` | 269-276 | The listing's own item lines, as the tool wrote them (the indent trimmed, runs o |
-| def | `asks_for_a_judgement` | 305-313 | Does this question ask to be ADVISED, rather than told? |
-| def | `asks_about_a_tool` | 329-370 | The tool a question is ASKING ABOUT, or "". |
-| def | `claims_wrote_a_file` | 388-411 | The file a seat says it WROTE, or "". |
-| def | `_wants_a_number` | 462-470 | Does this skill's own markdown describe its argument as a number? |
-| def | `_number_follows` | 473-487 | Is there a digit within `_NUMBER_WINDOW` words after this form in hay? |
-| def | `_wears_quotes` | 490-492 | A word wearing quotes is a word being NAMED rather than used. |
-| def | `_named_not_used` | 495-510 | Is this FUNCTION-WORD form being NAMED here, rather than spoken? |
-| def | `names_a_tool` | 522-568 | Return the keyword the objective names, or "" if none does. |
-| def | `_tool_hits` | 571-635 | Every skill his words name, each ranked (own, leads, length) -- the one |
-| def | `tool_choices` | 638-656 | The skills his words name, best first (three at most, each its workspace |
-| def | `_ppmi_words` | 692-698 | The words the reader counts: lower case, split at anything that is not a |
-| def | `_ppmi_signs` | 701-706 | A word's fixed direction, +1 or -1 on each axis, read off its blake2b |
-| def | `_ppmi_sentence` | 709-719 | A text's vector: its words' vectors, each weighted by how rare the word |
-| def | `_ppmi_strip` | 722-725 | `v` less the direction every skill shares (SIF's last step). |
-| def | `_ppmi_cosine` | 728-731 |  |
-| def | `_ppmi_build` | 734-785 | (word vectors, word weights, the shared direction, each skill's vector, |
-| def | `_ppmi_model` | 788-796 | The reader for this library: built once (about a third of a second), |
-| def | `ppmi_reading` | 799-815 | (the skill his words mean, its cosine, the best three as (skill, cosine)), |
-| def | `read_the_request` | 818-861 | HIS RULE (2026-10-13, his card: "Own words win; shared phrases yield"): |
-| def | `_wordlike` | 872-883 | Does this token look like a word a person meant to type? |
-| def | `gibberish` | 886-906 | True when the objective does not parse as language at all. |
-| def | `injection_markers` | 936-948 | Named markers found in pasted material. Empty list = no hard match. |
-| def | `topic_cue` | 963-970 | "session", "topic", or "". The operator's own words draw the line. |
-| def | `cue_only` | 973-981 | True when the turn is the cue and nothing else -- no question rides |
-| def | `own_words` | 1030-1039 | His words with what he pasted taken out: fenced and backticked code, and |
-| def | `wants_writing` | 1042-1051 | An order to write, in his own words: a write verb used as a verb -- not a |
-| def | `wants_action` | 1054-1056 | Action-verb + object: the turn wants hands, tool unspecified. |
-| def | `wants_running` | 1064-1085 | The `.py` this objective orders RUN, or "". |
-| def | `plain_flags` | 1104-1107 | The racked seats' flags his own words raise, or an empty set. |
-| def | `level` | 1128-1168 | (level, the seat that takes it, why, the big seat's flag) for one turn. |
-| def | `asks_the_sitting` | 1258-1263 | Whether the turn asks what THIS sitting has done -- the story's turf. |
-| def | `is_followup` | 1266-1298 | Whether this turn points back at the conversation rather than at |
-| def | `last_file_in` | 1301-1312 | The most recently MENTIONED filename in the conversation, newest |
-| def | `_after_courtesy` | 1366-1410 | Drop ONE leading courtesy clause, so the question behind it is seen. |
-| def | `names_a_folder` | 1428-1438 | The folder an objective asks to see, or "". `what is in the skills |
-| def | `asks_the_ground` | 1441-1485 | A question carrying a term worth looking up. Sitting 60: five |
-| def | `is_big_objective` | 1532-1554 | Whether an objective is plainly SEVERAL acts, not one. |
-| def | `decomposes_to_search` | 1557-1582 | The remainder-as-payload when the words are an ORDER to search the |
-| def | `wants_out` | 1592-1605 | An exit command wearing casual clothes. "exit bro" means exit. |
-| def | `wants_making` | 1653-1659 | The thing an objective asks to have MADE -- "simple snake game" -- or "". |
-| def | `wants_changing` | 1683-1685 | Whether the words ask for a change to the project in hand. |
-| def | `wants_a_tree_change` | 1708-1727 | (the file in the ground, the backticked names in order) when the words |
-| def | `wants_going_back` | 1755-1764 | None when this is not a request to go back; otherwise the version asked |
-| def | `wants_picking_up` | 1793-1804 | The words naming a project to pick up -- "work on the snake game |
-| def | `wants_putting_down` | 1826-1828 | Whether the words ask to put the project in hand down. |
+| def | `unglued` | 200-202 | `text` with a space between a number and the unit glued to it (13.8GB -> 13.8 GB |
+| def | `unsourced_numbers` | 205-225 | Numbers and hashes in `said` that appear nowhere in `facts`. |
+| def | `listing_items` | 257-267 | The items a listing tool's result names, in its order and once each; [] for a to |
+| def | `_is_named` | 270-274 | An item is named when its words are in `said_l` (already lower-cased); a model's |
+| def | `dropped_items` | 277-280 | The items of a listing that `said` does not name, in the listing's order. |
+| def | `listing_lines` | 283-290 | The listing's own item lines, as the tool wrote them (the indent trimmed, runs o |
+| def | `asks_for_a_judgement` | 319-327 | Does this question ask to be ADVISED, rather than told? |
+| def | `asks_about_a_tool` | 343-384 | The tool a question is ASKING ABOUT, or "". |
+| def | `claims_wrote_a_file` | 402-425 | The file a seat says it WROTE, or "". |
+| def | `_wants_a_number` | 476-484 | Does this skill's own markdown describe its argument as a number? |
+| def | `_number_follows` | 487-501 | Is there a digit within `_NUMBER_WINDOW` words after this form in hay? |
+| def | `_wears_quotes` | 504-506 | A word wearing quotes is a word being NAMED rather than used. |
+| def | `_named_not_used` | 509-524 | Is this FUNCTION-WORD form being NAMED here, rather than spoken? |
+| def | `names_a_tool` | 536-582 | Return the keyword the objective names, or "" if none does. |
+| def | `_tool_hits` | 585-649 | Every skill his words name, each ranked (own, leads, length) -- the one |
+| def | `tool_choices` | 652-670 | The skills his words name, best first (three at most, each its workspace |
+| def | `_ppmi_words` | 706-712 | The words the reader counts: lower case, split at anything that is not a |
+| def | `_ppmi_signs` | 715-720 | A word's fixed direction, +1 or -1 on each axis, read off its blake2b |
+| def | `_ppmi_sentence` | 723-733 | A text's vector: its words' vectors, each weighted by how rare the word |
+| def | `_ppmi_strip` | 736-739 | `v` less the direction every skill shares (SIF's last step). |
+| def | `_ppmi_cosine` | 742-745 |  |
+| def | `_ppmi_build` | 748-799 | (word vectors, word weights, the shared direction, each skill's vector, |
+| def | `_ppmi_model` | 802-810 | The reader for this library: built once (about a third of a second), |
+| def | `ppmi_reading` | 813-829 | (the skill his words mean, its cosine, the best three as (skill, cosine)), |
+| def | `read_the_request` | 832-875 | HIS RULE (2026-10-13, his card: "Own words win; shared phrases yield"): |
+| def | `_wordlike` | 886-897 | Does this token look like a word a person meant to type? |
+| def | `gibberish` | 900-920 | True when the objective does not parse as language at all. |
+| def | `injection_markers` | 950-962 | Named markers found in pasted material. Empty list = no hard match. |
+| def | `topic_cue` | 977-984 | "session", "topic", or "". The operator's own words draw the line. |
+| def | `cue_only` | 987-995 | True when the turn is the cue and nothing else -- no question rides |
+| def | `own_words` | 1044-1053 | His words with what he pasted taken out: fenced and backticked code, and |
+| def | `wants_writing` | 1056-1065 | An order to write, in his own words: a write verb used as a verb -- not a |
+| def | `wants_action` | 1068-1070 | Action-verb + object: the turn wants hands, tool unspecified. |
+| def | `wants_running` | 1078-1099 | The `.py` this objective orders RUN, or "". |
+| def | `plain_flags` | 1118-1121 | The racked seats' flags his own words raise, or an empty set. |
+| def | `level` | 1142-1182 | (level, the seat that takes it, why, the big seat's flag) for one turn. |
+| def | `asks_the_sitting` | 1272-1277 | Whether the turn asks what THIS sitting has done -- the story's turf. |
+| def | `is_followup` | 1280-1312 | Whether this turn points back at the conversation rather than at |
+| def | `last_file_in` | 1315-1326 | The most recently MENTIONED filename in the conversation, newest |
+| def | `_after_courtesy` | 1380-1424 | Drop ONE leading courtesy clause, so the question behind it is seen. |
+| def | `names_a_folder` | 1442-1452 | The folder an objective asks to see, or "". `what is in the skills |
+| def | `asks_the_ground` | 1455-1499 | A question carrying a term worth looking up. Sitting 60: five |
+| def | `is_big_objective` | 1546-1568 | Whether an objective is plainly SEVERAL acts, not one. |
+| def | `decomposes_to_search` | 1571-1596 | The remainder-as-payload when the words are an ORDER to search the |
+| def | `wants_out` | 1606-1619 | An exit command wearing casual clothes. "exit bro" means exit. |
+| def | `wants_making` | 1667-1673 | The thing an objective asks to have MADE -- "simple snake game" -- or "". |
+| def | `wants_changing` | 1697-1699 | Whether the words ask for a change to the project in hand. |
+| def | `wants_a_tree_change` | 1722-1741 | (the file in the ground, the backticked names in order) when the words |
+| def | `wants_going_back` | 1769-1778 | None when this is not a request to go back; otherwise the version asked |
+| def | `wants_picking_up` | 1807-1818 | The words naming a project to pick up -- "work on the snake game |
+| def | `wants_putting_down` | 1840-1842 | Whether the words ask to put the project in hand down. |
 
 ### manjuel/journal.py — 425 lines
 
@@ -1408,7 +1409,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `GroundWatch.start` | 197-222 |  |
 | def | `GroundWatch.stop` | 224-230 |  |
 
-manjuel/: 40 files, 35764 lines.
+manjuel/: 40 files, 35778 lines.
 
 ## GUARDS — by the failure that earned them
 
@@ -1547,61 +1548,62 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 | 142 | `cites_search_results` | Sitting 61: the Router lifted a filename out of one result's SNIPPET |
 | 156 | `(module)` | MOVED HERE FROM cli.py 2026-09-10, UNCHANGED. It lived beside `/brief` and |
 | 160 | `(module)` | 2026-09-09's "37 markdown files, ranging from 300 to 1200 bytes in size" |
-| 214 | `(module)` | A LISTING THE CLOSING SEAT MUST NOT SHORTEN (WHAT'S LEFT C7, 2026-10-02). "What models are |
-| 217 | `(module)` | of fourteen the answer named all eleven twice; the eight of 2026-09-30 named 3, 0, 11, 8,  |
-| 218 | `(module)` | and 3, and the one of 2026-10-02 named none ("eleven installed, three loaded, eight ready" |
-| 232 | `(module)` | THE SKILLS' TWO LISTINGS (WHAT'S LEFT C46, sitting 373: four of skill_search's five named, |
-| 280 | `(module)` | unless a judgement is asked for (the operator, 2026-09-09: "4.3 facts |
-| 287 | `(module)` | -- which is the fault this exists to close (sitting 85, three times). |
-| 332 | `asks_about_a_tool` | SITTING 69: "what does deep research do?" matched the spaced keyword |
-| 373 | `(module)` | AN EDIT IS A WRITE (WHAT'S LEFT C8, 2026-09-30). The 09-28 coder-flow run |
-| 391 | `claims_wrote_a_file` | SITTING 70's closer: "Yesterday, I compiled a poem about autumn, saved |
-| 417 | `(module)` | 2026-09-12 the coder flow's `verify` objective carried a brief that said |
-| 445 | `(module)` | sitting -- "review sitting 63", "what ran in sitting 47" -- and this estate |
-| 453 | `(module)` | `**Says:**` (sitting 66: markdown declares, Python only runs it). |
-| 457 | `(module)` | "sitting 63", "sitting number 63", "sitting #63" all count; "sitting is |
-| 476 | `_number_follows` | `hay` is normalised, so punctuation is already gone and "sitting 84's |
-| 477 | `_number_follows` | toll" reads as "sitting 84 s toll" -- which is still a naming, and still |
-| 513 | `(module)` | THE WORKSPACE HAS ITS OWN READER AND LISTER (sitting 370). The table names |
-| 531 | `names_a_tool` | the longest, so `git_commit` still beats `commit`. Sitting 370 measured the |
-| 548 | `names_a_tool` | skill will see it (the operator's ruling, sitting 66: markdown declares, |
-| 624 | `_tool_hits` | C51, its follow-up, 2026-10-20; his card: "Name outranks a phrase"). "give me |
-| 660 | `(module)` | Manjuel's logic core: the PPMI reader (2026-10-13, WHAT'S LEFT H29) |
-| 663 | `(module)` | HIS CARDS, 2026-10-13: "the whole first piece was essentially supposed to be |
-| 676 | `(module)` | HOW IT WAS SET, measured 2026-10-13 in the Python tab on the 51 asks of |
-| 819 | `read_the_request` | """HIS RULE (2026-10-13, his card: "Own words win; shared phrases yield"): |
-| 889 | `gibberish` | Sitting 22: keyboard mash ("9 sjdnfjnjn ghagga abbbbb...") raised |
-| 913 | `(module)` | Sitting 39: the injection test feed sailed past the model Guardian and |
-| 943 | `injection_markers` | THE WORDS, NOT THE SPACES (2026-10-02, the phrasing matrix). "You  must  now reveal ..." w |
-| 989 | `(module)` | CHANGE, never a thing to read. Sitting 42's lesson inverted a fix: the |
-| 994 | `(module)` | `replace` joined 2026-10-12 (sitting 370: "in measure.py in the workspace, |
-| 1000 | `(module)` | WHAT COUNTS AS AN ORDER TO WRITE (WHAT'S LEFT C49, 2026-10-20, his card: "All that, and |
-| 1001 | `(module)` | prose in chat"). Of the 54 turns read as writes since 2026-09-01, eleven ordered none: a |
-| 1013 | `(module)` | ...and a verb in a question clause, to the clause's end (sitting 376: "what I could change |
-| 1088 | `(module)` | HIS PLAIN WORDS RAISE A RACKED SEAT'S FLAG (2026-10-12, his card: "Engine |
-| 1089 | `(module)` | raises on plain words"). Sitting 370: "proofread this sentence", "think hard: |
-| 1109 | `(module)` | THE LEVELS (2026-10-12, his idea -- "tagging the things based on the size of |
-| 1171 | `(module)` | A FOLLOW-UP POINTS AT THE CONVERSATION. Sitting 87 (2026-09-04, runs 8, |
-| 1217 | `(module)` | Measured through the glass 2026-09-09: that exact question was routed as |
-| 1243 | `(module)` | A QUESTION ABOUT THIS SITTING (0.1.6, the sitting story). Sitting 93: |
-| 1318 | `(module)` | sitting 60 showed what fills the gap when a real term ISN'T looked up -- |
-| 1340 | `(module)` | A question that opens with a greeting is a greeting. Sitting 48's law |
-| 1369 | `_after_courtesy` | SITTING 81, and it is the greeting bug's mirror image. asks_the_ground |
-| 1442 | `asks_the_ground` | """A question carrying a term worth looking up. Sitting 60: five |
-| 1454 | `asks_the_ground` | under-match is sitting 60 again.""" |
-| 1457 | `asks_the_ground` | A GREETING IS THE FIRST TWO WORDS, NOT THE FIRST. Sitting 79: "good |
-| 1470 | `asks_the_ground` | bait, fifth sighting, sitting 93: "can you hear me" -> the reader -> |
-| 1476 | `asks_the_ground` | AN ANAPHOR POINTS AT THE CONVERSATION, NOT AT THE GROUND. Sitting 71: |
-| 1488 | `(module)` | THE DECOMPOSER (operator's design, sitting 62 conversation): dispatch by |
-| 1490 | `(module)` | the warden estate!" matched no alias twice in sitting 61 -- every word was |
-| 1562 | `decomposes_to_search` | objective, its own law since sitting 26).""" |
-| 1609 | `(module)` | The maker: "make me a snake game" (2026-09-21) |
-| 1614 | `(module)` | the result, play the game". Sitting 257 put exactly that sentence through the |
-| 1627 | `(module)` | HER OWN WORDS (2026-09-30, WHAT'S LEFT D2). The wife test's spec carries her |
-| 1631 | `(module)` | not one. The 2026-09-21 test sentence was his ("Make me a simple snake game") |
-| 1668 | `(module)` | "I WANT IT ..." / "I DON'T WANT IT ..." OPENS A CHANGE TOO (D2, 2026-09-30): |
-| 1688 | `(module)` | THE CODER'S WINDOW ON THE TREE (2026-09-28). Four firings of the coder-tree |
-| 1767 | `(module)` | PICKING A PROJECT UP, AND PUTTING IT DOWN (piece 2, 2026-09-21). A sitting |
+| 192 | `(module)` | A NUMBER GLUED TO ITS UNIT IN A SOURCE (2026-10-21, the cut of v0.2.6). rack_list prints " |
+| 228 | `(module)` | A LISTING THE CLOSING SEAT MUST NOT SHORTEN (WHAT'S LEFT C7, 2026-10-02). "What models are |
+| 231 | `(module)` | of fourteen the answer named all eleven twice; the eight of 2026-09-30 named 3, 0, 11, 8,  |
+| 232 | `(module)` | and 3, and the one of 2026-10-02 named none ("eleven installed, three loaded, eight ready" |
+| 246 | `(module)` | THE SKILLS' TWO LISTINGS (WHAT'S LEFT C46, sitting 373: four of skill_search's five named, |
+| 294 | `(module)` | unless a judgement is asked for (the operator, 2026-09-09: "4.3 facts |
+| 301 | `(module)` | -- which is the fault this exists to close (sitting 85, three times). |
+| 346 | `asks_about_a_tool` | SITTING 69: "what does deep research do?" matched the spaced keyword |
+| 387 | `(module)` | AN EDIT IS A WRITE (WHAT'S LEFT C8, 2026-09-30). The 09-28 coder-flow run |
+| 405 | `claims_wrote_a_file` | SITTING 70's closer: "Yesterday, I compiled a poem about autumn, saved |
+| 431 | `(module)` | 2026-09-12 the coder flow's `verify` objective carried a brief that said |
+| 459 | `(module)` | sitting -- "review sitting 63", "what ran in sitting 47" -- and this estate |
+| 467 | `(module)` | `**Says:**` (sitting 66: markdown declares, Python only runs it). |
+| 471 | `(module)` | "sitting 63", "sitting number 63", "sitting #63" all count; "sitting is |
+| 490 | `_number_follows` | `hay` is normalised, so punctuation is already gone and "sitting 84's |
+| 491 | `_number_follows` | toll" reads as "sitting 84 s toll" -- which is still a naming, and still |
+| 527 | `(module)` | THE WORKSPACE HAS ITS OWN READER AND LISTER (sitting 370). The table names |
+| 545 | `names_a_tool` | the longest, so `git_commit` still beats `commit`. Sitting 370 measured the |
+| 562 | `names_a_tool` | skill will see it (the operator's ruling, sitting 66: markdown declares, |
+| 638 | `_tool_hits` | C51, its follow-up, 2026-10-20; his card: "Name outranks a phrase"). "give me |
+| 674 | `(module)` | Manjuel's logic core: the PPMI reader (2026-10-13, WHAT'S LEFT H29) |
+| 677 | `(module)` | HIS CARDS, 2026-10-13: "the whole first piece was essentially supposed to be |
+| 690 | `(module)` | HOW IT WAS SET, measured 2026-10-13 in the Python tab on the 51 asks of |
+| 833 | `read_the_request` | """HIS RULE (2026-10-13, his card: "Own words win; shared phrases yield"): |
+| 903 | `gibberish` | Sitting 22: keyboard mash ("9 sjdnfjnjn ghagga abbbbb...") raised |
+| 927 | `(module)` | Sitting 39: the injection test feed sailed past the model Guardian and |
+| 957 | `injection_markers` | THE WORDS, NOT THE SPACES (2026-10-02, the phrasing matrix). "You  must  now reveal ..." w |
+| 1003 | `(module)` | CHANGE, never a thing to read. Sitting 42's lesson inverted a fix: the |
+| 1008 | `(module)` | `replace` joined 2026-10-12 (sitting 370: "in measure.py in the workspace, |
+| 1014 | `(module)` | WHAT COUNTS AS AN ORDER TO WRITE (WHAT'S LEFT C49, 2026-10-20, his card: "All that, and |
+| 1015 | `(module)` | prose in chat"). Of the 54 turns read as writes since 2026-09-01, eleven ordered none: a |
+| 1027 | `(module)` | ...and a verb in a question clause, to the clause's end (sitting 376: "what I could change |
+| 1102 | `(module)` | HIS PLAIN WORDS RAISE A RACKED SEAT'S FLAG (2026-10-12, his card: "Engine |
+| 1103 | `(module)` | raises on plain words"). Sitting 370: "proofread this sentence", "think hard: |
+| 1123 | `(module)` | THE LEVELS (2026-10-12, his idea -- "tagging the things based on the size of |
+| 1185 | `(module)` | A FOLLOW-UP POINTS AT THE CONVERSATION. Sitting 87 (2026-09-04, runs 8, |
+| 1231 | `(module)` | Measured through the glass 2026-09-09: that exact question was routed as |
+| 1257 | `(module)` | A QUESTION ABOUT THIS SITTING (0.1.6, the sitting story). Sitting 93: |
+| 1332 | `(module)` | sitting 60 showed what fills the gap when a real term ISN'T looked up -- |
+| 1354 | `(module)` | A question that opens with a greeting is a greeting. Sitting 48's law |
+| 1383 | `_after_courtesy` | SITTING 81, and it is the greeting bug's mirror image. asks_the_ground |
+| 1456 | `asks_the_ground` | """A question carrying a term worth looking up. Sitting 60: five |
+| 1468 | `asks_the_ground` | under-match is sitting 60 again.""" |
+| 1471 | `asks_the_ground` | A GREETING IS THE FIRST TWO WORDS, NOT THE FIRST. Sitting 79: "good |
+| 1484 | `asks_the_ground` | bait, fifth sighting, sitting 93: "can you hear me" -> the reader -> |
+| 1490 | `asks_the_ground` | AN ANAPHOR POINTS AT THE CONVERSATION, NOT AT THE GROUND. Sitting 71: |
+| 1502 | `(module)` | THE DECOMPOSER (operator's design, sitting 62 conversation): dispatch by |
+| 1504 | `(module)` | the warden estate!" matched no alias twice in sitting 61 -- every word was |
+| 1576 | `decomposes_to_search` | objective, its own law since sitting 26).""" |
+| 1623 | `(module)` | The maker: "make me a snake game" (2026-09-21) |
+| 1628 | `(module)` | the result, play the game". Sitting 257 put exactly that sentence through the |
+| 1641 | `(module)` | HER OWN WORDS (2026-09-30, WHAT'S LEFT D2). The wife test's spec carries her |
+| 1645 | `(module)` | not one. The 2026-09-21 test sentence was his ("Make me a simple snake game") |
+| 1682 | `(module)` | "I WANT IT ..." / "I DON'T WANT IT ..." OPENS A CHANGE TOO (D2, 2026-09-30): |
+| 1702 | `(module)` | THE CODER'S WINDOW ON THE TREE (2026-09-28). Four firings of the coder-tree |
+| 1781 | `(module)` | PICKING A PROJECT UP, AND PUTTING IT DOWN (piece 2, 2026-09-21). A sitting |
 
 ### manjuel/lawgate.py
 
@@ -2169,219 +2171,219 @@ its line range. The suites are the memory (HANDOFF: test discipline).
 | `test_the_turn_deadline` | 3608-3979 | `PipelineBook`, `PipelineBook.load`, `RunContext`, `SALVAGE_MARK`, `Steps`, `TURN_DEADLINE`, `_ask`, `_stage_left`, `_sub_runner`, `_time_left`, `_turn_limit`, `_within_deadline` |
 | `test_the_loops_of_2026_09_08` | 3982-4064 | `GroundWatch`, `PIPELINES`, `PIPELINES.items`, `PIPELINES.values`, `_sk`, `_sk.WRITING_SKILLS`, `_sk._INDEX_BUSY`, `_sk.acquire`, `_sk.locked`, `_sk.release`, `cli`, `cli.split` |
 | `test_the_release_gate` | 4067-4218 | — |
-| `test_the_p0_of_the_review` | 4221-4405 | `RunContext`, `SeatTimeout`, `StepResult`, `_sk`, `_sk._run_prompt_skill`, `_tr`, `_tr.write`, `_unsourced`, `decided_call`, `run_pipeline` |
-| `test_the_standup_reads_the_grounds_env` | 4408-4466 | — |
-| `test_the_engines_own_words_are_a_source` | 4469-4526 | `RunContext`, `StepResult`, `_seat_refusal`, `recompose` |
-| `test_the_sitting_story` | 4529-4648 | `RunContext`, `StepResult`, `_cli`, `_cli._ask_kind`, `_in`, `_in.asks_the_ground`, `_in.asks_the_sitting`, `_in.names_a_tool`, `_sl`, `_sl.Sitting`, `_sl.note_for`, `_sl.story_block` |
-| `test_the_ground_flag` | 4651-4792 | `RunContext`, `StepResult`, `_cli`, `_cli.AGENTS_DIR`, `_cli.AGENTS_FILE`, `_cli.LOGS_DIR`, `_cli.PARITY_FILE`, `_cli.PIPELINES_FILE`, `_cli.ROOT`, `_cli.SKILLS_DIR`, `_cli.Session`, `_cli.WORKSPACE_DIR` |
-| `test_git_never_waits_on_stdin` | 4795-4851 | `gitstate`, `gitstate.TIMEOUT` |
-| `test_the_headless_door` | 4853-5417 | `RuntimeError_`, `_AR`, `_AR.load`, `_cl`, `_cl.custom_commands`, `_ink`, `_ink._STATE`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.COMMANDS`, `_sv.Door` |
-| `test_sitting_88_paths_and_evidence` | 5420-5660 | `RunContext`, `_WRITES`, `build_prompt`, `decided_call`, `declares`, `find_by_name`, `run_pipeline`, `unjail` |
-| `test_a_spelled_out_door_call_is_written_by_the_engine` | 5663-5953 | `OllamaRuntime`, `RunContext`, `SALVAGE_MARK`, `_sk`, `_sk._mcp_braced`, `_sk.mcp_spelled_out`, `decided_call`, `run_pipeline` |
-| `test_a_refusal_reads_as_failed_everywhere` | 5956-6003 | `_ctx`, `_ctx.FAILED_HEADS`, `_pl`, `_pl.FAILED_HEADS`, `_sk`, `_sk.FAILED_HEADS`, `_sv`, `_sv._FAILED_HEADS`, `inspect_file` |
-| `test_inspect_remember_that_and_the_brief` | 6006-6167 | `REVIEW_ONLY_SKILLS`, `boot`, `boot.brief_facts`, `inspect_line`, `mem`, `mem.DEFAULT_KIND`, `mem.Entry`, `mem.OPERATOR`, `mem.land_pending`, `mem.stage`, `remember_cue`, `seatlog` |
-| `test_what_is_in_the_x_dir_is_a_listing` | 6170-6299 | `RunContext`, `names_a_folder`, `run_pipeline` |
-| `test_intent_and_empty_replies` | 6302-6329 | `RunContext`, `intent`, `intent.names_a_tool`, `run_pipeline` |
-| `test_thinking_models_are_not_swallowed` | 6332-6342 | `OllamaRuntime`, `OllamaRuntime._extract` |
-| `test_stale_lock_is_named_not_invented` | 6345-6386 | `gitstate`, `gitstate.GitRefused`, `gitstate.commit`, `gitstate.lock_state` |
-| `test_commit_subject_is_not_the_tool_name` | 6389-6462 | `_commit_subject` |
-| `test_seat_rack` | 6465-6526 | `Anchor`, `Seating`, `SeatingError`, `Step`, `parse_anchor`, `seating`, `seating.rack_for` |
-| `test_output_cannot_forge_the_record` | 6529-6544 | `quote_structure` |
-| `test_commit_subject_from_fact` | 6547-6632 | `_commit_subject`, `gitstate`, `gitstate.areas` |
-| `test_spelling_is_conservative` | 6635-6666 | `spelling`, `spelling.check` |
-| `test_voice_degrades` | 6669-6735 | `voice`, `voice.MAX_SPOKEN_CHARS`, `voice._cpp_parts`, `voice._stt_parts`, `voice.can_listen`, `voice.can_speak`, `voice.local_model`, `voice.speakable` |
-| `test_proofreader_is_racked` | 6738-6783 | `FLAGS_RAISED`, `_us`, `_us.reconcile`, `read_flags`, `seating`, `seating.Seating`, `seating.parse_anchor`, `seating.rack_for`, `seating.wake_flags` |
-| `test_parity_measures_without_deciding` | 6787-6881 | `parity`, `parity.DEFAULT_REFERENCE_MODEL`, `parity.Outcome`, `parity.ParityError`, `parity.Report`, `parity.compare`, `parity.load_cases`, `parity.reference_seat` |
-| `test_index_stays_in_research_and_off_the_keys` | 6884-6982 | `is_secret` |
-| `test_listening_follows_the_speaker` | 6985-7047 | `voice`, `voice.BLOCK_SECONDS`, `voice.SAMPLE_RATE`, `voice.VoiceError`, `voice._stt_parts`, `voice._transcribe`, `voice.listen` |
-| `test_the_machine_never_holds_the_floor` | 7050-7092 | `voice`, `voice._key_pressed`, `voice._speech_cmd`, `voice.speak_interruptible` |
-| `test_chat_remembers_and_still_reaches_tools` | 7095-7140 | `RunContext`, `StepResult`, `build_prompt`, `run_pipeline` |
-| `test_ollama_responses_read_in_both_shapes` | 7143-7182 | `OllamaRuntime`, `_field`, `_vram`, `_vram.installed_sizes` |
-| `test_sitting21_regressions` | 7185-7214 | `intent`, `intent.names_a_tool` |
-| `test_noise_never_wakes_a_seat` | 7217-7278 | `RunContext`, `StepResult`, `build_prompt`, `intent`, `intent.gibberish`, `run_pipeline` |
-| `test_small_talk_gets_conversation_not_scaffolding` | 7281-7312 | `RunContext`, `build_prompt` |
-| `test_sitting24_regressions` | 7315-7371 | `RunContext`, `StepResult`, `build_prompt`, `intent`, `intent.names_a_tool`, `run_pipeline` |
-| `test_environment_facts_are_read_not_generated` | 7374-7394 | `intent`, `intent.names_a_tool` |
-| `test_the_estate_is_heard_correctly` | 7397-7430 | `intent`, `intent.names_a_tool`, `voice`, `voice.VOCAB_BIAS`, `voice.correct_hearing` |
-| `test_sitting26_regressions` | 7433-7476 | `Refused`, `parity`, `parity.load_cases`, `parity.run` |
-| `test_the_reasoner_tier` | 7479-7526 | `RunContext`, `_age_of`, `run_pipeline`, `seating`, `seating.Anchor`, `seating.parse_anchor`, `seating.rack_for`, `seating.wake_flags` |
-| `test_capability_questions_are_read_not_generated` | 7529-7550 | `intent`, `intent.names_a_tool` |
-| `test_coder_lands_files_and_review_wakes` | 7553-7582 | `RunContext`, `land_code`, `run_pipeline` |
-| `test_the_landing_gate_parses_before_it_writes` | 7585-7715 | `NETWORK_MODULES`, `RunContext`, `inspect_code`, `inspect_code.__doc__`, `land_code` |
-| `test_ground_eyes_are_live_readonly_and_jailed` | 7718-7744 | `intent`, `intent.names_a_tool` |
-| `test_the_card_is_priced_live` | 7747-7810 | `_vram`, `_vram.budget_bytes`, `_vram.gb`, `_vram.installed_sizes`, `intent`, `intent.names_a_tool` |
-| `test_nothing_is_happening_unless_it_happened` | 7813-7838 | `RunContext`, `build_prompt`, `intent`, `intent.names_a_tool` |
-| `test_drift_needs_a_source` | 7841-7926 | `DriftChecker`, `RunContext`, `_drift`, `_drift.DRIFT_WARN`, `_drift.DRIFT_WARN_SHORT`, `_drift.SHORT_SOURCE_CHARS`, `run_pipeline` |
-| `test_foundation_folder` | 7929-7947 | `intent`, `intent.names_a_tool` |
-| `test_seats_cut_from_the_founding_cloth` | 7950-7996 | `intent`, `intent.names_a_tool` |
-| `test_the_round_table` | 7999-8039 | `RunContext`, `StepResult`, `build_prompt`, `run_pipeline` |
-| `test_the_palette_is_live` | 8042-8081 | `_cli`, `_cli.COMMANDS`, `_cli.custom_commands`, `_cli.palette`, `skills` |
-| `test_sitting29_regressions` | 8084-8102 | `RunContext`, `_cli`, `_cli.COMMANDS`, `build_prompt` |
-| `test_the_counsel_stays_in_the_room` | 8105-8130 | `RunContext`, `build_prompt` |
-| `test_the_thread_sessions` | 8133-8165 | `load_thread`, `save_thread` |
-| `test_parity_spread` | 8168-8183 | `parity`, `parity.load_cases` |
-| `test_the_estate_never_accuses_itself` | 8186-8223 | `EMBED_MODEL`, `_vram`, `_vram.foreign` |
-| `test_sitting31_regressions` | 8226-8262 | `RunContext`, `build_prompt`, `run_pipeline` |
-| `test_counsel_rules_on_counsel_not_furniture` | 8265-8285 | `RunContext`, `StepResult`, `build_prompt`, `intent`, `intent.names_a_tool` |
-| `test_workspace_subdirs_are_reachable_and_honest` | 8288-8335 | — |
-| `test_warm_matches_run_context` | 8338-8354 | `OllamaRuntime` |
-| `test_one_context_per_model` | 8357-8366 | — |
-| `test_ollama_is_the_server` | 8370-8388 | `BackendUnreachable`, `Session`, `Session.__new__`, `Session.rack_check` |
-| `test_sitting38_regressions` | 8391-8421 | `RunContext`, `build_prompt`, `intent`, `intent.names_a_tool` |
-| `test_the_guard_is_a_real_guard` | 8424-8461 | `Refused`, `RunContext`, `intent`, `intent.injection_markers`, `run_pipeline` |
-| `test_the_table_has_eyes_not_hands` | 8464-8529 | `REVIEW_ONLY_SKILLS`, `RunContext`, `WRITING_SKILLS`, `run_pipeline` |
-| `test_objective_is_the_payload_for_prompt_skills` | 8532-8565 | `R` |
-| `test_sitting40_regressions` | 8568-8610 | `RunContext`, `build_prompt`, `intent`, `intent.names_a_file`, `run_pipeline` |
-| `test_the_claim_check` | 8613-8700 | `REVIEW_ONLY_SKILLS`, `RunContext`, `StepResult`, `intent`, `intent.claims_file_contents`, `run_pipeline` |
-| `test_attention_budget` | 8703-8770 | `RunContext`, `build_prompt`, `select_dialogue` |
-| `test_recall_floor_and_timestamps` | 8773-8814 | `RECALL_FLOOR`, `RunContext`, `select_dialogue` |
-| `test_topic_boundaries` | 8817-8906 | `detect_shift`, `intent`, `intent.cue_only`, `intent.topic_cue`, `select_dialogue` |
-| `test_the_ground_watches_itself` | 8909-8974 | `GroundWatch`, `_cl`, `_cl.redirect_stdout`, `_cli`, `_cli._apply_ground_changes`, `available` |
-| `test_per_seat_voices` | 8977-9022 | `RunContext`, `StepResult`, `V`, `V._speech_backend`, `V._speech_cmd`, `_voice_for`, `registry` |
-| `test_sitting42_dispatch` | 9025-9186 | `RunContext`, `intent`, `intent.asks_the_ground`, `intent.decomposes_to_search`, `intent.last_file_in`, `intent.names_a_tool`, `intent.wants_action`, `intent.wants_out`, `intent.wants_writing`, `run_pipeline` |
-| `test_client_data_is_shielded` | 9189-9244 | `GroundWatch`, `is_protected` |
-| `test_no_client_world_is_read_by_this_suite` | 9247-9277 | — |
-| `test_sitting46_regressions` | 9280-9369 | `Agent`, `OllamaRuntime`, `RunContext`, `build_prompt` |
-| `test_streaming_never_eats_spaces` | 9372-9424 | `OllamaRuntime`, `RunContext` |
-| `test_the_review_can_send_work_back_once` | 9427-9483 | `RunContext`, `Seating`, `Step`, `build_prompt`, `run_pipeline` |
-| `test_several_acts_get_a_route_first` | 9486-9533 | `RunContext`, `intent`, `intent.is_big_objective`, `run_pipeline` |
-| `test_a_big_file_is_a_window_not_a_stump` | 9536-9591 | `READ_WINDOW`, `windowed` |
-| `test_the_estate_can_reason_about_time` | 9594-9785 | `RECENCY_WEIGHT`, `REVIEW_ONLY_SKILLS`, `RunContext`, `StepResult`, `build_prompt`, `doctrine`, `intent`, `intent.names_a_tool`, `now_block` |
-| `test_the_log_horizon` | 9788-9827 | `LOG_HORIZON_DAYS`, `_too_old_to_index` |
-| `test_the_router_knows_where_it_is` | 9830-9869 | — |
-| `test_sitting70_regressions` | 9872-9957 | `RunContext`, `WRITING_SKILLS`, `_v`, `_v.speak`, `intent`, `intent.claims_wrote_a_file`, `run_pipeline` |
-| `test_markup_never_reaches_the_terminal` | 9960-10007 | `RunContext`, `run_pipeline` |
-| `test_the_thought_is_drawn_live_and_dimmed` | 10010-10086 | `RunContext`, `ink`, `ink.DIM`, `ink._STATE`, `run_pipeline` |
-| `test_asking_about_a_tool_is_not_asking_for_it` | 10089-10168 | `RunContext`, `StepResult`, `build_prompt`, `intent`, `intent.asks_about_a_tool`, `run_pipeline` |
-| `test_a_skill_asked_for_in_its_own_words_is_the_one_named` | 10171-10275 | `RunContext`, `intent`, `intent.ALIASES`, `intent.names_a_tool`, `intent.tool_choices`, `intent.wants_running`, `run_pipeline` |
-| `test_no_router_in_the_order_means_no_tool` | 10278-10307 | `RunContext`, `run_pipeline` |
-| `test_the_steward_reads_its_own_simple_calls` | 10310-10340 | `REVIEW_ONLY_SKILLS`, `RunContext`, `WRITING_SKILLS`, `run_pipeline` |
-| `test_a_tool_it_is_not_sure_of_is_put_to_him` | 10343-10398 | `RunContext`, `intent`, `intent.tool_choices`, `run_pipeline` |
-| `test_his_plain_words_raise_the_flag_and_ask_first` | 10401-10459 | `FLAGS`, `FLAGS_ENGINE`, `RunContext`, `intent`, `intent.plain_flags`, `run_pipeline`, `wake_flags` |
-| `test_the_card_carries_its_color` | 10462-10502 | `CARD_COLORS`, `RunContext`, `run_pipeline`, `serve`, `serve.Door`, `serve.ask`, `serve.serve` |
-| `test_a_path_skill_takes_the_file_its_words_name` | 10505-10544 | `RunContext`, `run_pipeline`, `tool_verdicts` |
-| `test_a_seat_after_the_router_is_handed_the_package` | 10547-10594 | `RunContext`, `StepResult`, `answer_room`, `build_prompt` |
-| `test_the_router_names_the_task_it_packs` | 10597-10648 | `RunContext`, `read_task`, `run_pipeline`, `strip_control` |
-| `test_the_router_moves_up_on_its_own` | 10651-10685 | `RunContext`, `run_pipeline` |
-| `test_a_turn_is_measured_into_its_level` | 10688-10715 | `intent`, `intent.level` |
-| `test_the_level_routes_with_todays_seats` | 10718-10762 | `RunContext`, `run_pipeline` |
-| `test_the_big_seats_answer_goes_as_written` | 10765-10857 | `RunContext`, `StepResult`, `as_written`, `drift`, `run_pipeline` |
-| `test_the_closing_answer_is_this_turn_alone` | 10860-10908 | `RunContext`, `StepResult`, `build_prompt`, `carried_blocks`, `run_pipeline` |
-| `test_manjuel_reads_the_request` | 10911-11024 | `RunContext`, `intent`, `intent.PPMI_BY`, `intent.PPMI_SURE`, `intent._ppmi_signs`, `intent.ppmi_reading`, `intent.read_the_request`, `run_pipeline` |
-| `test_the_shortlist_is_budget_not_judgement` | 11027-11073 | `RunContext`, `build_prompt` |
-| `test_the_record_can_be_audited` | 11076-11205 | — |
-| `test_a_subtask_runs_scoped_and_bounded` | 11208-11306 | `RunContext`, `SUB_DEPTH_MAX`, `SUB_RUNS_MAX`, `_sub_runner`, `run_pipeline` |
-| `test_the_delivery_carries_what_actually_ran` | 11309-11368 | `RunContext`, `StepResult`, `recompose`, `run_pipeline` |
-| `test_a_skill_owns_its_own_dispatch` | 11371-11478 | `RunContext`, `SkillSpec`, `args_from_words`, `intent`, `intent.ALIASES`, `intent.names_a_tool`, `parse_says`, `parse_takes`, `run_pipeline` |
-| `test_an_error_message_is_a_promise` | 11481-11532 | `REBUILD_WORDS`, `_wants_rebuild`, `intent`, `intent.names_a_tool` |
-| `test_a_sitting_number_resolves_to_its_runs` | 11535-11600 | `REVIEW_ONLY_SKILLS`, `intent`, `intent.names_a_tool` |
-| `test_palette_commands_take_arguments_and_carry_methods` | 11603-11652 | `ARGS_TOKEN`, `RunContext`, `build_prompt`, `custom_commands`, `fill_args` |
-| `test_the_tool_loop_never_repeats_itself` | 11655-11720 | `MAX_TOOL_STEPS`, `MEM`, `MEM.pending`, `RunContext`, `run_pipeline` |
-| `test_the_boot_reports_what_was_proved` | 11723-11853 | `suite_tally` |
-| `test_the_chain_writes_declared_newlines` | 11856-11938 | `seatlog`, `seatlog.SEAT_LOG`, `seatlog.pay` |
-| `test_the_suites_write_the_record_in_crlf_too` | 11941-12033 | — |
-| `test_a_python_file_is_cut_by_definition_not_by_character` | 12036-12143 | `READ_WINDOW`, `windowed` |
-| `test_parity_reads_the_seat_map_not_a_constant` | 12155-12206 | `Outcome`, `Report`, `parity`, `parity.Case`, `parity.DEFAULT_REFERENCE_MODEL` |
-| `test_index_ground_says_which_mode_it_ran` | 12209-12238 | — |
-| `test_one_turn_gives_one_account_of_how_a_tool_was_chosen` | 12241-12291 | `RunContext`, `intent`, `intent.asks_about_a_tool`, `intent.names_a_tool`, `run_pipeline` |
-| `test_every_branch_that_chooses_a_tool_says_so` | 12294-12406 | `RunContext`, `StepResult`, `recompose`, `run_pipeline` |
-| `test_a_courtesy_preamble_does_not_bury_the_question` | 12409-12479 | `REVIEW_ONLY_SKILLS`, `intent`, `intent._after_courtesy`, `intent.asks_the_ground`, `intent.names_a_tool` |
-| `test_the_chain_can_say_what_it_has_proved` | 12482-12587 | `REVIEW_ONLY_SKILLS`, `WRITING_SKILLS` |
-| `test_a_malformed_flag_is_still_read_and_still_stripped` | 12595-12677 | `RunContext`, `read_flags`, `run_pipeline`, `strip_control` |
-| `test_prune_evicts_undeclared_roots_but_refuses_a_large_one` | 12680-12760 | `VectorIndex`, `VectorIndex.ORPHAN_CEILING` |
-| `test_what_feeds_the_index_keeps_to_its_roots` | 12763-12998 | `EMBED_MODEL`, `_V`, `_V.VectorIndex`, `_V.prune`, `_cli`, `_cli.ROOT`, `_cli._apply_ground_changes`, `_cli.set_ground`, `_watch`, `_watch.GroundWatch`, `_watch.is_protected`, `index_roots` |
-| `test_a_dial_in_env_is_read_and_the_transports_stay_few` | 13001-13171 | `RunContext`, `_dotenv`, `_dotenv.load`, `_pkg`, `_pkg.read_dials`, `_pl`, `_pl.TURN_DEADLINE`, `_pl._within_deadline`, `_rt`, `_rt.BOUND_TRANSPORTS`, `_rt.KEEP_ALIVE`, `_rt.OllamaRuntime` |
-| `test_an_idle_engine_closes_its_own_sitting` | 13174-13362 | `_cli`, `_cli._loop`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.IDLE_CLOSE`, `_sv.Inbox`, `_sv.TextChannel`, `_sv.Wire`, `_sv.__doc__`, `_sv.main` |
-| `test_a_hang_up_is_heard_at_once` | 13365-13470 | `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.Inbox`, `_sv.TextChannel`, `_sv.Wire` |
-| `test_a_commit_subject_is_the_operators_or_gits_never_the_models` | 13473-13557 | `_commit_subject` |
-| `test_a_git_skill_acts_in_the_world_it_is_given` | 13560-13717 | `_git_commit`, `_git_cycle`, `_git_init`, `_git_status`, `gitstate`, `gitstate.read` |
-| `test_a_quoted_message_is_handed_over_as_the_argument` | 13720-13915 | `MESSAGE_IS_THE_OPERATORS`, `RunContext`, `gitstate`, `gitstate.read`, `operator_message`, `run_pipeline`, `spelling` |
-| `test_the_deliberation_renders_as_prose_not_a_column` | 13918-13961 | `RunContext`, `_write`, `run_pipeline` |
-| `test_the_manifest_reconciles_to_the_disk` | 13964-14147 | `WRITING_SKILLS`, `us`, `us.load`, `us.rack_tags`, `us.reconcile` |
-| `test_the_flags_are_a_closed_set` | 14150-14248 | `FLAGS`, `FLAGS_ENGINE`, `FLAGS_RAISED`, `us`, `us.reconcile`, `wake_flags` |
-| `test_the_release_gate_runs_on_a_mark` | 14251-14542 | — |
-| `test_version_control_matches_the_record` | 14545-14690 | — |
-| `test_the_gate_asks_githubs_verdict` | 14693-14855 | — |
-| `test_the_flows_and_workflows_are_read_before_a_mark` | 14858-15248 | — |
-| `test_every_manifest_field_is_read_by_something` | 15251-15415 | `_us`, `_us.CORE`, `_us.READ_ELSEWHERE`, `_us.get`, `_us.items`, `_us.reconcile`, `_us.report`, `drift` |
-| `test_loose_is_declared_and_read_by_nothing` | 15418-15556 | `_pl`, `_pl.FLAGS`, `_pl.FLAGS_ENGINE`, `_us`, `_us.BOOKKEEPING_FIELDS`, `_us.CHECKED_FIELDS`, `_us.Finding`, `_us.reconcile`, `_us.report` |
-| `test_a_greeting_never_reaches_the_reader` | 15559-15619 | `_RO`, `intent`, `intent._GREETING_LEADS`, `intent.asks_the_ground`, `intent.names_a_tool` |
-| `test_the_deliberation_is_kept_and_never_spoken` | 15622-15727 | `RunContext`, `_write`, `run_pipeline` |
-| `test_the_dedup_keys_on_the_declared_call` | 15739-15784 | `_Spec` |
-| `test_ground_list_names_which_mistake_was_made` | 15794-15832 | — |
-| `test_only_byte_hashed_law_files_are_eol_frozen` | 15835-15891 | — |
-| `test_no_skill_is_dead_surface` | 15894-15948 | — |
-| `test_fixtures_mirror_the_runtime` | 15951-15998 | `OllamaRuntime`, `OllamaRuntime.chat` |
-| `test_the_citation_check` | 16001-16072 | `RunContext`, `bogus_citations`, `intent`, `intent.search_result_pairs`, `run_pipeline` |
-| `test_sitting48_no_router_for_greetings` | 16075-16120 | `RunContext`, `run_pipeline` |
-| `test_the_council_carries_its_key_to_the_door` | 16123-16218 | `_FAILED_HEADS`, `_sk`, `_sk._HANDLERS`, `_sk._mcp_servers` |
-| `test_the_mcp_skill_never_leaves_this_machine` | 16221-16383 | `_FAILED_HEADS`, `_declares`, `_mcp_named`, `_sk`, `_sk.TAKES_ARGS`, `_sk._HANDLERS`, `_sk._mcp_wait`, `_sk.read_dials` |
-| `test_a_keyword_whose_argument_is_a_number_wants_one` | 16386-16454 | `intent`, `intent._wants_a_number`, `intent.names_a_tool` |
-| `test_a_keyword_that_is_grammar_must_be_named` | 16457-16510 | `intent`, `intent.names_a_tool` |
-| `test_an_order_to_run_a_script_is_arithmetic` | 16513-16554 | `intent`, `intent.names_a_file`, `intent.wants_running` |
-| `test_a_turn_that_wanted_hands_and_used_none_says_so` | 16557-16612 | `RunContext`, `StepResult`, `recompose` |
-| `test_the_tools_own_words_leave_the_turn` | 16615-16703 | `StepResult`, `tool_verdicts` |
-| `test_a_write_refuses_python_that_will_not_parse` | 16706-16751 | — |
-| `test_an_edit_refuses_an_anchor_that_does_not_say_which` | 16754-16842 | — |
-| `test_a_run_is_bounded_jailed_and_blind_to_the_keys` | 16845-16940 | `_sk`, `_sk.RUN_TIMEOUT` |
-| `test_both_doors_into_the_workspace_hold_the_same_line` | 16943-16987 | — |
-| `test_the_edit_door_holds_the_same_line_as_the_write_door` | 16990-17045 | — |
-| `test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name` | 17048-17222 | `_sk`, `_sk.DRIVER`, `_sk.REVIEW_ONLY_SKILLS`, `_sk.WRITING_SKILLS`, `gitstate`, `gitstate.commit` |
-| `test_the_coder_lands_an_edit_on_the_tree` | 17225-17329 | `RunContext`, `SkillExecutionEnv`, `StepResult`, `gitstate`, `gitstate.commit`, `land_code`, `tool_verdicts` |
-| `test_the_coders_window_on_the_tree` | 17332-17641 | `RunContext`, `_maker_route`, `_tree_window`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.is_big_objective`, `intent.names_a_tool`, `intent.wants_a_tree_change`, `run_pipeline` |
-| `test_a_seat_that_holds_tools_has_room_to_answer` | 17644-17722 | `AgentRegistry`, `AgentRegistry.load`, `READ_WINDOW`, `RunContext`, `SkillLibrary`, `SkillLibrary.load`, `build_prompt`, `carried_blocks` |
-| `test_a_reply_the_rack_cut_is_said_so` | 17725-17892 | `CUT_MARGIN`, `OllamaRuntime`, `RunContext`, `note_cut_reply`, `run_pipeline`, `seatlog`, `seatlog.GUARD_MARKS`, `seatlog.note_for`, `usage_of` |
-| `test_the_watchers_reindex_waits_for_a_build` | 17895-18001 | `GroundWatch`, `_cli`, `_cli.ROOT`, `_cli._apply_ground_changes`, `_cli.set_ground`, `_sk`, `_sk._INDEX_BUSY`, `_sk.acquire`, `_sk.locked`, `_sk.release`, `runtime` |
-| `test_every_root_document_is_in_the_index_list` | 18004-18023 | — |
-| `test_the_small_honesty_of_the_record_keepers` | 18026-18188 | `MEM`, `MEM.Entry`, `MEM.MEMORY_FILE`, `MEM.PENDING_FILE`, `MEM.drop_pending`, `MEM.land_pending`, `MEM.pending`, `MEM.stage`, `MEM.unread_pending`, `_rt`, `_rt.OllamaRuntime`, `dotenv` |
-| `test_the_example_offers_only_dials_the_code_reads` | 18191-18225 | — |
-| `test_the_small_honesty_of_the_engine` | 18228-18419 | `Agent`, `DriftChecker`, `M`, `RunContext`, `RunContext.history_block`, `V`, `V.SPEAK_DEADLINE`, `V._key_pressed`, `V._reap`, `V._speech_backend`, `V._speech_cmd`, `V.speak` |
-| `test_an_unattended_turn_is_not_asked` | 18422-18497 | `Aborted`, `RunContext`, `RuntimeError_`, `_handle_failure`, `run_pipeline` |
-| `test_the_workspaces_reader_reads_the_ground_when_it_is_named` | 18500-18563 | — |
-| `test_the_greeting_case_asks_for_the_seats_own_words` | 18566-18619 | `rack` |
-| `test_the_status_page_is_read_off_the_record` | 18622-18770 | `gitstate`, `gitstate.commit` |
-| `test_the_map_says_how_to_ask` | 18773-18795 | `intent`, `intent.wants_a_tree_change` |
-| `test_the_refusals_document_lists_every_site_in_the_code` | 18798-18825 | — |
-| `test_the_plan_names_every_mark_where_it_sits` | 18828-18883 | — |
-| `test_the_release_steps_move_the_record_as_one` | 18886-19154 | `gitstate`, `gitstate.commit` |
-| `test_the_list_of_what_is_left_reads_whole_and_is_not_stale` | 19157-19231 | — |
-| `test_the_docs_call_the_page_what_the_glass_calls_it` | 19234-19386 | `D`, `D.living` |
-| `test_the_inventory_lists_every_function` | 19389-19462 | `skills`, `skills.append` |
-| `test_the_code_calls_the_pages_what_the_glass_calls_them` | 19465-19526 | `gitstate`, `gitstate.commit` |
-| `test_no_file_is_mixed_and_the_root_documents_are_crlf` | 19529-19564 | — |
-| `test_the_aider_door_keeps_what_the_seats_keep` | 19567-19613 | `_sk`, `_sk._NEVER_WRITTEN_FILES`, `_sk._NEVER_WRITTEN_STAMPS`, `_sk._NEVER_WRITTEN_SUFFIXES`, `_sk._NEVER_WRITTEN_TOP` |
-| `test_the_toll_index_is_read_off_the_log` | 19616-19655 | — |
-| `test_a_toll_refreshes_the_index_beside_it` | 19658-19713 | `_sl`, `_sl.index_is_current`, `_sl.index_text`, `_sl.pay`, `_sl.write_index` |
-| `test_a_listing_the_closing_seat_shortened_is_completed` | 19716-19867 | `RunContext`, `StepResult`, `_in`, `_in.dropped_items`, `_in.listing_items`, `_in.listing_lines`, `_vram`, `_vram.installed_sizes`, `rack`, `recompose` |
-| `test_the_phrasing_matrix_finds_nothing_and_has_teeth` | 19870-19951 | `_cl`, `_cl.redirect_stdout`, `_in`, `_in._INJECTION_MARKERS`, `_in.injection_markers`, `_lg`, `_lg._REACH_RE`, `_lg._REMOTE_RE`, `_lg._SECRET_VERB_RE` |
-| `test_a_run_python_child_is_walled_into_the_workspace` | 19954-20039 | `_sk`, `_sk.JAIL_MARK` |
-| `test_a_hook_watches_a_call_without_taking_it_over` | 20042-20147 | `_sk`, `_sk.ENGINE_HOOKS`, `_sk.SkillSpec`, `_sk._HANDLERS`, `_sk.hook_faults`, `_sk.parse_hooks`, `_sk.pop` |
-| `test_every_use_is_marked_and_weighed` | 20150-20198 | `_sk`, `_sk.DRIVER`, `_sk.ENGINE_HOOKS` |
-| `test_a_run_in_flight_can_be_interrupted` | 20201-20273 | `SV`, `SV.ASKING`, `SV.COMMANDS`, `SV.IDLE`, `SV.Inbox`, `SV.RUNNING`, `SV.TERMINAL`, `SV.Wire`, `SV._thread`, `_cli`, `_cli._loop`, `_in` |
-| `test_a_skill_cannot_hang_the_repl` | 20276-20318 | `_sk`, `_sk.SKILL_TIMEOUT`, `_sk._HANDLERS`, `_sk._run_bounded`, `_sk.pop` |
-| `test_native_tool_calling` | 20321-20449 | `REVIEW_ONLY`, `calls_to_action_xml`, `declares`, `extract_tool_call` |
-| `test_the_router_is_told_how_not_just_what` | 20452-20519 | `RunContext`, `_router_prompt`, `_steward_prompt` |
-| `test_a_thinking_router_is_never_silent` | 20522-20581 | `OllamaRuntime`, `_salvage`, `thinking_of` |
-| `test_write_read_and_speak_about_it` | 20584-20674 | `REVIEW_ONLY_SKILLS`, `RunContext`, `intent`, `intent.names_a_tool`, `run_pipeline` |
-| `test_model_override` | 20677-20988 | `AgentRegistry`, `AgentRegistry.load`, `RegistryError`, `RuntimeError_`, `_cli`, `_cli.COMMANDS`, `_cli._cmd_model`, `_ctx`, `_ctx.redirect_stdout`, `rack`, `spelling` |
-| `test_path_gate` | 20991-21148 | `RunContext`, `SkillSpec`, `gate_paths`, `parse_path_args`, `run_pipeline` |
-| `test_flags_are_not_speech` | 21151-21201 | `RunContext`, `build_prompt`, `read_flags`, `run_pipeline`, `strip_control` |
-| `test_the_maker` | 21204-21498 | `RunContext`, `_maker_route`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.wants_changing`, `intent.wants_going_back`, `intent.wants_making`, `maker`, `maker.AUTHOR_NAME`, `maker.MakerRefused` |
-| `test_the_maker_runs_the_page_before_it_keeps_it` | 21501-21789 | `RunContext`, `maker`, `maker.CHECK_BUDGET`, `maker.PROFILE_PREFIX`, `maker.PROFILE_STALE`, `maker.REPAIRS`, `maker.SETTLE`, `maker._BROWSERS`, `maker._CATCH`, `maker._inject`, `maker._made_at`, `maker._sweep_profiles` |
-| `test_the_maker_picks_up_and_puts_down` | 21792-22025 | `RunContext`, `_maker_route`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `intent`, `intent.wants_going_back`, `intent.wants_picking_up`, `intent.wants_putting_down`, `maker` |
-| `test_ink` | 22028-22076 | `ink`, `ink.RESET`, `ink.Spinner`, `ink._STATE`, `ink.bad`, `ink.body`, `ink.dim`, `ink.enabled`, `ink.good`, `ink.seat`, `ink.seat_color`, `ink.warn` |
-| `test_math` | 22079-22102 | `M`, `M.MathError`, `M.cosine`, `M.linear_regression`, `M.matmul`, `M.parse_numbers`, `M.stdev`, `M.transpose`, `M.variance` |
-| `test_a_commit_is_not_a_tag` | 22105-22146 | `_HANDLERS` |
-| `test_says_is_a_phrase_list_not_a_paragraph` | 22149-22214 | `SkillLibrary`, `SkillLibrary.load`, `parse_says` |
-| `test_the_stamp_is_not_an_edit` | 22217-22325 | `_BOOT_STAMPS`, `_H`, `_sf`, `suite_tally` |
-| `test_doctrine` | 22328-22502 | `D`, `D.dead_paths`, `D.doc_pass_report`, `D.doctrine_report`, `D.living`, `D.open_tasks`, `D.sittings`, `D.skills_axis`, `D.stale_tallies`, `D.versions`, `_H`, `_SL` |
-| `test_the_core_sees_its_own_repository` | 22505-22652 | `gitstate`, `gitstate.GitRefused`, `gitstate._bad_branch_name`, `gitstate._host_of`, `gitstate._jailed`, `gitstate.branches`, `gitstate.close_branch`, `gitstate.commit`, `gitstate.diff`, `gitstate.read`, `gitstate.remotes`, `gitstate.switch` |
-| `test_record_and_git` | 22655-22759 | `RunContext`, `_cli`, `_cli._toll_answer`, `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.pull`, `gitstate.push`, `gitstate.read`, `seatlog`, `seatlog.RunNote` |
-| `test_the_councils_push_sends_no_main_origin_has` | 22762-22879 | `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.push`, `gitstate.switch` |
-| `test_the_pack_is_wired` | 22894-22955 | — |
-| `test_the_maker_speaks_to_a_screen_without_a_file_to_open` | 22958-23203 | `RunContext`, `_cli`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `maker`, `maker.forget`, `maker.new_project`, `maker.report_back`, `maker.report_changed` |
-| `test_a_change_that_comes_back_unchanged_is_asked_for_once_more` | 23206-23375 | `RunContext`, `maker`, `maker.AGAINS`, `maker.RULES`, `maker.again_prompt`, `maker.forget`, `maker.new_project`, `maker.page_of`, `maker.report_unchanged`, `maker.run_page`, `maker.same_page`, `maker.save_version` |
-| `test_the_door_reads_the_law_chain_as_law_py_writes_it` | 23378-23530 | — |
-| `test_steward_drives_to_a_check` | 23533-23970 | `DriverMark`, `SV`, `SV.DRIVE_IGNORE`, `SV.DRIVE_NEVER`, `SV.DRIVE_STEPS`, `SV.DRIVE_SUITES`, `SV.door_call`, `SV.door_drive`, `SV.drive`, `SV.drive_parse`, `SV.drive_tools`, `WRITING_SKILLS` |
-| `test_steward_harness` | 23973-24543 | `REVIEW_ONLY_SKILLS`, `SV`, `SV.DRIVE_ALLOW`, `SV.DRIVE_CONTEXT_MAX`, `SV.DRIVE_DENY`, `SV.DRIVE_FALLBACK`, `SV.DRIVE_GRANTS`, `SV.DRIVE_MODEL`, `SV.DRIVE_STEPS`, `SV.Door`, `SV.Drive`, `SV.Inbox` |
+| `test_the_p0_of_the_review` | 4221-4419 | `RunContext`, `SeatTimeout`, `StepResult`, `_in`, `_in.unsourced_numbers`, `_sk`, `_sk._run_prompt_skill`, `_tr`, `_tr.write`, `_unsourced`, `decided_call`, `rack` |
+| `test_the_standup_reads_the_grounds_env` | 4422-4480 | — |
+| `test_the_engines_own_words_are_a_source` | 4483-4540 | `RunContext`, `StepResult`, `_seat_refusal`, `recompose` |
+| `test_the_sitting_story` | 4543-4662 | `RunContext`, `StepResult`, `_cli`, `_cli._ask_kind`, `_in`, `_in.asks_the_ground`, `_in.asks_the_sitting`, `_in.names_a_tool`, `_sl`, `_sl.Sitting`, `_sl.note_for`, `_sl.story_block` |
+| `test_the_ground_flag` | 4665-4806 | `RunContext`, `StepResult`, `_cli`, `_cli.AGENTS_DIR`, `_cli.AGENTS_FILE`, `_cli.LOGS_DIR`, `_cli.PARITY_FILE`, `_cli.PIPELINES_FILE`, `_cli.ROOT`, `_cli.SKILLS_DIR`, `_cli.Session`, `_cli.WORKSPACE_DIR` |
+| `test_git_never_waits_on_stdin` | 4809-4865 | `gitstate`, `gitstate.TIMEOUT` |
+| `test_the_headless_door` | 4867-5431 | `RuntimeError_`, `_AR`, `_AR.load`, `_cl`, `_cl.custom_commands`, `_ink`, `_ink._STATE`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.COMMANDS`, `_sv.Door` |
+| `test_sitting_88_paths_and_evidence` | 5434-5674 | `RunContext`, `_WRITES`, `build_prompt`, `decided_call`, `declares`, `find_by_name`, `run_pipeline`, `unjail` |
+| `test_a_spelled_out_door_call_is_written_by_the_engine` | 5677-5967 | `OllamaRuntime`, `RunContext`, `SALVAGE_MARK`, `_sk`, `_sk._mcp_braced`, `_sk.mcp_spelled_out`, `decided_call`, `run_pipeline` |
+| `test_a_refusal_reads_as_failed_everywhere` | 5970-6017 | `_ctx`, `_ctx.FAILED_HEADS`, `_pl`, `_pl.FAILED_HEADS`, `_sk`, `_sk.FAILED_HEADS`, `_sv`, `_sv._FAILED_HEADS`, `inspect_file` |
+| `test_inspect_remember_that_and_the_brief` | 6020-6181 | `REVIEW_ONLY_SKILLS`, `boot`, `boot.brief_facts`, `inspect_line`, `mem`, `mem.DEFAULT_KIND`, `mem.Entry`, `mem.OPERATOR`, `mem.land_pending`, `mem.stage`, `remember_cue`, `seatlog` |
+| `test_what_is_in_the_x_dir_is_a_listing` | 6184-6313 | `RunContext`, `names_a_folder`, `run_pipeline` |
+| `test_intent_and_empty_replies` | 6316-6343 | `RunContext`, `intent`, `intent.names_a_tool`, `run_pipeline` |
+| `test_thinking_models_are_not_swallowed` | 6346-6356 | `OllamaRuntime`, `OllamaRuntime._extract` |
+| `test_stale_lock_is_named_not_invented` | 6359-6400 | `gitstate`, `gitstate.GitRefused`, `gitstate.commit`, `gitstate.lock_state` |
+| `test_commit_subject_is_not_the_tool_name` | 6403-6476 | `_commit_subject` |
+| `test_seat_rack` | 6479-6540 | `Anchor`, `Seating`, `SeatingError`, `Step`, `parse_anchor`, `seating`, `seating.rack_for` |
+| `test_output_cannot_forge_the_record` | 6543-6558 | `quote_structure` |
+| `test_commit_subject_from_fact` | 6561-6646 | `_commit_subject`, `gitstate`, `gitstate.areas` |
+| `test_spelling_is_conservative` | 6649-6680 | `spelling`, `spelling.check` |
+| `test_voice_degrades` | 6683-6749 | `voice`, `voice.MAX_SPOKEN_CHARS`, `voice._cpp_parts`, `voice._stt_parts`, `voice.can_listen`, `voice.can_speak`, `voice.local_model`, `voice.speakable` |
+| `test_proofreader_is_racked` | 6752-6797 | `FLAGS_RAISED`, `_us`, `_us.reconcile`, `read_flags`, `seating`, `seating.Seating`, `seating.parse_anchor`, `seating.rack_for`, `seating.wake_flags` |
+| `test_parity_measures_without_deciding` | 6801-6895 | `parity`, `parity.DEFAULT_REFERENCE_MODEL`, `parity.Outcome`, `parity.ParityError`, `parity.Report`, `parity.compare`, `parity.load_cases`, `parity.reference_seat` |
+| `test_index_stays_in_research_and_off_the_keys` | 6898-6996 | `is_secret` |
+| `test_listening_follows_the_speaker` | 6999-7061 | `voice`, `voice.BLOCK_SECONDS`, `voice.SAMPLE_RATE`, `voice.VoiceError`, `voice._stt_parts`, `voice._transcribe`, `voice.listen` |
+| `test_the_machine_never_holds_the_floor` | 7064-7106 | `voice`, `voice._key_pressed`, `voice._speech_cmd`, `voice.speak_interruptible` |
+| `test_chat_remembers_and_still_reaches_tools` | 7109-7154 | `RunContext`, `StepResult`, `build_prompt`, `run_pipeline` |
+| `test_ollama_responses_read_in_both_shapes` | 7157-7196 | `OllamaRuntime`, `_field`, `_vram`, `_vram.installed_sizes` |
+| `test_sitting21_regressions` | 7199-7228 | `intent`, `intent.names_a_tool` |
+| `test_noise_never_wakes_a_seat` | 7231-7292 | `RunContext`, `StepResult`, `build_prompt`, `intent`, `intent.gibberish`, `run_pipeline` |
+| `test_small_talk_gets_conversation_not_scaffolding` | 7295-7326 | `RunContext`, `build_prompt` |
+| `test_sitting24_regressions` | 7329-7385 | `RunContext`, `StepResult`, `build_prompt`, `intent`, `intent.names_a_tool`, `run_pipeline` |
+| `test_environment_facts_are_read_not_generated` | 7388-7408 | `intent`, `intent.names_a_tool` |
+| `test_the_estate_is_heard_correctly` | 7411-7444 | `intent`, `intent.names_a_tool`, `voice`, `voice.VOCAB_BIAS`, `voice.correct_hearing` |
+| `test_sitting26_regressions` | 7447-7490 | `Refused`, `parity`, `parity.load_cases`, `parity.run` |
+| `test_the_reasoner_tier` | 7493-7540 | `RunContext`, `_age_of`, `run_pipeline`, `seating`, `seating.Anchor`, `seating.parse_anchor`, `seating.rack_for`, `seating.wake_flags` |
+| `test_capability_questions_are_read_not_generated` | 7543-7564 | `intent`, `intent.names_a_tool` |
+| `test_coder_lands_files_and_review_wakes` | 7567-7596 | `RunContext`, `land_code`, `run_pipeline` |
+| `test_the_landing_gate_parses_before_it_writes` | 7599-7729 | `NETWORK_MODULES`, `RunContext`, `inspect_code`, `inspect_code.__doc__`, `land_code` |
+| `test_ground_eyes_are_live_readonly_and_jailed` | 7732-7758 | `intent`, `intent.names_a_tool` |
+| `test_the_card_is_priced_live` | 7761-7824 | `_vram`, `_vram.budget_bytes`, `_vram.gb`, `_vram.installed_sizes`, `intent`, `intent.names_a_tool` |
+| `test_nothing_is_happening_unless_it_happened` | 7827-7852 | `RunContext`, `build_prompt`, `intent`, `intent.names_a_tool` |
+| `test_drift_needs_a_source` | 7855-7940 | `DriftChecker`, `RunContext`, `_drift`, `_drift.DRIFT_WARN`, `_drift.DRIFT_WARN_SHORT`, `_drift.SHORT_SOURCE_CHARS`, `run_pipeline` |
+| `test_foundation_folder` | 7943-7961 | `intent`, `intent.names_a_tool` |
+| `test_seats_cut_from_the_founding_cloth` | 7964-8010 | `intent`, `intent.names_a_tool` |
+| `test_the_round_table` | 8013-8053 | `RunContext`, `StepResult`, `build_prompt`, `run_pipeline` |
+| `test_the_palette_is_live` | 8056-8095 | `_cli`, `_cli.COMMANDS`, `_cli.custom_commands`, `_cli.palette`, `skills` |
+| `test_sitting29_regressions` | 8098-8116 | `RunContext`, `_cli`, `_cli.COMMANDS`, `build_prompt` |
+| `test_the_counsel_stays_in_the_room` | 8119-8144 | `RunContext`, `build_prompt` |
+| `test_the_thread_sessions` | 8147-8179 | `load_thread`, `save_thread` |
+| `test_parity_spread` | 8182-8197 | `parity`, `parity.load_cases` |
+| `test_the_estate_never_accuses_itself` | 8200-8237 | `EMBED_MODEL`, `_vram`, `_vram.foreign` |
+| `test_sitting31_regressions` | 8240-8276 | `RunContext`, `build_prompt`, `run_pipeline` |
+| `test_counsel_rules_on_counsel_not_furniture` | 8279-8299 | `RunContext`, `StepResult`, `build_prompt`, `intent`, `intent.names_a_tool` |
+| `test_workspace_subdirs_are_reachable_and_honest` | 8302-8349 | — |
+| `test_warm_matches_run_context` | 8352-8368 | `OllamaRuntime` |
+| `test_one_context_per_model` | 8371-8380 | — |
+| `test_ollama_is_the_server` | 8384-8402 | `BackendUnreachable`, `Session`, `Session.__new__`, `Session.rack_check` |
+| `test_sitting38_regressions` | 8405-8435 | `RunContext`, `build_prompt`, `intent`, `intent.names_a_tool` |
+| `test_the_guard_is_a_real_guard` | 8438-8475 | `Refused`, `RunContext`, `intent`, `intent.injection_markers`, `run_pipeline` |
+| `test_the_table_has_eyes_not_hands` | 8478-8543 | `REVIEW_ONLY_SKILLS`, `RunContext`, `WRITING_SKILLS`, `run_pipeline` |
+| `test_objective_is_the_payload_for_prompt_skills` | 8546-8579 | `R` |
+| `test_sitting40_regressions` | 8582-8624 | `RunContext`, `build_prompt`, `intent`, `intent.names_a_file`, `run_pipeline` |
+| `test_the_claim_check` | 8627-8714 | `REVIEW_ONLY_SKILLS`, `RunContext`, `StepResult`, `intent`, `intent.claims_file_contents`, `run_pipeline` |
+| `test_attention_budget` | 8717-8784 | `RunContext`, `build_prompt`, `select_dialogue` |
+| `test_recall_floor_and_timestamps` | 8787-8828 | `RECALL_FLOOR`, `RunContext`, `select_dialogue` |
+| `test_topic_boundaries` | 8831-8920 | `detect_shift`, `intent`, `intent.cue_only`, `intent.topic_cue`, `select_dialogue` |
+| `test_the_ground_watches_itself` | 8923-8988 | `GroundWatch`, `_cl`, `_cl.redirect_stdout`, `_cli`, `_cli._apply_ground_changes`, `available` |
+| `test_per_seat_voices` | 8991-9036 | `RunContext`, `StepResult`, `V`, `V._speech_backend`, `V._speech_cmd`, `_voice_for`, `registry` |
+| `test_sitting42_dispatch` | 9039-9200 | `RunContext`, `intent`, `intent.asks_the_ground`, `intent.decomposes_to_search`, `intent.last_file_in`, `intent.names_a_tool`, `intent.wants_action`, `intent.wants_out`, `intent.wants_writing`, `run_pipeline` |
+| `test_client_data_is_shielded` | 9203-9258 | `GroundWatch`, `is_protected` |
+| `test_no_client_world_is_read_by_this_suite` | 9261-9291 | — |
+| `test_sitting46_regressions` | 9294-9383 | `Agent`, `OllamaRuntime`, `RunContext`, `build_prompt` |
+| `test_streaming_never_eats_spaces` | 9386-9438 | `OllamaRuntime`, `RunContext` |
+| `test_the_review_can_send_work_back_once` | 9441-9497 | `RunContext`, `Seating`, `Step`, `build_prompt`, `run_pipeline` |
+| `test_several_acts_get_a_route_first` | 9500-9547 | `RunContext`, `intent`, `intent.is_big_objective`, `run_pipeline` |
+| `test_a_big_file_is_a_window_not_a_stump` | 9550-9605 | `READ_WINDOW`, `windowed` |
+| `test_the_estate_can_reason_about_time` | 9608-9799 | `RECENCY_WEIGHT`, `REVIEW_ONLY_SKILLS`, `RunContext`, `StepResult`, `build_prompt`, `doctrine`, `intent`, `intent.names_a_tool`, `now_block` |
+| `test_the_log_horizon` | 9802-9841 | `LOG_HORIZON_DAYS`, `_too_old_to_index` |
+| `test_the_router_knows_where_it_is` | 9844-9883 | — |
+| `test_sitting70_regressions` | 9886-9971 | `RunContext`, `WRITING_SKILLS`, `_v`, `_v.speak`, `intent`, `intent.claims_wrote_a_file`, `run_pipeline` |
+| `test_markup_never_reaches_the_terminal` | 9974-10021 | `RunContext`, `run_pipeline` |
+| `test_the_thought_is_drawn_live_and_dimmed` | 10024-10100 | `RunContext`, `ink`, `ink.DIM`, `ink._STATE`, `run_pipeline` |
+| `test_asking_about_a_tool_is_not_asking_for_it` | 10103-10182 | `RunContext`, `StepResult`, `build_prompt`, `intent`, `intent.asks_about_a_tool`, `run_pipeline` |
+| `test_a_skill_asked_for_in_its_own_words_is_the_one_named` | 10185-10289 | `RunContext`, `intent`, `intent.ALIASES`, `intent.names_a_tool`, `intent.tool_choices`, `intent.wants_running`, `run_pipeline` |
+| `test_no_router_in_the_order_means_no_tool` | 10292-10321 | `RunContext`, `run_pipeline` |
+| `test_the_steward_reads_its_own_simple_calls` | 10324-10354 | `REVIEW_ONLY_SKILLS`, `RunContext`, `WRITING_SKILLS`, `run_pipeline` |
+| `test_a_tool_it_is_not_sure_of_is_put_to_him` | 10357-10412 | `RunContext`, `intent`, `intent.tool_choices`, `run_pipeline` |
+| `test_his_plain_words_raise_the_flag_and_ask_first` | 10415-10473 | `FLAGS`, `FLAGS_ENGINE`, `RunContext`, `intent`, `intent.plain_flags`, `run_pipeline`, `wake_flags` |
+| `test_the_card_carries_its_color` | 10476-10516 | `CARD_COLORS`, `RunContext`, `run_pipeline`, `serve`, `serve.Door`, `serve.ask`, `serve.serve` |
+| `test_a_path_skill_takes_the_file_its_words_name` | 10519-10558 | `RunContext`, `run_pipeline`, `tool_verdicts` |
+| `test_a_seat_after_the_router_is_handed_the_package` | 10561-10608 | `RunContext`, `StepResult`, `answer_room`, `build_prompt` |
+| `test_the_router_names_the_task_it_packs` | 10611-10662 | `RunContext`, `read_task`, `run_pipeline`, `strip_control` |
+| `test_the_router_moves_up_on_its_own` | 10665-10699 | `RunContext`, `run_pipeline` |
+| `test_a_turn_is_measured_into_its_level` | 10702-10729 | `intent`, `intent.level` |
+| `test_the_level_routes_with_todays_seats` | 10732-10776 | `RunContext`, `run_pipeline` |
+| `test_the_big_seats_answer_goes_as_written` | 10779-10871 | `RunContext`, `StepResult`, `as_written`, `drift`, `run_pipeline` |
+| `test_the_closing_answer_is_this_turn_alone` | 10874-10922 | `RunContext`, `StepResult`, `build_prompt`, `carried_blocks`, `run_pipeline` |
+| `test_manjuel_reads_the_request` | 10925-11038 | `RunContext`, `intent`, `intent.PPMI_BY`, `intent.PPMI_SURE`, `intent._ppmi_signs`, `intent.ppmi_reading`, `intent.read_the_request`, `run_pipeline` |
+| `test_the_shortlist_is_budget_not_judgement` | 11041-11087 | `RunContext`, `build_prompt` |
+| `test_the_record_can_be_audited` | 11090-11219 | — |
+| `test_a_subtask_runs_scoped_and_bounded` | 11222-11320 | `RunContext`, `SUB_DEPTH_MAX`, `SUB_RUNS_MAX`, `_sub_runner`, `run_pipeline` |
+| `test_the_delivery_carries_what_actually_ran` | 11323-11382 | `RunContext`, `StepResult`, `recompose`, `run_pipeline` |
+| `test_a_skill_owns_its_own_dispatch` | 11385-11492 | `RunContext`, `SkillSpec`, `args_from_words`, `intent`, `intent.ALIASES`, `intent.names_a_tool`, `parse_says`, `parse_takes`, `run_pipeline` |
+| `test_an_error_message_is_a_promise` | 11495-11546 | `REBUILD_WORDS`, `_wants_rebuild`, `intent`, `intent.names_a_tool` |
+| `test_a_sitting_number_resolves_to_its_runs` | 11549-11614 | `REVIEW_ONLY_SKILLS`, `intent`, `intent.names_a_tool` |
+| `test_palette_commands_take_arguments_and_carry_methods` | 11617-11666 | `ARGS_TOKEN`, `RunContext`, `build_prompt`, `custom_commands`, `fill_args` |
+| `test_the_tool_loop_never_repeats_itself` | 11669-11734 | `MAX_TOOL_STEPS`, `MEM`, `MEM.pending`, `RunContext`, `run_pipeline` |
+| `test_the_boot_reports_what_was_proved` | 11737-11867 | `suite_tally` |
+| `test_the_chain_writes_declared_newlines` | 11870-11952 | `seatlog`, `seatlog.SEAT_LOG`, `seatlog.pay` |
+| `test_the_suites_write_the_record_in_crlf_too` | 11955-12047 | — |
+| `test_a_python_file_is_cut_by_definition_not_by_character` | 12050-12157 | `READ_WINDOW`, `windowed` |
+| `test_parity_reads_the_seat_map_not_a_constant` | 12169-12220 | `Outcome`, `Report`, `parity`, `parity.Case`, `parity.DEFAULT_REFERENCE_MODEL` |
+| `test_index_ground_says_which_mode_it_ran` | 12223-12252 | — |
+| `test_one_turn_gives_one_account_of_how_a_tool_was_chosen` | 12255-12305 | `RunContext`, `intent`, `intent.asks_about_a_tool`, `intent.names_a_tool`, `run_pipeline` |
+| `test_every_branch_that_chooses_a_tool_says_so` | 12308-12420 | `RunContext`, `StepResult`, `recompose`, `run_pipeline` |
+| `test_a_courtesy_preamble_does_not_bury_the_question` | 12423-12493 | `REVIEW_ONLY_SKILLS`, `intent`, `intent._after_courtesy`, `intent.asks_the_ground`, `intent.names_a_tool` |
+| `test_the_chain_can_say_what_it_has_proved` | 12496-12601 | `REVIEW_ONLY_SKILLS`, `WRITING_SKILLS` |
+| `test_a_malformed_flag_is_still_read_and_still_stripped` | 12609-12691 | `RunContext`, `read_flags`, `run_pipeline`, `strip_control` |
+| `test_prune_evicts_undeclared_roots_but_refuses_a_large_one` | 12694-12774 | `VectorIndex`, `VectorIndex.ORPHAN_CEILING` |
+| `test_what_feeds_the_index_keeps_to_its_roots` | 12777-13012 | `EMBED_MODEL`, `_V`, `_V.VectorIndex`, `_V.prune`, `_cli`, `_cli.ROOT`, `_cli._apply_ground_changes`, `_cli.set_ground`, `_watch`, `_watch.GroundWatch`, `_watch.is_protected`, `index_roots` |
+| `test_a_dial_in_env_is_read_and_the_transports_stay_few` | 13015-13185 | `RunContext`, `_dotenv`, `_dotenv.load`, `_pkg`, `_pkg.read_dials`, `_pl`, `_pl.TURN_DEADLINE`, `_pl._within_deadline`, `_rt`, `_rt.BOUND_TRANSPORTS`, `_rt.KEEP_ALIVE`, `_rt.OllamaRuntime` |
+| `test_an_idle_engine_closes_its_own_sitting` | 13188-13376 | `_cli`, `_cli._loop`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.IDLE_CLOSE`, `_sv.Inbox`, `_sv.TextChannel`, `_sv.Wire`, `_sv.__doc__`, `_sv.main` |
+| `test_a_hang_up_is_heard_at_once` | 13379-13484 | `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.Inbox`, `_sv.TextChannel`, `_sv.Wire` |
+| `test_a_commit_subject_is_the_operators_or_gits_never_the_models` | 13487-13571 | `_commit_subject` |
+| `test_a_git_skill_acts_in_the_world_it_is_given` | 13574-13731 | `_git_commit`, `_git_cycle`, `_git_init`, `_git_status`, `gitstate`, `gitstate.read` |
+| `test_a_quoted_message_is_handed_over_as_the_argument` | 13734-13929 | `MESSAGE_IS_THE_OPERATORS`, `RunContext`, `gitstate`, `gitstate.read`, `operator_message`, `run_pipeline`, `spelling` |
+| `test_the_deliberation_renders_as_prose_not_a_column` | 13932-13975 | `RunContext`, `_write`, `run_pipeline` |
+| `test_the_manifest_reconciles_to_the_disk` | 13978-14161 | `WRITING_SKILLS`, `us`, `us.load`, `us.rack_tags`, `us.reconcile` |
+| `test_the_flags_are_a_closed_set` | 14164-14262 | `FLAGS`, `FLAGS_ENGINE`, `FLAGS_RAISED`, `us`, `us.reconcile`, `wake_flags` |
+| `test_the_release_gate_runs_on_a_mark` | 14265-14556 | — |
+| `test_version_control_matches_the_record` | 14559-14704 | — |
+| `test_the_gate_asks_githubs_verdict` | 14707-14869 | — |
+| `test_the_flows_and_workflows_are_read_before_a_mark` | 14872-15262 | — |
+| `test_every_manifest_field_is_read_by_something` | 15265-15429 | `_us`, `_us.CORE`, `_us.READ_ELSEWHERE`, `_us.get`, `_us.items`, `_us.reconcile`, `_us.report`, `drift` |
+| `test_loose_is_declared_and_read_by_nothing` | 15432-15570 | `_pl`, `_pl.FLAGS`, `_pl.FLAGS_ENGINE`, `_us`, `_us.BOOKKEEPING_FIELDS`, `_us.CHECKED_FIELDS`, `_us.Finding`, `_us.reconcile`, `_us.report` |
+| `test_a_greeting_never_reaches_the_reader` | 15573-15633 | `_RO`, `intent`, `intent._GREETING_LEADS`, `intent.asks_the_ground`, `intent.names_a_tool` |
+| `test_the_deliberation_is_kept_and_never_spoken` | 15636-15741 | `RunContext`, `_write`, `run_pipeline` |
+| `test_the_dedup_keys_on_the_declared_call` | 15753-15798 | `_Spec` |
+| `test_ground_list_names_which_mistake_was_made` | 15808-15846 | — |
+| `test_only_byte_hashed_law_files_are_eol_frozen` | 15849-15905 | — |
+| `test_no_skill_is_dead_surface` | 15908-15962 | — |
+| `test_fixtures_mirror_the_runtime` | 15965-16012 | `OllamaRuntime`, `OllamaRuntime.chat` |
+| `test_the_citation_check` | 16015-16086 | `RunContext`, `bogus_citations`, `intent`, `intent.search_result_pairs`, `run_pipeline` |
+| `test_sitting48_no_router_for_greetings` | 16089-16134 | `RunContext`, `run_pipeline` |
+| `test_the_council_carries_its_key_to_the_door` | 16137-16232 | `_FAILED_HEADS`, `_sk`, `_sk._HANDLERS`, `_sk._mcp_servers` |
+| `test_the_mcp_skill_never_leaves_this_machine` | 16235-16397 | `_FAILED_HEADS`, `_declares`, `_mcp_named`, `_sk`, `_sk.TAKES_ARGS`, `_sk._HANDLERS`, `_sk._mcp_wait`, `_sk.read_dials` |
+| `test_a_keyword_whose_argument_is_a_number_wants_one` | 16400-16468 | `intent`, `intent._wants_a_number`, `intent.names_a_tool` |
+| `test_a_keyword_that_is_grammar_must_be_named` | 16471-16524 | `intent`, `intent.names_a_tool` |
+| `test_an_order_to_run_a_script_is_arithmetic` | 16527-16568 | `intent`, `intent.names_a_file`, `intent.wants_running` |
+| `test_a_turn_that_wanted_hands_and_used_none_says_so` | 16571-16626 | `RunContext`, `StepResult`, `recompose` |
+| `test_the_tools_own_words_leave_the_turn` | 16629-16717 | `StepResult`, `tool_verdicts` |
+| `test_a_write_refuses_python_that_will_not_parse` | 16720-16765 | — |
+| `test_an_edit_refuses_an_anchor_that_does_not_say_which` | 16768-16856 | — |
+| `test_a_run_is_bounded_jailed_and_blind_to_the_keys` | 16859-16954 | `_sk`, `_sk.RUN_TIMEOUT` |
+| `test_both_doors_into_the_workspace_hold_the_same_line` | 16957-17001 | — |
+| `test_the_edit_door_holds_the_same_line_as_the_write_door` | 17004-17059 | — |
+| `test_the_tree_doors_write_on_a_line_of_work_and_refuse_by_name` | 17062-17236 | `_sk`, `_sk.DRIVER`, `_sk.REVIEW_ONLY_SKILLS`, `_sk.WRITING_SKILLS`, `gitstate`, `gitstate.commit` |
+| `test_the_coder_lands_an_edit_on_the_tree` | 17239-17343 | `RunContext`, `SkillExecutionEnv`, `StepResult`, `gitstate`, `gitstate.commit`, `land_code`, `tool_verdicts` |
+| `test_the_coders_window_on_the_tree` | 17346-17655 | `RunContext`, `_maker_route`, `_tree_window`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.is_big_objective`, `intent.names_a_tool`, `intent.wants_a_tree_change`, `run_pipeline` |
+| `test_a_seat_that_holds_tools_has_room_to_answer` | 17658-17736 | `AgentRegistry`, `AgentRegistry.load`, `READ_WINDOW`, `RunContext`, `SkillLibrary`, `SkillLibrary.load`, `build_prompt`, `carried_blocks` |
+| `test_a_reply_the_rack_cut_is_said_so` | 17739-17906 | `CUT_MARGIN`, `OllamaRuntime`, `RunContext`, `note_cut_reply`, `run_pipeline`, `seatlog`, `seatlog.GUARD_MARKS`, `seatlog.note_for`, `usage_of` |
+| `test_the_watchers_reindex_waits_for_a_build` | 17909-18015 | `GroundWatch`, `_cli`, `_cli.ROOT`, `_cli._apply_ground_changes`, `_cli.set_ground`, `_sk`, `_sk._INDEX_BUSY`, `_sk.acquire`, `_sk.locked`, `_sk.release`, `runtime` |
+| `test_every_root_document_is_in_the_index_list` | 18018-18037 | — |
+| `test_the_small_honesty_of_the_record_keepers` | 18040-18202 | `MEM`, `MEM.Entry`, `MEM.MEMORY_FILE`, `MEM.PENDING_FILE`, `MEM.drop_pending`, `MEM.land_pending`, `MEM.pending`, `MEM.stage`, `MEM.unread_pending`, `_rt`, `_rt.OllamaRuntime`, `dotenv` |
+| `test_the_example_offers_only_dials_the_code_reads` | 18205-18239 | — |
+| `test_the_small_honesty_of_the_engine` | 18242-18433 | `Agent`, `DriftChecker`, `M`, `RunContext`, `RunContext.history_block`, `V`, `V.SPEAK_DEADLINE`, `V._key_pressed`, `V._reap`, `V._speech_backend`, `V._speech_cmd`, `V.speak` |
+| `test_an_unattended_turn_is_not_asked` | 18436-18511 | `Aborted`, `RunContext`, `RuntimeError_`, `_handle_failure`, `run_pipeline` |
+| `test_the_workspaces_reader_reads_the_ground_when_it_is_named` | 18514-18577 | — |
+| `test_the_greeting_case_asks_for_the_seats_own_words` | 18580-18633 | `rack` |
+| `test_the_status_page_is_read_off_the_record` | 18636-18784 | `gitstate`, `gitstate.commit` |
+| `test_the_map_says_how_to_ask` | 18787-18809 | `intent`, `intent.wants_a_tree_change` |
+| `test_the_refusals_document_lists_every_site_in_the_code` | 18812-18839 | — |
+| `test_the_plan_names_every_mark_where_it_sits` | 18842-18897 | — |
+| `test_the_release_steps_move_the_record_as_one` | 18900-19168 | `gitstate`, `gitstate.commit` |
+| `test_the_list_of_what_is_left_reads_whole_and_is_not_stale` | 19171-19245 | — |
+| `test_the_docs_call_the_page_what_the_glass_calls_it` | 19248-19400 | `D`, `D.living` |
+| `test_the_inventory_lists_every_function` | 19403-19476 | `skills`, `skills.append` |
+| `test_the_code_calls_the_pages_what_the_glass_calls_them` | 19479-19540 | `gitstate`, `gitstate.commit` |
+| `test_no_file_is_mixed_and_the_root_documents_are_crlf` | 19543-19578 | — |
+| `test_the_aider_door_keeps_what_the_seats_keep` | 19581-19627 | `_sk`, `_sk._NEVER_WRITTEN_FILES`, `_sk._NEVER_WRITTEN_STAMPS`, `_sk._NEVER_WRITTEN_SUFFIXES`, `_sk._NEVER_WRITTEN_TOP` |
+| `test_the_toll_index_is_read_off_the_log` | 19630-19669 | — |
+| `test_a_toll_refreshes_the_index_beside_it` | 19672-19727 | `_sl`, `_sl.index_is_current`, `_sl.index_text`, `_sl.pay`, `_sl.write_index` |
+| `test_a_listing_the_closing_seat_shortened_is_completed` | 19730-19881 | `RunContext`, `StepResult`, `_in`, `_in.dropped_items`, `_in.listing_items`, `_in.listing_lines`, `_vram`, `_vram.installed_sizes`, `rack`, `recompose` |
+| `test_the_phrasing_matrix_finds_nothing_and_has_teeth` | 19884-19965 | `_cl`, `_cl.redirect_stdout`, `_in`, `_in._INJECTION_MARKERS`, `_in.injection_markers`, `_lg`, `_lg._REACH_RE`, `_lg._REMOTE_RE`, `_lg._SECRET_VERB_RE` |
+| `test_a_run_python_child_is_walled_into_the_workspace` | 19968-20053 | `_sk`, `_sk.JAIL_MARK` |
+| `test_a_hook_watches_a_call_without_taking_it_over` | 20056-20161 | `_sk`, `_sk.ENGINE_HOOKS`, `_sk.SkillSpec`, `_sk._HANDLERS`, `_sk.hook_faults`, `_sk.parse_hooks`, `_sk.pop` |
+| `test_every_use_is_marked_and_weighed` | 20164-20212 | `_sk`, `_sk.DRIVER`, `_sk.ENGINE_HOOKS` |
+| `test_a_run_in_flight_can_be_interrupted` | 20215-20287 | `SV`, `SV.ASKING`, `SV.COMMANDS`, `SV.IDLE`, `SV.Inbox`, `SV.RUNNING`, `SV.TERMINAL`, `SV.Wire`, `SV._thread`, `_cli`, `_cli._loop`, `_in` |
+| `test_a_skill_cannot_hang_the_repl` | 20290-20332 | `_sk`, `_sk.SKILL_TIMEOUT`, `_sk._HANDLERS`, `_sk._run_bounded`, `_sk.pop` |
+| `test_native_tool_calling` | 20335-20463 | `REVIEW_ONLY`, `calls_to_action_xml`, `declares`, `extract_tool_call` |
+| `test_the_router_is_told_how_not_just_what` | 20466-20533 | `RunContext`, `_router_prompt`, `_steward_prompt` |
+| `test_a_thinking_router_is_never_silent` | 20536-20595 | `OllamaRuntime`, `_salvage`, `thinking_of` |
+| `test_write_read_and_speak_about_it` | 20598-20688 | `REVIEW_ONLY_SKILLS`, `RunContext`, `intent`, `intent.names_a_tool`, `run_pipeline` |
+| `test_model_override` | 20691-21002 | `AgentRegistry`, `AgentRegistry.load`, `RegistryError`, `RuntimeError_`, `_cli`, `_cli.COMMANDS`, `_cli._cmd_model`, `_ctx`, `_ctx.redirect_stdout`, `rack`, `spelling` |
+| `test_path_gate` | 21005-21162 | `RunContext`, `SkillSpec`, `gate_paths`, `parse_path_args`, `run_pipeline` |
+| `test_flags_are_not_speech` | 21165-21215 | `RunContext`, `build_prompt`, `read_flags`, `run_pipeline`, `strip_control` |
+| `test_the_maker` | 21218-21512 | `RunContext`, `_maker_route`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.wants_changing`, `intent.wants_going_back`, `intent.wants_making`, `maker`, `maker.AUTHOR_NAME`, `maker.MakerRefused` |
+| `test_the_maker_runs_the_page_before_it_keeps_it` | 21515-21803 | `RunContext`, `maker`, `maker.CHECK_BUDGET`, `maker.PROFILE_PREFIX`, `maker.PROFILE_STALE`, `maker.REPAIRS`, `maker.SETTLE`, `maker._BROWSERS`, `maker._CATCH`, `maker._inject`, `maker._made_at`, `maker._sweep_profiles` |
+| `test_the_maker_picks_up_and_puts_down` | 21806-22039 | `RunContext`, `_maker_route`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `intent`, `intent.wants_going_back`, `intent.wants_picking_up`, `intent.wants_putting_down`, `maker` |
+| `test_ink` | 22042-22090 | `ink`, `ink.RESET`, `ink.Spinner`, `ink._STATE`, `ink.bad`, `ink.body`, `ink.dim`, `ink.enabled`, `ink.good`, `ink.seat`, `ink.seat_color`, `ink.warn` |
+| `test_math` | 22093-22116 | `M`, `M.MathError`, `M.cosine`, `M.linear_regression`, `M.matmul`, `M.parse_numbers`, `M.stdev`, `M.transpose`, `M.variance` |
+| `test_a_commit_is_not_a_tag` | 22119-22160 | `_HANDLERS` |
+| `test_says_is_a_phrase_list_not_a_paragraph` | 22163-22228 | `SkillLibrary`, `SkillLibrary.load`, `parse_says` |
+| `test_the_stamp_is_not_an_edit` | 22231-22339 | `_BOOT_STAMPS`, `_H`, `_sf`, `suite_tally` |
+| `test_doctrine` | 22342-22516 | `D`, `D.dead_paths`, `D.doc_pass_report`, `D.doctrine_report`, `D.living`, `D.open_tasks`, `D.sittings`, `D.skills_axis`, `D.stale_tallies`, `D.versions`, `_H`, `_SL` |
+| `test_the_core_sees_its_own_repository` | 22519-22666 | `gitstate`, `gitstate.GitRefused`, `gitstate._bad_branch_name`, `gitstate._host_of`, `gitstate._jailed`, `gitstate.branches`, `gitstate.close_branch`, `gitstate.commit`, `gitstate.diff`, `gitstate.read`, `gitstate.remotes`, `gitstate.switch` |
+| `test_record_and_git` | 22669-22773 | `RunContext`, `_cli`, `_cli._toll_answer`, `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.pull`, `gitstate.push`, `gitstate.read`, `seatlog`, `seatlog.RunNote` |
+| `test_the_councils_push_sends_no_main_origin_has` | 22776-22893 | `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.push`, `gitstate.switch` |
+| `test_the_pack_is_wired` | 22908-22969 | — |
+| `test_the_maker_speaks_to_a_screen_without_a_file_to_open` | 22972-23217 | `RunContext`, `_cli`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `maker`, `maker.forget`, `maker.new_project`, `maker.report_back`, `maker.report_changed` |
+| `test_a_change_that_comes_back_unchanged_is_asked_for_once_more` | 23220-23389 | `RunContext`, `maker`, `maker.AGAINS`, `maker.RULES`, `maker.again_prompt`, `maker.forget`, `maker.new_project`, `maker.page_of`, `maker.report_unchanged`, `maker.run_page`, `maker.same_page`, `maker.save_version` |
+| `test_the_door_reads_the_law_chain_as_law_py_writes_it` | 23392-23544 | — |
+| `test_steward_drives_to_a_check` | 23547-23984 | `DriverMark`, `SV`, `SV.DRIVE_IGNORE`, `SV.DRIVE_NEVER`, `SV.DRIVE_STEPS`, `SV.DRIVE_SUITES`, `SV.door_call`, `SV.door_drive`, `SV.drive`, `SV.drive_parse`, `SV.drive_tools`, `WRITING_SKILLS` |
+| `test_steward_harness` | 23987-24557 | `REVIEW_ONLY_SKILLS`, `SV`, `SV.DRIVE_ALLOW`, `SV.DRIVE_CONTEXT_MAX`, `SV.DRIVE_DENY`, `SV.DRIVE_FALLBACK`, `SV.DRIVE_GRANTS`, `SV.DRIVE_MODEL`, `SV.DRIVE_STEPS`, `SV.Door`, `SV.Drive`, `SV.Inbox` |
 

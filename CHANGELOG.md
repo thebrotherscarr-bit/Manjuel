@@ -34,6 +34,26 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: a number glued to its unit in a tool's result is a source, so the release's live check passes the rack again (2026-10-21, his card: "Fix the guard, re-cut")
+
+The first run of the v0.2.6 cut stopped at its live check. The morning standup met 8 of 9 cases, twice, and the release flow stopped with FAIL before its second gate, so nothing was saved or sent.
+
+The failed case was "the rack". `rack_list` prints `13.8GB on disk  in memory 12.8GB`. Steward, on gpt-oss:20b, wrote "13.8 GB … 12.8 GB", which was true. Both number guards, the live one (`intent.unsourced_numbers`) and the standup's (`tests/standup.py`), read numbers with a pattern that stops at a letter. So the tool's `13.8GB` was no number at all, and the true answer was called invented. The old front model copied `13.8GB` verbatim, so this never fired before the swap.
+
+`intent.unglued` now loosens a SOURCE's number from the unit glued to it (B, KB to TB, KiB to TiB, ms, s, min, h) before it is read. Both guards use that one definition. What is judged is not loosened, so a number no tool returned is still named.
+
+Two strokes in `test_the_p0_of_the_review`, the first shown red first:
+- the rack's own words pass both guards;
+- a spaced number nothing returned beside them is still caught.
+
+What goes red if it comes unplugged: those two strokes, and the release flow's live check.
+
+The stopped run was unwound on his card, as the flow says to do before gate 2:
+- only the bump's own writes were put back;
+- the record was kept;
+- both repositories went back to main;
+- the never-sent `release-v0.2.6` lines were dropped.
+
 ### core: `reports_to: manjuel` answers to the core, and the release gate's manifest line is green again (2026-10-21, his card: "Manjuel, the core")
 
 The 66 us/ records say `"reports_to": "manjuel"`. Since H28 renamed that seat to the Judge, the reconciler had read the name as a missing seat, and the release gate's manifest line was red. That would have stopped the 0.2.6 cut at its check.

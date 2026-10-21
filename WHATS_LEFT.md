@@ -16,8 +16,9 @@ until 2026-10-10). Read it there: the tab counts the lines, finds words in them,
 ## Today's working path
 
 Your word, 2026-10-13: this page carries the build path, the build plan, the changelog and every document that fits each area,
-and shows the path we are on. **Today, on your cards of 2026-10-20: the harness study (H33)**, the road to v0.2.6 paused for
-it. **Before it, on your word of 2026-10-16: the driver (H31)** -- "A single simple driver that runs long workflows and tool
+and shows the path we are on. **Today, on your word of 2026-10-21: the cut of v0.2.6** ("publish it 0.2.6"), the harness
+study (H33) built into Steward first. **Before it, on your cards of 2026-10-20: the harness study (H33)**, the road to v0.2.6
+paused for it. **Before it, on your word of 2026-10-16: the driver (H31)** -- "A single simple driver that runs long workflows and tool
 chains to make sure that basically whatever I ask can be done. Fairly simple." -- inside the v0.2.6 pass (I2): "making sure
 all functions are working".
 
@@ -615,18 +616,22 @@ Found 2026-10-16, re-checked 2026-10-19 (INVENTORY.md section 5 carries each as 
 
 **v0.2.6, next** (I2), set 2026-10-19 from the checklist read off the code and the record (your word: "write it up, then begin
 the road to 0.2.6"). Fired by you through the release flow: its three gates and the publish are yours, and `git_pr` answers your
-glass alone, so Steward cannot run this flow. Not fired until I2's road to the cut is done. On the cut day, in order:
+glass alone, so Steward cannot run this flow. Not fired until I2's road to the cut is done. Cut on your word of 2026-10-21
+("publish it 0.2.6"), after the harness study (H33) was built into Steward. On the cut day, in order:
 
 - [x] 1. C121 to C125 mended, or C125 read off the first runs after 2026-10-19, so the cut can finish COMPLETE: by Steward
   on your cards, 2026-10-19 -- C121, C123 and C124 under Done; C122's first half mended and its second half ruled to v0.2.7
   (your card); C125 read off the core's runs, atlas's and the release gate's read at the cut, its move in the 0.2.8 pass.
-- [ ] 2. Both repositories on main, level with GitHub, no pull request open, and nothing unsaved on the ground but the record
-  this list names (C123).
-- [ ] 3. No sitting open, the door started with `--manjuel`, and the send wall open.
+- [x] 2. Both repositories on main, level with GitHub, no pull request open, and nothing unsaved on the ground but the record
+  this list names (C123): 2026-10-21, core `19fef8d` after its pull request 54 (the manifest's `reports_to`, your card
+  "Manjuel, the core"), atlas `a9cdddb` after its 24.
+- [x] 3. No sitting open, the door started with `--manjuel`, and the send wall open: 2026-10-21, the door as your desktop
+  app started it after the reboot (pid 16304, `--manjuel` on its line).
 - [ ] 4. This list's first line given the version words the page's stroke reads, with 0.2.6 twice, just before firing: the
   stroke reads the first such words on this page, and the pin moves only at the bump.
-- [ ] 5. The day's HANDOFF block and DAYBOOK entry, with its At close; CHANGELOG's Unreleased whole, naming by its number any
-  SPEC 4.x whose status moved.
+- [x] 5. The day's HANDOFF block and DAYBOOK entry, with its At close; CHANGELOG's Unreleased whole, naming by its number any
+  SPEC 4.x whose status moved: 2026-10-21, HANDOFF FOR 2026-10-21 and DAYBOOK's Session 30; no SPEC 4.x moved (the release
+  check's spec line: none changed since v0.2.5).
 - [ ] 6. The suites green after the newest edit, and the live check's `all` set with the review panel inside its turn (C124).
 - [ ] 7. The flow fired with the tag `v0.2.6`: gate 1 (the bump, the live check, the suites, the release check 17 of 17), gate 2
   (saved, sent, merged on GitHub, CI read), gate 3 (the tags, the record); the verdict COMPLETE, the flow's first.
