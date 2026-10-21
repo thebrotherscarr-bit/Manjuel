@@ -39,7 +39,10 @@ all functions are working".
   first"); (4) H32, every use of a skill or a tool marked, catalogued and weighed and handed to Steward whole, through the two
   pieces already built -- the whole skill file to Steward instead of its first 400 characters, and the built-but-unused
   after-tool hook writing one line per use (your card: "Whole card + after_tool hook"); (5) we sit and talk.
-  **Where it stands (2026-10-20, 13:48):** H33's plan merged (pull request 48), its three clones in
+  **Where it stands (2026-10-21, 06:58):** C130 sent and merged (pull request 49), the ground home on main. Today, on
+  your word: Steward is the main man, the system's face, with the council as his sub-agents, on gpt-oss:20b; REA to
+  be wired into the system; and first, H34, the rack knowing the machine. H33's page and C131 follow.
+  **At 13:48 on 2026-10-20 it stood:** H33's plan merged (pull request 48), its three clones in
   worlds/harnesses/ and its four readers back; first, on your word, C130 mended (a job's commit takes what its own
   check rewrote, never what was unsaved when the run began), then the study's page.
   **At 12:45 it stood:** routing's C49, C39 and C51, with C51's follow-up, sent and merged (pull request
@@ -1147,6 +1150,12 @@ goals". The steps under each are proposed from the disk; each is yours to change
 ## Done
 
 Finished lines, newest first. A number is never used again.
+
+- **H34. The rack knows the machine it runs on.** DONE 2026-10-21, by Steward on your word ("pull all the system specs
+  from the current PC and load them up on the racking system") and cards ("Card less 1 GB for Windows"): `rack.md`
+  carries the machine, read live at every sync -- Windows 11, a Ryzen 7 5800X, 32 GB, a Radeon RX 6800 XT with 16 GiB
+  -- and the VRAM budget is the card's own memory less a gigabyte, where it was a 15 GB guess.
+  *(CHANGELOG, "core: the rack knows the machine it runs on")*
 
 - **C130. A Steward job's commit left behind what its own check rewrote.** Found and DONE 2026-10-20, by Steward on your
   word ("fix it"): the job's commit took only the files it wrote, so the suites' stamps and a regenerated map were left

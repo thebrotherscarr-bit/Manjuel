@@ -35,12 +35,65 @@ UNKNOWN_WEIGHT = 5_000_000_000
 # name is FOREIGN, and its bytes are spoken for.
 import os
 
+# What the desktop keeps of the card for itself (his card, 2026-10-21: "Card less 1 GB
+# for Windows").
+WINDOWS_RESERVE = 1_000_000_000
+
+
 def budget_bytes() -> int:
-    """Usable VRAM. Override with MANJUEL_VRAM_GB when the guess is wrong."""
+    """Usable VRAM: MANJUEL_VRAM_GB when it is set; else the card's own memory, read
+    from its driver, less WINDOWS_RESERVE; else, where the card cannot be read, 15 GB."""
+    raw = os.environ.get("MANJUEL_VRAM_GB", "").strip()
+    if raw:
+        try:
+            return int(float(raw) * 1e9)
+        except ValueError:
+            pass
+    size = card()[1]
+    return size - WINDOWS_RESERVE if size > WINDOWS_RESERVE else 15_000_000_000
+
+
+def hklm(*parts):
+    """A key under HKEY_LOCAL_MACHINE, opened one part at a time, or None where
+    there is no registry or no such key."""
     try:
-        return int(float(os.environ.get("MANJUEL_VRAM_GB", "15")) * 1e9)
-    except ValueError:
-        return 15_000_000_000
+        import winreg
+    except ImportError:
+        return None
+    key = winreg.HKEY_LOCAL_MACHINE
+    try:
+        for part in parts:
+            key = winreg.OpenKey(key, part)
+    except OSError:
+        return None
+    return key
+
+
+def card() -> tuple:
+    """(name, bytes): the graphics card and its own memory as its driver records it,
+    or ("", 0) where that cannot be read. Win32_VideoController's AdapterRAM is not
+    used: it is a 32-bit field that stops at 4 GB, and read 4.29 GB for a 16 GB card."""
+    root = hklm("SYSTEM", "CurrentControlSet", "Control", "Class",
+                "{4d36e968-e325-11ce-bfc1-08002be10318}")
+    if root is None:
+        return "", 0
+    import winreg
+    best, i = ("", 0), 0
+    while True:
+        try:
+            sub = winreg.EnumKey(root, i)
+        except OSError:
+            break
+        i += 1
+        try:
+            with winreg.OpenKey(root, sub) as k:
+                name = str(winreg.QueryValueEx(k, "DriverDesc")[0])
+                size = int(winreg.QueryValueEx(k, "HardwareInformation.qwMemorySize")[0])
+        except (OSError, ValueError, TypeError):
+            continue
+        if size > best[1]:
+            best = (name, size)
+    return best
 
 
 def foreign(resident: list, mine: list[str]) -> list[tuple[str, int]]:
