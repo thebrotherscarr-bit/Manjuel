@@ -108,6 +108,7 @@ each slow route mended or ruled, one piece at a time. (4) The v0.2.6 cut through
 | K44 | when | Lists what ran in a WINDOW OF TIME, read from the transcript stamps in logs/. | sitting 373: ok, called by its own words | 33.7 s |
 | K45 | write_file | Writes text, scripts, or markdown data to a file inside the workspace. | sitting 370: ok, measure.py in the workspace | 39.8 s |
 | K46 | use_record | The engine's own after-tool hook: one line per use in logs/uses.jsonl (the tool, whether it answered, how long, who called), which skill_report weighs. Never called by name. | not run live yet (built 2026-10-19, WHAT'S LEFT H32) | -- |
+| K47 | triage_binary | What a file IS, read off its bytes alone: its type by its first bytes (ELF, PE, Mach-O, WASM, ZIP and its kin, PDF...), its entropy overall and per 4 KB (packed or encrypted), its strings by kind; a secret-looking string is counted, never printed. From his REA Studio. | not run live yet (built 2026-10-21, the harness study) | -- |
 
 ### Commands (the engine's palette, 31, and commands.md's own, 3): typed as /name
 

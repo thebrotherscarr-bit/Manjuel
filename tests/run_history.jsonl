@@ -762,3 +762,11 @@
 {"suite": "strokes", "at": 1792531009.0354483, "state": "finished", "passed": 4299, "total": 4299, "green": true, "failed": []}
 {"suite": "smoke", "at": 1792591323.7337513, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "strokes", "at": 1792591546.982927, "state": "finished", "passed": 4303, "total": 4303, "green": true, "failed": []}
+{"suite": "smoke", "at": 1792599901.3818247, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1792599902.5793211, "state": "crashed", "passed": null, "total": null, "green": false}
+{"suite": "strokes", "at": 1792600258.93577, "state": "finished", "passed": 4337, "total": 4342, "green": false, "failed": ["mcp_stdio.py: every writer declares newline=", "   and names real ones with their line ranges", "and the declarations are exactly the sixteen that jail", "every document at the root is listed in index_roots.txt", "   and every skill on the disk is a line of INVENTORY.md"]}
+{"suite": "strokes", "at": 1792600780.0829418, "state": "finished", "passed": 4342, "total": 4342, "green": true, "failed": []}
+{"suite": "smoke", "at": 1792600796.9475894, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1792601740.1198468, "state": "finished", "passed": 4347, "total": 4347, "green": true, "failed": []}
+{"suite": "smoke", "at": 1792601746.9242473, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "smoke", "at": 1792601759.6657183, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}

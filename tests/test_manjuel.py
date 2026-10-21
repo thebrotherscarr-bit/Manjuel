@@ -12058,7 +12058,7 @@ def test_a_python_file_is_cut_by_definition_not_by_character(reg, lib, book):
     m = windowed(src, "manjuel/skills.py")
     check("a .py maps by DEFINITION", "definitions. THIS IS THE MAP" in m, m[:90])
     check("   and names real ones with their line ranges",
-          "_commit_subject" in m and "windowed" in m, m[:200])
+          "_windowed_python  (lines" in m and "gate_paths  (lines" in m, m[:200])
     check("   and says plainly it is not the file",
           "NOT THE FILE" in m, m[:90])
     check("   and still offers numbered character windows",
@@ -21126,12 +21126,15 @@ def test_path_gate(reg, lib, book):
     # This roster is written out rather than counted on purpose -- a skill
     # that starts taking a path is a skill that must be seen doing it, and a
     # bare count would have let the eighth arrive unnoticed.
-    check("and the declarations are exactly the sixteen that jail",
+    # SEVENTEEN since 2026-10-21: `triage_binary` reads one file's bytes and
+    # declares its path into the GROUND jail exactly as `inspect` does.
+    check("and the declarations are exactly the seventeen that jail",
           sorted(declared) == ["edit_file", "embed_text", "git_commit",
                                "git_cycle", "git_init", "git_pull", "git_push",
                                "git_status", "ground_edit", "ground_list",
                                "ground_read", "ground_write", "inspect",
-                               "read_file", "run_python", "write_file"],
+                               "read_file", "run_python", "triage_binary",
+                               "write_file"],
           str(sorted(declared)))
 
 
@@ -23545,13 +23548,15 @@ def test_steward_drives_to_a_check(reg, lib, book):
     # THE PARSE: three modes, the fields cut from the end, "suites" naming the strokes.
     p = SV.drive_parse("plan tidy the docs | check: suites")
     check("drive: 'plan' is a mode, and 'suites' as the check names the strokes",
-          p == {"mode": "plan", "goal": "tidy the docs", "check": SV.DRIVE_SUITES, "do": ""}, str(p))
+          p == {"mode": "plan", "goal": "tidy the docs", "check": SV.DRIVE_SUITES, "do": "",
+                 "approve": "plan"}, str(p))
     p = SV.drive_parse('each git ls-files | do: fix $ITEM | check: python -c "print(1|2)"')
     check("drive: 'each' takes a source, a do and a check, and a pipe inside the check stays in it",
-          p == {"mode": "each", "goal": "git ls-files", "do": "fix $ITEM", "check": 'python -c "print(1|2)"'}, str(p))
+          p == {"mode": "each", "goal": "git ls-files", "do": "fix $ITEM", "check": 'python -c "print(1|2)"',
+                 "approve": "plan"}, str(p))
     p = SV.drive_parse("write the notes")
     check("drive: a bare goal is one job with no check", p == {"mode": "goal", "goal": "write the notes",
-                                                               "check": "", "do": ""}, str(p))
+                                                               "check": "", "do": "", "approve": "plan"}, str(p))
 
     events = []
 
@@ -23584,7 +23589,7 @@ def test_steward_drives_to_a_check(reg, lib, book):
     def asker(*answers):
         queue = list(answers)
 
-        def ask(prompt, color="red"):
+        def ask(prompt, color="red", timeout=None):
             events.append(("ask", prompt))
             return queue.pop(0) if queue else ""
         return ask
@@ -23603,7 +23608,7 @@ def test_steward_drives_to_a_check(reg, lib, book):
 
         # A WRITE WAITS ON HIS ANSWER, AND THE CHECK DECIDES DONE.
         events.clear()
-        d = SV.drive(f"write a | check: {py} -c pass", skills=Lib(), env=env, ground=tmp, logs=tmp / "logs",
+        d = SV.drive(f"ask write a | check: {py} -c pass", skills=Lib(), env=env, ground=tmp, logs=tmp / "logs",
                      ask=asker("y"), report=lambda line: None,
                      client=Model(call("write_file", filepath="a.txt", content="a"), call("done", summary="wrote a")))
         check("drive: on a yes the write runs only after he was asked, and the passing check ends the job",
@@ -23615,7 +23620,7 @@ def test_steward_drives_to_a_check(reg, lib, book):
               marked == [True] and not isinstance(env.caller, DriverMark), str(marked))
         twice = Model(call("write_file", filepath="a.txt", content="a"),
                       call("write_file", filepath="b.txt", content="b"), call("done", summary="wrote both"))
-        SV.drive(f"write two | check: {py} -c pass", skills=Lib(), env=env, ground=tmp, logs=tmp / "logs",
+        SV.drive(f"ask write two | check: {py} -c pass", skills=Lib(), env=env, ground=tmp, logs=tmp / "logs",
                  ask=asker("y", "y"), report=lambda line: None, client=twice)
         handed = [m.get("content", "") for m in twice.seen[-1] if isinstance(m, dict) and m.get("role") == "tool"]
         check("drive: a tool's first use hands Steward its whole skill file with what it returned, once a job (H32)",
@@ -23625,7 +23630,7 @@ def test_steward_drives_to_a_check(reg, lib, book):
 
         events.clear()
         SV.DRIVE_STEPS = 4
-        d = SV.drive(f"write a | check: {py} -c \"import sys; sys.exit(3)\"", skills=Lib(), env=env, ground=tmp,
+        d = SV.drive(f"ask write a | check: {py} -c \"import sys; sys.exit(3)\"", skills=Lib(), env=env, ground=tmp,
                      logs=tmp / "logs", ask=asker("n"), report=lambda line: None,
                      client=Model(call("write_file", filepath="a.txt", content="a"), call("done", summary="done")))
         SV.DRIVE_STEPS = kept_steps
@@ -23955,6 +23960,298 @@ def test_steward_drives_to_a_check(reg, lib, book):
         _sh.rmtree(tmp, ignore_errors=True)
 
 
+def test_steward_harness(reg, lib, book):
+    """THE HARNESS AROUND STEWARD (2026-10-21; his words: "the harness is the security, not the model", "i
+    shouldn't have to have 11 clicks", and "YOU ARE MAKING THE THING CAPABLE AS DESCRIBED"). What the harness
+    study found every proven harness has and the driver lacked, held here with a scripted model in a temp
+    folder: one card for a whole job (plan) or none (auto), the gates on the goal, calls mended or refused by
+    name, a call cut off by the length limit never run, the loop and failure guards, the council as
+    sub-agents, a plan asked for as JSON, a model driven in its own tongue when its native calls fail, the job
+    written down as it goes and carried on after a crash, a lesson staged for his hand, a card nobody answers
+    taken as no, and each new module proving itself."""
+    import json as _json
+    import shutil as _sh
+    from types import SimpleNamespace as _NS
+    from manjuel import serve as SV
+    from manjuel import compact, dialects, guards, journal, mcp_stdio, repair
+
+    for mod in (repair, guards, compact, journal, dialects, mcp_stdio):
+        try:
+            mod._strokes()
+            ok, why = True, ""
+        except Exception as exc:
+            ok, why = False, f"{type(exc).__name__}: {exc}"
+        check(f"harness: {mod.__name__.split('.')[-1]}.py proves itself (its own strokes)", ok, why[:300])
+
+    py = f'"{sys.executable}"'
+    events = []
+
+    class Lib:
+        def __init__(self, fail=False):
+            self.fail = fail
+
+        def keywords(self):
+            return ["write_file", "read_file"]
+
+        def tool_schemas(self, allowed):
+            out = []
+            for n in sorted(allowed):
+                props = {"filepath": {"type": "string"}}
+                if n == "write_file":
+                    props["content"] = {"type": "string"}
+                out.append({"type": "function", "function": {"name": n, "parameters": {
+                    "type": "object", "properties": props, "required": ["filepath"]}}})
+            return out
+
+        def execute(self, name, args, env):
+            events.append(("ran", name, dict(args)))
+            if self.fail:
+                return "Refused: that file is not there."
+            return "Saved to workspace: " + str(args.get("filepath"))
+
+        def spec(self, name):
+            return None
+
+    def call(name, args):
+        return {"role": "assistant", "content": "", "tool_calls": [{"function": {"name": name, "arguments": args}}]}
+
+    class Model:
+        def __init__(self, *replies, raises=0):
+            self.replies, self.seen, self.kw, self.raises = list(replies), [], [], raises
+
+        def chat(self, **kw):
+            self.kw.append(kw)
+            self.seen.append(kw.get("messages", []))
+            if self.raises:
+                self.raises -= 1
+                raise RuntimeError("model runner failed (status code: 500)")
+            got = self.replies.pop(0) if self.replies else call("done", {"summary": "done"})
+            return got if "message" in got else {"message": got}
+
+    def asker(*answers):
+        queue = list(answers)
+
+        def ask(prompt, color="red", timeout=None):
+            events.append(("ask", prompt))
+            return queue.pop(0) if queue else ""
+        return ask
+
+    tmp = Path(tempfile.mkdtemp())
+    kept = SV.DRIVE_STEPS
+    try:
+        (tmp / "logs").mkdir()
+        env = _NS(caller="", caller_allowed=None, objective="")
+
+        def run(said, *replies, answers=("y",), lib_=None, model=None, **kw):
+            events.clear()
+            m = model or Model(*replies)
+            d = SV.drive(said, skills=lib_ or Lib(), env=env, ground=tmp, logs=tmp / "logs",
+                         ask=asker(*answers), report=lambda line: events.append(("report", str(line))),
+                         client=m, **kw)
+            return d, m
+
+        # ONE CARD FOR THE JOB: the goal and the check shown whole, then its writes run without a card each.
+        d, _ = run(f"write two files | check: {py} -c pass",
+                   call("write_file", {"filepath": "a.txt", "content": "a"}),
+                   call("write_file", {"filepath": "b.txt", "content": "b"}), call("done", {"summary": "both"}))
+        asks = [e[1] for e in events if e[0] == "ask"]
+        check("harness: a job is one card -- its goal and its check shown whole -- and its writes run after it",
+              len(asks) == 1 and "write two files" in asks[0] and "-c pass" in asks[0]
+              and [e[1] for e in events if e[0] == "ran"] == ["write_file", "write_file"] and d.verdict == "passed"
+              and d.approved == SV.drive_job_hash(SV.drive_parse(f"write two files | check: {py} -c pass")),
+              f"{asks} -> {d.verdict}")
+        d, _ = run(f"write a | check: {py} -c pass", call("write_file", {"filepath": "a.txt", "content": "a"}),
+                   answers=("n",))
+        check("harness: a no to the job card runs nothing", d.verdict == "declined"
+              and not [e for e in events if e[0] == "ran"], d.verdict)
+        d, _ = run(f"auto write a | check: {py} -c pass", call("write_file", {"filepath": "a.txt", "content": "a"}))
+        check("harness: auto asks nothing, the write runs, and the check still decides done",
+              not [e for e in events if e[0] == "ask"] and d.verdict == "passed" and d.approve == "auto",
+              f"{d.verdict} {events[:3]}")
+
+        # THE GATES: the law on the goal, before anything is asked, called or written.
+        d, m = run(f"read ../Archive/notes.md and summarise it | check: {py} -c pass")
+        check("harness: a goal that reaches outside the ground is refused by the law, nothing asked or called",
+              d.verdict == "refused" and "THE LAW" in d.error and not m.kw
+              and not [e for e in events if e[0] == "ask"], d.error[:200])
+
+        # CALLS MENDED, OR REFUSED BY NAME.
+        broken = {"role": "assistant", "content": "", "tool_calls": [{"function": {
+            "name": "WriteFile", "arguments": '{"filepath": "a.txt", "content": "a",'}}]}
+        d, _ = run(f"auto write a | check: {py} -c pass", broken)
+        check("harness: a call a small model nearly got right (its name, its JSON) is mended and run",
+              ("ran", "write_file", {"filepath": "a.txt", "content": "a"}) in events, str(events)[:300])
+        d, _ = run(f"auto do it | check: {py} -c pass", call("launch_rockets", {"now": True}))
+        said = [s[3] for s in d.steps if s[1] == "launch_rockets"]
+        check("harness: a call to a tool that is not there is refused by name, with the tools listed",
+              said and said[0].startswith("Refused: there is no tool named launch_rockets"), str(said)[:200])
+        d, _ = run(f"auto write a | check: {py} -c pass", call("write_file", {"content": "a"}))
+        said = [str(s[3]) for s in d.steps if s[1] == "write_file"]
+        check("harness: a call missing a field is refused naming it, with what was received",
+              said and "filepath" in said[0] and "Received:" in said[0]
+              and not [e for e in events if e[0] == "ran"], str(said)[:300])
+
+        # A CALL CUT OFF BY THE LENGTH LIMIT IS NEVER RUN.
+        cut = {"message": call("write_file", {"filepath": "a.txt", "content": "half"}), "done_reason": "length"}
+        d, m = run(f"auto write a | check: {py} -c pass", cut)
+        check("harness: a call cut off by the length limit is refused and never run",
+              not [e for e in events if e[0] == "ran"] and any("cut off by the length limit" in str(x.get("content", ""))
+                                                               for x in m.seen[-1] if isinstance(x, dict)),
+              str(events)[:200])
+
+        # THE GUARDS: the same call again and again stops the job; turn after turn of failures stops it.
+        SV.DRIVE_STEPS = 12
+        same = [call("read_file", {"filepath": "x.txt"}) for _ in range(6)]
+        d, _ = run(f"auto read x | check: {py} -c pass", *same)
+        check("harness: the same call five times in a row stops the job (the loop guard)",
+              d.verdict == "loop" and len([e for e in events if e[0] == "ran"]) == 4, d.verdict)
+        failing = [call("read_file", {"filepath": f"{i}.txt"}) for i in range(5)]
+        d, _ = run(f"auto read them | check: {py} -c pass", *failing, lib_=Lib(fail=True))
+        check("harness: three turns in which every call failed stop the job (the failure guard)",
+              d.verdict == "stuck" and len([e for e in events if e[0] == "ran"]) == 3, d.verdict)
+        SV.DRIVE_STEPS = kept
+
+        # THE COUNCIL AS STEWARD'S SUB-AGENTS.
+        d, m = run(f"auto think | check: {py} -c pass", call("delegate", {"seat": "Reasoner", "task": "weigh it"}),
+                   seats=lambda seat, task: f"{seat} weighed: {task}", seat_names=["Reasoner"])
+        tool = next((t for t in m.kw[0]["tools"] if t["function"]["name"] == "delegate"), None)
+        check("harness: delegate asks a council seat and hands its answer back; the seats are named on the tool",
+              any(s[1] == "delegate" and "Reasoner weighed: weigh it" in str(s[3]) for s in d.steps)
+              and tool and tool["function"]["parameters"]["properties"]["seat"].get("enum") == ["Reasoner"],
+              str(d.steps)[:300])
+
+        # A PLAN IS ASKED FOR AS JSON, BY CONSTRUCTION.
+        planner = Model({"role": "assistant", "content": '["one", "two"]'})
+        d, _ = run(f"auto plan two parts | check: {py} -c pass", model=planner)
+        fmt = planner.kw[0].get("format")
+        check("harness: the plan is asked for in Ollama's JSON form, a list of two to eight strings",
+              isinstance(fmt, dict) and fmt.get("type") == "array" and d.items
+              and [k for k, _ in d.items] == ["one", "two"], f"{fmt} {d.items}")
+
+        # A MODEL WHOSE NATIVE CALLS FAIL IS DRIVEN IN ITS OWN TONGUE.
+        tongue = dialects.preferred(SV.DRIVE_MODEL)
+        tongue = "xml" if tongue == "native" else tongue
+        own = {"role": "assistant", "content": dialects.render_call(tongue, "write_file",
+                                                                     {"filepath": "a.txt", "content": "a"})}
+        d, m = run(f"auto write a | check: {py} -c pass", own, model=Model(own, raises=3))
+        check("harness: when the model's own tool calls fail (Ollama's 500), it is driven in a text form instead",
+              ("ran", "write_file", {"filepath": "a.txt", "content": "a"}) in events
+              and any(f"driving it in the {tongue} form" in e[1] for e in events if e[0] == "report")
+              and m.kw[-1].get("tools") is None, str([e for e in events if e[0] == "report"])[-300:])
+
+        # THE JOB WRITTEN DOWN AS IT GOES, AND CARRIED ON AFTER A CRASH.
+        d, _ = run(f"auto write a | check: {py} -c pass", call("write_file", {"filepath": "a.txt", "content": "a"}))
+        rows = []
+        for p in sorted((tmp / "logs").glob("*_drive.jsonl")):
+            rows = [_json.loads(l) for l in p.read_text(encoding="utf-8").splitlines() if l.strip()]
+        kinds = [r.get("kind") for r in rows]
+        check("harness: a job's journal holds its opening, its messages, its steps and its close",
+              kinds[:1] == ["open"] and "message" in kinds and "step" in kinds and kinds[-1] == "close",
+              str(kinds)[:200])
+        for p in (tmp / "logs").glob("*_drive.jsonl"):
+            p.unlink()
+        crashed = tmp / "logs" / "2026-01-01_000000_drive.jsonl"
+        spec = {"mode": "goal", "goal": "write c", "check": f"{sys.executable} -c pass", "do": "", "approve": "plan"}
+        crashed.write_text("\r\n".join(_json.dumps(r) for r in (
+            {"kind": "open", "spec": spec, "model": "m", "pid": 2 ** 30, "ts": "2026-01-01T00:00:00"},
+            {"kind": "message", "role": "system", "content": "you drive"},
+            {"kind": "message", "role": "user", "content": "Goal: write c"},
+            {"kind": "step", "n": 1, "tool": "write_file", "args": {"filepath": "c.txt"}, "result": "Saved"},
+        )) + "\r\n", encoding="utf-8")
+        d, m = run("resume", call("done", {"summary": "carried on"}))
+        check("harness: /drive resume carries a crashed job on from its journal, his card asked again",
+              d.resumed.endswith(crashed.name) and d.verdict == "passed"
+              and len([e for e in events if e[0] == "ask"]) == 1
+              and any("engine restarted" in str(x.get("content", "")) for x in m.seen[0] if isinstance(x, dict)),
+              f"{d.verdict} {d.error}")
+        d, _ = run("resume")
+        check("harness: a journal carried on once is never carried on twice",
+              d.verdict == "error" and "no job a crash cut short" in d.error, d.error)
+
+        # A LESSON, STAGED FOR HIS HAND -- read off the record, never landed by itself.
+        bad = SV.Drive("write a", "c", "m")
+        bad.verdict, bad.steps = "budget", [[1, "write_file", {}, "Refused: no such folder"],
+                                            [2, "check", "c", "exit 1\nboom"], [3, "check", "c", "exit 1\nboom"]]
+        good = SV.Drive("write a", "c", "m")
+        good.verdict, good.steps = "passed", [[1, "check", "c", "exit 0"]]
+        lesson = SV.drive_lesson(bad)
+        check("harness: a job that stumbled leaves a lesson from its record; a clean pass leaves none",
+              "write a" in lesson and "Refused at step 1" in lesson and "failed 2 time(s)" in lesson
+              and SV.drive_lesson(good) == "", lesson[:300])
+
+        # A CARD NOBODY ANSWERS IS A NO; AN UNATTENDED TURN WAITS FOR NOTHING.
+        said = []
+        wire = _NS(emit=lambda kind, **kw: said.append((kind, kw.get("text", ""))))
+        inbox = SV.Inbox([], wire)                 # never started: nothing will ever answer
+        door = SV.Door(_NS(runtime=_NS()), wire, inbox, ground=tmp, closer=lambda s: None)
+        t0 = time.time()
+        late = door.ask("Approve? [y/n] ", color="red", timeout=0.3)
+        now = door.ask("Approve? [y/n] ", color="red", timeout=0)
+        check("harness: a card nobody answers is taken as no when its time runs out, and at once when unattended",
+              late == "" and now == "" and time.time() - t0 < 5
+              and sum("taken as no" in t for k, t in said if k == "note") == 2, str(said)[-300:])
+
+        # WHAT THE DRIVER IS HANDED, AND THE WINDOW IT RUNS IN.
+        (tmp / "memory.md").write_text("# Memory\r\n\r\n## 2026-10-21T00:00:00+00:00 - a ruling\r\n- kind: ruling\r\n"
+                                       "\r\nThe send and the merge are his.\r\n", encoding="utf-8")
+        ctx_text = SV.drive_context(_NS(standing="## Standing\nthe plan", sitting=None), tmp)
+        check("harness: the driver is handed the standing and what memory holds",
+              "the plan" in ctx_text and "The send and the merge are his." in ctx_text, ctx_text[:300])
+
+        class Shown:
+            def show(self, model):
+                return {"modelinfo": {"gptoss.context_length": 131072}}
+
+            def list(self):
+                return {"models": [{"model": "gpt-oss:20b", "size": 13_000_000_000}]}
+        w = SV.drive_window(Shown(), "gpt-oss:20b")
+        check("harness: the window is read off the model and the card, within its bounds",
+              8192 <= w <= SV.DRIVE_CONTEXT_MAX and w % 1024 == 0, str(w))
+
+        # TRIAGE (from his REA Studio): what a file is, read off its bytes alone; a secret is counted, never shown.
+        from manjuel.skills import REVIEW_ONLY_SKILLS, triage_bytes, triage_text
+        elf = b"\x7fELF\x02\x01\x01" + b"\x00" * 9 + b"\x02\x00\x3e\x00" + b"\x00" * 40
+        planted = elf + b" api_key=sk-THISISNOTSHOWN0123456789 " + b"https://example.invalid/x " + bytes(range(256)) * 8
+        t = triage_bytes(planted)
+        text = triage_text(t, len(planted), len(planted))
+        check("harness: triage_binary names an ELF by its bytes and counts a secret without ever showing it",
+              "ELF" in text and "THISISNOTSHOWN" not in text and "THISISNOTSHOWN" not in _json.dumps(t, default=str)
+              and "triage_binary" in REVIEW_ONLY_SKILLS and "triage_binary" in lib.keywords(), text[:300])
+
+        # THE FORGIVING MATCHER (opencode's three tiers, OpenClaw's help on a miss).
+        from manjuel.skills import _apply_passage
+        f = tmp / "doc.txt"
+        f.write_bytes("He said “go” — then left.\r\nnext line   \r\nlast\r\n".encode("utf-8"))
+        first = _apply_passage(f, 'He said "go" - then left.', "He said stop.")
+        second = _apply_passage(f, "next line\nlast", "two\nlines")
+        miss = _apply_passage(f, "He sayd stop.", "x")
+        body = f.read_bytes()
+        check("harness: an edit lands past curly quotes and long dashes, then past trailing spaces, CRLF kept",
+              first.startswith("Edited") and "made plain" in first and second.startswith("Edited")
+              and "trailing spaces" in second and body == b"He said stop.\r\ntwo\r\nlines\r\n", f"{first} | {second} | {body!r}")
+        check("harness: a passage not in the file is refused with the nearest line and the column it differs at",
+              miss.startswith("Refused: that passage is not in") and "line 1" in miss and "column 6" in miss, miss)
+        f.write_text("a\nx\na\nx\n", encoding="utf-8", newline="\r\n")
+        twice = _apply_passage(f, "a ", "b")
+        check("harness: a forgiving tier that finds two places still refuses", "Refused" in twice and "times" in twice, twice)
+
+        # A BIG RESULT KEEPS ITS TAIL, AND THE WHOLE IS SAVED; A NO CAN SAY WHY.
+        big = "HEAD\n" + "x" * 20000 + "\nTo continue, read it again asking for part 2."
+        said_big = SV._drive_said(big, _NS(logs=tmp / "logs"), "ground_read")
+        spilled = list((tmp / "logs").glob("*_drive_result_ground_read*.txt"))
+        check("harness: a result over the cap keeps its head and its read-on line, the whole saved in logs/",
+              said_big.startswith("HEAD") and said_big.endswith("asking for part 2.") and len(said_big) < 5000
+              and spilled and spilled[0].read_text(encoding="utf-8").replace("\r\n", "\n") == big, said_big[-200:])
+        d, m = run(f"ask write a | check: {py} -c pass", call("write_file", {"filepath": "a.txt", "content": "a"}),
+                   answers=("no -- write it to b.txt instead",))
+        told = [str(x.get("content", "")) for x in m.seen[-1] if isinstance(x, dict) and x.get("role") == "tool"]
+        check("harness: a no with words goes back to the Steward as the operator's reason",
+              any("His reason: no -- write it to b.txt instead" in t for t in told), str(told)[:300])
+    finally:
+        SV.DRIVE_STEPS = kept
+        _sh.rmtree(tmp, ignore_errors=True)
+
+
 def main() -> int:
     if not SELECT:
         begin_run(ROOT, "strokes")   # so a crash cannot leave a green stamp
@@ -24220,6 +24517,7 @@ def main() -> int:
     test_the_door_reads_the_law_chain_as_law_py_writes_it(reg, lib, book)
     test_the_pack_is_wired(reg, lib, book)
     test_steward_drives_to_a_check(reg, lib, book)
+    test_steward_harness(reg, lib, book)
     test_ink()
     test_math()
     test_a_commit_is_not_a_tag()

@@ -1,7 +1,7 @@
 ## Steward
 - **Voice:** David
 - **Model Target:** llama3.2:latest
-- **May Call:** ground_read, ground_list, read_file, list_directory, inspect, semantic_search, search_transcripts, ground_report, git_status, rack_list, skill_report, skill_search, extract_facts, classify_sentiment, statistics, sitting, when, symbols, proved
+- **May Call:** ground_read, ground_list, read_file, list_directory, inspect, triage_binary, semantic_search, search_transcripts, ground_report, git_status, rack_list, skill_report, skill_search, extract_facts, classify_sentiment, statistics, sitting, when, symbols, proved
 - **Stage:** transform
 - **On Fail:** prompt
 - **Context:** 8192
