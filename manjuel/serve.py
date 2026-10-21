@@ -523,8 +523,27 @@ def _drive_dial(name: str, default: float) -> float:
         return float(default)
 
 
-# His card, 2026-10-16: the driver starts on qwen3.5:9b (SITTING LAW 3).
-DRIVE_MODEL = os.environ.get("MANJUEL_DRIVER_MODEL", "").strip() or "qwen3.5:9b"
+# His card, 2026-10-16: the driver starts on qwen3.5:9b (SITTING LAW 3). His word,
+# 2026-10-21: "we put steward as the main man, load him up with gpt oss" and "if oss
+# can make it easier ... just do that. that makes way more sense to me than dumbing
+# down the model" -- the driver, the face and the Steward seat run on gpt-oss:20b,
+# its own reasoning on (a live check that day: native tool calls clean, 1.9 s warm).
+DRIVE_MODEL = os.environ.get("MANJUEL_DRIVER_MODEL", "").strip() or "gpt-oss:20b"
+
+
+def drive_think(model: str):
+    """The thinking switch for a driver call. MANJUEL_DRIVER_THINK names it: 1/true/yes
+    on, 0/false/no off, or a level (low, medium, high). Unset: a gpt-oss model reasons
+    at `low` -- it is built to, and its reasoning is what the small-model layers stood
+    in for -- and every other model is off (2026-10-16: one step thought for minutes)."""
+    said = os.environ.get("MANJUEL_DRIVER_THINK", "").strip().lower()
+    if said in ("1", "true", "yes", "on"):
+        return True
+    if said in ("0", "false", "no", "off"):
+        return False
+    if said in ("low", "medium", "high"):
+        return said
+    return "low" if "gpt-oss" in str(model).lower() else False
 DRIVE_STEPS = int(_drive_dial("MANJUEL_DRIVER_STEPS", 30))
 DRIVE_MINUTES = _drive_dial("MANJUEL_DRIVER_MINUTES", 45)
 DRIVE_ITEM_STEPS = int(_drive_dial("MANJUEL_DRIVER_ITEM_STEPS", 15))
@@ -557,6 +576,30 @@ DRIVE_CONTEXT_SET = bool(os.environ.get("MANJUEL_DRIVER_CTX", "").strip())
 DRIVE_CONTEXT_CHARS = int(_drive_dial("MANJUEL_DRIVER_CONTEXT_CHARS", 5000))
 # Steward's sub-agents: a council seat asked one task, its answer handed back.
 DRIVE_DELEGATE_CHARS = 6000
+# STEWARD IS THE FACE (2026-10-21; his words: "steward becomes the system, the face,
+# the front-end agent", and "if oss can make it easier, to where we can pull out those
+# reasoning steps, and any extra bullshit from using a smaller front end model, just do
+# that"). An ordinary turn at this door goes to Steward's own loop (door_face): he reads
+# and checks with the tools himself, asks a council seat when he wants a second mind,
+# and answers in words -- the routing arithmetic and the hand-offs a small front model
+# needed stay for the REPL and the council path. MANJUEL_FACE=council puts the council
+# back in front; `/face steward` and `/face council` switch it for the sitting.
+FACE = (os.environ.get("MANJUEL_FACE", "").strip().lower() or "steward")
+FACE_STEPS = int(_drive_dial("MANJUEL_FACE_STEPS", 12))
+FACE_MINUTES = _drive_dial("MANJUEL_FACE_MINUTES", 10)
+FACE_HISTORY_TURNS = 6
+FACE_RULES = (
+    "THE FACE -- YOU HOLD THE TOOLS YOURSELF\n"
+    "At this door you are not handing off to a chain: the tools are in front of you, "
+    "and the flags above do not apply. Read before you claim -- semantic_search and "
+    "search_transcripts find what the record says, ground_read and ground_list read "
+    "the ground -- and check with a tool rather than guess. When he asks you to change "
+    "a file, make the change with ground_edit (one exact passage) or ground_write; each "
+    "asks him first, and a no may carry his reason. For real reasoning, a review or code "
+    "you want a second mind on, delegate to a council seat with the whole task. When you "
+    "have the answer, reply to him in words with NO tool call: that reply is what he "
+    "reads -- lead with the finding, short, in your own voice. A turn that is only talk "
+    "needs no tool at all.")
 # Never offered to the model. Saving and sending are the run's own steps, on
 # his answer (RULE 6, RULE 12); memory lands only through /memory (LAWS 5, 6).
 DRIVE_NEVER = {"git_commit", "git_cycle", "git_push", "git_pull", "git_init",
@@ -635,6 +678,7 @@ DRIVE_SAID = {
     "loop": "NOT DONE: the Steward repeated itself until the loop guard stopped the job.",
     "stuck": "NOT DONE: every call failed turn after turn, and the job was stopped.",
     "refused": "NOT RUN: the goal did not pass the gate (the law, or not language).",
+    "answered": "ANSWERED.",
 }
 DRIVE_DELEGATE_TOOL = {
     "type": "function",
@@ -683,6 +727,7 @@ class Drive:
         self.approved = ""           # the sha256 of the job text his yes was given to
         self.journal = None          # the job written down as it goes (journal.py)
         self.resumed = ""            # the journal a resumed job was carried on from
+        self.answer = ""             # what the face said to him (door_face)
 
 
 def drive_parse(said: str) -> dict:
@@ -1135,7 +1180,7 @@ def drive_act(name: str, args: dict, ctx, d) -> str:
 
 
 def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float,
-               messages: list | None = None) -> str:
+               messages: list | None = None, answer: bool = False) -> str:
     """One job, worked until its check passes or its budget is spent.
 
     THE HARNESS AROUND THE MODEL (2026-10-21, the harness study; his words: "the harness
@@ -1153,17 +1198,22 @@ def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float
     started = time.time()
     said_check = check or "none named: the job is unchecked and ends when you call done"
     before = f"What was done before in this sitting:\n{ctx.carry}\n\n" if ctx.carry else ""
-    system = DRIVE_SYSTEM + (("\n\n" + ctx.context) if getattr(ctx, "context", "") else "")
-    if messages is None:
+    system = ((getattr(ctx, "system", "") or DRIVE_SYSTEM)
+              + (("\n\n" + ctx.context) if getattr(ctx, "context", "") else ""))
+    if messages is None and answer:
+        # THE FACE (door_face): his words as he said them, after what was said before.
+        messages = ([{"role": "system", "content": system}] + list(getattr(ctx, "history", None) or [])
+                    + [{"role": "user", "content": task}])
+        for m in messages:
+            _drive_journal_message(d, m)
+    elif messages is None:
         messages = [
             {"role": "system", "content": system},
             {"role": "user", "content": f"{before}Goal: {task}\nThe check that decides done: {said_check}"},
         ]
         for m in messages:
             _drive_journal_message(d, m)
-    # Thinking is off by default: on 2026-10-16 one step after a write thought
-    # for over three minutes. MANJUEL_DRIVER_THINK=1 turns it back on.
-    think = os.environ.get("MANJUEL_DRIVER_THINK", "").strip().lower() in ("1", "true", "yes")
+    think = drive_think(ctx.model)
     window = getattr(ctx, "window", 0) or DRIVE_CONTEXT
     tools = ctx.tools
     schemas = {str(t["function"]["name"]): t["function"].get("parameters") or {}
@@ -1223,6 +1273,12 @@ def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float
             return "error"
         msg = _drive_field(resp, "message")
         content = str(_drive_field(msg, "content") or "")
+        # HIS REASONING, SHOWN (his word: "pull out those reasoning steps"): the model's
+        # own thinking goes to the glass as it comes back, and nowhere it could be taken
+        # for an answer.
+        thinking = str(_drive_field(msg, "thinking") or "")
+        if thinking and getattr(ctx, "thought", None) is not None:
+            ctx.thought(thinking)
         if dialect == "native":
             messages.append(msg)
             raw = drive_calls_raw(msg)
@@ -1244,6 +1300,12 @@ def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float
                            f"length limit, so its arguments may be incomplete. Make the call "
                            f"again with smaller arguments (one passage at a time).")
             continue
+        # THE FACE ANSWERS IN WORDS: a reply with no call is what the operator reads.
+        if answer and not raw:
+            d.answer = content.strip()
+            d.n += 1
+            d.steps.append([d.n, "answer", "", _drive_head(content)])
+            return "answered"
         # Words with no call are a claim that the job is done; the check decides,
         # exactly as it does for an explicit done.
         if not raw:
@@ -1281,6 +1343,10 @@ def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float
                 continue
             if name == "done":
                 summary = str(args.get("summary") or "").strip() or "(no summary)"
+                if answer:
+                    d.answer = summary if summary != "(no summary)" else content.strip()
+                    d.steps.append([n, "answer", "", _drive_head(d.answer)])
+                    return "answered"
                 if not check:
                     d.steps.append([n, "done", summary, "no check named"])
                     ctx.report(f"  [{n}] done: {summary} -- no check named")
@@ -1859,7 +1925,8 @@ def drive_save(d, spec: dict, ctx) -> None:
 def drive(spec, *, skills, env, ground, ask, report,
           host: str = "http://127.0.0.1:11434", keep_alive: str = "30m",
           logs=None, client=None, model: str = DRIVE_MODEL, carry: str = "",
-          context: str = "", seats=None, seat_names=None) -> Drive:
+          context: str = "", seats=None, seat_names=None, system: str = "",
+          history=None, thought=None) -> Drive:
     """Work one /drive to its end (the head of this section).
 
     `context` is what the driver is handed beside its goal (the standing, the story,
@@ -1891,14 +1958,16 @@ def drive(spec, *, skills, env, ground, ask, report,
                           client=client, tools=tools, keep_alive=keep_alive, model=model,
                           logs=Path(logs) if logs else ground / "logs", carry=carry,
                           context="", seats=seats, window=DRIVE_CONTEXT,
-                          dialect=os.environ.get("MANJUEL_DRIVER_DIALECT", "").strip() or "native")
+                          dialect=os.environ.get("MANJUEL_DRIVER_DIALECT", "").strip() or "native",
+                          system=system, history=list(history or []), thought=thought)
     kept = (getattr(env, "caller", ""), getattr(env, "caller_allowed", None),
             getattr(env, "objective", ""))
     from .skills import DRIVER
     env.caller, env.caller_allowed, env.objective = DRIVER, set(allowed), spec["goal"]
     mode = "" if spec["mode"] == "goal" else " " + spec["mode"]
-    report(f"  drive{mode}: {spec['goal']}")
-    report(f"  check: {spec['check'] or 'none named (unchecked)'} | model {model} | approval {d.approve}")
+    if spec["mode"] != "answer":
+        report(f"  drive{mode}: {spec['goal']}")
+        report(f"  check: {spec['check'] or 'none named (unchecked)'} | model {model} | approval {d.approve}")
     try:
         if spec["mode"] == "resume" and resumed is None:
             d.verdict, d.error = "error", "there is no job a crash cut short to carry on (logs/*_drive.jsonl)"
@@ -1906,7 +1975,7 @@ def drive(spec, *, skills, env, ground, ask, report,
         # THE RAILS (2026-10-21): the goal passes the gates every ordinary turn passes --
         # noise never reaches the model, and the law is walked and checked first. A refusal
         # ends the job in the gate's own words, before anything is asked or written.
-        if spec["mode"] in ("goal", "plan", "each"):
+        if spec["mode"] in ("goal", "plan", "each", "answer"):
             why = _drive_gate(spec, ground)
             if why.startswith("REFUSED"):
                 d.verdict, d.error = "refused", why
@@ -1914,7 +1983,8 @@ def drive(spec, *, skills, env, ground, ask, report,
                 return d
             ctx.context = (why + ("\n\n" + context if context else ""))[:DRIVE_CONTEXT_CHARS]
             ctx.window = drive_window(client, model)
-            report(f"  window: {ctx.window} tokens" + ("" if DRIVE_CONTEXT_SET else " (read off the model and the card)"))
+            if spec["mode"] != "answer":
+                report(f"  window: {ctx.window} tokens" + ("" if DRIVE_CONTEXT_SET else " (read off the model and the card)"))
         # WHAT IS UNSAVED BEFORE THE RUN (C130): noted once, before any write or check, so
         # what a check later rewrites is told apart from work that was here already.
         for sub in DRIVE_REPOS:
@@ -1926,6 +1996,12 @@ def drive(spec, *, skills, env, ground, ask, report,
             d.journal = Journal.open(ctx.logs, spec, model)
         if resumed is not None:
             _drive_resume(d, ctx, resumed)
+        elif spec["mode"] == "answer":
+            d.verdict = _drive_job(d, spec["goal"], "", ctx, FACE_STEPS, FACE_MINUTES, answer=True)
+            if d.item_files:
+                lines = sorted({r.get("line", "") for r in d.repos.values() if r.get("line")})
+                report(f"  what this turn changed is on the line {', '.join(lines)}, unsaved: "
+                       f"`/drive ship <message>` saves and sends it")
         elif spec["mode"] in ("plan", "each") and not spec["check"]:
             d.verdict, d.error = "error", f"{spec['mode']} needs a check (| check: <command>) to decide each item"
         elif spec["mode"] == "goal":
@@ -2101,6 +2177,111 @@ def drive_record(d: Drive, logs) -> str:
         return f"logs/{name}"
     except Exception:
         return ""
+
+
+def face_system(sess) -> str:
+    """The face's system prompt: his seat's own bearing and weighing (agents/steward.md,
+    the prompt of record) with the face's rules in place of the hand-off section, which
+    was written for a front seat that held no tools."""
+    try:
+        sp = str(sess.registry.get("Steward").system_prompt or "")
+    except Exception:
+        sp = ""
+    if "THE DICTUM" not in sp:
+        return (sp + "\n\n" + FACE_RULES).strip() if sp else DRIVE_SYSTEM
+    head, _, rest = sp.partition("THE DICTUM")
+    tail = ("CONVERSATION" + rest.split("CONVERSATION", 1)[1]) if "CONVERSATION" in rest else ""
+    return "\n\n".join(p.strip() for p in (head, FACE_RULES, tail) if p.strip())
+
+
+def face_history(sess) -> list:
+    """The last turns of this conversation, as the messages the face reads first."""
+    out = []
+    for who, text, *_ in list(getattr(sess, "dialogue", None) or [])[-FACE_HISTORY_TURNS * 2:]:
+        role = "user" if str(who) == "operator" else "assistant"
+        out.append({"role": role, "content": str(text or "")[:1500]})
+    return out
+
+
+def door_face(door, objective: str) -> bool:
+    """STEWARD, THE FACE (FACE, above): one ordinary turn answered by Steward's own loop
+    on his model, his reasoning shown as it comes back. True when the turn was his;
+    False hands it to the council pipeline (the model is down, or he could not answer)."""
+    sess = door.sess
+    rt = sess.runtime
+    # The face drives the rack itself: a session sitting on anything but the real Ollama
+    # runtime (the suites' stand-ins) keeps the council in front.
+    from .runtime import OllamaRuntime
+    if not isinstance(getattr(rt, "_inner", rt), OllamaRuntime) and not getattr(door, "face_client", None):
+        return False
+
+    def report(line):
+        print(line)
+        door.wire.emit("report", text=str(line))
+
+    def thought(text):
+        door.wire.emit("think", seat="Steward", text=str(text))
+
+    wait = 0.0 if getattr(door, "unattended", False) else DRIVE_CARD_SECONDS
+    try:
+        seat_names = sorted(a.name for a in sess.registry.all() if a.name != "Steward")
+    except Exception:
+        seat_names = []
+    try:
+        model = str(sess.registry.get("Steward").model or "") or DRIVE_MODEL
+    except Exception:
+        model = DRIVE_MODEL
+
+    def seat_answers(seat: str, task: str) -> str:
+        if seat not in seat_names:
+            return f"Refused: there is no seat named {seat}. The seats are: {', '.join(seat_names)}."
+        return str(rt.chat(sess.registry.get(seat), task) or "")
+
+    spec = {"mode": "answer", "goal": objective, "check": "", "do": "", "approve": "ask"}
+    d = drive(spec, skills=sess.skills, env=sess.env, ground=door.ground,
+              ask=lambda prompt: door.ask(prompt, color="red", timeout=wait), report=report,
+              host=getattr(rt, "host", None) or "http://127.0.0.1:11434",
+              keep_alive=getattr(rt, "keep_alive", None) or "30m",
+              logs=door.ground / "logs", model=model, context=drive_context(sess, door.ground),
+              client=getattr(door, "face_client", None),
+              seats=seat_answers if seat_names else None, seat_names=seat_names,
+              system=face_system(sess), history=face_history(sess), thought=thought)
+    if d.verdict == "refused" and "not parse as language" in d.error:
+        text = "I didn't catch a request in that -- say it again?"
+    elif d.verdict == "refused":
+        door.wire.emit("refused", text=d.error, notes=[])
+        return True
+    elif not d.answer:
+        report(f"  Steward could not answer this turn ({d.error or d.verdict}); the council takes it")
+        return False
+    else:
+        text = d.answer
+    import contextlib as _cl
+    with _cl.suppress(Exception):
+        from . import cli as _cli
+        sess.dialogue.append(("operator", objective, time.time()))
+        sess.dialogue.append(("steward", text, time.time()))
+        _cli.save_thread(door.ground, sess.session, sess.dialogue)
+    with _cl.suppress(Exception):
+        sess.sitting.runs.append({
+            "objective": objective[:300], "pipeline": "steward", "stages": len(d.steps),
+            "failed": 0, "elapsed": d.elapsed, "transcript": d.transcript,
+            "tools": sorted({str(s[1]) for s in d.steps}), "guards": [],
+            "seats_failed": [], "out_of_time": [], "delivery": text[:200]})
+    print(f"\n--- delivery · {d.elapsed:.1f}s ---\n")
+    print(text)
+    door.wire.emit("delivery", text=text, elapsed=round(d.elapsed, 1), transcript=d.transcript,
+                   pipeline="steward", flags=[], notes=[], failures=[], verdicts=[],
+                   out_of_time=[], project="",
+                   steps=[{"seat": "Steward", "model": d.model, "elapsed": round(d.elapsed, 1),
+                           "tools": [str(s[1]) for s in d.steps if s[1] not in ("answer",)],
+                           "error": d.error or "", "skipped": False, "chars": len(text),
+                           "drift": None, "drifted": False}])
+    if getattr(sess, "speaking", False) and text:
+        with _cl.suppress(Exception):
+            from . import voice
+            voice.speak(text, blocking=False)
+    return True
 
 
 def drive_context(sess, ground) -> str:
@@ -2671,6 +2852,16 @@ class Door:
         if objective.split(None, 1)[0].lower() == "mcp_call":
             door_call(self, objective)
             return True
+        # WHO ANSWERS AN ORDINARY TURN, switched for the sitting (FACE).
+        if objective.split(None, 1)[0].lower() == "/face":
+            global FACE
+            want = objective.split(None, 1)[1].strip().lower() if " " in objective else ""
+            if want in ("steward", "council"):
+                FACE = want
+            print(f"\n  The face is {FACE}: " + ("Steward answers ordinary turns himself, on his "
+                  "own loop." if FACE == "steward" else "the council pipeline answers ordinary "
+                  "turns.") + " `/face steward` or `/face council` switches it.\n")
+            return True
 
         if _cli._topic_turn(sess, objective):
             return True
@@ -2704,6 +2895,11 @@ class Door:
         except SystemExit:
             self._close("/exit")
             return False
+
+        # THE FACE (FACE, in the driver's section): Steward answers an ordinary turn
+        # himself; the council takes it only when he cannot.
+        if FACE == "steward" and (sess.rack_ok or sess.rack_check()) and door_face(self, objective):
+            return True
 
         if not sess.rack_ok and not sess.rack_check():
             print("\n  The rack is still unreachable — `ollama serve`, then "

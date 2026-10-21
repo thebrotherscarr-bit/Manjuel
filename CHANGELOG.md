@@ -34,6 +34,16 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: Steward on gpt-oss, and Steward as the face (2026-10-21, on his word)
+
+His words: "we put steward as the main man, load him up with gpt oss"; "steward becomes the system, the face, the front-end agent"; "if oss can make it easier, to where we can pull out those reasoning steps, and any extra bullshit from using a smaller front end model, just do that. that makes way more sense to me than dumbing down the model"; and "go ahead with the swap and the face".
+
+- **The swap.** The Steward seat (`agents/steward.md`: gpt-oss:20b, a 16k window, his 180 s kept) and the driver's default (`DRIVE_MODEL`) run on gpt-oss:20b, with `us/seat_steward.us` and `rack.md` brought to the disk. Checked live first: gpt-oss on this Ollama answers the driver's request shape -- native tool calls clean, thinking off accepted, 1.9 s warm at `low`.
+- **His own reasoning** (`drive_think`): a gpt-oss model reasons at `low` unless `MANJUEL_DRIVER_THINK` says otherwise (on, off, or a level); its reasoning goes to the glass as `think` events as it comes back, and nowhere it could be taken for an answer.
+- **Steward is the face** (`door_face`, `face_system`, `face_history`, `FACE`). At the door, an ordinary turn -- not a /command, not a cue -- is answered by Steward's own loop on his seat's model: he reads and checks with the tools himself, asks a council seat when he wants a second mind (delegate), makes changes through the write tools (each asks), and answers in words; his prompt is his seat's own bearing and weighing with the face's rules in place of the hand-off flags a tool-less front seat needed. The gates stand in front (not language, the law); the last turns of the conversation come with him; the reply lands in the dialogue and the sitting's runs. When he cannot answer (the model down) the council pipeline takes the turn as before, and a session on a stand-in runtime keeps the council in front. `MANJUEL_FACE=council` or `/face council` puts the council back; `/face steward` returns him.
+
+Strokes: in `test_steward_harness`, the swap and the reasoning level, the face's prompt, a face turn (a tool read, the reasoning shown, the words delivered, the dialogue carried), the fall back to the council, the stand-in guard and the wire in Door.turn. What goes red if it comes unplugged: those strokes. Restart required.
+
 ### core: Steward made capable -- the harness around him, from the harness study (v0.2.6; 2026-10-21, on his word)
 
 His words: "make Steward the perfect agent that is set in a perfect harness"; "not just that part, but ALL of the functionality of them"; "i shouldn't have to have 11 clicks"; "the harness is the security, not the model"; and, to the hand: "YOU ARE MAKING THE THING CAPABLE AS DESCRIBED. DO NOT RUN THE SYSTEM, BUILD IT!" The diff first: opencode, Cline, OpenShell, Pi, oh-my-pi, Hermes and OpenClaw (its published package, with REA's static analysis) and his REA Studio, read against Steward by eight readers and every claim checked against the source by seven more (HARNESS_STUDY.md). Then what every proven harness had and the driver lacked, built into it:

@@ -1063,7 +1063,7 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 ## THE SITES — every `Refused:` in the code, read off the code
 
-32 refusals are written up above, by hand, each with the sitting that earned it. The code refuses at 129 sites. This tail lists every one -- module, line, and the words it says -- regenerated from the code by `python tests/refusals.py` so it cannot drift; `--check` in CI refuses a stale copy. A site is the code's fact; a section above is the account of why. Where a site's words name a law, a rule or a gate, the section is the one that names the same.
+32 refusals are written up above, by hand, each with the sitting that earned it. The code refuses at 130 sites. This tail lists every one -- module, line, and the words it says -- regenerated from the code by `python tests/refusals.py` so it cannot drift; `--check` in CI refuses a stale copy. A site is the code's fact; a section above is the account of why. Where a site's words name a law, a rule or a gate, the section is the one that names the same.
 
 ### manjuel/cli.py — 1 site
 
@@ -1130,23 +1130,24 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 | 755 | there is no tool named rm_rf. The tools are: read_file, done. |
 | 796 | read_file was not run -- the arguments |
 
-### manjuel/serve.py — 13 sites
+### manjuel/serve.py — 14 sites
 
 | line | says |
 |---|---|
-| 1071 | '{name}' is not one of the driver's tools. |
-| 1075 | {tgt[0].name} is not on a branch (a detached HEAD), so there is no |
-| 1080 | {_drive_rel(*key)} carries changes that are not the Steward's (not |
-| 1108 | the line of work `{opening}` could not be opened: {out} |
-| 1116 | {_drive_rel(*key)} could not be read before it was written: {exc} |
-| 1125 | {name} failed in the engine ({type(exc).__name__}: {exc}). |
-| 1243 | {name} was not run -- the reply was cut off by the |
-| 1362 | no council is seated for this job, so there is no one to delegate to. |
-| 1364 | delegate needs a seat and a task. |
-| 1366 | {seat} answered nothing. |
-| 1368 | {seat} could not answer ({type(exc).__name__}: {exc}). |
-| 2147 | there is no seat named {seat}. The seats are: { |
-| 2272 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
+| 1116 | '{name}' is not one of the driver's tools. |
+| 1120 | {tgt[0].name} is not on a branch (a detached HEAD), so there is no |
+| 1125 | {_drive_rel(*key)} carries changes that are not the Steward's (not |
+| 1153 | the line of work `{opening}` could not be opened: {out} |
+| 1161 | {_drive_rel(*key)} could not be read before it was written: {exc} |
+| 1170 | {name} failed in the engine ({type(exc).__name__}: {exc}). |
+| 1299 | {name} was not run -- the reply was cut off by the |
+| 1428 | no council is seated for this job, so there is no one to delegate to. |
+| 1430 | delegate needs a seat and a task. |
+| 1432 | {seat} answered nothing. |
+| 1434 | {seat} could not answer ({type(exc).__name__}: {exc}). |
+| 2237 | there is no seat named {seat}. The seats are: { |
+| 2328 | there is no seat named {seat}. The seats are: { |
+| 2453 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
 
 ### manjuel/skills.py — 86 sites
 
