@@ -477,6 +477,9 @@ REVIEW_ONLY_SKILLS = {
     "proved",
     # `inspect` reads a file's FACTS and never its contents (2026-09-07).
     "inspect",
+    # `triage_binary` reads a file's bytes and writes nothing; a
+    # secret-looking string is counted, never printed (2026-10-21).
+    "triage_binary",
 }
 
 # What actually puts something on disk. The write-claim check (sitting 70)
@@ -1999,6 +2002,319 @@ def _inspect(env: SkillExecutionEnv, args: dict) -> str:
     if len(fresh) > 20:
         out.append(f"\n... and {len(fresh) - 20} more; inspect them by name.")
     return "\n".join(out)
+
+
+# TRIAGE A BINARY (2026-10-21, on his word): ported from his REA Studio's
+# binaryParser.ts -- entropy, the format by its magic bytes, the strings --
+# and cut back to what the bytes say. The port leaves out what the original
+# invents: its sections are synthetic and its mitigations are constants, so
+# neither is here. A secret-looking string is counted and never printed
+# (LAW 9), and the pure reading (triage_bytes) is kept apart from the words
+# (triage_text) so each is proved on its own.
+TRIAGE_CAP = 64 * 1024 * 1024
+TRIAGE_WINDOW = 4096
+TRIAGE_HIGH = 7.2
+TRIAGE_MIN_STR = 5
+TRIAGE_KEEP = 400
+TRIAGE_SHOW = 5
+
+_ELF_MACHINES = {0x03: "x86", 0x08: "MIPS", 0x14: "PowerPC", 0x15: "PowerPC64",
+                 0x16: "S390", 0x28: "ARM", 0x2B: "SPARC V9", 0x3E: "x86-64",
+                 0xB7: "AArch64", 0xF3: "RISC-V", 0x102: "LoongArch"}
+_ELF_TYPES = {1: "relocatable", 2: "executable", 3: "shared object or PIE", 4: "core dump"}
+_PE_MACHINES = {0x14C: "x86 (i386)", 0x8664: "x86-64", 0x1C0: "ARM", 0x1C4: "ARM Thumb-2",
+                0xAA64: "ARM64", 0xA641: "ARM64EC", 0x200: "IA-64", 0x5064: "RISC-V 64"}
+_PE_SUBSYSTEMS = {1: "native", 2: "Windows GUI", 3: "Windows console", 9: "Windows CE",
+                  10: "EFI application", 14: "Xbox"}
+_MACHO_CPUS = {7: "x86", 0x01000007: "x86-64", 12: "ARM", 0x0100000C: "ARM64",
+               0x0200000C: "ARM64_32", 18: "PowerPC", 0x01000012: "PowerPC64"}
+_MACHO_TYPES = {1: "object", 2: "executable", 6: "dylib", 7: "dylinker", 8: "bundle",
+                10: "dSYM"}
+_STR_ASCII_RE = re.compile(rb"[\x20-\x7e\t]{5,}")
+_STR_UTF16_RE = re.compile(rb"(?:[\x20-\x7e\t]\x00){5,}")
+_SECRETISH_RE = re.compile(
+    r"secret|token|api_?key|apikey|bearer |private_key|password|passwd|auth_"
+    r"|-----begin [a-z ]*private key|://[^/\s:@]+:[^/\s@]+@", re.I)
+_LONG_KEYISH_RE = re.compile(r"^[A-Za-z0-9_\-+/=]{32,}$")
+_URL_RE = re.compile(r"\b(?:https?|wss?|ftp)://", re.I)
+_CRYPTO_RE = re.compile(
+    r"\b(?:aes|rsa|iv|des|md5|ecdsa|ecdh|pkcs\d*|x509)\b|sha-?(?:1|224|256|384|512)"
+    r"|hmac|curve25519|ed25519|chacha|cipher|decrypt|encrypt", re.I)
+_PATH_RE = re.compile(r"^(?:/(?!/)|\./|\.\./|[A-Za-z]:[\\/])|[\w.-]\\[\w.-]"
+                      r"|\.(?:so|dll|exe|dylib|json|py|go|sys)$")
+_ERROR_RE = re.compile(r"error|fail|fatal|invalid|exception|panic", re.I)
+
+
+def _entropy(counts, n: int) -> float:
+    """Shannon entropy in bits per byte (0.0 to 8.0) from byte counts."""
+    import math
+    if n <= 0:
+        return 0.0
+    return -sum((c / n) * math.log2(c / n) for c in counts if c)
+
+
+def _string_kind(s: str) -> str:
+    """url / secret / crypto / path / error / other. The secret test comes
+    FIRST, before url, so a URL carrying a token or a password is counted as
+    a secret and never printed."""
+    if _SECRETISH_RE.search(s) or _LONG_KEYISH_RE.match(s):
+        return "secret"
+    if _URL_RE.search(s):
+        return "url"
+    if _CRYPTO_RE.search(s):
+        return "crypto"
+    if _PATH_RE.search(s):
+        return "path"
+    if _ERROR_RE.search(s):
+        return "error"
+    return "other"
+
+
+def _u16(b: bytes, at: int, big: bool = False) -> int | None:
+    if at < 0 or at + 2 > len(b):
+        return None
+    return int.from_bytes(b[at:at + 2], "big" if big else "little")
+
+
+def _u32(b: bytes, at: int, big: bool = False) -> int | None:
+    if at < 0 or at + 4 > len(b):
+        return None
+    return int.from_bytes(b[at:at + 4], "big" if big else "little")
+
+
+def _named(table: dict, code) -> str:
+    if code is None:
+        return "unreadable (file too short)"
+    return f"{table[code]} (0x{code:x})" if code in table else f"unknown (0x{code:x})"
+
+
+def _triage_format(data: bytes) -> dict:
+    """The format by its magic bytes, with only the header fields read off them."""
+    if data[:4] == b"\x7fELF":
+        cls = {1: "32-bit", 2: "64-bit"}.get(data[4] if len(data) > 4 else 0, "class unknown")
+        big = len(data) > 5 and data[5] == 2
+        order = {1: "little", 2: "big"}.get(data[5] if len(data) > 5 else 0, "unknown")
+        return {"format": "ELF", "endianness": order,
+                "detail": f"{cls}, {order}-endian, {_named(_ELF_TYPES, _u16(data, 16, big))}, "
+                          f"machine {_named(_ELF_MACHINES, _u16(data, 18, big))}"}
+    if data[:2] == b"MZ":
+        e = _u32(data, 0x3C)
+        if e is None or data[e:e + 4] != b"PE\x00\x00":
+            return {"format": "MZ (DOS) executable", "endianness": "little",
+                    "detail": "no PE header at the offset 0x3c names"}
+        mach = _named(_PE_MACHINES, _u16(data, e + 4))
+        nsec = _u16(data, e + 6)
+        chars = _u16(data, e + 22) or 0
+        opt = e + 24
+        magic = _u16(data, opt)
+        kind = {0x10B: "PE32", 0x20B: "PE32+"}.get(magic, "optional header unknown")
+        bits = [kind, f"machine {mach}", "DLL" if chars & 0x2000 else "EXE"]
+        sub = _u16(data, opt + 68)
+        if magic in (0x10B, 0x20B) and sub is not None:
+            bits.append(f"subsystem {_named(_PE_SUBSYSTEMS, sub)}")
+        if nsec is not None:
+            bits.append(f"{nsec} section(s) in the header")
+        dotnet = "unreadable"
+        if magic in (0x10B, 0x20B):
+            nd_at, dirs = (opt + 92, opt + 96) if magic == 0x10B else (opt + 108, opt + 112)
+            nd = _u32(data, nd_at)
+            if nd is not None:
+                rva, size = _u32(data, dirs + 14 * 8), _u32(data, dirs + 14 * 8 + 4)
+                dotnet = ("yes (CLI header present)" if nd > 14 and rva and size
+                          else "no (no CLI header)")
+        bits.append(f".NET {dotnet}")
+        return {"format": "PE", "endianness": "little", "detail": ", ".join(bits)}
+    macho = {b"\xfe\xed\xfa\xce": ("32-bit", True), b"\xfe\xed\xfa\xcf": ("64-bit", True),
+             b"\xce\xfa\xed\xfe": ("32-bit", False), b"\xcf\xfa\xed\xfe": ("64-bit", False)}
+    if data[:4] in macho:
+        cls, big = macho[data[:4]]
+        return {"format": "Mach-O", "endianness": "big" if big else "little",
+                "detail": f"{cls}, cpu {_named(_MACHO_CPUS, _u32(data, 4, big))}, "
+                          f"{_named(_MACHO_TYPES, _u32(data, 12, big))}"}
+    if data[:4] in (b"\xca\xfe\xba\xbe", b"\xca\xfe\xba\xbf"):
+        n = _u32(data, 4, True) or 0
+        if data[:4] == b"\xca\xfe\xba\xbe" and n >= 45:
+            # The same four bytes open a Java class file; there the next word
+            # is the class version, 45 and up, and a fat header's count is small.
+            return {"format": "Java class file", "endianness": "big",
+                    "detail": f"class version {_u16(data, 6, True)}.{_u16(data, 4, True)}"}
+        step = 20 if data[3] == 0xBE else 32
+        cpus = [_named(_MACHO_CPUS, _u32(data, 8 + i * step, True)) for i in range(min(n, 16))]
+        return {"format": "Mach-O fat (universal)", "endianness": "big",
+                "detail": f"{n} architecture(s): " + ("; ".join(cpus) or "none listed")}
+    if data[:4] == b"\x00asm":
+        return {"format": "WebAssembly", "endianness": "little",
+                "detail": f"module version {_u32(data, 4)}"}
+    if data[:4] in (b"PK\x03\x04", b"PK\x05\x06", b"PK\x07\x08"):
+        import io
+        import zipfile
+        # The hints come off the central directory's NAMES, never a search of
+        # the bytes: a zip of source code that mentions AndroidManifest.xml is
+        # not an APK (measured on his REA Studio zip, 2026-10-21).
+        hints = []
+        try:
+            listed = zipfile.ZipFile(io.BytesIO(data)).namelist()
+            names = set(listed)
+            entries = f"{len(listed)} entries"
+            for h, marks in (("APK-like", ("AndroidManifest.xml", "classes.dex")),
+                             ("JAR-like", ("META-INF/MANIFEST.MF",)),
+                             ("Office Open XML", ("[Content_Types].xml",))):
+                if names & set(marks):
+                    hints.append(f"{h} ({', '.join(sorted(names & set(marks)))} at the root)")
+        except Exception:
+            entries = "central directory unreadable (no entry names read)"
+        return {"format": "ZIP", "endianness": "little",
+                "detail": ", ".join([entries] + hints)}
+    if data[:4] == b"\x04\x00\x00\x00" and b'{"files":' in data[8:40]:
+        return {"format": "ASAR archive", "endianness": "little",
+                "detail": f"header of {_u32(data, 12)} bytes"}
+    if data[:2] == b"\x1f\x8b":
+        method = "deflate" if len(data) > 2 and data[2] == 8 else "method unknown"
+        return {"format": "gzip", "endianness": "n/a", "detail": method}
+    if data[:5] == b"%PDF-":
+        ver = re.match(rb"%PDF-(\d+\.\d+)", data[:16])
+        return {"format": "PDF", "endianness": "n/a",
+                "detail": f"version {ver.group(1).decode() if ver else 'unreadable'}"}
+    if data[:8] == b"\x89PNG\r\n\x1a\n":
+        w, h = _u32(data, 16, True), _u32(data, 20, True)
+        return {"format": "PNG", "endianness": "n/a",
+                "detail": f"{w} x {h}, bit depth {data[24] if len(data) > 24 else '?'}"}
+    return {"format": "unknown", "endianness": "n/a", "detail": "no magic bytes this skill knows"}
+
+
+def triage_bytes(data: bytes) -> dict:
+    """What the bytes say, as a dict. Pure: no disk, no env. A secret-looking
+    string's VALUE never enters the result -- only its offset, encoding,
+    length and kind -- so nothing downstream can print it."""
+    from collections import Counter
+    n = len(data)
+    out = _triage_format(data)
+    out["size"] = n
+    out["entropy"] = round(_entropy(Counter(data).values(), n), 3)
+    full = n // TRIAGE_WINDOW
+    ents = ([_entropy(Counter(data[i:i + TRIAGE_WINDOW]).values(), TRIAGE_WINDOW)
+             for i in range(0, full * TRIAGE_WINDOW, TRIAGE_WINDOW)] if full else
+            ([_entropy(Counter(data).values(), n)] if n else []))
+    high = sum(1 for x in ents if x > TRIAGE_HIGH)
+    out["windows"] = {"count": len(ents), "full": bool(full),
+                      "min": round(min(ents), 3) if ents else 0.0,
+                      "mean": round(sum(ents) / len(ents), 3) if ents else 0.0,
+                      "max": round(max(ents), 3) if ents else 0.0,
+                      "high": high, "high_share": round(high / len(ents), 4) if ents else 0.0}
+    found = {"ascii": 0, "utf16": 0}
+    got = []
+    for enc, rx, codec in (("ascii", _STR_ASCII_RE, "ascii"),
+                           ("utf16", _STR_UTF16_RE, "utf-16-le")):
+        kept = 0
+        for m in rx.finditer(data):
+            found[enc] += 1
+            if kept >= TRIAGE_KEEP:
+                continue
+            s = m.group().decode(codec, errors="replace").strip()
+            if len(s) >= TRIAGE_MIN_STR:
+                got.append((m.start(), enc, s))
+                kept += 1
+    got.sort()
+    kept_rows = []
+    for at, enc, s in got[:TRIAGE_KEEP]:
+        kind = _string_kind(s)
+        kept_rows.append({"offset": at, "encoding": enc, "kind": kind, "length": len(s),
+                          "value": None if kind == "secret" else s})
+    out["strings"] = {"ascii_found": found["ascii"], "utf16_found": found["utf16"],
+                      "kept": kept_rows,
+                      "by_kind": dict(Counter(r["kind"] for r in kept_rows))}
+    head = data[:64]
+    # The head is withheld when a secret-looking string starts inside it, or
+    # its hex would print what the string count keeps silent.
+    if any(r["kind"] == "secret" and r["offset"] < 64 for r in kept_rows):
+        out["head_hex"] = None
+    else:
+        out["head_hex"] = " ".join(f"{b:02x}" for b in head)
+    return out
+
+
+def triage_text(t: dict, shown: str = "", total: int | None = None) -> str:
+    """The words for a triage_bytes dict. Every number is one it carries."""
+    total = t["size"] if total is None else total
+    w, s = t["windows"], t["strings"]
+    lines = [f"{shown or 'bytes'} -- triaged off its bytes",
+             f"  size      : {total:,} bytes"
+             + (f"; CUT: only the first {t['size']:,} bytes were read" if total > t["size"] else ""),
+             f"  format    : {t['format']} -- {t['detail']}",
+             f"  byte order: {t['endianness']}",
+             f"  entropy   : {t['entropy']:.3f} bits/byte over the bytes read (8.0 is random)"]
+    if w["count"]:
+        span = (f"{w['count']:,} window(s) of 4 KB" if w["full"]
+                else "the file is under 4 KB, so one window of it")
+        lines.append(f"  windows   : {span}: min {w['min']:.3f}, mean {w['mean']:.3f}, "
+                     f"max {w['max']:.3f}; {w['high']:,} ({w['high_share'] * 100:.1f}%) above "
+                     f"{TRIAGE_HIGH} (packed or encrypted-looking)")
+    kept = s["kept"]
+    lines.append(f"  strings   : {s['ascii_found']:,} ASCII and {s['utf16_found']:,} UTF-16LE of "
+                 f"{TRIAGE_MIN_STR}+ characters; the first {len(kept)} by offset sorted:")
+    order = ("url", "secret", "crypto", "path", "error", "other")
+    lines.append("              " + ", ".join(
+        f"{'secret-looking' if k == 'secret' else k} {s['by_kind'].get(k, 0)}" for k in order))
+    if s["by_kind"].get("secret"):
+        lines.append(f"  secret-looking: {s['by_kind']['secret']} counted, none printed (LAW 9: keys are silent)")
+    for k in ("url", "crypto", "path", "error", "other"):
+        rows = [r for r in kept if r["kind"] == k][:TRIAGE_SHOW]
+        for r in rows:
+            v = r["value"] if len(r["value"]) <= 80 else r["value"][:77] + "..."
+            lines.append(f"  {k:10}: 0x{r['offset']:06x} {r['encoding']:5} {v!r}")
+    lines.append("  first 64  : " + (t["head_hex"] or "(no bytes)" if t["head_hex"] is not None else
+                                     "withheld: a secret-looking string begins inside it"))
+    lines.append("These are facts read off the bytes. No sections, imports or mitigations are inferred.")
+    return "\n".join(lines)
+
+
+@skill("triage_binary")
+def _triage_binary(env: SkillExecutionEnv, args: dict) -> str:
+    """Triage one file by its bytes. The jail and the refusals are inspect's:
+    the workspace first, then the ground; never a secret, client material,
+    worlds/ or a vault/."""
+    from .vectors import is_protected, is_secret
+    rel = unjail((args.get("filepath") or args.get("content") or "").strip().strip("'\"`"))
+    if not rel:
+        return "Error: name the file to triage, relative to the workspace or the ground."
+    if rel.startswith(("/", "\\")) or ":" in rel:
+        return f"Refused {GATE_MARK}: '{rel}' is an absolute path; give one relative to the workspace or the ground."
+    ws = Path(env.workspace).resolve()
+    cand = (ws / rel).resolve()
+    if (ws == cand or ws in cand.parents) and cand.is_file():
+        path = cand
+    else:
+        p = _inside_ground(env, rel)
+        if p is None:
+            return f"Error: '{rel}' is outside the ground; only Research can be triaged."
+        if not p.is_file():
+            found = find_by_name(env, rel)
+            hint = (f" A file of that name IS in the ground: `{found[0]}`."
+                    if len(found) == 1 else "")
+            return f"Error: '{rel}' is not a file in the workspace or the ground.{hint}"
+        path = p
+    ground = Path(env.ground).resolve()
+    try:
+        shown = path.relative_to(ground).as_posix()
+    except ValueError:
+        shown = rel
+    parts = [x.lower() for x in Path(shown).parts]
+    if (parts and parts[0] == "worlds") or "vault" in parts:
+        return (f"Refused [ESTATE LAW 2]: {shown} is under another world's ground, closed "
+                f"until the operator points at it (SITTING LAW 2). Nothing was read.")
+    if is_secret(path.name):
+        return (f"Refused: {shown} is a SECRET by name. Nothing about it is read, "
+                f"shown or indexed (LAW 9: keys are silent). Do not read it.")
+    if is_protected(path):
+        return (f"Refused: {shown} is CLIENT DATA by tag. Never read into the chain, "
+                f"never indexed, never cross-referenced (SITTING LAW 2). Do not read it.")
+    try:
+        total = path.stat().st_size
+        with path.open("rb") as fh:
+            data = fh.read(TRIAGE_CAP)
+    except OSError as exc:
+        return f"Read error: {exc}"
+    return triage_text(triage_bytes(data), shown, total)
 
 
 @skill("skill_report")
@@ -3777,9 +4093,25 @@ def _mcp_servers() -> dict:
     nothing that returns to a seat carries the url."""
     out = {}
     for k, v in os.environ.items():
-        if k.startswith(_MCP_DIAL) and v.strip() and not k.endswith(_MCP_KEY):
+        if (k.startswith(_MCP_DIAL) and v.strip() and not k.endswith(_MCP_KEY)
+                and not k.endswith(_MCP_CMD)):
             out[k[len(_MCP_DIAL):].strip().lower()] = v.strip()
     return out
+
+
+# A SERVER CAN ALSO BE A PROGRAM (2026-10-21). `MANJUEL_MCP_<NAME>_CMD` in .env
+# is a command line, started over stdio by manjuel/mcp_stdio.py -- REA is the
+# first. It is never an address, so `_mcp_servers` skips it by this suffix (or
+# the wall would refuse a command as a far host); the two kinds of server meet
+# only in `_mcp_declared`, the one roster every NAME is judged against.
+_MCP_CMD = "_CMD"
+
+
+def _mcp_declared() -> set:
+    """Every server name this ground declares, loopback dial or stdio command.
+    Names only."""
+    from . import mcp_stdio
+    return set(_mcp_servers()) | set(mcp_stdio.servers())
 
 
 def _mcp_key(name: str) -> str:
@@ -3895,7 +4227,7 @@ def mcp_spelled_out(text: str) -> bool:
     """
     import json as _json
     said = (text or "").strip()
-    if not said or not _mcp_named(said, _mcp_servers()):
+    if not said or not _mcp_named(said, _mcp_declared()):
         return False
     raw = _mcp_braced(said)
     if not raw:
@@ -3913,10 +4245,14 @@ def _mcp_call(env: SkillExecutionEnv, args: dict) -> str:
     Every way this can fail names what would answer it, because a seat that
     gets "refused" and nothing else will invent the rest.
     """
-    import json as _json
     from urllib.parse import urlparse
+    from . import mcp_stdio
 
     servers = _mcp_servers()
+    # Names are judged against BOTH kinds of server; the url stays in
+    # `servers` and the command line in `stdio`, and neither leaves here.
+    stdio = mcp_stdio.servers()
+    declared = set(servers) | set(stdio)
 
     # WHERE THE ARGUMENTS COME FROM, and why this is not simply `server=`.
     #
@@ -3942,33 +4278,42 @@ def _mcp_call(env: SkillExecutionEnv, args: dict) -> str:
 
     name = (args.get("server") or "").strip().strip("'\"`").lower()
     if not name:
-        name = _mcp_named(said, servers)
+        name = _mcp_named(said, declared)
         # One declared server and none named is not ambiguity, it is the only
         # answer there is -- but ONLY when something was actually asked. With
         # nothing said at all the question is "which servers are there", and
         # dialling the only one to recite its 78 tools answers a question
         # nobody put.
-        if not name and said and len(servers) == 1:
-            name = next(iter(servers))
+        if not name and said and len(declared) == 1:
+            name = next(iter(declared))
 
     # NO SERVER NAMED: say which are declared. Names only -- never the address.
     if not name:
-        if not servers:
+        if not declared:
             return ("Refused: this ground declares no MCP server. Declare one "
                     "as a dial in .env -- MANJUEL_MCP_<NAME>=<loopback url> -- "
                     "and it becomes callable by <NAME>. The address must be "
-                    "loopback; the estate is local.")
+                    "loopback; the estate is local. A server that is a program "
+                    "is declared as MANJUEL_MCP_<NAME>_CMD=<command line>, and "
+                    "its program or script must be inside the ground.")
         return ("The MCP servers this ground declares: "
-                + ", ".join(sorted(servers)) + ".\nAsk for one by name to see "
+                + ", ".join(sorted(declared)) + ".\nAsk for one by name to see "
                 "what it carries, or name a tool with it -- "
-                + f"`{sorted(servers)[0]} <tool>`, and any arguments after "
+                + f"`{sorted(declared)[0]} <tool>`, and any arguments after "
                 "that as a JSON object.")
 
-    if name not in servers:
+    if name not in declared:
         return (f"Refused: this ground declares no MCP server called "
                 f"{name!r}. It declares: "
-                + (", ".join(sorted(servers)) if servers else "none")
-                + f". A server is declared as {_MCP_DIAL}{name.upper()} in .env.")
+                + (", ".join(sorted(declared)) if declared else "none")
+                + f". A server is declared as {_MCP_DIAL}{name.upper()} in .env"
+                + f" (a loopback url), or {_MCP_DIAL}{name.upper()}{_MCP_CMD}"
+                + " (a command line inside the ground).")
+
+    # A PROGRAM, NOT AN ADDRESS: the stdio branch. Only when there is no
+    # loopback dial of the same name -- a dial, where both are declared, wins.
+    if name not in servers:
+        return _mcp_stdio_call(name, stdio[name], args, explicit, said)
 
     url = servers[name]
     key = _mcp_key(name)
@@ -4021,29 +4366,9 @@ def _mcp_call(env: SkillExecutionEnv, args: dict) -> str:
     # AND the tool has nowhere else to put the arguments, so `content` IS them
     # and must parse whole. A caller that named neither is speaking a sentence,
     # so the arguments are the {...} inside it, if there is one.
-    payload: dict = {}
-    if explicit:
-        raw = (args.get("content") or "").strip()
-        if raw:
-            try:
-                payload = _json.loads(raw)
-            except ValueError:
-                return (f"Refused: the arguments for {tool!r} must be a JSON "
-                        f"object, e.g. {{\"project\": \"research\"}}. Got: "
-                        f"{raw[:120]!r}")
-            if not isinstance(payload, dict):
-                return (f"Refused: the arguments for {tool!r} must be a JSON "
-                        f"OBJECT, not {type(payload).__name__}.")
-    else:
-        raw = _mcp_braced(said)
-        if raw:
-            try:
-                payload = _json.loads(raw)
-            except ValueError:
-                return (f"Refused: {raw[:80]!r} sits in that request "
-                        f"where {tool!r}'s arguments would, and it is not JSON.")
-            if not isinstance(payload, dict):
-                payload = {}
+    payload, refused = _mcp_args(args, explicit, said, tool)
+    if refused:
+        return refused
 
     # The handshake first, as the protocol asks. A server that does not need it
     # is not harmed by it, and one that does would refuse everything without it.
@@ -4072,6 +4397,94 @@ def _mcp_call(env: SkillExecutionEnv, args: dict) -> str:
     if result.get("isError"):
         return (f"Refused: {name}'s {tool!r} refused -- "
                 + (text or "and said nothing about why."))
+    return text or f"{name}'s {tool!r} ran and returned nothing."
+
+
+def _mcp_args(args: dict, explicit: bool, said: str, tool: str) -> tuple[dict, str]:
+    """(payload, "") or ({}, refusal): the tool's arguments, read the ONE way
+    both branches read them (THE ARGUMENTS, in `_mcp_call`, says why)."""
+    import json as _json
+    payload: dict = {}
+    if explicit:
+        raw = (args.get("content") or "").strip()
+        if raw:
+            try:
+                payload = _json.loads(raw)
+            except ValueError:
+                return {}, (f"Refused: the arguments for {tool!r} must be a JSON "
+                            f"object, e.g. {{\"project\": \"research\"}}. Got: "
+                            f"{raw[:120]!r}")
+            if not isinstance(payload, dict):
+                return {}, (f"Refused: the arguments for {tool!r} must be a JSON "
+                            f"OBJECT, not {type(payload).__name__}.")
+    else:
+        raw = _mcp_braced(said)
+        if raw:
+            try:
+                payload = _json.loads(raw)
+            except ValueError:
+                return {}, (f"Refused: {raw[:80]!r} sits in that request "
+                            f"where {tool!r}'s arguments would, and it is not JSON.")
+            if not isinstance(payload, dict):
+                payload = {}
+    return payload, ""
+
+
+def _mcp_stdio_call(name: str, argv: list, args: dict, explicit: bool, said: str) -> str:
+    """`_mcp_call` for a server that is a program (MANJUEL_MCP_<NAME>_CMD).
+
+    One process per call: started, asked, closed -- so nothing is left
+    running behind a turn. The same refusals as the loopback branch, the same
+    bound (the skill's, less the margin, across the whole call), and the
+    same roster answer for no tool or a tool it does not carry. THE WALL is
+    mcp_stdio.admit: a program or script outside the ground is refused by
+    name and nothing is started. The command line is never repeated back.
+    """
+    import time as _time
+    from . import mcp_stdio
+    ran, why = mcp_stdio.admit(name, argv)
+    if why:
+        return why
+    wait = _mcp_wait()
+    deadline = _time.monotonic() + wait
+
+    def left() -> float:
+        return max(1.0, deadline - _time.monotonic())
+
+    tool = (args.get("tool") or "").strip().strip("'\"`")
+    srv = mcp_stdio.StdioServer(ran, timeout=wait)
+    try:
+        try:
+            srv.start()
+            tools = srv.list_tools(timeout=left())
+        except mcp_stdio.StdioError as exc:
+            return f"Refused: {name} could not be read -- {exc}."
+        known = [str(t.get("name")) for t in tools]
+        if not tool and said:
+            tool = _mcp_named(said, known)
+        if not tool:
+            if not tools:
+                return f"{name} carries no tools."
+            lines = [f"{name} carries {len(tools)} tools:"]
+            for t in tools:
+                desc = " ".join(str(t.get("description") or "").split())
+                lines.append(f"  - {t.get('name')}"
+                             + (f"  {desc[:100]}" if desc else ""))
+            return "\n".join(lines)
+        if tool not in known:
+            return (f"Refused: {name} carries no tool called {tool!r}. "
+                    f"It carries: {', '.join(sorted(known))}.")
+        payload, refused = _mcp_args(args, explicit, said, tool)
+        if refused:
+            return refused
+        try:
+            text = srv.call(tool, payload, timeout=left())
+        except mcp_stdio.StdioError as exc:
+            return f"Refused: {name} could not run {tool!r} -- {exc}."
+    finally:
+        srv.close()
+    if text.startswith("Refused: "):
+        return f"Refused: {name}'s " + text[len("Refused: "):]
     return text or f"{name}'s {tool!r} ran and returned nothing."
 
 
@@ -4195,17 +4608,11 @@ def _apply_passage(path: Path, old: str, new: str) -> str:
     text = raw.decode("utf-8", "replace")
     flat = text.replace("\r\n", "\n")
 
-    hits = flat.count(old)
-    if hits == 0:
-        return (f"Refused: that passage is not in {path.name}. Nothing was "
-                f"written. Read the file and quote it exactly -- whitespace "
-                f"and all.")
-    if hits > 1:
-        return (f"Refused: that passage appears {hits} times in {path.name}, "
-                f"and an anchor that matches more than once does not say "
-                f"which. Quote more around it until it is unique.")
+    start, end, tier, why = _locate_passage(flat, old, path.name)
+    if why:
+        return why
 
-    out = flat.replace(old, new, 1)
+    out = flat[:start] + new + flat[end:]
 
     # REFUSE BY PROOF, the way land_code does. A .py that would not parse
     # after the edit is not written -- the parse message stays its own, it
@@ -4239,13 +4646,89 @@ def _apply_passage(path: Path, old: str, new: str) -> str:
     before = len(flat.split("\n"))
     path.write_bytes(out.replace("\n", eol.decode()).encode("utf-8"))
     after = len(out.split("\n"))
-    where = flat[:flat.index(old)].count("\n") + 1
+    where = flat[:start].count("\n") + 1
     return (f"Edited {path.name} at line {where}: "
             f"{len(old.splitlines())} line(s) replaced by "
             f"{len(new.splitlines())}, file now {after} lines (was {before}). "
             f"Terminator kept: {kept}."
+            + (f" (Matched {tier}: the passage as quoted differed from the file only "
+               f"there.)" if tier else "")
             + (f" The file already carried what the gate refuses -- {carried} -- "
                f"and the edit added none of it." if carried else ""))
+
+
+# THE PLAIN FORMS (2026-10-21, the harness study: opencode's second tier, Pi's and
+# OpenClaw's forgiving match). A model copying a passage turns a curly quote, a long
+# dash or an odd space into its plain twin; every one maps ONE character to ONE, so a
+# place found in the plain text is the same place in the file.
+_PLAIN = str.maketrans({"‘": "'", "’": "'", "‚": "'", "‛": "'",
+                        "“": '"', "”": '"', "„": '"', "‟": '"',
+                        "‐": "-", "‑": "-", "‒": "-", "–": "-",
+                        "—": "-", "―": "-", "−": "-",
+                        " ": " ", " ": " ", " ": " ", " ": " ",
+                        " ": " ", " ": " ", "　": " "})
+
+
+def _locate_passage(flat: str, old: str, name: str) -> tuple:
+    """Where `old` is in the file: (start, end, how, refusal). THREE TIERS, each tried
+    only when the one before found nothing (opencode's matcher): exactly; with curly
+    quotes, long dashes and odd spaces made plain; line by line with trailing spaces
+    ignored. Every tier must find ONE place -- more than one is refused, as it always
+    was. On a miss the refusal says where the nearest lines are and the first
+    character that differs (OpenClaw's help on a miss), so the next try lands."""
+    hits = flat.count(old)
+    if hits == 1:
+        at = flat.index(old)
+        return at, at + len(old), "", ""
+    if hits > 1:
+        return 0, 0, "", (f"Refused: that passage appears {hits} times in {name}, "
+                          f"and an anchor that matches more than once does not say "
+                          f"which. Quote more around it until it is unique.")
+    plain, want = flat.translate(_PLAIN), old.translate(_PLAIN)
+    hits = plain.count(want)
+    if hits == 1:
+        at = plain.index(want)
+        return at, at + len(want), "with quotes, dashes and spaces made plain", ""
+    if hits > 1:
+        return 0, 0, "", (f"Refused: with quotes and dashes made plain, that passage "
+                          f"appears {hits} times in {name}. Quote more around it until "
+                          f"it is unique.")
+    lines = plain.split("\n")
+    wanted = [l.rstrip() for l in want.split("\n")]
+    bare = [l.rstrip() for l in lines]
+    found = [i for i in range(len(bare) - len(wanted) + 1) if bare[i:i + len(wanted)] == wanted]
+    if len(found) == 1:
+        i = found[0]
+        start = sum(len(l) + 1 for l in lines[:i])
+        end = start + sum(len(l) + 1 for l in lines[i:i + len(wanted)]) - 1
+        return start, end, "with trailing spaces ignored", ""
+    if len(found) > 1:
+        return 0, 0, "", (f"Refused: with trailing spaces ignored, that passage appears "
+                          f"{len(found)} times in {name}. Quote more around it until it "
+                          f"is unique.")
+    return 0, 0, "", (f"Refused: that passage is not in {name}. Nothing was written. "
+                      f"Read the file and quote it exactly -- whitespace and all."
+                      + _nearest_lines(lines, wanted))
+
+
+def _nearest_lines(lines: list, wanted: list) -> str:
+    """The file's three lines most like the passage's first line, with the column
+    where the closest first differs -- '' when nothing is close."""
+    import difflib
+    first = next((w for w in wanted if w.strip()), "")
+    if not first:
+        return ""
+    scored = sorted(((difflib.SequenceMatcher(None, first.strip(), l.strip()).ratio(), n)
+                     for n, l in enumerate(lines) if l.strip()), reverse=True)[:3]
+    scored = [(r, n) for r, n in scored if r >= 0.45]
+    if not scored:
+        return ""
+    best = lines[scored[0][1]].rstrip()
+    col = next((k for k, (a, b) in enumerate(zip(first, best)) if a != b), min(len(first), len(best)))
+    near = "; ".join(f"line {n + 1}: {lines[n].strip()[:120]!r}" for _, n in scored)
+    return (f" The nearest lines are {near}. Against line {scored[0][1] + 1} your first "
+            f"line differs at column {col + 1} ({first[col:col + 20]!r} where the file has "
+            f"{best[col:col + 20]!r}).")
 
 
 # =====================================================================

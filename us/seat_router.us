@@ -64,6 +64,8 @@ reason the estate can say a seat never touches the filesystem.
     "subtask",
     "symbols",
     "time_align",
+    "triage_binary",
+    "use_record",
     "when",
     "write_file"
   ],

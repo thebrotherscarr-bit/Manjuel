@@ -538,6 +538,25 @@ DRIVE_CHECK_SECONDS = _drive_dial("MANJUEL_DRIVER_CHECK_SECONDS", 900)
 DRIVE_CI_SECONDS = _drive_dial("MANJUEL_DRIVER_CI_SECONDS", 1800)
 DRIVE_CALL_SECONDS = 600.0
 DRIVE_RESULT_CHARS = 4000
+# HOW A JOB IS APPROVED (2026-10-21, his ruling on the harness study: "Both, chosen
+# per job"; and "i shouldn't have to have 11 clicks"). `plan` (the default): one card
+# shows the whole job -- the goal, the check, the items -- and on his yes every write
+# on the job's own line of work runs without a card of its own. `auto` (line-auto):
+# no job card; the writes run and git is the net. `ask`: every write asks, as before.
+# In all three run_python and mcp_call still ask, the floors (secrets, protected and
+# client paths, main, never_written) still refuse, and the send and the merge are his.
+DRIVE_APPROVALS = ("plan", "auto", "ask")
+# No answer on a card in this long is a no (Hermes: no answer is a deny; opencode: a
+# run nobody watches rejects its asks). His door's unattended turns get no wait at all.
+DRIVE_CARD_SECONDS = _drive_dial("MANJUEL_CARD_WAIT", 1800)
+# The window is read off the model and the card (H34) unless MANJUEL_DRIVER_CTX says it.
+DRIVE_CONTEXT_MAX = int(_drive_dial("MANJUEL_DRIVER_CTX_MAX", 32768))
+DRIVE_CONTEXT_SET = bool(os.environ.get("MANJUEL_DRIVER_CTX", "").strip())
+# The context the driver is handed beside its goal: the law, the standing, the story,
+# what memory holds -- bounded, as every seat's blocks are.
+DRIVE_CONTEXT_CHARS = int(_drive_dial("MANJUEL_DRIVER_CONTEXT_CHARS", 5000))
+# Steward's sub-agents: a council seat asked one task, its answer handed back.
+DRIVE_DELEGATE_CHARS = 6000
 # Never offered to the model. Saving and sending are the run's own steps, on
 # his answer (RULE 6, RULE 12); memory lands only through /memory (LAWS 5, 6).
 DRIVE_NEVER = {"git_commit", "git_cycle", "git_push", "git_pull", "git_init",
@@ -561,16 +580,23 @@ DRIVE_USAGE = (
     "        passes AND the command no longer lists it\n"
     "  /drive tidy                               every branch merged into main deleted, here and on GitHub\n"
     "  /drive ship <message>                     the work on disk saved, sent, through CI, merged on your card\n"
-    "  plan and each need a check; \"suites\" as the check runs the strokes. Every\n"
-    "  write asks first; after each job it asks what is next.")
+    "  /drive resume                             the newest job a crash cut short, carried on from its journal\n"
+    "  plan and each need a check; \"suites\" as the check runs the strokes.\n"
+    "  Approval, chosen per job by the first word: (none) one card for the whole job,\n"
+    "  then its writes on its line run; `auto` no job card, git is the net; `ask` every\n"
+    "  write asks. run_python, mcp_call, the send and the merge always ask. After each\n"
+    "  job it asks what is next.")
 DRIVE_SYSTEM = (
     "You are the Steward, driving one job to its end on the operator's machine. "
     "Work in steps: call one tool, read what it returned, then decide the next "
     "call. Use only the tools you are given, and never claim a result a tool did "
     "not return. A file in the ground (the code and the documents) is changed "
     "with ground_edit (one exact passage) or ground_write (a whole file); "
-    "write_file writes only the workspace. Tools that write wait for the "
-    "operator's approval; if he declines, find another way or call done. Do not "
+    "write_file writes only the workspace. Some tools wait for the operator's "
+    "approval; if he declines, find another way or call done. A refusal tells you "
+    "what was wrong: correct the call, do not repeat it. To have a council seat "
+    "think about part of the work, call delegate with the seat and the task; its "
+    "answer comes back to you. Do not "
     "write or run scripts to test your own work: the job's check runs by itself "
     "when you call done. When you believe the goal is met, call done with a "
     "one-line summary. Only a passing check ends the job; if it fails you are "
@@ -606,6 +632,25 @@ DRIVE_SAID = {
     "clean": "TIDY: no branch merged into main is left, here or on GitHub.",
     "shipped": "SHIPPED: saved and sent; the steps say what CI and the merge did.",
     "unsent": "NOT SENT: saved on its line of work, but the send did not go through (the steps say why).",
+    "loop": "NOT DONE: the Steward repeated itself until the loop guard stopped the job.",
+    "stuck": "NOT DONE: every call failed turn after turn, and the job was stopped.",
+    "refused": "NOT RUN: the goal did not pass the gate (the law, or not language).",
+}
+DRIVE_DELEGATE_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "delegate",
+        "description": ("Ask one council seat to think about one task and hand back its "
+                        "answer (it reads nothing and writes nothing itself: give it what "
+                        "it needs in the task). Use it for review, reasoning or code "
+                        "drafting you want a second mind on."),
+        "parameters": {
+            "type": "object",
+            "properties": {"seat": {"type": "string", "description": "the seat's name"},
+                           "task": {"type": "string", "description": "the whole task, with its material"}},
+            "required": ["seat", "task"],
+        },
+    },
 }
 DRIVE_REPOS = ("", "atlas")                  # the ground, and the door's repository inside it
 
@@ -634,14 +679,23 @@ class Drive:
         self.items: list = []        # [item, verdict]
         self.prs: list = []          # pull requests opened
         self.merged: list = []       # lines merged on his click
+        self.approve = "plan"        # how its writes are approved (DRIVE_APPROVALS)
+        self.approved = ""           # the sha256 of the job text his yes was given to
+        self.journal = None          # the job written down as it goes (journal.py)
+        self.resumed = ""            # the journal a resumed job was carried on from
 
 
 def drive_parse(said: str) -> dict:
     """'[plan|each|tidy|ship] <goal> [| do: <prompt>] [| check: <command>]' -> a spec.
     The fields are cut from the end, so a pipe inside a command stays in it."""
     text = str(said or "").strip()
+    approve = "plan"
+    for a in DRIVE_APPROVALS[1:]:
+        if text.lower() == a or text.lower().startswith(a + " "):
+            approve, text = a, text[len(a):].strip()
+            break           # `auto` or `ask` first, then the mode: "auto plan tidy the docs"
     mode = "goal"
-    for m in ("plan", "each", "tidy", "ship"):
+    for m in ("plan", "each", "tidy", "ship", "resume"):
         if text.lower() == m or text.lower().startswith(m + " "):
             mode, text = m, text[len(m):].strip()
             break           # the first word alone names the mode: "plan tidy the docs" is a plan
@@ -654,7 +708,32 @@ def drive_parse(said: str) -> dict:
         text, do = text[:cut].strip(), text[cut + len("| do:"):].strip()
     if check.lower() in ("suites", "the suites", "strokes", "the strokes"):
         check = DRIVE_SUITES
-    return {"mode": mode, "goal": text, "check": check, "do": do}
+    return {"mode": mode, "goal": text, "check": check, "do": do, "approve": approve}
+
+
+def drive_job_hash(spec: dict, items=None) -> str:
+    """What his yes to a job card is bound to (OpenShell binds an approval to a hash of
+    exactly what was reviewed): the mode, the goal, the prompt, the check, the items."""
+    import hashlib
+    text = "\n".join([spec.get("mode", ""), spec.get("goal", ""), spec.get("do", ""),
+                      spec.get("check", "")] + [_drive_key(i) for i in (items or [])])
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def _drive_preview(name: str, args: dict) -> str:
+    """What a write card shows: the passage it replaces and the one it writes, or the
+    head of the file it writes -- never the arguments cut to a line."""
+    content = str((args or {}).get("content") or "")
+    where = str((args or {}).get("filepath") or "").strip()
+    if name in ("ground_edit", "edit_file") and "@@ NEW" in content:
+        old, _, new = content.partition("@@ NEW")
+        old = old.replace("@@ OLD", "", 1).strip("\r\n")
+        body = ("\n".join("- " + l for l in old.splitlines()) + "\n"
+                + "\n".join("+ " + l for l in new.strip("\r\n").splitlines()))
+    else:
+        body = content
+    body = body if len(body) <= DRIVE_RESULT_CHARS else body[:DRIVE_RESULT_CHARS] + "\n... (cut)"
+    return f"{name} {where}\n{body}" if body.strip() else f"{name} {_drive_brief(args)}"
 
 
 def _drive_yes(answer) -> bool:
@@ -774,6 +853,80 @@ def drive_calls(msg) -> list:
         if name:
             out.append((name, dict(args) if isinstance(args, dict) else {}))
     return out
+
+
+def drive_calls_raw(msg) -> list:
+    """Every native tool call in a reply as (name, the arguments as they came): the
+    repair (repair.py) reads them before anything is decided, so a call a small model
+    got nearly right is mended and a broken one refused by name -- never run on a guess."""
+    out = []
+    for call in (_drive_field(msg, "tool_calls") or []):
+        fn = _drive_field(call, "function")
+        if fn is None:
+            continue
+        out.append((str(_drive_field(fn, "name") or "").strip(), _drive_field(fn, "arguments")))
+    return out
+
+
+def drive_window(client, model: str) -> int:
+    """The window the driver runs in: MANJUEL_DRIVER_CTX when he set it; otherwise the
+    model's own trained length, cut to what the card holds beside its weights (vram.py:
+    the card less Windows' gigabyte, ~11 KB a token), at most DRIVE_CONTEXT_MAX and at
+    least 8192 -- read, never assumed. Any fault: DRIVE_CONTEXT."""
+    if DRIVE_CONTEXT_SET:
+        return DRIVE_CONTEXT
+    try:
+        from . import vram
+        info = client.show(model)
+        mi = _drive_field(info, "modelinfo") or _drive_field(info, "model_info") or {}
+        trained = max([int(v) for k, v in dict(mi).items() if str(k).endswith(".context_length")] or [0])
+        weights = 0
+        for m in (_drive_field(client.list(), "models") or []):
+            if str(_drive_field(m, "model") or _drive_field(m, "name") or "") in (model, model + ":latest"):
+                weights = int(_drive_field(m, "size") or 0)
+        room = vram.budget_bytes() - weights - vram.GRAPH_OVERHEAD
+        fits = int(room / vram.KV_BYTES_PER_TOKEN) if room > 0 else 0
+        window = min(x for x in (trained or DRIVE_CONTEXT_MAX, fits or DRIVE_CONTEXT, DRIVE_CONTEXT_MAX))
+        return max(8192, window // 1024 * 1024)
+    except Exception:
+        return DRIVE_CONTEXT
+
+
+def drive_memory(ground) -> str:
+    """The newest of what memory.md holds -- landed by his hand, so it is the record, not
+    a model's word -- bounded for the driver's prompt. '' when there is none."""
+    try:
+        from .memory import MEMORY_FILE
+        text = (Path(ground) / MEMORY_FILE).read_text(encoding="utf-8", errors="replace")
+    except Exception:
+        return ""
+    at = text.find("\n## ")
+    body = text[at:].strip() if at >= 0 else ""
+    if not body:
+        return ""
+    body = body if len(body) <= 1500 else "...\n" + body[-1500:].split("\n## ", 1)[-1]
+    return "## Memory -- what the operator has landed (newest last)\n" + body
+
+
+def drive_lesson(d) -> str:
+    """What a job taught, read off its record alone (no model): staged in memory's
+    pending file for his hand to land (/memory) -- learning kept, never landed by itself.
+    '' when the job taught nothing worth his time (it passed cleanly)."""
+    refused = [s for s in d.steps if str(s[3] or "").lstrip().startswith(("Refused", "Declined"))]
+    fails = [s for s in d.steps if s[1] == "check" and not str(s[3] or "").startswith("exit 0")]
+    if d.verdict in ("passed", "tidy", "clean", "shipped") and not refused and len(fails) < 2:
+        return ""
+    lines = [f"Steward drove \"{d.goal[:200]}\" (check: {d.check or 'none'}) -> {d.verdict}"
+             f" in {len(d.steps)} steps on {d.model}."]
+    if d.error:
+        lines.append(f"It stopped on: {d.error[:300]}")
+    for s in refused[:5]:
+        lines.append(f"Refused at step {s[0]} ({s[1]}): {_drive_head(s[3])}")
+    if fails:
+        lines.append(f"The check failed {len(fails)} time(s); the last: {_drive_head(fails[-1][3])}")
+    if d.transcript:
+        lines.append(f"Record: {d.transcript}")
+    return "\n".join(lines)
 
 
 def _drive_brief(args) -> str:
@@ -928,97 +1081,231 @@ def drive_act(name: str, args: dict, ctx, d) -> str:
                     f"saved, or not in git), so it is not written: what the run commits or puts "
                     f"back must be its own work alone. Nothing was written.")
     opening = ("drive-" + time.strftime("%m%d-%H%M%S")) if tgt and tgt[2] in DRIVE_MAIN else ""
-    if name in WRITING_SKILLS or name in DRIVE_ASKS:
+    # A write inside a job he approved runs without a card of its own (the job card bound
+    # his yes to its text); run_python and mcp_call always ask (DRIVE_APPROVALS).
+    covered = name in WRITING_SKILLS and name not in DRIVE_ASKS and (
+        d.approve == "auto" or (d.approve == "plan" and d.approved))
+    if (name in WRITING_SKILLS or name in DRIVE_ASKS) and not covered:
         where = (f" (first opening the line of work `{opening}` in {tgt[0].name})"
                  if opening else "")
-        answer = ctx.ask(f"The Steward wants to run {name} {_drive_brief(args)}{where}\n"
+        answer = ctx.ask(f"The Steward wants to run {_drive_preview(name, args)}{where}\n"
                          f"Approve? [y/n] ")
+        if d.journal is not None:
+            d.journal.write("card", prompt=f"{name} {_drive_brief(args)}", answer=str(answer or ""))
         if not _drive_yes(answer):
-            return f"Declined by the operator: {name} did not run."
+            # A NO THAT SAYS WHY (opencode: a reject with a message is feedback): any
+            # words beyond a plain no go back to the Steward as his reason.
+            reason = str(answer or "").strip()
+            if reason.lower() in DRIVE_STOP:
+                return f"Declined by the operator: {name} did not run."
+            return f"Declined by the operator: {name} did not run. His reason: {reason[:600]}"
+    elif covered and getattr(ctx, "report", None) is not None:
+        ctx.report(f"  {name} {str(args.get('filepath') or '')[:120]}: inside the approved job "
+                   f"({d.approve}), no card")
     if opening:
         code, out = _drive_run(["git", "switch", "-c", opening], tgt[0])
         if code:
             return f"Refused: the line of work `{opening}` could not be opened: {out}"
         d.repos[key[0]] = {"base": tgt[2], "line": opening}
+        if d.journal is not None:
+            d.journal.write("repo", key=key[0], base=tgt[2], line=opening)
     if key and key not in d.item_files:
         try:
             d.before[key] = Path(key[1]).read_bytes() if Path(key[1]).is_file() else None
         except OSError as exc:
             return f"Refused: {_drive_rel(*key)} could not be read before it was written: {exc}"
+        if d.journal is not None:
+            import base64
+            raw = d.before[key]
+            d.journal.write("before", repo=key[0], path=key[1],
+                            bytes=None if raw is None else base64.b64encode(raw).decode("ascii"))
     try:
         result = str(ctx.skills.execute(name, args, env) or "")
     except Exception as exc:
         return f"Refused: {name} failed in the engine ({type(exc).__name__}: {exc})."
     if key and result.lstrip().startswith(("Wrote", "Edited")):
+        if key[0] not in d.repos and d.journal is not None:
+            d.journal.write("repo", key=key[0], base="", line=tgt[2])
         d.repos.setdefault(key[0], {"base": "", "line": tgt[2]})
         d.item_files.add(key)
         d.touched.add(key)
+        if d.journal is not None:
+            d.journal.write("item_file", repo=key[0], path=key[1])
     return result
 
 
-def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float) -> str:
-    """One job, worked until its check passes or its budget is spent."""
+def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float,
+               messages: list | None = None) -> str:
+    """One job, worked until its check passes or its budget is spent.
+
+    THE HARNESS AROUND THE MODEL (2026-10-21, the harness study; his words: "the harness
+    is the security, not the model"). Each call the model makes is mended before it is
+    judged and refused by name when it cannot be (repair.py); the same call again and
+    again, or turn after turn of failures, stops the job (guards.py); a failed model call
+    is tried again before it ends anything (guards.retry); the window is kept under its
+    line, results trimmed first and summarised only when that is not enough
+    (compact.py); a model whose own tool calls fail it is driven in its own tongue
+    instead (dialects.py); and every message, step, card and byte put by is written down
+    as it happens (journal.py), so a crash loses nothing `/drive resume` cannot pick up.
+    `messages` carries a resumed job's conversation in."""
+    from . import compact, dialects, guards, repair
+    from .context import FAILED_HEADS
     started = time.time()
     said_check = check or "none named: the job is unchecked and ends when you call done"
     before = f"What was done before in this sitting:\n{ctx.carry}\n\n" if ctx.carry else ""
-    messages: list = [
-        {"role": "system", "content": DRIVE_SYSTEM},
-        {"role": "user", "content": f"{before}Goal: {task}\nThe check that decides done: {said_check}"},
-    ]
+    system = DRIVE_SYSTEM + (("\n\n" + ctx.context) if getattr(ctx, "context", "") else "")
+    if messages is None:
+        messages = [
+            {"role": "system", "content": system},
+            {"role": "user", "content": f"{before}Goal: {task}\nThe check that decides done: {said_check}"},
+        ]
+        for m in messages:
+            _drive_journal_message(d, m)
     # Thinking is off by default: on 2026-10-16 one step after a write thought
     # for over three minutes. MANJUEL_DRIVER_THINK=1 turns it back on.
     think = os.environ.get("MANJUEL_DRIVER_THINK", "").strip().lower() in ("1", "true", "yes")
+    window = getattr(ctx, "window", 0) or DRIVE_CONTEXT
+    tools = ctx.tools
+    schemas = {str(t["function"]["name"]): t["function"].get("parameters") or {}
+               for t in tools if isinstance(t, dict) and t.get("function")}
+    names = sorted(schemas)
+    dialect = getattr(ctx, "dialect", "native") or "native"
+    guard = guards.CallGuard()
     steps = 0
     shown: set = set()          # the tools whose whole file this job has handed over (H32)
 
     def spent() -> bool:
         return steps >= max_steps or time.time() - started > max_minutes * 60
 
+    def summarise(prompt: str) -> str:
+        r = ctx.client.chat(model=ctx.model, messages=[{"role": "user", "content": prompt}],
+                            options={"num_ctx": window}, keep_alive=ctx.keep_alive, think=False)
+        return str(_drive_field(_drive_field(r, "message"), "content") or "")
+
+    def tell(name: str, text: str) -> None:
+        if dialect == "native":
+            m = {"role": "tool", "tool_name": name, "content": text}
+        else:
+            m = {"role": "user", "content": dialects.render_result(
+                dialect, name, dialects.escape_untrusted(dialect, text))}
+        messages.append(m)
+        _drive_journal_message(d, m)
+
     while True:
         if spent():
             ctx.report(f"  budget spent: {steps} steps, {(time.time() - started) / 60:.1f} min")
             return "budget"
+        messages[:], trimmed = compact.compact(list(messages), window, ask=summarise, logs=ctx.logs)
+        if trimmed:
+            ctx.report(f"  the window: {trimmed}")
+        sent = list(messages)
+        if dialect != "native":
+            sent[0] = dict(sent[0], content=_drive_field(sent[0], "content")
+                           + "\n\n" + dialects.tool_prompt(dialect, tools))
         try:
-            resp = ctx.client.chat(model=ctx.model, messages=messages, tools=ctx.tools,
-                                   options={"num_ctx": DRIVE_CONTEXT},
-                                   keep_alive=ctx.keep_alive, think=think)
+            resp = guards.retry(lambda: ctx.client.chat(
+                model=ctx.model, messages=sent, tools=(tools if dialect == "native" else None),
+                options={"num_ctx": window}, keep_alive=ctx.keep_alive, think=think),
+                report=lambda line: ctx.report("  " + line))
         except Exception as exc:
+            switch = dialects.preferred(ctx.model)
+            if dialect == "native" and switch == "native":
+                switch = "xml"              # oh-my-pi's fallback for a model with no form of its own
+            if dialect == "native" and ("500" in str(exc) or "tool" in str(exc).lower()):
+                # Ollama answers a tool call it could not parse with a 500 (C126): the
+                # model is driven in its own form from here, never left to die on it.
+                dialect = switch
+                ctx.report(f"  the model's own tool calls failed ({type(exc).__name__}); "
+                           f"driving it in the {dialect} form from here")
+                continue
             d.error = f"{type(exc).__name__}: {exc}"
             ctx.report(f"  the model call failed: {d.error}")
             return "error"
         msg = _drive_field(resp, "message")
-        messages.append(msg)
+        content = str(_drive_field(msg, "content") or "")
+        if dialect == "native":
+            messages.append(msg)
+            raw = drive_calls_raw(msg)
+        else:
+            if dialects.writes_own_result(dialect, content):
+                content = content.split("<|start|>functions.", 1)[0]
+            raw = [(n, a) for n, a in dialects.parse(dialect, content, names)]
+            # The clean form goes back into the history, never an invented tail.
+            messages.append({"role": "assistant", "content": dialects.visible_text(dialect, content)
+                             + "".join(dialects.render_call(dialect, n, a) for n, a in raw)})
+            content = dialects.visible_text(dialect, content)
+        _drive_journal_message(d, messages[-1])
+        # A call written as plain text is taken only when its name is one of the tools.
+        if not raw and content:
+            raw = [(n, a) for n, a in repair.text_calls(content, names)]
+        if raw and repair.cut_by_length(resp):
+            for name, _ in raw:
+                tell(name, f"Refused: {name} was not run -- the reply was cut off by the "
+                           f"length limit, so its arguments may be incomplete. Make the call "
+                           f"again with smaller arguments (one passage at a time).")
+            continue
         # Words with no call are a claim that the job is done; the check decides,
         # exactly as it does for an explicit done.
-        calls = drive_calls(msg) or [("done", {"summary": _drive_head(_drive_field(msg, "content"))})]
-        for name, args in calls:
+        if not raw:
+            raw = [("done", {"summary": _drive_head(content)})]
+        for name, raw_args in raw:
             if spent():
                 break
             steps += 1
             d.n += 1
             n = d.n
             if name == "done":
+                args = raw_args if isinstance(raw_args, dict) else {"summary": str(raw_args or "")}
+            else:
+                name, args, problem = repair.normalize_call(name, raw_args, schemas)
+                if problem:
+                    d.steps.append([n, name or "?", _drive_brief(raw_args or {}), problem])
+                    ctx.report(f"  [{n}] {name or '?'} -> {_drive_head(problem)}")
+                    _drive_journal_step(d, d.steps[-1])
+                    guard.see_result(name or "?", True)
+                    tell(name or "?", problem)
+                    continue
+                level, why = guard.see_call(name, args)
+                if level == "stop":
+                    d.steps.append([n, name, args, f"stopped by the loop guard: {why}"])
+                    ctx.report(f"  [{n}] the loop guard stopped the job: {why}")
+                    _drive_journal_step(d, d.steps[-1])
+                    return "loop"
+            if name == "delegate":
+                result = _drive_delegate(ctx, args)
+                d.steps.append([n, name, {"seat": args.get("seat", "")}, result])
+                ctx.report(f"  [{n}] delegate {args.get('seat', '')} -> {_drive_head(result)}")
+                _drive_journal_step(d, d.steps[-1])
+                guard.see_result(name, result.lstrip().startswith(FAILED_HEADS))
+                tell(name, result[:DRIVE_DELEGATE_CHARS])
+                continue
+            if name == "done":
                 summary = str(args.get("summary") or "").strip() or "(no summary)"
                 if not check:
                     d.steps.append([n, "done", summary, "no check named"])
                     ctx.report(f"  [{n}] done: {summary} -- no check named")
+                    _drive_journal_step(d, d.steps[-1])
                     return "unchecked"
                 ctx.report(f"  [{n}] done claimed: {summary}; running the check")
                 ok, out = _drive_checked(d, check, ctx.ground)
                 d.check_out = out
                 d.steps.append([n, "check", check, out])
                 ctx.report(f"  [{n}] check {'PASSED' if ok else 'FAILED'}: {_drive_head(out)}")
+                _drive_journal_step(d, d.steps[-1])
                 if ok:
                     if d.item_files:
                         _drive_take_check_files(d, ctx.report)    # C130
                     return "passed"
-                messages.append({"role": "tool", "tool_name": "done",
-                                 "content": f"The check failed:\n{out}"})
+                tell("done", f"The check failed:\n{out}")
                 continue
             result = drive_act(name, args, ctx, d)
             d.steps.append([n, name, args, result])
             ctx.report(f"  [{n}] {name} {_drive_brief(args)} -> {_drive_head(result)}")
-            said = result[:DRIVE_RESULT_CHARS]
+            _drive_journal_step(d, d.steps[-1])
+            guard.see_result(name, result.lstrip().startswith(FAILED_HEADS))
+            said = _drive_said(result, ctx, name)
+            if level == "warn":
+                said += "\n\n" + why
             # THE WHOLE FILE ON FIRST USE (WHAT'S LEFT H32, his card of 2026-10-19):
             # the tools list carries each description cut to 400 characters, so
             # the first time a job uses a tool its whole skill file comes back
@@ -1028,7 +1315,57 @@ def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float
                 shown.add(name)
                 said = (f"How `{name}` works -- its whole skill file, once in this job:\n"
                         f"{spec.body.strip()}\n\nWhat it returned:\n{said}")
-            messages.append({"role": "tool", "tool_name": name, "content": said})
+            tell(name, said)
+        level, why = guard.end_turn()
+        if level == "stop":
+            d.n += 1
+            d.steps.append([d.n, "stopped", "", why])
+            ctx.report(f"  the failure guard stopped the job: {why}")
+            _drive_journal_step(d, d.steps[-1])
+            return "stuck"
+
+
+def _drive_said(result: str, ctx, name: str) -> str:
+    """What the model is handed of a tool's result. Under DRIVE_RESULT_CHARS, all of it.
+    Over it, the head AND the tail -- a long read ends with the line that says how to
+    read on, and a cut that kept only the head threw that line away -- with the whole
+    saved in logs/ and named in the cut (opencode, Hermes, oh-my-pi)."""
+    if len(result) <= DRIVE_RESULT_CHARS:
+        return result
+    from . import compact
+    where = compact.spill(result, getattr(ctx, "logs", None), name) if getattr(ctx, "logs", None) else ""
+    head, tail = result[:int(DRIVE_RESULT_CHARS * 0.65)], result[-int(DRIVE_RESULT_CHARS * 0.3):]
+    return (f"{head}\n\n... [{len(result) - len(head) - len(tail):,} characters cut here"
+            + (f"; the whole result is in {where}" if where else "") + "] ...\n\n" + tail)
+
+
+def _drive_journal_message(d, msg) -> None:
+    if d.journal is not None:
+        from .journal import message_dict
+        d.journal.write("message", **message_dict(msg))
+
+
+def _drive_journal_step(d, step) -> None:
+    if d.journal is not None:
+        n, tool, args, result = step
+        d.journal.write("step", n=n, tool=str(tool), args=args if isinstance(args, (dict, str)) else str(args),
+                        result=str(result or ""))
+
+
+def _drive_delegate(ctx, args: dict) -> str:
+    """Steward's sub-agent: one council seat asked one task (DRIVE_DELEGATE_TOOL). The
+    seat reads nothing and writes nothing -- it is given the task as text and answers in
+    text -- so a sub-agent can never step outside the job's approval."""
+    seats = getattr(ctx, "seats", None)
+    seat, task = str(args.get("seat") or "").strip(), str(args.get("task") or "").strip()
+    if seats is None:
+        return "Refused: no council is seated for this job, so there is no one to delegate to."
+    if not seat or not task:
+        return "Refused: delegate needs a seat and a task."
+    try:
+        return str(seats(seat, task) or "") or f"Refused: {seat} answered nothing."
+    except Exception as exc:
+        return f"Refused: {seat} could not answer ({type(exc).__name__}: {exc})."
 
 
 def _drive_changes(d) -> str:
@@ -1061,6 +1398,8 @@ def _drive_commit_item(d, label: str, report) -> bool:
         if c2 == 0:
             _, sha = _drive_run(["git", "rev-parse", "HEAD"], repo)
             d.made.setdefault(repo, []).append(sha.strip())
+            if d.journal is not None:
+                d.journal.write("commit", repo=repo, sha=sha.strip())
             for k in [k for k in d.item_files | d.taken if k[0] == repo]:
                 d.item_files.discard(k)
                 d.taken.discard(k)
@@ -1227,8 +1566,13 @@ def drive_plan(goal: str, check: str, ctx) -> list:
     msgs = [{"role": "system", "content": DRIVE_PLAN_SYSTEM},
             {"role": "user", "content": f"{before}Goal: {goal}\nThe check every item must pass: {check or '(none)'}"}]
     try:
-        resp = ctx.client.chat(model=ctx.model, messages=msgs, options={"num_ctx": DRIVE_CONTEXT},
-                               keep_alive=ctx.keep_alive, think=False)
+        # JSON BY CONSTRUCTION (Ollama's `format`): the list is asked for in the shape it
+        # must have, so it is not scraped out of prose; the scrape below stays for a model
+        # that ignores it.
+        resp = ctx.client.chat(model=ctx.model, messages=msgs, keep_alive=ctx.keep_alive, think=False,
+                               options={"num_ctx": getattr(ctx, "window", 0) or DRIVE_CONTEXT},
+                               format={"type": "array", "items": {"type": "string"},
+                                       "minItems": 2, "maxItems": 8})
     except Exception as exc:
         ctx.report(f"  the plan could not be asked: {type(exc).__name__}: {exc}")
         return []
@@ -1247,6 +1591,12 @@ def _drive_single(d, ctx) -> None:
     """ONE JOB: worked; on a pass, what changed, then on his answer the whole
     pipeline; on no pass, its own files put back on his answer."""
     d.verdict = _drive_job(d, d.goal, d.check, ctx, DRIVE_STEPS, DRIVE_MINUTES)
+    _drive_after_job(d, ctx)
+
+
+def _drive_after_job(d, ctx) -> None:
+    """What follows one job's verdict: on a pass the change and the send card; on no
+    pass its own files put back on his answer (shared by a job and a resumed one)."""
     if d.verdict in ("passed", "unchecked") and d.item_files:
         said = _drive_changes(d)
         if d.verdict == "unchecked":
@@ -1298,13 +1648,16 @@ def drive_items(d, spec: dict, ctx) -> None:
     if not todo:
         d.verdict = "nothing"
         return
-    listing = "\n".join(f"  {i}. {k[:140]}" for i, (_, k) in enumerate(todo, 1))
-    answer = ctx.ask(f"The Steward will work {len(todo)} item(s), each its own job, each checked by: "
-                     f"{check}\n{listing}\nOn a line of work of its own: an item that passes is "
-                     f"committed there, one that fails is put back; each write still asks. "
-                     f"Approve the run? [y/n] ")
-    if not _drive_yes(answer):
-        d.verdict = "declined"
+    if d.approve == "ask":
+        listing = "\n".join(f"  {i}. {k[:140]}" for i, (_, k) in enumerate(todo, 1))
+        answer = ctx.ask(f"The Steward will work {len(todo)} item(s), each its own job, each checked by: "
+                         f"{check}\n{listing}\nOn a line of work of its own: an item that passes is "
+                         f"committed there, one that fails is put back; each write still asks. "
+                         f"Approve the run? [y/n] ")
+        if not _drive_yes(answer):
+            d.verdict = "declined"
+            return
+    elif not _drive_job_card(d, spec, ctx, [it for it, _ in todo]):
         return
     passed = 0
     for i, (it, k) in enumerate(todo, 1):
@@ -1328,6 +1681,8 @@ def drive_items(d, spec: dict, ctx) -> None:
         elif d.item_files or d.taken:
             _drive_put_back(d, ctx.report, k[:60])
         d.items.append([k, v])
+        if d.journal is not None:
+            d.journal.write("item", key=k, verdict=v)
         if v == "error":
             break               # the model is down: what was not worked is not marked tried
         if key:
@@ -1503,39 +1858,79 @@ def drive_save(d, spec: dict, ctx) -> None:
 
 def drive(spec, *, skills, env, ground, ask, report,
           host: str = "http://127.0.0.1:11434", keep_alive: str = "30m",
-          logs=None, client=None, model: str = DRIVE_MODEL, carry: str = "") -> Drive:
-    """Work one /drive to its end (the head of this section)."""
+          logs=None, client=None, model: str = DRIVE_MODEL, carry: str = "",
+          context: str = "", seats=None, seat_names=None) -> Drive:
+    """Work one /drive to its end (the head of this section).
+
+    `context` is what the driver is handed beside its goal (the standing, the story,
+    memory: drive_context); `seats` a callable (seat, task) -> its answer, which makes
+    the council Steward's sub-agents (delegate); `seat_names` lists them for the tool."""
     from types import SimpleNamespace
     if isinstance(spec, str):
         spec = drive_parse(spec)
+    spec.setdefault("approve", "plan")
+    resumed = None
+    if spec["mode"] == "resume":
+        resumed = _drive_resume_spec(Path(logs) if logs else Path(ground) / "logs")
+        if resumed is not None:
+            spec = dict(resumed["spec"], approve=resumed["spec"].get("approve", "plan"))
     d = Drive(spec["goal"] or spec["mode"], spec["check"], model)
+    d.approve = spec["approve"] if spec["approve"] in DRIVE_APPROVALS else "plan"
     started = time.time()
     ground = Path(ground)
     if client is None:
         import ollama
         client = ollama.Client(host=host, timeout=DRIVE_CALL_SECONDS)
     tools, allowed = drive_tools(skills)
+    if seats is not None:
+        tool = json.loads(json.dumps(DRIVE_DELEGATE_TOOL))
+        if seat_names:
+            tool["function"]["parameters"]["properties"]["seat"]["enum"] = list(seat_names)
+        tools = tools[:-1] + [tool] + tools[-1:]       # done stays last
     ctx = SimpleNamespace(skills=skills, env=env, ground=ground, ask=ask, report=report,
                           client=client, tools=tools, keep_alive=keep_alive, model=model,
-                          logs=Path(logs) if logs else ground / "logs", carry=carry)
+                          logs=Path(logs) if logs else ground / "logs", carry=carry,
+                          context="", seats=seats, window=DRIVE_CONTEXT,
+                          dialect=os.environ.get("MANJUEL_DRIVER_DIALECT", "").strip() or "native")
     kept = (getattr(env, "caller", ""), getattr(env, "caller_allowed", None),
             getattr(env, "objective", ""))
     from .skills import DRIVER
     env.caller, env.caller_allowed, env.objective = DRIVER, set(allowed), spec["goal"]
     mode = "" if spec["mode"] == "goal" else " " + spec["mode"]
     report(f"  drive{mode}: {spec['goal']}")
-    report(f"  check: {spec['check'] or 'none named (unchecked)'} | model {model}")
+    report(f"  check: {spec['check'] or 'none named (unchecked)'} | model {model} | approval {d.approve}")
     try:
+        if spec["mode"] == "resume" and resumed is None:
+            d.verdict, d.error = "error", "there is no job a crash cut short to carry on (logs/*_drive.jsonl)"
+            return d
+        # THE RAILS (2026-10-21): the goal passes the gates every ordinary turn passes --
+        # noise never reaches the model, and the law is walked and checked first. A refusal
+        # ends the job in the gate's own words, before anything is asked or written.
+        if spec["mode"] in ("goal", "plan", "each"):
+            why = _drive_gate(spec, ground)
+            if why.startswith("REFUSED"):
+                d.verdict, d.error = "refused", why
+                report(f"  {why}")
+                return d
+            ctx.context = (why + ("\n\n" + context if context else ""))[:DRIVE_CONTEXT_CHARS]
+            ctx.window = drive_window(client, model)
+            report(f"  window: {ctx.window} tokens" + ("" if DRIVE_CONTEXT_SET else " (read off the model and the card)"))
         # WHAT IS UNSAVED BEFORE THE RUN (C130): noted once, before any write or check, so
         # what a check later rewrites is told apart from work that was here already.
         for sub in DRIVE_REPOS:
             repo = ground / sub if sub else ground
             if (repo / ".git").exists():
                 d.baseline[str(repo.resolve())] = _drive_unsaved(repo)
-        if spec["mode"] in ("plan", "each") and not spec["check"]:
+        if spec["mode"] in ("goal", "plan", "each"):
+            from .journal import Journal
+            d.journal = Journal.open(ctx.logs, spec, model)
+        if resumed is not None:
+            _drive_resume(d, ctx, resumed)
+        elif spec["mode"] in ("plan", "each") and not spec["check"]:
             d.verdict, d.error = "error", f"{spec['mode']} needs a check (| check: <command>) to decide each item"
         elif spec["mode"] == "goal":
-            _drive_single(d, ctx)
+            if _drive_job_card(d, spec, ctx):
+                _drive_single(d, ctx)
         elif spec["mode"] == "tidy":
             drive_tidy(d, ctx)
         elif spec["mode"] == "ship":
@@ -1543,7 +1938,10 @@ def drive(spec, *, skills, env, ground, ask, report,
         else:
             drive_items(d, spec, ctx)
     except EOFError:
-        raise                   # his close: the door's loop serves it after the delivery
+        # His close: the door's loop serves it after the delivery. The journal is left
+        # open, so the job can be carried on (/drive resume).
+        d.journal = None
+        raise
     except Exception as exc:
         d.verdict, d.error = "error", f"{type(exc).__name__}: {exc}"
         report(f"  the driver stopped: {d.error}")
@@ -1552,7 +1950,105 @@ def drive(spec, *, skills, env, ground, ask, report,
         d.elapsed = time.time() - started
         d.transcript = drive_record(d, ctx.logs)
         d.report = drive_report(d)
+        if d.journal is not None:
+            d.journal.close(d.verdict or "error")
     return d
+
+
+def _drive_gate(spec: dict, ground: Path) -> str:
+    """The ordinary turn's gates on a job: not language is refused, and the law is walked
+    and the goal and its prompt are checked against what a regex can decide
+    (lawgate.py). 'REFUSED ...' or the law's block, which rides in the driver's prompt."""
+    from . import intent, lawgate
+    from . import gitstate as _gitstate
+    if spec["mode"] != "each" and intent.gibberish(spec["goal"]):
+        return "REFUSED: the goal did not parse as language; nothing was asked or written."
+    # The goal and the prompt are what the model is told to do; the check is his own
+    # command, shown on the job card before it ever runs, and may name a path anywhere.
+    # For `each` the goal is his source command too; only the prompt is the model's.
+    words = " ".join(x for x in ((spec["goal"] if spec["mode"] != "each" else ""),
+                                 spec.get("do", "")) if x)
+    verdict = lawgate.run(words, ground, remote_allowed=_gitstate.remote_allowed())
+    if not verdict.ok:
+        return "REFUSED by THE LAW: " + "; ".join(f"{law} -- {why}" for law, why in verdict.refusals)
+    return verdict.block()
+
+
+def _drive_job_card(d, spec: dict, ctx, items=None) -> bool:
+    """THE ONE CARD FOR A JOB (approval `plan`): the goal, the check that will run and the
+    items, whole; his yes is bound to their hash, and every write inside the job on its
+    own line of work runs after it without a card. `auto` asks nothing here; `ask` asks
+    at every write instead. True when the job may run."""
+    if d.approve == "auto":
+        d.approved = drive_job_hash(spec, items)
+        return True
+    if d.approve == "ask":
+        return True
+    listing = "".join(f"\n  {i}. {_drive_key(it)[:140]}" for i, it in enumerate(items or [], 1))
+    answer = ctx.ask(f"The Steward will work this job, on a line of work of its own:\n"
+                     f"  goal: {spec['goal'][:600]}\n"
+                     f"  the check that decides done (it runs when the Steward calls done): "
+                     f"{spec['check'] or '(none: the job is unchecked and nothing is saved)'}"
+                     + (f"\n  items:{listing}" if listing else "") +
+                     f"\nOn your yes its writes on that line run without a card each; run_python and "
+                     f"mcp_call still ask; nothing is saved, sent or merged without its own card. "
+                     f"Approve the job? [y/n] ")
+    if d.journal is not None:
+        d.journal.write("card", prompt="the job card", answer=str(answer or ""))
+    if not _drive_yes(answer):
+        d.verdict = "declined"
+        return False
+    d.approved = drive_job_hash(spec, items)
+    if d.journal is not None:
+        d.journal.write("approved", hash=d.approved)
+    return True
+
+
+def _drive_resume_spec(logs: Path):
+    """The newest journal a crash left open (journal.unfinished), replayed; None if none."""
+    from . import journal
+    path = journal.unfinished(logs)
+    if path is None:
+        return None
+    try:
+        got = journal.replay(path)
+    except Exception:
+        return None
+    got["path"] = path
+    return got
+
+
+def _drive_resume(d, ctx, got: dict) -> None:
+    """Carry a job a crash cut short on from its journal: its line of work, the files it
+    wrote and their bytes before it, its steps and its conversation come back; his card
+    is asked again (an approval is never carried across a crash), and the job goes on
+    from its last message until its check decides it."""
+    from . import journal
+    d.resumed = str(got["path"])
+    journal.mark_resumed(got["path"])
+    d.repos = {k: dict(v) for k, v in (got.get("repos") or {}).items()}
+    d.item_files = set(got.get("item_files") or ())
+    d.touched = set(got.get("touched") or ()) | d.item_files
+    d.before = dict(got.get("before") or {})
+    d.made = {k: list(v) for k, v in (got.get("made") or {}).items()}
+    d.steps = [list(s) for s in (got.get("steps") or [])]
+    d.n = int(got.get("last_n") or len(d.steps))
+    spec = got["spec"]
+    ctx.report(f"  resumed from {Path(got['path']).name}: {len(d.steps)} steps, "
+               f"{len(d.item_files)} file(s) written, {len(got.get('messages') or [])} messages")
+    if spec.get("mode") != "goal":
+        d.verdict, d.error = "error", ("only a single job is carried on after a crash; plan and each "
+                                       "pick their items up again on their own (logs/drive_ignore.jsonl)")
+        return
+    if not _drive_job_card(d, spec, ctx):
+        return
+    messages = list(got.get("messages") or []) or None
+    if messages:
+        messages.append({"role": "user", "content": "The engine restarted while you worked. Your "
+                         "conversation and the files you wrote are as they were; carry on."})
+    d.verdict = _drive_job(d, spec["goal"], spec["check"], ctx, DRIVE_STEPS, DRIVE_MINUTES,
+                           messages=messages)
+    _drive_after_job(d, ctx)
 
 
 def drive_report(d: Drive) -> str:
@@ -1607,6 +2103,21 @@ def drive_record(d: Drive, logs) -> str:
         return ""
 
 
+def drive_context(sess, ground) -> str:
+    """What the driver is handed beside its goal, as every seat is (pipeline's carried
+    blocks): the standing (DAYBOOK), the story of this sitting, and what memory holds.
+    Read, never generated; bounded; '' for what is not there."""
+    parts = []
+    try:
+        from . import seatlog as _log
+        parts.append(getattr(sess, "standing", "") or _log.standing_block(ground))
+        parts.append(_log.story_block(sess.sitting))
+    except Exception:
+        pass
+    parts.append(drive_memory(ground))
+    return "\n\n".join(p for p in parts if p)
+
+
 def door_drive(door, said: str) -> None:
     """The /drive turn: job after job. Each job's report goes on the wire as it
     ends; then the driver asks what is next, and a blank answer (or "stop") ends
@@ -1621,20 +2132,48 @@ def door_drive(door, said: str) -> None:
 
     rt = sess.runtime
     started, carry, reports, last = time.time(), "", [], ""
+    # A card nobody answers is a no after DRIVE_CARD_SECONDS, and at once on a turn sent
+    # unattended: nothing a job asks waits forever, and nothing runs on silence.
+    wait = 0.0 if getattr(door, "unattended", False) else DRIVE_CARD_SECONDS
+    try:
+        seat_names = sorted(a.name for a in sess.registry.all() if a.name != "Steward")
+    except Exception:
+        seat_names = []
+
+    def seat_answers(seat: str, task: str) -> str:
+        # The council as Steward's sub-agents: the seat's own declaration (model, prompt,
+        # window, timeout) answers the task as text through the runtime every seat sits on.
+        if seat not in seat_names:
+            return f"Refused: there is no seat named {seat}. The seats are: {', '.join(seat_names)}."
+        return str(rt.chat(sess.registry.get(seat), task) or "")
+
     while True:
         spec = drive_parse(said)
-        if (not spec["goal"] and spec["mode"] != "tidy") or (spec["mode"] == "each" and not spec["do"]):
+        if ((not spec["goal"] and spec["mode"] not in ("tidy", "resume"))
+                or (spec["mode"] == "each" and not spec["do"])):
             print(DRIVE_USAGE)
             reports.append(DRIVE_USAGE)
         else:
             try:
                 d = drive(spec, skills=sess.skills, env=sess.env, ground=door.ground,
-                          ask=lambda prompt: door.ask(prompt, color="red"), report=report,
+                          ask=lambda prompt: door.ask(prompt, color="red", timeout=wait), report=report,
                           host=getattr(rt, "host", None) or "http://127.0.0.1:11434",
                           keep_alive=getattr(rt, "keep_alive", None) or "30m",
-                          logs=door.ground / "logs", carry=carry)
+                          logs=door.ground / "logs", carry=carry,
+                          context=drive_context(sess, door.ground),
+                          seats=seat_answers if seat_names else None, seat_names=seat_names)
             except EOFError:
                 break
+            lesson = drive_lesson(d)
+            if lesson:
+                try:
+                    from . import memory as _memory
+                    _memory.stage(door.ground, _memory.Entry(
+                        title=f"what /drive taught: {d.goal[:60]}", body=lesson, kind="learning",
+                        session=str(getattr(sess, "session", "") or ""), run=d.transcript))
+                    report("  a lesson from this job is staged for you (/memory lands it)")
+                except Exception as exc:
+                    report(f"  (the lesson could not be staged: {exc})")
             reports.append(d.report)
             last = d.transcript or last
             for line in d.report.splitlines():
@@ -1802,23 +2341,36 @@ class Door:
 
     # ---- the keyboard --------------------------------------------------
 
-    def ask(self, prompt: str = "", color: str = "amber") -> str:
+    def ask(self, prompt: str = "", color: str = "amber", timeout: float | None = None) -> str:
         """Stands where input() stood. One question, one answer, over the
         wire; a cancel here is Ctrl-C and a close is Ctrl-D, which is what
         every input() site in cli.py and pipeline.py already handles. The
         card's color rides with the question (2026-10-12, his word: amber for
         reads and approvals, green for moving up or waking a seat, red for
-        code edits and file writes); input() itself asks amber."""
+        code edits and file writes); input() itself asks amber.
+
+        `timeout` (seconds; the driver's cards pass it) makes a card nobody
+        answers a NO when it runs out -- 0 is no wait at all, for a turn sent
+        unattended -- said in a note, never taken as a yes."""
         self.asked += 1
+        if timeout is not None and timeout <= 0:
+            self.wire.emit("note", text="nobody is at this turn (unattended): the card is taken as no -- "
+                                        + str(prompt or "").splitlines()[0][:200])
+            return ""
         self.inbox.set_state(Inbox.ASKING)
         self.wire.emit("needs_answer", id=self.asked, prompt=str(prompt or ""),
                        color=color if color in ("amber", "green", "red") else "amber")
+        deadline = (time.time() + timeout) if timeout else None
         try:
             while True:
-                row = self.inbox.take()
+                left = None if deadline is None else max(0.0, deadline - time.time())
+                row = self.inbox.take(timeout=left)
                 if row is None:
                     raise EOFError("the client hung up")
                 cmd = row.get("cmd")
+                if cmd == "_timeout":
+                    self.wire.emit("note", text=f"no answer in {timeout / 60:.0f} minutes: the card is taken as no")
+                    return ""
                 if cmd == "answer":
                     return str(row.get("text") or "")
                 if cmd == "cancel":

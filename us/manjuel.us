@@ -461,6 +461,21 @@ other (LAW 5); now a record that lies is a finding.
 {
   "can_approve": false,
   "covenant": "1512741580b7239b",
+  "id": "triage_binary",
+  "kind": "skill",
+  "office": "MANJUEL",
+  "reports_to": "manjuel",
+  "source": "skills/triage_binary.md",
+  "us": 1,
+  "wall": "one file's BYTES, the workspace first then the ground: its type, entropy and strings; a secret-looking string is counted, never printed; a secret or a client file is refused",
+  "writes": false
+}
+```
+
+```json
+{
+  "can_approve": false,
+  "covenant": "1512741580b7239b",
   "id": "linear_regression",
   "kind": "skill",
   "office": "MANJUEL",
