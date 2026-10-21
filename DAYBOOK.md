@@ -3263,15 +3263,15 @@ pins at 0.2.0 in both repositories. The release check, the save, the send and th
 
 **Standing** — the same conversation, carried across context resets. Everything that ran was run from his glass, every write to a repository was on his card, and every send was on his word. main changes in both repositories only through a pull request whose checks have passed.
 
-**Version** — at open: core and atlas on the lines of the harness study, both pins 0.2.5. At close: core `main@19fef8d`, atlas `main@a9cdddb`, both pins 0.2.5 until the flow's bump.
+**Version** — at open: core and atlas on the lines of the harness study, both pins 0.2.5. At close: core `main@a6de50f`, atlas `main@a9cdddb`, both pins 0.2.5 until the flow's bump.
 
 **The plan** — his: "make Steward the perfect agent that is set in a perfect harness"; "diff the full feature list from all the other harnesses, and add them to stewards abilities"; "merged, go ahead and build them all"; then "publish it 0.2.6".
 
-**What was done** — Steward on gpt-oss:20b and as the face of ordinary turns (core 52). The feature list, 62 features set against Steward, and every one marked BUILD built (core 53; atlas 24, the secret card). CI on GitHub found the run_shell stroke red on Linux; it was mended and merged. The release gate's manifest line was red since H28's rename; it was mended on his card "Manjuel, the core" (core 54). Both repositories are on main and level with GitHub, and the record for the cut is written.
+**What was done** — Steward on gpt-oss:20b and as the face of ordinary turns (core 52). The feature list, 62 features set against Steward, and every one marked BUILD built (core 53; atlas 24, the secret card). CI on GitHub found the run_shell stroke red on Linux; it was mended and merged. The release gate's manifest line was red since H28's rename; it was mended on his card "Manjuel, the core" (core 54). The release flow's first run stopped at its live check: both number guards read a tool's `13.8GB` as no number and called Steward's true "13.8 GB" invented. It was unwound before gate 2 on his card, and the guard was mended on his card "Fix the guard, re-cut" (core 55). Both repositories are on main and level with GitHub, and the record for the cut is written.
 
 **Found (not the plan)** — HANDOFF's note of 2026-10-21, (a) to (d).
 
-**Rulings** — his words above, and his card "Manjuel, the core".
+**Rulings** — his words above, and his cards "Manjuel, the core" and "Fix the guard, re-cut".
 
 **At close** — No sitting open (428 the last). The door and the glass as his desktop app started them after the 13:22 reboot. The suites from the ship's own check, then the release flow's. The cut is his: the release flow with mark v0.2.6 and its three gates.
 

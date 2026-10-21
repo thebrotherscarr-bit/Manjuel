@@ -617,18 +617,21 @@ Found 2026-10-16, re-checked 2026-10-19 (INVENTORY.md section 5 carries each as 
 **v0.2.6, next** (I2), set 2026-10-19 from the checklist read off the code and the record (your word: "write it up, then begin
 the road to 0.2.6"). Fired by you through the release flow: its three gates and the publish are yours, and `git_pr` answers your
 glass alone, so Steward cannot run this flow. Not fired until I2's road to the cut is done. Cut on your word of 2026-10-21
-("publish it 0.2.6"), after the harness study (H33) was built into Steward. On the cut day, in order:
+("publish it 0.2.6"), after the harness study (H33) was built into Steward: version numbers set (0.2.6 and 0.2.6) by the
+flow's bump, then the live check and the suites after it. On the cut day, in order:
 
 - [x] 1. C121 to C125 mended, or C125 read off the first runs after 2026-10-19, so the cut can finish COMPLETE: by Steward
   on your cards, 2026-10-19 -- C121, C123 and C124 under Done; C122's first half mended and its second half ruled to v0.2.7
   (your card); C125 read off the core's runs, atlas's and the release gate's read at the cut, its move in the 0.2.8 pass.
 - [x] 2. Both repositories on main, level with GitHub, no pull request open, and nothing unsaved on the ground but the record
-  this list names (C123): 2026-10-21, core `19fef8d` after its pull request 54 (the manifest's `reports_to`, your card
-  "Manjuel, the core"), atlas `a9cdddb` after its 24.
+  this list names (C123): 2026-10-21, core `a6de50f` after its pull requests 54 (the manifest's `reports_to`, your card
+  "Manjuel, the core") and 55 (a number glued to its unit is a source, after the first run stopped at its live check; your
+  card "Fix the guard, re-cut"), atlas `a9cdddb` after its 24.
 - [x] 3. No sitting open, the door started with `--manjuel`, and the send wall open: 2026-10-21, the door as your desktop
   app started it after the reboot (pid 16304, `--manjuel` on its line).
-- [ ] 4. This list's first line given the version words the page's stroke reads, with 0.2.6 twice, just before firing: the
-  stroke reads the first such words on this page, and the pin moves only at the bump.
+- [x] 4. This list's first line given the version words the page's stroke reads, with 0.2.6 twice, just before firing: the
+  stroke reads the first such words on this page, and the pin moves only at the bump. 2026-10-21, above, unsaved until the
+  cut's own save carries it (a save before the bump reds the stroke: the first ship of pull request 55 did, and was refused).
 - [x] 5. The day's HANDOFF block and DAYBOOK entry, with its At close; CHANGELOG's Unreleased whole, naming by its number any
   SPEC 4.x whose status moved: 2026-10-21, HANDOFF FOR 2026-10-21 and DAYBOOK's Session 30; no SPEC 4.x moved (the release
   check's spec line: none changed since v0.2.5).
