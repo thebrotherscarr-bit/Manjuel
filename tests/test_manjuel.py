@@ -1700,6 +1700,20 @@ def test_shared_card(reg, book):
           "NOT ours" not in clean and "against" in clean)
 
     check("the budget is overridable", vram.budget_bytes() > 0)
+    # THE BUDGET IS THE CARD'S (WHAT'S LEFT H34, his card of 2026-10-21: "Card less 1 GB for Windows"):
+    # read from the driver, less a gigabyte for the desktop; 15 GB only where the card cannot be read.
+    kept = os.environ.pop("MANJUEL_VRAM_GB", None)
+    try:
+        name, size = vram.card()
+        check("the budget is the card's own memory less a gigabyte for Windows, or 15GB where it cannot be read",
+              vram.budget_bytes() == (size - vram.WINDOWS_RESERVE if size > vram.WINDOWS_RESERVE
+                                      else 15_000_000_000), f"{name} {size} -> {vram.budget_bytes()}")
+        os.environ["MANJUEL_VRAM_GB"] = "7.5"
+        check("   and MANJUEL_VRAM_GB still overrides it", vram.budget_bytes() == 7_500_000_000)
+    finally:
+        os.environ.pop("MANJUEL_VRAM_GB", None)
+        if kept is not None:
+            os.environ["MANJUEL_VRAM_GB"] = kept
 
 
 class RackStub(Stub):
@@ -2321,6 +2335,19 @@ def test_rack_sync(reg, lib):
     body = (g / R.RACK_FILE).read_text(encoding="utf-8")
     check("the written rack says when it was taken and that it is derived",
           "Taken" in body and "DERIVED" in body)
+    # THE RACK KNOWS THE MACHINE (WHAT'S LEFT H34, 2026-10-21): read live at every sync, never guessed.
+    check("the written rack says what machine it runs on, read at this sync",
+          "## The machine" in body and "| RAM |" in body and "| VRAM budget |" in body, body[:500])
+    page = R.render({"taken": "t", "host": "h", "installed": [], "sizes": {}, "resident": {},
+                     "declared": {}, "missing": [], "unused": [], "machine": {
+                         "os": "Windows-11", "cpu": "AMD Ryzen 7 5800X 8-Core Processor", "threads": 16,
+                         "ram": 34_277_511_168, "gpu": "AMD Radeon RX 6800 XT", "vram": 17_163_091_968,
+                         "budget": 16_163_091_968, "budget_from": "the card less 1 GB for Windows",
+                         "disk_free": 64_637_747_200, "ollama": "ollama version is 0.35.0"}})
+    check("   each fact on its own line: the card's own memory, the budget and where it came from",
+          "| GPU | AMD Radeon RX 6800 XT, 17.2GB of its own memory |" in page
+          and "| VRAM budget | 16.2GB (the card less 1 GB for Windows) |" in page
+          and "16 threads" in page and "| RAM | 34.3GB |" in page, page[:700])
     check("it lists what this ground declares", "Declared by this ground" in body
           and SEAT in body)
     check("a declared model that is NOT installed is called out",

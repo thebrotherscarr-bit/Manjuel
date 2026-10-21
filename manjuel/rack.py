@@ -27,6 +27,66 @@ from . import vram
 RACK_FILE = "rack.md"
 
 
+def _ram_bytes() -> int:
+    """The machine's memory in bytes, or 0 where it cannot be read."""
+    try:
+        import ctypes
+
+        class Status(ctypes.Structure):
+            _fields_ = [("length", ctypes.c_ulong), ("load", ctypes.c_ulong),
+                        ("total", ctypes.c_ulonglong), ("free", ctypes.c_ulonglong),
+                        ("page_total", ctypes.c_ulonglong), ("page_free", ctypes.c_ulonglong),
+                        ("virtual_total", ctypes.c_ulonglong), ("virtual_free", ctypes.c_ulonglong),
+                        ("extended_free", ctypes.c_ulonglong)]
+        st = Status()
+        st.length = ctypes.sizeof(st)
+        if ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(st)):
+            return int(st.total)
+    except (AttributeError, OSError, ImportError):
+        pass
+    try:
+        import os
+        return int(os.sysconf("SC_PAGE_SIZE") * os.sysconf("SC_PHYS_PAGES"))
+    except (AttributeError, OSError, ValueError):
+        return 0
+
+
+def machine() -> dict:
+    """WHAT THIS MACHINE IS, read live at every sync (WHAT'S LEFT H34; his word, 2026-10-21:
+    "pull all the system specs from the current PC and load them up on the racking system,
+    so we ACTUALLY know what's going on"). The standard library alone, nothing downloaded;
+    a fact that cannot be read here is left empty, never guessed."""
+    import os
+    import platform
+    import shutil
+    import subprocess
+    gpu, size = vram.card()
+    cpu, key = "", vram.hklm("HARDWARE", "DESCRIPTION", "System", "CentralProcessor", "0")
+    if key is not None:
+        import winreg
+        try:
+            cpu = str(winreg.QueryValueEx(key, "ProcessorNameString")[0]).strip()
+        except OSError:
+            cpu = ""
+    try:
+        said = subprocess.run(["ollama", "--version"], capture_output=True, text=True,
+                              stdin=subprocess.DEVNULL, timeout=10).stdout
+        ollama = next((ln.strip() for ln in said.splitlines() if "version" in ln), "")
+    except (OSError, subprocess.TimeoutExpired):
+        ollama = ""
+    try:
+        free = shutil.disk_usage(Path(__file__).resolve().anchor).free
+    except OSError:
+        free = 0
+    set_by = os.environ.get("MANJUEL_VRAM_GB", "").strip()
+    return {"os": platform.platform(), "cpu": cpu or platform.processor(),
+            "threads": os.cpu_count() or 0, "ram": _ram_bytes(), "gpu": gpu, "vram": size,
+            "budget": vram.budget_bytes(),
+            "budget_from": ("MANJUEL_VRAM_GB" if set_by else "the card less 1 GB for Windows"
+                            if size else "15 GB: the card could not be read here"),
+            "disk_free": free, "ollama": ollama}
+
+
 def survey(runtime, registry, skills, embed_model: str) -> dict:
     """Ask Ollama fresh. Never the cache -- a model pulled in another terminal
     must show up here without restarting the REPL.
@@ -67,6 +127,7 @@ def survey(runtime, registry, skills, embed_model: str) -> dict:
         "override": getattr(registry, "override", "") or "",
         "missing": sorted(m for m in declared if m not in installed),
         "unused": sorted(m for m in installed if m not in declared),
+        "machine": machine(),
     }
 
 
@@ -88,6 +149,19 @@ def render(s: dict) -> str:
             "sitting.",
             "",
         ]
+    m = s.get("machine") or {}
+    if m:
+        no = "not read here"
+        out += ["## The machine", "",
+                "Read live at this sync (WHAT'S LEFT H34): the rack plans against these, not a guess.", "",
+                "| | |", "|---|---|",
+                f"| OS | {m.get('os') or no} |",
+                f"| CPU | {m.get('cpu') or no}, {m.get('threads') or '?'} threads |",
+                f"| RAM | {vram.gb(m['ram']) if m.get('ram') else no} |",
+                f"| GPU | {m.get('gpu') or no}, {vram.gb(m['vram']) + ' of its own memory' if m.get('vram') else 'its memory ' + no} |",
+                f"| VRAM budget | {vram.gb(m['budget']) if m.get('budget') else no} ({m.get('budget_from') or no}) |",
+                f"| Disk free | {vram.gb(m['disk_free']) if m.get('disk_free') else no} |",
+                f"| Ollama | {m.get('ollama') or no} |", ""]
     out += [
         "## Declared by this ground",
         "",
