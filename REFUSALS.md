@@ -1095,7 +1095,7 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 | line | says |
 |---|---|
-| 1172 | `content` must be a |
+| 1186 | `content` must be a |
 
 ### manjuel/mcp_stdio.py — 11 sites
 

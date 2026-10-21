@@ -779,3 +779,9 @@
 {"suite": "smoke", "at": 1792607720.10191, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "smoke", "at": 1792617510.9843287, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "strokes", "at": 1792617759.9167936, "state": "finished", "passed": 4409, "total": 4409, "green": true, "failed": []}
+{"suite": "standup", "at": 1792619596.6846952, "state": "finished", "passed": 8, "total": 9, "green": false, "failed": ["the rack"], "report": "logs/standup_2026-10-21_145316.md"}
+{"suite": "standup", "at": 1792619799.902379, "state": "finished", "passed": 8, "total": 9, "green": false, "failed": ["the rack"], "report": "logs/standup_2026-10-21_145639.md"}
+{"suite": "smoke", "at": 1792620942.3168013, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1792621214.7287378, "state": "finished", "passed": 4410, "total": 4411, "green": false, "failed": ["the release checklist's version is the pin's, or the checklist names none"]}
+{"suite": "smoke", "at": 1792621354.384059, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1792621586.5514622, "state": "finished", "passed": 4411, "total": 4411, "green": true, "failed": []}

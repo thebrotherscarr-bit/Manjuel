@@ -60,6 +60,7 @@ from manjuel import cli, transcript, seatlog, gitstate           # noqa: E402
 from manjuel.context import RunContext                           # noqa: E402
 from manjuel.pipeline import Refused, Aborted, run_pipeline       # noqa: E402
 from manjuel.pipeline import RECITAL_CHARS, recited               # noqa: E402  one definition of a recital (2026-09-30)
+from manjuel.intent import unglued                                # noqa: E402  one definition of a glued unit (2026-10-21)
 from manjuel.drift import DriftChecker                           # noqa: E402
 from manjuel.skills import EMBED_MODEL                           # noqa: E402
 from manjuel.intent import LISTING_TOOLS, dropped_items, listing_items  # noqa: E402  the engine's own roll call (2026-10-02)
@@ -208,7 +209,9 @@ def unsourced_numbers(delivery: str, results: list[str], objective: str = "") ->
     """
     have = set()
     for r in results:
-        have |= numbers_in(r)
+        # A number glued to its unit in a tool's result (13.8GB) is a source (intent.unglued,
+        # the live guard's own definition; 2026-10-21, the cut of v0.2.6).
+        have |= numbers_in(unglued(r))
     have |= numbers_in(objective)
     out = []
     # THE SOURCES KEEP THEIR DATES; only what is JUDGED is stripped. The

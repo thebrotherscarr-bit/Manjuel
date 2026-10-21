@@ -671,6 +671,16 @@ dropped by operator ruling 2026-09-01 — see the fix log.
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
 
+## HANDOFF FOR 2026-10-21 — read this before anything below it
+
+**Where the day stands.** The harness study (H33) is built into Steward and merged on his clicks. In the core: the driver made capable (pull request 51), Steward on gpt-oss:20b and as the face of ordinary turns (52), and the full feature list from the eight harnesses (53, with its Linux fix in the run_shell stroke). In atlas: the desktop app (23) and the secret card (24). Then, on his word "publish it 0.2.6": the reconciler taught that `reports_to: manjuel` is the core (his card "Manjuel, the core"; pull request 54), this record, and the release flow, fired by him.
+
+**Placing.** The door and the glass running today were built before the secret card. atlas-mcp.exe, atlas-webapp.exe and atlas-desktop.exe are to be rebuilt from main and restarted (his card) before the Discord test, which needs the card.
+
+**Next.** The cut's three gates (his); the record after it (G's item 9); then the Discord test: Steward walks him through a Discord bot and wires it himself, the token typed on the masked secret card.
+
+**Found on the way (his to place):** (a) `/close` typed at the driver's "What is next?" card runs as a goal (logs/2026-10-21_121800_drive.md); (b) the ship's card counts commits against main as last fetched, so a line already merged on GitHub shows as unsent until main is fetched; (c) the Router's 16k window holds the 51 skills by a thin margin, and the next skill needs room made; (d) the machine rebooted at 13:22, and an atlas-mcp.exe from outside the ground was running from 13:26, left alone.
+
 ## HANDOFF FOR 2026-10-16 — read this before anything below it
 
 **Where the day stands.** Steward drives (H31) is built and merged on his clicks: /drive with one job, plan, each, tidy and ship, and What is next after every job (the core's pull request 28 and atlas's 21), then C77, a door call said plainly (the core's 29), and his law of the day, SITTING LAW 11, everything is run by Steward through the webapp (the core's 30; the ledger's entry 11, a draft for his seal). Each was saved and sent by Steward's own ship: the suites as its check, then the commit, the push, the pull request, CI and the merge on his cards; tidy deleted every branch already merged into main in both repositories. This block is Steward's own, H31's proof job (bb): from 2026-10-10 the days' notes had stood under that day's block, so the gate found no block for the day.

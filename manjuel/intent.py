@@ -189,14 +189,28 @@ def without_clock(text: str) -> str:
     return CLOCK_SHAPES.sub(" ", text or "")
 
 
+# A NUMBER GLUED TO ITS UNIT IN A SOURCE (2026-10-21, the cut of v0.2.6). rack_list prints "13.8GB";
+# gpt-oss writes "13.8 GB", and _NUM_OR_HASH, which stops at a letter, read the tool's number as no
+# number at all -- so both guards called a true answer invented and the release stopped at its live
+# check. A SOURCE is loosened from its units before it is read; what is JUDGED is not, so nothing said
+# that no tool returned passes. One definition, shared with the standup's guard.
+_GLUED_UNIT = re.compile(r"(\d)(?=(?:[kKMGT]i?B|B|ms|s|min|h)(?![\w]))")
+
+
+def unglued(text: str) -> str:
+    """`text` with a space between a number and the unit glued to it (13.8GB -> 13.8 GB)."""
+    return _GLUED_UNIT.sub(r"\1 ", text or "")
+
+
 def unsourced_numbers(said: str, facts: str) -> list[str]:
     """Numbers and hashes in `said` that appear nowhere in `facts`.
 
     Small integers (0-12) are words in prose and are not judged, and
     numbers written as a date or a clock are not judged either (see
-    CLOCK_SHAPES). Everything else is.
+    CLOCK_SHAPES). Everything else is. A number in `facts` glued to its
+    unit (13.8GB) is read as the number it is (unglued).
     """
-    have = {m.group(1).replace(",", "").rstrip(".") for m in _NUM_OR_HASH.finditer(facts or "")}
+    have = {m.group(1).replace(",", "").rstrip(".") for m in _NUM_OR_HASH.finditer(unglued(facts))}
     out = []
     # `facts` keeps its dates -- they are a SOURCE. Only what is judged is
     # stripped, so the door may say the date without being called a liar.

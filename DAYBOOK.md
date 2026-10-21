@@ -3258,3 +3258,21 @@ pins at 0.2.0 in both repositories. The release check, the save, the send and th
 **At close** — (10:20) No sitting opened today; 382 the last. The door (pid 22896) and the glass (pid 11144) as placed for C70. The suites from his glass, the save and the send follow this entry, each on his card, and each repository's pull request is his to merge.
 
 **Next session** — H31's piece 2, its set-up (C71), with R1 and R2 put to him on cards first; then the door change (the driver may call `aider_run`, held for his card) and the loop, each new stroke shown red first.
+
+## Session 30 — 2026-10-21 (Wednesday), sittings 425 to 428 from his glass: the harness study built into Steward, and the cut of v0.2.6
+
+**Standing** — the same conversation, carried across context resets. Everything that ran was run from his glass, every write to a repository was on his card, and every send was on his word. main changes in both repositories only through a pull request whose checks have passed.
+
+**Version** — at open: core and atlas on the lines of the harness study, both pins 0.2.5. At close: core `main@19fef8d`, atlas `main@a9cdddb`, both pins 0.2.5 until the flow's bump.
+
+**The plan** — his: "make Steward the perfect agent that is set in a perfect harness"; "diff the full feature list from all the other harnesses, and add them to stewards abilities"; "merged, go ahead and build them all"; then "publish it 0.2.6".
+
+**What was done** — Steward on gpt-oss:20b and as the face of ordinary turns (core 52). The feature list, 62 features set against Steward, and every one marked BUILD built (core 53; atlas 24, the secret card). CI on GitHub found the run_shell stroke red on Linux; it was mended and merged. The release gate's manifest line was red since H28's rename; it was mended on his card "Manjuel, the core" (core 54). Both repositories are on main and level with GitHub, and the record for the cut is written.
+
+**Found (not the plan)** — HANDOFF's note of 2026-10-21, (a) to (d).
+
+**Rulings** — his words above, and his card "Manjuel, the core".
+
+**At close** — No sitting open (428 the last). The door and the glass as his desktop app started them after the 13:22 reboot. The suites from the ship's own check, then the release flow's. The cut is his: the release flow with mark v0.2.6 and its three gates.
+
+**Next session** — the record after the cut (G's item 9), the binaries rebuilt and placed on his card, then the Discord test.
