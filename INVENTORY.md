@@ -58,7 +58,7 @@ each slow route mended or ruled, one piece at a time. (4) The v0.2.6 cut through
 | P4 | court | The review panel: every counsel is heard, then the Judge rules; its turn may take 900 s. | sitting 366: FAULT, Jesster and Manjuel past their bounds, Neiro's last word; 368: /table ruled with all five | 900 s; 779 s |
 | P5 | quick | One seat past the gate, for a throwaway question. | sitting 373: ok, "two plus two" said four; the search its words chose set aside, with no Router to run it | 3.9 s |
 
-### Skills (skills/, 46): what a seat can call
+### Skills (skills/, 51): what a seat can call
 
 | # | name | what it does | live run | time |
 |---|---|---|---|---|
@@ -109,6 +109,10 @@ each slow route mended or ruled, one piece at a time. (4) The v0.2.6 cut through
 | K45 | write_file | Writes text, scripts, or markdown data to a file inside the workspace. | sitting 370: ok, measure.py in the workspace | 39.8 s |
 | K46 | use_record | The engine's own after-tool hook: one line per use in logs/uses.jsonl (the tool, whether it answered, how long, who called), which skill_report weighs. Never called by name. | not run live yet (built 2026-10-19, WHAT'S LEFT H32) | -- |
 | K47 | triage_binary | What a file IS, read off its bytes alone: its type by its first bytes (ELF, PE, Mach-O, WASM, ZIP and its kin, PDF...), its entropy overall and per 4 KB (packed or encrypted), its strings by kind; a secret-looking string is counted, never printed. From his REA Studio. | not run live yet (built 2026-10-21, the harness study) | -- |
+| K48 | ground_grep | WHERE a pattern is in the ground: a regex over its text files, path:line: text, at most 200 hits; smart case. Never opens a secret, a client file, worlds/, a vault/ or .git/. | not run live yet (built 2026-10-21, the feature list) | -- |
+| K49 | find_files | WHICH files match a glob in the ground, newest first with size and time; a bare name is found at any depth. Never names a secret, a client file, worlds/, a vault/ or .git/. | not run live yet (built 2026-10-21, the feature list) | -- |
+| K50 | apply_patch | A patch over several files of the ground at once (add, update, move, delete), on a line of work, whole or nothing: every hunk is found before any file is touched, and one miss writes none. | not run live yet (built 2026-10-21, the feature list) | -- |
+| K51 | run_shell | One line of Git Bash in the ground: a short list of reads runs at once, anything else waits on his card in the driver; git status, the network, installs, machine settings, secrets and paths outside the ground are refused and never started. | not run live yet (built 2026-10-21, the feature list) | -- |
 
 ### Commands (the engine's palette, 31, and commands.md's own, 3): typed as /name
 
@@ -159,8 +163,12 @@ each slow route mended or ruled, one piece at a time. (4) The v0.2.6 cut through
 | D4 | /drive tidy | every branch merged into main deleted, here and on GitHub, both repositories, on one card | 2026-10-16: ok, three runs, the last closing drive-1016-201509 | 90.5 s, 12.7 s, 6.9 s |
 | D5 | /drive ship <message> [\| check: <command>] | the work on disk saved on a line, sent, a pull request opened or reused, CI waited on, merged on his card | 2026-10-16: ok, pull requests 28 to 33 (the last, 33, in sitting 403) | 776.7 s to 1973.1 s |
 | D6 | mcp_call atlas <tool> {json} | a door call said plainly: one line before, the wait on his card if the door holds it, one line after; no seat | 2026-10-16, sitting 403: ok, git_branch switch and git_pull on his cards | 6.4 to 8.4 s plus his click |
+| D7 | /drive propose <goal> \| check: <command> | plan mode: the Steward reads with readers only and writes a plan; the plan and the check on one card, and on his yes the plan is worked as one job | not run live yet (built 2026-10-21, the feature list) | -- |
+| D8 | /undo | the last Steward turn's own unsaved files put back byte for byte on one card; a file it made is removed | not run live yet (built 2026-10-21, the feature list) | -- |
+| D9 | /schedule every 30m\|at 18:00\|cron ".."\|once <time> <drive> | a /drive run by the idle door when due, unattended and as `auto` (every card a no, git the net), while a sitting is open; state/schedules.jsonl | not run live yet (built 2026-10-21, the feature list) | -- |
+| D10 | /goal <drive> \| check: <command>; /schedules [drop <id>] | a goal run every 30 minutes until its check passes (done), three alike failures or its 48 runs (blocked); /schedules lists them and drops one | not run live yet (built 2026-10-21, the feature list) | -- |
 
-## 2. The door's tools (atlas-mcp, 95)
+## 2. The door's tools (atlas-mcp, 96)
 
 Each is called by the glass (a tab, a button, Registry & Docs' Call) or by the council (mcp_call); a writing call from anything but his glass waits on its card.
 
@@ -261,6 +269,7 @@ Each is called by the glass (a tab, a button, Registry & Docs' Call) or by the c
 | T93 | town_status | read the board: tasks, worked set, open orders (N2) | glass 17:59: ok, 0 tasks | 4 ms |
 | T94 | us_to_vc | convert a .us declaration to a W3C Verifiable Credential | glass 17:59: ok, seat_steward.us as a credential | 4 ms |
 | T95 | verify_chain | chain verdict via tools/chain_verify.py, the Python spine: EMPTY/INTACT/FLIP/TAMPER (SKIPPED where rows carry no hash) | glass 17:59: FAULT, FLIP on all 10 links of law/chain.jsonl, where law_status proves the chain whole | 144 ms |
+| T96 | secret_set | the secret card's write: one NAME=value line of the tenant's .env set in place or added, the glass's call only (ServiceOnly), the value never in an answer, a trace or the record; answers `secret NAME set in .env (N chars)` | not run live yet (built 2026-10-21, the feature list) | -- |
 
 ## 3. The glass (atlas-webapp)
 

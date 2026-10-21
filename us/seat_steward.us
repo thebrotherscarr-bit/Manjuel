@@ -27,7 +27,9 @@ his sitting-39 ruling, "review, never write". No writer, so `edit` stays denied.
   "may_call": [
     "classify_sentiment",
     "extract_facts",
+    "find_files",
     "git_status",
+    "ground_grep",
     "ground_list",
     "ground_read",
     "ground_report",

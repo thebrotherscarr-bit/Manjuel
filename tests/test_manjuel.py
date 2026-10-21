@@ -21128,10 +21128,14 @@ def test_path_gate(reg, lib, book):
     # bare count would have let the eighth arrive unnoticed.
     # SEVENTEEN since 2026-10-21: `triage_binary` reads one file's bytes and
     # declares its path into the GROUND jail exactly as `inspect` does.
-    check("and the declarations are exactly the seventeen that jail",
-          sorted(declared) == ["edit_file", "embed_text", "git_commit",
+    # NINETEEN the same day (the feature list): `ground_grep` and `find_files`
+    # take a folder, a file or a glob and jail it into the GROUND as
+    # ground_list does. apply_patch and run_shell take no path argument: the
+    # patch names its files inside it and holds each to the walls itself.
+    check("and the declarations are exactly the nineteen that jail",
+          sorted(declared) == ["edit_file", "embed_text", "find_files", "git_commit",
                                "git_cycle", "git_init", "git_pull", "git_push",
-                               "git_status", "ground_edit", "ground_list",
+                               "git_status", "ground_edit", "ground_grep", "ground_list",
                                "ground_read", "ground_write", "inspect",
                                "read_file", "run_python", "triage_binary",
                                "write_file"],
@@ -23975,11 +23979,12 @@ def test_steward_harness(reg, lib, book):
     import shutil as _sh
     from types import SimpleNamespace as _NS
     from manjuel import serve as SV
-    from manjuel import compact, dialects, guards, journal, mcp_stdio, repair
+    from manjuel import compact, dialects, guards, journal, mcp_stdio, repair, tools_files, tools_shell
 
-    for mod in (repair, guards, compact, journal, dialects, mcp_stdio):
+    for mod in (repair, guards, compact, journal, dialects, mcp_stdio, tools_files, tools_shell):
         try:
-            mod._strokes()
+            with _cl.redirect_stdout(_io.StringIO()):
+                mod._strokes()
             ok, why = True, ""
         except Exception as exc:
             ok, why = False, f"{type(exc).__name__}: {exc}"
@@ -24292,6 +24297,241 @@ def test_steward_harness(reg, lib, book):
         src = (ROOT / "manjuel" / "serve.py").read_text(encoding="utf-8")
         check("face: Door.turn hands an ordinary turn to the face first, and /face switches it",
               'door_face(self, objective)' in src and '"/face"' in src)
+
+        # THE FEATURE LIST (2026-10-21, his word: "diff the full feature list ... and add them", "build them all").
+        SV.DRIVE_DENY.add("write_file")
+        try:
+            d, m = run(f"auto write a | check: {py} -c pass", call("write_file", {"filepath": "a.txt", "content": "a"}))
+            offered = [t["function"]["name"] for t in m.kw[0]["tools"]]
+        finally:
+            SV.DRIVE_DENY.discard("write_file")
+        check("features: a tool he denies (MANJUEL_DRIVER_DENY) is never offered and never runs",
+              "write_file" not in offered and not [e for e in events if e[0] == "ran"], str(offered))
+        SV.DRIVE_ALLOW.add("write_file")
+        try:
+            d, _ = run(f"ask write a | check: {py} -c pass", call("write_file", {"filepath": "a.txt", "content": "a"}))
+        finally:
+            SV.DRIVE_ALLOW.discard("write_file")
+        check("features: a tool he allows (MANJUEL_DRIVER_ALLOW) writes with no card even in ask",
+              not [e for e in events if e[0] == "ask"] and ("ran", "write_file", {"filepath": "a.txt", "content": "a"}) in events,
+              str(events)[:300])
+        try:
+            d, _ = run(f"ask write two | check: {py} -c pass", call("write_file", {"filepath": "a.txt", "content": "a"}),
+                       call("write_file", {"filepath": "b.txt", "content": "b"}), answers=("always",))
+            granted = "write_file" in SV.DRIVE_GRANTS
+        finally:
+            SV.DRIVE_GRANTS.clear()
+        check("features: `always` on a card runs it and every later one of that tool in the sitting, with no card",
+              granted and len([e for e in events if e[0] == "ask"]) == 1
+              and len([e for e in events if e[0] == "ran"]) == 2, str(events)[:300])
+        d, m = run(f"auto keep a list | check: {py} -c pass",
+                   call("todo", {"items": [{"text": "read it", "done": True}, {"text": "fix it", "done": False}]}))
+        told = [str(x.get("content", "")) for x in m.seen[-1] if isinstance(x, dict) and x.get("role") == "tool"]
+        check("features: todo keeps the Steward's own list and shows it back to him",
+              d.todo == [["read it", True], ["fix it", False]] and any("1 of 2 done" in t for t in told), str(told)[:200])
+        d, m = run(f"auto pick one | check: {py} -c pass",
+                   call("ask_operator", {"question": "which colour?", "choices": ["red", "blue"]}), answers=("2",))
+        asks = [e[1] for e in events if e[0] == "ask"]
+        told = [str(x.get("content", "")) for x in m.seen[-1] if isinstance(x, dict) and x.get("role") == "tool"]
+        check("features: ask_operator puts his question on a card with numbered choices, and his pick comes back",
+              asks and "which colour?" in asks[0] and "2. blue" in asks[0]
+              and any("The operator answered: blue" in t for t in told), f"{asks} {told}"[:300])
+        secrets = []
+        d, m = run(f"auto get the key | check: {py} -c pass",
+                   call("ask_secret", {"name": "SOME_TOKEN", "why": "to reach the bot"}),
+                   call("ask_secret", {"name": "bad name", "why": "x"}),
+                   ask_secret=lambda key, why: secrets.append((key, why)) or "skip")
+        told = [str(x.get("content", "")) for x in m.seen[-1] if isinstance(x, dict) and x.get("role") == "tool"]
+        check("features: ask_secret raises the masked card by the variable's name; a name .env cannot hold is refused",
+              secrets == [("SOME_TOKEN", "to reach the bot")] and any("did not set SOME_TOKEN" in t for t in told)
+              and any("is not a name for .env" in t for t in told), str(told)[:300])
+        d, m = run(f"auto get the key | check: {py} -c pass", call("ask_secret", {"name": "SOME_TOKEN", "why": "x"}))
+        told = [str(x.get("content", "")) for x in m.seen[-1] if isinstance(x, dict) and x.get("role") == "tool"]
+        check("features: a door with no secret card refuses ask_secret by name",
+              any("no secret card" in t for t in told), str(told)[:200])
+        (tmp / ".env").write_text("MANJUEL_STROKE_KEY=the-new-one\r\n", encoding="utf-8", newline="")
+        os.environ["MANJUEL_STROKE_KEY"] = "the-old-one"
+        try:
+            d, m = run(f"auto get the key | check: {py} -c pass", call("ask_secret", {"name": "MANJUEL_STROKE_KEY", "why": "x"}),
+                       ask_secret=lambda key, why: "set")
+            now_key = os.environ.get("MANJUEL_STROKE_KEY")
+        finally:
+            os.environ.pop("MANJUEL_STROKE_KEY", None)
+            (tmp / ".env").unlink()
+        told = [str(x.get("content", "")) for x in m.seen[-1] if isinstance(x, dict) and x.get("role") == "tool"]
+        check("features: a key set again on the card is loaded fresh into the engine, and its value is never told",
+              now_key == "the-new-one" and any("loaded into the engine" in t for t in told)
+              and not any("the-new-one" in t or "the-old-one" in t for t in told), str(told)[:200])
+        half = {"message": {"role": "assistant", "content": "The first half, "}, "done_reason": "length"}
+        d2 = SV.drive({"mode": "answer", "goal": "what is it?", "check": "", "do": "", "approve": "ask"},
+                      skills=Lib(), env=env, ground=tmp, logs=tmp / "logs", ask=asker(), report=lambda line: None,
+                      client=Model(half, {"role": "assistant", "content": "and the second."}))
+        check("features: a reply cut off by its length with no call is continued, and the pieces kept together",
+              d2.answer == "The first half, and the second.", d2.answer)
+        d2 = SV.drive({"mode": "answer", "goal": "what is it?", "check": "", "do": "", "approve": "ask"},
+                      skills=Lib(), env=env, ground=tmp, logs=tmp / "logs", ask=asker(), report=lambda line: None,
+                      client=Model({"role": "assistant", "content": ""}, {"role": "assistant", "content": "Here."}))
+        check("features: an empty reply is asked again, never taken for an answer or for done", d2.answer == "Here.", d2.answer)
+
+        class Gone(Model):
+            def chat(self, **kw):
+                self.kw.append(kw)
+                if len(self.kw) == 1:
+                    raise ValueError("model gone")
+                return {"message": call("done", {"summary": "done"})}
+        d, m = run(f"auto do it | check: {py} -c pass", model=Gone())
+        check("features: a model that fails outright hands the job, once, to the fallback model, said in the record",
+              d.verdict == "passed" and m.kw[-1]["model"] == SV.DRIVE_FALLBACK and SV.DRIVE_FALLBACK in d.model
+              and any("fallback" in e[1] for e in events if e[0] == "report"), f"{d.verdict} {d.model}")
+        d, m = run(f"auto two at once | check: {py} -c pass",
+                   call("delegate", {"tasks": [{"seat": "Reasoner", "task": "one"}, {"seat": "Reasoner", "task": "two"}]}),
+                   seats=lambda seat, task: f"{seat} did {task}", seat_names=["Reasoner"])
+        said = [str(s[3]) for s in d.steps if s[1] == "delegate"]
+        check("features: delegate takes a batch of tasks and hands back every answer, in order",
+              said and "1. Reasoner" in said[0] and "Reasoner did one" in said[0] and "Reasoner did two" in said[0],
+              str(said)[:300])
+
+        # THE STALE-WRITE GUARD: a whole file is not written over unless this job read it first.
+        old = tmp / "kept.txt"
+        old.write_text("his words\n", encoding="utf-8")
+        real_target, real_run = SV._drive_target, SV._drive_run
+        SV._drive_target = lambda env_, args: (tmp, tmp / str(args.get("filepath")), "work") if args.get("filepath") else None
+        SV._drive_run = lambda cmd, repo, *a, **k: (0, "")
+        try:
+            dd = SV.Drive("g", "", "m")
+            dd.approve, dd.approved = "auto", "x"
+            ctx_ = _NS(env=_NS(caller_allowed={"ground_write"}), ask=asker(), report=lambda line: None,
+                       skills=_NS(execute=lambda n, a, e: "Wrote " + a["filepath"]), journal=None, ground=tmp)
+            stale = SV.drive_act("ground_write", {"filepath": "kept.txt", "content": "x"}, ctx_, dd)
+            dd.read.add((str(tmp), str(tmp / "kept.txt")))
+            fresh = SV.drive_act("ground_write", {"filepath": "kept.txt", "content": "x"}, ctx_, dd)
+        finally:
+            SV._drive_target, SV._drive_run = real_target, real_run
+        check("features: ground_write over a file this job never read is refused; after a read it runs",
+              stale.startswith("Refused") and "has not read it" in stale and fresh.startswith("Wrote"), f"{stale} | {fresh}")
+
+        # THE NEW HANDS IN THE DRIVER: grep, find, the patch and the shell offered; a shell read runs at once, the rest asks.
+        _, offered = SV.drive_tools(lib)
+        check("features: the driver is offered ground_grep, find_files, apply_patch and run_shell from the library",
+              {"ground_grep", "find_files", "apply_patch", "run_shell"} <= offered
+              and {"ground_grep", "find_files"} <= REVIEW_ONLY_SKILLS, str(sorted(offered))[:300])
+        cards = []
+        sctx = _NS(env=_NS(caller_allowed={"run_shell", "apply_patch"}), report=lambda line: None, journal=None, ground=ROOT,
+                   ask=lambda prompt: cards.append(prompt) or "n", skills=_NS(execute=lambda n, a, e: "RAN: exit 0"))
+        sd = SV.Drive("g", "", "m")
+        sd.approve, sd.approved = "plan", "x"
+        read = SV.drive_act("run_shell", {"content": "git log --oneline -1"}, sctx, sd)
+        wrote = SV.drive_act("run_shell", {"content": "python make.py"}, sctx, sd)
+        barred = SV.drive_act("run_shell", {"content": "git status"}, sctx, sd)
+        check("features: run_shell's reads run with no card, its writes ask even inside an approved job, git status is refused",
+              read.startswith("RAN") and wrote.startswith("Declined") and len(cards) == 1
+              and barred.startswith("Refused") and "Nothing ran" in barred, f"{read} | {wrote} | {barred}")
+        council = tools_shell._run_shell(_NS(ground=ROOT, caller=""), {"content": "python make.py"})
+        check("features: a seat of the council, which has no card, gets run_shell's reads only -- a write is refused unrun",
+              council.startswith("Refused") and "only Steward's driver" in council and "Nothing ran" in council, council)
+        pg = tmp / "pg"
+        pg.mkdir()
+        (pg / "one.txt").write_bytes(b"a\r\nb\r\n")
+        (pg / "two.txt").write_bytes(b"c\r\n")
+        SV._drive_target = lambda env_, args: (pg, pg / str(args.get("filepath")), "work") if args.get("filepath") else None
+        SV._drive_run = lambda cmd, repo, *a, **k: (0, "")
+        patch = ("*** Begin Patch\n*** Update File: one.txt\n@@\n-a\n+A\n*** Update File: two.txt\n@@\n-c\n+C\n"
+                 "*** End Patch\n")
+        try:
+            pd = SV.Drive("g", "", "m")
+            pd.approve, pd.approved = "auto", "x"
+
+            def patched(n, a, e):
+                (pg / "one.txt").write_bytes(b"A\r\nb\r\n")
+                (pg / "two.txt").write_bytes(b"C\r\n")
+                return "Patched 2 file(s) on line of work `work`:"
+            pctx = _NS(env=_NS(caller_allowed={"apply_patch"}), report=lambda line: None, journal=None, ground=pg,
+                       ask=asker(), skills=_NS(execute=patched))
+            res = SV.drive_act("apply_patch", {"content": patch}, pctx, pd)
+            mine = {Path(k[1]).name for k in pd.item_files}
+            SV._drive_put_back(pd, lambda line: None, "test")
+        finally:
+            SV._drive_target, SV._drive_run = real_target, real_run
+        check("features: every file a patch names becomes the job's own, so the put-back restores each one",
+              res.startswith("Patched") and mine == {"one.txt", "two.txt"}
+              and (pg / "one.txt").read_bytes() == b"a\r\nb\r\n" and (pg / "two.txt").read_bytes() == b"c\r\n",
+              f"{res} {mine}")
+
+        # SEVERAL EDITS IN ONE CALL, ALL OR NOTHING; LINT AFTER; READ-BACK.
+        from manjuel.skills import _edit_passages
+        f = tmp / "multi.txt"
+        f.write_bytes(b"alpha\r\nbeta\r\ngamma\r\n")
+        pairs, why = _edit_passages("@@ OLD\nalpha\n@@ NEW\nALPHA\n@@ OLD\ngamma\n@@ NEW\nGAMMA\n")
+        both = _apply_passage(f, pairs[0][0], pairs[0][1], more=pairs[1:])
+        none = _apply_passage(f, "ALPHA", "a", more=[("not there", "b")])
+        check("features: several @@ OLD / @@ NEW pairs land in one edit, CRLF kept; one miss writes none of them",
+              len(pairs) == 2 and both.startswith("Edited") and none.startswith("Refused")
+              and f.read_bytes() == b"ALPHA\r\nbeta\r\nGAMMA\r\n", f"{both} | {none} | {f.read_bytes()!r}")
+        j = tmp / "conf.json"
+        j.write_bytes(b'{"a": 1}\r\n')
+        broke = _apply_passage(j, '"a": 1', '"a": 1,')
+        check("features: an edit that leaves a .json file unparseable is refused and the file left as it was",
+              broke.startswith("Refused") and j.read_bytes() == b'{"a": 1}\r\n', broke)
+
+        # PLAN MODE: reads only, a plan on his card, then the plan worked as one job.
+        d, m = run(f"propose write a | check: {py} -c pass",
+                   {"role": "assistant", "content": "1. write a.txt\n2. done"},
+                   call("write_file", {"filepath": "a.txt", "content": "a"}), call("done", {"summary": "a"}))
+        first = [t["function"]["name"] for t in m.kw[0]["tools"]]
+        asks = [e[1] for e in events if e[0] == "ask"]
+        check("features: /drive propose reads with readers only, shows the plan on one card, then works it on his yes",
+              "write_file" not in first and "read_file" in first and len(asks) == 1 and "1. write a.txt" in asks[0]
+              and ("ran", "write_file", {"filepath": "a.txt", "content": "a"}) in events and d.verdict == "passed",
+              f"{first} {asks} {d.verdict}"[:300])
+        d, _ = run(f"propose write a | check: {py} -c pass", {"role": "assistant", "content": "1. write a.txt"},
+                   answers=("n",))
+        check("features: a no to the plan card writes nothing", d.verdict == "declined"
+              and not [e for e in events if e[0] == "ran"], d.verdict)
+
+        # /undo: the last turn's own unsaved files put back on his card.
+        u = tmp / "undo.txt"
+        u.write_bytes(b"before\r\n")
+        made = tmp / "made.txt"
+        made.write_bytes(b"new\r\n")
+        last = SV.Drive("g", "", "m")
+        last.item_files = {(str(tmp), str(u)), (str(tmp), str(made))}
+        last.before = {(str(tmp), str(u)): b"before\r\n", (str(tmp), str(made)): None}
+        u.write_bytes(b"after\r\n")
+        cards = []
+        udoor = _NS(last_drive=last, ask=lambda prompt, color="red", timeout=None: cards.append(prompt) or "y")
+        with _cl.redirect_stdout(_io.StringIO()):
+            SV.door_undo(udoor)
+            SV.door_undo(udoor)
+        check("features: /undo puts the last turn's files back byte for byte on one card; a file it made is removed",
+              u.read_bytes() == b"before\r\n" and not made.exists() and len(cards) == 1
+              and "undo.txt" in cards[0] and "removed" in cards[0], str(cards)[:300])
+
+        # SCHEDULES AND GOALS: the store proves itself; a due goal runs as an unattended job and its pass ends it.
+        from manjuel import schedule
+        try:
+            schedule._strokes()
+            ok, why = True, ""
+        except Exception as exc:
+            ok, why = False, f"{type(exc).__name__}: {exc}"
+        check("harness: schedule.py proves itself (its own strokes)", ok, why[:300])
+        (tmp / "state").mkdir(exist_ok=True)
+        said = []
+        sdoor = _NS(ground=tmp, unattended=False, inbox=_NS(set_state=lambda s: None),
+                    wire=_NS(emit=lambda kind, **kw: said.append((kind, kw.get("text", ""))), ended=True))
+        with _cl.redirect_stdout(_io.StringIO()):
+            SV.door_schedule(sdoor, f"/goal fix the map | check: {py} -c pass")
+        ran, real_drive = [], SV.door_drive
+        SV.door_drive = lambda door, text, once=False: ran.append((text, once, door.unattended)) or _NS(verdict="passed")
+        try:
+            n = SV.door_schedules(sdoor)
+        finally:
+            SV.door_drive = real_drive
+        listing = schedule.listing(tmp)
+        check("features: /goal is kept; the idle door runs it once, unattended, as an auto job, and a pass ends the goal",
+              n == 1 and ran and ran[0][1] is True and ran[0][2] is True and ran[0][0].startswith("auto")
+              and "done" in listing and sdoor.unattended is False, f"{ran} {listing}"[:300])
+        check("features: the idle door ticks for schedules and Door.turn serves /schedule, /goal, /schedules and /undo",
+              "door_schedules(self)" in src and '"/schedule", "/goal", "/schedules"' in src and "door_undo(self)" in src)
     finally:
         SV.DRIVE_STEPS = kept
         _sh.rmtree(tmp, ignore_errors=True)
