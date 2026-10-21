@@ -554,6 +554,185 @@ sent by name (SPEC 8.2 carries the same, under its themes):
                                 BUILDPATH's ladders are history, so the docs
                                 stroke leaves them alone, and main is green
                                 again after the v0.2.4 cut
+           v0.2.6   2026-10-21  a number glued to its unit in a tool's
+                                result is a source, so the release's live
+                                check passes the rack again; `reports_to:
+                                manjuel` answers to the core, and the
+                                release gate's manifest line is green again;
+                                the full feature list built into Steward;
+                                Steward on gpt-oss, and Steward as the face;
+                                Steward made capable -- the harness around
+                                him, from the harness study; the rack knows
+                                the machine it runs on; what a passing check
+                                rewrote goes into the job's commit; a
+                                skill's own phrases sit beside the rules on
+                                the record; every skill declares its own
+                                phrases, and the shared table keeps only the
+                                words that belong to no single skill; the
+                                Router reads and packs while a coder waits
+                                behind it; an order to write is read from
+                                his own words; a seat or skill file counts
+                                only in its own place, and the reload line
+                                names it; a flag is read from a seat's own
+                                words, never from a tool's text in its
+                                reply; index_ground's rebuild words count
+                                only as whole words; the Proofreader's task
+                                names the sound-alikes; a flag in quote
+                                marks is taken out of the shown text whole;
+                                the answers' caps -- the Reasoner, the
+                                Quality Evaluator and Jesster uncapped, the
+                                Router at 2,000, and a seat with no cap
+                                packed for half its window; the court's time
+                                -- a seat's Timeout bounds its whole stage,
+                                and 360 s of the court's 900 are kept for
+                                the Judge; in the glass his own commands and
+                                a typed /listen run what they leave to run;
+                                the Deep Researcher is told this ground's
+                                own words before the question; the closing
+                                answer no longer shortens the skills' two
+                                listings; the engine's note on what it added
+                                to an answer names every block; the turn's
+                                clock stops while a card waits for him; the
+                                cut stands on its release line, level with
+                                GitHub's main, and carries the record only;
+                                the release check counts the tag being cut;
+                                every use of a skill marked and weighed, and
+                                Steward handed each tool's whole file on
+                                first use; docs: the v0.2.6 and v0.2.7
+                                release checklist read off the code and the
+                                record, and the road to v0.2.6 set;
+                                ground_write and ground_edit say what they
+                                now allow -- H5's first live proof,
+                                Steward's first write into skills/; Steward
+                                may write the seats and the skills, and a
+                                seat still may not; ground_read takes a
+                                definition's name as asked; docs: What's
+                                left made whole -- the readers' findings re-
+                                checked and written down, nothing lost;
+                                docs: the book of the system -- README,
+                                QUICKSTART, RUNBOOK and INVENTORY folded
+                                into one, every part in full; put back what
+                                the engine already had -- the suites' tally
+                                comes from `proved`; C71 and the driver's
+                                own send, done by Steward on its own code;
+                                SITTING LAW 11; a door call said plainly
+                                (WHAT'S LEFT C77) -- a line that leads with
+                                `mcp_call` goes to the door with no seat in
+                                between: one line of what it asks, the card,
+                                the wait on his click, one line of what
+                                became of it; Steward drives (H31) --
+                                `/drive`, the driver at Nigel's parity: one
+                                job, `plan` and `each`, the save, the send,
+                                CI and the merge on his cards, `tidy` for
+                                merged branches, and "What is next?" after
+                                every job; the documentation pass --
+                                SYSTEM_DESIGN.md rewritten as the recorder
+                                and the harness built on it, SPEC 8.2
+                                superseded, the living documents brought to
+                                the system as it stands and the historical
+                                ones dated; a seat's thought, live in the
+                                terminal -- each fragment of a thinking
+                                seat's thought crosses the wire as it
+                                arrives and the REPL draws it dimmed, kept
+                                for the transcript and nowhere else; the
+                                door passes it through and the glass draws
+                                it live and folds it; saved and sent through
+                                Steward; the seat renamed the Judge -- the
+                                gemma4:12b seat that rules last at the court
+                                and sits in the estate takes the name, with
+                                its file, its record, the engine's two
+                                running orders and `pipelines.md`'s six
+                                lines, so "Manjuel" means the core alone;
+                                the door opened to `pipelines.md` for the
+                                piece and shut again; Manjuel's logic core,
+                                its first piece -- the PPMI reader reads the
+                                request where no skill's own words are in
+                                it, by his rule: a skill's own words stand,
+                                a shared phrase gives way, the engine's sure
+                                readers keep their turns, and a write is
+                                never the reader's to name; the plan written
+                                into the documents -- SPEC's words and 8.4,
+                                BUILDPATH's order, DAYBOOK's Session 28,
+                                What's left's H28 to H30, the gemma4:12b
+                                seat named the Judge, and no path out of a
+                                world in what is sent; the plan by office --
+                                Manjuel the core, Steward the body that
+                                acts, Jesster the coder, Neiro the overseer,
+                                Aurora the webapp kept as it is; Manjuel's
+                                logic core first; WHAT'S LEFT made honest --
+                                every open fault on the record a numbered
+                                line under C, the half-built pieces under D,
+                                what never ran under E, the stale paperwork
+                                under F, C13 reopened, the working path at
+                                the top, and I2's plan brought up to his
+                                words; the answers, piece (1), the big
+                                seat's answer as written -- when the
+                                Reasoner or the Expert Coder answers, its
+                                words are the delivery as written and what
+                                is still open is the engine's, from the
+                                record; every closing answer is written from
+                                this turn alone; routing, its third part,
+                                the levels -- each turn measured by
+                                arithmetic on his words and tagged by the
+                                seat that takes it; where a Router stands, a
+                                larger ask brings the Router, a much larger
+                                one asks him to wake a big seat, and a
+                                workflow's job runs as a big seat's until
+                                workflows exist; routing, its second part,
+                                the Router's package -- a seat after the
+                                Router is handed his words, what the
+                                Router's tools returned cut to fit its
+                                window, the task and its limits; the Router
+                                is told who waits behind it and asked to
+                                name the task; its ways up are read from the
+                                seat files; routing, its first part, the
+                                front face -- the Steward up front answers
+                                reads and simple calls, a skill is named by
+                                its own words, a card asks him when the turn
+                                is not sure and before a racked seat wakes,
+                                quick and estate run no tool, and the cards
+                                carry their color; every call the glass
+                                makes is in sight -- the Run tab's Door
+                                calls lists each one as it goes and as it
+                                comes back, a long run has an entry in the
+                                terminal, and the Audit Ledger reads the
+                                proof again when the suites or the live
+                                check end; I2's second step, the measure --
+                                every line of INVENTORY.md run live on his
+                                glass and its time written down, or ruled:
+                                244 lines, 41 with a fault, 29 ruled; v0.2.6
+                                set in four steps, and the first one's first
+                                pass written -- INVENTORY.md, every function
+                                of both repositories on a line of its own,
+                                held whole by a stroke; RUNBOOK says how
+                                GitHub works from the glass -- the GitHub
+                                tab and its buttons, a change's road to main
+                                through a pull request, what waits for his
+                                hand and a cut, the Dashboard's commit and
+                                push annotated where they stood, and a
+                                stroke holding the section to the tab's own
+                                buttons; the six pages with no tab open a
+                                tab -- the Watchboard opens Run with its
+                                floor and its tool calls, Agents, Tools and
+                                Records open Registry & Docs, Evals the
+                                Audit Ledger, What's left a tab of its own,
+                                and the front page comes up on Agent; a pull
+                                request wraps in the Inspector -- each is a
+                                block of lines with Merge on GitHub under
+                                them, where a table row ran past the panel's
+                                edge; the pages with a tab open their tab --
+                                Workflows, Laws, GitHub and Settings open
+                                the front page with their Inspector tab, and
+                                what only those pages drew is gone; the
+                                release check names a retired flow retired
+                                -- `coder` and `version-tag` retired on the
+                                door, every version kept; the release flow's
+                                record step prints STATUS again -- so the
+                                flow's last read can pass, and the flow can
+                                finish COMPLETE; the record of the v0.2.5
+                                cut -- WHAT'S LEFT's checklist ticked and I1
+                                moved to Done, HANDOFF and DAYBOOK told the
+                                cut, and STATUS printed again
     atlas  v0.1.6   2026-09-18  THE DOOR'S OWN QUARTER ("atlas needs its own
                                 number too")
            v0.1.7   2026-09-23  EVERY PIN IN STEP
@@ -642,6 +821,52 @@ sent by name (SPEC 8.2 carries the same, under its themes):
                                 approved hold runs in the world it was held
                                 for: a council's call held for atlas,
                                 approved from the glass, had run in the core
+           v0.2.6   2026-10-21  The secret card: a key typed into a masked
+                                field, never seen by the model; The glass as
+                                a desktop app: `atlas-desktop.exe`; The
+                                door: gitpr.go's promise of a re-fire
+                                between the merges annotated; The glass: a
+                                [y/n] question in the Agent tab carries
+                                Approve and Deny; The documentation pass,
+                                atlas's part: LAUNCH_PLAN.md rewritten as
+                                the plan of the harness built on the
+                                recorder, the living documents brought to
+                                atlas as it stands, and the historical ones
+                                dated; A seat's thought, live on the glass:
+                                the door hands the glass each fragment of a
+                                thinking seat's thought as it arrives and
+                                keeps none, and the glass draws it live and
+                                dimmed under the live line, then folds it to
+                                one line when the seat speaks, in the Agent
+                                tab and on the Run tab's floor; Routing's
+                                front face, atlas's part: file_edit sets the
+                                seats and the skills on his card while no
+                                sitting is open, and the cards are colored
+                                by what they are for -- amber to read or
+                                approve, green to move up or wake a seat,
+                                red for an edit or a command; Every call the
+                                glass makes is in sight: the Run tab's Door
+                                calls lists each one as it goes and as it
+                                comes back, a long run has an entry in the
+                                terminal, and the Audit Ledger reads the
+                                proof again when the suites or the live
+                                check end; The six pages with no tab open a
+                                tab: the Watchboard opens Run, which draws
+                                its floor and its tool calls; Agents, Tools
+                                and Records open Registry & Docs, each tool
+                                saying what it does; Evals opens the Audit
+                                Ledger; What's left is a tab of its own; and
+                                the front page comes up on Agent; A pull
+                                request wraps in the Inspector: each is a
+                                block of lines with Merge on GitHub under
+                                them, where a table row ran past the panel's
+                                edge; A page with a tab opens its tab:
+                                Workflows, Laws, GitHub and Settings open
+                                the front page with their Inspector tab, and
+                                what only those pages drew is gone; A flow
+                                is retired by a version of its own: the door
+                                fires it no more, every version of it kept,
+                                and the Workflows tab says so
 
 THE MARKS AS GIT HOLDS THEM, read 2026-09-30. The rewrite of 2026-09-21 moved
 every mark that stood before it (CHANGELOG's headings say "on <sha> since"),
@@ -651,11 +876,12 @@ so the 2026-09-17 list above is history (LAW 1) and this is where they sit:
            v0.1.12 084fe33    v0.1.13 4e04378    v0.1.14 de2420e
            v0.1.15 af50522    v0.1.16 e8aa9b5    v0.2.0  f232dd6    v0.2.1  9ce3b74
            v0.2.2  156284a    v0.2.4  2230e7d
-           v0.1.6  2f84bca    v0.1.10 e06c932    v0.2.5  4503173
+           v0.1.6  2f84bca    v0.1.10 e06c932    v0.2.5  4503173    v0.2.6  a0ab2be
     atlas  v0.1.5  3dacdbc    v0.1.6  0c65afc    v0.1.7  063a152
            v0.1.8  56a3078    v0.1.9  b1059a1    v0.2.0  e2db417    v0.2.1  5c6beeb
            v0.2.2  acdceb6    v0.2.4  af92401
            v0.1.2  0586228    v0.1.3  7688c04    v0.1.4  467e94c    v0.2.5  144a425
+           v0.2.6  19dcc85
 
 The last row of each side was marked on 2026-10-09, after the fact (his word: "post-script the versions that didnt get any tags or info ... tag them with what happened that day"): versions
 cut and never tagged, each marked on the commit that cut its number, with every pin there agreeing and its
