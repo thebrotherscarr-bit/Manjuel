@@ -1080,7 +1080,8 @@ def _strokes() -> None:
 
     ground = Path(__file__).resolve().parent.parent
     g = str(ground).replace("\\", "/")
-    msys = "/" + g[0].lower() + g[2:]
+    # Git Bash's spelling of a drive path (/c/Users/...); a ground with no drive (Linux) has none.
+    msys = ("/" + g[0].lower() + g[2:]) if g[1:2] == ":" else g
     matrix = [
         # reads: run at once
         ("git log --oneline -5", READ),

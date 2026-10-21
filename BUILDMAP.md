@@ -1232,7 +1232,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `_refused` | 765-767 |  |
 | def | `_strokes` | 774-982 | Prove the three on a throwaway ground with its own git repository on |
 
-### manjuel/tools_shell.py — 1220 lines
+### manjuel/tools_shell.py — 1221 lines
 
 *The shell for Steward: `run_shell`, gated the way the door gates his own.*
 
@@ -1270,7 +1270,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `_kill_tree` | 971-987 | End the run and everything it started: a grandchild left holding the |
 | def | `_wait_for` | 990-995 |  |
 | def | `_run_shell` | 999-1064 | Run one command line in the ground and report its exit code and output. |
-| def | `_strokes` | 1072-1220 | The gate's matrix and two real runs. Raises AssertionError on a fault. |
+| def | `_strokes` | 1072-1221 | The gate's matrix and two real runs. Raises AssertionError on a fault. |
 
 ### manjuel/transcript.py — 190 lines
 
@@ -1408,7 +1408,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `GroundWatch.start` | 197-222 |  |
 | def | `GroundWatch.stop` | 224-230 |  |
 
-manjuel/: 40 files, 35755 lines.
+manjuel/: 40 files, 35756 lines.
 
 ## GUARDS — by the failure that earned them
 

@@ -1277,8 +1277,8 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 | 1015 | (the words are on the next line) |
 | 1020 | (the words are on the next line) |
 | 1041 | the shell could not be started -- |
-| 1208 | (the words are on the next line) |
-| 1210 | (the words are on the next line) |
-| 1212 | (the words are on the next line) |
+| 1209 | (the words are on the next line) |
+| 1211 | (the words are on the next line) |
+| 1213 | (the words are on the next line) |
 
 <!-- /THE SITES -->
