@@ -34,6 +34,50 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: the full feature list built into Steward (2026-10-21, on his word)
+
+His words: "diff the full feature list from all the other harnesses, and add them to stewards abilities", then "merged, go ahead and build them all". Sixty-two features across opencode, Cline, OpenShell, Pi, oh-my-pi, Hermes, OpenClaw and his REA Studio, each set against Steward as HAVE, BUILD or NOT TAKEN (HARNESS_STUDY.md, "The full feature list"). What was BUILD, built:
+
+- **The hands every coding harness has** (`manjuel/tools_files.py`, `manjuel/tools_shell.py`, new; skills/ground_grep.md, find_files.md, apply_patch.md, run_shell.md):
+  - `ground_grep` finds where a regex is in the ground.
+  - `find_files` lists the files a glob matches, newest first.
+  - Neither one names or opens a secret, a client file, worlds/, a vault/ or .git/.
+  - `apply_patch` changes several files at once, on a line of work, whole or nothing. Every hunk is found before any file is touched, through ground_write's own walls.
+  - `run_shell` runs one line of Git Bash in the ground. A short list of reads runs at once and anything else asks him in the driver. A seat of the council has no card for it, so there only the reads run. These are refused and never started: git status, the network, installs, machine settings, secrets, and paths outside the ground.
+  - The Router's 16k window went 113 tokens over with the four new skills; their descriptions were cut short and it holds again, by a thin margin. The next skill added will need room made.
+  - Registered at the end of skills.py. ground_grep and find_files are in REVIEW_ONLY_SKILLS and Steward's May Call. apply_patch is in WRITING_SKILLS. run_shell and apply_patch are in the driver's hands. Their us records sit beside triage_binary's.
+- **Per-tool rules and "always"** (`MANJUEL_DRIVER_ALLOW`, `MANJUEL_DRIVER_DENY`, `DRIVE_GRANTS`):
+  - A tool he denies is never offered.
+  - A tool he allows writes with no card.
+  - `always` on a write card grants that tool for the rest of the sitting.
+- **Plan mode** (`/drive propose <goal> | check: ...`, `_drive_propose`): the Steward reads with readers only and writes a plan. The plan and the check go on one card, and on his yes the plan is worked as one job.
+- **His own tools in the loop**: `todo` (the Steward's own list), `ask_operator` (a question on a card, numbered choices), `ask_secret` (the masked secret card, by the .env variable's name; the value is never seen by the model, and atlas paints the card), and `delegate` taking a batch of tasks.
+- **A model that misbehaves**:
+  - A reply cut off by its length with no call is continued, at most twice.
+  - An empty reply is asked again, never taken for done.
+  - A model that fails outright hands the job, once, to `MANJUEL_DRIVER_FALLBACK` (qwen3.5:9b).
+  - A summary runs on `MANJUEL_SUMMARY_MODEL` (qwen3.5:4b) first.
+- **Edits that hold**:
+  - Several `@@ OLD / @@ NEW` pairs land in one ground_edit or edit_file, all or nothing.
+  - What was written is read back and compared byte for byte.
+  - A .json file is parsed after the edit, and a .js file is put through `node --check`.
+  - ground_write over a file the job never read is refused (the stale-write guard).
+  - Every file a patch names becomes the job's own, so the commit and the put-back see each one.
+- **`/undo`** (`door_undo`): the last Steward turn's own unsaved files are put back byte for byte, on one card.
+- **Schedules and goals** (`manjuel/schedule.py`, new; `/schedule`, `/goal`, `/schedules [drop <id>]`; `door_schedule`, `door_schedules`, `Door._next`):
+  - Rows live in `state/schedules.jsonl`.
+  - While a sitting is open, the idle door looks every minute and runs each due row once, as an unattended `auto` job (every card a no, git the net). It records the verdict.
+  - A goal is done when its check passes. It is blocked on three alike failures or 48 runs.
+
+Not taken, with the reason in the study: a kernel sandbox, web search, telemetry, allow-everything defaults, sub-agents in their own copy of the folder, and background commands (these need a long-lived runner).
+
+Strokes: 25 more in `test_steward_harness`, plus the three new modules' own. What goes red if this comes unplugged:
+- those strokes;
+- `SkillLibrary.validate()` for the four skill files;
+- `python -m manjuel.us` for their records.
+
+Restart required.
+
 ### core: Steward on gpt-oss, and Steward as the face (2026-10-21, on his word)
 
 His words: "we put steward as the main man, load him up with gpt oss"; "steward becomes the system, the face, the front-end agent"; "if oss can make it easier, to where we can pull out those reasoning steps, and any extra bullshit from using a smaller front end model, just do that. that makes way more sense to me than dumbing down the model"; and "go ahead with the swap and the face".

@@ -131,6 +131,7 @@ import builtins
 import json
 import os
 import queue
+import re
 import sys
 import threading
 import time
@@ -576,6 +577,19 @@ DRIVE_CONTEXT_SET = bool(os.environ.get("MANJUEL_DRIVER_CTX", "").strip())
 DRIVE_CONTEXT_CHARS = int(_drive_dial("MANJUEL_DRIVER_CONTEXT_CHARS", 5000))
 # Steward's sub-agents: a council seat asked one task, its answer handed back.
 DRIVE_DELEGATE_CHARS = 6000
+# THE REST OF THE FEATURE LIST (2026-10-21, his word: "diff the full feature list from
+# all the other harnesses, and add them to stewards abilities"; HARNESS_STUDY.md):
+# per-tool rules (opencode, Cline, oh-my-pi, OpenClaw): a tool named in ALLOW writes
+# without a card, one named in DENY is never run; an "always" on a write card grants
+# that tool for the rest of the sitting (DRIVE_GRANTS, this process's life). A fallback
+# model takes over when the first one keeps failing (Hermes, OpenClaw), and a small
+# side model writes the summaries when the window is compacted (Cline, opencode).
+DRIVE_ALLOW = {t.strip() for t in os.environ.get("MANJUEL_DRIVER_ALLOW", "").split(",") if t.strip()}
+DRIVE_DENY = {t.strip() for t in os.environ.get("MANJUEL_DRIVER_DENY", "").split(",") if t.strip()}
+DRIVE_GRANTS: set = set()
+DRIVE_FALLBACK = os.environ.get("MANJUEL_DRIVER_FALLBACK", "").strip() or "qwen3.5:9b"
+DRIVE_SUMMARY_MODEL = os.environ.get("MANJUEL_SUMMARY_MODEL", "").strip() or "qwen3.5:4b"
+DRIVE_ALWAYS = ("always", "a", "yes always", "always yes")
 # STEWARD IS THE FACE (2026-10-21; his words: "steward becomes the system, the face,
 # the front-end agent", and "if oss can make it easier, to where we can pull out those
 # reasoning steps, and any extra bullshit from using a smaller front end model, just do
@@ -592,11 +606,15 @@ FACE_RULES = (
     "THE FACE -- YOU HOLD THE TOOLS YOURSELF\n"
     "At this door you are not handing off to a chain: the tools are in front of you, "
     "and the flags above do not apply. Read before you claim -- semantic_search and "
-    "search_transcripts find what the record says, ground_read and ground_list read "
-    "the ground -- and check with a tool rather than guess. When he asks you to change "
-    "a file, make the change with ground_edit (one exact passage) or ground_write; each "
-    "asks him first, and a no may carry his reason. For real reasoning, a review or code "
-    "you want a second mind on, delegate to a council seat with the whole task. When you "
+    "search_transcripts find what the record says, ground_grep and find_files find where "
+    "a thing is, ground_read and ground_list read the ground -- and check with a tool "
+    "rather than guess. When he asks you to change a file, make the change with "
+    "ground_edit (exact passages), ground_write (a whole file you have read) or apply_patch "
+    "(several files at once); run_shell runs one line of bash. Each change asks him "
+    "first, and a no may carry his reason. For real reasoning, a review or code "
+    "you want a second mind on, delegate to a council seat with the whole task. If only he "
+    "can decide, ask_operator; if the work needs a key or token, ask_secret names it and he "
+    "types it into a masked card -- you never see the value. When you "
     "have the answer, reply to him in words with NO tool call: that reply is what he "
     "reads -- lead with the finding, short, in your own voice. A turn that is only talk "
     "needs no tool at all.")
@@ -607,7 +625,10 @@ DRIVE_NEVER = {"git_commit", "git_cycle", "git_push", "git_pull", "git_init",
                "index_ground", "embed_text", "speak"}
 # Offered beside the readers. Each of these asks him first (drive_act).
 DRIVE_HANDS = {"ground_write", "ground_edit", "write_file", "edit_file",
-               "run_python", "mcp_call"}
+               "run_python", "mcp_call",
+               # the feature list (2026-10-21): a gated shell (its reads run at once,
+               # tools_shell.classify) and a multi-file patch checked whole first.
+               "run_shell", "apply_patch"}
 DRIVE_ASKS = ("run_python", "mcp_call")      # asked as the WRITING_SKILLS are
 DRIVE_TREE = ("ground_write", "ground_edit")
 DRIVE_MAIN = ("main", "master")
@@ -624,6 +645,11 @@ DRIVE_USAGE = (
     "  /drive tidy                               every branch merged into main deleted, here and on GitHub\n"
     "  /drive ship <message>                     the work on disk saved, sent, through CI, merged on your card\n"
     "  /drive resume                             the newest job a crash cut short, carried on from its journal\n"
+    "  /drive propose <goal> | check: <command>  plan mode: it reads, writes a plan, and on your\n"
+    "        yes works the plan as one job\n"
+    "  /undo   the last Steward turn's unsaved files put back, on your card\n"
+    "  /schedule every 30m|at 18:00|cron \"..\"|once <time> <drive> ; /goal <drive> | check: <command>\n"
+    "        run as unattended `auto` jobs while a sitting is open; /schedules lists, /schedules drop <id>\n"
     "  plan and each need a check; \"suites\" as the check runs the strokes.\n"
     "  Approval, chosen per job by the first word: (none) one card for the whole job,\n"
     "  then its writes on its line run; `auto` no job card, git is the net; `ask` every\n"
@@ -634,16 +660,29 @@ DRIVE_SYSTEM = (
     "Work in steps: call one tool, read what it returned, then decide the next "
     "call. Use only the tools you are given, and never claim a result a tool did "
     "not return. A file in the ground (the code and the documents) is changed "
-    "with ground_edit (one exact passage) or ground_write (a whole file); "
-    "write_file writes only the workspace. Some tools wait for the operator's "
+    "with ground_edit (one exact passage; several @@ OLD / @@ NEW pairs in one "
+    "call) or ground_write (a whole file, after you have read it); apply_patch "
+    "changes several files at once, whole or not at all; write_file writes only "
+    "the workspace. Find things before you read them: ground_grep finds where a "
+    "pattern is, find_files which files match a name. run_shell runs one line of "
+    "bash in the ground: a read runs at once, anything else asks him. Some tools wait for the operator's "
     "approval; if he declines, find another way or call done. A refusal tells you "
     "what was wrong: correct the call, do not repeat it. To have a council seat "
     "think about part of the work, call delegate with the seat and the task; its "
-    "answer comes back to you. Do not "
+    "answer comes back to you. Keep your own list of steps with todo on a job of "
+    "more than a few steps. When only the operator can decide, ask him with "
+    "ask_operator; when the work needs a key or token, call ask_secret with the "
+    "variable's name -- he types it into a masked card and you never see it. Do not "
     "write or run scripts to test your own work: the job's check runs by itself "
     "when you call done. When you believe the goal is met, call done with a "
     "one-line summary. Only a passing check ends the job; if it fails you are "
     "given its output -- fix what it names and call done again.")
+DRIVE_PROPOSE_SYSTEM = (
+    "You are the Steward, planning a job before any of it is done (plan mode: opencode, "
+    "Cline, oh-my-pi). Read what you need with the tools you are given -- they only read -- "
+    "then reply in words, with no tool call, with a short numbered plan: each file to change "
+    "and how, and how the job's check will prove it done. Change nothing; the operator "
+    "approves the plan before a single file is written.")
 DRIVE_PLAN_SYSTEM = (
     "You break one goal into a short list of small, separate items of work. Each "
     "item must be doable on its own and checkable by the same check. Reply with "
@@ -691,11 +730,54 @@ DRIVE_DELEGATE_TOOL = {
         "parameters": {
             "type": "object",
             "properties": {"seat": {"type": "string", "description": "the seat's name"},
-                           "task": {"type": "string", "description": "the whole task, with its material"}},
-            "required": ["seat", "task"],
+                           "task": {"type": "string", "description": "the whole task, with its material"},
+                           "tasks": {"type": "array", "description": (
+                               "several at once instead: a list of {seat, task}, answered one after "
+                               "another"), "items": {"type": "object", "properties": {
+                                   "seat": {"type": "string"}, "task": {"type": "string"}}}}},
+            "required": [],
         },
     },
 }
+# THE DRIVER'S OWN TOOLS (the feature list): a todo list it keeps for itself (opencode,
+# Hermes, oh-my-pi), a question to him with choices (Cline, Hermes, OpenClaw), and a key
+# asked for on a masked card that only the glass and the door ever see (OpenClaw's
+# secrets tool; atlas's secret card).
+DRIVE_TODO_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "todo",
+        "description": ("Keep your own list of the steps of this job: pass the whole list each time, "
+                        "each item with done true or false. It is shown to the operator and handed "
+                        "back to you."),
+        "parameters": {"type": "object", "properties": {"items": {"type": "array", "items": {
+            "type": "object", "properties": {"text": {"type": "string"}, "done": {"type": "boolean"}}}}},
+            "required": ["items"]},
+    },
+}
+DRIVE_ASK_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "ask_operator",
+        "description": ("Ask the operator one question you cannot answer from the ground, with up to "
+                        "five choices; his answer comes back to you. Ask only what you truly need."),
+        "parameters": {"type": "object", "properties": {
+            "question": {"type": "string"},
+            "choices": {"type": "array", "items": {"type": "string"}}}, "required": ["question"]},
+    },
+}
+DRIVE_SECRET_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "ask_secret",
+        "description": ("Ask the operator to enter a key (a token, an API key) on a masked card. It goes "
+                        "straight into .env under the name you give; you never see it -- you are told "
+                        "only whether it was set. name: CAPITALS_AND_UNDERSCORES; why: one line he reads."),
+        "parameters": {"type": "object", "properties": {
+            "name": {"type": "string"}, "why": {"type": "string"}}, "required": ["name", "why"]},
+    },
+}
+DRIVE_SECRET_NAME = re.compile(r"^[A-Z][A-Z0-9_]{1,63}$")
 DRIVE_REPOS = ("", "atlas")                  # the ground, and the door's repository inside it
 
 
@@ -728,6 +810,8 @@ class Drive:
         self.journal = None          # the job written down as it goes (journal.py)
         self.resumed = ""            # the journal a resumed job was carried on from
         self.answer = ""             # what the face said to him (door_face)
+        self.todo: list = []         # [text, done]: the list it keeps for itself (todo)
+        self.read: set = set()       # (repo, path) it read in full this job: the stale-write guard
 
 
 def drive_parse(said: str) -> dict:
@@ -740,7 +824,7 @@ def drive_parse(said: str) -> dict:
             approve, text = a, text[len(a):].strip()
             break           # `auto` or `ask` first, then the mode: "auto plan tidy the docs"
     mode = "goal"
-    for m in ("plan", "each", "tidy", "ship", "resume"):
+    for m in ("plan", "each", "tidy", "ship", "resume", "propose"):
         if text.lower() == m or text.lower().startswith(m + " "):
             mode, text = m, text[len(m):].strip()
             break           # the first word alone names the mode: "plan tidy the docs" is a plan
@@ -1125,18 +1209,70 @@ def drive_act(name: str, args: dict, ctx, d) -> str:
             return (f"Refused: {_drive_rel(*key)} carries changes that are not the Steward's (not "
                     f"saved, or not in git), so it is not written: what the run commits or puts "
                     f"back must be its own work alone. Nothing was written.")
+    # A PATCH NAMES SEVERAL FILES (apply_patch, tools_files.patch_targets): each is held to
+    # what a single tree write is held to -- on a branch, carrying nothing of his -- and
+    # each is the job's own after it lands, so the commit and the put-back see every one.
+    patched = []
+    if name == "apply_patch":
+        try:
+            from .tools_files import patch_targets
+            named = patch_targets(str(args.get("content") or ""))
+        except Exception:
+            named = []
+        for rel in named:
+            t = _drive_target(env, {"filepath": rel})
+            if not t:
+                continue
+            k = (str(t[0]), str(t[1]))
+            if t[2] in ("HEAD", ""):
+                return (f"Refused: {t[0].name} is not on a branch (a detached HEAD), so there is no "
+                        f"line of work to write on. Nothing was written.")
+            if k not in d.item_files:
+                _, dirty = _drive_run(["git", "status", "--porcelain", "--", _drive_rel(*k)], t[0])
+                if dirty.strip():
+                    return (f"Refused: {_drive_rel(*k)} carries changes that are not the Steward's, so "
+                            f"the patch is not applied: what the run commits or puts back must be its "
+                            f"own work alone. Nothing was written.")
+            patched.append((t, k))
+        if patched and not tgt:
+            tgt, key = patched[0]
     opening = ("drive-" + time.strftime("%m%d-%H%M%S")) if tgt and tgt[2] in DRIVE_MAIN else ""
     # A write inside a job he approved runs without a card of its own (the job card bound
     # his yes to its text); run_python and mcp_call always ask (DRIVE_APPROVALS).
     covered = name in WRITING_SKILLS and name not in DRIVE_ASKS and (
         d.approve == "auto" or (d.approve == "plan" and d.approved))
-    if (name in WRITING_SKILLS or name in DRIVE_ASKS) and not covered:
+    # Per-tool rules and his "always" for the sitting (the feature list): a tool he allows
+    # or has granted writes without a card; run_python, mcp_call and run_shell's writes
+    # can be granted too, but never by the job card alone.
+    covered = covered or name in DRIVE_ALLOW or name in DRIVE_GRANTS
+    shell_read = False
+    if name == "run_shell":
+        try:
+            from .tools_shell import classify
+            kind, why = classify(str(args.get("content") or ""), ctx.ground)
+        except Exception as exc:
+            kind, why = "write", f"it could not be classified ({exc})"
+        if kind == "refused":
+            return f"Refused: run_shell will not run that -- {why}. Nothing ran."
+        shell_read = kind == "read"
+    # THE STALE-WRITE GUARD (Hermes): a whole file is not written over unless this job read
+    # it first or wrote it itself -- a write over what it never saw loses what was there.
+    if (name == "ground_write" and key and Path(key[1]).is_file() and key not in d.item_files
+            and key not in d.read):
+        return (f"Refused: {_drive_rel(*key)} is already there and this job has not read it. Read it "
+                f"first (ground_read), then write it whole, or change a passage with ground_edit.")
+    asks = name in WRITING_SKILLS or name in DRIVE_ASKS or name == "run_shell"
+    if asks and not covered and not shell_read:
         where = (f" (first opening the line of work `{opening}` in {tgt[0].name})"
                  if opening else "")
         answer = ctx.ask(f"The Steward wants to run {_drive_preview(name, args)}{where}\n"
+                         f"(\"always\" approves every {name} for the rest of this sitting)\n"
                          f"Approve? [y/n] ")
         if d.journal is not None:
             d.journal.write("card", prompt=f"{name} {_drive_brief(args)}", answer=str(answer or ""))
+        if str(answer or "").strip().lower() in DRIVE_ALWAYS:
+            DRIVE_GRANTS.add(name)
+            answer = "y"
         if not _drive_yes(answer):
             # A NO THAT SAYS WHY (opencode: a reject with a message is feedback): any
             # words beyond a plain no go back to the Steward as his reason.
@@ -1154,28 +1290,41 @@ def drive_act(name: str, args: dict, ctx, d) -> str:
         d.repos[key[0]] = {"base": tgt[2], "line": opening}
         if d.journal is not None:
             d.journal.write("repo", key=key[0], base=tgt[2], line=opening)
-    if key and key not in d.item_files:
+    for k in ([key] if key and not patched else [k for _, k in patched]):
+        if k in d.item_files:
+            continue
         try:
-            d.before[key] = Path(key[1]).read_bytes() if Path(key[1]).is_file() else None
+            d.before[k] = Path(k[1]).read_bytes() if Path(k[1]).is_file() else None
         except OSError as exc:
-            return f"Refused: {_drive_rel(*key)} could not be read before it was written: {exc}"
+            return f"Refused: {_drive_rel(*k)} could not be read before it was written: {exc}"
         if d.journal is not None:
             import base64
-            raw = d.before[key]
-            d.journal.write("before", repo=key[0], path=key[1],
+            raw = d.before[k]
+            d.journal.write("before", repo=k[0], path=k[1],
                             bytes=None if raw is None else base64.b64encode(raw).decode("ascii"))
     try:
         result = str(ctx.skills.execute(name, args, env) or "")
     except Exception as exc:
         return f"Refused: {name} failed in the engine ({type(exc).__name__}: {exc})."
-    if key and result.lstrip().startswith(("Wrote", "Edited")):
-        if key[0] not in d.repos and d.journal is not None:
-            d.journal.write("repo", key=key[0], base="", line=tgt[2])
-        d.repos.setdefault(key[0], {"base": "", "line": tgt[2]})
-        d.item_files.add(key)
-        d.touched.add(key)
-        if d.journal is not None:
-            d.journal.write("item_file", repo=key[0], path=key[1])
+    # What it read whole, for the stale-write guard above.
+    if name in ("ground_read", "read_file") and not result.lstrip().startswith(("Refused", "Error")):
+        seen = _drive_target(env, args) if name == "ground_read" else None
+        if seen:
+            d.read.add((str(seen[0]), str(seen[1])))
+    if key and result.lstrip().startswith(("Wrote", "Edited", "Patched")):
+        for t, k in (patched or [(tgt, key)]):
+            if k[0] not in d.repos and d.journal is not None:
+                d.journal.write("repo", key=k[0], base="", line=t[2])
+            d.repos.setdefault(k[0], {"base": "", "line": t[2]})
+            d.item_files.add(k)
+            d.touched.add(k)
+            if d.journal is not None:
+                d.journal.write("item_file", repo=k[0], path=k[1])
+    elif patched:
+        # A refused patch wrote nothing: the copies kept for it are let go.
+        for _, k in patched:
+            if k not in d.item_files:
+                d.before.pop(k, None)
     return result
 
 
@@ -1228,9 +1377,22 @@ def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float
         return steps >= max_steps or time.time() - started > max_minutes * 60
 
     def summarise(prompt: str) -> str:
-        r = ctx.client.chat(model=ctx.model, messages=[{"role": "user", "content": prompt}],
-                            options={"num_ctx": window}, keep_alive=ctx.keep_alive, think=False)
-        return str(_drive_field(_drive_field(r, "message"), "content") or "")
+        # A small side model writes the summary when it can (Cline, opencode), so the big
+        # one is not unloaded for it; the job's own model when the side one is missing.
+        for who in dict.fromkeys((DRIVE_SUMMARY_MODEL, ctx.model)):
+            try:
+                r = ctx.client.chat(model=who, messages=[{"role": "user", "content": prompt}],
+                                    options={"num_ctx": window}, keep_alive=ctx.keep_alive, think=False)
+                said = str(_drive_field(_drive_field(r, "message"), "content") or "")
+                if said.strip():
+                    return said
+            except Exception:
+                continue
+        return ""
+
+    cut_in_a_row = empty_in_a_row = 0
+    held_answer = ""
+    fell_back = False
 
     def tell(name: str, text: str) -> None:
         if dialect == "native":
@@ -1268,6 +1430,16 @@ def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float
                 ctx.report(f"  the model's own tool calls failed ({type(exc).__name__}); "
                            f"driving it in the {dialect} form from here")
                 continue
+            if not fell_back and DRIVE_FALLBACK and DRIVE_FALLBACK != ctx.model:
+                # THE FALLBACK MODEL (Hermes, OpenClaw): the first one kept failing after its
+                # retries, so the job goes on, once, on the second -- said in the record.
+                fell_back = True
+                ctx.report(f"  {ctx.model} kept failing ({type(exc).__name__}); carrying on with "
+                           f"the fallback, {DRIVE_FALLBACK}")
+                ctx.model = DRIVE_FALLBACK
+                d.model = f"{d.model} -> {DRIVE_FALLBACK}"
+                think = drive_think(ctx.model)
+                continue
             d.error = f"{type(exc).__name__}: {exc}"
             ctx.report(f"  the model call failed: {d.error}")
             return "error"
@@ -1300,6 +1472,27 @@ def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float
                            f"length limit, so its arguments may be incomplete. Make the call "
                            f"again with smaller arguments (one passage at a time).")
             continue
+        # A REPLY CUT OFF BY ITS LENGTH, WITH NO CALL, IS CONTINUED (opencode, Cline, Hermes),
+        # at most twice, and the pieces are kept together.
+        if not raw and content and repair.cut_by_length(resp) and cut_in_a_row < 2:
+            cut_in_a_row += 1
+            held_answer += content
+            m = {"role": "user", "content": "Your reply was cut off by the length limit. Carry on "
+                                            "exactly where it stopped; do not repeat what you wrote."}
+            messages.append(m)
+            _drive_journal_message(d, m)
+            continue
+        if held_answer and not raw:
+            content, held_answer = held_answer + content, ""
+        cut_in_a_row = 0
+        # AN EMPTY REPLY IS NOT A CLAIM OF DONE (Cline, Hermes, oh-my-pi): asked again, twice.
+        if not raw and not content.strip() and empty_in_a_row < 2:
+            empty_in_a_row += 1
+            m = {"role": "user", "content": "Your reply was empty. Call a tool, or answer in words."}
+            messages.append(m)
+            _drive_journal_message(d, m)
+            continue
+        empty_in_a_row = 0
         # THE FACE ANSWERS IN WORDS: a reply with no call is what the operator reads.
         if answer and not raw:
             d.answer = content.strip()
@@ -1333,10 +1526,12 @@ def _drive_job(d, task: str, check: str, ctx, max_steps: int, max_minutes: float
                     ctx.report(f"  [{n}] the loop guard stopped the job: {why}")
                     _drive_journal_step(d, d.steps[-1])
                     return "loop"
-            if name == "delegate":
-                result = _drive_delegate(ctx, args)
-                d.steps.append([n, name, {"seat": args.get("seat", "")}, result])
-                ctx.report(f"  [{n}] delegate {args.get('seat', '')} -> {_drive_head(result)}")
+            if name in ("delegate", "todo", "ask_operator", "ask_secret"):
+                result = _drive_own_tool(name, args, ctx, d)
+                shown_args = ({"seat": args.get("seat", "")} if name == "delegate"
+                              else {"name": args.get("name", "")} if name == "ask_secret" else args)
+                d.steps.append([n, name, shown_args, result])
+                ctx.report(f"  [{n}] {name} -> {_drive_head(result)}")
                 _drive_journal_step(d, d.steps[-1])
                 guard.see_result(name, result.lstrip().startswith(FAILED_HEADS))
                 tell(name, result[:DRIVE_DELEGATE_CHARS])
@@ -1432,6 +1627,62 @@ def _drive_delegate(ctx, args: dict) -> str:
         return str(seats(seat, task) or "") or f"Refused: {seat} answered nothing."
     except Exception as exc:
         return f"Refused: {seat} could not answer ({type(exc).__name__}: {exc})."
+
+
+def _drive_own_tool(name: str, args: dict, ctx, d) -> str:
+    """The driver's own tools, run here rather than through the skill library (they touch
+    no file): delegate (one task or a batch, one after another on one GPU), todo, a
+    question to him with choices, and a key asked for on the masked secret card."""
+    if name == "delegate":
+        batch = args.get("tasks") if isinstance(args.get("tasks"), list) else None
+        if not batch:
+            return _drive_delegate(ctx, args)
+        out = []
+        for i, t in enumerate(batch[:8], 1):
+            t = t if isinstance(t, dict) else {}
+            out.append(f"--- {i}. {t.get('seat', '?')} ---\n" + _drive_delegate(ctx, t)[:DRIVE_DELEGATE_CHARS // 2])
+        return "\n\n".join(out)
+    if name == "todo":
+        items = [i for i in (args.get("items") or []) if isinstance(i, dict)]
+        d.todo = [[str(i.get("text") or "").strip()[:200], bool(i.get("done"))] for i in items][:30]
+        shown = "\n".join(f"  [{'x' if done else ' '}] {text}" for text, done in d.todo)
+        return f"Your list ({sum(1 for _, x in d.todo if x)} of {len(d.todo)} done):\n{shown}"
+    if name == "ask_operator":
+        q = str(args.get("question") or "").strip()
+        choices = [str(c).strip() for c in (args.get("choices") or []) if str(c).strip()][:5]
+        if not q:
+            return "Refused: ask_operator needs a question."
+        listing = "".join(f"\n  {i}. {c}" for i, c in enumerate(choices, 1))
+        said = str(ctx.ask(f"Steward asks: {q}{listing}\nYour answer: ") or "").strip()
+        if said.isdigit() and choices and 1 <= int(said) <= len(choices):
+            said = choices[int(said) - 1]
+        return f"The operator answered: {said}" if said else "The operator gave no answer."
+    if name == "ask_secret":
+        key, why = str(args.get("name") or "").strip(), str(args.get("why") or "").strip()
+        if not DRIVE_SECRET_NAME.match(key):
+            return (f"Refused: {key!r} is not a name for .env -- capitals, digits and underscores, "
+                    f"starting with a letter.")
+        ask_secret = getattr(ctx, "ask_secret", None)
+        if ask_secret is None:
+            return "Refused: this door has no secret card, so no key can be asked for here."
+        said = str(ask_secret(key, why) or "").strip().lower()
+        if said != "set":
+            return f"The operator did not set {key} (he skipped the card)."
+        # dotenv.load skips a name already in the environment, so a key asked for again
+        # is let go first and its new line read; if none is read the old one stands.
+        held = os.environ.pop(key, None)
+        try:
+            from . import dotenv
+            dotenv.load(Path(ctx.ground) / ".env")
+        except Exception:
+            pass
+        if key not in os.environ and held is not None:
+            os.environ[key] = held
+        here = bool(os.environ.get(key))
+        return (f"{key} is set in .env" + (" and loaded into the engine" if here else
+                ", but the engine could not load it (restart the sitting)")
+                + ". You never see its value; a tool that needs it reads it from the environment.")
+    return f"Refused: {name} is not one of the driver's own tools."
 
 
 def _drive_changes(d) -> str:
@@ -1926,7 +2177,7 @@ def drive(spec, *, skills, env, ground, ask, report,
           host: str = "http://127.0.0.1:11434", keep_alive: str = "30m",
           logs=None, client=None, model: str = DRIVE_MODEL, carry: str = "",
           context: str = "", seats=None, seat_names=None, system: str = "",
-          history=None, thought=None) -> Drive:
+          history=None, thought=None, ask_secret=None) -> Drive:
     """Work one /drive to its end (the head of this section).
 
     `context` is what the driver is handed beside its goal (the standing, the story,
@@ -1949,17 +2200,22 @@ def drive(spec, *, skills, env, ground, ask, report,
         import ollama
         client = ollama.Client(host=host, timeout=DRIVE_CALL_SECONDS)
     tools, allowed = drive_tools(skills)
+    allowed -= DRIVE_DENY
+    tools = [t for t in tools if t["function"]["name"] not in DRIVE_DENY]
+    own = [DRIVE_TODO_TOOL, DRIVE_ASK_TOOL, DRIVE_SECRET_TOOL]
     if seats is not None:
         tool = json.loads(json.dumps(DRIVE_DELEGATE_TOOL))
         if seat_names:
             tool["function"]["parameters"]["properties"]["seat"]["enum"] = list(seat_names)
-        tools = tools[:-1] + [tool] + tools[-1:]       # done stays last
+        own.append(tool)
+    tools = tools[:-1] + own + tools[-1:]       # done stays last
     ctx = SimpleNamespace(skills=skills, env=env, ground=ground, ask=ask, report=report,
                           client=client, tools=tools, keep_alive=keep_alive, model=model,
                           logs=Path(logs) if logs else ground / "logs", carry=carry,
                           context="", seats=seats, window=DRIVE_CONTEXT,
                           dialect=os.environ.get("MANJUEL_DRIVER_DIALECT", "").strip() or "native",
-                          system=system, history=list(history or []), thought=thought)
+                          system=system, history=list(history or []), thought=thought,
+                          ask_secret=ask_secret)
     kept = (getattr(env, "caller", ""), getattr(env, "caller_allowed", None),
             getattr(env, "objective", ""))
     from .skills import DRIVER
@@ -1975,7 +2231,7 @@ def drive(spec, *, skills, env, ground, ask, report,
         # THE RAILS (2026-10-21): the goal passes the gates every ordinary turn passes --
         # noise never reaches the model, and the law is walked and checked first. A refusal
         # ends the job in the gate's own words, before anything is asked or written.
-        if spec["mode"] in ("goal", "plan", "each", "answer"):
+        if spec["mode"] in ("goal", "plan", "each", "answer", "propose"):
             why = _drive_gate(spec, ground)
             if why.startswith("REFUSED"):
                 d.verdict, d.error = "refused", why
@@ -1991,11 +2247,13 @@ def drive(spec, *, skills, env, ground, ask, report,
             repo = ground / sub if sub else ground
             if (repo / ".git").exists():
                 d.baseline[str(repo.resolve())] = _drive_unsaved(repo)
-        if spec["mode"] in ("goal", "plan", "each"):
+        if spec["mode"] in ("goal", "plan", "each", "propose"):
             from .journal import Journal
             d.journal = Journal.open(ctx.logs, spec, model)
         if resumed is not None:
             _drive_resume(d, ctx, resumed)
+        elif spec["mode"] == "propose":
+            _drive_propose(d, spec, ctx)
         elif spec["mode"] == "answer":
             d.verdict = _drive_job(d, spec["goal"], "", ctx, FACE_STEPS, FACE_MINUTES, answer=True)
             if d.item_files:
@@ -2078,6 +2336,39 @@ def _drive_job_card(d, spec: dict, ctx, items=None) -> bool:
     if d.journal is not None:
         d.journal.write("approved", hash=d.approved)
     return True
+
+
+def _drive_propose(d, spec: dict, ctx) -> None:
+    """PLAN MODE (opencode, Cline, oh-my-pi): the Steward reads -- only reads -- and writes a
+    plan; his card shows the plan and the check whole, and on his yes the plan is worked as
+    one job on its own line of work, its writes covered by that yes (the job card)."""
+    from .skills import REVIEW_ONLY_SKILLS
+    readers = set(REVIEW_ONLY_SKILLS) | {"delegate", "todo", "ask_operator", "done"}
+    tools, system = ctx.tools, getattr(ctx, "system", "")
+    ctx.tools = [t for t in tools if t["function"]["name"] in readers]
+    ctx.system = DRIVE_PROPOSE_SYSTEM
+    try:
+        v = _drive_job(d, spec["goal"], "", ctx, FACE_STEPS, FACE_MINUTES, answer=True)
+    finally:
+        ctx.tools, ctx.system = tools, system
+    plan = d.answer.strip()
+    if not plan:
+        d.verdict = v if v != "answered" else "error"
+        d.error = d.error or "the Steward wrote no plan"
+        return
+    said = ctx.ask(f"The Steward's plan for: {spec['goal'][:300]}\n\n{plan[:3500]}\n\n"
+                   f"The check that will decide it: {spec['check'] or '(none: unchecked)'}\n"
+                   f"Run this plan now, as one job on its own line of work? [y/n] ")
+    if d.journal is not None:
+        d.journal.write("card", prompt="the plan card", answer=str(said or ""))
+    if not _drive_yes(said):
+        d.verdict = "declined"
+        return
+    d.approve, d.approved = "plan", drive_job_hash(spec)
+    d.answer = ""
+    d.verdict = _drive_job(d, f"{spec['goal']}\n\nThe plan he approved -- work it:\n{plan}",
+                           spec["check"], ctx, DRIVE_STEPS, DRIVE_MINUTES)
+    _drive_after_job(d, ctx)
 
 
 def _drive_resume_spec(logs: Path):
@@ -2179,6 +2470,20 @@ def drive_record(d: Drive, logs) -> str:
         return ""
 
 
+def _door_secret(door, wait: float):
+    """The secret card's question, for a door that can show one (Door.ask's `secret`); None
+    for a stand-in door with no such card."""
+    import inspect as _inspect
+    try:
+        if "secret" not in _inspect.signature(door.ask).parameters:
+            return None
+    except (TypeError, ValueError):
+        return None
+    return lambda name, why: door.ask(
+        f"Steward asks for a key: {name}\n{why}\nPaste it into the masked field; it goes "
+        f"straight into .env and is never shown to him.", color="amber", timeout=wait, secret=name)
+
+
 def face_system(sess) -> str:
     """The face's system prompt: his seat's own bearing and weighing (agents/steward.md,
     the prompt of record) with the face's rules in place of the hand-off section, which
@@ -2245,7 +2550,9 @@ def door_face(door, objective: str) -> bool:
               logs=door.ground / "logs", model=model, context=drive_context(sess, door.ground),
               client=getattr(door, "face_client", None),
               seats=seat_answers if seat_names else None, seat_names=seat_names,
-              system=face_system(sess), history=face_history(sess), thought=thought)
+              system=face_system(sess), history=face_history(sess), thought=thought,
+              ask_secret=_door_secret(door, wait))
+    door.last_drive = d          # what /undo puts back
     if d.verdict == "refused" and "not parse as language" in d.error:
         text = "I didn't catch a request in that -- say it again?"
     elif d.verdict == "refused":
@@ -2299,13 +2606,16 @@ def drive_context(sess, ground) -> str:
     return "\n\n".join(p for p in parts if p)
 
 
-def door_drive(door, said: str) -> None:
+def door_drive(door, said: str, once: bool = False):
     """The /drive turn: job after job. Each job's report goes on the wire as it
     ends; then the driver asks what is next, and a blank answer (or "stop") ends
     the turn in one delivery. What earlier jobs did is carried into the next,
     cut to its newest DRIVE_CARRY_CHARS. His close on any card ends the turn the
-    same way, and the door's loop serves the close after the delivery."""
+    same way, and the door's loop serves the close after the delivery. `once` (a
+    schedule's run, door_schedules) asks nothing after its one job. The last job's
+    Drive is returned (None when none ran)."""
     sess = door.sess
+    d = None
 
     def report(line):
         print(line)
@@ -2342,9 +2652,11 @@ def door_drive(door, said: str) -> None:
                           keep_alive=getattr(rt, "keep_alive", None) or "30m",
                           logs=door.ground / "logs", carry=carry,
                           context=drive_context(sess, door.ground),
-                          seats=seat_answers if seat_names else None, seat_names=seat_names)
+                          seats=seat_answers if seat_names else None, seat_names=seat_names,
+                          ask_secret=_door_secret(door, wait))
             except EOFError:
                 break
+            door.last_drive = d      # what /undo puts back
             lesson = drive_lesson(d)
             if lesson:
                 try:
@@ -2369,6 +2681,8 @@ def door_drive(door, said: str) -> None:
                     "seats_failed": [], "out_of_time": [], "delivery": d.report[:200]})
             except Exception:
                 pass
+        if once:
+            break
         try:
             nxt = door.ask("What is next? Type the next goal (plan ..., each ..., tidy and ship ... work too), "
                            "or leave it blank to stop.", color="green")
@@ -2386,6 +2700,87 @@ def door_drive(door, said: str) -> None:
     door.wire.emit("delivery", text=text, elapsed=round(took, 1),
                    transcript=last, pipeline="drive", flags=[], notes=[],
                    failures=[], verdicts=[], out_of_time=[], project="", steps=[])
+    return d
+
+
+def door_undo(door) -> None:
+    """/undo (opencode, Cline, Hermes, oh-my-pi): the last Steward turn's own unsaved
+    files put back byte for byte, on his card -- the driver's own put-back
+    (_drive_put_back), so a file it made is removed and a file it never kept a copy of
+    is said, not guessed. What a job already saved is git's to revert, not this."""
+    d = getattr(door, "last_drive", None)
+    keys = sorted(k for k in (getattr(d, "item_files", None) or ()) if k in d.before) if d else []
+    if not keys:
+        print("\n  Nothing to undo: the last Steward turn left no unsaved file of its own.\n")
+        return
+    said = door.ask("Put these back as they were before the Steward's last turn wrote them?\n"
+                    + "\n".join(f"  {_drive_rel(*k)}" + ("  (made by it: removed)" if d.before[k] is None else "")
+                                for k in keys) + "\n[y/n] ", color="red")
+    if not _drive_yes(said):
+        print("\n  Left as they are.\n")
+        return
+    lines = []
+    _drive_put_back(d, lines.append, "undo")
+    print("\n" + d.steps[-1][3] + "\n")
+
+
+SCHEDULE_TICK = 60.0       # how often an idle door looks for a due schedule (seconds)
+
+
+def door_schedule(door, objective: str) -> None:
+    """/schedule, /goal, /schedules [drop <id>] (Hermes, Cline, OpenClaw): rows in
+    state/schedules.jsonl (schedule.py), run by the idle door (door_schedules) as
+    unattended `/drive auto` jobs -- every card a no, git the net."""
+    from . import schedule
+    head, _, rest = objective.strip().partition(" ")
+    head = head.lower()
+    if head == "/schedules":
+        words = rest.split()
+        if len(words) == 2 and words[0].lower() == "drop":
+            row, why = schedule.drop(door.ground, words[1])
+            print(f"\n  {'dropped ' + row['id'] if row else why}\n")
+            return
+        print("\n" + (schedule.listing(door.ground) or "  No schedules or goals.") + "\n")
+        return
+    row, why = schedule.parse(objective)
+    if row is None:
+        print(f"\n  {why}\n  {schedule.USAGE}\n")
+        return
+    row, why2 = schedule.add(door.ground, row)
+    if row is None:
+        print(f"\n  {why2}\n")
+        return
+    print(f"\n  {row['kind']} {row['id']}: next run {row['next']} -- {row['said']}"
+          + (f"\n  {why}" if why else "") + "\n  It runs while a sitting is open; "
+          "`/schedules` lists them, `/schedules drop <id>` ends one.\n")
+
+
+def door_schedules(door) -> int:
+    """The idle door's tick: each due row run once as an unattended /drive job, its
+    verdict recorded (a goal is done on a pass, blocked on three alike). The number run."""
+    from . import schedule
+    try:
+        rows = schedule.due(door.ground)
+    except Exception as exc:
+        door.wire.emit("note", text=f"the schedules could not be read: {exc}")
+        return 0
+    for row in rows:
+        door.wire.emit("note", text=f"{row['kind']} {row['id']} is due: {row['said'][:200]}")
+        door.unattended, door.wire.ended = True, False
+        door.inbox.set_state(Inbox.RUNNING)
+        try:
+            d = door_drive(door, row["said"], once=True)
+        except Exception as exc:
+            d = None
+            door.wire.emit("error", text=f"{row['kind']} {row['id']}: {type(exc).__name__}: {exc}")
+        finally:
+            door.unattended = False
+            door.inbox.set_state(Inbox.IDLE)
+        verdict = (d.verdict if d is not None else "") or "error"
+        got = schedule.record(door.ground, row["id"], verdict)
+        door.wire.emit("note", text=f"{row['kind']} {row['id']}: {verdict}"
+                       + (f"; now {got['state']}, next {got['next']}" if got else ""))
+    return len(rows)
 
 
 # A DOOR CALL, SAID PLAINLY (WHAT'S LEFT C77). His words, 2026-10-16: "it
@@ -2516,13 +2911,15 @@ class Door:
         self.asked = 0
         # Whether the turn in hand was sent as `unattended` (the wire, above).
         self.unattended = False
+        self.last_drive = None       # the last Steward turn's Drive: /undo (door_undo)
         self._deferred: list[dict] = []
         if not isinstance(getattr(sess, "runtime", None), _Runtime):
             sess.runtime = _Runtime(sess.runtime, wire)
 
     # ---- the keyboard --------------------------------------------------
 
-    def ask(self, prompt: str = "", color: str = "amber", timeout: float | None = None) -> str:
+    def ask(self, prompt: str = "", color: str = "amber", timeout: float | None = None,
+            secret: str = "") -> str:
         """Stands where input() stood. One question, one answer, over the
         wire; a cancel here is Ctrl-C and a close is Ctrl-D, which is what
         every input() site in cli.py and pipeline.py already handles. The
@@ -2539,8 +2936,13 @@ class Door:
                                         + str(prompt or "").splitlines()[0][:200])
             return ""
         self.inbox.set_state(Inbox.ASKING)
+        # THE SECRET CARD (the feature list; atlas paints it): `secret` names the .env
+        # variable. The glass shows a masked field, hands the value to the door's
+        # secret_set, and answers this question with `set` or `skip` -- the value itself
+        # never comes back over this wire.
+        extra = {"secret": secret} if secret else {}
         self.wire.emit("needs_answer", id=self.asked, prompt=str(prompt or ""),
-                       color=color if color in ("amber", "green", "red") else "amber")
+                       color=color if color in ("amber", "green", "red") else "amber", **extra)
         deadline = (time.time() + timeout) if timeout else None
         try:
             while True:
@@ -2609,8 +3011,21 @@ class Door:
     def _next(self) -> dict | None:
         if self._deferred:
             return self._deferred.pop(0)
-        # Bounded: the one wait in this door that is not inside a turn.
-        return self.inbox.take(timeout=self.idle_close)
+        # Bounded: the one wait in this door that is not inside a turn. While a schedule
+        # is on the ground (door_schedules) the wait is cut into SCHEDULE_TICKs and the
+        # due rows run between them; his idle close still falls when it would have.
+        if not (self.ground / "state" / "schedules.jsonl").is_file():
+            return self.inbox.take(timeout=self.idle_close)
+        deadline = time.time() + self.idle_close
+        while True:
+            left = max(0.0, deadline - time.time())
+            wait = min(left, SCHEDULE_TICK)
+            row = self.inbox.take(timeout=wait)
+            if row is None or row.get("cmd") != "_timeout" or wait >= left:
+                return row
+            door_schedules(self)
+            if self._deferred:
+                return self._deferred.pop(0)
 
     # ---- the loop ------------------------------------------------------
 
@@ -2851,6 +3266,13 @@ class Door:
         # decided already, so no seat reads it -- door_call, in the driver's section.
         if objective.split(None, 1)[0].lower() == "mcp_call":
             door_call(self, objective)
+            return True
+        # SCHEDULES AND GOALS, and UNDO (the feature list, 2026-10-21).
+        if objective.split(None, 1)[0].lower() in ("/schedule", "/goal", "/schedules"):
+            door_schedule(self, objective)
+            return True
+        if objective.split(None, 1)[0].lower() == "/undo":
+            door_undo(self)
             return True
         # WHO ANSWERS AN ORDINARY TURN, switched for the sitting (FACE).
         if objective.split(None, 1)[0].lower() == "/face":

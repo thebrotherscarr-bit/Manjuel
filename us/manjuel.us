@@ -476,6 +476,66 @@ other (LAW 5); now a record that lies is a finding.
 {
   "can_approve": false,
   "covenant": "1512741580b7239b",
+  "id": "find_files",
+  "kind": "skill",
+  "office": "MANJUEL",
+  "reports_to": "manjuel",
+  "source": "skills/find_files.md",
+  "us": 1,
+  "wall": "the ground, read only: names files by a glob, newest first; never names a secret, a client file, worlds/, any vault/ or .git/, and skips what is not the work (node_modules, index/, logs/_prompts, a virtualenv, a binary, a file over 2 MB)",
+  "writes": false
+}
+```
+
+```json
+{
+  "can_approve": false,
+  "covenant": "1512741580b7239b",
+  "id": "ground_grep",
+  "kind": "skill",
+  "office": "MANJUEL",
+  "reports_to": "manjuel",
+  "source": "skills/ground_grep.md",
+  "us": 1,
+  "wall": "the ground, read only: a regex over its text files, path:line: text, at most 200 hits shown; never opens a secret, a client file, worlds/, any vault/ or .git/, a binary or a file over 2 MB",
+  "writes": false
+}
+```
+
+```json
+{
+  "can_approve": false,
+  "covenant": "1512741580b7239b",
+  "id": "apply_patch",
+  "kind": "skill",
+  "office": "MANJUEL",
+  "reports_to": "manjuel",
+  "source": "skills/apply_patch.md",
+  "us": 1,
+  "wall": "the ground itself, on a line of work only -- the main line is refused (RULE 6); every path through ground_write's walls (never_written, line_of_work, the .py structural gate); every hunk of every file found before any file is touched, one miss refuses the whole patch and nothing is written; terminators kept, MIXED refused, no new folder (RULE 8), a delete only of a file git can give back; unsaved until git_commit lands it on that line.",
+  "writes": true
+}
+```
+
+```json
+{
+  "can_approve": false,
+  "covenant": "1512741580b7239b",
+  "id": "run_shell",
+  "kind": "skill",
+  "office": "MANJUEL",
+  "reports_to": "manjuel",
+  "source": "skills/run_shell.md",
+  "us": 1,
+  "wall": "the ground as its working folder, one line of Git Bash; a short list of reads runs at once, anything else is a write the driver asks for on a card; refused by name and never started: git status, a bare git diff, any remote or network command, an install, a machine setting, a recursive delete of the ground, a secret or a key shape, worlds/, vault/, a client file, a path outside the ground. The child is bounded in time and handed no key; its output has key values withheld. The handler writes nothing; the child it starts may, which is declared here.",
+  "writes": false
+}
+```
+
+```json
+{
+  "can_approve": false,
+  "covenant": "1512741580b7239b",
   "id": "linear_regression",
   "kind": "skill",
   "office": "MANJUEL",

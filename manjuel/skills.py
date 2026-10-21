@@ -480,6 +480,9 @@ REVIEW_ONLY_SKILLS = {
     # `triage_binary` reads a file's bytes and writes nothing; a
     # secret-looking string is counted, never printed (2026-10-21).
     "triage_binary",
+    # `ground_grep` and `find_files` answer "where is it" over the ground and
+    # write nothing (tools_files.py, the feature list, 2026-10-21).
+    "ground_grep", "find_files",
 }
 
 # What actually puts something on disk. The write-claim check (sitting 70)
@@ -506,6 +509,10 @@ WRITING_SKILLS = {
     "ground_write", "ground_edit",
     # 2026-10-19 (H32): one line per use, appended to logs/uses.jsonl.
     "use_record",
+    # 2026-10-21 (the feature list): a multi-file patch into the ground, on a
+    # line of work, whole or nothing (tools_files.py). `run_shell` is NOT here,
+    # for run_python's reason: its handler writes nothing, the child may.
+    "apply_patch",
 }
 
 # THE WRITERS WHOSE ARGUMENT IS A MESSAGE ONLY THE OPERATOR CAN SUPPLY.
@@ -4556,10 +4563,34 @@ def _edit_file(env: SkillExecutionEnv, args: dict) -> str:
                 f"write_file makes a new file; edit_file changes one that is "
                 f"already there.")
 
-    old, new, why = _edit_passage(args.get("content") or "")
+    pairs, why = _edit_passages(args.get("content") or "")
     if why:
         return why
-    return _apply_passage(path, old, new)
+    return _apply_passage(path, pairs[0][0], pairs[0][1], more=pairs[1:])
+
+
+def _edit_passages(body: str) -> tuple[list, str]:
+    """SEVERAL EDITS IN ONE CALL (2026-10-21, the feature list: Pi, OpenClaw, oh-my-pi):
+    the two-marker shape, repeated -- `@@ OLD`, `@@ NEW`, `@@ OLD`, `@@ NEW` ... -- read as
+    ([(old, new), ...], refusal). One pair is read exactly as _edit_passage reads it."""
+    lines = body.replace("\r\n", "\n").split("\n")
+    marks = [(i, l.strip()) for i, l in enumerate(lines) if l.strip() in (_EDIT_OLD, _EDIT_NEW)]
+    if len([m for m in marks if m[1] == _EDIT_OLD]) <= 1:
+        old, new, why = _edit_passage(body)
+        return ([(old, new)] if not why else []), why
+    if [m for _, m in marks] != [_EDIT_OLD, _EDIT_NEW] * (len(marks) // 2) or len(marks) % 2:
+        return [], (f"Refused: several edits in one call go as pairs -- `{_EDIT_OLD}`, the text, "
+                    f"`{_EDIT_NEW}`, its replacement -- one pair after another, each marker on a "
+                    f"line of its own. These markers were out of that order.")
+    pairs = []
+    for k in range(0, len(marks), 2):
+        o, n = marks[k][0], marks[k + 1][0]
+        stop = marks[k + 2][0] if k + 2 < len(marks) else len(lines)
+        old, new, why = _edit_passage("\n".join([_EDIT_OLD] + lines[o + 1:n] + [_EDIT_NEW] + lines[n + 1:stop]))
+        if why:
+            return [], f"{why} (in edit {k // 2 + 1} of {len(marks) // 2})"
+        pairs.append((old, new))
+    return pairs, ""
 
 
 def _edit_passage(body: str) -> tuple[str, str, str]:
@@ -4590,12 +4621,18 @@ def _edit_passage(body: str) -> tuple[str, str, str]:
     return old, new, ""
 
 
-def _apply_passage(path: Path, old: str, new: str) -> str:
+def _apply_passage(path: Path, old: str, new: str, more=()) -> str:
     """Replace `old` with `new` in the file at `path`, or refuse and write
     nothing. ONE WRITER for every door that edits (2026-09-28): the unique
     anchor, the terminator kept and MIXED refused, and the structural gate on
     the whole file as it would stand, are the same at the workspace door and
-    at the tree door because they are the same code."""
+    at the tree door because they are the same code.
+
+    `more` carries further (old, new) pairs (2026-10-21, several edits in one
+    call): every one is found in the file AS IT WAS, they may not overlap, and
+    one that is not found refuses them all -- nothing is written by halves. What
+    is written is read back and checked byte for byte (OpenClaw), and a .json
+    must still parse, a .js pass `node --check` (Hermes' lint after an edit)."""
     import ast as _ast
     from .pipeline import inspect_code as _inspect_code, inspect_added as _inspect_added
 
@@ -4608,11 +4645,25 @@ def _apply_passage(path: Path, old: str, new: str) -> str:
     text = raw.decode("utf-8", "replace")
     flat = text.replace("\r\n", "\n")
 
-    start, end, tier, why = _locate_passage(flat, old, path.name)
-    if why:
-        return why
-
-    out = flat[:start] + new + flat[end:]
+    spans = []
+    for k, (o, n) in enumerate([(old, new)] + list(more), 1):
+        s0, e0, t0, why = _locate_passage(flat, o, path.name)
+        if why:
+            return why + (f" (edit {k} of {len(more) + 1}; none of them was written)" if more else "")
+        spans.append((s0, e0, t0, n))
+    spans.sort()
+    for (s0, e0, _, _), (s1, _, _, _) in zip(spans, spans[1:]):
+        if s1 < e0:
+            return (f"Refused: two of the edits overlap in {path.name} (around line "
+                    f"{flat[:s1].count(chr(10)) + 1}); make them one edit. Nothing was written.")
+    out = flat
+    for s0, e0, _, n in reversed(spans):
+        out = out[:s0] + n + out[e0:]
+    start = spans[0][0]
+    tier = "; ".join(sorted({t for _, _, t, _ in spans if t}))
+    lint = _lint_after(path, out)
+    if lint:
+        return lint
 
     # REFUSE BY PROOF, the way land_code does. A .py that would not parse
     # after the edit is not written -- the parse message stays its own, it
@@ -4644,10 +4695,16 @@ def _apply_passage(path: Path, old: str, new: str) -> str:
 
     kept = "CRLF" if eol == b"\r\n" else "LF"
     before = len(flat.split("\n"))
-    path.write_bytes(out.replace("\n", eol.decode()).encode("utf-8"))
+    body = out.replace("\n", eol.decode()).encode("utf-8")
+    path.write_bytes(body)
+    # READ BACK (OpenClaw): what is on disk now is what was meant, byte for byte.
+    if path.read_bytes() != body:
+        return (f"Refused: {path.name} was written but does not read back as written -- "
+                f"something else holds the file. Check it before anything else.")
     after = len(out.split("\n"))
     where = flat[:start].count("\n") + 1
-    return (f"Edited {path.name} at line {where}: "
+    return (f"Edited {path.name} at line {where}"
+            + (f" ({len(more) + 1} edits)" if more else "") + ": "
             f"{len(old.splitlines())} line(s) replaced by "
             f"{len(new.splitlines())}, file now {after} lines (was {before}). "
             f"Terminator kept: {kept}."
@@ -4655,6 +4712,41 @@ def _apply_passage(path: Path, old: str, new: str) -> str:
                f"there.)" if tier else "")
             + (f" The file already carried what the gate refuses -- {carried} -- "
                f"and the edit added none of it." if carried else ""))
+
+
+def _lint_after(path: Path, out: str) -> str:
+    """LINT AFTER AN EDIT (Hermes, oh-my-pi), for the kinds a check costs nothing on: a
+    .json must still parse, and a .js / .mjs / .cjs must pass `node --check` when node is
+    here. '' when it passes (or cannot be checked); a refusal naming the fault when not.
+    (A .py is checked by the parse and the structural gate below.)"""
+    import json as _json
+    suffix = path.suffix.lower()
+    if suffix == ".json":
+        try:
+            _json.loads(out)
+        except ValueError as exc:
+            return (f"Refused: that edit would leave {path.name} invalid JSON -- {exc}. "
+                    f"Nothing was written.")
+    if suffix in (".js", ".mjs", ".cjs"):
+        import shutil as _shutil
+        import subprocess as _sp
+        import tempfile as _tf
+        node = _shutil.which("node")
+        if node:
+            with _tf.TemporaryDirectory() as tmp:
+                probe = Path(tmp) / ("probe" + suffix)
+                probe.write_text(out, encoding="utf-8", newline="\r\n")
+                try:
+                    p = _sp.run([node, "--check", str(probe)], capture_output=True, text=True,
+                                stdin=_sp.DEVNULL, timeout=30)
+                except (OSError, _sp.TimeoutExpired):
+                    return ""
+                if p.returncode:
+                    err = (p.stderr or p.stdout or "").strip().splitlines()
+                    said = next((l for l in err if "SyntaxError" in l), err[-1] if err else "a syntax error")
+                    return (f"Refused: that edit would leave {path.name} failing node --check -- "
+                            f"{said.strip()[:200]}. Nothing was written.")
+    return ""
 
 
 # THE PLAIN FORMS (2026-10-21, the harness study: opencode's second tier, Pi's and
@@ -5002,10 +5094,10 @@ def _ground_edit(env: SkillExecutionEnv, args: dict) -> str:
     if not path.is_file():
         return (f"Refused: there is no '{rel}' in the ground to edit. ground_write makes a "
                 f"new file; ground_edit changes one that is already there.")
-    old, new, why = _edit_passage(args.get("content") or "")
+    pairs, why = _edit_passages(args.get("content") or "")
     if why:
         return why
-    out = _apply_passage(path, old, new)
+    out = _apply_passage(path, pairs[0][0], pairs[0][1], more=pairs[1:])
     if out.startswith("Edited"):
         out += (f" On line of work `{branch}`; unsaved until git_commit lands it there.")
     return out
@@ -5790,3 +5882,7 @@ def extract_tool_call(text: str) -> tuple[str | None, dict]:
         args["content"] = ct.group(1).strip()
 
     return m.group(1).strip(), args
+
+# THE FEATURE LIST'S HANDS (2026-10-21): registered on import, after `skill` exists.
+from . import tools_files  # noqa: E402,F401  (ground_grep, find_files, apply_patch)
+from . import tools_shell  # noqa: E402,F401  (run_shell)

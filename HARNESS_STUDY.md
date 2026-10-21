@@ -315,6 +315,77 @@ data.
 
 ---
 
+## The full feature list, against Steward (2026-10-21, his word: "diff the full feature list ... and add them")
+
+Every feature the eight readers and seven verifiers found in opencode (oc), Cline (cl), OpenShell (os), Pi (pi),
+oh-my-pi (omp), Hermes (he), OpenClaw (ocw) and REA Studio (rs), against Steward as he stands on 2026-10-21. HAVE:
+built and proved. BUILD: built in this pass. NOT TAKEN: refused, with the reason.
+
+| # | Feature | Who has it | Steward |
+|---|---|---|---|
+| 1 | The model chooses its tools in a loop | all but os | HAVE (/drive, the face) |
+| 2 | A check, not the model, decides done | he (/goal), omp (goal audit), cl (submit verified) | HAVE |
+| 3 | One approval for a whole job | os (batch), oc (always settles), he (batch ahead) | HAVE (plan card, auto, ask) |
+| 4 | An "always" for the rest of the sitting | oc, he, omp, ocw | BUILD (`always` on a write card) |
+| 5 | Per-tool allow / ask / deny rules | oc, cl, omp, ocw | BUILD (MANJUEL_DRIVER_ALLOW / _DENY) |
+| 6 | A no that carries a reason back | oc, os | HAVE |
+| 7 | No answer is a no; unattended denies | he, oc, cl, ocw | HAVE |
+| 8 | Floors that hold in every mode | he, omp, ocw | HAVE (never_written, secrets, main) |
+| 9 | Plan mode: read only, then a plan to approve | oc, cl, omp, pi | BUILD (`/drive propose`: reads, then a plan card) |
+| 10 | JSON repair, type coercion, nearest tool name | pi, oc, he, omp, cl | HAVE |
+| 11 | Plain-text tool calls promoted (harmony etc.) | ocw, omp | HAVE |
+| 12 | A model's own tool-call dialect | omp | HAVE |
+| 13 | A length-cut call never run | pi, he, oc | HAVE |
+| 14 | A reply cut off by its length continued | oc, cl, he | BUILD |
+| 15 | An empty reply retried, not taken for done | cl, he, omp | BUILD |
+| 16 | Retry with backoff on a failed model call | all | HAVE |
+| 17 | A fallback model when the first one fails | he, ocw, omp | BUILD (MANJUEL_DRIVER_FALLBACK) |
+| 18 | Loop guard (identical calls, cycles) | cl, he, omp, ocw | HAVE |
+| 19 | Failure guard (turns of nothing but failures) | cl, he | HAVE |
+| 20 | Forgiving edit matcher | oc, pi, he, ocw, omp | HAVE |
+| 21 | Several edits in one call | pi, ocw, omp | BUILD (repeated @@ OLD / @@ NEW pairs) |
+| 22 | A multi-file patch, all checked before any is written | he (V4A), cl, oc, omp, ocw | BUILD (`apply_patch`) |
+| 23 | Help on a missed edit (nearest lines, column) | ocw | HAVE |
+| 24 | Read-back: what was written is checked byte for byte | ocw | BUILD |
+| 25 | Stale-write guard: no overwrite of a file not read | he | BUILD |
+| 26 | Lint after an edit | he, omp | BUILD (.py parse kept; .json parsed; .js `node --check`) |
+| 27 | grep over the ground (regex) | all coding harnesses | BUILD (`ground_grep`) |
+| 28 | Find files by pattern (glob) | all coding harnesses | BUILD (`find_files`) |
+| 29 | A shell, gated | all coding harnesses | BUILD (`run_shell`: reads at once, the rest asks) |
+| 30 | A todo list the model keeps | oc, he, omp, cl | BUILD (`todo`) |
+| 31 | Ask the operator a question with choices | cl, he, ocw, omp, oc | BUILD (`ask_operator`) |
+| 32 | Big results trimmed, the whole kept and named | oc, he, omp, pi | HAVE |
+| 33 | Compaction in a fixed form, model-free first | oc, pi, cl, he, omp, ocw | HAVE |
+| 34 | A small side model for summaries | cl, oc, he, ocw | BUILD (MANJUEL_SUMMARY_MODEL) |
+| 35 | The window from the model and the card | he, cl, oc, ocw | HAVE |
+| 36 | Rules, memory and standing in the prompt | all | HAVE |
+| 37 | Tool search / deferred tools for a small window | pi, he, omp, ocw | NOT NEEDED (gpt-oss, 27 tools) |
+| 38 | Sub-agents | oc, cl, he, omp, ocw | HAVE (delegate) |
+| 39 | A batch of sub-agent tasks | he, omp, cl, ocw | BUILD (delegate `tasks`, one at a time on one GPU) |
+| 40 | Sub-agents in their own copy of the folder | omp, he, ocw | NOT TAKEN (seats write nothing; the line of work is the copy) |
+| 41 | The job written down; resume after a crash | oc, pi, ocw, he | HAVE |
+| 42 | Undo the last turn's file changes | oc, cl, he, omp | BUILD (`/undo`) |
+| 43 | Sessions saved and resumed | all | HAVE (sittings, thread.jsonl, /resume) |
+| 44 | Schedules (cron) | he, cl, ocw | BUILD (`/schedule`) |
+| 45 | Goals that persist until their check passes | he, ocw, omp | BUILD (`/goal`) |
+| 46 | Background commands that report when done | oc, he, omp, cl | NOT YET (needs a long-lived runner) |
+| 47 | Skills as markdown, read whole on first use | all | HAVE |
+| 48 | Skills hot-reloaded | oc, cl | HAVE (the watcher, /reload) |
+| 49 | MCP client, stdio and HTTP | all coding harnesses | HAVE (REA, 207 tools) |
+| 50 | MCP server | he, ocw | HAVE (the door) |
+| 51 | Hooks before and after a tool | pi, oc, cl, he, ocw | HAVE (skill hooks) |
+| 52 | Learning staged for the operator | he, omp, ocw | HAVE (lessons) |
+| 53 | Secrets entered masked, never seen by the model | ocw, os | BUILD (the secret card) |
+| 54 | Messaging channels (Discord...) | he, cl, ocw | NEXT (Steward's own test, after the secret card) |
+| 55 | Desktop app | he, oc, ocw | HAVE |
+| 56 | Voice | he, omp, ocw | HAVE (speak, listen) |
+| 57 | Binary triage | rs | HAVE (triage_binary) |
+| 58 | Reverse engineering | rs (staged), REA | HAVE (REA through mcp_call) |
+| 59 | Kernel sandbox | os | NOT TAKEN (Linux; Windows native needs an Insider build) |
+| 60 | Web search and fetch | all but os | NOT TAKEN (RULE 4: the estate is local) |
+| 61 | Telemetry, auto-update, phone-home | pi, os, omp, cl, ocw | NOT TAKEN (RULE 4) |
+| 62 | Allow-everything defaults | omp, oc, ocw, cl | NOT TAKEN |
+
 ## The gaps, ranked by what we keep fighting
 
 1. **A click for every write.** Piece 2: the plan card and line-auto, chosen per job, with a bound on every card.

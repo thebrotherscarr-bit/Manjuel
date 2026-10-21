@@ -831,6 +831,47 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `OllamaRuntime.embed` | 788-822 | One embedding vector. Embedders have no generative head, so this |
 | def | `OllamaRuntime._extract` | 825-876 | Pull message content out of a response across ollama-python versions. |
 
+### manjuel/schedule.py — 873 lines
+
+*Schedules and goals: Steward's work that runs while nobody is at the glass.*
+
+| kind | name | lines | says |
+|---|---|---|---|
+| def | `_now` | 98-107 | `now` as a plain local datetime to the second: None is the clock, a string |
+| def | `_iso` | 110-111 |  |
+| def | `_when` | 114-119 | An iso string as a datetime, or None where it is missing or unreadable. |
+| def | `duration` | 122-138 | Seconds in "30m", "2h", "1h30m", "1h 30m", "90 seconds", "2 hours", "hour", |
+| def | `span` | 141-148 | Seconds said short: 1800 -> "30m", 5400 -> "1h30m", 86400 -> "1d". |
+| def | `_cron_field` | 158-180 | One field: *, a value, a range a-b, a list a,b,c, and steps on any of them |
+| def | `cron_parse` | 183-192 | (minutes, hours, days, months, weekdays, day_star, weekday_star). Weekdays |
+| def | `cron_next` | 195-229 | The first minute strictly after `after` that the cron line names, or None |
+| def | `_daily` | 232-238 | The first HH:MM strictly after `after`. |
+| def | `next_after` | 241-253 | When the row is next due after a run at `after`: every -> after + every; |
+| def | `interval` | 256-270 | The row's gap between runs in seconds, around its `next`; None for a once. |
+| def | `_take` | 277-286 | The first n words of `text` and the rest exactly as written, or None. |
+| def | `_drive_text` | 289-314 | (said, why): the drive text with `auto` in front, or (None, why it is refused). |
+| def | `_row` | 317-321 |  |
+| def | `parse` | 324-420 | `/schedule <when> <drive text>` or `/goal <drive text>` -> (row, why), or |
+| def | `_store` | 427-428 |  |
+| def | `_ready` | 431-438 | "" when the ground has its state/ folder; else why nothing can be kept. |
+| def | `_write` | 441-461 | Append one event row, flushed and synced. True when it reached the disk. |
+| def | `_rows` | 464-481 | Every whole event row, in order. A row cut short is skipped. |
+| def | `fold` | 484-489 | {id: row}: the latest event per id, in the order the ids were first added. |
+| class | `_Lock` | 492-532 | The store held by one process at a time, for a read-fold-write. On Windows a |
+| def | `_Lock.__init__` | 497-498 |  |
+| def | `_Lock.__enter__` | 500-513 |  |
+| def | `_Lock.__exit__` | 515-532 |  |
+| def | `_valid` | 535-551 | "" for a row the store can keep; else why not. |
+| def | `add` | 558-576 | Keep a parsed row: (row as kept, "") or (None, why it was refused). |
+| def | `drop` | 579-596 | Stop a row: (row, "") or (None, why). The record of it stays. |
+| def | `_leased` | 599-601 |  |
+| def | `due` | 604-627 | The active rows due at `now`, oldest first, each now leased to this process |
+| def | `missed` | 630-645 | The active rows more than one interval late: the machine was off, or the door |
+| def | `record` | 648-689 | A run's end: the row as it now stands, or None. Runs + 1, the verdict kept |
+| def | `_describe` | 692-699 |  |
+| def | `listing` | 702-721 | Every schedule and goal, active first, one line each. |
+| def | `_strokes` | 728-873 | The module's own proof, in a throwaway ground with its own state/ folder. |
+
 ### manjuel/seating.py — 232 lines
 
 *The seat rack: seats that rest until a flag calls them.*
@@ -883,114 +924,120 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `write_index` | 631-641 | Rewrite SEAT_LOG_INDEX.md from SEAT_LOG.md, in the log's own line endings. None  |
 | def | `index_is_current` | 644-653 | True when SEAT_LOG_INDEX.md is exactly what a regeneration would write (and wher |
 
-### manjuel/serve.py — 3217 lines
+### manjuel/serve.py — 3639 lines
 
 *The headless door: the REPL's turn over stdin/stdout as JSON lines.*
 
 | kind | name | lines | says |
 |---|---|---|---|
-| def | `_mark` | 181-201 | One line of boot progress, on the REAL stderr. |
-| class | `Wire` | 209-236 | JSON lines out, one per event, under a lock: the watcher, the |
-| def | `Wire.__init__` | 213-222 |  |
-| def | `Wire.emit` | 224-236 |  |
-| class | `TextChannel` | 239-266 | Stands where sys.stdout stood. Every write is a `text` event; there |
-| def | `TextChannel.__init__` | 246-247 |  |
-| def | `TextChannel.write` | 249-253 |  |
-| def | `TextChannel.flush` | 255-256 |  |
-| def | `TextChannel.isatty` | 258-259 |  |
-| def | `TextChannel.fileno` | 261-262 |  |
-| def | `TextChannel.writelines` | 264-266 |  |
-| class | `Inbox` | 269-348 | The client's lines, read on a thread so a `cancel` can reach a run |
-| def | `Inbox.__init__` | 276-284 |  |
-| def | `Inbox.start` | 286-287 |  |
-| def | `Inbox.set_state` | 289-291 |  |
-| def | `Inbox._pump` | 293-327 |  |
-| def | `Inbox.take` | 329-345 | The next command, or None at EOF -- and None at every call after it. |
-| def | `Inbox.put_back` | 347-348 |  |
-| class | `_Runtime` | 356-422 | The runtime as it is, plus a `seat` event when a seat sits, `token` |
-| def | `_Runtime.__init__` | 362-364 |  |
-| def | `_Runtime.__getattr__` | 366-367 |  |
-| def | `_Runtime.chat` | 369-377 |  |
-| def | `_Runtime._token_sink` | 379-401 |  |
-| def | `_Runtime._think_sink` | 403-422 | THE THOUGHT, LIVE (2026-10-14, WHAT'S LEFT C70; his words: "I would |
-| def | `_watch_skills` | 425-446 | Wrap execute() on THIS library instance for THIS wire. /reload |
-| def | `_drive_dial` | 519-523 |  |
-| def | `drive_think` | 534-546 | The thinking switch for a driver call. MANJUEL_DRIVER_THINK names it: 1/true/yes |
-| class | `Drive` | 702-730 | One job's record. Everything the report says is read off this. |
-| def | `Drive.__init__` | 705-730 |  |
-| def | `drive_parse` | 733-756 | '[plan|each|tidy|ship] <goal> [| do: <prompt>] [| check: <command>]' -> a spec. |
-| def | `drive_job_hash` | 759-765 | What his yes to a job card is bound to (OpenShell binds an approval to a hash of |
-| def | `_drive_preview` | 768-781 | What a write card shows: the passage it replaces and the one it writes, or the |
-| def | `_drive_yes` | 784-785 |  |
-| def | `drive_check` | 788-802 | The job's check, run in the ground. Exit 0 passes. Bounded. |
-| def | `_drive_run` | 805-816 | One command (git, gh) in a repository: (exit, output). stdin closed. |
-| def | `drive_source` | 819-840 | The items a source command lists: JSON, or one per line. (items, why); |
-| def | `_drive_key` | 843-844 |  |
-| def | `_drive_ignored` | 847-858 |  |
-| def | `_drive_ignore` | 861-867 |  |
-| def | `drive_tools` | 870-875 | The schemas the model is offered, and the set the library enforces. |
-| def | `_drive_field` | 878-881 |  |
-| def | `drive_calls` | 884-900 | Every native tool call in a reply, as (name, args). |
-| def | `drive_calls_raw` | 903-913 | Every native tool call in a reply as (name, the arguments as they came): the |
-| def | `drive_window` | 916-937 | The window the driver runs in: MANJUEL_DRIVER_CTX when he set it; otherwise the |
-| def | `drive_memory` | 940-953 | The newest of what memory.md holds -- landed by his hand, so it is the record, n |
-| def | `drive_lesson` | 956-974 | What a job taught, read off its record alone (no model): staged in memory's |
-| def | `_drive_brief` | 977-979 |  |
-| def | `_drive_head` | 982-987 |  |
-| def | `_drive_target` | 990-999 | (repo, path, branch) of the file a tree write names, or None. |
-| def | `_drive_rel` | 1002-1003 |  |
-| def | `_drive_by_repo` | 1006-1010 |  |
-| def | `_drive_unsaved` | 1013-1045 | Every changed, staged or new file in one repository -- a set of names, or with |
-| def | `_drive_checked` | 1048-1063 | drive_check, with what the check itself changed noted (C130): on every line the |
-| def | `_drive_take_check_files` | 1066-1104 | WHAT THE CHECK REWROTE GOES WITH THE JOB (WHAT'S LEFT C130, 2026-10-20, his |
-| def | `drive_act` | 1107-1179 | One call. A writer waits for his answer first and runs only on a yes, |
-| def | `_drive_job` | 1182-1391 | One job, worked until its check passes or its budget is spent. |
-| def | `_drive_said` | 1394-1405 | What the model is handed of a tool's result. Under DRIVE_RESULT_CHARS, all of it |
-| def | `_drive_journal_message` | 1408-1411 |  |
-| def | `_drive_journal_step` | 1414-1418 |  |
-| def | `_drive_delegate` | 1421-1434 | Steward's sub-agent: one council seat asked one task (DRIVE_DELEGATE_TOOL). The |
-| def | `_drive_changes` | 1437-1448 | What the item in hand changed, read off git. |
-| def | `_drive_commit_item` | 1451-1477 | Commit exactly the item's own files on its line, under his git name. True |
-| def | `_drive_put_back` | 1480-1507 | Put back exactly the item's own files, byte for byte as they were before it |
-| def | `_drive_close_lines` | 1510-1539 | Back to the base each line was opened from, and the line closed here: an |
-| def | `drive_ship` | 1542-1607 | The whole pipeline, on his answer: push each line the run committed on, |
-| def | `_drive_steps` | 1610-1626 | Run the pipeline's commands in order, each on the record, stopping at the |
-| def | `drive_plan` | 1629-1653 | DECOMPOSE: the goal as a short list of items, from the model. |
-| def | `_drive_single` | 1656-1660 | ONE JOB: worked; on a pass, what changed, then on his answer the whole |
-| def | `_drive_after_job` | 1663-1688 | What follows one job's verdict: on a pass the change and the send card; on no |
-| def | `drive_items` | 1691-1785 | PLAN or EACH: the items, one job each, on his answer; each passing item |
-| def | `drive_tidy` | 1788-1837 | TIDY: every branch already merged into main, here and on GitHub, listed |
-| def | `drive_save` | 1840-1922 | SHIP: the work on disk saved and sent (the head of this section). Each |
-| def | `drive` | 1925-2031 | Work one /drive to its end (the head of this section). |
-| def | `_drive_gate` | 2034-2050 | The ordinary turn's gates on a job: not language is refused, and the law is walk |
-| def | `_drive_job_card` | 2053-2080 | THE ONE CARD FOR A JOB (approval `plan`): the goal, the check that will run and  |
-| def | `_drive_resume_spec` | 2083-2094 | The newest journal a crash left open (journal.unfinished), replayed; None if non |
-| def | `_drive_resume` | 2097-2127 | Carry a job a crash cut short on from its journal: its line of work, the files i |
-| def | `drive_report` | 2130-2151 | What happened, read off the record alone. |
-| def | `drive_carry` | 2154-2158 | One line of what a job did, carried into the next. |
-| def | `drive_record` | 2161-2179 | The whole job as a transcript in logs/, every result as it came back. |
-| def | `face_system` | 2182-2194 | The face's system prompt: his seat's own bearing and weighing (agents/steward.md |
-| def | `face_history` | 2197-2203 | The last turns of this conversation, as the messages the face reads first. |
-| def | `door_face` | 2206-2284 | STEWARD, THE FACE (FACE, above): one ordinary turn answered by Steward's own loo |
-| def | `drive_context` | 2287-2299 | What the driver is handed beside its goal, as every seat is (pipeline's carried |
-| def | `door_drive` | 2302-2388 | The /drive turn: job after job. Each job's report goes on the wire as it |
-| def | `door_hold_wait` | 2410-2432 | Wait on the door's hold logs until the hold is answered: its outcome, or |
-| def | `door_call` | 2435-2490 | The mcp_call turn: one line of what is asked, the call, and -- when the |
-| class | `Door` | 2498-3038 | One sitting, over one wire. `sess` is cli.Session or anything that |
-| def | `Door.__init__` | 2502-2521 |  |
-| def | `Door.ask` | 2525-2570 | Stands where input() stood. One question, one answer, over the |
-| def | `Door._listen` | 2572-2607 | One spoken turn, captured and transcribed, and NOT run. |
-| def | `Door._next` | 2609-2613 |  |
-| def | `Door.serve` | 2617-2731 | cli._loop's shape: take a turn, run it, until close or EOF. |
-| def | `Door._head_plan` | 2735-2788 | Read `model` and `voices` off the wire into a plan, or refuse. |
-| def | `Door._head_words` | 2791-2797 | The plan in the operator's words, for the `note` that says what |
-| def | `Door._close` | 2799-2815 |  |
-| def | `Door.turn` | 2819-3038 | One typed turn, cli._loop's body line for line (the REPL read of |
-| def | `open_wire` | 3046-3063 | The real stdout and stdin as the wire. stdout is swapped for the |
-| def | `main` | 3066-3157 |  |
-| def | `_open_and_serve` | 3160-3210 | Everything after the sitting line: the boot the REPL does, `opened`, |
+| def | `_mark` | 182-202 | One line of boot progress, on the REAL stderr. |
+| class | `Wire` | 210-237 | JSON lines out, one per event, under a lock: the watcher, the |
+| def | `Wire.__init__` | 214-223 |  |
+| def | `Wire.emit` | 225-237 |  |
+| class | `TextChannel` | 240-267 | Stands where sys.stdout stood. Every write is a `text` event; there |
+| def | `TextChannel.__init__` | 247-248 |  |
+| def | `TextChannel.write` | 250-254 |  |
+| def | `TextChannel.flush` | 256-257 |  |
+| def | `TextChannel.isatty` | 259-260 |  |
+| def | `TextChannel.fileno` | 262-263 |  |
+| def | `TextChannel.writelines` | 265-267 |  |
+| class | `Inbox` | 270-349 | The client's lines, read on a thread so a `cancel` can reach a run |
+| def | `Inbox.__init__` | 277-285 |  |
+| def | `Inbox.start` | 287-288 |  |
+| def | `Inbox.set_state` | 290-292 |  |
+| def | `Inbox._pump` | 294-328 |  |
+| def | `Inbox.take` | 330-346 | The next command, or None at EOF -- and None at every call after it. |
+| def | `Inbox.put_back` | 348-349 |  |
+| class | `_Runtime` | 357-423 | The runtime as it is, plus a `seat` event when a seat sits, `token` |
+| def | `_Runtime.__init__` | 363-365 |  |
+| def | `_Runtime.__getattr__` | 367-368 |  |
+| def | `_Runtime.chat` | 370-378 |  |
+| def | `_Runtime._token_sink` | 380-402 |  |
+| def | `_Runtime._think_sink` | 404-423 | THE THOUGHT, LIVE (2026-10-14, WHAT'S LEFT C70; his words: "I would |
+| def | `_watch_skills` | 426-447 | Wrap execute() on THIS library instance for THIS wire. /reload |
+| def | `_drive_dial` | 520-524 |  |
+| def | `drive_think` | 535-547 | The thinking switch for a driver call. MANJUEL_DRIVER_THINK names it: 1/true/yes |
+| class | `Drive` | 784-814 | One job's record. Everything the report says is read off this. |
+| def | `Drive.__init__` | 787-814 |  |
+| def | `drive_parse` | 817-840 | '[plan|each|tidy|ship] <goal> [| do: <prompt>] [| check: <command>]' -> a spec. |
+| def | `drive_job_hash` | 843-849 | What his yes to a job card is bound to (OpenShell binds an approval to a hash of |
+| def | `_drive_preview` | 852-865 | What a write card shows: the passage it replaces and the one it writes, or the |
+| def | `_drive_yes` | 868-869 |  |
+| def | `drive_check` | 872-886 | The job's check, run in the ground. Exit 0 passes. Bounded. |
+| def | `_drive_run` | 889-900 | One command (git, gh) in a repository: (exit, output). stdin closed. |
+| def | `drive_source` | 903-924 | The items a source command lists: JSON, or one per line. (items, why); |
+| def | `_drive_key` | 927-928 |  |
+| def | `_drive_ignored` | 931-942 |  |
+| def | `_drive_ignore` | 945-951 |  |
+| def | `drive_tools` | 954-959 | The schemas the model is offered, and the set the library enforces. |
+| def | `_drive_field` | 962-965 |  |
+| def | `drive_calls` | 968-984 | Every native tool call in a reply, as (name, args). |
+| def | `drive_calls_raw` | 987-997 | Every native tool call in a reply as (name, the arguments as they came): the |
+| def | `drive_window` | 1000-1021 | The window the driver runs in: MANJUEL_DRIVER_CTX when he set it; otherwise the |
+| def | `drive_memory` | 1024-1037 | The newest of what memory.md holds -- landed by his hand, so it is the record, n |
+| def | `drive_lesson` | 1040-1058 | What a job taught, read off its record alone (no model): staged in memory's |
+| def | `_drive_brief` | 1061-1063 |  |
+| def | `_drive_head` | 1066-1071 |  |
+| def | `_drive_target` | 1074-1083 | (repo, path, branch) of the file a tree write names, or None. |
+| def | `_drive_rel` | 1086-1087 |  |
+| def | `_drive_by_repo` | 1090-1094 |  |
+| def | `_drive_unsaved` | 1097-1129 | Every changed, staged or new file in one repository -- a set of names, or with |
+| def | `_drive_checked` | 1132-1147 | drive_check, with what the check itself changed noted (C130): on every line the |
+| def | `_drive_take_check_files` | 1150-1188 | WHAT THE CHECK REWROTE GOES WITH THE JOB (WHAT'S LEFT C130, 2026-10-20, his |
+| def | `drive_act` | 1191-1328 | One call. A writer waits for his answer first and runs only on a yes, |
+| def | `_drive_job` | 1331-1586 | One job, worked until its check passes or its budget is spent. |
+| def | `_drive_said` | 1589-1600 | What the model is handed of a tool's result. Under DRIVE_RESULT_CHARS, all of it |
+| def | `_drive_journal_message` | 1603-1606 |  |
+| def | `_drive_journal_step` | 1609-1613 |  |
+| def | `_drive_delegate` | 1616-1629 | Steward's sub-agent: one council seat asked one task (DRIVE_DELEGATE_TOOL). The |
+| def | `_drive_own_tool` | 1632-1685 | The driver's own tools, run here rather than through the skill library (they tou |
+| def | `_drive_changes` | 1688-1699 | What the item in hand changed, read off git. |
+| def | `_drive_commit_item` | 1702-1728 | Commit exactly the item's own files on its line, under his git name. True |
+| def | `_drive_put_back` | 1731-1758 | Put back exactly the item's own files, byte for byte as they were before it |
+| def | `_drive_close_lines` | 1761-1790 | Back to the base each line was opened from, and the line closed here: an |
+| def | `drive_ship` | 1793-1858 | The whole pipeline, on his answer: push each line the run committed on, |
+| def | `_drive_steps` | 1861-1877 | Run the pipeline's commands in order, each on the record, stopping at the |
+| def | `drive_plan` | 1880-1904 | DECOMPOSE: the goal as a short list of items, from the model. |
+| def | `_drive_single` | 1907-1911 | ONE JOB: worked; on a pass, what changed, then on his answer the whole |
+| def | `_drive_after_job` | 1914-1939 | What follows one job's verdict: on a pass the change and the send card; on no |
+| def | `drive_items` | 1942-2036 | PLAN or EACH: the items, one job each, on his answer; each passing item |
+| def | `drive_tidy` | 2039-2088 | TIDY: every branch already merged into main, here and on GitHub, listed |
+| def | `drive_save` | 2091-2173 | SHIP: the work on disk saved and sent (the head of this section). Each |
+| def | `drive` | 2176-2289 | Work one /drive to its end (the head of this section). |
+| def | `_drive_gate` | 2292-2308 | The ordinary turn's gates on a job: not language is refused, and the law is walk |
+| def | `_drive_job_card` | 2311-2338 | THE ONE CARD FOR A JOB (approval `plan`): the goal, the check that will run and  |
+| def | `_drive_propose` | 2341-2371 | PLAN MODE (opencode, Cline, oh-my-pi): the Steward reads -- only reads -- and wr |
+| def | `_drive_resume_spec` | 2374-2385 | The newest journal a crash left open (journal.unfinished), replayed; None if non |
+| def | `_drive_resume` | 2388-2418 | Carry a job a crash cut short on from its journal: its line of work, the files i |
+| def | `drive_report` | 2421-2442 | What happened, read off the record alone. |
+| def | `drive_carry` | 2445-2449 | One line of what a job did, carried into the next. |
+| def | `drive_record` | 2452-2470 | The whole job as a transcript in logs/, every result as it came back. |
+| def | `_door_secret` | 2473-2484 | The secret card's question, for a door that can show one (Door.ask's `secret`);  |
+| def | `face_system` | 2487-2499 | The face's system prompt: his seat's own bearing and weighing (agents/steward.md |
+| def | `face_history` | 2502-2508 | The last turns of this conversation, as the messages the face reads first. |
+| def | `door_face` | 2511-2591 | STEWARD, THE FACE (FACE, above): one ordinary turn answered by Steward's own loo |
+| def | `drive_context` | 2594-2606 | What the driver is handed beside its goal, as every seat is (pipeline's carried |
+| def | `door_drive` | 2609-2703 | The /drive turn: job after job. Each job's report goes on the wire as it |
+| def | `door_undo` | 2706-2724 | /undo (opencode, Cline, Hermes, oh-my-pi): the last Steward turn's own unsaved |
+| def | `door_schedule` | 2730-2755 | /schedule, /goal, /schedules [drop <id>] (Hermes, Cline, OpenClaw): rows in |
+| def | `door_schedules` | 2758-2783 | The idle door's tick: each due row run once as an unattended /drive job, its |
+| def | `door_hold_wait` | 2805-2827 | Wait on the door's hold logs until the hold is answered: its outcome, or |
+| def | `door_call` | 2830-2885 | The mcp_call turn: one line of what is asked, the call, and -- when the |
+| class | `Door` | 2893-3460 | One sitting, over one wire. `sess` is cli.Session or anything that |
+| def | `Door.__init__` | 2897-2917 |  |
+| def | `Door.ask` | 2921-2972 | Stands where input() stood. One question, one answer, over the |
+| def | `Door._listen` | 2974-3009 | One spoken turn, captured and transcribed, and NOT run. |
+| def | `Door._next` | 3011-3028 |  |
+| def | `Door.serve` | 3032-3146 | cli._loop's shape: take a turn, run it, until close or EOF. |
+| def | `Door._head_plan` | 3150-3203 | Read `model` and `voices` off the wire into a plan, or refuse. |
+| def | `Door._head_words` | 3206-3212 | The plan in the operator's words, for the `note` that says what |
+| def | `Door._close` | 3214-3230 |  |
+| def | `Door.turn` | 3234-3460 | One typed turn, cli._loop's body line for line (the REPL read of |
+| def | `open_wire` | 3468-3485 | The real stdout and stdin as the wire. stdout is swapped for the |
+| def | `main` | 3488-3579 |  |
+| def | `_open_and_serve` | 3582-3632 | Everything after the sitting line: the boot the REPL does, `opened`, |
 
-### manjuel/skills.py — 5792 lines
+### manjuel/skills.py — 5888 lines
 
 *Skills: markdown declares the interface, Python registers the implementation.*
 
@@ -1012,136 +1059,138 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `SkillSpec.param_notes` | 401-414 | {argument: the skill's OWN words for it}, off **Parameters Needed:**. |
 | def | `SkillSpec.summary` | 417-436 | The ROUTING view: keyword, what it does, what it takes. |
 | def | `declares` | 439-458 | Every argument name a skill's OWN markdown declares. |
-| class | `SkillExecutionEnv` | 527-592 | Everything a skill handler is allowed to touch. |
-| def | `SkillExecutionEnv.__post_init__` | 559-565 |  |
-| def | `SkillExecutionEnv.safe_path` | 567-592 | Jail file access to the workspace -- SUBDIRECTORIES included. |
-| def | `unjail` | 610-622 | Strip the jail's own name(s) off the front of a relative path. |
-| def | `find_by_name` | 625-654 | Real files in the ground whose basename matches `name`, case- |
-| def | `_inside_ground` | 657-666 | Resolve a relative path and refuse anything that escapes the ground. |
-| def | `gate_paths` | 669-753 | LAW 8 -- one write-path per chain. Refuse a declared path argument that |
-| def | `declared_path` | 756-786 | The file a call NAMES, resolved the way gate_paths resolves it -- or None. |
-| def | `_git_worlds` | 822-839 | The repositories this ground carries, named the way the argument wants |
-| def | `_git_world` | 842-889 | (the repository to act in, what to call it, a refusal). |
-| def | `_world_said` | 892-897 | Name the world in the answer. A reader sees the ANSWER, never the |
-| def | `_ground_list` | 901-965 | The ground as it stands on disk. Live, read-only. |
-| def | `_windowed_python` | 973-1072 | A .py cut by definition. None => caller falls back to the char path. |
-| def | `_windowed_chars` | 1075-1087 | The original character-window path, unchanged, reachable on its own. |
-| def | `windowed` | 1090-1177 | A big file as a MOVABLE WINDOW, never a silent first slice. |
-| def | `_sitting` | 1189-1256 | Resolve a SITTING NUMBER to the runs it held and their transcripts. |
-| def | `_when` | 1279-1363 | What ran in a WINDOW OF TIME, from the transcript filenames. |
-| def | `_describe` | 1366-1370 | A skill's own words about itself, whole -- not the routing stub. |
-| def | `_skill_search` | 1374-1424 | What the chain can do about a subject, from the skills' own files. |
-| def | `_symbols_in` | 1475-1504 | (name, line, kind) a file DECLARES. Never what it merely mentions. |
-| def | `_walk_code` | 1507-1523 | Every code file in the ground, jails and client ground excluded. |
-| def | `symbol_table` | 1526-1552 | ({rel path: [(name, line, kind)...]}, {rel path: {word, ...}}). |
-| def | `_countable` | 1555-1562 | Whether a declared name can stand as evidence that a file leans on it. |
-| def | `map_rows` | 1565-1620 | (path, weight, symbol count, top names) for every file, ranked. |
-| def | `_symbols` | 1624-1707 | Where a name is DEFINED -- or, named nothing, the shape of the ground. |
-| def | `_subtask` | 1711-1733 | Hand one scoped piece of work to a fresh run of its own. |
-| def | `_ground_read` | 1737-1787 | One real file, as it is right now. Read-only; secrets refused. |
-| def | `_file_type` | 1808-1820 |  |
-| def | `_terminator` | 1823-1832 |  |
-| def | `_git_tracks` | 1835-1844 |  |
-| def | `_indexed` | 1847-1858 |  |
-| def | `_age` | 1861-1870 |  |
-| def | `inspect_file` | 1873-1947 | The facts about one file, as a block. The workspace is tried first, |
-| def | `inspect_line` | 1950-1964 | One line of the facts, for the stamp a workspace read carries. |
-| def | `_inspect` | 1968-2004 |  |
-| def | `_entropy` | 2048-2053 | Shannon entropy in bits per byte (0.0 to 8.0) from byte counts. |
-| def | `_string_kind` | 2056-2070 | url / secret / crypto / path / error / other. The secret test comes |
-| def | `_u16` | 2073-2076 |  |
-| def | `_u32` | 2079-2082 |  |
-| def | `_named` | 2085-2088 |  |
-| def | `_triage_format` | 2091-2182 | The format by its magic bytes, with only the header fields read off them. |
-| def | `triage_bytes` | 2185-2233 | What the bytes say, as a dict. Pure: no disk, no env. A secret-looking |
-| def | `triage_text` | 2236-2268 | The words for a triage_bytes dict. Every number is one it carries. |
-| def | `_triage_binary` | 2272-2317 | Triage one file by its bytes. The jail and the refusals are inspect's: |
-| def | `_skill_report` | 2321-2343 | The chain's actual reach, read from the loaded library. |
-| def | `_uses_weighed` | 2346-2374 | Each skill weighed off logs/uses.jsonl (WHAT'S LEFT H32): its uses, its |
-| def | `_use_record` | 2378-2401 | One line per use, written by the after-tool hook alone (WHAT'S LEFT H32). |
-| def | `_ground_report` | 2405-2424 | Where the chain stands. Read, not generated -- a guessed path is a |
-| def | `_list_directory` | 2428-2438 |  |
-| def | `_read_file` | 2442-2492 |  |
-| def | `_write_file` | 2496-2562 | Write one file into the workspace. |
-| def | `_embed_text` | 2566-2613 | Index ONE workspace file now, without a full sweep. |
-| def | `_remember` | 2617-2642 | PROPOSE a memory entry. Staged, not landed. |
-| def | `_git_status` | 2646-2682 |  |
-| def | `operator_message` | 2734-2774 | (the message the OPERATOR quoted, the world he named beside it). |
-| def | `_commit_subject` | 2777-2940 | Pick a commit subject a human will still understand in six months. |
-| def | `_git_commit` | 2944-2974 | Local, additive, recoverable -- so a seat may do it. |
-| def | `_proved` | 2978-3101 | What the suites last proved, read from what they stamped. |
-| def | `_speak` | 3105-3127 |  |
-| def | `_git_init` | 3131-3142 |  |
-| def | `_git_pull` | 3146-3153 |  |
-| def | `_git_push` | 3157-3168 |  |
-| def | `_git_cycle` | 3172-3328 | The whole version-control turn: prove, status, commit, push, VERIFY. |
-| def | `_linear_regression` | 3332-3365 | Ordinary least squares over numbers found in the text. |
-| def | `_statistics` | 3369-3387 | Descriptive statistics over numbers found in the text. |
-| def | `_pipeline_models` | 3397-3399 | Tags this ground declares -- seats, prompt skills, and the embedder. |
-| def | `_rack_list` | 3403-3471 | Read-only: the shelf and the card. |
-| def | `_rack_report` | 3475-3545 | The rack's OBSERVED state. FACTS ONLY unless a judgement is asked for. |
-| def | `_rack_sync` | 3549-3580 | Pull a current list from Ollama and rewrite rack.md. |
-| def | `_rack_load` | 3584-3596 | Bring a model into VRAM so the next call does not pay the load. |
-| def | `_rack_unload` | 3600-3619 | Free VRAM. REFUSES a model this ground does not declare, because it |
-| def | `_rack_pull` | 3623-3638 | Download a model. Crosses the wall and can move gigabytes, so it is |
-| def | `_index_busy` | 3653-3661 | The refusal for a second build while one is running, or "". |
-| def | `_open_index` | 3664-3684 |  |
-| def | `_wants_rebuild` | 3692-3715 | Did the operator ask for the index to be built from scratch? |
-| def | `index_roots` | 3718-3725 | What the index is told to hold: index_roots.txt, read against the ground. |
-| def | `_index_ground` | 3729-3751 | Build or refresh the semantic index over the configured roots. |
-| def | `_index_ground_locked` | 3754-3813 | The build itself; the caller holds _INDEX_BUSY for its whole life. |
-| def | `_age_of` | 3816-3834 | How old a file is, in the units a person thinks in. |
-| def | `_semantic_search` | 3838-3839 |  |
-| def | `_search_transcripts` | 3843-3857 | What was SAID on a past run, as opposed to what the estate holds. |
-| def | `_search_scoped` | 3860-3972 |  |
-| def | `ground_terms` | 3975-3998 | This ground's own words, read off its files for a seat that answers out |
-| def | `_deep_research` | 4002-4027 | Delegate to the Deep Researcher persona defined in agents.md. |
-| def | `_mcp_wait` | 4075-4078 | Seconds a door call waits: the skill bound, less the margin, never |
-| def | `_mcp_servers` | 4090-4099 | {name: url} for every server this ground declares. Names only ever |
-| def | `_mcp_declared` | 4110-4114 | Every server name this ground declares, loopback dial or stdio command. |
-| def | `_mcp_key` | 4117-4120 | The bearer this ground holds for server `name`, or "". It leaves this |
-| def | `_mcp_hint` | 4123-4130 | What a 401 from `name` is asking for, in words that name the dial and |
-| def | `_mcp_rpc` | 4133-4164 | One JSON-RPC call. Returns (result, error-in-plain-words). |
-| def | `_mcp_text` | 4167-4174 | An MCP result's own words. The content blocks are the answer; the |
-| def | `_mcp_named` | 4177-4189 | The first candidate NAMED IN `text` as a whole word, or "". |
-| def | `_mcp_braced` | 4192-4201 | The `{...}` a sentence carries, first brace to last, or "". |
-| def | `mcp_spelled_out` | 4204-4238 | Does `text` spell a door call out WHOLE -- a declared server named as a |
-| def | `_mcp_call` | 4242-4400 | Call one tool on a local MCP server this ground declares. |
-| def | `_mcp_args` | 4403-4430 | (payload, "") or ({}, refusal): the tool's arguments, read the ONE way |
-| def | `_mcp_stdio_call` | 4433-4488 | `_mcp_call` for a server that is a program (MANJUEL_MCP_<NAME>_CMD). |
-| def | `_one_terminator` | 4514-4520 | CRLF if the file is CRLF, LF if it is LF. Refuses to guess for MIXED. |
-| def | `_edit_file` | 4524-4562 | Replace one exact passage in a workspace file. |
-| def | `_edit_passage` | 4565-4590 | The two-marker shape, read: (old, new, refusal). ONE READER for every |
-| def | `_apply_passage` | 4593-4657 | Replace `old` with `new` in the file at `path`, or refuse and write |
-| def | `_locate_passage` | 4672-4711 | Where `old` is in the file: (start, end, how, refusal). THREE TIERS, each tried |
-| def | `_nearest_lines` | 4714-4731 | The file's three lines most like the passage's first line, with the column |
-| class | `DriverMark` | 4813-4814 | The caller mark the driver alone sets on the env, in drive(). |
-| def | `never_written` | 4838-4872 | Why a seat may never write THIS path in the ground, or "" when it may. |
-| def | `repo_of` | 4875-4885 | The nearest repository the path belongs to, inside the ground: the first |
-| def | `line_of_work` | 4888-4907 | (refusal, branch): the branch the file's repository stands on, or why a |
-| def | `terminator_for` | 4910-4920 | The terminator a write must use: the file's own (None when MIXED), or |
-| def | `checked_python` | 4923-4943 | The structural gate for a whole file about to be written: parse, then |
-| def | `_tree_target` | 4946-4961 | The resolved file a tree door was asked for: (path, rel, branch, refusal). |
-| def | `_ground_write` | 4965-4993 | Write one whole file into the ground, on a line of work. |
-| def | `_ground_edit` | 4997-5011 | Replace one exact passage in a file in the ground, on a line of work. |
-| def | `_run_python` | 5170-5251 | Run one Python file from the workspace and report what it said. |
-| class | `SkillLibrary` | 5260-5677 |  |
-| def | `SkillLibrary.__init__` | 5270-5273 |  |
-| def | `SkillLibrary.load` | 5276-5319 |  |
-| def | `SkillLibrary.validate` | 5321-5357 | Return (errors, warnings) for the md <-> handler binding. |
-| def | `SkillLibrary.manifest` | 5359-5370 | Compact by default -- this is what the router reads to pick a tool. |
-| def | `SkillLibrary.shortlist` | 5372-5428 | The manifest, narrowed to what bears on THIS objective. |
-| def | `SkillLibrary.keywords` | 5430-5431 |  |
-| def | `SkillLibrary.spec` | 5433-5435 |  |
-| def | `SkillLibrary.models` | 5437-5439 | Model tags prompt skills depend on, for the startup check. |
-| def | `SkillLibrary.tool_schemas` | 5441-5520 | Ollama `tools=` schemas -- each skill offered ONLY what it declares. |
-| def | `SkillLibrary.hooks_for` | 5522-5531 | Every skill declaring `point`, in NAME ORDER. |
-| def | `SkillLibrary._fire` | 5533-5584 | Run the hooks for one point. They watch and they act; they do not |
-| def | `SkillLibrary.execute` | 5586-5612 | Every skill call in this estate, with its declared hooks around it. |
-| def | `SkillLibrary._call` | 5614-5677 |  |
-| def | `_run_prompt_skill` | 5680-5732 | Send <content> to the skill's own model, with its markdown as the rules. |
-| def | `_json_call` | 5758-5776 |  |
-| def | `extract_tool_call` | 5779-5792 |  |
+| class | `SkillExecutionEnv` | 534-599 | Everything a skill handler is allowed to touch. |
+| def | `SkillExecutionEnv.__post_init__` | 566-572 |  |
+| def | `SkillExecutionEnv.safe_path` | 574-599 | Jail file access to the workspace -- SUBDIRECTORIES included. |
+| def | `unjail` | 617-629 | Strip the jail's own name(s) off the front of a relative path. |
+| def | `find_by_name` | 632-661 | Real files in the ground whose basename matches `name`, case- |
+| def | `_inside_ground` | 664-673 | Resolve a relative path and refuse anything that escapes the ground. |
+| def | `gate_paths` | 676-760 | LAW 8 -- one write-path per chain. Refuse a declared path argument that |
+| def | `declared_path` | 763-793 | The file a call NAMES, resolved the way gate_paths resolves it -- or None. |
+| def | `_git_worlds` | 829-846 | The repositories this ground carries, named the way the argument wants |
+| def | `_git_world` | 849-896 | (the repository to act in, what to call it, a refusal). |
+| def | `_world_said` | 899-904 | Name the world in the answer. A reader sees the ANSWER, never the |
+| def | `_ground_list` | 908-972 | The ground as it stands on disk. Live, read-only. |
+| def | `_windowed_python` | 980-1079 | A .py cut by definition. None => caller falls back to the char path. |
+| def | `_windowed_chars` | 1082-1094 | The original character-window path, unchanged, reachable on its own. |
+| def | `windowed` | 1097-1184 | A big file as a MOVABLE WINDOW, never a silent first slice. |
+| def | `_sitting` | 1196-1263 | Resolve a SITTING NUMBER to the runs it held and their transcripts. |
+| def | `_when` | 1286-1370 | What ran in a WINDOW OF TIME, from the transcript filenames. |
+| def | `_describe` | 1373-1377 | A skill's own words about itself, whole -- not the routing stub. |
+| def | `_skill_search` | 1381-1431 | What the chain can do about a subject, from the skills' own files. |
+| def | `_symbols_in` | 1482-1511 | (name, line, kind) a file DECLARES. Never what it merely mentions. |
+| def | `_walk_code` | 1514-1530 | Every code file in the ground, jails and client ground excluded. |
+| def | `symbol_table` | 1533-1559 | ({rel path: [(name, line, kind)...]}, {rel path: {word, ...}}). |
+| def | `_countable` | 1562-1569 | Whether a declared name can stand as evidence that a file leans on it. |
+| def | `map_rows` | 1572-1627 | (path, weight, symbol count, top names) for every file, ranked. |
+| def | `_symbols` | 1631-1714 | Where a name is DEFINED -- or, named nothing, the shape of the ground. |
+| def | `_subtask` | 1718-1740 | Hand one scoped piece of work to a fresh run of its own. |
+| def | `_ground_read` | 1744-1794 | One real file, as it is right now. Read-only; secrets refused. |
+| def | `_file_type` | 1815-1827 |  |
+| def | `_terminator` | 1830-1839 |  |
+| def | `_git_tracks` | 1842-1851 |  |
+| def | `_indexed` | 1854-1865 |  |
+| def | `_age` | 1868-1877 |  |
+| def | `inspect_file` | 1880-1954 | The facts about one file, as a block. The workspace is tried first, |
+| def | `inspect_line` | 1957-1971 | One line of the facts, for the stamp a workspace read carries. |
+| def | `_inspect` | 1975-2011 |  |
+| def | `_entropy` | 2055-2060 | Shannon entropy in bits per byte (0.0 to 8.0) from byte counts. |
+| def | `_string_kind` | 2063-2077 | url / secret / crypto / path / error / other. The secret test comes |
+| def | `_u16` | 2080-2083 |  |
+| def | `_u32` | 2086-2089 |  |
+| def | `_named` | 2092-2095 |  |
+| def | `_triage_format` | 2098-2189 | The format by its magic bytes, with only the header fields read off them. |
+| def | `triage_bytes` | 2192-2240 | What the bytes say, as a dict. Pure: no disk, no env. A secret-looking |
+| def | `triage_text` | 2243-2275 | The words for a triage_bytes dict. Every number is one it carries. |
+| def | `_triage_binary` | 2279-2324 | Triage one file by its bytes. The jail and the refusals are inspect's: |
+| def | `_skill_report` | 2328-2350 | The chain's actual reach, read from the loaded library. |
+| def | `_uses_weighed` | 2353-2381 | Each skill weighed off logs/uses.jsonl (WHAT'S LEFT H32): its uses, its |
+| def | `_use_record` | 2385-2408 | One line per use, written by the after-tool hook alone (WHAT'S LEFT H32). |
+| def | `_ground_report` | 2412-2431 | Where the chain stands. Read, not generated -- a guessed path is a |
+| def | `_list_directory` | 2435-2445 |  |
+| def | `_read_file` | 2449-2499 |  |
+| def | `_write_file` | 2503-2569 | Write one file into the workspace. |
+| def | `_embed_text` | 2573-2620 | Index ONE workspace file now, without a full sweep. |
+| def | `_remember` | 2624-2649 | PROPOSE a memory entry. Staged, not landed. |
+| def | `_git_status` | 2653-2689 |  |
+| def | `operator_message` | 2741-2781 | (the message the OPERATOR quoted, the world he named beside it). |
+| def | `_commit_subject` | 2784-2947 | Pick a commit subject a human will still understand in six months. |
+| def | `_git_commit` | 2951-2981 | Local, additive, recoverable -- so a seat may do it. |
+| def | `_proved` | 2985-3108 | What the suites last proved, read from what they stamped. |
+| def | `_speak` | 3112-3134 |  |
+| def | `_git_init` | 3138-3149 |  |
+| def | `_git_pull` | 3153-3160 |  |
+| def | `_git_push` | 3164-3175 |  |
+| def | `_git_cycle` | 3179-3335 | The whole version-control turn: prove, status, commit, push, VERIFY. |
+| def | `_linear_regression` | 3339-3372 | Ordinary least squares over numbers found in the text. |
+| def | `_statistics` | 3376-3394 | Descriptive statistics over numbers found in the text. |
+| def | `_pipeline_models` | 3404-3406 | Tags this ground declares -- seats, prompt skills, and the embedder. |
+| def | `_rack_list` | 3410-3478 | Read-only: the shelf and the card. |
+| def | `_rack_report` | 3482-3552 | The rack's OBSERVED state. FACTS ONLY unless a judgement is asked for. |
+| def | `_rack_sync` | 3556-3587 | Pull a current list from Ollama and rewrite rack.md. |
+| def | `_rack_load` | 3591-3603 | Bring a model into VRAM so the next call does not pay the load. |
+| def | `_rack_unload` | 3607-3626 | Free VRAM. REFUSES a model this ground does not declare, because it |
+| def | `_rack_pull` | 3630-3645 | Download a model. Crosses the wall and can move gigabytes, so it is |
+| def | `_index_busy` | 3660-3668 | The refusal for a second build while one is running, or "". |
+| def | `_open_index` | 3671-3691 |  |
+| def | `_wants_rebuild` | 3699-3722 | Did the operator ask for the index to be built from scratch? |
+| def | `index_roots` | 3725-3732 | What the index is told to hold: index_roots.txt, read against the ground. |
+| def | `_index_ground` | 3736-3758 | Build or refresh the semantic index over the configured roots. |
+| def | `_index_ground_locked` | 3761-3820 | The build itself; the caller holds _INDEX_BUSY for its whole life. |
+| def | `_age_of` | 3823-3841 | How old a file is, in the units a person thinks in. |
+| def | `_semantic_search` | 3845-3846 |  |
+| def | `_search_transcripts` | 3850-3864 | What was SAID on a past run, as opposed to what the estate holds. |
+| def | `_search_scoped` | 3867-3979 |  |
+| def | `ground_terms` | 3982-4005 | This ground's own words, read off its files for a seat that answers out |
+| def | `_deep_research` | 4009-4034 | Delegate to the Deep Researcher persona defined in agents.md. |
+| def | `_mcp_wait` | 4082-4085 | Seconds a door call waits: the skill bound, less the margin, never |
+| def | `_mcp_servers` | 4097-4106 | {name: url} for every server this ground declares. Names only ever |
+| def | `_mcp_declared` | 4117-4121 | Every server name this ground declares, loopback dial or stdio command. |
+| def | `_mcp_key` | 4124-4127 | The bearer this ground holds for server `name`, or "". It leaves this |
+| def | `_mcp_hint` | 4130-4137 | What a 401 from `name` is asking for, in words that name the dial and |
+| def | `_mcp_rpc` | 4140-4171 | One JSON-RPC call. Returns (result, error-in-plain-words). |
+| def | `_mcp_text` | 4174-4181 | An MCP result's own words. The content blocks are the answer; the |
+| def | `_mcp_named` | 4184-4196 | The first candidate NAMED IN `text` as a whole word, or "". |
+| def | `_mcp_braced` | 4199-4208 | The `{...}` a sentence carries, first brace to last, or "". |
+| def | `mcp_spelled_out` | 4211-4245 | Does `text` spell a door call out WHOLE -- a declared server named as a |
+| def | `_mcp_call` | 4249-4407 | Call one tool on a local MCP server this ground declares. |
+| def | `_mcp_args` | 4410-4437 | (payload, "") or ({}, refusal): the tool's arguments, read the ONE way |
+| def | `_mcp_stdio_call` | 4440-4495 | `_mcp_call` for a server that is a program (MANJUEL_MCP_<NAME>_CMD). |
+| def | `_one_terminator` | 4521-4527 | CRLF if the file is CRLF, LF if it is LF. Refuses to guess for MIXED. |
+| def | `_edit_file` | 4531-4569 | Replace one exact passage in a workspace file. |
+| def | `_edit_passages` | 4572-4593 | SEVERAL EDITS IN ONE CALL (2026-10-21, the feature list: Pi, OpenClaw, oh-my-pi) |
+| def | `_edit_passage` | 4596-4621 | The two-marker shape, read: (old, new, refusal). ONE READER for every |
+| def | `_apply_passage` | 4624-4714 | Replace `old` with `new` in the file at `path`, or refuse and write |
+| def | `_lint_after` | 4717-4749 | LINT AFTER AN EDIT (Hermes, oh-my-pi), for the kinds a check costs nothing on: a |
+| def | `_locate_passage` | 4764-4803 | Where `old` is in the file: (start, end, how, refusal). THREE TIERS, each tried |
+| def | `_nearest_lines` | 4806-4823 | The file's three lines most like the passage's first line, with the column |
+| class | `DriverMark` | 4905-4906 | The caller mark the driver alone sets on the env, in drive(). |
+| def | `never_written` | 4930-4964 | Why a seat may never write THIS path in the ground, or "" when it may. |
+| def | `repo_of` | 4967-4977 | The nearest repository the path belongs to, inside the ground: the first |
+| def | `line_of_work` | 4980-4999 | (refusal, branch): the branch the file's repository stands on, or why a |
+| def | `terminator_for` | 5002-5012 | The terminator a write must use: the file's own (None when MIXED), or |
+| def | `checked_python` | 5015-5035 | The structural gate for a whole file about to be written: parse, then |
+| def | `_tree_target` | 5038-5053 | The resolved file a tree door was asked for: (path, rel, branch, refusal). |
+| def | `_ground_write` | 5057-5085 | Write one whole file into the ground, on a line of work. |
+| def | `_ground_edit` | 5089-5103 | Replace one exact passage in a file in the ground, on a line of work. |
+| def | `_run_python` | 5262-5343 | Run one Python file from the workspace and report what it said. |
+| class | `SkillLibrary` | 5352-5769 |  |
+| def | `SkillLibrary.__init__` | 5362-5365 |  |
+| def | `SkillLibrary.load` | 5368-5411 |  |
+| def | `SkillLibrary.validate` | 5413-5449 | Return (errors, warnings) for the md <-> handler binding. |
+| def | `SkillLibrary.manifest` | 5451-5462 | Compact by default -- this is what the router reads to pick a tool. |
+| def | `SkillLibrary.shortlist` | 5464-5520 | The manifest, narrowed to what bears on THIS objective. |
+| def | `SkillLibrary.keywords` | 5522-5523 |  |
+| def | `SkillLibrary.spec` | 5525-5527 |  |
+| def | `SkillLibrary.models` | 5529-5531 | Model tags prompt skills depend on, for the startup check. |
+| def | `SkillLibrary.tool_schemas` | 5533-5612 | Ollama `tools=` schemas -- each skill offered ONLY what it declares. |
+| def | `SkillLibrary.hooks_for` | 5614-5623 | Every skill declaring `point`, in NAME ORDER. |
+| def | `SkillLibrary._fire` | 5625-5676 | Run the hooks for one point. They watch and they act; they do not |
+| def | `SkillLibrary.execute` | 5678-5704 | Every skill call in this estate, with its declared hooks around it. |
+| def | `SkillLibrary._call` | 5706-5769 |  |
+| def | `_run_prompt_skill` | 5772-5824 | Send <content> to the skill's own model, with its markdown as the rules. |
+| def | `_json_call` | 5850-5868 |  |
+| def | `extract_tool_call` | 5871-5884 |  |
 
 ### manjuel/spelling.py — 171 lines
 
@@ -1155,6 +1204,73 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `_match_case` | 106-111 |  |
 | def | `_dictionary` | 123-135 | pyspellchecker if present, else None. Probed without importing. |
 | def | `check` | 138-171 | Correct known misspellings; report unknown words without touching them. |
+
+### manjuel/tools_files.py — 982 lines
+
+*The ground's search and patch doors: ground_grep, find_files, apply_patch.*
+
+| kind | name | lines | says |
+|---|---|---|---|
+| def | `_skip_dir` | 79-87 | Whether the walk goes into this folder. Judged by name, never by |
+| def | `_walk` | 90-112 | Every file under `start` the readers may see, as (path, rel posix). |
+| def | `_glob_re` | 115-150 | A glob as a compiled regex over ground-relative posix paths. |
+| def | `_scope` | 153-203 | (start folder, path matcher or None, label, refusal) for a reader's |
+| def | `_ground_grep` | 211-270 | A regex search over the ground, live from disk. Read-only. |
+| def | `_find_files` | 278-310 | Files in the ground by glob, newest first. Read-only. |
+| class | `_Hunk` | 352-359 |  |
+| def | `_Hunk.__init__` | 355-359 |  |
+| class | `_Op` | 362-369 |  |
+| def | `_Op.__init__` | 365-369 |  |
+| def | `_parse_patch` | 372-460 | (ops, problems). Pure: reads the text, touches no disk. |
+| def | `patch_targets` | 463-474 | Every path a patch names -- each file it adds, updates, moves to or |
+| def | `_find_block` | 477-509 | (start line index, how it matched, refusal) for one hunk's old lines. |
+| def | `_apply_hunks` | 512-539 | (new text, notes, problems). Every hunk is found against the file AS |
+| def | `_python_gate` | 542-561 | (refusal, carried) for a .py as it would stand. HELD TO WHAT IT ADDS, |
+| def | `_recoverable` | 564-581 | "" when the file's bytes are in the repository's last commit, so a |
+| def | `_target` | 584-603 | (path, rel, refusal) through the tree doors' walls: inside the |
+| def | `_apply_patch` | 607-762 | Apply a multi-file patch to the ground, on a line of work, whole or |
+| def | `_refused` | 765-767 |  |
+| def | `_strokes` | 774-982 | Prove the three on a throwaway ground with its own git repository on |
+
+### manjuel/tools_shell.py — 1220 lines
+
+*The shell for Steward: `run_shell`, gated the way the door gates his own.*
+
+| kind | name | lines | says |
+|---|---|---|---|
+| def | `_own_spellings` | 178-185 | The ways the ground's own path is written: Windows, forward-slashed, |
+| def | `_inside_own` | 188-193 | Whether a path (forward-slashed, lower-cased), once its dots are |
+| def | `_reaches_outside` | 196-206 |  |
+| def | `_text_refusals` | 209-234 | What a piece of text names that is refused outright. Never echoes a key. |
+| class | `_Tok` | 242-249 | One lexed piece: a word (quoting stripped), an operator or a redirection. |
+| def | `_Tok.__init__` | 247-249 |  |
+| def | `_var_start` | 252-253 |  |
+| def | `_lex` | 256-481 | Split a command line the way bash would, far enough to see the command |
+| def | `_simple_commands` | 484-504 | [(words, redirects, op_after)] -- each simple command, its redirections |
+| def | `_name` | 507-515 | A command word as Windows finds it: its last path part, lower-cased, |
+| def | `_operands` | 518-527 |  |
+| def | `_git_split` | 530-541 | (leading options, subcommand, rest) of `git ...`; -C and -c take a value. |
+| def | `_command_refusals` | 544-615 | What one command word, with its arguments, reaches that is refused. |
+| def | `_nested_command` | 618-635 | The text a command runs as a command of its own, if it carries one: |
+| def | `_command_words` | 638-656 | [(name, args)] for a simple command: its command word and, through any |
+| def | `_refusals` | 659-713 | Every refusal a command line earns: in its text, in each word with its |
+| def | `_deny_flags` | 721-738 | A rule that is a plain look unless one of these options is given. |
+| def | `_any_args` | 741-742 |  |
+| def | `_date_rule` | 745-750 |  |
+| def | `_uniq_rule` | 753-754 |  |
+| def | `_git_rule` | 762-781 | git: a handful of plain looks. Never status, never a bare diff (those |
+| def | `_version_rule` | 784-788 | `python --version` and its kind: exactly one argument, a version flag. |
+| def | `_writes` | 813-861 | Why a command line that is not refused is not a plain look either. |
+| def | `classify` | 864-885 | (kind, why) for one command line typed in the ground. |
+| def | `_child_env` | 909-918 |  |
+| def | `_find_bash` | 921-943 | Git Bash, found by the git on PATH or under Program Files -- never by |
+| def | `_secret_values` | 946-952 | Values to withhold from what a run prints: every variable in THIS |
+| def | `_redact` | 955-958 |  |
+| def | `_cut` | 961-968 | Head and tail, with the cut said where it was made. |
+| def | `_kill_tree` | 971-987 | End the run and everything it started: a grandchild left holding the |
+| def | `_wait_for` | 990-995 |  |
+| def | `_run_shell` | 999-1064 | Run one command line in the ground and report its exit code and output. |
+| def | `_strokes` | 1072-1220 | The gate's matrix and two real runs. Raises AssertionError on a fault. |
 
 ### manjuel/transcript.py — 190 lines
 
@@ -1292,7 +1408,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `GroundWatch.start` | 197-222 |  |
 | def | `GroundWatch.stop` | 224-230 |  |
 
-manjuel/: 37 files, 32162 lines.
+manjuel/: 40 files, 35755 lines.
 
 ## GUARDS — by the failure that earned them
 
@@ -1792,33 +1908,36 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 
 | line | in | marker |
 |---|---|---|
-| 151 | `(module)` | is exactly what every `/command` did until 2026-09-09. `error` is NOT here: |
-| 157 | `(module)` | AN ENGINE NOBODY USES CLOSES ITS OWN SITTING (2026-09-16, his ruling on the |
-| 159 | `(module)` | engines standing after their last turn -- 7.2 of them sitting 208's, 429 |
-| 172 | `(module)` | since 2026-09-25, not repeated, so the event says what the record says by |
-| 380 | `_token_sink` | SITTING 70's rule, kept: control markup is the seat's channel to |
-| 404 | `_think_sink` | """THE THOUGHT, LIVE (2026-10-14, WHAT'S LEFT C70; his words: "I would |
-| 413 | `_think_sink` | keeps it for the transcript (sitting 79) and nowhere else. Every |
-| 453 | `(module)` | His words, 2026-10-16: "A single simple driver that runs long workflows and |
-| 515 | `(module)` | one, since 2026-10-19 (WHAT'S LEFT H5): it alone may write a .md directly in |
-| 526 | `(module)` | His card, 2026-10-16: the driver starts on qwen3.5:9b (SITTING LAW 3). His word, |
-| 527 | `(module)` | 2026-10-21: "we put steward as the main man, load him up with gpt oss" and "if oss |
-| 560 | `(module)` | HOW A JOB IS APPROVED (2026-10-21, his ruling on the harness study: "Both, chosen |
-| 579 | `(module)` | STEWARD IS THE FACE (2026-10-21; his words: "steward becomes the system, the face, |
-| 793 | `drive_check` | inherited it hung on it (2026-10-16, a one-line python -c, 400 s). |
-| 1067 | `_drive_take_check_files` | """WHAT THE CHECK REWROTE GOES WITH THE JOB (WHAT'S LEFT C130, 2026-10-20, his |
-| 1375 | `_drive_job` | THE WHOLE FILE ON FIRST USE (WHAT'S LEFT H32, his card of 2026-10-19): |
-| 1975 | `drive` | THE RAILS (2026-10-21): the goal passes the gates every ordinary turn passes -- |
-| 2391 | `(module)` | A DOOR CALL, SAID PLAINLY (WHAT'S LEFT C77). His words, 2026-10-16: "it |
-| 2622 | `serve` | ...and the colored card's hook beside it (pipeline._ask, 2026-10-12). |
-| 2658 | `serve` | say so is attended, as every turn was before 2026-09-29. |
-| 2660 | `serve` | THE HEAD IS A PROPERTY OF THE TURN (2026-09-23, his ruling: |
-| 2671 | `serve` | `voices` IS THE NARROWER ONE (2026-09-23, "then B underneath |
-| 2801 | `_close` | WHY, ON THE LEDGER LINE AND IN THE TOLL (2026-09-29). The `closed` |
-| 2884 | `turn` | WHAT THE COMMAND LEFT TO RUN (WHAT'S LEFT C57, sitting 368): a command of his |
-| 3122 | `main` | A LOCK HELD BY NOBODY IS RELEASED HERE TOO (2026-09-22). cli.main has |
-| 3123 | `main` | reaped since 2026-09-17; this door never did, and it is the one THE LINE |
-| 3133 | `main` | EVERY EXIT FROM HERE ON CLOSES THE SITTING (2026-09-22). The line above |
+| 152 | `(module)` | is exactly what every `/command` did until 2026-09-09. `error` is NOT here: |
+| 158 | `(module)` | AN ENGINE NOBODY USES CLOSES ITS OWN SITTING (2026-09-16, his ruling on the |
+| 160 | `(module)` | engines standing after their last turn -- 7.2 of them sitting 208's, 429 |
+| 173 | `(module)` | since 2026-09-25, not repeated, so the event says what the record says by |
+| 381 | `_token_sink` | SITTING 70's rule, kept: control markup is the seat's channel to |
+| 405 | `_think_sink` | """THE THOUGHT, LIVE (2026-10-14, WHAT'S LEFT C70; his words: "I would |
+| 414 | `_think_sink` | keeps it for the transcript (sitting 79) and nowhere else. Every |
+| 454 | `(module)` | His words, 2026-10-16: "A single simple driver that runs long workflows and |
+| 516 | `(module)` | one, since 2026-10-19 (WHAT'S LEFT H5): it alone may write a .md directly in |
+| 527 | `(module)` | His card, 2026-10-16: the driver starts on qwen3.5:9b (SITTING LAW 3). His word, |
+| 528 | `(module)` | 2026-10-21: "we put steward as the main man, load him up with gpt oss" and "if oss |
+| 561 | `(module)` | HOW A JOB IS APPROVED (2026-10-21, his ruling on the harness study: "Both, chosen |
+| 580 | `(module)` | THE REST OF THE FEATURE LIST (2026-10-21, his word: "diff the full feature list from |
+| 593 | `(module)` | STEWARD IS THE FACE (2026-10-21; his words: "steward becomes the system, the face, |
+| 629 | `(module)` | the feature list (2026-10-21): a gated shell (its reads run at once, |
+| 877 | `drive_check` | inherited it hung on it (2026-10-16, a one-line python -c, 400 s). |
+| 1151 | `_drive_take_check_files` | """WHAT THE CHECK REWROTE GOES WITH THE JOB (WHAT'S LEFT C130, 2026-10-20, his |
+| 1570 | `_drive_job` | THE WHOLE FILE ON FIRST USE (WHAT'S LEFT H32, his card of 2026-10-19): |
+| 2231 | `drive` | THE RAILS (2026-10-21): the goal passes the gates every ordinary turn passes -- |
+| 2786 | `(module)` | A DOOR CALL, SAID PLAINLY (WHAT'S LEFT C77). His words, 2026-10-16: "it |
+| 3037 | `serve` | ...and the colored card's hook beside it (pipeline._ask, 2026-10-12). |
+| 3073 | `serve` | say so is attended, as every turn was before 2026-09-29. |
+| 3075 | `serve` | THE HEAD IS A PROPERTY OF THE TURN (2026-09-23, his ruling: |
+| 3086 | `serve` | `voices` IS THE NARROWER ONE (2026-09-23, "then B underneath |
+| 3216 | `_close` | WHY, ON THE LEDGER LINE AND IN THE TOLL (2026-09-29). The `closed` |
+| 3270 | `turn` | SCHEDULES AND GOALS, and UNDO (the feature list, 2026-10-21). |
+| 3306 | `turn` | WHAT THE COMMAND LEFT TO RUN (WHAT'S LEFT C57, sitting 368): a command of his |
+| 3544 | `main` | A LOCK HELD BY NOBODY IS RELEASED HERE TOO (2026-09-22). cli.main has |
+| 3545 | `main` | reaped since 2026-09-17; this door never did, and it is the one THE LINE |
+| 3555 | `main` | EVERY EXIT FROM HERE ON CLOSES THE SITTING (2026-09-22). The line above |
 
 ### manjuel/skills.py
 
@@ -1839,91 +1958,95 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 | 472 | `(module)` | and writes nothing. It was left out when it was added on 2026-09-03, |
 | 478 | `(module)` | `inspect` reads a file's FACTS and never its contents (2026-09-07). |
 | 481 | `(module)` | secret-looking string is counted, never printed (2026-10-21). |
-| 485 | `(module)` | What actually puts something on disk. The write-claim check (sitting 70) |
-| 494 | `(module)` | 2026-09-08 (the REPL read): pull and push were missing, so the |
-| 498 | `(module)` | 2026-09-11: edit_file replaces a passage in a file that already exists. |
-| 504 | `(module)` | 2026-09-28: the tree doors write into the ground itself, on a line of |
-| 507 | `(module)` | 2026-10-19 (H32): one line per use, appended to logs/uses.jsonl. |
-| 516 | `(module)` | since sitting 80, when two commits carried invented subjects. So for these |
-| 519 | `(module)` | instruction and half message (2026-09-18; see `operator_message`). |
-| 522 | `(module)` | 2026-09-08 ruling whole: its argument is the Router's to choose. |
-| 570 | `safe_path` | Sitting 32: the operator put python-3.14-docs-text/ in the workspace |
-| 591 | `safe_path` | legs were red and both Ubuntu legs passed (2026-09-10). |
-| 600 | `(module)` | THE JAIL'S OWN NAME IS NOT A PATH INTO IT (sitting 88, 2026-09-07). The |
-| 628 | `find_by_name` | file" error (sitting 88: the Router asked for `estate_laws.md` at the |
-| 694 | `gate_paths` | A PART IS NOT A PATH (WHAT'S LEFT C101, 2026-10-19). With both tags, |
-| 703 | `gate_paths` | PROSE IS NOT A PATH (sitting 70, and the third time this month). |
-| 705 | `gate_paths` | in ground'; earlier it asked ground_read for 'review sitting 63 |
-| 740 | `gate_paths` | ESTATE LAW 2 AS A GATE (his ruling 2026-09-30, WHAT'S LEFT B4; SPEC |
-| 793 | `(module)` | Added 2026-09-18 on his word: "add a world parameter to the git skills." |
-| 896 | `_world_said` | bitten by before (sitting 81's count, which direction it pointed).""" |
-| 908 | `_ground_list` | Sitting 77: the Router passed the WHOLE OBJECTIVE as the folder -- |
-| 954 | `_ground_list` | the lines itself, and on 2026-09-08 and 2026-09-09 it counted 35 and |
-| 991 | `_windowed_python` | MODULE-LEVEL NAMES ARE ADDRESSABLE TOO (2026-09-28). The first firing |
-| 1022 | `_windowed_python` | A NAME IS ASKED BARE (WHAT'S LEFT C101, 2026-10-19). The map's rows |
-| 1192 | `_sitting` | Sitting 63 asked the chain to review sitting 63 and it could not: runs |
-| 1380 | `_skill_search` | than by RUNNING it -- which is what sitting 69 did, before reporting |
-| 1432 | `(module)` | EARNED 2026-09-17, by the operator, about every agent that has worked this |
-| 1752 | `_ground_read` | Sitting 30: the Router quoted the filename -- '"pipelines.md"' -- and |
-| 1769 | `_ground_read` | NAME THE CURE (sitting 88). The file may exist elsewhere in the |
-| 1790 | `(module)` | THE INSPECTION (2026-09-07, the operator: "a skill that is able to review |
-| 1795 | `(module)` | github"). The ruling it makes into a tool is from 2026-08-29, sittings |
-| 1903 | `inspect_file` | A REFUSAL BEGINS WITH THE WORD (2026-09-25, the harm list). These two |
-| 2007 | `(module)` | TRIAGE A BINARY (2026-10-21, on his word): ported from his REA Studio's |
-| 2153 | `_triage_format` | not an APK (measured on his REA Studio zip, 2026-10-21). |
-| 2448 | `_read_file` | 2026-09-29). A seat that wants a file of the ground and reaches for this |
-| 2485 | `_read_file` | names the part when both are given. THE STAMP (2026-09-07): a |
-| 2594 | `_embed_text` | (vectors.VectorIndex.build, 2026-09-15). |
-| 2651 | `_git_status` | Sitting 38: the closer read counts from two moments and narrated a |
-| 2685 | `(module)` | THE MESSAGE TRAVELS AS AN ARGUMENT, NOT AS THE INSTRUCTION (2026-09-18). |
-| 2697 | `(module)` | QUOTED, AND ONLY QUOTED. The 2026-09-08 ruling stands -- a writer's argument |
-| 2711 | `(module)` | (2026-09-18, his word: "teach it to carry both"). |
-| 2783 | `_commit_subject` | another's message, which is the same class of fault as sitting 72's |
-| 2799 | `_commit_subject` | SITTING 72: the previous subject was in the Router's results (git_status |
-| 2802 | `_commit_subject` | description of different work. Same disease as sitting 61's lifted |
-| 2820 | `_commit_subject` | ever made and tells a reader nothing. Sitting 6's guard caught a bare |
-| 2854 | `_commit_subject` | SITTING 80, and the operator caught it from the transcripts: two |
-| 2900 | `_commit_subject` | Sitting 81: `git commit " i ran a session, found a bug in the router.` |
-| 2916 | `_commit_subject` | SITTING 85 (2026-09-04): `git commit -m parity ran, review the models |
-| 2962 | `_git_commit` | SAY WHICH DIRECTION THE COUNT POINTS. Sitting 81: the result carried |
-| 2981 | `_proved` | SITTING 81. The operator asked "have you run a full test suite on these |
-| 3115 | `_speak` | SITTING 70, THE OPERATOR: "speak ran, it just doesnt put the output |
-| 3205 | `_git_cycle` | AND IT SHIPS THIS GROUND, NOT A WORLD IN IT (2026-09-18). The world |
-| 3416 | `_rack_list` | TWO QUANTITIES, NAMED AS TWO (sitting 82, built 2026-09-29). The size |
-| 3484 | `_rack_report` | labelled after sitting 59, but the Router still summarised THE READING |
-| 3485 | `_rack_report` | rather than the facts, three times in sitting 85. A reading nobody asked |
-| 3525 | `_rack_report` | 2026-09-02, sitting 59: this returned ONLY the Quartermaster's prose, and |
-| 3641 | `(module)` | ONE BUILD AT A TIME (sitting 94, 2026-09-08). `_run_bounded` cannot kill |
-| 3659 | `_index_busy` | "vectors.db corrupt both (sitting 94). Wait for it, or " |
-| 3676 | `_open_index` | HELD. Sitting 94: this was `pass`, the old file stayed |
-| 3695 | `_wants_rebuild` | Sitting 66, and this is the fault worth naming: the index refused -- |
-| 3709 | `_wants_rebuild` | WHOLE WORDS (WHAT'S LEFT C40, 2026-10-20). Each word was taken as a plain |
-| 3762 | `_index_ground_locked` | SITTING 81: this banner was appended to `lines` -- which is then |
-| 3773 | `_index_ground_locked` | account of it. Same fault as git_commit's count (sitting 80). |
-| 3848 | `_search_transcripts` | 2026-09-10 for the same reason transcripts did: a CHANGELOG entry ABOUT |
-| 3863 | `_search_scoped` | Sitting 26: the Router called search with no query, the error came |
-| 3886 | `_search_scoped` | THE QUERY'S OWN WORDS GO DOWN TOO (2026-09-17). The vector is what |
-| 3895 | `_search_scoped` | Doctrine outranks plumbing. Sitting 28 asked "what is the covenant" |
-| 3910 | `_rank` | RECENCY, added 2026-09-02. Age was DISPLAYED on every hit and |
-| 3934 | `_search_scoped` | Sitting 26: passages from an old run transcript were narrated as if |
-| 4010 | `_deep_research` | The standing ruling: the objective IS the payload. Sitting 39 |
-| 4020 | `_deep_research` | THE GROUND'S OWN WORDS FIRST (WHAT'S LEFT C43, sitting 370). Asked about the |
-| 4059 | `(module)` | OWN DIAL, not by a number of its own (2026-09-28). This was `_MCP_TIMEOUT |
-| 4079 | `(module)` | THE KEY RIDES BESIDE THE DIAL (2026-09-25, his ruling: the core learns a key |
-| 4102 | `(module)` | A SERVER CAN ALSO BE A PROGRAM (2026-10-21). `MANJUEL_MCP_<NAME>_CMD` in .env |
-| 4395 | `_mcp_call` | 2026-09-11 (ADR-006 item 2): a tool that fails has usually said why, and |
-| 4632 | `_apply_passage` | HELD TO WHAT IT ADDS (2026-09-29, coder-tree run five): a file |
-| 4660 | `(module)` | THE PLAIN FORMS (2026-10-21, the harness study: opencode's second tier, Pi's and |
-| 4735 | `(module)` | THE TREE DOORS (2026-09-28) |
-| 4778 | `(module)` | beside CRLF files is CRLF (the terminator ruling, 2026-09-03). |
-| 4807 | `(module)` | 2026-10-19: "lets start with it writing up the skills and agents"). Steward's |
-| 5028 | `(module)` | THE CHILD'S WALL (2026-09-22, on his word: "sandbox the python"). |
-| 5303 | `load` | 2026-09-10 `doc_pass` claimed 35 phrases where 8 were declared, |
-| 5624 | `_call` | SAY WHAT WAS CHECKED, AND NOTHING ELSE (sitting 82, built |
-| 5625 | `_call` | 2026-09-29). The gate is an allowlist and that is the whole test: |
-| 5692 | `_run_prompt_skill` | sitting 39 waiting for a <content> nobody was going to type twice. |
-| 5698 | `_run_prompt_skill` | 2026-09-08). Sitting 95: "time align the logs" -- four words, no log |
-| 5748 | `(module)` | `<|python_tag|>`. Sitting 84 (2026-09-04): the closing Steward on llama3.2 |
+| 484 | `(module)` | write nothing (tools_files.py, the feature list, 2026-10-21). |
+| 488 | `(module)` | What actually puts something on disk. The write-claim check (sitting 70) |
+| 497 | `(module)` | 2026-09-08 (the REPL read): pull and push were missing, so the |
+| 501 | `(module)` | 2026-09-11: edit_file replaces a passage in a file that already exists. |
+| 507 | `(module)` | 2026-09-28: the tree doors write into the ground itself, on a line of |
+| 510 | `(module)` | 2026-10-19 (H32): one line per use, appended to logs/uses.jsonl. |
+| 512 | `(module)` | 2026-10-21 (the feature list): a multi-file patch into the ground, on a |
+| 523 | `(module)` | since sitting 80, when two commits carried invented subjects. So for these |
+| 526 | `(module)` | instruction and half message (2026-09-18; see `operator_message`). |
+| 529 | `(module)` | 2026-09-08 ruling whole: its argument is the Router's to choose. |
+| 577 | `safe_path` | Sitting 32: the operator put python-3.14-docs-text/ in the workspace |
+| 598 | `safe_path` | legs were red and both Ubuntu legs passed (2026-09-10). |
+| 607 | `(module)` | THE JAIL'S OWN NAME IS NOT A PATH INTO IT (sitting 88, 2026-09-07). The |
+| 635 | `find_by_name` | file" error (sitting 88: the Router asked for `estate_laws.md` at the |
+| 701 | `gate_paths` | A PART IS NOT A PATH (WHAT'S LEFT C101, 2026-10-19). With both tags, |
+| 710 | `gate_paths` | PROSE IS NOT A PATH (sitting 70, and the third time this month). |
+| 712 | `gate_paths` | in ground'; earlier it asked ground_read for 'review sitting 63 |
+| 747 | `gate_paths` | ESTATE LAW 2 AS A GATE (his ruling 2026-09-30, WHAT'S LEFT B4; SPEC |
+| 800 | `(module)` | Added 2026-09-18 on his word: "add a world parameter to the git skills." |
+| 903 | `_world_said` | bitten by before (sitting 81's count, which direction it pointed).""" |
+| 915 | `_ground_list` | Sitting 77: the Router passed the WHOLE OBJECTIVE as the folder -- |
+| 961 | `_ground_list` | the lines itself, and on 2026-09-08 and 2026-09-09 it counted 35 and |
+| 998 | `_windowed_python` | MODULE-LEVEL NAMES ARE ADDRESSABLE TOO (2026-09-28). The first firing |
+| 1029 | `_windowed_python` | A NAME IS ASKED BARE (WHAT'S LEFT C101, 2026-10-19). The map's rows |
+| 1199 | `_sitting` | Sitting 63 asked the chain to review sitting 63 and it could not: runs |
+| 1387 | `_skill_search` | than by RUNNING it -- which is what sitting 69 did, before reporting |
+| 1439 | `(module)` | EARNED 2026-09-17, by the operator, about every agent that has worked this |
+| 1759 | `_ground_read` | Sitting 30: the Router quoted the filename -- '"pipelines.md"' -- and |
+| 1776 | `_ground_read` | NAME THE CURE (sitting 88). The file may exist elsewhere in the |
+| 1797 | `(module)` | THE INSPECTION (2026-09-07, the operator: "a skill that is able to review |
+| 1802 | `(module)` | github"). The ruling it makes into a tool is from 2026-08-29, sittings |
+| 1910 | `inspect_file` | A REFUSAL BEGINS WITH THE WORD (2026-09-25, the harm list). These two |
+| 2014 | `(module)` | TRIAGE A BINARY (2026-10-21, on his word): ported from his REA Studio's |
+| 2160 | `_triage_format` | not an APK (measured on his REA Studio zip, 2026-10-21). |
+| 2455 | `_read_file` | 2026-09-29). A seat that wants a file of the ground and reaches for this |
+| 2492 | `_read_file` | names the part when both are given. THE STAMP (2026-09-07): a |
+| 2601 | `_embed_text` | (vectors.VectorIndex.build, 2026-09-15). |
+| 2658 | `_git_status` | Sitting 38: the closer read counts from two moments and narrated a |
+| 2692 | `(module)` | THE MESSAGE TRAVELS AS AN ARGUMENT, NOT AS THE INSTRUCTION (2026-09-18). |
+| 2704 | `(module)` | QUOTED, AND ONLY QUOTED. The 2026-09-08 ruling stands -- a writer's argument |
+| 2718 | `(module)` | (2026-09-18, his word: "teach it to carry both"). |
+| 2790 | `_commit_subject` | another's message, which is the same class of fault as sitting 72's |
+| 2806 | `_commit_subject` | SITTING 72: the previous subject was in the Router's results (git_status |
+| 2809 | `_commit_subject` | description of different work. Same disease as sitting 61's lifted |
+| 2827 | `_commit_subject` | ever made and tells a reader nothing. Sitting 6's guard caught a bare |
+| 2861 | `_commit_subject` | SITTING 80, and the operator caught it from the transcripts: two |
+| 2907 | `_commit_subject` | Sitting 81: `git commit " i ran a session, found a bug in the router.` |
+| 2923 | `_commit_subject` | SITTING 85 (2026-09-04): `git commit -m parity ran, review the models |
+| 2969 | `_git_commit` | SAY WHICH DIRECTION THE COUNT POINTS. Sitting 81: the result carried |
+| 2988 | `_proved` | SITTING 81. The operator asked "have you run a full test suite on these |
+| 3122 | `_speak` | SITTING 70, THE OPERATOR: "speak ran, it just doesnt put the output |
+| 3212 | `_git_cycle` | AND IT SHIPS THIS GROUND, NOT A WORLD IN IT (2026-09-18). The world |
+| 3423 | `_rack_list` | TWO QUANTITIES, NAMED AS TWO (sitting 82, built 2026-09-29). The size |
+| 3491 | `_rack_report` | labelled after sitting 59, but the Router still summarised THE READING |
+| 3492 | `_rack_report` | rather than the facts, three times in sitting 85. A reading nobody asked |
+| 3532 | `_rack_report` | 2026-09-02, sitting 59: this returned ONLY the Quartermaster's prose, and |
+| 3648 | `(module)` | ONE BUILD AT A TIME (sitting 94, 2026-09-08). `_run_bounded` cannot kill |
+| 3666 | `_index_busy` | "vectors.db corrupt both (sitting 94). Wait for it, or " |
+| 3683 | `_open_index` | HELD. Sitting 94: this was `pass`, the old file stayed |
+| 3702 | `_wants_rebuild` | Sitting 66, and this is the fault worth naming: the index refused -- |
+| 3716 | `_wants_rebuild` | WHOLE WORDS (WHAT'S LEFT C40, 2026-10-20). Each word was taken as a plain |
+| 3769 | `_index_ground_locked` | SITTING 81: this banner was appended to `lines` -- which is then |
+| 3780 | `_index_ground_locked` | account of it. Same fault as git_commit's count (sitting 80). |
+| 3855 | `_search_transcripts` | 2026-09-10 for the same reason transcripts did: a CHANGELOG entry ABOUT |
+| 3870 | `_search_scoped` | Sitting 26: the Router called search with no query, the error came |
+| 3893 | `_search_scoped` | THE QUERY'S OWN WORDS GO DOWN TOO (2026-09-17). The vector is what |
+| 3902 | `_search_scoped` | Doctrine outranks plumbing. Sitting 28 asked "what is the covenant" |
+| 3917 | `_rank` | RECENCY, added 2026-09-02. Age was DISPLAYED on every hit and |
+| 3941 | `_search_scoped` | Sitting 26: passages from an old run transcript were narrated as if |
+| 4017 | `_deep_research` | The standing ruling: the objective IS the payload. Sitting 39 |
+| 4027 | `_deep_research` | THE GROUND'S OWN WORDS FIRST (WHAT'S LEFT C43, sitting 370). Asked about the |
+| 4066 | `(module)` | OWN DIAL, not by a number of its own (2026-09-28). This was `_MCP_TIMEOUT |
+| 4086 | `(module)` | THE KEY RIDES BESIDE THE DIAL (2026-09-25, his ruling: the core learns a key |
+| 4109 | `(module)` | A SERVER CAN ALSO BE A PROGRAM (2026-10-21). `MANJUEL_MCP_<NAME>_CMD` in .env |
+| 4402 | `_mcp_call` | 2026-09-11 (ADR-006 item 2): a tool that fails has usually said why, and |
+| 4573 | `_edit_passages` | """SEVERAL EDITS IN ONE CALL (2026-10-21, the feature list: Pi, OpenClaw, oh-my-pi): |
+| 4683 | `_apply_passage` | HELD TO WHAT IT ADDS (2026-09-29, coder-tree run five): a file |
+| 4752 | `(module)` | THE PLAIN FORMS (2026-10-21, the harness study: opencode's second tier, Pi's and |
+| 4827 | `(module)` | THE TREE DOORS (2026-09-28) |
+| 4870 | `(module)` | beside CRLF files is CRLF (the terminator ruling, 2026-09-03). |
+| 4899 | `(module)` | 2026-10-19: "lets start with it writing up the skills and agents"). Steward's |
+| 5120 | `(module)` | THE CHILD'S WALL (2026-09-22, on his word: "sandbox the python"). |
+| 5395 | `load` | 2026-09-10 `doc_pass` claimed 35 phrases where 8 were declared, |
+| 5716 | `_call` | SAY WHAT WAS CHECKED, AND NOTHING ELSE (sitting 82, built |
+| 5717 | `_call` | 2026-09-29). The gate is an allowlist and that is the whole test: |
+| 5784 | `_run_prompt_skill` | sitting 39 waiting for a <content> nobody was going to type twice. |
+| 5790 | `_run_prompt_skill` | 2026-09-08). Sitting 95: "time align the logs" -- four words, no log |
+| 5840 | `(module)` | `<|python_tag|>`. Sitting 84 (2026-09-04): the closing Steward on llama3.2 |
+| 5886 | `(module)` | THE FEATURE LIST'S HANDS (2026-10-21): registered on import, after `skill` exists. |
 
 ### manjuel/spelling.py
 
@@ -2240,24 +2363,24 @@ its line range. The suites are the memory (HANDOFF: test discipline).
 | `test_a_thinking_router_is_never_silent` | 20516-20575 | `OllamaRuntime`, `_salvage`, `thinking_of` |
 | `test_write_read_and_speak_about_it` | 20578-20668 | `REVIEW_ONLY_SKILLS`, `RunContext`, `intent`, `intent.names_a_tool`, `run_pipeline` |
 | `test_model_override` | 20671-20982 | `AgentRegistry`, `AgentRegistry.load`, `RegistryError`, `RuntimeError_`, `_cli`, `_cli.COMMANDS`, `_cli._cmd_model`, `_ctx`, `_ctx.redirect_stdout`, `rack`, `spelling` |
-| `test_path_gate` | 20985-21138 | `RunContext`, `SkillSpec`, `gate_paths`, `parse_path_args`, `run_pipeline` |
-| `test_flags_are_not_speech` | 21141-21191 | `RunContext`, `build_prompt`, `read_flags`, `run_pipeline`, `strip_control` |
-| `test_the_maker` | 21194-21488 | `RunContext`, `_maker_route`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.wants_changing`, `intent.wants_going_back`, `intent.wants_making`, `maker`, `maker.AUTHOR_NAME`, `maker.MakerRefused` |
-| `test_the_maker_runs_the_page_before_it_keeps_it` | 21491-21779 | `RunContext`, `maker`, `maker.CHECK_BUDGET`, `maker.PROFILE_PREFIX`, `maker.PROFILE_STALE`, `maker.REPAIRS`, `maker.SETTLE`, `maker._BROWSERS`, `maker._CATCH`, `maker._inject`, `maker._made_at`, `maker._sweep_profiles` |
-| `test_the_maker_picks_up_and_puts_down` | 21782-22015 | `RunContext`, `_maker_route`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `intent`, `intent.wants_going_back`, `intent.wants_picking_up`, `intent.wants_putting_down`, `maker` |
-| `test_ink` | 22018-22066 | `ink`, `ink.RESET`, `ink.Spinner`, `ink._STATE`, `ink.bad`, `ink.body`, `ink.dim`, `ink.enabled`, `ink.good`, `ink.seat`, `ink.seat_color`, `ink.warn` |
-| `test_math` | 22069-22092 | `M`, `M.MathError`, `M.cosine`, `M.linear_regression`, `M.matmul`, `M.parse_numbers`, `M.stdev`, `M.transpose`, `M.variance` |
-| `test_a_commit_is_not_a_tag` | 22095-22136 | `_HANDLERS` |
-| `test_says_is_a_phrase_list_not_a_paragraph` | 22139-22204 | `SkillLibrary`, `SkillLibrary.load`, `parse_says` |
-| `test_the_stamp_is_not_an_edit` | 22207-22315 | `_BOOT_STAMPS`, `_H`, `_sf`, `suite_tally` |
-| `test_doctrine` | 22318-22492 | `D`, `D.dead_paths`, `D.doc_pass_report`, `D.doctrine_report`, `D.living`, `D.open_tasks`, `D.sittings`, `D.skills_axis`, `D.stale_tallies`, `D.versions`, `_H`, `_SL` |
-| `test_the_core_sees_its_own_repository` | 22495-22642 | `gitstate`, `gitstate.GitRefused`, `gitstate._bad_branch_name`, `gitstate._host_of`, `gitstate._jailed`, `gitstate.branches`, `gitstate.close_branch`, `gitstate.commit`, `gitstate.diff`, `gitstate.read`, `gitstate.remotes`, `gitstate.switch` |
-| `test_record_and_git` | 22645-22749 | `RunContext`, `_cli`, `_cli._toll_answer`, `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.pull`, `gitstate.push`, `gitstate.read`, `seatlog`, `seatlog.RunNote` |
-| `test_the_councils_push_sends_no_main_origin_has` | 22752-22869 | `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.push`, `gitstate.switch` |
-| `test_the_pack_is_wired` | 22884-22945 | — |
-| `test_the_maker_speaks_to_a_screen_without_a_file_to_open` | 22948-23193 | `RunContext`, `_cli`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `maker`, `maker.forget`, `maker.new_project`, `maker.report_back`, `maker.report_changed` |
-| `test_a_change_that_comes_back_unchanged_is_asked_for_once_more` | 23196-23365 | `RunContext`, `maker`, `maker.AGAINS`, `maker.RULES`, `maker.again_prompt`, `maker.forget`, `maker.new_project`, `maker.page_of`, `maker.report_unchanged`, `maker.run_page`, `maker.same_page`, `maker.save_version` |
-| `test_the_door_reads_the_law_chain_as_law_py_writes_it` | 23368-23520 | — |
-| `test_steward_drives_to_a_check` | 23523-23960 | `DriverMark`, `SV`, `SV.DRIVE_IGNORE`, `SV.DRIVE_NEVER`, `SV.DRIVE_STEPS`, `SV.DRIVE_SUITES`, `SV.door_call`, `SV.door_drive`, `SV.drive`, `SV.drive_parse`, `SV.drive_tools`, `WRITING_SKILLS` |
-| `test_steward_harness` | 23963-24297 | `REVIEW_ONLY_SKILLS`, `SV`, `SV.DRIVE_CONTEXT_MAX`, `SV.DRIVE_MODEL`, `SV.DRIVE_STEPS`, `SV.Door`, `SV.Drive`, `SV.Inbox`, `SV._drive_said`, `SV.door_face`, `SV.drive`, `SV.drive_context` |
+| `test_path_gate` | 20985-21142 | `RunContext`, `SkillSpec`, `gate_paths`, `parse_path_args`, `run_pipeline` |
+| `test_flags_are_not_speech` | 21145-21195 | `RunContext`, `build_prompt`, `read_flags`, `run_pipeline`, `strip_control` |
+| `test_the_maker` | 21198-21492 | `RunContext`, `_maker_route`, `gitstate`, `gitstate.commit`, `gitstate.read`, `intent`, `intent.wants_changing`, `intent.wants_going_back`, `intent.wants_making`, `maker`, `maker.AUTHOR_NAME`, `maker.MakerRefused` |
+| `test_the_maker_runs_the_page_before_it_keeps_it` | 21495-21783 | `RunContext`, `maker`, `maker.CHECK_BUDGET`, `maker.PROFILE_PREFIX`, `maker.PROFILE_STALE`, `maker.REPAIRS`, `maker.SETTLE`, `maker._BROWSERS`, `maker._CATCH`, `maker._inject`, `maker._made_at`, `maker._sweep_profiles` |
+| `test_the_maker_picks_up_and_puts_down` | 21786-22019 | `RunContext`, `_maker_route`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `intent`, `intent.wants_going_back`, `intent.wants_picking_up`, `intent.wants_putting_down`, `maker` |
+| `test_ink` | 22022-22070 | `ink`, `ink.RESET`, `ink.Spinner`, `ink._STATE`, `ink.bad`, `ink.body`, `ink.dim`, `ink.enabled`, `ink.good`, `ink.seat`, `ink.seat_color`, `ink.warn` |
+| `test_math` | 22073-22096 | `M`, `M.MathError`, `M.cosine`, `M.linear_regression`, `M.matmul`, `M.parse_numbers`, `M.stdev`, `M.transpose`, `M.variance` |
+| `test_a_commit_is_not_a_tag` | 22099-22140 | `_HANDLERS` |
+| `test_says_is_a_phrase_list_not_a_paragraph` | 22143-22208 | `SkillLibrary`, `SkillLibrary.load`, `parse_says` |
+| `test_the_stamp_is_not_an_edit` | 22211-22319 | `_BOOT_STAMPS`, `_H`, `_sf`, `suite_tally` |
+| `test_doctrine` | 22322-22496 | `D`, `D.dead_paths`, `D.doc_pass_report`, `D.doctrine_report`, `D.living`, `D.open_tasks`, `D.sittings`, `D.skills_axis`, `D.stale_tallies`, `D.versions`, `_H`, `_SL` |
+| `test_the_core_sees_its_own_repository` | 22499-22646 | `gitstate`, `gitstate.GitRefused`, `gitstate._bad_branch_name`, `gitstate._host_of`, `gitstate._jailed`, `gitstate.branches`, `gitstate.close_branch`, `gitstate.commit`, `gitstate.diff`, `gitstate.read`, `gitstate.remotes`, `gitstate.switch` |
+| `test_record_and_git` | 22649-22753 | `RunContext`, `_cli`, `_cli._toll_answer`, `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.pull`, `gitstate.push`, `gitstate.read`, `seatlog`, `seatlog.RunNote` |
+| `test_the_councils_push_sends_no_main_origin_has` | 22756-22873 | `gitstate`, `gitstate.GitRefused`, `gitstate.REMOTE_ENV`, `gitstate.commit`, `gitstate.push`, `gitstate.switch` |
+| `test_the_pack_is_wired` | 22888-22949 | — |
+| `test_the_maker_speaks_to_a_screen_without_a_file_to_open` | 22952-23197 | `RunContext`, `_cli`, `_sl`, `_sl.Sitting`, `_sv`, `_sv.Door`, `_sv.open_wire`, `maker`, `maker.forget`, `maker.new_project`, `maker.report_back`, `maker.report_changed` |
+| `test_a_change_that_comes_back_unchanged_is_asked_for_once_more` | 23200-23369 | `RunContext`, `maker`, `maker.AGAINS`, `maker.RULES`, `maker.again_prompt`, `maker.forget`, `maker.new_project`, `maker.page_of`, `maker.report_unchanged`, `maker.run_page`, `maker.same_page`, `maker.save_version` |
+| `test_the_door_reads_the_law_chain_as_law_py_writes_it` | 23372-23524 | — |
+| `test_steward_drives_to_a_check` | 23527-23964 | `DriverMark`, `SV`, `SV.DRIVE_IGNORE`, `SV.DRIVE_NEVER`, `SV.DRIVE_STEPS`, `SV.DRIVE_SUITES`, `SV.door_call`, `SV.door_drive`, `SV.drive`, `SV.drive_parse`, `SV.drive_tools`, `WRITING_SKILLS` |
+| `test_steward_harness` | 23967-24537 | `REVIEW_ONLY_SKILLS`, `SV`, `SV.DRIVE_ALLOW`, `SV.DRIVE_CONTEXT_MAX`, `SV.DRIVE_DENY`, `SV.DRIVE_FALLBACK`, `SV.DRIVE_GRANTS`, `SV.DRIVE_MODEL`, `SV.DRIVE_STEPS`, `SV.Door`, `SV.Drive`, `SV.Inbox` |
 
