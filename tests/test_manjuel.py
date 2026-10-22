@@ -24525,7 +24525,38 @@ def test_steward_harness(reg, lib, book):
               and [a[0] for a in asked[1:]] == ["index_search", "context_now"], printed[:300])
         check("features: with no second brain declared, nothing is added and nothing is asked",
               no_brain == "" and len(asked) == 3, no_brain)
+        # D, THE DAY'S WORK INTO HIS NOTES (2026-10-22): a closed sitting, from its record alone, into
+        # today's capture note through the kernel's capture_append; nothing for a sitting with no turn.
+        st = _NS(n=777, started="2026-10-22T07:50:00", ended="2026-10-22T08:09:00", closed_by="closed by the client",
+                 git_start={"branch": "main", "head": "", "short": ""}, git_end={},
+                 runs=[{"objective": "what was I building with the Hermes features?", "pipeline": "steward",
+                        "delivery": "You were putting together the Hermes-powered SecondBrain pipeline.",
+                        "transcript": "logs/x_drive.md"}])
+        entry = SV.sitting_capture_text(st, tmp)
+        captured = []
+
+        class FakeCapture(FakeKernel):
+            def call(self, tool, args, timeout=None):
+                captured.append((tool, dict(args)))
+                return _json.dumps({"note": "capture-2026-10-22-manjuel"})
+        mcp_stdio.StdioServer = FakeCapture
+        mcp_stdio.servers = lambda: {"notes": [sys.executable, "manjuel/mcp_stdio.py"]}
+        try:
+            wrote = SV.capture_sitting(st, tmp)
+            empty = SV.capture_sitting(_NS(n=778, runs=[]), tmp)
+        finally:
+            mcp_stdio.StdioServer, mcp_stdio.servers = real_srv, real_servers
+        check("features: a closed sitting becomes one entry of his day's capture note, from its record alone",
+              entry.startswith("Sitting 777, 07:50 to 08:09 (closed by the client), on main.")
+              and "Hermes-powered SecondBrain pipeline" in entry and "(logs/x_drive.md)" in entry
+              and wrote == "" and len(captured) == 1 and captured[0][0] == "capture_append"
+              and captured[0][1]["source"] == "manjuel" and captured[0][1]["assistant"] == entry,
+              f"{entry[:200]} | {captured}")
+        check("features: a sitting that ran no turn writes nothing to his notes", empty == "" and len(captured) == 1)
         src_now = (ROOT / "manjuel" / "serve.py").read_text(encoding="utf-8")
+        check("features: the door writes the sitting after its toll, and a failed write is said on the wire",
+              "missed = capture_sitting(st, self.ground)" in src_now
+              and "this sitting was not written to your notes" in src_now)
         check("features: Door.turn serves /notes, and the face and the driver both carry his notes on the turn",
               "door_notes(self, objective)" in src_now and "drive_context(sess, door.ground, objective)" in src_now
               and 'drive_context(sess, door.ground, spec.get("goal", ""))' in src_now)

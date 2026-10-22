@@ -2646,6 +2646,53 @@ def notes_context(q: str) -> str:
     return ("## From his notes (his second brain, read by its index)\n" + body) if body else ""
 
 
+CAPTURE_CHARS = 4000           # one sitting's entry in his day's capture note
+
+
+def sitting_capture_text(st, ground) -> str:
+    """A sitting as one entry for his notes, read off its record alone (no model): when,
+    how it closed, every turn with the head of what it delivered, the commits made, and git
+    at its start and end. '' for a sitting that ran no turn."""
+    runs = list(getattr(st, "runs", None) or [])
+    if not runs:
+        return ""
+    t0, t1 = str(getattr(st, "started", ""))[11:16], str(getattr(st, "ended", ""))[11:16]
+    gs, ge = getattr(st, "git_start", None) or {}, getattr(st, "git_end", None) or {}
+    why = getattr(st, "closed_by", "") or ""
+    lines = [f"Sitting {getattr(st, 'n', '?')}, {t0 or '?'} to {t1 or 'now'}"
+             + (f" ({why})" if why else "") + (f", on {gs.get('branch')}" if gs.get("branch") else "") + "."]
+    lines.append(f"Turns ({len(runs)}):")
+    for r in runs[:20]:
+        said = " ".join(str(r.get("delivery") or "").split())[:200]
+        lines.append(f"- \"{' '.join(str(r.get('objective') or '').split())[:160]}\" -> {r.get('pipeline') or '?'}"
+                     + (f": {said}" if said else "") + (f" ({r.get('transcript')})" if r.get("transcript") else ""))
+    a, b = str(gs.get("head") or ""), str(ge.get("head") or "")
+    if a and b and a != b:
+        code, out = _drive_run(["git", "log", "--oneline", "--no-decorate", f"{a}..{b}"], Path(ground))
+        made = [ln for ln in out.splitlines() if ln.strip()][:15] if code == 0 else []
+        if made:
+            lines.append("Commits:")
+            lines += [f"- {ln[:180]}" for ln in made]
+        lines.append(f"Git: {gs.get('branch')}@{gs.get('short') or a[:9]} -> {ge.get('branch')}@{ge.get('short') or b[:9]}")
+    return "\n".join(lines)[:CAPTURE_CHARS]
+
+
+def capture_sitting(st, ground) -> str:
+    """D, THE BRIDGE FROM THE WORKSPACE TO HIS NOTES (2026-10-22, his words: the second brain
+    "can take notes and help me keep everything in line and organized. basically like a
+    secretary that's able to get all my disorganized crap sorted from the day of work"). A
+    closed sitting goes into today's capture note in his notes (source `manjuel`, the kernel's
+    capture_append), for his secretary to sort. '' when written or when there was nothing to
+    write or no second brain; else why it was not written."""
+    text = sitting_capture_text(st, ground)
+    if not text:
+        return ""
+    _, why = notes_call("capture_append", {"source": "manjuel", "model": "the record",
+                                           "user": f"Sitting {getattr(st, 'n', '?')}: what was done",
+                                           "assistant": text})
+    return "" if not why or why.startswith("his second brain is not declared") else why
+
+
 def drive_context(sess, ground, q: str = "") -> str:
     """What the driver is handed beside its goal, as every seat is (pipeline's carried
     blocks): his notes on `q` first (notes_context), then the standing (DAYBOOK), the
@@ -3310,6 +3357,13 @@ class Door:
             self.closer(self.sess)
         except Exception as exc:
             self.wire.emit("error", text=f"close: {type(exc).__name__}: {exc}")
+        # THE DAY'S WORK INTO HIS NOTES (capture_sitting): after the toll, from the record.
+        try:
+            missed = capture_sitting(st, self.ground)
+        except Exception as exc:
+            missed = f"{type(exc).__name__}: {exc}"
+        if missed:
+            self.wire.emit("note", text=f"this sitting was not written to your notes: {missed}")
         self.wire.emit("closed", why=why, sitting=getattr(st, "n", None),
                        runs=len(getattr(st, "runs", []) or []),
                        toll_paid=bool(getattr(st, "toll_paid", False)))
