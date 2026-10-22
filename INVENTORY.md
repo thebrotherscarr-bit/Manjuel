@@ -283,7 +283,7 @@ Each is called by the glass (a tab, a button, Registry & Docs' Call) or by the c
 | G4 | PowerShell | PowerShell 7 as you; every line waits on its card, up to 300 s | card 206, 18:25: ok, 7.6.6 | 603 ms |
 | G5 | Aider | Aider edits the files you name, on a line of work, with the coding seat's model | RULED (his card): runs on a line of work; measured the next time a piece uses it | — |
 
-### The Inspector's tabs (10): every other page's address opens one of these
+### The Inspector's tabs (11): every other page's address opens one of these
 
 | # | name | what it does | live run | time |
 |---|---|---|---|---|
@@ -297,6 +297,7 @@ Each is called by the glass (a tab, a button, Registry & Docs' Call) or by the c
 | G13 | Settings | the door's address, the evals pass mark, the messaging bridge | glass 18:13: ok, the door's address | 161 ms |
 | G14 | Registry & Docs | the door's tools with Call, the seats with their files and prompts, the documents by kind | glass 18:13: ok, the 95 tools with Call | 156 ms |
 | G15 | Rack | the local voices on the rack, by tier | glass 18:13: ok, 11 voices in 3 tiers | 155 ms |
+| G26 | Claude | the Claude Code harness in the ground: pick the model (Claude on his key in SecondBrain, or a local Ollama model), instructions for the session, talk to it and watch every step it takes; its hands are the door's, so a write waits on its card | built 2026-10-22; measured once the new glass is placed | — |
 
 ### The front page's parts, and the pages still standing (10)
 
@@ -1964,6 +1965,8 @@ Nothing is answered but by his click or his words. A shell card whose hold left 
     Registry & Docs  the door's tools with Call (a JSON form; a writing tool called here runs as him, unheld); the seats with
                      their prompts and files; the documents by kind, each whole with its sha256
     Rack             rack_list: the voices by tier
+    Claude           /api/claude/info, /turn, /stop: the model (Claude on his SecondBrain key, or Ollama), instructions for
+                     the session, the talk, and every step Claude takes as it streams; New conversation; Stop
 
 Pages off the menu that still draw: /traces (the newest 100 traces; "+ Add Eval" with a 0-1 score, passed at or above the pass
 mark), /messages (the bridge; a send goes out on one click, no card), /playground (the prompt registry). Addresses: /workflows,
