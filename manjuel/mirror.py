@@ -72,6 +72,20 @@ def _h2(text: str) -> list:
     return out
 
 
+def _preamble(text: str) -> tuple:
+    """(title, text) above the first '## ': the '# ' title, and everything there, title and
+    all. A document's opening is part of it; before 2026-10-23 no note carried it."""
+    lines, fence = [], False
+    for line in text.replace("\r\n", "\n").splitlines():
+        if line.lstrip().startswith("```"):
+            fence = not fence
+        if not fence and _H2.match(line):
+            break
+        lines.append(line)
+    title = next((ln[2:].strip() for ln in lines if ln.startswith("# ")), "")
+    return title, "\n".join(lines).strip()
+
+
 def _note(kind, key, title, body, src, tags, category):
     """One note, or several when the body is over BODY_MAX (each a part)."""
     parts = [body[i:i + BODY_MAX] for i in range(0, max(len(body), 1), BODY_MAX)] or [""]
@@ -113,6 +127,10 @@ def units(ground) -> list:
                          ["changelog"], "resources")
     for name in DOCS:
         stem = Path(name).stem
+        title, opening = _preamble(read(name))
+        if len(opening) >= 40:         # the text above the first section, as the document's own note
+            out += _note("doc", f"{stem}-opening", f"{stem}: {title or 'opening'}", opening, name,
+                         ["doc", stem.lower().replace("_", "-")], "resources")
         for head, body in _h2(read(name)):
             if len(body) >= 40:
                 out += _note("doc", f"{stem}-{head[:40]}", f"{stem}: {head}", body, name,
@@ -168,6 +186,11 @@ def _strokes() -> None:
                                             rulings.FOOT.format(src=u["source"]))) for u in got)
     assert any(u["title"].startswith("Handoff 2026-10-21") for u in got)
     assert not set(NOT_DOCS) & {u["source"] for u in got}, "rack.md and memory.md are not documents"
+    for name in DOCS:                  # a document's opening is in its notes, not only its sections
+        opening = _preamble((ground / name).read_text(encoding="utf-8", errors="replace"))[1] \
+            if (ground / name).is_file() else ""
+        if len(opening) >= 40:
+            assert any(u["source"] == name and opening in u["body"] for u in got), f"{name}'s opening has no note"
 
     class Fake:
         def __init__(self):

@@ -1118,8 +1118,8 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 | line | says |
 |---|---|
-| 179 | notes_get failed: no such note |
-| 184 | notes_create failed: bad id |
+| 202 | notes_get failed: no such note |
+| 207 | notes_create failed: bad id |
 
 ### manjuel/pipeline.py — 2 sites
 
