@@ -611,9 +611,11 @@ FACE_RULES = (
     "rather than guess. When he asks you to change a file, make the change with "
     "ground_edit (exact passages), ground_write (a whole file you have read) or apply_patch "
     "(several files at once); run_shell runs one line of bash. Each change asks him "
-    "first, and a no may carry his reason. His second brain, when it is declared, answers "
-    "through mcp_call to the server notes: context_for and notes_search read what he has "
-    "written and done, llm_ask answers from it, and capture_append or notes_create add to it. "
+    "first, and a no may carry his reason. His second brain is his notes: the passages most "
+    "relevant to his words already sit above, under From his notes. To dig further, "
+    "mcp_call the server notes (index_search, context_for -- his notes by their index) or, "
+    "while his SecondBrain app is open, the server secondbrain (search_notes, read_note, "
+    "search_sessions). capture_append adds to his notes. "
     "For real reasoning, a review or code "
     "you want a second mind on, delegate to a council seat with the whole task. If only he "
     "can decide, ask_operator; if the work needs a key or token, ask_secret names it and he "
@@ -651,6 +653,7 @@ DRIVE_USAGE = (
     "  /drive propose <goal> | check: <command>  plan mode: it reads, writes a plan, and on your\n"
     "        yes works the plan as one job\n"
     "  /undo   the last Steward turn's unsaved files put back, on your card\n"
+    "  /notes [words]   your notes searched by their own index (no model); alone: lately\n"
     "  /schedule every 30m|at 18:00|cron \"..\"|once <time> <drive> ; /goal <drive> | check: <command>\n"
     "        run as unattended `auto` jobs while a sitting is open; /schedules lists, /schedules drop <id>\n"
     "  plan and each need a check; \"suites\" as the check runs the strokes.\n"
@@ -668,9 +671,10 @@ DRIVE_SYSTEM = (
     "changes several files at once, whole or not at all; write_file writes only "
     "the workspace. Find things before you read them: ground_grep finds where a "
     "pattern is, find_files which files match a name. run_shell runs one line of "
-    "bash in the ground: a read runs at once, anything else asks him. His second brain, "
-    "when declared, is the MCP server notes (mcp_call): context_for before work, "
-    "capture_append after it. Some tools wait for the operator's "
+    "bash in the ground: a read runs at once, anything else asks him. His notes on the goal "
+    "sit above, under From his notes; dig further with mcp_call to the server notes "
+    "(index_search, context_for) or, while his app is open, secondbrain (search_notes, "
+    "read_note). Some tools wait for the operator's "
     "approval; if he declines, find another way or call done. A refusal tells you "
     "what was wrong: correct the call, do not repeat it. To have a council seat "
     "think about part of the work, call delegate with the seat and the task; its "
@@ -2552,7 +2556,7 @@ def door_face(door, objective: str) -> bool:
               ask=lambda prompt: door.ask(prompt, color="red", timeout=wait), report=report,
               host=getattr(rt, "host", None) or "http://127.0.0.1:11434",
               keep_alive=getattr(rt, "keep_alive", None) or "30m",
-              logs=door.ground / "logs", model=model, context=drive_context(sess, door.ground),
+              logs=door.ground / "logs", model=model, context=drive_context(sess, door.ground, objective),
               client=getattr(door, "face_client", None),
               seats=seat_answers if seat_names else None, seat_names=seat_names,
               system=face_system(sess), history=face_history(sess), thought=thought,
@@ -2596,11 +2600,58 @@ def door_face(door, objective: str) -> bool:
     return True
 
 
-def drive_context(sess, ground) -> str:
+NOTES_CONTEXT_CHARS = 1500     # what his notes may take of the driver's context
+NOTES_CALL_SECONDS = 12.0
+
+
+def notes_call(tool: str, args: dict | None = None) -> tuple[str, str]:
+    """(text, "") or ("", why): one call to his second brain's kernel, the MCP server
+    `notes` (MANJUEL_MCP_NOTES_CMD), through the same wall mcp_call uses (mcp_stdio.admit).
+    Retrieval only -- the kernel's index, never a big model."""
+    from . import mcp_stdio
+    argv = mcp_stdio.servers().get("notes")
+    if not argv:
+        return "", "his second brain is not declared (MANJUEL_MCP_NOTES_CMD)"
+    if mcp_stdio.refused_tool("notes", tool):
+        return "", mcp_stdio.refused_tool("notes", tool)
+    ran, why = mcp_stdio.admit("notes", argv)
+    if why:
+        return "", why
+    srv = mcp_stdio.StdioServer(ran, timeout=NOTES_CALL_SECONDS)
+    try:
+        srv.start()
+        return str(srv.call(tool, args or {}, timeout=NOTES_CALL_SECONDS) or ""), ""
+    except mcp_stdio.StdioError as exc:
+        return "", f"his second brain did not answer ({exc})"
+    finally:
+        srv.close()
+
+
+def notes_context(q: str) -> str:
+    """HIS NOTES, BESIDE EVERY TURN (2026-10-22, his words: the workspace "can also query the
+    notes and it doesnt need to use so much processing power just getting notes and
+    information, that can be delivered by a small indexing or nomic model within the notes
+    app"). The kernel's context_for -- what he worked on lately and the passages most
+    relevant to `q`, by its index -- bounded; '' when there is no second brain or no answer."""
+    if not str(q or "").strip():
+        return ""
+    text, why = notes_call("context_for", {"q": str(q)[:500], "budget": NOTES_CONTEXT_CHARS})
+    if why or not text:
+        return ""
+    try:
+        body = str(json.loads(text).get("text") or "")
+    except (ValueError, AttributeError):
+        body = text
+    body = body.strip()[:NOTES_CONTEXT_CHARS]
+    return ("## From his notes (his second brain, read by its index)\n" + body) if body else ""
+
+
+def drive_context(sess, ground, q: str = "") -> str:
     """What the driver is handed beside its goal, as every seat is (pipeline's carried
-    blocks): the standing (DAYBOOK), the story of this sitting, and what memory holds.
-    Read, never generated; bounded; '' for what is not there."""
-    parts = []
+    blocks): his notes on `q` first (notes_context), then the standing (DAYBOOK), the
+    story of this sitting, and what memory holds. Read, never generated; bounded; '' for
+    what is not there."""
+    parts = [notes_context(q)]
     try:
         from . import seatlog as _log
         parts.append(getattr(sess, "standing", "") or _log.standing_block(ground))
@@ -2656,7 +2707,7 @@ def door_drive(door, said: str, once: bool = False):
                           host=getattr(rt, "host", None) or "http://127.0.0.1:11434",
                           keep_alive=getattr(rt, "keep_alive", None) or "30m",
                           logs=door.ground / "logs", carry=carry,
-                          context=drive_context(sess, door.ground),
+                          context=drive_context(sess, door.ground, spec.get("goal", "")),
                           seats=seat_answers if seat_names else None, seat_names=seat_names,
                           ask_secret=_door_secret(door, wait))
             except EOFError:
@@ -2727,6 +2778,35 @@ def door_undo(door) -> None:
     lines = []
     _drive_put_back(d, lines.append, "undo")
     print("\n" + d.steps[-1][3] + "\n")
+
+
+def door_notes(door, objective: str) -> None:
+    """/notes [words] (2026-10-22, the bridge from the workspace to his second brain): his
+    notes searched by the kernel's own index (index_search), or with no words what he has
+    worked on lately (context_now) -- straight from the notes, no model asked."""
+    words = objective.strip()[len("/notes"):].strip()
+    tool, args = ("index_search", {"q": words, "limit": 8}) if words else ("context_now", {})
+    text, why = notes_call(tool, args)
+    if why:
+        print(f"\n  {why}\n")
+        return
+    try:
+        data = json.loads(text)
+    except ValueError:
+        print("\n" + text + "\n")
+        return
+    if not words:
+        print("\n" + str(data.get("text") or "Nothing touched lately.") + "\n")
+        return
+    hits = data.get("results") or []
+    if not hits:
+        print(f"\n  Nothing in your notes for: {words}\n")
+        return
+    lines = [f"  {len(hits)} from your notes for: {words}"]
+    for h in hits:
+        snippet = " ".join(str(h.get("text") or "").split())[:160]
+        lines.append(f"  - {h.get('title') or h.get('note')}  [{h.get('note')}]\n      {snippet}")
+    print("\n" + "\n".join(lines) + "\n")
 
 
 SCHEDULE_TICK = 60.0       # how often an idle door looks for a due schedule (seconds)
@@ -3278,6 +3358,9 @@ class Door:
             return True
         if objective.split(None, 1)[0].lower() == "/undo":
             door_undo(self)
+            return True
+        if objective.split(None, 1)[0].lower() == "/notes":
+            door_notes(self, objective)
             return True
         # WHO ANSWERS AN ORDINARY TURN, switched for the sitting (FACE).
         if objective.split(None, 1)[0].lower() == "/face":

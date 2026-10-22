@@ -927,7 +927,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `write_index` | 631-641 | Rewrite SEAT_LOG_INDEX.md from SEAT_LOG.md, in the log's own line endings. None  |
 | def | `index_is_current` | 644-653 | True when SEAT_LOG_INDEX.md is exactly what a regeneration would write (and wher |
 
-### manjuel/serve.py — 3644 lines
+### manjuel/serve.py — 3727 lines
 
 *The headless door: the REPL's turn over stdin/stdout as JSON lines.*
 
@@ -960,85 +960,88 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `_watch_skills` | 426-447 | Wrap execute() on THIS library instance for THIS wire. /reload |
 | def | `_drive_dial` | 520-524 |  |
 | def | `drive_think` | 535-547 | The thinking switch for a driver call. MANJUEL_DRIVER_THINK names it: 1/true/yes |
-| class | `Drive` | 789-819 | One job's record. Everything the report says is read off this. |
-| def | `Drive.__init__` | 792-819 |  |
-| def | `drive_parse` | 822-845 | '[plan|each|tidy|ship] <goal> [| do: <prompt>] [| check: <command>]' -> a spec. |
-| def | `drive_job_hash` | 848-854 | What his yes to a job card is bound to (OpenShell binds an approval to a hash of |
-| def | `_drive_preview` | 857-870 | What a write card shows: the passage it replaces and the one it writes, or the |
-| def | `_drive_yes` | 873-874 |  |
-| def | `drive_check` | 877-891 | The job's check, run in the ground. Exit 0 passes. Bounded. |
-| def | `_drive_run` | 894-905 | One command (git, gh) in a repository: (exit, output). stdin closed. |
-| def | `drive_source` | 908-929 | The items a source command lists: JSON, or one per line. (items, why); |
-| def | `_drive_key` | 932-933 |  |
-| def | `_drive_ignored` | 936-947 |  |
-| def | `_drive_ignore` | 950-956 |  |
-| def | `drive_tools` | 959-964 | The schemas the model is offered, and the set the library enforces. |
-| def | `_drive_field` | 967-970 |  |
-| def | `drive_calls` | 973-989 | Every native tool call in a reply, as (name, args). |
-| def | `drive_calls_raw` | 992-1002 | Every native tool call in a reply as (name, the arguments as they came): the |
-| def | `drive_window` | 1005-1026 | The window the driver runs in: MANJUEL_DRIVER_CTX when he set it; otherwise the |
-| def | `drive_memory` | 1029-1042 | The newest of what memory.md holds -- landed by his hand, so it is the record, n |
-| def | `drive_lesson` | 1045-1063 | What a job taught, read off its record alone (no model): staged in memory's |
-| def | `_drive_brief` | 1066-1068 |  |
-| def | `_drive_head` | 1071-1076 |  |
-| def | `_drive_target` | 1079-1088 | (repo, path, branch) of the file a tree write names, or None. |
-| def | `_drive_rel` | 1091-1092 |  |
-| def | `_drive_by_repo` | 1095-1099 |  |
-| def | `_drive_unsaved` | 1102-1134 | Every changed, staged or new file in one repository -- a set of names, or with |
-| def | `_drive_checked` | 1137-1152 | drive_check, with what the check itself changed noted (C130): on every line the |
-| def | `_drive_take_check_files` | 1155-1193 | WHAT THE CHECK REWROTE GOES WITH THE JOB (WHAT'S LEFT C130, 2026-10-20, his |
-| def | `drive_act` | 1196-1333 | One call. A writer waits for his answer first and runs only on a yes, |
-| def | `_drive_job` | 1336-1591 | One job, worked until its check passes or its budget is spent. |
-| def | `_drive_said` | 1594-1605 | What the model is handed of a tool's result. Under DRIVE_RESULT_CHARS, all of it |
-| def | `_drive_journal_message` | 1608-1611 |  |
-| def | `_drive_journal_step` | 1614-1618 |  |
-| def | `_drive_delegate` | 1621-1634 | Steward's sub-agent: one council seat asked one task (DRIVE_DELEGATE_TOOL). The |
-| def | `_drive_own_tool` | 1637-1690 | The driver's own tools, run here rather than through the skill library (they tou |
-| def | `_drive_changes` | 1693-1704 | What the item in hand changed, read off git. |
-| def | `_drive_commit_item` | 1707-1733 | Commit exactly the item's own files on its line, under his git name. True |
-| def | `_drive_put_back` | 1736-1763 | Put back exactly the item's own files, byte for byte as they were before it |
-| def | `_drive_close_lines` | 1766-1795 | Back to the base each line was opened from, and the line closed here: an |
-| def | `drive_ship` | 1798-1863 | The whole pipeline, on his answer: push each line the run committed on, |
-| def | `_drive_steps` | 1866-1882 | Run the pipeline's commands in order, each on the record, stopping at the |
-| def | `drive_plan` | 1885-1909 | DECOMPOSE: the goal as a short list of items, from the model. |
-| def | `_drive_single` | 1912-1916 | ONE JOB: worked; on a pass, what changed, then on his answer the whole |
-| def | `_drive_after_job` | 1919-1944 | What follows one job's verdict: on a pass the change and the send card; on no |
-| def | `drive_items` | 1947-2041 | PLAN or EACH: the items, one job each, on his answer; each passing item |
-| def | `drive_tidy` | 2044-2093 | TIDY: every branch already merged into main, here and on GitHub, listed |
-| def | `drive_save` | 2096-2178 | SHIP: the work on disk saved and sent (the head of this section). Each |
-| def | `drive` | 2181-2294 | Work one /drive to its end (the head of this section). |
-| def | `_drive_gate` | 2297-2313 | The ordinary turn's gates on a job: not language is refused, and the law is walk |
-| def | `_drive_job_card` | 2316-2343 | THE ONE CARD FOR A JOB (approval `plan`): the goal, the check that will run and  |
-| def | `_drive_propose` | 2346-2376 | PLAN MODE (opencode, Cline, oh-my-pi): the Steward reads -- only reads -- and wr |
-| def | `_drive_resume_spec` | 2379-2390 | The newest journal a crash left open (journal.unfinished), replayed; None if non |
-| def | `_drive_resume` | 2393-2423 | Carry a job a crash cut short on from its journal: its line of work, the files i |
-| def | `drive_report` | 2426-2447 | What happened, read off the record alone. |
-| def | `drive_carry` | 2450-2454 | One line of what a job did, carried into the next. |
-| def | `drive_record` | 2457-2475 | The whole job as a transcript in logs/, every result as it came back. |
-| def | `_door_secret` | 2478-2489 | The secret card's question, for a door that can show one (Door.ask's `secret`);  |
-| def | `face_system` | 2492-2504 | The face's system prompt: his seat's own bearing and weighing (agents/steward.md |
-| def | `face_history` | 2507-2513 | The last turns of this conversation, as the messages the face reads first. |
-| def | `door_face` | 2516-2596 | STEWARD, THE FACE (FACE, above): one ordinary turn answered by Steward's own loo |
-| def | `drive_context` | 2599-2611 | What the driver is handed beside its goal, as every seat is (pipeline's carried |
-| def | `door_drive` | 2614-2708 | The /drive turn: job after job. Each job's report goes on the wire as it |
-| def | `door_undo` | 2711-2729 | /undo (opencode, Cline, Hermes, oh-my-pi): the last Steward turn's own unsaved |
-| def | `door_schedule` | 2735-2760 | /schedule, /goal, /schedules [drop <id>] (Hermes, Cline, OpenClaw): rows in |
-| def | `door_schedules` | 2763-2788 | The idle door's tick: each due row run once as an unattended /drive job, its |
-| def | `door_hold_wait` | 2810-2832 | Wait on the door's hold logs until the hold is answered: its outcome, or |
-| def | `door_call` | 2835-2890 | The mcp_call turn: one line of what is asked, the call, and -- when the |
-| class | `Door` | 2898-3465 | One sitting, over one wire. `sess` is cli.Session or anything that |
-| def | `Door.__init__` | 2902-2922 |  |
-| def | `Door.ask` | 2926-2977 | Stands where input() stood. One question, one answer, over the |
-| def | `Door._listen` | 2979-3014 | One spoken turn, captured and transcribed, and NOT run. |
-| def | `Door._next` | 3016-3033 |  |
-| def | `Door.serve` | 3037-3151 | cli._loop's shape: take a turn, run it, until close or EOF. |
-| def | `Door._head_plan` | 3155-3208 | Read `model` and `voices` off the wire into a plan, or refuse. |
-| def | `Door._head_words` | 3211-3217 | The plan in the operator's words, for the `note` that says what |
-| def | `Door._close` | 3219-3235 |  |
-| def | `Door.turn` | 3239-3465 | One typed turn, cli._loop's body line for line (the REPL read of |
-| def | `open_wire` | 3473-3490 | The real stdout and stdin as the wire. stdout is swapped for the |
-| def | `main` | 3493-3584 |  |
-| def | `_open_and_serve` | 3587-3637 | Everything after the sitting line: the boot the REPL does, `opened`, |
+| class | `Drive` | 793-823 | One job's record. Everything the report says is read off this. |
+| def | `Drive.__init__` | 796-823 |  |
+| def | `drive_parse` | 826-849 | '[plan|each|tidy|ship] <goal> [| do: <prompt>] [| check: <command>]' -> a spec. |
+| def | `drive_job_hash` | 852-858 | What his yes to a job card is bound to (OpenShell binds an approval to a hash of |
+| def | `_drive_preview` | 861-874 | What a write card shows: the passage it replaces and the one it writes, or the |
+| def | `_drive_yes` | 877-878 |  |
+| def | `drive_check` | 881-895 | The job's check, run in the ground. Exit 0 passes. Bounded. |
+| def | `_drive_run` | 898-909 | One command (git, gh) in a repository: (exit, output). stdin closed. |
+| def | `drive_source` | 912-933 | The items a source command lists: JSON, or one per line. (items, why); |
+| def | `_drive_key` | 936-937 |  |
+| def | `_drive_ignored` | 940-951 |  |
+| def | `_drive_ignore` | 954-960 |  |
+| def | `drive_tools` | 963-968 | The schemas the model is offered, and the set the library enforces. |
+| def | `_drive_field` | 971-974 |  |
+| def | `drive_calls` | 977-993 | Every native tool call in a reply, as (name, args). |
+| def | `drive_calls_raw` | 996-1006 | Every native tool call in a reply as (name, the arguments as they came): the |
+| def | `drive_window` | 1009-1030 | The window the driver runs in: MANJUEL_DRIVER_CTX when he set it; otherwise the |
+| def | `drive_memory` | 1033-1046 | The newest of what memory.md holds -- landed by his hand, so it is the record, n |
+| def | `drive_lesson` | 1049-1067 | What a job taught, read off its record alone (no model): staged in memory's |
+| def | `_drive_brief` | 1070-1072 |  |
+| def | `_drive_head` | 1075-1080 |  |
+| def | `_drive_target` | 1083-1092 | (repo, path, branch) of the file a tree write names, or None. |
+| def | `_drive_rel` | 1095-1096 |  |
+| def | `_drive_by_repo` | 1099-1103 |  |
+| def | `_drive_unsaved` | 1106-1138 | Every changed, staged or new file in one repository -- a set of names, or with |
+| def | `_drive_checked` | 1141-1156 | drive_check, with what the check itself changed noted (C130): on every line the |
+| def | `_drive_take_check_files` | 1159-1197 | WHAT THE CHECK REWROTE GOES WITH THE JOB (WHAT'S LEFT C130, 2026-10-20, his |
+| def | `drive_act` | 1200-1337 | One call. A writer waits for his answer first and runs only on a yes, |
+| def | `_drive_job` | 1340-1595 | One job, worked until its check passes or its budget is spent. |
+| def | `_drive_said` | 1598-1609 | What the model is handed of a tool's result. Under DRIVE_RESULT_CHARS, all of it |
+| def | `_drive_journal_message` | 1612-1615 |  |
+| def | `_drive_journal_step` | 1618-1622 |  |
+| def | `_drive_delegate` | 1625-1638 | Steward's sub-agent: one council seat asked one task (DRIVE_DELEGATE_TOOL). The |
+| def | `_drive_own_tool` | 1641-1694 | The driver's own tools, run here rather than through the skill library (they tou |
+| def | `_drive_changes` | 1697-1708 | What the item in hand changed, read off git. |
+| def | `_drive_commit_item` | 1711-1737 | Commit exactly the item's own files on its line, under his git name. True |
+| def | `_drive_put_back` | 1740-1767 | Put back exactly the item's own files, byte for byte as they were before it |
+| def | `_drive_close_lines` | 1770-1799 | Back to the base each line was opened from, and the line closed here: an |
+| def | `drive_ship` | 1802-1867 | The whole pipeline, on his answer: push each line the run committed on, |
+| def | `_drive_steps` | 1870-1886 | Run the pipeline's commands in order, each on the record, stopping at the |
+| def | `drive_plan` | 1889-1913 | DECOMPOSE: the goal as a short list of items, from the model. |
+| def | `_drive_single` | 1916-1920 | ONE JOB: worked; on a pass, what changed, then on his answer the whole |
+| def | `_drive_after_job` | 1923-1948 | What follows one job's verdict: on a pass the change and the send card; on no |
+| def | `drive_items` | 1951-2045 | PLAN or EACH: the items, one job each, on his answer; each passing item |
+| def | `drive_tidy` | 2048-2097 | TIDY: every branch already merged into main, here and on GitHub, listed |
+| def | `drive_save` | 2100-2182 | SHIP: the work on disk saved and sent (the head of this section). Each |
+| def | `drive` | 2185-2298 | Work one /drive to its end (the head of this section). |
+| def | `_drive_gate` | 2301-2317 | The ordinary turn's gates on a job: not language is refused, and the law is walk |
+| def | `_drive_job_card` | 2320-2347 | THE ONE CARD FOR A JOB (approval `plan`): the goal, the check that will run and  |
+| def | `_drive_propose` | 2350-2380 | PLAN MODE (opencode, Cline, oh-my-pi): the Steward reads -- only reads -- and wr |
+| def | `_drive_resume_spec` | 2383-2394 | The newest journal a crash left open (journal.unfinished), replayed; None if non |
+| def | `_drive_resume` | 2397-2427 | Carry a job a crash cut short on from its journal: its line of work, the files i |
+| def | `drive_report` | 2430-2451 | What happened, read off the record alone. |
+| def | `drive_carry` | 2454-2458 | One line of what a job did, carried into the next. |
+| def | `drive_record` | 2461-2479 | The whole job as a transcript in logs/, every result as it came back. |
+| def | `_door_secret` | 2482-2493 | The secret card's question, for a door that can show one (Door.ask's `secret`);  |
+| def | `face_system` | 2496-2508 | The face's system prompt: his seat's own bearing and weighing (agents/steward.md |
+| def | `face_history` | 2511-2517 | The last turns of this conversation, as the messages the face reads first. |
+| def | `door_face` | 2520-2600 | STEWARD, THE FACE (FACE, above): one ordinary turn answered by Steward's own loo |
+| def | `notes_call` | 2607-2627 | (text, "") or ("", why): one call to his second brain's kernel, the MCP server |
+| def | `notes_context` | 2630-2646 | HIS NOTES, BESIDE EVERY TURN (2026-10-22, his words: the workspace "can also que |
+| def | `drive_context` | 2649-2662 | What the driver is handed beside its goal, as every seat is (pipeline's carried |
+| def | `door_drive` | 2665-2759 | The /drive turn: job after job. Each job's report goes on the wire as it |
+| def | `door_undo` | 2762-2780 | /undo (opencode, Cline, Hermes, oh-my-pi): the last Steward turn's own unsaved |
+| def | `door_notes` | 2783-2809 | /notes [words] (2026-10-22, the bridge from the workspace to his second brain):  |
+| def | `door_schedule` | 2815-2840 | /schedule, /goal, /schedules [drop <id>] (Hermes, Cline, OpenClaw): rows in |
+| def | `door_schedules` | 2843-2868 | The idle door's tick: each due row run once as an unattended /drive job, its |
+| def | `door_hold_wait` | 2890-2912 | Wait on the door's hold logs until the hold is answered: its outcome, or |
+| def | `door_call` | 2915-2970 | The mcp_call turn: one line of what is asked, the call, and -- when the |
+| class | `Door` | 2978-3548 | One sitting, over one wire. `sess` is cli.Session or anything that |
+| def | `Door.__init__` | 2982-3002 |  |
+| def | `Door.ask` | 3006-3057 | Stands where input() stood. One question, one answer, over the |
+| def | `Door._listen` | 3059-3094 | One spoken turn, captured and transcribed, and NOT run. |
+| def | `Door._next` | 3096-3113 |  |
+| def | `Door.serve` | 3117-3231 | cli._loop's shape: take a turn, run it, until close or EOF. |
+| def | `Door._head_plan` | 3235-3288 | Read `model` and `voices` off the wire into a plan, or refuse. |
+| def | `Door._head_words` | 3291-3297 | The plan in the operator's words, for the `note` that says what |
+| def | `Door._close` | 3299-3315 |  |
+| def | `Door.turn` | 3319-3548 | One typed turn, cli._loop's body line for line (the REPL read of |
+| def | `open_wire` | 3556-3573 | The real stdout and stdin as the wire. stdout is swapped for the |
+| def | `main` | 3576-3667 |  |
+| def | `_open_and_serve` | 3670-3720 | Everything after the sitting line: the boot the REPL does, `opened`, |
 
 ### manjuel/skills.py — 5896 lines
 
@@ -1411,7 +1414,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `GroundWatch.start` | 197-222 |  |
 | def | `GroundWatch.stop` | 224-230 |  |
 
-manjuel/: 40 files, 35846 lines.
+manjuel/: 40 files, 35929 lines.
 
 ## GUARDS — by the failure that earned them
 
@@ -1933,22 +1936,24 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 | 561 | `(module)` | HOW A JOB IS APPROVED (2026-10-21, his ruling on the harness study: "Both, chosen |
 | 580 | `(module)` | THE REST OF THE FEATURE LIST (2026-10-21, his word: "diff the full feature list from |
 | 593 | `(module)` | STEWARD IS THE FACE (2026-10-21; his words: "steward becomes the system, the face, |
-| 632 | `(module)` | the feature list (2026-10-21): a gated shell (its reads run at once, |
-| 882 | `drive_check` | inherited it hung on it (2026-10-16, a one-line python -c, 400 s). |
-| 1156 | `_drive_take_check_files` | """WHAT THE CHECK REWROTE GOES WITH THE JOB (WHAT'S LEFT C130, 2026-10-20, his |
-| 1575 | `_drive_job` | THE WHOLE FILE ON FIRST USE (WHAT'S LEFT H32, his card of 2026-10-19): |
-| 2236 | `drive` | THE RAILS (2026-10-21): the goal passes the gates every ordinary turn passes -- |
-| 2791 | `(module)` | A DOOR CALL, SAID PLAINLY (WHAT'S LEFT C77). His words, 2026-10-16: "it |
-| 3042 | `serve` | ...and the colored card's hook beside it (pipeline._ask, 2026-10-12). |
-| 3078 | `serve` | say so is attended, as every turn was before 2026-09-29. |
-| 3080 | `serve` | THE HEAD IS A PROPERTY OF THE TURN (2026-09-23, his ruling: |
-| 3091 | `serve` | `voices` IS THE NARROWER ONE (2026-09-23, "then B underneath |
-| 3221 | `_close` | WHY, ON THE LEDGER LINE AND IN THE TOLL (2026-09-29). The `closed` |
-| 3275 | `turn` | SCHEDULES AND GOALS, and UNDO (the feature list, 2026-10-21). |
-| 3311 | `turn` | WHAT THE COMMAND LEFT TO RUN (WHAT'S LEFT C57, sitting 368): a command of his |
-| 3549 | `main` | A LOCK HELD BY NOBODY IS RELEASED HERE TOO (2026-09-22). cli.main has |
-| 3550 | `main` | reaped since 2026-09-17; this door never did, and it is the one THE LINE |
-| 3560 | `main` | EVERY EXIT FROM HERE ON CLOSES THE SITTING (2026-09-22). The line above |
+| 634 | `(module)` | the feature list (2026-10-21): a gated shell (its reads run at once, |
+| 886 | `drive_check` | inherited it hung on it (2026-10-16, a one-line python -c, 400 s). |
+| 1160 | `_drive_take_check_files` | """WHAT THE CHECK REWROTE GOES WITH THE JOB (WHAT'S LEFT C130, 2026-10-20, his |
+| 1579 | `_drive_job` | THE WHOLE FILE ON FIRST USE (WHAT'S LEFT H32, his card of 2026-10-19): |
+| 2240 | `drive` | THE RAILS (2026-10-21): the goal passes the gates every ordinary turn passes -- |
+| 2631 | `notes_context` | """HIS NOTES, BESIDE EVERY TURN (2026-10-22, his words: the workspace "can also query the |
+| 2784 | `door_notes` | """/notes [words] (2026-10-22, the bridge from the workspace to his second brain): his |
+| 2871 | `(module)` | A DOOR CALL, SAID PLAINLY (WHAT'S LEFT C77). His words, 2026-10-16: "it |
+| 3122 | `serve` | ...and the colored card's hook beside it (pipeline._ask, 2026-10-12). |
+| 3158 | `serve` | say so is attended, as every turn was before 2026-09-29. |
+| 3160 | `serve` | THE HEAD IS A PROPERTY OF THE TURN (2026-09-23, his ruling: |
+| 3171 | `serve` | `voices` IS THE NARROWER ONE (2026-09-23, "then B underneath |
+| 3301 | `_close` | WHY, ON THE LEDGER LINE AND IN THE TOLL (2026-09-29). The `closed` |
+| 3355 | `turn` | SCHEDULES AND GOALS, and UNDO (the feature list, 2026-10-21). |
+| 3394 | `turn` | WHAT THE COMMAND LEFT TO RUN (WHAT'S LEFT C57, sitting 368): a command of his |
+| 3632 | `main` | A LOCK HELD BY NOBODY IS RELEASED HERE TOO (2026-09-22). cli.main has |
+| 3633 | `main` | reaped since 2026-09-17; this door never did, and it is the one THE LINE |
+| 3643 | `main` | EVERY EXIT FROM HERE ON CLOSES THE SITTING (2026-09-22). The line above |
 
 ### manjuel/skills.py
 
@@ -2394,5 +2399,5 @@ its line range. The suites are the memory (HANDOFF: test discipline).
 | `test_a_change_that_comes_back_unchanged_is_asked_for_once_more` | 23220-23389 | `RunContext`, `maker`, `maker.AGAINS`, `maker.RULES`, `maker.again_prompt`, `maker.forget`, `maker.new_project`, `maker.page_of`, `maker.report_unchanged`, `maker.run_page`, `maker.same_page`, `maker.save_version` |
 | `test_the_door_reads_the_law_chain_as_law_py_writes_it` | 23392-23544 | — |
 | `test_steward_drives_to_a_check` | 23547-23984 | `DriverMark`, `SV`, `SV.DRIVE_IGNORE`, `SV.DRIVE_NEVER`, `SV.DRIVE_STEPS`, `SV.DRIVE_SUITES`, `SV.door_call`, `SV.door_drive`, `SV.drive`, `SV.drive_parse`, `SV.drive_tools`, `WRITING_SKILLS` |
-| `test_steward_harness` | 23987-24591 | `REVIEW_ONLY_SKILLS`, `SV`, `SV.DRIVE_ALLOW`, `SV.DRIVE_CONTEXT_MAX`, `SV.DRIVE_DENY`, `SV.DRIVE_FALLBACK`, `SV.DRIVE_GRANTS`, `SV.DRIVE_MODEL`, `SV.DRIVE_STEPS`, `SV.Door`, `SV.Drive`, `SV.Inbox` |
+| `test_steward_harness` | 23987-24640 | `REVIEW_ONLY_SKILLS`, `SV`, `SV.DRIVE_ALLOW`, `SV.DRIVE_CONTEXT_MAX`, `SV.DRIVE_DENY`, `SV.DRIVE_FALLBACK`, `SV.DRIVE_GRANTS`, `SV.DRIVE_MODEL`, `SV.DRIVE_STEPS`, `SV.Door`, `SV.Drive`, `SV.Inbox` |
 

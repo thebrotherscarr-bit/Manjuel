@@ -34,6 +34,33 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: the bridge from the workspace to his notes -- his notes beside every Steward turn, and /notes (2026-10-22, piece C; his words: the workspace "can also query the notes and it doesnt need to use so much processing power just getting notes and information, that can be delivered by a small indexing or nomic model within the notes app")
+
+His second brain moved into the ground on his word ("why don't we put the secondbrain into a world?"):
+- The SecondBrain app's checkout (the Jesster repository, its own git) is now in `worlds/jesster`.
+- His notes, one folder shared by the app and the notes kernel, are in `worlds/notes`.
+- Both are gitignored, never sent with Research.
+- The app keeps its notes there (its `vaultDir`), and his shortcut opens it from there.
+- `MANJUEL_MCP_NOTES_CMD` names the kernel inside the ground with `--vault`, so no declared root is needed.
+- His app's own share answers as `secondbrain` (`MANJUEL_MCP_SECONDBRAIN`).
+
+What C added:
+- **His notes, first in Steward's context** (`notes_call`, `notes_context`, `drive_context(sess, ground, q)`). Before the face or the driver asks its model anything, the notes kernel's `context_for` is asked about his words. It returns what he worked on lately and the most relevant passages, read by its index (keywords, and nomic vectors once embedded), never a big model. The answer leads the driver's context under "From his notes", bounded to 1,500 characters. With no second brain declared, nothing is asked and nothing is added.
+- **`/notes [words]`** (`door_notes`): his notes searched by their own index (`index_search`) straight from the workspace. Alone, it shows what he has worked on lately (`context_now`).
+- **Steward's prompts** name both routes: `notes` (the index, app open or not) and `secondbrain` (the app's tools, while it runs).
+
+Proved live from the glass on 2026-10-22: `mcp_call notes notes_stats` (11 notes from `worlds/notes`) and `mcp_call secondbrain search_notes` ("Claude finder").
+
+Strokes in `test_steward_harness`, with a fake kernel:
+- his notes lead the driver's context, asked with the turn's words;
+- `/notes` with words and alone;
+- nothing is asked with no second brain;
+- `Door.turn` and both drive paths carry it.
+
+What goes red if it comes unplugged: those four strokes.
+
+Restart required.
+
 ### core: his second brain wired into Steward and the council, through the MCP door (2026-10-22; his words: "We will also be integrating the secondbrain i just built into the system today"; his cards: "MCP on stdio", "Default places")
 
 The second brain is the Jesster notes kernel, in his checkout `secondbrain-local---ollama-gpt-oss` (`notes/cli.py`). His notes are Markdown in `%USERPROFILE%\JessterNotes`, and every save is deposited on the vault's own chain. gpt-oss answers from them through Ollama, and nothing leaves the machine. Its MCP server on stdio answers `mcp_stdio.StdioServer` unchanged, with 41 tools, read live on 2026-10-22.
