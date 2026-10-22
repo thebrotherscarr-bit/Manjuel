@@ -24003,9 +24003,11 @@ def test_steward_harness(reg, lib, book):
 
     for mod in (repair, guards, compact, journal, dialects, mcp_stdio, tools_files, tools_shell):
         try:
-            with _cl.redirect_stdout(_io.StringIO()):
-                mod._strokes()
-            ok, why = True, ""
+            out = _io.StringIO()
+            with _cl.redirect_stdout(out):
+                rv = mod._strokes()
+            # A module whose strokes RETURN their verdict (mcp_stdio's 0 or 1) is held to it too.
+            ok, why = rv in (None, 0), out.getvalue()[-300:]
         except Exception as exc:
             ok, why = False, f"{type(exc).__name__}: {exc}"
         check(f"harness: {mod.__name__.split('.')[-1]}.py proves itself (its own strokes)", ok, why[:300])
@@ -24446,6 +24448,38 @@ def test_steward_harness(reg, lib, book):
         check("features: run_shell's reads run with no card, its writes ask even inside an approved job, git status is refused",
               read.startswith("RAN") and wrote.startswith("Declined") and len(cards) == 1
               and barred.startswith("Refused") and "Nothing ran" in barred, f"{read} | {wrote} | {barred}")
+        # HIS SECOND BRAIN'S REFUSED TOOLS, on the real call path (2026-10-22): asked for in plain
+        # words, a tool the door never runs is refused by name and the server is never asked to run it.
+        from manjuel import skills as _sk2
+        ran_tools = []
+
+        class FakeNotes:
+            def __init__(self, argv, **kw):
+                pass
+
+            def start(self):
+                pass
+
+            def list_tools(self, timeout=None):
+                return [{"name": "notes_search"}, {"name": "system_update"}]
+
+            def call(self, tool, payload, timeout=None):
+                ran_tools.append(tool)
+                return "ran"
+
+            def close(self):
+                pass
+        real_srv = mcp_stdio.StdioServer
+        mcp_stdio.StdioServer = FakeNotes
+        try:
+            said_up = _sk2._mcp_stdio_call("notes", [sys.executable, "manjuel/mcp_stdio.py"], {}, False,
+                                           "mcp_call notes system_update {}")
+            listed = _sk2._mcp_stdio_call("notes", [sys.executable, "manjuel/mcp_stdio.py"], {}, False, "")
+        finally:
+            mcp_stdio.StdioServer = real_srv
+        check("features: the second brain's system_update, said plainly, is refused by name and never run",
+              said_up.startswith("Refused") and "system_update" in said_up and not ran_tools
+              and "notes_search" in listed and "system_update" not in listed, f"{said_up} | {listed}")
         council = tools_shell._run_shell(_NS(ground=ROOT, caller=""), {"content": "python make.py"})
         check("features: a seat of the council, which has no card, gets run_shell's reads only -- a write is refused unrun",
               council.startswith("Refused") and "only Steward's driver" in council and "Nothing ran" in council, council)
