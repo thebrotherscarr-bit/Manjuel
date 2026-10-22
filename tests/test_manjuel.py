@@ -16395,6 +16395,14 @@ def test_the_mcp_skill_never_leaves_this_machine(reg, lib, book):
     check("a name embedded in a longer word does not count",
           _mcp_named("mustering the troops", ["muster"]) == "",
           "substring matching would call a tool nobody named")
+    # 2026-10-22: a note about "secondbrain" written through `notes` went to the server
+    # `secondbrain`, named only inside the note's own text.
+    said_n = 'mcp_call notes notes_create {"body": "SecondBrain holds what I know", "tags": ["secondbrain"]}'
+    check("the server named first is the one, not a longer name said later",
+          _mcp_named(said_n, {"notes", "secondbrain"}) == "notes", _mcp_named(said_n, {"notes", "secondbrain"}))
+    check("a name said only inside the arguments is not a name",
+          _mcp_named('mcp_call {"server": "atlas"}', {"atlas", "notes"}) == ""
+          and _mcp_named(said_n, ["notes_create", "notes_get"]) == "notes_create")
 
 
 def test_a_keyword_whose_argument_is_a_number_wants_one(reg, lib, book):
@@ -23999,9 +24007,10 @@ def test_steward_harness(reg, lib, book):
     import shutil as _sh
     from types import SimpleNamespace as _NS
     from manjuel import serve as SV
-    from manjuel import compact, dialects, guards, journal, mcp_stdio, repair, rulings, tools_files, tools_shell
+    from manjuel import (compact, dialects, guards, journal, mcp_stdio, mirror, repair, rulings, tools_files,
+                         tools_shell)
 
-    for mod in (repair, guards, compact, journal, dialects, mcp_stdio, tools_files, tools_shell, rulings):
+    for mod in (repair, guards, compact, journal, dialects, mcp_stdio, tools_files, tools_shell, rulings, mirror):
         try:
             out = _io.StringIO()
             with _cl.redirect_stdout(out):
@@ -24584,9 +24593,24 @@ def test_steward_harness(reg, lib, book):
         check("features: /rulings sync writes every ruling into his notes in one session and says how many",
               f"{n_rulings} new, 0 changed, 0 already there" in said_r
               and sum(1 for c in captured if c[0] == "notes_create") == n_rulings, said_r[-200:])
+        # STAGE 1 OF THE RECONCILE: /mirror sync writes the whole record into his notes in one session.
+        mcp_stdio.StdioServer = FakeRulings
+        mcp_stdio.servers = lambda: {"notes": [sys.executable, "manjuel/mcp_stdio.py"]}
+        mirrored_before = sum(1 for c in captured if c[0] == "notes_create")
+        try:
+            out_m = _io.StringIO()
+            with _cl.redirect_stdout(out_m):
+                SV.door_mirror(_NS(ground=ROOT), "/mirror sync")
+        finally:
+            mcp_stdio.StdioServer, mcp_stdio.servers = real_srv, real_servers
+        n_all = len(mirror.units(ROOT))
+        check("features: /mirror sync writes the whole record into his notes, tagged by kind, and says so",
+              f"{n_all} new, 0 changed, 0 already there" in out_m.getvalue() and "whats-left" in out_m.getvalue()
+              and sum(1 for c in captured if c[0] == "notes_create") - mirrored_before == n_all, out_m.getvalue()[:300])
         check("features: a /drive job is written to Steward's scratchpad in his notes",
-              job == "" and captured[-1][0] == "capture_append" and captured[-1][1]["source"] == "steward"
-              and captured[-1][1]["user"] == "/drive fix the map", str(captured[-1])[:200])
+              job == "" and [c for c in captured if c[0] == "capture_append"][-1][1]["source"] == "steward"
+              and [c for c in captured if c[0] == "capture_append"][-1][1]["user"] == "/drive fix the map",
+              str([c for c in captured if c[0] == "capture_append"][-1:])[:200])
         src_now = (ROOT / "manjuel" / "serve.py").read_text(encoding="utf-8")
         check("features: the door writes the sitting after its toll, and a failed write is said on the wire",
               "missed = capture_sitting(st, self.ground)" in src_now

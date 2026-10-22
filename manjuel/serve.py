@@ -657,6 +657,7 @@ DRIVE_USAGE = (
     "  /undo   the last Steward turn's unsaved files put back, on your card\n"
     "  /notes [words]   your notes searched by their own index (no model); alone: lately\n"
     "  /rulings sync | /rulings <words>   your laws and rules in your notes, and found there\n"
+    "  /mirror sync   the whole record into your notes, tagged by kind (the files stay the source)\n"
     "  /schedule every 30m|at 18:00|cron \"..\"|once <time> <drive> ; /goal <drive> | check: <command>\n"
     "        run as unattended `auto` jobs while a sitting is open; /schedules lists, /schedules drop <id>\n"
     "  plan and each need a check; \"suites\" as the check runs the strokes.\n"
@@ -2865,6 +2866,49 @@ def door_notes(door, objective: str) -> None:
     print("\n" + "\n".join(lines) + "\n")
 
 
+def notes_session(work):
+    """(work(server), "") or (None, why): one open session on his notes kernel for many
+    calls (a sync), through the same wall as every notes call (mcp_stdio.admit)."""
+    from . import mcp_stdio
+    argv = mcp_stdio.servers().get("notes")
+    if not argv:
+        return None, "his second brain is not declared (MANJUEL_MCP_NOTES_CMD)"
+    ran, why = mcp_stdio.admit("notes", argv)
+    if why:
+        return None, why
+    srv = mcp_stdio.StdioServer(ran, timeout=NOTES_CALL_SECONDS)
+    try:
+        srv.start()
+        return work(srv), ""
+    except mcp_stdio.StdioError as exc:
+        return None, f"his second brain did not answer ({exc})"
+    finally:
+        srv.close()
+
+
+def _written(got: dict) -> str:
+    return (f"{got['created']} new, {got['updated']} changed, {got['same']} already there"
+            + (f", {len(got['failed'])} failed: {got['failed'][:3]}" if got["failed"] else ""))
+
+
+def door_mirror(door, objective: str) -> None:
+    """/mirror sync (stage 1 of the reconcile, 2026-10-22, his words: "laws, registry and
+    docs, whats left, and the audit ledger can all be moved out and the information put into
+    the secondbrain notes system"): the record written into his notes, tagged by kind
+    (mirror.py), safe to repeat. Nothing leaves the repository at this stage."""
+    if objective.strip()[len("/mirror"):].strip().lower() != "sync":
+        print("\n  /mirror sync   the record into your notes, tagged by kind (what's left, handoff, daybook,\n"
+              "                 changelog, doc, ledger, ruling); safe to repeat; the files stay the source\n")
+        return
+    from . import mirror
+    got, why = notes_session(lambda srv: mirror.sync(door.ground, srv))
+    if why:
+        print(f"\n  {why}\n")
+        return
+    kinds = ", ".join(f"{k} {n}" for k, n in sorted(got["kinds"].items()))
+    print(f"\n  the record in your notes: {_written(got)}\n  by kind: {kinds}\n")
+
+
 def door_rulings(door, objective: str) -> None:
     """/rulings sync | /rulings <words> (F, 2026-10-22, his words: "we can tie in the notes
     system to be able to diff or parse whatever ive ruled before"). `sync` writes every law
@@ -2876,27 +2920,9 @@ def door_rulings(door, objective: str) -> None:
               "  /rulings <words>   your rulings that bear on them, by the notes' index\n")
         return
     if words.lower() == "sync":
-        from . import mcp_stdio, rulings
-        argv = mcp_stdio.servers().get("notes")
-        if not argv:
-            print("\n  his second brain is not declared (MANJUEL_MCP_NOTES_CMD)\n")
-            return
-        ran, why = mcp_stdio.admit("notes", argv)
-        if why:
-            print(f"\n  {why}\n")
-            return
-        srv = mcp_stdio.StdioServer(ran, timeout=NOTES_CALL_SECONDS)
-        try:
-            srv.start()
-            got = rulings.sync(door.ground, srv)
-        except mcp_stdio.StdioError as exc:
-            print(f"\n  his second brain did not answer ({exc})\n")
-            return
-        finally:
-            srv.close()
-        print(f"\n  rulings in your notes: {got['created']} new, {got['updated']} changed, "
-              f"{got['same']} already there" + (f", {len(got['failed'])} failed: {got['failed'][:3]}"
-                                                 if got["failed"] else "") + "\n")
+        from . import rulings
+        got, why = notes_session(lambda srv: rulings.sync(door.ground, srv))
+        print(f"\n  {why}\n" if why else f"\n  rulings in your notes: {_written(got)}\n")
         return
     text, why = notes_call("index_search", {"q": words, "limit": 8, "tag": "ruling"})
     if why:
@@ -3492,6 +3518,9 @@ class Door:
             return True
         if objective.split(None, 1)[0].lower() == "/rulings":
             door_rulings(self, objective)
+            return True
+        if objective.split(None, 1)[0].lower() == "/mirror":
+            door_mirror(self, objective)
             return True
         # WHO ANSWERS AN ORDINARY TURN, switched for the sitting (FACE).
         if objective.split(None, 1)[0].lower() == "/face":

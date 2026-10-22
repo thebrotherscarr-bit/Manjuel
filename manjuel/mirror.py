@@ -1,0 +1,188 @@
+"""The record mirrored into his notes -- stage 1 of the reconcile (2026-10-22).
+
+His words: "I would like to go through and reconcile these two systems to simplify the
+fuck out of atlas/manjuel so that it just does the coding/workflows/agentic stuff there
+and uses the secondbrain as essentially a repository for any and all information relating
+to what i am working on", and "so laws, registry and docs, whats left, and the audit
+ledger can all be moved out and the information put into the secondbrain notes system so
+that it can be referred to when needed."
+
+STAGE 1 IS A MIRROR. Every document below is written into his notes, tagged by kind, by
+one sync that is safe to repeat (rulings.write: new created, changed updated, the same
+left alone). Nothing is removed from the repository: until stage 3 the file is the
+source, and a note here is its readable copy -- an edit made in the note is overwritten by
+the next sync, and every note says so on its last line.
+
+  whats-left  WHATS_LEFT.md, one note per section (A, B, C ... Done)
+  handoff     HANDOFF.md, one note per day
+  daybook     DAYBOOK.md, one note per session
+  changelog   CHANGELOG.md, one note per version
+  doc         the documents (README, RUNBOOK, SPEC, INVENTORY ...), one note per section
+  ledger      SEAT_LOG.md, the tolls, one note per day
+  ruling      the laws (rulings.py)
+
+The notes kernel cuts every note into passages for its index, so a section-sized note is
+found as precisely as a line. Generated files (BUILDMAP, REFUSALS, STATUS, the toll index)
+are not mirrored: they are rebuilt from the code.
+
+stdlib only, Python 3.10.
+"""
+
+from __future__ import annotations
+
+import re
+from pathlib import Path
+
+from . import rulings
+
+DOCS = ("README.md", "QUICKSTART.md", "RUNBOOK.md", "SPEC.md", "DESIGN.md", "SYSTEM_DESIGN.md",
+        "INVENTORY.md", "BUILDPATH.md", "TESTING.md", "CONTRIBUTING.md", "HARNESS_STUDY.md",
+        "TASKS.md", "agents.md", "commands.md", "pipelines.md", "rack.md", "parity.md", "memory.md")
+BODY_MAX = 40000          # a section longer than this is cut into parts
+FOOT = ("Mirrored from {src} by /mirror sync. Until the reconcile's stage 3 the file in the "
+        "repository is the source: an edit made here is overwritten by the next sync.")
+_H2 = re.compile(r"^## (.+?)\s*$")
+_TOLL = re.compile(r"^(\d{4}-\d{2}-\d{2})\b")
+
+
+def _id(kind: str, key: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", f"{kind}-{key}".lower()).strip("-")
+    return slug[:rulings.ID_MAX].rstrip("-")
+
+
+def _h2(text: str) -> list:
+    """[(heading, body)] for every '## ' section, in order (### stays inside)."""
+    out, head, lines, fence = [], None, [], False
+    for line in text.replace("\r\n", "\n").splitlines():
+        if line.lstrip().startswith("```"):
+            fence = not fence
+        m = None if fence else _H2.match(line)
+        if m:
+            if head is not None:
+                out.append((head, "\n".join(lines).strip()))
+            head, lines = m.group(1), []
+        elif head is not None:
+            lines.append(line)
+    if head is not None:
+        out.append((head, "\n".join(lines).strip()))
+    return out
+
+
+def _note(kind, key, title, body, src, tags, category):
+    """One note, or several when the body is over BODY_MAX (each a part)."""
+    parts = [body[i:i + BODY_MAX] for i in range(0, max(len(body), 1), BODY_MAX)] or [""]
+    out = []
+    for n, part in enumerate(parts, 1):
+        suffix = f" (part {n} of {len(parts)})" if len(parts) > 1 else ""
+        out.append({"id": _id(kind, key + (f"-{n}" if len(parts) > 1 else "")),
+                    "title": (title + suffix)[:160].strip(), "category": category,
+                    "body": f"{part.strip()}\n\n{FOOT.format(src=src)}", "tags": list(tags), "source": src})
+    return out
+
+
+def units(ground) -> list:
+    """Every note the mirror writes, rulings included, with unique ids the kernel accepts."""
+    ground = Path(ground)
+    out = []
+
+    def read(name):
+        p = ground / name
+        return p.read_text(encoding="utf-8", errors="replace") if p.is_file() else ""
+
+    for head, body in _h2(read("WHATS_LEFT.md")):
+        if len(body) < 40:
+            continue
+        tags = ["whats-left"] + (["done"] if head.strip().lower().startswith("done") else [])
+        out += _note("whats-left", head[:40], f"What's left: {head}", body, "WHATS_LEFT.md", tags, "projects")
+    for head, body in _h2(read("HANDOFF.md")):
+        m = re.match(r"HANDOFF FOR (\S+)", head)
+        if m:
+            out += _note("handoff", m.group(1), f"Handoff {m.group(1)}", body, "HANDOFF.md", ["handoff"], "archives")
+    for head, body in _h2(read("DAYBOOK.md")):
+        m = re.match(r"Session (\d+)", head)
+        if m:
+            out += _note("daybook", f"session-{m.group(1)}", f"Daybook: {head}", body, "DAYBOOK.md",
+                         ["daybook"], "archives")
+    for head, body in _h2(read("CHANGELOG.md")):
+        if len(body) >= 40:
+            out += _note("changelog", head[:40], f"Changelog: {head}", body, "CHANGELOG.md",
+                         ["changelog"], "resources")
+    for name in DOCS:
+        stem = Path(name).stem
+        for head, body in _h2(read(name)):
+            if len(body) >= 40:
+                out += _note("doc", f"{stem}-{head[:40]}", f"{stem}: {head}", body, name,
+                             ["doc", stem.lower().replace("_", "-")], "resources")
+    days: dict = {}
+    for head, body in _h2(read("SEAT_LOG.md")):
+        m = _TOLL.match(head)
+        if m:
+            days.setdefault(m.group(1), []).append(f"## {head}\n\n{body}")
+    for day, tolls in days.items():
+        out += _note("ledger", day, f"Ledger {day} ({len(tolls)} tolls)", "\n\n".join(tolls),
+                     "SEAT_LOG.md", ["ledger"], "archives")
+    out += rulings.units(ground)
+    seen: dict = {}
+    for u in out:                      # two sections with one heading keep two notes
+        n = seen.get(u["id"], 0)
+        seen[u["id"]] = n + 1
+        if n:
+            tail = f"-{n + 1}"
+            u["id"] = u["id"][:rulings.ID_MAX - len(tail)].rstrip("-") + tail
+    return out
+
+
+def sync(ground, server) -> dict:
+    """The whole mirror, through one open session on his notes kernel; counted by kind."""
+    got = units(ground)
+    counts = rulings.write(got, server)
+    kinds: dict = {}
+    for u in got:
+        k = u["tags"][0]
+        kinds[k] = kinds.get(k, 0) + 1
+    counts["kinds"] = kinds
+    return counts
+
+
+def _strokes() -> None:
+    """On the real record: every kind present, ids unique and the kernel's, every note naming
+    its source and that the file is the source; a second sync changes nothing."""
+    import json
+    ground = Path(__file__).resolve().parent.parent
+    got = units(ground)
+    ids = [u["id"] for u in got]
+    assert len(ids) == len(set(ids)), "ids are unique"
+    assert all(rulings.ID_RULE.match(i) for i in ids), [i for i in ids if not rulings.ID_RULE.match(i)][:3]
+    kinds = {u["tags"][0] for u in got}
+    assert kinds >= {"whats-left", "handoff", "daybook", "changelog", "doc", "ledger", "ruling"}, kinds
+    assert all(len(u["body"]) <= BODY_MAX + 400 for u in got)
+    assert all(u["body"].rstrip().endswith((FOOT.format(src=u["source"]),
+                                            rulings.FOOT.format(src=u["source"]))) for u in got)
+    assert any(u["title"].startswith("Handoff 2026-10-21") for u in got)
+
+    class Fake:
+        def __init__(self):
+            self.notes = {}
+
+        def call(self, tool, args):
+            if tool == "notes_get":
+                n = self.notes.get(args["id"])
+                return json.dumps(n) if n else "Refused: notes_get failed: no such note"
+            if tool in ("notes_create", "notes_update"):
+                args = dict(args, title=str(args.get("title") or "").strip())   # the kernel trims a title
+            if tool == "notes_create":
+                if not rulings.ID_RULE.match(args["id"]):
+                    return "Refused: notes_create failed: bad id"
+                self.notes[args["id"]] = dict(args)
+            if tool == "notes_update":
+                self.notes[args["id"]].update(args)
+            return "{}"
+    fake = Fake()
+    first, again = sync(ground, fake), sync(ground, fake)
+    assert first["created"] == len(got) and not first["failed"], (first["created"], first["failed"][:2])
+    assert again["same"] == len(got) and not again["created"] and not again["updated"], again
+    print(f"mirror strokes: {len(got)} notes in {len(kinds)} kinds, written then left alone -- all held")
+
+
+if __name__ == "__main__":
+    _strokes()

@@ -34,6 +34,31 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: the reconcile's stage 1 -- the whole record mirrored into his notes, and a door call goes to the server named first (2026-10-22; his words: "simplify the fuck out of atlas/manjuel so that it just does the coding/workflows/agentic stuff there and uses the secondbrain as essentially a repository for any and all information relating to what i am working on", and "so laws, registry and docs, whats left, and the audit ledger can all be moved out and the information put into the secondbrain notes system so that it can be referred to when needed")
+
+The plan is in his notes, pinned: "Reconcile: Manjuel does the work, SecondBrain holds what I know". It has three stages: 1 mirror, 2 point, 3 retire each file once nothing reads it, on his card.
+
+- **Stage 1, the mirror** (`manjuel/mirror.py`, new; `/mirror sync`, `door_mirror`, `notes_session`). One sync writes the record into his notes, tagged by kind, and is safe to repeat (`rulings.write`, now shared: new created, changed updated, the same left alone). 443 notes today:
+  - what's left, one note per section (16);
+  - HANDOFF, one note per day (33);
+  - DAYBOOK, one note per session (32);
+  - CHANGELOG, one note per version (38);
+  - the documents (README, RUNBOOK, SPEC, INVENTORY and the rest), one note per section (214);
+  - the tolls of SEAT_LOG, one note per day (39);
+  - the rulings (71).
+
+  A section over 40,000 characters is cut into parts. Generated files (BUILDMAP, REFUSALS, STATUS, the toll index) are not mirrored. Nothing leaves the repository: until stage 3 the file is the source, and every mirrored note says so on its last line.
+- **A door call goes to the server named first** (`skills._mcp_named`). It used to try the longest candidate anywhere in the words, the JSON included: "mcp_call notes notes_create {... secondbrain ...}" went to `secondbrain`, named only inside the note being written. Now the first candidate in the words before the `{` is the one, for the server and the tool alike.
+
+Strokes:
+- `mirror._strokes` (the real record: every kind, ids the kernel accepts, every note naming its source, a second sync that changes nothing);
+- `/mirror sync` in `test_steward_harness`;
+- two for the matcher in `test_the_mcp_skill_never_leaves_this_machine`.
+
+What goes red if it comes unplugged: those strokes.
+
+Restart required.
+
 ### core: his rulings in his notes, and Steward's scratchpad there (2026-10-22, piece F; his words: "we can tie in the notes system to be able to diff or parse whatever ive ruled before, and integrate that into the workflows for steward, as well as allowing steward to have the notes app as a scratchpad for work ... I will NEVER lose any information again!")
 
 - **His rulings as notes** (`manjuel/rulings.py`, new). Every law in `law/` (the estate laws, the sitting laws, the ledger, LAW 001 to 003) and every RULE in CLAUDE.md becomes one note in his notes: 71 today, one per numbered law or section. Each has a stable id, a title by its citation ("SITTING LAW 5: …"), and the tags `ruling` and its file. The ledger's verbatim copies of CLAUDE.md's rules are left to CLAUDE.md, so nothing is held twice.
