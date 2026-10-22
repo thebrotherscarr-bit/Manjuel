@@ -34,6 +34,23 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: the mirror carries each document's opening (2026-10-23, the reconcile's stage 3, before the first retirement; his words: "go ahead, split")
+
+Before retiring HARNESS_STUDY.md, the notes were checked against the file through the relay. All 42 sections of the four "can go now" documents matched their notes exactly. The text above each document's first `## ` heading did not: `mirror._h2` begins at the first section, so no note carried a document's opening. HARNESS_STUDY loses 2,651 characters that way, and SYSTEM_DESIGN 617. Retiring a file would have left its opening only in git history. So the retirement waits for this piece.
+
+- **`mirror._preamble`** (new) returns a document's `# ` title and everything above its first section.
+- **`mirror.units`** writes that text as the document's own note: id `doc-<stem>-opening`, titled with the document's title, with the same tags as its sections. Openings under 40 characters, a title line alone, are skipped, as short sections are. Fourteen documents gain a note.
+- **BUILDMAP.md and REFUSALS.md** are regenerated.
+
+Not changed: the records (WHATS_LEFT, HANDOFF, DAYBOOK, CHANGELOG, SEAT_LOG) are read by heading as before. They stay files until he rules on them (option C).
+
+Strokes:
+- `mirror._strokes`: every document on DOCS with an opening of 40 characters or more has a note that carries it. Proved by reversal: with the threshold raised, README's opening had no note, and the stroke went red.
+
+What goes red if it comes unplugged: `mirror._strokes` (run in `test_steward_harness`).
+
+Restart required. Then `/mirror sync`, which writes the fourteen opening notes. The retirement of HARNESS_STUDY.md follows once the relay shows them.
+
 ### core: the mirror stops treating rack.md and memory.md as documents (2026-10-23, the reconcile's stage 2, piece A3; his words: "let's do A and then B as proposed")
 
 The plan is in his notes: "Plan (A then B approved): the reconcile's stages 2 and 3". The stage-2 survey read every reader and writer of the 23 mirrored files, file:line, and its notes are "Survey: what reads and writes Manjuel's mirrored files" and "Survey: the glass pages and door tools behind the reconcile". It found two of the files on /mirror sync's document list are not documents:
