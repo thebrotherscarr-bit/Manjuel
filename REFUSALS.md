@@ -1101,18 +1101,18 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 | line | says |
 |---|---|
-| 119 | {name}'s {tool!r} is never run through this door -- it changes the |
-| 138 | {name}'s command is empty. |
-| 145 | {name}'s program {prog!r} was not found. |
-| 149 | {name}'s command loads code with |
-| 154 | {name}'s command names no script for {prog!r} to run. |
-| 160 | {name}'s script is outside the ground ({ground}) |
-| 164 | {name}'s script {argv[i]!r} does not exist. |
-| 167 | {name}'s program {prog!r} is not inside the |
-| 349 | {name} failed: {exc} |
-| 354 | {name} failed: |
-| 418 | boom failed: it broke |
-| 420 | nosuch failed |
+| 123 | {name}'s {tool!r} is never run through this door -- it changes the |
+| 142 | {name}'s command is empty. |
+| 149 | {name}'s program {prog!r} was not found. |
+| 153 | {name}'s command loads code with |
+| 158 | {name}'s command names no script for {prog!r} to run. |
+| 164 | {name}'s script is outside the ground ({ground}) |
+| 168 | {name}'s script {argv[i]!r} does not exist. |
+| 171 | {name}'s program {prog!r} is not inside the |
+| 353 | {name} failed: {exc} |
+| 358 | {name} failed: |
+| 422 | boom failed: it broke |
+| 424 | nosuch failed |
 
 ### manjuel/mirror.py — 2 sites
 
