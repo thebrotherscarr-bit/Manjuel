@@ -671,6 +671,14 @@ dropped by operator ruling 2026-09-01 — see the fix log.
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
 
+## HANDOFF FOR 2026-10-22 — read this before anything below it
+
+**Where the day stands.** v0.2.6 is published (core `a0ab2be`, atlas `19dcc85`). SecondBrain is in the ground as two worlds, `worlds/jesster` (the app and its notes kernel) and `worlds/notes` (his vault), and is wired into Manjuel on his cards: notes beside every Steward turn and `/notes` (C), every closed sitting into the day's capture note (D, pull request 61), his rulings as notes and Steward's scratchpad (F, 62), the whole record mirrored into the notes by `/mirror sync` (the reconcile's stage 1, 63), and a client that hangs up no longer printed as an error, with the archive digger's path readers refused at the door (64). The full-system check is green: both suites, the live standup 9/9, atlas `line` and `webapp` under go vet and go test, SecondBrain's lint, 83 tests and build.
+
+**Next.** The reconcile's stage 2 (point the glass's pages and Steward at the notes), then stage 3 (retire the files one by one, on his card).
+
+**Found on the way (his to place):** (a) the suites write their pretend sittings into the real capture note: D reaches the notes through `.env`, which the suites load too (his word: leave it for now); (b) the glass's Bash tab ends any command at 300 s, so a standup run there was cut and left sitting 454 open, reaped at the next boot; long runs go through `standup_run` and `suite_run`; (c) Ask Brain mixed stale record sections into a "what is X" answer; a pinned overview note would steady it.
+
 ## HANDOFF FOR 2026-10-21 — read this before anything below it
 
 **Where the day stands.** The harness study (H33) is built into Steward and merged on his clicks. In the core: the driver made capable (pull request 51), Steward on gpt-oss:20b and as the face of ordinary turns (52), and the full feature list from the eight harnesses (53, with its Linux fix in the run_shell stroke). In atlas: the desktop app (23) and the secret card (24). Then, on his word "publish it 0.2.6": the reconciler taught that `reports_to: manjuel` is the core (his card "Manjuel, the core"; pull request 54), this record, and the release flow, fired by him. Its first run stopped at the live
