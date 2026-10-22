@@ -103,7 +103,7 @@ def units(ground) -> list:
                 seen.add(uid)
                 if not key and rel == "CLAUDE.md":
                     title = head
-                out.append({"id": uid, "title": title[:160], "source": rel,
+                out.append({"id": uid, "title": title[:160].strip(), "source": rel,
                             "body": f"{body}\n\n{FOOT.format(src=rel)}",
                             "tags": [TAG, stem]})
     return out
@@ -112,8 +112,15 @@ def units(ground) -> list:
 def sync(ground, server) -> dict:
     """Write every ruling into his notes through `server` (an open mcp_stdio.StdioServer on
     the notes kernel): created, updated, unchanged and failed, counted."""
+    return write(units(ground), server)
+
+
+def write(notes, server, category: str = CATEGORY) -> dict:
+    """Write each {id, title, body, tags[, category]} into his notes through `server`: a new
+    one created, a changed one updated, an unchanged one left alone; counted. One engine for
+    every mirror into his notes (rulings here, the record in mirror.py)."""
     counts = {"created": 0, "updated": 0, "same": 0, "failed": []}
-    for u in units(ground):
+    for u in notes:
         try:
             have = server.call("notes_get", {"id": u["id"]})
             note = None
@@ -124,11 +131,12 @@ def sync(ground, server) -> dict:
                     note = None
             if not note:
                 said = server.call("notes_create", {"id": u["id"], "title": u["title"], "body": u["body"],
-                                                    "tags": u["tags"], "category": CATEGORY})
+                                                    "tags": u["tags"], "category": u.get("category") or category})
                 if str(said or "").startswith("Refused"):
                     raise ValueError(said)
                 counts["created"] += 1
-            elif str(note.get("body") or "").strip() != u["body"].strip() or note.get("title") != u["title"]:
+            elif (str(note.get("body") or "").strip() != u["body"].strip() or note.get("title") != u["title"]
+                  or sorted(note.get("tags") or []) != sorted(u["tags"])):
                 said = server.call("notes_update", {"id": u["id"], "title": u["title"], "body": u["body"],
                                                     "tags": u["tags"]})
                 if str(said or "").startswith("Refused"):
@@ -169,6 +177,8 @@ def _strokes() -> None:
             if tool == "notes_get":
                 n = self.notes.get(args["id"])
                 return json.dumps(n) if n else "Refused: notes_get failed: no such note"
+            if tool in ("notes_create", "notes_update"):
+                args = dict(args, title=str(args.get("title") or "").strip())   # the kernel trims a title
             if tool == "notes_create":
                 if not ID_RULE.match(args["id"]):          # the kernel's own refusal
                     return "Refused: notes_create failed: bad id"

@@ -4187,12 +4187,22 @@ def _mcp_named(text: str, candidates) -> str:
     Resolved against what actually exists -- the declared servers, or the
     server's own roster read off the wire -- never guessed at. A name that is
     not really there is not a name.
+
+    THE NAME SAID FIRST, AND NEVER ONE INSIDE THE ARGUMENTS (2026-10-22). This
+    tried the longest candidate first, anywhere in the words, the JSON included:
+    "mcp_call notes notes_create {... secondbrain ...}" went to the server
+    `secondbrain`, named only inside the note being written. The words before the
+    first `{` are where a name is said, and the first of them that is a
+    candidate is the one.
     """
-    words = {w.strip(".,;:!?'\"`()[]{}").lower()
-             for w in (text or "").split()}
-    for c in sorted(candidates, key=len, reverse=True):
-        if str(c).lower() in words:
-            return str(c)
+    head = text or ""
+    if "{" in head:
+        head = head[:head.find("{")]
+    names = {str(c).lower(): str(c) for c in candidates}
+    for w in head.split():
+        hit = names.get(w.strip(".,;:!?'\"`()[]{}").lower())
+        if hit:
+            return hit
     return ""
 
 
