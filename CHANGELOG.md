@@ -34,6 +34,24 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: his rulings in his notes, and Steward's scratchpad there (2026-10-22, piece F; his words: "we can tie in the notes system to be able to diff or parse whatever ive ruled before, and integrate that into the workflows for steward, as well as allowing steward to have the notes app as a scratchpad for work ... I will NEVER lose any information again!")
+
+- **His rulings as notes** (`manjuel/rulings.py`, new). Every law in `law/` (the estate laws, the sitting laws, the ledger, LAW 001 to 003) and every RULE in CLAUDE.md becomes one note in his notes: 71 today, one per numbered law or section. Each has a stable id, a title by its citation ("SITTING LAW 5: …"), and the tags `ruling` and its file. The ledger's verbatim copies of CLAUDE.md's rules are left to CLAUDE.md, so nothing is held twice.
+- **`/rulings sync`** writes them through the notes kernel in one session: new ones created, changed ones updated, unchanged ones left alone, so it is safe to repeat.
+- **`/rulings <words>`** searches only his rulings, by the notes' index (tag `ruling`).
+- **Steward's context.** His notes on the turn already lead Steward's context (C), and his rulings come with them when they bear on it. His prompts say a ruling is found by `index_search` with tag `ruling`.
+- **The chain stays the authority.** Every ruling note's last line says the sealed chain (`law/chain.jsonl`) and the gates in code decide; the note is how a ruling is found. A search that finds no ruling says one may still bind.
+- **Steward's scratchpad** (`capture_job`). Every `/drive` job, when it ends (scheduled ones too), is written into today's `steward` capture note in his notes: its goal and its report. His work outlives a context reset, and the index finds it next time.
+- **Claude connects in by MCP** (piece E): `.mcp.json` at the ground's root declares his notes (`notes`, the kernel over `worlds/notes`) and his door (`atlas`, over stdio at his real ground; its writes still wait on his card). Commands and paths only, no key. Both answered their MCP handshake on 2026-10-22, and the door's muster read `atlas, research`.
+
+Strokes:
+- `rulings._strokes` (the real law files: 71 rulings, unique ids, the cited laws found, the ledger's copies left out, every note naming the chain; a sync that creates, then leaves alone);
+- in `test_steward_harness`: `/rulings` by tag, `/rulings sync`'s count, and a job into the scratchpad.
+
+What goes red if it comes unplugged: those strokes.
+
+Restart required.
+
 ### core: the day's work into his notes -- every sitting with a turn, on its close, into today's capture note (2026-10-22, piece D; his words: the second brain "can take notes and help me keep everything in line and organized. basically like a secretary that's able to get all my disorganized crap sorted from the day of work, and then also be able to dig through all my old notes")
 
 `capture_sitting` and `sitting_capture_text`, called by `Door._close` after the toll. A sitting that ran a turn is written into today's capture note in his notes, through the kernel's `capture_append` (source `manjuel`: one note per day, one entry per sitting). The entry is read off the sitting's record alone, no model:
