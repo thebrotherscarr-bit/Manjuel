@@ -93,6 +93,34 @@ def split(line: str) -> list:
     return shlex.split(line.strip())
 
 
+# A SERVER'S OWN ROOT (2026-10-22, his card: "Default places", for his second brain). A server
+# whose script lives outside the ground -- his notes kernel beside it on the Desktop -- is admitted
+# only inside the root HE declares for that one server, MANJUEL_MCP_<NAME>_ROOT in .env (his to
+# write: RULE 7). Every other server keeps the wall whole.
+ROOT = "_ROOT"
+
+# TOOLS REFUSED BY NAME, per server: what would change the machine or pull in local paths, never
+# run through this door whoever calls -- a council seat's mcp_call carries no card.
+REFUSED_TOOLS = {
+    "notes": {"system_update", "system_install_desktop", "system_desktop_build",
+              "import_folder", "ingest_path", "ingest_watch", "notes_remove"},
+}
+
+
+def declared_root(name: str) -> Path | None:
+    """The root he declared for server `name`, or None."""
+    v = os.environ.get(DIAL + name.upper() + ROOT, "").strip().strip("'\"")
+    return Path(v) if v else None
+
+
+def refused_tool(name: str, tool: str) -> str:
+    """'' or the refusal, in plain words, of a tool this door never runs for `name`."""
+    if tool in REFUSED_TOOLS.get(name.lower(), ()):
+        return (f"Refused: {name}'s {tool!r} is never run through this door -- it changes the "
+                f"machine or pulls in local paths; run it in its own app, by hand.")
+    return ""
+
+
 def _inside(p: Path, ground: Path) -> bool:
     try:
         return p.resolve().is_relative_to(ground.resolve())
@@ -127,9 +155,11 @@ def admit(name: str, argv: list, ground: Path = GROUND) -> tuple:
         script = Path(argv[i])
         if not script.is_absolute():
             script = ground / script
-        if not _inside(script, ground):
-            return None, (f"Refused: {name}'s script is outside the ground "
-                          f"({ground}); nothing was started.")
+        root = declared_root(name)
+        if not _inside(script, ground) and not (root is not None and _inside(script, root)):
+            return None, (f"Refused: {name}'s script is outside the ground ({ground})"
+                          + (f" and outside its declared root ({root})" if root is not None else "")
+                          + "; nothing was started.")
         if not script.is_file():
             return None, f"Refused: {name}'s script {argv[i]!r} does not exist."
         return [str(exe), *argv[1:i], str(script.resolve()), *argv[i + 1:]], ""
@@ -418,6 +448,31 @@ def _strokes() -> int:
         ran, why = admit("self", [sys.executable, "-I", "-X", "utf8", "manjuel/mcp_stdio.py"])
         check("a script inside the ground is admitted, made absolute",
               ran is not None and ran[-1] == str((GROUND / "manjuel/mcp_stdio.py").resolve()), why)
+
+        # A ROOT HE DECLARES (2026-10-22, the second brain): a script outside the ground is
+        # admitted inside that one server's own declared root, and nowhere else.
+        os.environ["MANJUEL_MCP_FAKE_ROOT"] = tmp
+        try:
+            ran, why = admit("fake", [sys.executable, str(script)])
+            check("a script inside the server's declared root is admitted",
+                  ran is not None and ran[-1] == str(script.resolve()), why)
+            ran, why = admit("other", [sys.executable, str(script)])
+            check("another server's root admits nothing for this one",
+                  ran is None and "outside the ground" in why, why)
+            os.environ["MANJUEL_MCP_FAKE_ROOT"] = str(Path(tmp) / "sub")
+            ran, why = admit("fake", [sys.executable, str(script)])
+            check("a script outside the declared root is still refused",
+                  ran is None and "outside the ground" in why and "declared root" in why, why)
+        finally:
+            os.environ.pop("MANJUEL_MCP_FAKE_ROOT", None)
+        # TOOLS REFUSED BY NAME: the second brain's tools that change the machine or pull in
+        # local paths never run through this door, whoever calls.
+        why = refused_tool("notes", "system_update")
+        check("the notes server's system_update is refused by name",
+              why.startswith("Refused") and "system_update" in why, why)
+        check("its reads and its notes pass",
+              not refused_tool("notes", "notes_search") and not refused_tool("notes", "llm_ask")
+              and not refused_tool("rea", "system_update"), "")
 
         # The environment is the allowlist only.
         os.environ["MANJUEL_STROKE_SECRET"] = "x"

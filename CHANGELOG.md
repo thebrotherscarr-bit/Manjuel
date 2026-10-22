@@ -34,6 +34,29 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: his second brain wired into Steward and the council, through the MCP door (2026-10-22; his words: "We will also be integrating the secondbrain i just built into the system today"; his cards: "MCP on stdio", "Default places")
+
+The second brain is the Jesster notes kernel, in his checkout `secondbrain-local---ollama-gpt-oss` (`notes/cli.py`). His notes are Markdown in `%USERPROFILE%\JessterNotes`, and every save is deposited on the vault's own chain. gpt-oss answers from them through Ollama, and nothing leaves the machine. Its MCP server on stdio answers `mcp_stdio.StdioServer` unchanged, with 41 tools, read live on 2026-10-22.
+
+What the door changed:
+- **A root he declares** (`mcp_stdio.declared_root`). A script outside the ground is admitted only inside the root he declares for that one server, as `MANJUEL_MCP_<NAME>_ROOT` in .env, which he writes himself (RULE 7). Every other server keeps the wall whole. His two lines:
+  - `MANJUEL_MCP_NOTES_CMD=python <checkout>/notes/cli.py mcp`
+  - `MANJUEL_MCP_NOTES_ROOT=<checkout>`
+- **Tools refused by name** (`mcp_stdio.REFUSED_TOOLS`, `refused_tool`). A council seat's mcp_call carries no card. So the notes server's tools that change the machine or pull in local paths are never run through this door, and are not offered: `system_update`, `system_install_desktop`, `system_desktop_build`, `import_folder`, `ingest_path`, `ingest_watch`, `notes_remove`.
+- **Steward knows it is there.** The face's rules and the driver's prompt name the server `notes`: `context_for` before work and `capture_append` after it. `notes_search` and `llm_ask` read it, and `notes_create` adds to it.
+
+Also, a seam closed on the way: `test_steward_harness` counted a module's strokes as passing when they raised nothing. `mcp_stdio._strokes()` returns its verdict and never raises, so its reds were invisible. The stroke now holds the returned verdict too.
+
+Strokes in `mcp_stdio._strokes`, shown red first:
+- a script inside the declared root is admitted;
+- another server's root admits nothing;
+- outside the root is still refused;
+- `system_update` is refused by name, while reads, notes and other servers pass.
+
+What goes red if it comes unplugged: those strokes, through `test_steward_harness`.
+
+Restart required.
+
 ## v0.2.6 — 2026-10-21 15:38 (tag on a0ab2be)
 
 ### core: a number glued to its unit in a tool's result is a source, so the release's live check passes the rack again (2026-10-21, his card: "Fix the guard, re-cut")

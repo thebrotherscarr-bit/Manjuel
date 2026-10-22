@@ -4466,7 +4466,15 @@ def _mcp_stdio_call(name: str, argv: list, args: dict, explicit: bool, said: str
             tools = srv.list_tools(timeout=left())
         except mcp_stdio.StdioError as exc:
             return f"Refused: {name} could not be read -- {exc}."
+        # What this door never runs is not offered either (mcp_stdio.REFUSED_TOOLS).
+        tools = [t for t in tools if not mcp_stdio.refused_tool(name, str(t.get("name")))]
         known = [str(t.get("name")) for t in tools]
+        if not tool and said:
+            # Said plainly ("mcp_call notes system_update {}"), the tool rides in the words.
+            tool = next((t for t in mcp_stdio.REFUSED_TOOLS.get(name.lower(), ())
+                         if t in said.replace("{", " ").split()), "")
+        if tool and mcp_stdio.refused_tool(name, tool):
+            return mcp_stdio.refused_tool(name, tool)
         if not tool and said:
             tool = _mcp_named(said, known)
         if not tool:
