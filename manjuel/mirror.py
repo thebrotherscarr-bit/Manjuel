@@ -154,7 +154,11 @@ def _strokes() -> None:
     assert len(ids) == len(set(ids)), "ids are unique"
     assert all(rulings.ID_RULE.match(i) for i in ids), [i for i in ids if not rulings.ID_RULE.match(i)][:3]
     kinds = {u["tags"][0] for u in got}
-    assert kinds >= {"whats-left", "handoff", "daybook", "changelog", "doc", "ledger", "ruling"}, kinds
+    # SEAT_LOG.md is the ground's own record and is not tracked: a checkout (CI) has no ledger.
+    want = {"whats-left", "handoff", "daybook", "changelog", "doc", "ruling"}
+    if (ground / "SEAT_LOG.md").is_file():
+        want.add("ledger")
+    assert kinds >= want, (sorted(want - kinds), sorted(kinds))
     assert all(len(u["body"]) <= BODY_MAX + 400 for u in got)
     assert all(u["body"].rstrip().endswith((FOOT.format(src=u["source"]),
                                             rulings.FOOT.format(src=u["source"]))) for u in got)

@@ -572,7 +572,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `drop_pending` | 410-416 |  |
 | def | `split_entries` | 424-452 | Split memory.md into one piece per entry. |
 
-### manjuel/mirror.py — 188 lines
+### manjuel/mirror.py — 192 lines
 
 *The record mirrored into his notes -- stage 1 of the reconcile (2026-10-22).*
 
@@ -583,7 +583,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `_note` | 71-80 | One note, or several when the body is over BODY_MAX (each a part). |
 | def | `units` | 83-132 | Every note the mirror writes, rulings included, with unique ids the kernel accep |
 | def | `sync` | 135-144 | The whole mirror, through one open session on his notes kernel; counted by kind. |
-| def | `_strokes` | 147-184 | On the real record: every kind present, ids unique and the kernel's, every note  |
+| def | `_strokes` | 147-188 | On the real record: every kind present, ids unique and the kernel's, every note  |
 
 ### manjuel/parity.py — 495 lines
 
@@ -1447,7 +1447,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `GroundWatch.start` | 197-222 |  |
 | def | `GroundWatch.stop` | 224-230 |  |
 
-manjuel/: 42 files, 36485 lines.
+manjuel/: 42 files, 36489 lines.
 
 ## GUARDS — by the failure that earned them
 
