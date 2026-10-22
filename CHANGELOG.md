@@ -34,6 +34,25 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: the day's work into his notes -- every sitting with a turn, on its close, into today's capture note (2026-10-22, piece D; his words: the second brain "can take notes and help me keep everything in line and organized. basically like a secretary that's able to get all my disorganized crap sorted from the day of work, and then also be able to dig through all my old notes")
+
+`capture_sitting` and `sitting_capture_text`, called by `Door._close` after the toll. A sitting that ran a turn is written into today's capture note in his notes, through the kernel's `capture_append` (source `manjuel`: one note per day, one entry per sitting). The entry is read off the sitting's record alone, no model:
+- when it ran and how it closed;
+- every turn, with the head of what it delivered and its transcript;
+- the commits made between its start and its end;
+- git at both ends.
+
+There his SecondBrain sorts it, and the index finds it the next time a turn asks. A sitting with no turn writes nothing; with no second brain declared nothing is asked; a write that fails is said on the wire as a note.
+
+Strokes in `test_steward_harness`:
+- the entry from a sitting's record, written through `capture_append`;
+- nothing for a sitting with no turn;
+- the door's call after the toll, and its note when the write fails.
+
+What goes red if it comes unplugged: those strokes.
+
+Restart required.
+
 ### core: the bridge from the workspace to his notes -- his notes beside every Steward turn, and /notes (2026-10-22, piece C; his words: the workspace "can also query the notes and it doesnt need to use so much processing power just getting notes and information, that can be delivered by a small indexing or nomic model within the notes app")
 
 His second brain moved into the ground on his word ("why don't we put the secondbrain into a world?"):

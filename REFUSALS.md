@@ -1155,8 +1155,8 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 | 1676 | this door has no secret card, so no key can be asked for here. |
 | 1694 | {name} is not one of the driver's own tools. |
 | 2551 | there is no seat named {seat}. The seats are: { |
-| 2694 | there is no seat named {seat}. The seats are: { |
-| 2933 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
+| 2741 | there is no seat named {seat}. The seats are: { |
+| 2980 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
 
 ### manjuel/skills.py — 91 sites
 
