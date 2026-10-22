@@ -34,6 +34,25 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: HARNESS_STUDY.md retired; its notes are now the source (2026-10-23, the reconcile's stage 3, the first of B's retirements; his words: "let's do A and then B as proposed", and on B's questions: "check through the relay, should it in the same PR. note footer can be reworded code comments repointed")
+
+HARNESS_STUDY.md leaves the repository. Its text is in his notes, tagged `doc` and `harness-study`, and in git history. The relay checked this before it went: its 15 section notes match the file exactly, and its opening note (written by the mirror since the previous entry, after his `/mirror sync`) carries the 2,650 characters above its first heading. Nothing read it at run time: before this piece, the only things naming it were `mirror.DOCS`, `index_roots.txt` and one comment in `serve.py`.
+
+- **`mirror.RETIRED`** (new) names the documents that have left. The sync writes no note for them.
+- **`mirror.retire`** (new, run by `mirror.sync` in the same kernel session) rewords the footer on a retired document's notes. The old footer says "Until the reconcile's stage 3 the file in the repository is the source"; the new one says the note is now the source. It changes each note once and leaves any note whose footer is already reworded or edited away. `/mirror sync` says how many it reworded.
+- **`index_roots.txt`** drops the line, on his word to do it in the same PR.
+- **The `serve.py` comment** that cited HARNESS_STUDY.md now points at the note.
+- **BUILDMAP.md and REFUSALS.md** are regenerated.
+
+Strokes (`mirror._strokes`):
+- A retired document is neither on disk nor on DOCS.
+- An old footer is reworded on the first sync and left alone on the second.
+
+All three were proved by reversal: the file put back, its name put back on DOCS, and the reword skipped. Each went red.
+
+What goes red if it comes unplugged: `mirror._strokes` (run in `test_steward_harness`).
+
+Restart required.
 ### core: the mirror carries each document's opening (2026-10-23, the reconcile's stage 3, before the first retirement; his words: "go ahead, split")
 
 Before retiring HARNESS_STUDY.md, the notes were checked against the file through the relay. All 42 sections of the four "can go now" documents matched their notes exactly. The text above each document's first `## ` heading did not: `mirror._h2` begins at the first section, so no note carried a document's opening. HARNESS_STUDY loses 2,651 characters that way, and SYSTEM_DESIGN 617. Retiring a file would have left its opening only in git history. So the retirement waits for this piece.

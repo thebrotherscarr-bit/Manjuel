@@ -578,7 +578,8 @@ DRIVE_CONTEXT_CHARS = int(_drive_dial("MANJUEL_DRIVER_CONTEXT_CHARS", 5000))
 # Steward's sub-agents: a council seat asked one task, its answer handed back.
 DRIVE_DELEGATE_CHARS = 6000
 # THE REST OF THE FEATURE LIST (2026-10-21, his word: "diff the full feature list from
-# all the other harnesses, and add them to stewards abilities"; HARNESS_STUDY.md):
+# all the other harnesses, and add them to stewards abilities"; the harness study, in his
+# notes under the tag harness-study since its file was retired, 2026-10-23):
 # per-tool rules (opencode, Cline, oh-my-pi, OpenClaw): a tool named in ALLOW writes
 # without a card, one named in DENY is never run; an "always" on a write card grants
 # that tool for the rest of the sitting (DRIVE_GRANTS, this process's life). A fallback
@@ -2906,7 +2907,8 @@ def door_mirror(door, objective: str) -> None:
         print(f"\n  {why}\n")
         return
     kinds = ", ".join(f"{k} {n}" for k, n in sorted(got["kinds"].items()))
-    print(f"\n  the record in your notes: {_written(got)}\n  by kind: {kinds}\n")
+    gone = f"\n  retired documents: {got['retired']} notes reworded as the source" if got.get("retired") else ""
+    print(f"\n  the record in your notes: {_written(got)}\n  by kind: {kinds}{gone}\n")
 
 
 def door_rulings(door, objective: str) -> None:

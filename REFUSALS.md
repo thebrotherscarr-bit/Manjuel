@@ -1118,8 +1118,8 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 | line | says |
 |---|---|
-| 202 | notes_get failed: no such note |
-| 207 | notes_create failed: bad id |
+| 250 | notes_get failed: no such note |
+| 255 | notes_create failed: bad id |
 
 ### manjuel/pipeline.py — 2 sites
 
@@ -1149,28 +1149,28 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 | line | says |
 |---|---|
-| 1213 | '{name}' is not one of the driver's tools. |
-| 1217 | {tgt[0].name} is not on a branch (a detached HEAD), so there is no |
-| 1222 | {_drive_rel(*key)} carries changes that are not the Steward's (not |
-| 1241 | {t[0].name} is not on a branch (a detached HEAD), so there is no |
-| 1246 | {_drive_rel(*k)} carries changes that are not the Steward's, so |
-| 1269 | run_shell will not run that -- {why}. Nothing ran. |
-| 1275 | {_drive_rel(*key)} is already there and this job has not read it. Read it |
-| 1302 | the line of work `{opening}` could not be opened: {out} |
-| 1312 | {_drive_rel(*k)} could not be read before it was written: {exc} |
-| 1321 | {name} failed in the engine ({type(exc).__name__}: {exc}). |
-| 1484 | {name} was not run -- the reply was cut off by the |
-| 1636 | no council is seated for this job, so there is no one to delegate to. |
-| 1638 | delegate needs a seat and a task. |
-| 1640 | {seat} answered nothing. |
-| 1642 | {seat} could not answer ({type(exc).__name__}: {exc}). |
-| 1667 | ask_operator needs a question. |
-| 1676 | {key!r} is not a name for .env -- capitals, digits and underscores, |
-| 1680 | this door has no secret card, so no key can be asked for here. |
-| 1698 | {name} is not one of the driver's own tools. |
-| 2555 | there is no seat named {seat}. The seats are: { |
-| 2745 | there is no seat named {seat}. The seats are: { |
-| 3080 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
+| 1214 | '{name}' is not one of the driver's tools. |
+| 1218 | {tgt[0].name} is not on a branch (a detached HEAD), so there is no |
+| 1223 | {_drive_rel(*key)} carries changes that are not the Steward's (not |
+| 1242 | {t[0].name} is not on a branch (a detached HEAD), so there is no |
+| 1247 | {_drive_rel(*k)} carries changes that are not the Steward's, so |
+| 1270 | run_shell will not run that -- {why}. Nothing ran. |
+| 1276 | {_drive_rel(*key)} is already there and this job has not read it. Read it |
+| 1303 | the line of work `{opening}` could not be opened: {out} |
+| 1313 | {_drive_rel(*k)} could not be read before it was written: {exc} |
+| 1322 | {name} failed in the engine ({type(exc).__name__}: {exc}). |
+| 1485 | {name} was not run -- the reply was cut off by the |
+| 1637 | no council is seated for this job, so there is no one to delegate to. |
+| 1639 | delegate needs a seat and a task. |
+| 1641 | {seat} answered nothing. |
+| 1643 | {seat} could not answer ({type(exc).__name__}: {exc}). |
+| 1668 | ask_operator needs a question. |
+| 1677 | {key!r} is not a name for .env -- capitals, digits and underscores, |
+| 1681 | this door has no secret card, so no key can be asked for here. |
+| 1699 | {name} is not one of the driver's own tools. |
+| 2556 | there is no seat named {seat}. The seats are: { |
+| 2746 | there is no seat named {seat}. The seats are: { |
+| 3082 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
 
 ### manjuel/skills.py — 91 sites
 
