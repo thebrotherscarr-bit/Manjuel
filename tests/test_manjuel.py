@@ -24480,6 +24480,55 @@ def test_steward_harness(reg, lib, book):
         check("features: the second brain's system_update, said plainly, is refused by name and never run",
               said_up.startswith("Refused") and "system_update" in said_up and not ran_tools
               and "notes_search" in listed and "system_update" not in listed, f"{said_up} | {listed}")
+        # C, THE BRIDGE FROM THE WORKSPACE TO HIS NOTES (2026-10-22): his notes beside every turn by the
+        # kernel's index (context_for), first in the driver's context; /notes searches them; no model asked.
+        asked = []
+
+        class FakeKernel:
+            def __init__(self, argv, **kw):
+                pass
+
+            def start(self):
+                pass
+
+            def call(self, tool, args, timeout=None):
+                asked.append((tool, dict(args)))
+                if tool == "context_for":
+                    return _json.dumps({"text": "Recently worked on: the cut of v0.2.6\n[n1] Claude finder\nthe notes are here"})
+                if tool == "index_search":
+                    return _json.dumps({"results": [{"note": "n1", "title": "Claude finder", "text": "the notes are here"}]})
+                return _json.dumps({"text": "Recently worked on (last 7 days):\n- Claude finder"})
+
+            def close(self):
+                pass
+        real_srv, real_servers = mcp_stdio.StdioServer, mcp_stdio.servers
+        mcp_stdio.StdioServer = FakeKernel
+        mcp_stdio.servers = lambda: {"notes": [sys.executable, "manjuel/mcp_stdio.py"]}
+        try:
+            ctx_notes = SV.drive_context(_NS(standing="## Standing\nthe plan", sitting=None), tmp, "where are my notes")
+            out = _io.StringIO()
+            with _cl.redirect_stdout(out):
+                SV.door_notes(_NS(), "/notes claude finder")
+                SV.door_notes(_NS(), "/notes")
+            printed = out.getvalue()
+            mcp_stdio.servers = lambda: {}
+            no_brain = SV.notes_context("where are my notes")
+        finally:
+            mcp_stdio.StdioServer, mcp_stdio.servers = real_srv, real_servers
+        check("features: his notes come first in the driver's context, by the kernel's context_for, bounded",
+              ctx_notes.startswith("## From his notes") and "the notes are here" in ctx_notes
+              and ctx_notes.index("From his notes") < ctx_notes.index("the plan")
+              and asked[0] == ("context_for", {"q": "where are my notes", "budget": SV.NOTES_CONTEXT_CHARS}),
+              ctx_notes[:300])
+        check("features: /notes searches his notes by their index, and alone says what he worked on lately",
+              "Claude finder  [n1]" in printed and "the notes are here" in printed and "Recently worked on" in printed
+              and [a[0] for a in asked[1:]] == ["index_search", "context_now"], printed[:300])
+        check("features: with no second brain declared, nothing is added and nothing is asked",
+              no_brain == "" and len(asked) == 3, no_brain)
+        src_now = (ROOT / "manjuel" / "serve.py").read_text(encoding="utf-8")
+        check("features: Door.turn serves /notes, and the face and the driver both carry his notes on the turn",
+              "door_notes(self, objective)" in src_now and "drive_context(sess, door.ground, objective)" in src_now
+              and 'drive_context(sess, door.ground, spec.get("goal", ""))' in src_now)
         council = tools_shell._run_shell(_NS(ground=ROOT, caller=""), {"content": "python make.py"})
         check("features: a seat of the council, which has no card, gets run_shell's reads only -- a write is refused unrun",
               council.startswith("Refused") and "only Steward's driver" in council and "Nothing ran" in council, council)

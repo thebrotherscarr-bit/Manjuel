@@ -1135,28 +1135,28 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 | line | says |
 |---|---|
-| 1205 | '{name}' is not one of the driver's tools. |
-| 1209 | {tgt[0].name} is not on a branch (a detached HEAD), so there is no |
-| 1214 | {_drive_rel(*key)} carries changes that are not the Steward's (not |
-| 1233 | {t[0].name} is not on a branch (a detached HEAD), so there is no |
-| 1238 | {_drive_rel(*k)} carries changes that are not the Steward's, so |
-| 1261 | run_shell will not run that -- {why}. Nothing ran. |
-| 1267 | {_drive_rel(*key)} is already there and this job has not read it. Read it |
-| 1294 | the line of work `{opening}` could not be opened: {out} |
-| 1304 | {_drive_rel(*k)} could not be read before it was written: {exc} |
-| 1313 | {name} failed in the engine ({type(exc).__name__}: {exc}). |
-| 1476 | {name} was not run -- the reply was cut off by the |
-| 1628 | no council is seated for this job, so there is no one to delegate to. |
-| 1630 | delegate needs a seat and a task. |
-| 1632 | {seat} answered nothing. |
-| 1634 | {seat} could not answer ({type(exc).__name__}: {exc}). |
-| 1659 | ask_operator needs a question. |
-| 1668 | {key!r} is not a name for .env -- capitals, digits and underscores, |
-| 1672 | this door has no secret card, so no key can be asked for here. |
-| 1690 | {name} is not one of the driver's own tools. |
-| 2547 | there is no seat named {seat}. The seats are: { |
-| 2643 | there is no seat named {seat}. The seats are: { |
-| 2853 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
+| 1209 | '{name}' is not one of the driver's tools. |
+| 1213 | {tgt[0].name} is not on a branch (a detached HEAD), so there is no |
+| 1218 | {_drive_rel(*key)} carries changes that are not the Steward's (not |
+| 1237 | {t[0].name} is not on a branch (a detached HEAD), so there is no |
+| 1242 | {_drive_rel(*k)} carries changes that are not the Steward's, so |
+| 1265 | run_shell will not run that -- {why}. Nothing ran. |
+| 1271 | {_drive_rel(*key)} is already there and this job has not read it. Read it |
+| 1298 | the line of work `{opening}` could not be opened: {out} |
+| 1308 | {_drive_rel(*k)} could not be read before it was written: {exc} |
+| 1317 | {name} failed in the engine ({type(exc).__name__}: {exc}). |
+| 1480 | {name} was not run -- the reply was cut off by the |
+| 1632 | no council is seated for this job, so there is no one to delegate to. |
+| 1634 | delegate needs a seat and a task. |
+| 1636 | {seat} answered nothing. |
+| 1638 | {seat} could not answer ({type(exc).__name__}: {exc}). |
+| 1663 | ask_operator needs a question. |
+| 1672 | {key!r} is not a name for .env -- capitals, digits and underscores, |
+| 1676 | this door has no secret card, so no key can be asked for here. |
+| 1694 | {name} is not one of the driver's own tools. |
+| 2551 | there is no seat named {seat}. The seats are: { |
+| 2694 | there is no seat named {seat}. The seats are: { |
+| 2933 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
 
 ### manjuel/skills.py — 91 sites
 
