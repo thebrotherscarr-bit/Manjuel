@@ -5,13 +5,12 @@
       "args": ["worlds/jesster/notes/cli.py", "--vault", "worlds/notes", "mcp"]
     },
     "atlas": {
-      "command": "C:/Users/novad/Desktop/Research/atlas/line/atlas-mcp.exe",
-      "args": [
-        "--tenant", "research=C:/Users/novad/Desktop/Research",
-        "--tenant", "atlas=C:/Users/novad/Desktop/Research/atlas",
-        "--default-project", "research",
-        "--manjuel", "python C:/Users/novad/Desktop/Research/manjuel.py"
-      ]
+      "command": "python",
+      "args": ["C:/Users/novad/Desktop/Research/bin/atlas_bridge.py"]
+    },
+    "creative": {
+      "command": "python",
+      "args": ["C:/Users/novad/Desktop/Research/bin/creative_mcp.py"]
     }
   }
 }
