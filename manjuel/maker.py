@@ -74,6 +74,7 @@ import re
 import shutil
 import socketserver
 import subprocess
+import sys
 import tempfile
 import threading
 import time
@@ -423,6 +424,21 @@ _HEAD_OPEN = re.compile(r"(?i)<head\b[^>]*>")
 _HTML_OPEN = re.compile(r"(?i)<html\b[^>]*>")
 _DOCTYPE = re.compile(r"(?i)<!doctype\s+html[^>]*>")
 
+# A CLIENT THAT HANGS UP IS NOT AN ERROR (2026-10-22, his words: "those fucking sockets and
+# connection noise is super annoying EVERY time.. that shouldnt be normal noise"). The browser
+# closing its page mid-request reset the connection, and socketserver's default printed the
+# whole traceback for it, every run. A hang-up is dropped; any other error still prints.
+HANG_UPS = (ConnectionResetError, ConnectionAbortedError, BrokenPipeError)
+
+
+class QuietServer(socketserver.ThreadingTCPServer):
+    """ThreadingTCPServer whose client hanging up is not an error (HANG_UPS)."""
+
+    def handle_error(self, request, client_address):
+        if isinstance(sys.exc_info()[1], HANG_UPS):
+            return
+        super().handle_error(request, client_address)
+
 
 def _inject(page: str, settle: float) -> tuple[str, int]:
     """(the page with the catcher in it, how many lines it pushed things down).
@@ -486,7 +502,7 @@ def run_page(page: str, settle: float = SETTLE,
             self.wfile.write(body)
 
     try:
-        srv = socketserver.ThreadingTCPServer(("127.0.0.1", 0), Handler)
+        srv = QuietServer(("127.0.0.1", 0), Handler)
     except OSError as exc:
         return False, [], f"the page could not be served to a browser ({exc})"
     srv.daemon_threads = True

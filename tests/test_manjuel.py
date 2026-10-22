@@ -23,6 +23,26 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+def _quiet(base):
+    """A stand-in server whose client hanging up is not an error (maker.HANG_UPS): the
+    suites' servers printed a ConnectionResetError traceback every run when a client
+    closed mid-request (2026-10-22). Any other error still prints."""
+    from manjuel.maker import HANG_UPS
+
+    class Quiet(base):
+        def handle_error(self, request, client_address):
+            if isinstance(sys.exc_info()[1], HANG_UPS):
+                return
+            super().handle_error(request, client_address)
+    return Quiet
+
+
+def _ss_quiet_base():
+    """socketserver's own base, for the stroke that holds _quiet to its word."""
+    import socketserver
+    return socketserver.ThreadingTCPServer
+
+
 # The suites grow with the system, so no count is written into a doc (the
 # operator's ruling, 2026-09-02). Instead each run STAMPS what it proved
 # here, and the boot report reads it back -- an observed fact with a time
@@ -1108,7 +1128,7 @@ def test_a_hosted_route_is_opened_on_his_terms(reg, lib, book):
         do_GET = do_POST
 
     def start(handler):
-        srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+        srv = _quiet(http.server.ThreadingHTTPServer)(("127.0.0.1", 0), handler)
         threading.Thread(target=srv.serve_forever, daemon=True).start()
         return srv, srv.server_address[1]
 
@@ -5756,7 +5776,7 @@ def test_a_spelled_out_door_call_is_written_by_the_engine(reg, lib, book):
         def log_message(self, *a):        # the stub says nothing on the console
             pass
 
-    srv = _hs.HTTPServer(("127.0.0.1", 0), Door)
+    srv = _quiet(_hs.HTTPServer)(("127.0.0.1", 0), Door)
     port = srv.server_address[1]
     _th.Thread(target=srv.serve_forever, daemon=True).start()
     saved = {k: v for k, v in _os.environ.items() if k.startswith("MANJUEL_MCP_")}
@@ -16182,7 +16202,7 @@ def test_the_council_carries_its_key_to_the_door(reg, lib, book):
         def log_message(self, *a):        # the stub says nothing on the console
             pass
 
-    srv = _hs.HTTPServer(("127.0.0.1", 0), Stub)
+    srv = _quiet(_hs.HTTPServer)(("127.0.0.1", 0), Stub)
     port = srv.server_address[1]
     _th.Thread(target=srv.serve_forever, daemon=True).start()
     call = lambda **kw: _sk._HANDLERS["mcp_call"](None, kw)
@@ -16315,7 +16335,7 @@ def test_the_mcp_skill_never_leaves_this_machine(reg, lib, book):
             def log_message(self, *a):
                 pass
 
-        srv = _ss.ThreadingTCPServer(("127.0.0.1", 0), _Stall)
+        srv = _quiet(_ss.ThreadingTCPServer)(("127.0.0.1", 0), _Stall)
         srv.daemon_threads = True
         _th.Thread(target=srv.serve_forever, daemon=True).start()
         _os.environ["MANJUEL_MCP_SLOW"] = f"http://127.0.0.1:{srv.server_address[1]}/rpc"
@@ -24534,6 +24554,24 @@ def test_steward_harness(reg, lib, book):
               and [a[0] for a in asked[1:]] == ["index_search", "context_now"], printed[:300])
         check("features: with no second brain declared, nothing is added and nothing is asked",
               no_brain == "" and len(asked) == 3, no_brain)
+        # A CLIENT THAT HANGS UP IS NOT AN ERROR (2026-10-22): no traceback for a reset, a real fault still printed.
+        from manjuel.maker import QuietServer
+        for label, cls in (("the maker's server", QuietServer), ("the suites' stand-ins", _quiet(_ss_quiet_base()))):
+            srv_q = cls.__new__(cls)
+            err = _io.StringIO()
+            with _cl.redirect_stderr(err):
+                try:
+                    raise ConnectionResetError(10054, "An existing connection was forcibly closed by the remote host")
+                except ConnectionResetError:
+                    srv_q.handle_error(None, ("127.0.0.1", 1))
+                try:
+                    raise ValueError("a real fault")
+                except ValueError:
+                    srv_q.handle_error(None, ("127.0.0.1", 1))
+            check(f"features: {label} say nothing when a client hangs up, and still print a real fault",
+                  "ConnectionResetError" not in err.getvalue() and "ValueError: a real fault" in err.getvalue(),
+                  err.getvalue()[-300:])
+
         # D, THE DAY'S WORK INTO HIS NOTES (2026-10-22): a closed sitting, from its record alone, into
         # today's capture note through the kernel's capture_append; nothing for a sitting with no turn.
         st = _NS(n=777, started="2026-10-22T07:50:00", ended="2026-10-22T08:09:00", closed_by="closed by the client",

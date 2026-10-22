@@ -102,8 +102,12 @@ ROOT = "_ROOT"
 # TOOLS REFUSED BY NAME, per server: what would change the machine or pull in local paths, never
 # run through this door whoever calls -- a council seat's mcp_call carries no card.
 REFUSED_TOOLS = {
+    # archive_dig and archive_sources read paths on his PC (the archive digger, agreed with
+    # the cloud Claude in his note archive-digger-sync, 2026-10-22); its distill, write and
+    # status stay open.
     "notes": {"system_update", "system_install_desktop", "system_desktop_build",
-              "import_folder", "ingest_path", "ingest_watch", "notes_remove"},
+              "import_folder", "ingest_path", "ingest_watch", "notes_remove",
+              "archive_dig", "archive_sources"},
 }
 
 
@@ -473,6 +477,10 @@ def _strokes() -> int:
         check("its reads and its notes pass",
               not refused_tool("notes", "notes_search") and not refused_tool("notes", "llm_ask")
               and not refused_tool("rea", "system_update"), "")
+        check("the archive digger's path readers are refused, its distill, write and status are not",
+              refused_tool("notes", "archive_dig") and refused_tool("notes", "archive_sources")
+              and not refused_tool("notes", "archive_distill") and not refused_tool("notes", "archive_write")
+              and not refused_tool("notes", "archive_status"), "")
 
         # The environment is the allowlist only.
         os.environ["MANJUEL_STROKE_SECRET"] = "x"

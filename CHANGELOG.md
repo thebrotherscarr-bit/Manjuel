@@ -34,6 +34,26 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: the archive digger's path readers refused at Manjuel's door (2026-10-22; agreed with the cloud Claude in his note `archive-digger-sync`, at his word)
+
+The cloud Claude is building an archive digger into the notes kernel (`archive.dig`, `archive.distill`, `archive.write`, `archive.status`, `archive.sources`). Two of its tools read paths on his PC, so `mcp_stdio.REFUSED_TOOLS` refuses `archive_dig` and `archive_sources` by name for the `notes` server, as it already does `ingest_path`. A path is his to give the digger, by hand. `archive_distill`, `archive_write` and `archive_status` stay open to Steward.
+
+A stroke in `mcp_stdio._strokes` holds the refusals and what stays open. What goes red if it comes unplugged: that stroke.
+
+### core: a client that hangs up is not an error -- the suites run clean (2026-10-22; his words: "those fucking sockets and connection noise is super annoying EVERY time.. that shouldnt be normal noise")
+
+Every suite run printed `ConnectionResetError` tracebacks. A client hanging up on one of our small HTTP servers mid-request (the browser closing the maker's page check, a stroke's client finishing early) reached socketserver's default `handle_error`, which prints the whole stack for it.
+
+Now a hang-up (`maker.HANG_UPS`: a reset, an abort, a broken pipe) is dropped, and any other error still prints as before:
+- `manjuel/maker.py` serves its page check from `QuietServer`.
+- The suites' four stand-in servers go through one helper, `_quiet(base)`.
+
+The full suite read 4429 of 4429 with no `ConnectionResetError` and no traceback in its output.
+
+A stroke in `test_steward_harness` holds both halves, for the maker's server and the suites' helper: a reset prints nothing, a real fault prints. What goes red if it comes unplugged: that stroke.
+
+Restart required.
+
 ### core: the reconcile's stage 1 -- the whole record mirrored into his notes, and a door call goes to the server named first (2026-10-22; his words: "simplify the fuck out of atlas/manjuel so that it just does the coding/workflows/agentic stuff there and uses the secondbrain as essentially a repository for any and all information relating to what i am working on", and "so laws, registry and docs, whats left, and the audit ledger can all be moved out and the information put into the secondbrain notes system so that it can be referred to when needed")
 
 The plan is in his notes, pinned: "Reconcile: Manjuel does the work, SecondBrain holds what I know". It has three stages: 1 mirror, 2 point, 3 retire each file once nothing reads it, on his card.
