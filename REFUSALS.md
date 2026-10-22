@@ -1063,7 +1063,7 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 
 ## THE SITES — every `Refused:` in the code, read off the code
 
-32 refusals are written up above, by hand, each with the sitting that earned it. The code refuses at 162 sites. This tail lists every one -- module, line, and the words it says -- regenerated from the code by `python tests/refusals.py` so it cannot drift; `--check` in CI refuses a stale copy. A site is the code's fact; a section above is the account of why. Where a site's words name a law, a rule or a gate, the section is the one that names the same.
+32 refusals are written up above, by hand, each with the sitting that earned it. The code refuses at 164 sites. This tail lists every one -- module, line, and the words it says -- regenerated from the code by `python tests/refusals.py` so it cannot drift; `--check` in CI refuses a stale copy. A site is the code's fact; a section above is the account of why. Where a site's words name a law, a rule or a gate, the section is the one that names the same.
 
 ### manjuel/cli.py — 1 site
 
@@ -1131,32 +1131,39 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 | 755 | there is no tool named rm_rf. The tools are: read_file, done. |
 | 796 | read_file was not run -- the arguments |
 
+### manjuel/rulings.py — 2 sites
+
+| line | says |
+|---|---|
+| 171 | notes_get failed: no such note |
+| 174 | notes_create failed: bad id |
+
 ### manjuel/serve.py — 22 sites
 
 | line | says |
 |---|---|
-| 1209 | '{name}' is not one of the driver's tools. |
-| 1213 | {tgt[0].name} is not on a branch (a detached HEAD), so there is no |
-| 1218 | {_drive_rel(*key)} carries changes that are not the Steward's (not |
-| 1237 | {t[0].name} is not on a branch (a detached HEAD), so there is no |
-| 1242 | {_drive_rel(*k)} carries changes that are not the Steward's, so |
-| 1265 | run_shell will not run that -- {why}. Nothing ran. |
-| 1271 | {_drive_rel(*key)} is already there and this job has not read it. Read it |
-| 1298 | the line of work `{opening}` could not be opened: {out} |
-| 1308 | {_drive_rel(*k)} could not be read before it was written: {exc} |
-| 1317 | {name} failed in the engine ({type(exc).__name__}: {exc}). |
-| 1480 | {name} was not run -- the reply was cut off by the |
-| 1632 | no council is seated for this job, so there is no one to delegate to. |
-| 1634 | delegate needs a seat and a task. |
-| 1636 | {seat} answered nothing. |
-| 1638 | {seat} could not answer ({type(exc).__name__}: {exc}). |
-| 1663 | ask_operator needs a question. |
-| 1672 | {key!r} is not a name for .env -- capitals, digits and underscores, |
-| 1676 | this door has no secret card, so no key can be asked for here. |
-| 1694 | {name} is not one of the driver's own tools. |
-| 2551 | there is no seat named {seat}. The seats are: { |
-| 2741 | there is no seat named {seat}. The seats are: { |
-| 2980 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
+| 1212 | '{name}' is not one of the driver's tools. |
+| 1216 | {tgt[0].name} is not on a branch (a detached HEAD), so there is no |
+| 1221 | {_drive_rel(*key)} carries changes that are not the Steward's (not |
+| 1240 | {t[0].name} is not on a branch (a detached HEAD), so there is no |
+| 1245 | {_drive_rel(*k)} carries changes that are not the Steward's, so |
+| 1268 | run_shell will not run that -- {why}. Nothing ran. |
+| 1274 | {_drive_rel(*key)} is already there and this job has not read it. Read it |
+| 1301 | the line of work `{opening}` could not be opened: {out} |
+| 1311 | {_drive_rel(*k)} could not be read before it was written: {exc} |
+| 1320 | {name} failed in the engine ({type(exc).__name__}: {exc}). |
+| 1483 | {name} was not run -- the reply was cut off by the |
+| 1635 | no council is seated for this job, so there is no one to delegate to. |
+| 1637 | delegate needs a seat and a task. |
+| 1639 | {seat} answered nothing. |
+| 1641 | {seat} could not answer ({type(exc).__name__}: {exc}). |
+| 1666 | ask_operator needs a question. |
+| 1675 | {key!r} is not a name for .env -- capitals, digits and underscores, |
+| 1679 | this door has no secret card, so no key can be asked for here. |
+| 1697 | {name} is not one of the driver's own tools. |
+| 2554 | there is no seat named {seat}. The seats are: { |
+| 2744 | there is no seat named {seat}. The seats are: { |
+| 3054 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
 
 ### manjuel/skills.py — 91 sites
 

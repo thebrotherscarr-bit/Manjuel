@@ -23999,9 +23999,9 @@ def test_steward_harness(reg, lib, book):
     import shutil as _sh
     from types import SimpleNamespace as _NS
     from manjuel import serve as SV
-    from manjuel import compact, dialects, guards, journal, mcp_stdio, repair, tools_files, tools_shell
+    from manjuel import compact, dialects, guards, journal, mcp_stdio, repair, rulings, tools_files, tools_shell
 
-    for mod in (repair, guards, compact, journal, dialects, mcp_stdio, tools_files, tools_shell):
+    for mod in (repair, guards, compact, journal, dialects, mcp_stdio, tools_files, tools_shell, rulings):
         try:
             out = _io.StringIO()
             with _cl.redirect_stdout(out):
@@ -24553,6 +24553,40 @@ def test_steward_harness(reg, lib, book):
               and captured[0][1]["source"] == "manjuel" and captured[0][1]["assistant"] == entry,
               f"{entry[:200]} | {captured}")
         check("features: a sitting that ran no turn writes nothing to his notes", empty == "" and len(captured) == 1)
+
+        # F, HIS RULINGS AND STEWARD'S SCRATCHPAD IN HIS NOTES (2026-10-22): /rulings searches only rulings
+        # (tag ruling), /rulings sync writes them through one kernel session, and a /drive job is captured.
+        class FakeRulings(FakeKernel):
+            def call(self, tool, args, timeout=None):
+                captured.append((tool, dict(args)))
+                if tool == "index_search":
+                    return _json.dumps({"results": [{"note": "ruling-x", "title": "SITTING LAW 5: Nothing is edited",
+                                                     "text": "while the operator's sitting is open"}]})
+                if tool == "notes_get":
+                    return "Refused: notes_get failed: no such note"
+                return "{}"
+        mcp_stdio.StdioServer = FakeRulings
+        mcp_stdio.servers = lambda: {"notes": [sys.executable, "manjuel/mcp_stdio.py"]}
+        captured.clear()
+        try:
+            out = _io.StringIO()
+            with _cl.redirect_stdout(out):
+                SV.door_rulings(_NS(ground=ROOT), "/rulings edits during a sitting")
+                SV.door_rulings(_NS(ground=ROOT), "/rulings sync")
+            job = SV.capture_job(_NS(goal="fix the map", model="gpt-oss:20b", report="Steward drove: fix the map -> passed"))
+        finally:
+            mcp_stdio.StdioServer, mcp_stdio.servers = real_srv, real_servers
+        said_r = out.getvalue()
+        n_rulings = len(rulings.units(ROOT))
+        check("features: /rulings searches only his rulings, by the notes' index",
+              captured[0] == ("index_search", {"q": "edits during a sitting", "limit": 8, "tag": "ruling"})
+              and "SITTING LAW 5: Nothing is edited" in said_r, said_r[:300])
+        check("features: /rulings sync writes every ruling into his notes in one session and says how many",
+              f"{n_rulings} new, 0 changed, 0 already there" in said_r
+              and sum(1 for c in captured if c[0] == "notes_create") == n_rulings, said_r[-200:])
+        check("features: a /drive job is written to Steward's scratchpad in his notes",
+              job == "" and captured[-1][0] == "capture_append" and captured[-1][1]["source"] == "steward"
+              and captured[-1][1]["user"] == "/drive fix the map", str(captured[-1])[:200])
         src_now = (ROOT / "manjuel" / "serve.py").read_text(encoding="utf-8")
         check("features: the door writes the sitting after its toll, and a failed write is said on the wire",
               "missed = capture_sitting(st, self.ground)" in src_now

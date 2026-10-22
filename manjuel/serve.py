@@ -615,7 +615,9 @@ FACE_RULES = (
     "relevant to his words already sit above, under From his notes. To dig further, "
     "mcp_call the server notes (index_search, context_for -- his notes by their index) or, "
     "while his SecondBrain app is open, the server secondbrain (search_notes, read_note, "
-    "search_sessions). capture_append adds to his notes. "
+    "search_sessions). His rulings are notes tagged ruling: index_search with tag ruling finds "
+    "what he has ruled on a thing; the sealed law and the gates still decide. capture_append "
+    "adds to his notes. "
     "For real reasoning, a review or code "
     "you want a second mind on, delegate to a council seat with the whole task. If only he "
     "can decide, ask_operator; if the work needs a key or token, ask_secret names it and he "
@@ -654,6 +656,7 @@ DRIVE_USAGE = (
     "        yes works the plan as one job\n"
     "  /undo   the last Steward turn's unsaved files put back, on your card\n"
     "  /notes [words]   your notes searched by their own index (no model); alone: lately\n"
+    "  /rulings sync | /rulings <words>   your laws and rules in your notes, and found there\n"
     "  /schedule every 30m|at 18:00|cron \"..\"|once <time> <drive> ; /goal <drive> | check: <command>\n"
     "        run as unattended `auto` jobs while a sitting is open; /schedules lists, /schedules drop <id>\n"
     "  plan and each need a check; \"suites\" as the check runs the strokes.\n"
@@ -2760,6 +2763,12 @@ def door_drive(door, said: str, once: bool = False):
             except EOFError:
                 break
             door.last_drive = d      # what /undo puts back
+            try:
+                missed = capture_job(d)      # Steward's scratchpad, in his notes
+            except Exception as exc:
+                missed = f"{type(exc).__name__}: {exc}"
+            if missed:
+                report(f"  (this job was not written to your notes: {missed})")
             lesson = drive_lesson(d)
             if lesson:
                 try:
@@ -2854,6 +2863,71 @@ def door_notes(door, objective: str) -> None:
         snippet = " ".join(str(h.get("text") or "").split())[:160]
         lines.append(f"  - {h.get('title') or h.get('note')}  [{h.get('note')}]\n      {snippet}")
     print("\n" + "\n".join(lines) + "\n")
+
+
+def door_rulings(door, objective: str) -> None:
+    """/rulings sync | /rulings <words> (F, 2026-10-22, his words: "we can tie in the notes
+    system to be able to diff or parse whatever ive ruled before"). `sync` writes every law
+    and rule into his notes, tagged `ruling` (rulings.py), in one kernel session; words
+    search only his rulings by the notes' index. The chain stays the authority."""
+    words = objective.strip()[len("/rulings"):].strip()
+    if not words:
+        print("\n  /rulings sync   every law and rule into your notes (safe to repeat)\n"
+              "  /rulings <words>   your rulings that bear on them, by the notes' index\n")
+        return
+    if words.lower() == "sync":
+        from . import mcp_stdio, rulings
+        argv = mcp_stdio.servers().get("notes")
+        if not argv:
+            print("\n  his second brain is not declared (MANJUEL_MCP_NOTES_CMD)\n")
+            return
+        ran, why = mcp_stdio.admit("notes", argv)
+        if why:
+            print(f"\n  {why}\n")
+            return
+        srv = mcp_stdio.StdioServer(ran, timeout=NOTES_CALL_SECONDS)
+        try:
+            srv.start()
+            got = rulings.sync(door.ground, srv)
+        except mcp_stdio.StdioError as exc:
+            print(f"\n  his second brain did not answer ({exc})\n")
+            return
+        finally:
+            srv.close()
+        print(f"\n  rulings in your notes: {got['created']} new, {got['updated']} changed, "
+              f"{got['same']} already there" + (f", {len(got['failed'])} failed: {got['failed'][:3]}"
+                                                 if got["failed"] else "") + "\n")
+        return
+    text, why = notes_call("index_search", {"q": words, "limit": 8, "tag": "ruling"})
+    if why:
+        print(f"\n  {why}\n")
+        return
+    try:
+        hits = json.loads(text).get("results") or []
+    except (ValueError, AttributeError):
+        hits = []
+    if not hits:
+        print(f"\n  No ruling found for: {words} (a ruling not found still binds; /rulings sync "
+              f"brings new ones in)\n")
+        return
+    lines = [f"  {len(hits)} of your rulings for: {words}"]
+    for h in hits:
+        lines.append(f"  - {h.get('title') or h.get('note')}\n      "
+                     + " ".join(str(h.get('text') or '').split())[:200])
+    print("\n" + "\n".join(lines) + "\n")
+
+
+def capture_job(d) -> str:
+    """STEWARD'S SCRATCHPAD (F, 2026-10-22, his words: "allowing steward to have the notes app
+    as a scratchpad for work"). A /drive job, when it ends, into today's `steward` capture
+    note in his notes: its goal and its report, read off the record. '' when written or not
+    asked; else why."""
+    if not str(getattr(d, "goal", "") or "").strip():
+        return ""
+    _, why = notes_call("capture_append", {"source": "steward", "model": str(getattr(d, "model", "") or ""),
+                                           "user": f"/drive {d.goal}"[:500],
+                                           "assistant": str(getattr(d, "report", "") or "")[:CAPTURE_CHARS]})
+    return "" if not why or why.startswith("his second brain is not declared") else why
 
 
 SCHEDULE_TICK = 60.0       # how often an idle door looks for a due schedule (seconds)
@@ -3415,6 +3489,9 @@ class Door:
             return True
         if objective.split(None, 1)[0].lower() == "/notes":
             door_notes(self, objective)
+            return True
+        if objective.split(None, 1)[0].lower() == "/rulings":
+            door_rulings(self, objective)
             return True
         # WHO ANSWERS AN ORDINARY TURN, switched for the sitting (FACE).
         if objective.split(None, 1)[0].lower() == "/face":
