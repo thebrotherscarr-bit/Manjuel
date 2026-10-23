@@ -26,7 +26,6 @@ tests
 # what the chain is CONFIGURED as
 agents
 skills
-agents.md
 pipelines.md
 parity.md
 index_roots.txt

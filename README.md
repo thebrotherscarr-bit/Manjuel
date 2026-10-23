@@ -304,7 +304,7 @@ tracks in this repository:
                    BUILDPATH, STATUS, WHATS_LEFT (everything
                    open, numbered; the glass's What's left tab reads it), TASKS
                    (his list, only what he put there), CHANGELOG, DAYBOOK,
-                   HANDOFF, REFUSALS, BUILDMAP, agents.md, parity.md, CLAUDE.md
+                   HANDOFF, REFUSALS, BUILDMAP, parity.md, CLAUDE.md
                    (the standing rules for any hand)
 
 On disk and kept out of git (the `.gitignore` says why for each):

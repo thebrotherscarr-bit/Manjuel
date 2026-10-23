@@ -34,6 +34,25 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: agents.md retired; its notes are now the source (2026-10-23, the reconcile's stage 3, the first of the second three; his words: "Yes, both")
+
+agents.md leaves the repository. It was the seats' index: documentation only, with no seat table in it, on purpose, since 2026-09-02. Its text is in his notes, tagged `doc` and `agents`: 3 sections and its opening, checked through the relay against this same text. Git history keeps the file.
+
+- **What still reads it, and why nothing breaks:**
+  - `cli.py` falls back to `agents.md` only when `agents/` is missing, and the ground always has `agents/`. The fallback stays, for a world without `agents/`.
+  - `watch.py` still names `agents.md` among the declaration files it hot-reloads. It is only a name, and a world may carry one.
+- **The mirror:** `mirror.RETIRED` gains it and `mirror.DOCS` loses it. The next `/mirror sync` rewords its notes' footer.
+- **`index_roots.txt`** drops the `agents.md` line, and keeps `agents`, the seats' folder.
+- **README's** list of root documents drops it.
+- **CLAUDE.md's** line naming it among the CRLF files is his, and is left for him.
+- BUILDMAP.md and REFUSALS.md are regenerated.
+
+Strokes: `mirror._strokes` asserts a retired document is neither on disk nor on DOCS. Proved by reversal: agents.md put back went red.
+
+What goes red if it comes unplugged: `mirror._strokes` (run in `test_steward_harness`).
+
+Restart required. Then `/mirror sync`, which rewords agents.md's 4 notes.
+
 ### core: SYSTEM_DESIGN.md retired; its notes are now the source (2026-10-23, the reconcile's stage 3, B's fourth retirement; his word: "go")
 
 SYSTEM_DESIGN.md leaves the repository. The recorder, and the harness built on it, are in his notes, tagged `doc` and `system-design`. Both halves were checked through the relay against this same text (unchanged since): its 9 sections, and its opening note, which carries the 616 characters above its first heading. Git history keeps the file. Nothing read it at run time. Atlas's `records` only sorts the files it finds into kinds, so it lists one fewer.
