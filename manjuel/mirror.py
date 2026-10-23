@@ -40,14 +40,14 @@ from . import rulings
 # hash-chained memory store LAW 8 keeps -- the record, not a page about it.
 DOCS = ("README.md", "QUICKSTART.md", "RUNBOOK.md", "SPEC.md", "DESIGN.md",
         "INVENTORY.md", "BUILDPATH.md",
-        "TASKS.md", "agents.md", "commands.md", "pipelines.md", "parity.md")
+        "TASKS.md", "commands.md", "pipelines.md", "parity.md")
 NOT_DOCS = ("rack.md", "memory.md")
 # THE RECONCILE'S STAGE 3, RETIRE (2026-10-23, his word: "let's do A and then B as proposed";
 # one file per pull request). A retired document has left the repository, and its notes are
 # the only working copy (git history keeps the file). The sync writes no note for it, and
 # rewords the footer of the notes it wrote before, once, so they stop calling the file the
 # source.
-RETIRED = ("HARNESS_STUDY.md", "CONTRIBUTING.md", "TESTING.md", "SYSTEM_DESIGN.md")
+RETIRED = ("HARNESS_STUDY.md", "CONTRIBUTING.md", "TESTING.md", "SYSTEM_DESIGN.md", "agents.md")
 RETIRED_FOOT = ("Mirrored from {src} by /mirror sync until {src} left the repository (the "
                 "reconcile's stage 3). This note is now the source: edit it here; the sync no "
                 "longer writes it.")
