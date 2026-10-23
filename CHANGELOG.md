@@ -34,6 +34,28 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: SYSTEM_DESIGN.md retired; its notes are now the source (2026-10-23, the reconcile's stage 3, B's fourth retirement; his word: "go")
+
+SYSTEM_DESIGN.md leaves the repository. The recorder, and the harness built on it, are in his notes, tagged `doc` and `system-design`. Both halves were checked through the relay against this same text (unchanged since): its 9 sections, and its opening note, which carries the 616 characters above its first heading. Git history keeps the file. Nothing read it at run time. Atlas's `records` only sorts the files it finds into kinds, so it lists one fewer.
+
+- `mirror.RETIRED` gains it, and `mirror.DOCS` loses it. The next `/mirror sync` rewords its notes' footer.
+- `index_roots.txt` drops its line.
+- The pointers that send a reader to it now say "SYSTEM_DESIGN, in his notes" (tag `system-design`):
+  - README's "What it is", its list of root documents, and its one-line entry.
+  - DESIGN's status block.
+  - SPEC 457, 652 and 698.
+  - BUILDPATH 1036.
+  - The ground-flag comment in `manjuel/cli.py`.
+- Dated history stays as written: BUILDPATH 629 ("SYSTEM_DESIGN.md rewritten as the recorder"), DAYBOOK, HANDOFF, WHATS_LEFT, TASKS and INVENTORY's note.
+- BUILDMAP.md and REFUSALS.md are regenerated.
+- Atlas's own pointers (LAUNCH_PLAN's preflight and `docs/ARCHITECTURE.md`) move in Atlas's companion change.
+
+Strokes: `mirror._strokes` asserts a retired document is neither on disk nor on DOCS. Proved by reversal: SYSTEM_DESIGN.md put back went red.
+
+What goes red if it comes unplugged: `mirror._strokes` (run in `test_steward_harness`).
+
+Restart required. Then `/mirror sync`, which rewords SYSTEM_DESIGN's 10 notes.
+
 ### core: TESTING.md retired; its notes are now the source (2026-10-23, the reconcile's stage 3, B's third retirement; his words: "move on to your next piece")
 
 TESTING.md leaves the repository. The tiers, how to run them and the discipline are in his notes, tagged `doc` and `testing`: its 8 sections, checked through the relay against this same text (unchanged since), and its title. Git history keeps the file. Nothing read it at run time.

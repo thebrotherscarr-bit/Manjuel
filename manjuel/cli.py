@@ -44,7 +44,7 @@ SENTINEL = "."
 
 
 # THE GROUND FLAG (the operator, 2026-09-09: "go"; SPEC_CONTROL_CENTER.md
-# §4.2, SYSTEM_DESIGN.md §3.2). Until now the ground was the package's
+# §4.2, SYSTEM_DESIGN §3.2, in his notes). Until now the ground was the package's
 # parent, and only here: every function below takes a `ground` and reads
 # these names at call time, so an engine could never sit INSIDE a world
 # (worlds/<name>/) and write that world's own record. `--ground <path>`

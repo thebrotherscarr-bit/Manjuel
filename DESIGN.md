@@ -41,7 +41,8 @@ everything above still holds.
 > where it was built: SPEC 8.2's themes and the CHANGELOG's entries for the
 > glass, the flows and the coder on the tree; WHAT'S LEFT for routing's three
 > parts (I2), the PPMI reader (H29) and the Judge (H28); and the harness, the
-> driver built on all of it, in SYSTEM_DESIGN.md (WHAT'S LEFT H31).
+> driver built on all of it, in SYSTEM_DESIGN (his notes, tag `system-design`;
+> WHAT'S LEFT H31).
 
 ---
 
