@@ -34,6 +34,25 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: TESTING.md retired; its notes are now the source (2026-10-23, the reconcile's stage 3, B's third retirement; his words: "move on to your next piece")
+
+TESTING.md leaves the repository. The tiers, how to run them and the discipline are in his notes, tagged `doc` and `testing`: its 8 sections, checked through the relay against this same text (unchanged since), and its title. Git history keeps the file. Nothing read it at run time.
+
+- `mirror.RETIRED` gains it, and `mirror.DOCS` loses it. The next `/mirror sync` rewords its notes' footer.
+- `index_roots.txt` drops its line.
+- The live mentions point at the notes (tag `testing`):
+  - README's list of root documents and its one-line entry for it.
+  - BUILDPATH's "before you touch a stroke".
+  - The comments in `.github/workflows/prove.yml`, `pyproject.toml`, `tests/release.py` and `tests/test_manjuel.py`.
+- The dated record stays as written.
+- BUILDMAP.md and REFUSALS.md are regenerated.
+
+Strokes: `mirror._strokes` asserts a retired document is neither on disk nor on DOCS. Proved by reversal: TESTING.md put back went red.
+
+What goes red if it comes unplugged: `mirror._strokes` (run in `test_steward_harness`).
+
+Restart required. Then `/mirror sync`, which rewords TESTING's 8 notes.
+
 ### core: CONTRIBUTING.md retired; its notes are now the source (2026-10-23, the reconcile's stage 3, B's second retirement; his word: "go")
 
 CONTRIBUTING.md leaves the repository. The house style is in his notes, tagged `doc` and `contributing`: its 10 sections, checked through the relay against this same text (unchanged since), and its title. Git history keeps the file. Nothing read it at run time.

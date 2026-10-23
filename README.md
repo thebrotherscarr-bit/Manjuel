@@ -301,7 +301,7 @@ tracks in this repository:
     pyproject.toml, LICENSE, .gitattributes, .gitignore, .env.example
     the root .md   this book (README, QUICKSTART, RUNBOOK, INVENTORY), SPEC
                    (what it IS and when it is DONE), SYSTEM_DESIGN, DESIGN,
-                   BUILDPATH, TESTING, STATUS, WHATS_LEFT (everything
+                   BUILDPATH, STATUS, WHATS_LEFT (everything
                    open, numbered; the glass's What's left tab reads it), TASKS
                    (his list, only what he put there), CHANGELOG, DAYBOOK,
                    HANDOFF, REFUSALS, BUILDMAP, agents.md, parity.md, CLAUDE.md
@@ -414,7 +414,6 @@ hour); `RUNBOOK.md` (Part III, driving it and keeping it running);
   where it drifted, and the rulings it produced. (The check sequence at its
   top is the 2026-09 terminal one; today's is a job's check, RUNBOOK.md.)
 - `REFUSALS.md`   — every gate: what it refuses, and the failure that earned it
-- `TESTING.md`    — the tiers, how to run them, and the discipline
 - `parity.md`     — what Manjuel is measured against, and how to read a score
 - `RUNBOOK.md`    — Part III: starting the system, Steward driving, GitHub,
   the dials and bounds, and when the machine misbehaves

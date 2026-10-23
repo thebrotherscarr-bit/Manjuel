@@ -5574,7 +5574,7 @@ def test_sitting_88_paths_and_evidence(reg, lib, book):
     # list_directory, proved, ground_report and skill_report declare no
     # parameters, so the objective naming one determines the call in full.
     #
-    # THE STROKE ABOVE IS NARROWED, NOT DELETED (TESTING: a superseded ruling
+    # THE STROKE ABOVE IS NARROWED, NOT DELETED (the testing notes: a superseded ruling
     # rewrites its stroke and keeps the guard). What it still guards is real:
     # with no library nothing can be decided by declaration, because nothing
     # can say what is declared.

@@ -120,7 +120,6 @@ STATUS.md
 atlas/docs/SPEC_CONTROL_CENTER.md
 SYSTEM_DESIGN.md
 TASKS.md
-TESTING.md
 WHATS_LEFT.md
 commands.md
 

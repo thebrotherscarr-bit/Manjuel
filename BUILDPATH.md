@@ -1092,5 +1092,5 @@ path we are on today, its Now line first) → README → QUICKSTART → this fil
 `pipeline.py` last, with a transcript from `logs/` open beside it.
 
 `REFUSALS.md` when you want to know what the estate will not do,
-`TESTING.md` before you touch a stroke, `RUNBOOK.md` when the machine
+the testing notes (tag `testing`, in his notes) before you touch a stroke, `RUNBOOK.md` when the machine
 misbehaves, `HANDOFF.md` for the fix log and the standing rulings.

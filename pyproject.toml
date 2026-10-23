@@ -7,7 +7,8 @@
 #
 # The suites are OFFLINE AND STUBBED BY DESIGN -- no rack, no network, no
 # GPU, no model. `ollama` is imported by manjuel/runtime.py at module load,
-# so CI installs the package; it never reaches a server. See TESTING.md.
+# so CI installs the package; it never reaches a server. See the testing
+# notes (his notes, tag testing).
 
 [build-system]
 requires = ["setuptools>=68"]

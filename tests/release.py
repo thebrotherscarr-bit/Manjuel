@@ -774,9 +774,9 @@ def remotes(root: Path = ROOT) -> Check:
 # ---- GitHub's own verdict (WHAT'S LEFT D9, 2026-10-02) ----------------------------------------------
 #
 # THE RELEASE CHECK PASSED 17 OF 17 BESIDE A RED RUN ON THE MARK IT HAD JUST CUT (2026-09-29; C34):
-# v0.1.16's own run on GitHub was red on every machine and nothing on this ground read it. TESTING.md
-# has said since then that every run is read, and a rule kept by a hand is a habit that has not failed
-# yet. So the gate asks.
+# v0.1.16's own run on GitHub was red on every machine and nothing on this ground read it. The testing
+# notes (his notes, tag testing; TESTING.md until 2026-10-23) have said since then that every run is
+# read, and a rule kept by a hand is a habit that has not failed yet. So the gate asks.
 #
 # WHAT IT ASKS. For each repository that carries a GitHub origin (core, and atlas where it is a
 # repository of its own): the workflow runs GitHub holds for the commit HEAD points at, and the NEWEST
