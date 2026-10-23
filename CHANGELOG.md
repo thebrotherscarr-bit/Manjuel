@@ -34,6 +34,25 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: CONTRIBUTING.md retired; its notes are now the source (2026-10-23, the reconcile's stage 3, B's second retirement; his word: "go")
+
+CONTRIBUTING.md leaves the repository. The house style is in his notes, tagged `doc` and `contributing`: its 10 sections, checked through the relay against this same text (unchanged since), and its title. Git history keeps the file. Nothing read it at run time.
+
+- `mirror.RETIRED` gains it, and `mirror.DOCS` loses it. The next `/mirror sync` rewords its notes' footer to say each note is now the source.
+- `index_roots.txt` drops its line.
+- The live mentions point at the notes:
+  - README's list of root documents drops it.
+  - SPEC's reading-order line (172) says the house style is in his notes, tag `contributing`.
+  - The comments in `pyproject.toml` and `tests/test_manjuel.py` that quoted it say where the words now are.
+- The dated record (DAYBOOK, HANDOFF, WHATS_LEFT, TASKS and INVENTORY's note) stays as written.
+- BUILDMAP.md and REFUSALS.md are regenerated.
+
+Strokes: `mirror._strokes` asserts a retired document is neither on disk nor on DOCS. Proved by reversal: CONTRIBUTING.md put back went red.
+
+What goes red if it comes unplugged: `mirror._strokes` (run in `test_steward_harness`).
+
+Restart required. Then `/mirror sync`, which rewords CONTRIBUTING's 10 notes.
+
 ### core: HARNESS_STUDY.md retired; its notes are now the source (2026-10-23, the reconcile's stage 3, the first of B's retirements; his words: "let's do A and then B as proposed", and on B's questions: "check through the relay, should it in the same PR. note footer can be reworded code comments repointed")
 
 HARNESS_STUDY.md leaves the repository. Its text is in his notes, tagged `doc` and `harness-study`, and in git history. The relay checked this before it went: its 15 section notes match the file exactly, and its opening note (written by the mirror since the previous entry, after his `/mirror sync`) carries the 2,650 characters above its first heading. Nothing read it at run time: before this piece, the only things naming it were `mirror.DOCS`, `index_roots.txt` and one comment in `serve.py`.

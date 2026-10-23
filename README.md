@@ -301,7 +301,7 @@ tracks in this repository:
     pyproject.toml, LICENSE, .gitattributes, .gitignore, .env.example
     the root .md   this book (README, QUICKSTART, RUNBOOK, INVENTORY), SPEC
                    (what it IS and when it is DONE), SYSTEM_DESIGN, DESIGN,
-                   BUILDPATH, TESTING, CONTRIBUTING, STATUS, WHATS_LEFT (everything
+                   BUILDPATH, TESTING, STATUS, WHATS_LEFT (everything
                    open, numbered; the glass's What's left tab reads it), TASKS
                    (his list, only what he put there), CHANGELOG, DAYBOOK,
                    HANDOFF, REFUSALS, BUILDMAP, agents.md, parity.md, CLAUDE.md

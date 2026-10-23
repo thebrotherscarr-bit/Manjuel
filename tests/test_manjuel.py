@@ -14514,7 +14514,7 @@ def test_the_release_gate_runs_on_a_mark(reg, lib, book):
     # (RULE 1, and the reason the door refuses to SEND such a mark).
     #
     # "A guard proved only on what it refuses might refuse everything"
-    # (CONTRIBUTING). The inverse is what happened here, and it needs a repo
+    # (the house style, in his notes under the tag contributing). The inverse is what happened here, and it needs a repo
     # built to fail rather than a ground that happens to pass.
     if HAVE_GIT:
         gr = Path(tempfile.mkdtemp())
