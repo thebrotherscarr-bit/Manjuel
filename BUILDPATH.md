@@ -1033,7 +1033,7 @@ words stand and a shared phrase gives way; and it is built on the line `ppmi-rea
 holds the measure it is scored against.
 
 Since (2026-10-16): 2 and 1 are done (H29 and H28, both 2026-10-14). Reordered on his word of 2026-10-16: the driver goes
-first -- Steward drives, one loop that carries a job to a check a machine reads (WHAT'S LEFT H31; SYSTEM_DESIGN.md; atlas's
+first -- Steward drives, one loop that carries a job to a check a machine reads (WHAT'S LEFT H31; SYSTEM_DESIGN, in his notes; atlas's
 LAUNCH_PLAN.md) -- and the coding loop, Neiro's task list and workflows from a sentence close with it (D18, H25, H23); the
 honesty gate (H30) after it. The rhythm's proof is on his glass since 2026-10-05 (RULE 13), never a mirror or a scratch copy.
 

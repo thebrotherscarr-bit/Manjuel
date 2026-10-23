@@ -454,7 +454,8 @@ is the plan, we are doing the harness. we built the recorder, its perfect,
 now we build the harness on top of it." So the road ahead is no longer the
 themes below but one piece: Steward drives (WHAT'S LEFT H31) -- one loop
 that carries a job to a check a machine reads, under LAW_003's three
-bounds, every write on his card. What it is: `SYSTEM_DESIGN.md`, rewritten
+bounds, every write on his card. What it is: SYSTEM_DESIGN (his notes, tag
+`system-design`, since the file was retired 2026-10-23), rewritten
 the same day. Its order, its two weeks and the rulings it owes:
 `atlas/LAUNCH_PLAN.md`, rewritten the same day. What is open, item by item:
 WHAT'S LEFT. The themes below stand as written, the record of how the
@@ -648,7 +649,7 @@ BUILDPATH, "The order it goes next".
                    words and LAW_003
 
     NOT IN THIS PLAN, and named so it is not mistaken for forgotten: the
-    appliance and the business (`SYSTEM_DESIGN.md`, `atlas/LAUNCH_PLAN.md`
+    appliance and the business (SYSTEM_DESIGN in his notes, `atlas/LAUNCH_PLAN.md`
     and their T-stones). That work lives in a world, and SITTING LAW 2 keeps
     a world closed until he points at it. Its plan is dated 2026-09-08 and
     nothing of it has been built since `--ground`; when he points at it, it
@@ -694,7 +695,7 @@ piece: the reader learns from the skills' own words alone, a skill's own words s
 disagree, and a shared phrase gives way (WHAT'S LEFT H29).
 
 Both done 2026-10-14 (H29, then H28). Reordered again on 2026-10-16, on his word: the driver goes first -- Steward drives,
-one loop that carries a job to a check a machine reads (WHAT'S LEFT H31; SYSTEM_DESIGN.md; atlas's LAUNCH_PLAN.md) -- and
+one loop that carries a job to a check a machine reads (WHAT'S LEFT H31; SYSTEM_DESIGN, in his notes; atlas's LAUNCH_PLAN.md) -- and
 the coding loop, Neiro's task list and workflows from a sentence close with it (D18, H25, H23); the honesty gate (H30) after
 it.
 

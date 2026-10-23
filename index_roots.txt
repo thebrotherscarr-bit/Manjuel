@@ -118,7 +118,6 @@ RUNBOOK.md
 SPEC.md
 STATUS.md
 atlas/docs/SPEC_CONTROL_CENTER.md
-SYSTEM_DESIGN.md
 TASKS.md
 WHATS_LEFT.md
 commands.md
