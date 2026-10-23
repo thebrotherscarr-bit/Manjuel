@@ -33,7 +33,7 @@ name: prove
 # every line AND on its pull request -- the same commit twice, eight legs for
 # four. Main takes a change only through a pull request whose four legs are
 # green, so that run is the one that counts; a mark is still proved as GitHub
-# checks it out, shallow and detached (TESTING.md, "AS GITHUB CHECKS OUT"); and
+# checks it out, shallow and detached (his notes, tag testing, "AS GITHUB CHECKS OUT"); and
 # `workflow_dispatch` still proves any line by hand. tests/release.py's
 # `workflows` check refuses a workflow that runs on pull requests and on a push
 # to every line.
