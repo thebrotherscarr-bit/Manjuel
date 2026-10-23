@@ -1087,7 +1087,7 @@ rule, and a sent mark is never renamed; everything from v0.1.11 on carries it.
 `CLAUDE.md` (the operator's rules) → `DAYBOOK.md` (what the last session
 was FOR — you begin with total amnesia and that is the only file that
 carries intent across the gap) → `WHATS_LEFT.md` (everything open, and the
-path we are on today, its Now line first) → README → QUICKSTART → this file →
+path we are on today, its Now line first) → README → this file →
 `pipelines.md` → one seat file → `intent.py` (small and load-bearing) →
 `pipeline.py` last, with a transcript from `logs/` open beside it.
 

@@ -34,6 +34,28 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: QUICKSTART.md folded into the README and retired (2026-10-23, the reconcile's stage 3; his words: "Fold into README, retire")
+
+QUICKSTART.md was Part II of the book: the first hour. It is the install guide for someone who finds Manjuel on GitHub without his notes. So its walkthrough is kept in the repository, condensed, as README's new section "The first hour", and the file leaves.
+
+- **What the new section carries:**
+  - what a fresh clone lacks and why the first boot's red gate is correct;
+  - the nine steps at the glass, from building the door and the glass to `/close`;
+  - the REPL without the glass;
+  - extending;
+  - where to look when something misbehaves.
+- **Its whole text** is in his notes, tagged `doc` and `quickstart`: 8 sections and its opening, all 9 checked identical through the relay. Git history keeps the file.
+- **The book is three files:** README is Parts I and II. RUNBOOK's opening and its Go note, SPEC 171 and 172 (the stranger's reading order is one step shorter), BUILDPATH's reading order, and `pyproject.toml`'s Documentation link point at the README.
+- **The mirror:** `mirror.RETIRED` gains it and `mirror.DOCS` loses it. `index_roots.txt` drops its line.
+- **Left as written:** the dated record (BUILDPATH 613, DAYBOOK, HANDOFF and WHATS_LEFT), and the suite's use of the name as an example of a non-record.
+- BUILDMAP.md and REFUSALS.md are regenerated.
+
+Strokes: `mirror._strokes` asserts a retired document is neither on disk nor on DOCS. Proved by reversal: QUICKSTART.md put back went red.
+
+What goes red if it comes unplugged: `mirror._strokes` (run in `test_steward_harness`).
+
+Restart required.
+
 ### core: DESIGN.md retired; its notes are now the source (2026-10-23, the reconcile's stage 3; his words: "Yes, both")
 
 DESIGN.md leaves the repository. The architecture's reasoning and its history are in his notes, tagged `doc` and `design`: 15 sections and its opening, checked through the relay. One line differs, in the opening: the note still points at `SYSTEM_DESIGN.md`, where the file had just been repointed to the notes (when SYSTEM_DESIGN was retired). It is the same pointer, to a document that is now in his notes too, so nothing of DESIGN is lost. Git history keeps the file.
