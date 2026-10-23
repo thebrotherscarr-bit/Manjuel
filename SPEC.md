@@ -3,7 +3,7 @@
 Written 2026-09-04 on the operator's word ("getting close to an actual
 product, review missing specs, and write full spec -- 'when done'"), from a
 full read of the code, the record and the laws. This is the one document
-that says what the thing IS and what DONE means. DESIGN.md is the reasoning
+that says what the thing IS and what DONE means. DESIGN (his notes, tag `design`) is the reasoning
 and its history; BUILDPATH.md is the module map; BUILDMAP.md is where each
 thing lives; REFUSALS.md is what each guard refuses; this is the contract.
 
@@ -70,7 +70,7 @@ A proposal that needs a word uses the nearest one below.
 | **the ground** | `Desktop\Research`, the one folder. Seats read it; nothing reads outside it. | CLAUDE.md RULE 1, 2026-08-29 |
 | **the workspace** | `agent_workspace/`, the seats' scratch: the ONLY place a seat writes, and where anything from outside lands first. | sittings 18–27, 2026-08-29 |
 | **the estate** | the whole system: the seats, the law, the record, the rack. | the founding docs (LAW_001) |
-| **a seat** | one job, one markdown file in `agents/`, one model on it. | agents/, DESIGN.md |
+| **a seat** | one job, one markdown file in `agents/`, one model on it. | agents/, DESIGN in his notes |
 | **the rack** | the models installed on this machine; also the seats that rest until a flag wakes them. | rack.md; pipelines.md |
 | **the spine** | the seats that sit every run of a pipeline. | pipelines.md |
 | **the door** | the Steward: first to answer, last to report. | pipelines.md |
@@ -81,7 +81,7 @@ A proposal that needs a word uses the nearest one below.
 | **Jesster** | the coder: writes the code and refutes it; the Expert Coder and Aider work under its name. On the review panel it is counsel, as before. | his word, 2026-08-14, kept 2026-10-13 |
 | **Neiro** | the overseer: holds the state of the whole process from the record, runs the work as flows and watches each run; never acts on the world or approves. On the review panel it is counsel, as before. | the founding papers; his card, 2026-10-13 |
 | **Aurora** | the webapp, the user-facing part ("like the menu at a restaurant"): the glass, named atlas for ease, its admin section for now; kept as it is. | his word, 2026-10-13 |
-| **the Router** | the one seat that runs tools. | DESIGN.md |
+| **the Router** | the one seat that runs tools. | DESIGN in his notes |
 | **a skill** | one tool: a markdown file in `skills/` and a handler. | skills/ |
 | **a pipeline** | ONE TURN's running order of seats and tools: who sits, in what order, who wakes on which flag, which seat hands to which. The Steward handing to the Router, the Router calling the index, Jesster reviewing what the Router read -- all inside one pipeline. Declared in `pipelines.md`. | pipelines.md; ruled 2026-09-07 |
 | **a workflow** | SEVERAL TURNS strung into one task: a list of objectives, each run through a pipeline, checked between steps, reported at the end. The standup is the first one. Declared in a file since: a flow in `flows/`, its steps, gates, checks and bounded returns, fired from the glass's Workflows tab. | the operator, 2026-09-04 and 2026-09-07 |

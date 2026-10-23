@@ -3458,7 +3458,9 @@ def test_the_claude_md_system_and_the_ruling_loop(reg, lib, book):
                 return "<action>ground_read</action><filepath>DESIGN.md</filepath><content>1</content>"
             return "words"
     r4 = Reader()
-    shutil.copy(ROOT / "DESIGN.md", g / "DESIGN.md")
+    # A big file of its own, well past READ_WINDOW: the stroke once copied the real DESIGN.md, which left
+    # the repository 2026-10-23 (his notes, tag design). The name stays; nothing reads the real one.
+    (g / "DESIGN.md").write_text("# Design\n\n" + ("A paragraph of the reasoning. " * 2000), encoding="utf-8")
     ctx4 = RunContext(objective="read DESIGN.md part 1")
     e4 = env_for(g / "agent_workspace", reg, r4)
     e4.ground = g
@@ -18055,7 +18057,9 @@ def test_every_root_document_is_in_the_index_list(reg, lib, book):
     listed = {l.strip() for l in raw.splitlines()
               if l.strip() and not l.lstrip().startswith("#")}
     docs = sorted(p.name for p in ROOT.glob("*.md"))
-    check("there are root documents to hold the list to", len(docs) >= 20, str(len(docs)))
+    # The floor only proves the glob found the root, not how many documents it should hold: the reconcile
+    # retires documents into his notes one by one (2026-10-23), so it was narrowed from 20 to 10, not deleted.
+    check("there are root documents to hold the list to", len(docs) >= 10, str(len(docs)))
     missing = [d for d in docs if d not in listed]
     check("every document at the root is listed in index_roots.txt",
           not missing, "not listed: " + ", ".join(missing))

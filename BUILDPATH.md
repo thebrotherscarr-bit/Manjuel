@@ -257,7 +257,7 @@ knows Ollama; `routes.py` knows a hosted route exists (since 2026-10-02); nothin
                       second Manjuel nobody walks.
     SPEC.md           LANDED 2026-09-04. What this IS and when it is DONE,
                       line by line: MET with the stroke, or OPEN with whose
-                      call it is. The contract; DESIGN is the reasoning.
+                      call it is. The contract; DESIGN (his notes) is the reasoning.
     BUILDMAP.md       LANDED 2026-09-04. Where to look, generated from the
                       code with ast by tests/buildmap.py: every module,
                       class and function with line ranges; every guard by
