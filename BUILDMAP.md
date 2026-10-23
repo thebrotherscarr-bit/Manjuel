@@ -574,20 +574,20 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `drop_pending` | 410-416 |  |
 | def | `split_entries` | 424-452 | Split memory.md into one piece per entry. |
 
-### manjuel/mirror.py — 277 lines
+### manjuel/mirror.py — 278 lines
 
 *The record mirrored into his notes -- stage 1 of the reconcile (2026-10-22).*
 
 | kind | name | lines | says |
 |---|---|---|---|
-| def | `_id` | 61-63 |  |
-| def | `_h2` | 66-81 | [(heading, body)] for every '## ' section, in order (### stays inside). |
-| def | `_preamble` | 84-95 | (title, text) above the first '## ': the '# ' title, and everything there, title |
-| def | `_note` | 98-107 | One note, or several when the body is over BODY_MAX (each a part). |
-| def | `units` | 110-163 | Every note the mirror writes, rulings included, with unique ids the kernel accep |
-| def | `retire` | 166-194 | Every note a retired document left behind that still ends in the mirror's footer |
-| def | `sync` | 197-210 | The whole mirror, through one open session on his notes kernel; counted by kind. |
-| def | `_strokes` | 213-273 | On the real record: every kind present, ids unique and the kernel's, every note  |
+| def | `_id` | 62-64 |  |
+| def | `_h2` | 67-82 | [(heading, body)] for every '## ' section, in order (### stays inside). |
+| def | `_preamble` | 85-96 | (title, text) above the first '## ': the '# ' title, and everything there, title |
+| def | `_note` | 99-108 | One note, or several when the body is over BODY_MAX (each a part). |
+| def | `units` | 111-164 | Every note the mirror writes, rulings included, with unique ids the kernel accep |
+| def | `retire` | 167-195 | Every note a retired document left behind that still ends in the mirror's footer |
+| def | `sync` | 198-211 | The whole mirror, through one open session on his notes kernel; counted by kind. |
+| def | `_strokes` | 214-274 | On the real record: every kind present, ids unique and the kernel's, every note  |
 
 ### manjuel/parity.py — 495 lines
 
@@ -1451,7 +1451,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `GroundWatch.start` | 197-222 |  |
 | def | `GroundWatch.stop` | 224-230 |  |
 
-manjuel/: 42 files, 36600 lines.
+manjuel/: 42 files, 36601 lines.
 
 ## GUARDS — by the failure that earned them
 

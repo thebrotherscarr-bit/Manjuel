@@ -168,8 +168,8 @@ are the whole remaining distance.
 
 ### 4.1 Installation and first hour
 - MET — one `pip install ".[test]"` (one dependency to run, `ollama`; one
-  more to prove, `numpy`, which a stroke imports outright), eight `ollama pull`s named in QUICKSTART (seven seat tags and the embedder), `python manjuel.py` boots or names the missing tag. CI on Windows and Ubuntu.
-- MET — a stranger's reading order exists and is ONE order, BUILDPATH's: CLAUDE.md → DAYBOOK (last entry) → README → QUICKSTART → BUILDPATH → pipelines.md → one seat file → intent.py → pipeline.py with a transcript beside it; BUILDMAP and REFUSALS when looking for a thing or a refusal. The house style is in his notes (tag `contributing`; CONTRIBUTING.md retired 2026-10-23).
+  more to prove, `numpy`, which a stroke imports outright), eight `ollama pull`s named in README's Install (seven seat tags and the embedder), `python manjuel.py` boots or names the missing tag. CI on Windows and Ubuntu.
+- MET — a stranger's reading order exists and is ONE order, BUILDPATH's: CLAUDE.md → DAYBOOK (last entry) → README → BUILDPATH → pipelines.md → one seat file → intent.py → pipeline.py with a transcript beside it; BUILDMAP and REFUSALS when looking for a thing or a refusal. The house style is in his notes (tag `contributing`; CONTRIBUTING.md retired 2026-10-23).
 - MET (2026-09-04, prove.yml) — `python tests/buildmap.py --check` runs in CI. MET (2026-09-09) — `BUILDMAP.md` IS in `index_roots.txt`; the call was his and he made it ("index everything"), along with every other root document and the five law files: 17 roots → 39, 828 → 995 indexed documents.
 
 ### 4.2 An ordinary turn

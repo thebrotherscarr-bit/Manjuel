@@ -1,10 +1,10 @@
 # Manjuel
 
-**THE BOOK OF THIS SYSTEM, PART I: WHAT IT IS.** Four files, read top to bottom,
+**THE BOOK OF THIS SYSTEM, PART I: WHAT IT IS.** Three files, read top to bottom,
 are one book:
 
     Part I    README.md       what it is, how it was made, how it is built (this file)
-    Part II   QUICKSTART.md   the first hour: install, start, the first job
+    Part II   this file       "The first hour": install, start, the first job
     Part III  RUNBOOK.md      driving it every day, and keeping it running
     Part IV   INVENTORY.md    every part, one line each, then every part in full
 
@@ -95,7 +95,7 @@ doctrine: the intake that acts, with the operator holding the gate.
 
 ## Install
 
-Everything it needs, in one list. Part II (QUICKSTART.md) walks it in order,
+Everything it needs, in one list. "The first hour", below, walks it in order,
 and RUNBOOK.md, "Starting the system", builds and starts the door and the glass.
 
 - **Python 3.10 or later** (CI runs 3.10 and 3.13 on Windows and Ubuntu; this
@@ -141,6 +141,68 @@ runs the strokes), or as a door call (`mcp_call atlas suite_run
 live standup -- the seats through nine fixed objectives on the rack, about
 ninety seconds -- is `mcp_call atlas standup_run {"set":"morning"}`; it opens a
 sitting of its own, so it refuses while one is open.
+
+## The first hour
+
+(Folded in from QUICKSTART.md, Part II, on his word of 2026-10-23: "Fold into
+README, retire". The whole of it is in his notes, tag `quickstart`.)
+
+**What a fresh clone does not have, on purpose.** The record is untracked and
+binaries are not source: no `bin/` (whisper; listening is off until you supply
+one), an empty `index/` (`index ground` builds it), no `logs/` or `sessions/`
+(your first boot is sitting 1), no `.env` (copy `.env.example` and fill it in
+by hand), and no `atlas/` (`git clone https://github.com/thebrotherscarr-bit/Atlas.git atlas`).
+**The first boot shows a RED GATE, and that is correct**: it will not call
+proven what you have not proven. Run the strokes, the smoke and the standup
+and it goes quiet. The first brief is the author's (DAYBOOK, HANDOFF and TASKS
+are tracked): read it as history. A suite tally that came with the clone is
+hearsay until you run it.
+
+**At the glass, in order:**
+
+1. **Build the door and the glass** (RUNBOOK.md, "Starting the system"), and
+   again after any change to atlas's Go code or its page.
+2. **Start** Ollama, then the door on 127.0.0.1:8090 with `--auth`, then the
+   glass on 127.0.0.1:8091 from `atlas\webapp`. Both read `ATLAS_SERVICE` from
+   the shell's environment. Nothing starts by itself after a reboot.
+3. **Open http://127.0.0.1:8091.** The first time it asks for a name and a PIN
+   of four to eight digits (kept hashed in `atlas\webapp\data\user.json`;
+   delete that file if you forget it).
+4. **The front page** is one terminal and an Inspector. Its tabs: Agent (the
+   engine), Bash (Git Bash; a read runs at once, a write asks first), Python,
+   PowerShell (every line asks first) and Aider. Cards, the questions and the
+   Approve/Deny asks, sit at the foot of the terminal.
+5. **Boot**: Boot in the Agent tab's title, or `/boot`. The report reads
+   GROUND, RACK, RECORD, GATE, VOICE, and the title says "sitting N".
+6. **A first look**: in Bash, `git log --oneline -5` runs at once; `touch x.txt`
+   asks first. Deny it. That is the gate, the same for every write.
+7. **A first door call**: in Agent, `mcp_call atlas git {}`, then
+   `mcp_call atlas suite_run {"set":"smoke"}`.
+8. **A first job for Steward**:
+
+       /drive Add a one-line docstring to enabled() in manjuel/ink.py | check: suites
+
+   Reads need no card. The first write comes as a red card, and on your yes
+   it opens a line of work (main is never written). The check decides when it
+   is done. Cards then offer to commit, push, open the pull request, wait on
+   CI and merge, and finally ask "What is next?". A job with no check ends
+   UNCHECKED. RUNBOOK.md, "Steward drives", has every mode.
+9. **Close**: `/close`, or Close in the title. An idle engine closes itself
+   after 30 minutes.
+
+**Without the glass**, from the ground: `python manjuel.py` (add `--headless`
+for JSON lines on stdin and stdout, `--ground worlds\NAME` to sit inside a
+world). Try `what can you do`, `what is in this repo`, `git status`,
+`what ran yesterday`, `/chat`, `/help`. `/paste` pastes through the Guardian,
+`/remember` lands a ruling, `/brief` says where the build is, `/toll` pays the
+sitting's toll.
+
+**Extending**: a new seat is one file in `agents/`, a new tool one file in
+`skills/` (a `Model Target:` line makes it a prompt skill with no Python), a
+new pipeline a block in `pipelines.md`, a new command a block in
+`commands.md`; then `/reload`. **When something misbehaves**: RUNBOOK.md for
+the machine, REFUSALS.md for what was refused on purpose, and the transcripts
+in `logs/` for a seat; the record outranks any model's account of itself.
 
 ## How it was made
 
@@ -299,7 +361,7 @@ tracks in this repository:
                    and `release-gate.yml` (the gate on a mark)
     index_roots.txt  the folders and files the semantic index embeds
     pyproject.toml, LICENSE, .gitattributes, .gitignore, .env.example
-    the root .md   this book (README, QUICKSTART, RUNBOOK, INVENTORY), SPEC
+    the root .md   this book (README, RUNBOOK, INVENTORY), SPEC
                    (what it IS and when it is DONE),
                    BUILDPATH, STATUS, WHATS_LEFT (everything
                    open, numbered; the glass's What's left tab reads it), TASKS
@@ -404,8 +466,8 @@ no earlier doc named: `deep_research`, `ground_report`, `skill_report`,
 
 ## Documents
 
-The book, in reading order: this file; `QUICKSTART.md` (Part II, the first
-hour); `RUNBOOK.md` (Part III, driving it and keeping it running);
+The book, in reading order: this file (Parts I and II, "The first hour" among
+it); `RUNBOOK.md` (Part III, driving it and keeping it running);
 `INVENTORY.md` (Part IV, every part, one line each and then in full). Then:
 
 - `WHATS_LEFT.md` — everything still open, numbered, and the path we are on

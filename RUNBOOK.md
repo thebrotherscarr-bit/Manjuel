@@ -1,7 +1,7 @@
 # Runbook
 
 **THE BOOK, PART III: DRIVING IT, AND KEEPING IT RUNNING.** Part I (README.md)
-says what the system is and Part II (QUICKSTART.md) takes a fresh machine to a
+says what the system is and Part II (README.md, "The first hour") takes a fresh machine to a
 first job. This part is the daily work: starting the system; Steward driving
 (every mode, every card, every bound, every record it writes); the glass's
 tabs and pages; a change's road to GitHub; the dials; and what to do when the
@@ -74,7 +74,7 @@ Two processes and a browser. Neither starts by itself, and nothing opens a
 sitting behind you.
 
 **You need Go for this half.** The engine wants only Python and Ollama; these
-two servers are Go, built from source. QUICKSTART's "You need" is the ENGINE's
+two servers are Go, built from source. The engine's own list (README.md, "Install") is the ENGINE's
 list and does not name a Go toolchain, because nothing in the REPL wants one.
 If `go version` answers, you are ready.
 

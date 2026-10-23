@@ -72,7 +72,7 @@ voice = []
 
 [project.urls]
 Homepage = "https://github.com/thebrotherscarr-bit/Manjuel-atlas"
-Documentation = "https://github.com/OWNER/manjuel/blob/master/QUICKSTART.md"
+Documentation = "https://github.com/OWNER/manjuel/blob/master/README.md"
 
 [project.scripts]
 manjuel = "manjuel.cli:main"
