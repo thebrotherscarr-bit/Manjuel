@@ -300,7 +300,7 @@ tracks in this repository:
     index_roots.txt  the folders and files the semantic index embeds
     pyproject.toml, LICENSE, .gitattributes, .gitignore, .env.example
     the root .md   this book (README, QUICKSTART, RUNBOOK, INVENTORY), SPEC
-                   (what it IS and when it is DONE), DESIGN,
+                   (what it IS and when it is DONE),
                    BUILDPATH, STATUS, WHATS_LEFT (everything
                    open, numbered; the glass's What's left tab reads it), TASKS
                    (his list, only what he put there), CHANGELOG, DAYBOOK,
@@ -420,7 +420,6 @@ hour); `RUNBOOK.md` (Part III, driving it and keeping it running);
 - `BUILDPATH.md`  — every module, what it owns, and the order it was built
 - `STATUS.md`     — where the ground stands, printed from the record by `tests/status.py`
 - `INVENTORY.md`  — every function of both repositories, its last live run and its time
-- `DESIGN.md`     — the architecture record, including what was tried and superseded
 - `HANDOFF.md`    — the live operational record: patterns, fix log, rulings
 - `CLAUDE.md`     — standing rules for any agent working in this ground
 - `LICENSE`       — MIT

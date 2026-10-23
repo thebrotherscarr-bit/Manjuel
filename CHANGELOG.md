@@ -34,6 +34,30 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: DESIGN.md retired; its notes are now the source (2026-10-23, the reconcile's stage 3; his words: "Yes, both")
+
+DESIGN.md leaves the repository. The architecture's reasoning and its history are in his notes, tagged `doc` and `design`: 15 sections and its opening, checked through the relay. One line differs, in the opening: the note still points at `SYSTEM_DESIGN.md`, where the file had just been repointed to the notes (when SYSTEM_DESIGN was retired). It is the same pointer, to a document that is now in his notes too, so nothing of DESIGN is lost. Git history keeps the file.
+
+- **The index-list stroke's floor is narrowed from 20 root documents to 10, not deleted.** It only proves the glob found the root, and the retirements took the count to 19.
+- **Its one reader at run time was a stroke.** The end-to-end partial-read stroke copied the real DESIGN.md into its temporary ground as a big file. It now writes a 60,000-character file of its own, well past `READ_WINDOW`, under the same name, and its assertions are unchanged. The suite's other uses of the name write their own small files.
+- **The mirror:** `mirror.RETIRED` gains it and `mirror.DOCS` loses it. The next `/mirror sync` rewords its notes' footer.
+- **`index_roots.txt`** drops its line.
+- **The pointers now name his notes:**
+  - SPEC's opening and its glossary rows for a seat and for the Router.
+  - BUILDPATH's "the contract; DESIGN is the reasoning".
+  - README's list of root documents and its one-line entry.
+- **Left as written:**
+  - The code comments that cite its sections ("DESIGN 11", "DESIGN 14.10"). Each section is its own note, so they still resolve.
+  - The comments that record what happened (`pipeline.py` 402 and 4529, `runtime.py` 207).
+  - The dated record.
+- BUILDMAP.md and REFUSALS.md are regenerated.
+
+Strokes: `mirror._strokes` asserts a retired document is neither on disk nor on DOCS. Proved by reversal: DESIGN.md put back went red. The partial-read stroke passes on its generated file.
+
+What goes red if it comes unplugged: `mirror._strokes` (run in `test_steward_harness`).
+
+Restart required. Then `/mirror sync`, which rewords DESIGN's 16 notes.
+
 ### core: agents.md retired; its notes are now the source (2026-10-23, the reconcile's stage 3, the first of the second three; his words: "Yes, both")
 
 agents.md leaves the repository. It was the seats' index: documentation only, with no seat table in it, on purpose, since 2026-09-02. Its text is in his notes, tagged `doc` and `agents`: 3 sections and its opening, checked through the relay against this same text. Git history keeps the file.

@@ -41,7 +41,6 @@ agent_workspace
 # the estate
 us
 foundation
-DESIGN.md
 
 # the worlds. NOT versioned (see .gitignore) -- the operator's archive of his
 # own work, local only. Indexed by NAME, one world at a time, on his call:
