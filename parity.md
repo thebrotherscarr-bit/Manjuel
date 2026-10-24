@@ -29,7 +29,7 @@ tier as the bare reference. Same weights against themselves is no longer
 the default question; it is one case, kept, and labelled.
 
     tier            seat head             reference head      seats on the seat head
-    front door      llama3.2:latest       phi4-mini:latest    Steward -- fast, NO thinking pass (ruled 2026-09-04:
+    front door      gpt-oss:20b           phi4-mini:latest    Steward -- on gpt-oss:20b since 2026-10-21; before it llama3.2, fast, NO thinking pass (ruled 2026-09-04:
                                                               a thinking door in front of a thinking Router is two
                                                               reasoners in a row; gemma4:12b was tried and moved)
     small           llama3.2:latest       phi4-mini:latest    Neiro, Guardian, Morning Rev, Quartermaster
@@ -96,7 +96,8 @@ VRAM; a hosted run costs what the provider charges.
 
 ## Case: front door tier — llama3.2 against phi4-mini
 
-The Steward answers on `llama3.2`, the spine this ground started on; the
+The Steward answered on `llama3.2`, the spine this ground started on, until
+2026-10-21, and on `gpt-oss:20b` since; the
 reference is `phi4-mini`, the head that held the door from 09-01 to 09-04.
 Warmth and plainness are what the operator asked for at the door.
 
@@ -115,9 +116,10 @@ thinking door in front of a thinking Router is two reasoners in a row.
 
 ## Case: the front door against the original spine
 
-Kept and relabelled: the Steward IS `llama3.2` again, so this now measures
+Kept and relabelled when the Steward was `llama3.2` again, so it measured
 the whole default pipeline against one bare call to its own door --
-overhead, like the same-weights case below.
+overhead, like the same-weights case below. Since 2026-10-21 the door is
+`gpt-oss:20b`, and this pits the pipeline against the door's old head.
 
 - **Objective:** Explain in four sentences what a semantic index is for, and one thing it cannot do.
 - **Model:** llama3.2:latest
@@ -166,15 +168,16 @@ rack. `/use court` first; read Jesster's stage.
 ## Case: the court against one big head
 
 The whole `court` pipeline — four models now — against a single bare call
-to the largest head on the rack. `/use court` first. LOW is the interesting reading either way.
+to a large head on the rack. `/use court` first. LOW is the interesting reading either way.
 
 - **Objective:** A tool ran, failed, and the seat that read the result reported success. Say in three sentences why that is worse than reporting nothing, and what would prevent it.
 - **Model:** qwen2.5-coder:14b
 
 ## Case: same weights, bare — Manjuel's overhead
 
-Kept from the old default. The Steward on `phi4-mini` against `phi4-mini`
-called once. HIGH here means the machinery changed nothing on this case.
+Kept from the old default, when the Steward sat on `phi4-mini`: the pipeline
+against `phi4-mini` called once. HIGH here meant, while the door was
+`phi4-mini`, that the machinery changed nothing on this case.
 
 - **Objective:** Summarise this in two sentences.
 - **Model:** phi4-mini:latest

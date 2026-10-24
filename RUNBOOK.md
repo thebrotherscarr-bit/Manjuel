@@ -74,8 +74,8 @@ Two processes and a browser. Neither starts by itself, and nothing opens a
 sitting behind you.
 
 **You need Go for this half.** The engine wants only Python and Ollama; these
-two servers are Go, built from source. The engine's own list (README.md, "Install") is the ENGINE's
-list and does not name a Go toolchain, because nothing in the REPL wants one.
+two servers are Go, built from source; README.md, "Install", names the Go
+version both `go.mod` files ask for among what the door and the glass need.
 If `go version` answers, you are ready.
 
 **And atlas is its own repository.** Since 2026-09-10 the core and atlas are
@@ -169,8 +169,9 @@ two gates grant `git_tag` (since 2026-09-28). Two secrets live in `.env` and now
 tenants a live key carries is moved with `auth_key_scope` -- the list replaced
 whole, possession re-proved like create and revoke, the move audited, and from
 any hand but the glass parked in the holds for yours -- since 2026-09-28).
-Neither process reads `.env` itself: put the wire in the environment before
-starting each one --
+Neither process reads `.env` itself when started this way (the desktop app,
+below, is the one exception): put the wire in the environment before starting
+each one --
 
     $env:ATLAS_SERVICE = ((Get-Content .env | Where-Object { $_ -match '^ATLAS_SERVICE=' }) -replace '^ATLAS_SERVICE=','').Trim()
 
@@ -187,7 +188,11 @@ to the door at `127.0.0.1:8090`.
                          line then says "service wire held"
     ATLAS_WEB_PORT=<n>   serve on another port
 
-The glass reads those two and nothing else (`atlas/webapp/main.go`). It must be
+Started this way the glass reads those two and nothing else
+(`atlas/webapp/main.go`). Run as `atlas-desktop.exe`, or with `--desktop`, it
+is the desktop app (`atlas/webapp/desktop.go`): it reads `ATLAS_SERVICE` from
+the ground's `.env` when the environment lacks it, starts Ollama and the door
+when they do not answer, and opens the glass in a window of its own. It must be
 started FROM `atlas\webapp`: its data -- `data\user.json` (the PIN's hash),
 `data\sessions.json` (sign-ins, twelve hours each, kept across a restart),
 `data\webapp.db\` (settings, the kept conversation, and `traces.jsonl`, every
@@ -301,8 +306,9 @@ terminal, in every tab.
                        steps the page runs: env_close (if one is open),
                        env_open, `/warm`, `/status`; the report is kept.
     2. the job         in the Agent tab: `/drive <job> | check: <command>`.
-                       Steward works it, every write a red [y/n] card, until
-                       the check passes. "Steward drives", below, is all of it.
+                       One red card shows the job; on your yes Steward works
+                       it on a line of work until the check passes. "Steward
+                       drives", below, is all of it.
     3. the send        on the passing check, the cards that commit, push,
                        open the pull request, wait on CI, and merge on your
                        click; or `/drive ship <message> | check: <command>`
@@ -459,9 +465,10 @@ it is reached only through the glass's Agent tab (the door's headless engine);
 the REPL has no `/drive`. Its rule, in the code's own words: the check --
 never the model -- decides that a job is done.
 
-**The line he types.** `/drive [plan|each|tidy|ship] <goal> [| do: <prompt>]
-[| check: <command>]`. The first word alone names the mode ("plan tidy the
-docs" is a plan). `| check:` is cut at its LAST occurrence and `| do:` at its
+**The line he types.** `/drive [auto|ask] [plan|each|tidy|ship|propose|resume]
+<goal> [| do: <prompt>] [| check: <command>]`. `auto` or `ask` comes first and
+says how the job's writes are approved (below, "The cards"); then the first
+word alone names the mode ("plan tidy the docs" is a plan). `| check:` is cut at its LAST occurrence and `| do:` at its
 last occurrence before that, so a pipe inside a command stays in it. A check of
 `suites`, `the suites`, `strokes` or `the strokes` becomes `python
 tests/test_manjuel.py` (the strokes only, not the smoke). A goal with no words
@@ -481,6 +488,12 @@ tests/test_manjuel.py` (the strokes only, not the smoke). A goal with no words
                                               on one card; main and the line you stand on never
     /drive ship <message> [| check: <command>]   the work on disk saved, sent, through CI,
                                               and merged on your card
+    /drive propose <goal> | check: <command>  it reads, writes a plan, and on your yes
+                                              works the plan as one job
+    /drive resume                             the newest job a crash cut short, carried on
+                                              from its journal
+    /undo                                     the last Steward turn's unsaved files put
+                                              back, on your card
 
 `plan` and `each` refuse to run without a check ("<mode> needs a check (|
 check: <command>) to decide each item"). A single job with no check runs and
@@ -495,23 +508,22 @@ started with `shell=True`, in the ground, stdin closed, bounded at 900 s; exit
 words are not there (2026-10-16: a `grep -q` check failed fifteen times with
 "'grep' is not recognized"). A check must FAIL before the work and PASS after
 it: a check that already passes proves nothing, and the model will call a job
-done that it never did. The check runs with no card -- it is his own words, run
-as typed.
+done that it never did. The check is his own words, run as typed; it is shown
+on the job's card before it runs, and under `auto` there is no card.
 
 **What Steward is handed.** A model call (`ollama.Client`, 600 s per call) to
-`qwen3.5:9b` with a 16384-token window, thinking off, and:
+`gpt-oss:20b` (`qwen3.5:9b` takes over when it keeps failing), reasoning at
+`low` on a gpt-oss model and off on any other, in a window read off the model
+and the card (`drive_window`), and:
 
-- The system text, verbatim: "You are the Steward, driving one job to its end
-  on the operator's machine. Work in steps: call one tool, read what it
-  returned, then decide the next call. Use only the tools you are given, and
-  never claim a result a tool did not return. A file in the ground (the code
-  and the documents) is changed with ground_edit (one exact passage) or
-  ground_write (a whole file); write_file writes only the workspace. Tools that
-  write wait for the operator's approval; if he declines, find another way or
-  call done. Do not write or run scripts to test your own work: the job's check
-  runs by itself when you call done. When you believe the goal is met, call
-  done with a one-line summary. Only a passing check ends the job; if it fails
-  you are given its output -- fix what it names and call done again."
+- The system text, `DRIVE_SYSTEM` in `manjuel/serve.py`, whole there: work in
+  steps, one tool call at a time; use only the tools given and never claim a
+  result a tool did not return; change the ground with ground_edit,
+  ground_write or apply_patch, find things with ground_grep and find_files,
+  run one line of bash with run_shell; his notes sit above the goal; correct a
+  refused call rather than repeat it; delegate, todo, ask_operator and
+  ask_secret; do not test its own work, since the check runs when it calls
+  done; only a passing check ends the job.
 - The job: `[What was done before in this sitting:\n<carry>\n\n]Goal: <job>\nThe
   check that decides done: <check, or "none named: the job is unchecked and ends
   when you call done">`. The carry is one line per earlier job this turn, cut to
@@ -520,11 +532,13 @@ as typed.
   `search_transcripts`, `ground_read`, `ground_list`, `ground_report`,
   `read_file`, `list_directory`, `git_status`, `rack_list`, `skill_report`,
   `extract_facts`, `classify_sentiment`, `statistics`, `sitting`, `when`,
-  `skill_search`, `symbols`, `proved`, `inspect`), its six hands
-  (`ground_write`, `ground_edit`, `write_file`, `edit_file`, `run_python`,
-  `mcp_call`), and `done`. Each tool's description reaches it cut to 400
-  characters and each argument's to 200; ten of the twenty-five are cut
-  mid-sentence today (INVENTORY.md, Part IV, says which).
+  `skill_search`, `symbols`, `proved`, `inspect`, `triage_binary`,
+  `ground_grep`, `find_files`), its hands (`ground_write`, `ground_edit`,
+  `write_file`, `edit_file`, `run_python`, `mcp_call`, `run_shell`,
+  `apply_patch`), `delegate` (a council seat asked one task), `todo`,
+  `ask_operator`, `ask_secret`, and `done`. Each tool's description reaches it
+  cut to 400 characters and each argument's to 200 (INVENTORY.md, Part IV,
+  says which are cut mid-sentence).
 - NEVER offered, and refused twice over if asked (by the driver and by the
   skill library): `git_commit`, `git_cycle`, `git_push`, `git_pull`,
   `git_init`, `remember`, `rack_sync`, `rack_load`, `rack_unload`,
@@ -546,12 +560,25 @@ it, the job ends "budget".
 **The cards, word for word.** Red unless said. A yes is any of `y`, `yes`,
 `approve`, `approved`, `ok`, `go`; anything else is a no.
 
-    a write (every writing skill, run_python and mcp_call):
-        The Steward wants to run <tool> <its arguments, to 120 characters>[ (first
-        opening the line of work `drive-MMDD-HHMMSS` in <repo>)]
+    the job (approval `plan`, the default; not under `auto` or `ask`):
+        The Steward will work this job, on a line of work of its own:
+          goal: <goal>
+          the check that decides done (it runs when the Steward calls done): <check>
+          [items: <the items, numbered>]
+        On your yes its writes on that line run without a card each; run_python and
+        mcp_call still ask; nothing is saved, sent or merged without its own card.
+        Approve the job? [y/n]
+      -- the yes is bound to a hash of the mode, goal, prompt, check and items.
+    a write the job card does not cover (every write under `ask`; run_python,
+    mcp_call and a run_shell line that writes, always):
+        The Steward wants to run <tool> <the passage it replaces and the one it
+        writes, or its arguments>[ (first opening the line of work
+        `drive-MMDD-HHMMSS` in <repo>)]
+        ("always" approves every <tool> for the rest of this sitting)
         Approve? [y/n]
       -- on a no the tool does not run, and the model is told "Declined by the
-         operator: <tool> did not run." A ground write on main or master first
+         operator: <tool> did not run.", with any words beyond a plain no as
+         "His reason: ...". A ground write on main or master first
          opens the line `drive-MMDD-HHMMSS` (`git switch -c`); main is never
          written. The file's bytes before its first write are kept, so a job
          that fails can be put back.
@@ -606,9 +633,9 @@ first that fails stops it):
     8. back on the base: git switch <base>; git branch -D <line>
     9. git pull --ff-only origin <base>                              180 s
 
-`gh` must be signed in. The driver's sends do not read `MANJUEL_GIT_REMOTE`,
-and a `/drive` line does not pass the pipeline's law gate: his cards are their
-gate.
+`gh` must be signed in. A `/drive` goal (and an `each`'s prompt) passes the
+gibberish and law gates an ordinary turn passes (`_drive_gate`). The driver's
+sends do not read `MANJUEL_GIT_REMOTE`: his cards are their gate.
 
 **The verdicts**, as the delivery says them:
 
@@ -635,12 +662,15 @@ environment moves them -- see the note in "The dials, in one place"):
     one job        30 steps or 45 minutes     MANJUEL_DRIVER_STEPS, _MINUTES
     one item       15 steps or 15 minutes     MANJUEL_DRIVER_ITEM_STEPS, _ITEM_MINUTES
     items          25 at most                 MANJUEL_DRIVER_ITEMS
-    window         16384 tokens               MANJUEL_DRIVER_CTX
+    window         read off the model and the card, 8192 to 32768 tokens
+                                              MANJUEL_DRIVER_CTX (fixes it), _CTX_MAX
     carry          3000 characters            MANJUEL_DRIVER_CARRY
     the check      900 s                      MANJUEL_DRIVER_CHECK_SECONDS
     CI             1800 s                     MANJUEL_DRIVER_CI_SECONDS
-    the model      qwen3.5:9b                 MANJUEL_DRIVER_MODEL
-    thinking       off                        MANJUEL_DRIVER_THINK=1 turns it on
+    a card         30 minutes, then a no      MANJUEL_CARD_WAIT
+    the model      gpt-oss:20b                MANJUEL_DRIVER_MODEL
+    its fallback   qwen3.5:9b                 MANJUEL_DRIVER_FALLBACK
+    thinking       low on gpt-oss, else off   MANJUEL_DRIVER_THINK (on, off, low, medium, high)
     one model call 600 s; one tool result 4000 characters
 
 **What it records.** `logs/<YYYY-MM-DD_HHMMSS>_drive.md` when the job ends:
@@ -825,9 +855,10 @@ every argument, what it reads and writes, whether it waits on a card, every
 refusal in its own words, where it lives, and when to reach for it -- is Part
 IV, INVENTORY.md, "Every part, in full". Who may call what: a door tool called
 from the glass runs at once; a writing door tool called by the engine or any
-keyed caller is HELD for his card (the door runs with `--auth`); seven tools
-are the glass's alone and refused to every other caller by name (`shell_run`,
-`aider_run`, `aider_undo`, `law_add`, `law_seal`, `file_edit`, `git_pr`).
+keyed caller is HELD for his card (the door runs with `--auth`); the tools
+declared `ServiceOnly` are the glass's alone and refused to every other caller
+by name (`shell_run`, `aider_run`, `aider_undo`, `law_add`, `law_seal`,
+`file_edit`, `git_pr`, `secret_set`).
 
 ## The wire: every event, with its fields
 
@@ -846,7 +877,8 @@ fields the glass reads:
     tool          a tool is called: {action|tool|name, args (each to 200 characters)}
     tool_result   what it said: {action, failed, chars, head (to 400 characters)}
     report        one line of a Steward job or a door call: {text}
-    needs_answer  a CARD: {prompt, color (green|red|amber)}; the turn waits
+    needs_answer  a CARD: {id, prompt, color (green|red|amber)}, and `secret` on
+                  the masked card that asks for a key; the turn waits
     delivery      the end of the turn: {text, pipeline, transcript, steps[{seat,
                   model, elapsed, skipped, error}], failures[], out_of_time[],
                   elapsed, project}
@@ -1091,7 +1123,7 @@ guard you just built would have caught anything historically.
 Two bounds, both the operator's (2026-09-08; ruled again 2026-09-28: "180
 for steward. 300 to route and 600 max per seat other than the court which
 requires a max of 900"): ONE CALL to a seat may take at most its own
-`Timeout:` (agents/*.md -- the Steward 180, the other llama3.2 seats 150,
+`Timeout:` (agents/*.md -- the Steward 180, the llama3.2 seats 150,
 phi4-mini 300, qwen3.5:4b 300, the 7-12b seats 600), and a seat that
 declares none takes the ceiling `MANJUEL_SEAT_TIMEOUT` (600); ONE TURN may
 take at most `MANJUEL_TURN_DEADLINE` (600), or what its pipeline declares for
@@ -1143,7 +1175,8 @@ boot report says which took effect) or the shell. Nothing else is a dial.
     MANJUEL_VRAM_GB         card   the budget the VRAM plan reasons against (vram.py)
     MANJUEL_LOG_HORIZON_DAYS 45    transcripts older than this leave retrieval; 0 = never (vectors.py)
     MANJUEL_NO_COLOR        off    1 turns the ink off (ink.py)
-    MANJUEL_WHISPER_MODEL / _DIR / _CLI / _GGML   where speech-in looks (voice.py)
+    MANJUEL_WHISPER_MODEL, MANJUEL_WHISPER_DIR, MANJUEL_WHISPER_CLI,
+    MANJUEL_WHISPER_GGML    --     where speech-in looks (voice.py)
     MANJUEL_MCP_<NAME>      --     a LOCAL MCP server, callable as <NAME> by the
                                    `mcp_call` skill. Loopback only; anything else
                                    is refused by name and nothing is sent (skills.py)
@@ -1153,23 +1186,44 @@ boot report says which took effect) or the shell. Nothing else is a dial.
                                    what leaves and asks first (routes.py)
     MANJUEL_MCP_<NAME>_KEY  --     the bearer the engine presents to that server (the door's
                                    key for the council, minted with auth_key_create) (skills.py)
-    MANJUEL_DRIVER_MODEL    qwen3.5:9b   the model Steward drives with (serve.py)
+    MANJUEL_MCP_<NAME>_CMD  --     a LOCAL MCP server on stdio, as a command line, callable
+                                   as <NAME> (mcp_stdio.py): MANJUEL_MCP_NOTES_CMD is his
+                                   notes (his second brain), MANJUEL_MCP_REA_CMD the example
+    MANJUEL_MCP_<NAME>_ROOT --     the one folder outside the ground that server's script
+                                   may live in (mcp_stdio.py)
+    MANJUEL_FACE            steward   who answers an ordinary turn at the door: `steward`,
+                                   or `council` for the pipeline (serve.py; `/face` switches)
+    MANJUEL_FACE_STEPS      12     the most tool calls one face turn may make
+    MANJUEL_FACE_MINUTES    10     the most minutes one face turn may take
+    MANJUEL_CARD_WAIT       1800   seconds a driver's card waits; no answer is a no
+    MANJUEL_DRIVER_MODEL    gpt-oss:20b   the model Steward drives with (serve.py)
+    MANJUEL_DRIVER_FALLBACK qwen3.5:9b    the model that takes over when the first keeps failing
+    MANJUEL_SUMMARY_MODEL   qwen3.5:4b    the side model that summarises when the window is compacted
+    MANJUEL_DRIVER_THINK    --     unset: `low` on a gpt-oss model, off on any other; 1/true/yes
+                                   on, 0/false/no off, or low, medium, high
+    MANJUEL_DRIVER_DIALECT  native the tool-call form: native, harmony, hermes or xml (dialects.py)
     MANJUEL_DRIVER_STEPS    30     the most tool calls one job may make
     MANJUEL_DRIVER_MINUTES  45     the most minutes one job may take
     MANJUEL_DRIVER_ITEM_STEPS 15   the same, for one item of a plan or an each
     MANJUEL_DRIVER_ITEM_MINUTES 15
     MANJUEL_DRIVER_ITEMS    25     the most items a plan or an each works
-    MANJUEL_DRIVER_CTX      16384  the driver model's window
+    MANJUEL_DRIVER_CTX      --     fixes the driver's window; unset, it is read off the model
+                                   and the card (16384 if that read fails)
+    MANJUEL_DRIVER_CTX_MAX  32768  the most that read may give
+    MANJUEL_DRIVER_CONTEXT_CHARS 5000  the law, standing, story and memory handed beside the goal
     MANJUEL_DRIVER_CARRY    3000   how much of what earlier jobs did is carried into the next
     MANJUEL_DRIVER_CHECK_SECONDS 900   the most a job's check may run
     MANJUEL_DRIVER_CI_SECONDS 1800     the most the send waits on CI
-    MANJUEL_DRIVER_THINK    off    1 lets the driver's model think before it answers
+    MANJUEL_DRIVER_ALLOW    --     tools, comma-separated, that write without a card
+    MANJUEL_DRIVER_DENY     --     tools, comma-separated, never run
 
 THE DRIVER'S DIALS ARE READ WHEN THE ENGINE STARTS, BEFORE `.env` IS (found
 2026-10-16): serve.py is imported before `.env` is read, and it is not among
-the modules that read their dials again after. So a `MANJUEL_DRIVER_*` line in
-`.env` does nothing today, except `MANJUEL_DRIVER_THINK`, which is read at each
-call. Set them in the environment of the shell that starts the door. The door's
+the modules that read their dials again after. So a `MANJUEL_DRIVER_*`,
+`MANJUEL_FACE*`, `MANJUEL_CARD_WAIT` or `MANJUEL_SUMMARY_MODEL` line in `.env`
+does nothing, except `MANJUEL_DRIVER_THINK` and `MANJUEL_DRIVER_DIALECT`, which
+are read at each job. Set them in the environment of the shell that starts the
+door. The door's
 own bounds are in its code: a held call waits up to 900 s for his click (the
 engine's `door_call`), and the engine waits 295 s for any one door call
 (`MANJUEL_SKILL_TIMEOUT` less five).
@@ -1180,6 +1234,11 @@ THREE NAMES THAT ARE NOT DIALS, struck from `.env.example` on 2026-09-29.
 and `MANJUEL_SPEAK_FILE` are the names voice.py hands its OWN child process,
 written over on every call; setting them did nothing. A stroke holds the
 example to the code now: a dial it offers is one the code reads.
+
+NOR ARE THESE. `MANJUEL_SHELL_COMMAND` is the name tools_shell.py hands its own
+child the command in. `MANJUEL_STROKE_SECRET`, `MANJUEL_STROKE_TOKEN`,
+`MANJUEL_MCP_STROKE_CMD` and `MANJUEL_MCP_FAKE_ROOT` are set and taken back by
+the strokes inside the engine's own modules.
 
 ---
 

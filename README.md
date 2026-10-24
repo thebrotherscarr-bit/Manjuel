@@ -57,24 +57,33 @@ until he seals it on the Laws page.) So the operator types into the glass, and
 three kinds of line do three different things:
 
 1. **`/drive <job> | check: <command>` -- Steward drives.** The driver
-   (`manjuel/serve.py`, the `/drive` section; model `qwen3.5:9b`) works the job
-   through the engine's tools, one call at a time, until the CHECK passes --
-   never until the model says so. Every write it wants is a red `[y/n]` card in
-   the glass, and nothing writes without his Approve. Then it offers to commit,
-   push, open a pull request, wait on CI and merge, each on its own card, and
-   asks "What is next?". The modes (`plan`, `each`, `tidy`, `ship`) and every
-   bound are in RUNBOOK.md, "Steward drives", and INVENTORY.md.
+   (`manjuel/serve.py`, the `/drive` section; model `gpt-oss:20b`, falling back
+   to `qwen3.5:9b`) works the job through the engine's tools, one call at a
+   time, until the CHECK passes -- never until the model says so. One red card
+   in the glass shows the job (the goal, the check, the items), and on his
+   Approve its writes run on the job's own line of work; `/drive ask ...` asks
+   at every write instead, and `/drive auto ...` shows no job card. run_python,
+   mcp_call and a shell line that writes ask every time. Then one card offers to
+   commit, push, open a pull request and wait on CI, another to merge, and it
+   asks "What is next?". The modes (`plan`, `each`, `tidy`, `ship`, `propose`,
+   `resume`) and every bound are in RUNBOOK.md, "Steward drives", and
+   INVENTORY.md.
 2. **`mcp_call atlas <tool> {json}` -- a door call, said plainly.** No seat
    reads it and no model narrates it: the engine asks the door, says in one
    line what it asked, waits for his click if the door holds the call, and
    says in one line what became of it.
-3. **Anything else -- the council.** The seats sit in their running order
-   (below), and the Router is the only one that may use tools.
+3. **Anything else -- Steward answers it himself** (the face, `door_face`):
+   he reads and checks with the tools, asks a council seat when he wants a
+   second mind (`delegate`), and answers in words. When he cannot (the model
+   down), or after `/face council` or with `MANJUEL_FACE=council`, the council
+   takes the turn: the seats sit in their running order (below), and the
+   Router is the only one that may use tools.
 
 The Steward who drives is not the Steward SEAT. The seat (`agents/steward.md`,
-`llama3.2`) opens and closes an ordinary turn; the driver has its own
-instructions (`DRIVE_SYSTEM`) and its own model. Both are Steward in the
-doctrine: the intake that acts, with the operator holding the gate.
+`gpt-oss:20b`) opens and closes a council turn; the driver has its own
+instructions (`DRIVE_SYSTEM`) and, at the door, runs on the seat's model. Both
+are Steward in the doctrine: the intake that acts, with the operator holding
+the gate.
 
 ## How a typed line travels
 
@@ -83,9 +92,11 @@ doctrine: the intake that acts, with the operator holding the gate.
    `{"cmd":"objective","text":<line>}` to the engine's stdin.
 3. The engine (`Door.turn`, `manjuel/serve.py`) routes it, in this order:
    an empty line does nothing; `exit`/`quit` closes the sitting; `/drive` goes
-   to the driver; a line leading with `mcp_call` goes to `door_call`; a topic or
-   session cue; "pay the toll"; "remember that"; `@<seat>`; a `/command`; the
-   rack unreachable is said so; otherwise the pipeline runs.
+   to the driver; a line leading with `mcp_call` goes to `door_call`;
+   `/schedule`, `/goal`, `/schedules`, `/undo`, `/notes`, `/rulings`, `/mirror`
+   and `/face`; a topic or session cue; "pay the toll"; "remember that";
+   `@<seat>`; a `/command`; then Steward answers (the face); the rack
+   unreachable is said so; otherwise the pipeline runs.
 4. The engine answers in JSON-line events on stdout: `seat`, `token`, `think`,
    `tool`, `tool_result`, `report`, `needs_answer` (a card: the question and its
    colour), and one `delivery` at the end. The door streams them to the glass,
@@ -104,9 +115,10 @@ and RUNBOOK.md, "Starting the system", builds and starts the door and the glass.
   and then crashes the suite). It puts `manjuel` on PATH; `python manjuel.py`
   from a clone works too.
 - **Ollama** on 127.0.0.1:11434, with the models `rack.md` declares:
-  `llama3.2` (Steward seat, Security Guardian, Neiro, Quartermaster, Morning
-  Reviewer), `qwen3.5:4b` (Router, Quality Evaluator), `qwen3.5:9b` (Reasoner,
-  Deep Researcher, and THE DRIVER, which `rack.md` does not yet list),
+  `gpt-oss:20b` (the Steward seat and THE DRIVER), `llama3.2` (Security
+  Guardian, Neiro, Quartermaster, Morning Reviewer), `qwen3.5:4b` (Router,
+  Quality Evaluator, and the driver's summaries), `qwen3.5:9b` (Reasoner, Deep
+  Researcher, and the driver's fallback),
   `phi4-mini` (Proofreader, Delivery Agent, four prompt skills),
   `deepseek-r1:8b` (Jesster), `gemma4:12b` (Judge), `qwen2.5-coder:14b` (Expert
   Coder, `lint_code`, and Aider), and the embedder `nomic-embed-text-v2-moe` (the
@@ -123,8 +135,9 @@ and RUNBOOK.md, "Starting the system", builds and starts the door and the glass.
   passed on a command line (RULE 7): the service wire `ATLAS_SERVICE` (the
   door and the glass must hold the same one), the door's address and key for
   the engine (`MANJUEL_MCP_ATLAS`, `MANJUEL_MCP_ATLAS_KEY`), and
-  `MANJUEL_GIT_REMOTE`, the wall on sending. `.env.example` names every key;
-  RUNBOOK.md's table of the dials says what each one does.
+  `MANJUEL_GIT_REMOTE`, the wall on sending. `.env.example` names the
+  engine's main dials; RUNBOOK.md's table of the dials is the full list, and
+  says what each one does.
 
 Windows-first: voice (SAPI out, whisper.cpp in) is Windows-bound and DEGRADES
 ALONE -- boot reports GROUND / RACK / RECORD / GATE / VOICE separately, so a
@@ -182,11 +195,12 @@ hearsay until you run it.
 
        /drive Add a one-line docstring to enabled() in manjuel/ink.py | check: suites
 
-   Reads need no card. The first write comes as a red card, and on your yes
-   it opens a line of work (main is never written). The check decides when it
-   is done. Cards then offer to commit, push, open the pull request, wait on
-   CI and merge, and finally ask "What is next?". A job with no check ends
-   UNCHECKED. RUNBOOK.md, "Steward drives", has every mode.
+   A red card shows the job: the goal and the check that will run. On your
+   yes its writes run on a line of work of its own (main is never written).
+   The check decides when it is done. A card then offers to commit, push, open
+   the pull request and wait on CI, another to merge, and finally it asks
+   "What is next?". A job with no check ends UNCHECKED. RUNBOOK.md, "Steward
+   drives", has every mode.
 9. **Close**: `/close`, or Close in the title. An idle engine closes itself
    after 30 minutes.
 
@@ -310,16 +324,19 @@ widen a window, only cover more ground with each one.
   the card — answered by the harness from ground truth, never by a model.
 - **Keys are silent.** `.env` is never printed, indexed, or passed on a
   command line. Secret-shaped files are refused by name.
-- **The gate is his.** Every write Steward wants waits on a red `[y/n]`
-  card, and runs only on his Approve; a writing call to the door from
-  anything but his glass is held in the door's queue until he answers its
-  card; a commit, a push and a merge are each a card of their own; a memory is
-  landed only by him (`/memory`). His glass itself runs what he presses.
-- **Where the gate stands today, read off the code (2026-10-16).** A job's
-  `| check:` command runs with no card -- it is his own words, run as typed. A
-  `/drive` job and a `mcp_call` line do not pass the pipeline's law gate, and
-  the driver's sends (`git push`, `gh pr`) do not read `MANJUEL_GIT_REMOTE`:
-  his cards are their gate. RUNBOOK.md, "Steward drives", says the same.
+- **The gate is his.** Every write Steward wants runs only on his Approve:
+  the job's card, or a card of its own (`/drive ask`, run_python, mcp_call, a
+  shell line that writes); a writing call to the door from anything but his
+  glass is held in the door's queue until he answers its card; the save and
+  send, and the merge, are each a card of their own; a memory is landed only
+  by him (`/memory`). His glass itself runs what he presses.
+- **Where the gate stands today, read off the code.** A job's `| check:`
+  command is his own words, run as typed, and is shown on the job's card
+  before it runs (`/drive auto` shows none). A `/drive` goal passes the
+  gibberish and law gates an ordinary turn passes; a `mcp_call` line does
+  not, and the driver's sends (`git push`, `gh pr`) do not read
+  `MANJUEL_GIT_REMOTE`: his cards are their gate. RUNBOOK.md, "Steward
+  drives", says the same.
 - **The ground is this folder.** Nothing reaches outside `Research`, and a
   test fails if anything tries.
 - **A claim needs something behind it.** A seat that presents a file's
@@ -343,7 +360,7 @@ tracks in this repository:
                    parameters, the phrases that name it
     pipelines.md   the running orders
     commands.md    the engine's own shortcut commands (`/morning`, `/sitting`,
-                   `/covenant`; they run in the REPL only today)
+                   `/covenant`; they run in the REPL and in the glass)
     rack.md        the models, generated by `rack_sync` from what Ollama holds
     us/            the capability records: one `.us` per seat and route, and
                    `manjuel.us`, one record per skill (what it may touch)
@@ -360,7 +377,9 @@ tracks in this repository:
     .github/       CI: `prove.yml` (the suites on every pull request and push)
                    and `release-gate.yml` (the gate on a mark)
     index_roots.txt  the folders and files the semantic index embeds
-    pyproject.toml, LICENSE, .gitattributes, .gitignore, .env.example
+    .mcp.json      the MCP servers a coding client in this ground may reach
+    pyproject.toml, LICENSE, .gitattributes, .gitignore, .env.example,
+    chain_original.py.bak
     the root .md   this book (README, RUNBOOK, INVENTORY), SPEC
                    (what it IS and when it is DONE),
                    BUILDPATH, STATUS, WHATS_LEFT (everything
@@ -415,11 +434,10 @@ boot report -- is in RUNBOOK.md and INVENTORY.md.
 ## The engine's own commands, and the REPL without the glass
 
 The glass's Agent tab sends every line to the engine, so the commands below
-work there too -- except that `/drive` and a `mcp_call` line exist ONLY in the
-headless engine the glass runs (`python manjuel.py --headless`), and the
-engine's `commands.md` shortcuts and `/listen` run only in the REPL (the glass
-stores what they would run and never runs it; RUNBOOK.md says so where it
-matters). `python manjuel.py` on its own is the REPL: the same engine in a
+work there too -- except that the commands on the `headless` line below, and
+a `mcp_call` line, exist ONLY in the headless engine the glass runs (`python
+manjuel.py --headless`). `python manjuel.py` on its own is the REPL: the same
+engine in a
 terminal, for when the glass is down. `/help` prints the palette. The
 commands, so none is only in the code (the REPL read of 2026-09-08 found eleven
 that no doc named):
@@ -429,6 +447,7 @@ that no doc named):
     the ground  /status  /index  /find <q>  /parity   (`inspect <name>` is a skill, typed as words)
     the rack    /models  /model <tag>|reset  /warm  /rack
     plumbing    /agents  /skills  /pipeline  /pipelines  /use <name>  /reload  /listen  /exit
+    headless    /drive  /undo  /face  /schedule  /goal  /schedules  /notes  /rulings  /mirror
 
 `/model <tag>` runs every seat on one model for the sitting -- a
 measurement, not a configuration; `rack.md` keeps the declared models.

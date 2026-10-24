@@ -34,6 +34,42 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: the docs say what is true at v0.2.6 (2026-10-24; his words: "make a pass on all the docs on the repos and make sure they are all good and match the system's 0.2.6 publish")
+
+Every living doc was read in full against the code, and 49 findings were written down before any was fixed (his notes, "Docs pass"). The cause behind most of them: the v0.2.6 work of 2026-10-21 (Steward on gpt-oss, Steward as the face, Steward made capable) never reached the docs.
+
+- **README and RUNBOOK (21):**
+  - Steward and the driver are on `gpt-oss:20b`, falling back to `qwen3.5:9b`. Thinking is `low` on gpt-oss. The driver's window is read off the model and the card.
+  - Steward answers at the door himself. `/face council` puts the council in front.
+  - `/drive` asks on one job card by default; `ask` and `auto` change that. `propose`, `resume` and `/undo` are documented.
+  - A `/drive` goal passes the gibberish and law gates.
+  - `commands.md` shortcuts and `/listen` run in the glass too.
+  - The driver's tools: eight hands, plus delegate, todo, ask_operator and ask_secret.
+  - The glass's own tools include `secret_set`.
+  - The desktop glass reads `.env`.
+  - RUNBOOK's table of the dials lists every `MANJUEL_*` the code reads. The names that are not dials are named as such.
+- **SPEC (11):**
+  - Ruling turns are twelve.
+  - The flag sets are complete.
+  - The seat records are `us/seat_*.us`.
+  - The reading order includes WHATS_LEFT.
+  - The sitting laws: 11 sits below the ledger's last seal.
+  - The release gate asks every check `release.py` prints.
+  - **4.7's "everyday pipelines fit resident" is OPEN again.** Steward on gpt-oss:20b plus the Router is 17.2 GB against `rack.md`'s 16.2 GB budget, until it is re-measured on his glass.
+  - 4.7's "the door stays llama3.2" is marked superseded on 2026-10-21.
+  - The DESIGN citations point at his notes.
+- **BUILDPATH (5):**
+  - The eleven modules missing from the map are added.
+  - Steward's driver opens its own Ollama client.
+  - parity's reference is the other head of its tier.
+  - `reports_to` may name the core.
+- **pipelines (6):** the Quartermaster's row, Steward on gpt-oss:20b, the coder on 14b, the court without Steward, and the chain's link count.
+- **parity (2):** the front-door tier since gpt-oss, and "a large head".
+- **.env.example:** the driver, face, card and summary dials with their defaults, and `MANJUEL_MCP_ATLAS_KEY`. The chainkit wording is gone.
+- **pyproject.toml:** Homepage and Documentation point at the real repository.
+
+Left as they were: dated history; STATUS.md, which is generated on his glass; and CLAUDE.md, his file. Its line naming the retired `agents.md` is his to change.
+
 ### core: QUICKSTART.md folded into the README and retired (2026-10-23, the reconcile's stage 3; his words: "Fold into README, retire")
 
 QUICKSTART.md was Part II of the book: the first hour. It is the install guide for someone who finds Manjuel on GitHub without his notes. So its walkthrough is kept in the repository, condensed, as README's new section "The first hour", and the file leaves.

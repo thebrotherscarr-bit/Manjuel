@@ -3,7 +3,7 @@
 The modules, what each one owns, and the order the estate actually grew.
 The containment rule has held since the first rewrite and is the reason the
 suite runs offline: **`registry.py` and `skills.py` know markdown; `runtime.py`
-knows Ollama; `routes.py` knows a hosted route exists (since 2026-10-02); nothing else knows any of it.**
+knows Ollama, and so does Steward's driver in `serve.py`, which opens its own client; `routes.py` knows a hosted route exists (since 2026-10-02); nothing else knows any of it.**
 
 ## Layer 0 — words on disk (the sources of truth)
 
@@ -26,6 +26,18 @@ knows Ollama; `routes.py` knows a hosted route exists (since 2026-10-02); nothin
                   of `windowed()`, which turns a file too big for any window
                   into part N of M with its own headings mapped -- a movable
                   window rather than a silent stump.
+    tools_files.py the ground's search and patch doors: ground_grep,
+                  find_files, apply_patch (2026-10-21). Their walls are
+                  ground_read's and ground_write's; nothing here draws a
+                  new jail.
+    tools_shell.py run_shell, Steward's shell, gated the way the door gates
+                  his own: a plain read runs, a write waits on his
+                  approval, and a secret, a remote, the network or a path
+                  outside the ground is refused by name.
+    mcp_stdio.py  MCP over stdio for `mcp_call`: starts a local tool server
+                  that is a program, not an address -- only one that
+                  resolves inside the ground, with a minimal environment --
+                  lists its tools, calls one, and stops it again.
 
 ## Layer 2 — deciding (before any model wakes)
 
@@ -103,7 +115,7 @@ knows Ollama; `routes.py` knows a hosted route exists (since 2026-10-02); nothin
                   secret-named files whatever their extension.
     drift.py      each stage scored against the source; a low score is a
                   flag to read, never a verdict.
-    parity.py     Manjuel vs one bare call to the same local model;
+    parity.py     Manjuel vs one bare call to the other head of its tier;
                   grouped by reference, expected refusals honored. A
                   second set (`**Set:** hosted`) asks a hosted head through
                   routes.py, says first what would leave, and after what did.
@@ -142,6 +154,12 @@ knows Ollama; `routes.py` knows a hosted route exists (since 2026-10-02); nothin
                   handed to the door and the court).
     gitstate.py   read-only git + local init/commit; stale locks named with
                   their cure; remotes off unless the operator opens them.
+    mirror.py     the record mirrored into his notes (2026-10-22, the
+                  reconcile's stage 1), tagged by kind, by one sync that is
+                  safe to repeat.
+    rulings.py    his laws and rulings as notes his second brain indexes,
+                  so Steward is handed the ones that bear on a job; the
+                  sealed chain and the gates in code stay the authority.
 
 ## Layer 6 — the senses and the voice
 
@@ -163,11 +181,27 @@ knows Ollama; `routes.py` knows a hosted route exists (since 2026-10-02); nothin
                   per open world. An engine with no command for thirty
                   minutes between turns closes its own sitting (IDLE_CLOSE,
                   2026-09-16). Added to this map 2026-09-17.
+    dialects.py   in-band tool-call dialects: the driver reads a model's
+                  calls out of its own written form (Harmony, `<tool_call>`)
+                  when Ollama's native tool calls fail it.
+    repair.py     a small model's tool call mended before it is judged; a
+                  value it did not send is never made up, and what cannot
+                  be mended is refused in words the model can act on.
+    guards.py     the driver's loop guards: the same call over and over, a
+                  cycle of calls, every call refused -- warned, then stopped.
+    compact.py    keeps a long /drive job inside its window: older tool
+                  results pruned to a note (the whole result kept in logs/),
+                  the system prompt and the goal kept whole.
+    journal.py    a /drive job written down as it happens, in
+                  logs/<stamp>_drive.jsonl, so a job that died is found and
+                  can be resumed.
+    schedule.py   Steward's work on a clock, or until its check passes:
+                  schedules and goals the door runs on its idle tick.
     boot.py       GROUND / RACK / RECORD / GATE / VOICE report; every
                   section degrades alone. And the brief's facts, read off
                   the record at every open (`/brief` has the door say them).
     dotenv.py     .env honored; returns names, never values.
-    manjuel.py      sixteen lines; the entrypoint.
+    manjuel.py      the entrypoint.
 
 ## Layer 8 — the declaration, and the reconciliation
 
@@ -183,7 +217,8 @@ knows Ollama; `routes.py` knows a hosted route exists (since 2026-10-02); nothin
                       covenant      the DID namespace the door mints a record's
                                     credential in (vc.go) -- one source, the
                                     manifest itself; no constant (2026-09-25)
-                      reports_to    Manjuel of answerability -- a seat in agents/
+                      reports_to    Manjuel of answerability -- a seat in agents/,
+                                    or `manjuel`, the core
                       office        read by the door's us_to_vc into the
                                     credential; the core names that reader
                       mode          DERIVED: racked (has a Wakes On) or spine
@@ -224,7 +259,7 @@ knows Ollama; `routes.py` knows a hosted route exists (since 2026-10-02); nothin
                        (said here since the manifest was written; asserted
                        since 2026-09-25)
                     `covenant` agrees across the manifest; `reports_to`
-                       names a seat; `mode` is derived from Wakes On;
+                       names a seat or the core; `mode` is derived from Wakes On;
                        `stage` is the seat's (2026-09-25)
                     `office` is READ ELSEWHERE (vc.go) and the report says
                        so -- READ_ELSEWHERE, proved against the reader's
