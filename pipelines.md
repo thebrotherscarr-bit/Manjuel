@@ -40,6 +40,7 @@ to this order -- they belong to a condition. Each declares its own summons in
 | Expert Coder | `technical` | after Router |
 | Reasoner | `hard` | after Router |
 | Quality Evaluator | `drifted`, `review` | after Router |
+| Quartermaster | `rack` | last |
 | Proofreader | `prose` | last |
 | Delivery Agent | `deliver` | last |
 
@@ -168,7 +169,7 @@ And these lines are the ENGINE's, never a seat's -- they appear in the
 transcript and the delivery whatever the words around them say:
 
 ```
-law: chain whole (4 links, head ...)        THE LAW GATE, first on every run:
+law: chain whole (N links, head ...)        THE LAW GATE, first on every run:
      objective passed 4 checks              the ledger verified, the request
                                             checked (REFUSALS §19). A refusal
                                             here means no seat sat.
@@ -201,7 +202,7 @@ made by the engine and it is not a vote. So on `default`:
 ```
 operator   morning, what's on the board?
 
-Steward    (llama3.2)  Morning. Nothing new on the board since yesterday's
+Steward    (gpt-oss:20b)  Morning. Nothing new on the board since yesterday's
            toll — the parity run is still owed. Want me to pull the task
            list?
            [no flags]  → Router skipped (needs_tool never rose)
@@ -253,7 +254,7 @@ operator   write a function that returns the cosine of two float lists
 Steward    That's the Expert Coder's. <flags>needs_tool technical</flags>
 Router     no skill needed for writing code → no action; prose: "handing to
            the coder".
-Expert Coder  (qwen2.5-coder:7b, wakes on `technical`, after Router)
+Expert Coder  (qwen2.5-coder:14b, wakes on `technical`, after Router)
            <filepath>cosine.py</filepath>
            ```python
            def cosine(a, b): ...
@@ -269,7 +270,7 @@ Steward    (closing) "cosine.py is in the workspace; it returns 0.0 when
 
 ### A make request — the maker: the engine routes, the Coder only writes
 
-Added 2026-09-21 (SPEC 4.8, DESIGN 14.15). No spine seat sits: the ENGINE
+Added 2026-09-21 (SPEC 4.8; DESIGN 14.15, in his notes, tag `design`). No spine seat sits: the ENGINE
 reads the request by arithmetic, seats the Expert Coder alone, checks what it
 writes and saves it as a version of a project. Whatever pipeline is in use, a
 make request goes this way. Live, sitting 258, from the dashboard:
@@ -349,8 +350,7 @@ operator   /use court
            should gemma sit at the front door?
 
 Security Guardian (llama3.2)  SAFE            (only if a feed was pasted)
-Steward    frames it; raises needs_tool if the record should be read.
-Router     reads: rack_list, semantic_search "front door" — READ-ONLY at
+Router     (when: needs_tool; the door does not sit at the table) reads: rack_list, semantic_search "front door" — READ-ONLY at
            the table; a writing skill is refused by the engine here.
 Neiro      (llama3.2, the warden)   what the record shows, sourced.
 Jesster    (deepseek-r1:8b, the licensed fool)   the strongest case AGAINST.

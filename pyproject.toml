@@ -71,8 +71,8 @@ test = ["numpy"]
 voice = []
 
 [project.urls]
-Homepage = "https://github.com/thebrotherscarr-bit/Manjuel-atlas"
-Documentation = "https://github.com/OWNER/manjuel/blob/master/README.md"
+Homepage = "https://github.com/thebrotherscarr-bit/Manjuel"
+Documentation = "https://github.com/thebrotherscarr-bit/Manjuel/blob/main/README.md"
 
 [project.scripts]
 manjuel = "manjuel.cli:main"
