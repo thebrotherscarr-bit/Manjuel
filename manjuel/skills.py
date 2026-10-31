@@ -4149,14 +4149,23 @@ def _mcp_rpc(url: str, method: str, params: dict, key: str = "") -> tuple[dict |
     import urllib.request
     body = _json.dumps({"jsonrpc": "2.0", "id": 1,
                         "method": method, "params": params}).encode("utf-8")
-    headers = {"Content-Type": "application/json"}
+    # BOTH KINDS OF ANSWER ARE ASKED FOR (2026-10-31). The MCP spec's Streamable
+    # HTTP transport (2025-06-18, Transports) says a client MUST list
+    # application/json and text/event-stream in Accept, and MUST read either
+    # one back. A server built on the MCP SDK answers 406 without the header --
+    # Steward's door (worlds/steward, mcp_app.py) did, to every call from here.
+    # atlas's door ignores Accept and answers JSON, so it is unchanged.
+    headers = {"Content-Type": "application/json",
+               "Accept": "application/json, text/event-stream"}
     if key:
         headers["Authorization"] = "Bearer " + key
     req = urllib.request.Request(url, body, headers)
     wait = _mcp_wait()
     try:
         with urllib.request.urlopen(req, timeout=wait) as r:
-            row = _json.loads(r.read().decode("utf-8", "replace"))
+            kind = (r.headers.get("Content-Type") or "").lower()
+            text = r.read().decode("utf-8", "replace")
+        row = _mcp_sse(text) if kind.startswith("text/event-stream") else _json.loads(text)
     except urllib.error.URLError as exc:
         return None, f"it did not answer ({exc.reason})"
     except TimeoutError:
@@ -4169,6 +4178,25 @@ def _mcp_rpc(url: str, method: str, params: dict, key: str = "") -> tuple[dict |
         err = row["error"]
         return None, f"it refused: {err.get('message') or err}"
     return (row or {}).get("result") or {}, ""
+
+
+def _mcp_sse(text: str) -> dict:
+    """The JSON-RPC answer in an event stream: the last event whose data is a
+    message carrying `result` or `error`. Raises ValueError when there is none,
+    which `_mcp_rpc` already answers as "not JSON"."""
+    import json as _json
+    found: dict = {}
+    for event in text.replace("\r\n", "\n").split("\n\n"):
+        data = "\n".join(l[5:].removeprefix(" ") for l in event.split("\n")
+                         if l.startswith("data:"))
+        if not data:
+            continue
+        row = _json.loads(data)
+        if isinstance(row, dict) and ("result" in row or "error" in row):
+            found = row
+    if not found:
+        raise ValueError("no JSON-RPC answer in the event stream")
+    return found
 
 
 def _mcp_text(result: dict) -> str:
@@ -5818,9 +5846,14 @@ def _run_prompt_skill(spec: SkillSpec, args: dict, env: SkillExecutionEnv) -> st
                 f"file in the workspace with <filepath>.")
 
     from .registry import Agent
+    # AN OVERRIDE MOVES THE PROMPT SKILLS WITH THE SEATS (2026-10-31). `/model
+    # <tag>` and the boot's own move to MANJUEL_SEAT_MODEL put every seat on one
+    # model; a prompt skill left on its declared tag would load a second model
+    # beside it, or fail on a tag the rack no longer has.
+    override = getattr(getattr(env, "registry", None), "override", "") or ""
     seat = Agent(
         name=spec.keyword,
-        model=spec.model,
+        model=override or spec.model,
         system_prompt=(
             f"{spec.body.strip()}\n\n"
             f"Follow the rules above exactly. Output only what they ask for: "

@@ -952,9 +952,15 @@ here (operator ruling, sitting 33); there is no fallback by design.
 
 **`Missing model tags referenced by agents/ or skills/`**
 
-A seat or skill declares a tag that is not installed. The boot report names
-each one with its own pull command. Either pull it, or point that seat at a
-tag you have — `agents/*.md`, one line, then `/reload`.
+A seat or skill declares a tag that is not installed, AND the model every seat
+would sit on instead (`MANJUEL_SEAT_MODEL`, gpt-oss:20b) is not installed
+either, or that dial is `off`. The boot report names each one with its own pull
+command. Either pull it, or point that seat at a tag you have — `agents/*.md`,
+one line, then `/reload`.
+
+Since 2026-10-31 a missing tag alone does not stop the boot: the boot says which
+tags are missing and puts every seat and prompt skill on `MANJUEL_SEAT_MODEL`
+for the sitting, as `/model <tag>` would. agents/ and skills/ are not written.
 
 **Something else, at import.** Run the strokes: they need no model and no
 network, and a parse error or a bad seat file shows up there in a second.
@@ -1172,6 +1178,9 @@ boot report says which took effect) or the shell. Nothing else is a dial.
     MANJUEL_RACK_PULL       off    1 allows `ollama pull` from a seat (skills.py)
     MANJUEL_KEEP_ALIVE      30m    how long Ollama holds a model after a call (runtime.py)
     MANJUEL_NO_WARM         off    1 skips warming the spine at boot (cli.py)
+    MANJUEL_SEAT_MODEL      gpt-oss:20b   when a tag agents/ or skills/ declares is not
+                                   installed, every seat and prompt skill sits on this
+                                   one for the sitting; `off` refuses the boot (cli.py)
     MANJUEL_VRAM_GB         card   the budget the VRAM plan reasons against (vram.py)
     MANJUEL_LOG_HORIZON_DAYS 45    transcripts older than this leave retrieval; 0 = never (vectors.py)
     MANJUEL_NO_COLOR        off    1 turns the ink off (ink.py)

@@ -161,6 +161,21 @@ def ground_from_argv(argv) -> Path | None:
     return p.resolve()
 
 
+SEAT_MODEL_DIAL = "MANJUEL_SEAT_MODEL"
+SEAT_MODEL_DEFAULT = "gpt-oss:20b"
+
+
+def seat_model() -> str:
+    """The one model every seat sits on when a declared tag is not on the rack
+    (Session.preflight). Read when it is asked, after `.env`; `off` turns it off,
+    and the boot refuses over a missing tag as it always did."""
+    raw = os.environ.get(SEAT_MODEL_DIAL, "").strip()
+    if raw.lower() in ("off", "0", "no", "none", "false"):
+        return ""
+    tag = raw or SEAT_MODEL_DEFAULT
+    return tag if ":" in tag else f"{tag}:latest"
+
+
 class Session:
     def __init__(self):
         self.runtime = OllamaRuntime()
@@ -305,6 +320,20 @@ class Session:
         return self.rack_ok
 
     def preflight(self) -> bool:
+        """The rack answers, and every model the seats and prompt skills run on
+        is installed.
+
+        ONE MISSING TAG NO LONGER LOCKS THE GROUND (2026-10-31, his word: "fix
+        the preflight and re-point everything to a small default just for
+        running it"; his card: gpt-oss:20b, one model front and back, ADR-0001).
+        Six declared tags left the rack, and this refused the whole boot over
+        seats that may never sit in a sitting -- Jesster, the Proofreader, the
+        Deep Researcher. Now, when a declared tag is missing, every seat and
+        every prompt skill sits on SEAT_MODEL for this sitting, the way `/model
+        <tag>` moves them, and the boot says which tags were missing and where
+        they went. agents/ and skills/ are never written. It still refuses when
+        that model is missing too, or when the dial says `off`.
+        """
         try:
             self.runtime.health()
         except BackendUnreachable as exc:
@@ -312,15 +341,31 @@ class Session:
             return False
 
         assert self.registry is not None
-        needed = self.registry.models() | self.skills.models()
+        needed = ({self.model_override} if self.model_override
+                  else self.registry.models() | self.skills.models())
         missing = self.runtime.missing(needed)
-        if missing:
-            print("\nMissing model tags referenced by agents/ or skills/:")
-            for tag in missing:
-                print(f"  - {tag}      ollama pull {tag}")
-            print()
-            return False
-        return True
+        if not missing:
+            return True
+        fallback = seat_model()
+        if (fallback and not self.model_override
+                and not self.runtime.missing({fallback})):
+            self.model_override = fallback
+            self.registry.override_model(fallback)
+            print(f"\n  Not on the rack: {', '.join(sorted(missing))} "
+                  f"(declared in agents/ or skills/).")
+            print(f"  Every seat and prompt skill sits on {fallback} this sitting "
+                  f"({SEAT_MODEL_DIAL}); agents/ and skills/ are unchanged.")
+            print(f"  /model <tag> moves them again; pull a tag and restart to "
+                  f"run it as declared.\n")
+            return True
+        print("\nMissing model tags referenced by agents/ or skills/:")
+        for tag in missing:
+            print(f"  - {tag}      ollama pull {tag}")
+        if fallback and not self.model_override:
+            print(f"  and {fallback}, the model every seat would sit on instead "
+                  f"({SEAT_MODEL_DIAL}), is not installed either")
+        print()
+        return False
 
     @property
     def env(self) -> SkillExecutionEnv:

@@ -34,6 +34,47 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: a missing model tag no longer locks the engine; every seat sits on one model instead (2026-10-31; his words: "fix the preflight and re-point everything to a small default just for running it"; his card: gpt-oss:20b)
+
+The restart for the `mcp_call` fix failed at preflight: six tags that agents/ and skills/ declare are no longer on the rack (`deepseek-r1:8b`, `llama3.2:latest`, `phi4-mini:latest`, `qwen2.5-coder:14b`, `qwen3.5:4b`, `qwen3.5:9b`), and `Session.preflight` refused the whole boot when any declared tag was missing, even for seats that may never sit in a sitting.
+
+- **Preflight** (`manjuel/cli.py`): when a declared tag is missing, every seat sits on `MANJUEL_SEAT_MODEL` for the sitting, the way `/model <tag>` moves them, and the boot says which tags were missing and where the seats went. agents/ and skills/ are not written. It still refuses when that model is missing too, or when the dial is `off`.
+- **The dial** `MANJUEL_SEAT_MODEL`, default `gpt-oss:20b`. ADR-0001's one model front and back: Steward runs on it, so the council and Steward share one loaded model on the 16 GB card. Read when preflight asks, after `.env`. In `.env.example` and RUNBOOK's table of the dials.
+- **Prompt skills** (`manjuel/skills.py`, `_run_prompt_skill`): an override moves them with the seats; before, they stayed on their declared tags.
+- RUNBOOK's "Manjuel will not start" says when the boot still refuses.
+
+Not moved: the driver's own defaults in serve.py (`MANJUEL_DRIVER_FALLBACK` qwen3.5:9b, `MANJUEL_SUMMARY_MODEL` qwen3.5:4b) name tags that are gone too; the driver itself runs on gpt-oss:20b.
+
+Strokes: `test_a_missing_tag_puts_every_seat_on_one_model` (9).
+
+What goes red if it comes unplugged: that stroke. Preflight put back as it was reds the boot-goes-on checks; the runner ignoring the override reds the prompt-skill check.
+
+Restart required.
+
+### core: INVENTORY.md lists the door's `notes` tool (2026-10-31; his words: "Yes, add it")
+
+The door gained `notes` in atlas 7b5bd35, and INVENTORY.md never got a line for it, so the stroke "every door tool is a line of INVENTORY.md" went red on the first suite run after. It is T97 now, a reader, and section 2 counts 97 tools. Not measured live yet; the line says so.
+
+What goes red if it comes unplugged: that stroke, in `test_the_inventory_lists_every_function`.
+
+### core: `mcp_call` asks for both kinds of answer and reads an event stream (2026-10-31; his words: "Yes, fix Manjuel")
+
+Manjuel could not reach Steward's door. The MCP spec's Streamable HTTP transport (2025-06-18) says a client MUST list `application/json` and `text/event-stream` in its Accept header, and MUST read either one back. `_mcp_rpc` sent no Accept at all, and a door built on the MCP SDK answers 406 to that. Steward's `mcp_app.py` (worlds/steward) did, to every call from here.
+
+- `_mcp_rpc` sends `Accept: application/json, text/event-stream` on every request.
+- A reply whose Content-Type is `text/event-stream` is read by the new `_mcp_sse`: the last event whose data is a message carrying `result` or `error`. A stream with no such message is refused as "not JSON", the way a bad JSON reply already was.
+- atlas's door ignores Accept and answers JSON, so calls to it are unchanged.
+
+Measured on loopback with Steward's own `mcp_app.py` (a scripted model, no Ollama), served once as shipped (JSON) and once answering as a stream: both answered 406 with no Accept, and both answered `mcp_call` with the fix.
+
+Strokes: `test_the_council_asks_for_both_kinds_of_answer` (7). A stub door refuses a request that does not ask for both kinds, and answers as a stream when told to. It checks that every request asks for both, that a roster and a tool's answer sent as a stream are read past a notification sent before them, that a stream with no answer is refused and reads as failed, and that a message split over two data lines is read as one.
+
+What goes red if it comes unplugged: that stroke. Without the Accept header the stub answers 406 and its first two checks go red; without `_mcp_sse` the stream checks go red.
+
+BUILDMAP.md and REFUSALS.md are regenerated (skills.py's refusal sites moved down). On his glass, 2026-10-31 11:20: smoke 72/72, strokes 4435/4436. The one red is not this piece: "every door tool is a line of INVENTORY.md" names `notes`, the door tool atlas gained in 7b5bd35 (2026-10-22), after the last green run.
+
+Restart required.
+
 ### core: the docs say what is true at v0.2.6 (2026-10-24; his words: "make a pass on all the docs on the repos and make sure they are all good and match the system's 0.2.6 publish")
 
 Every living doc was read in full against the code, and 49 findings were written down before any was fixed (his notes, "Docs pass"). The cause behind most of them: the v0.2.6 work of 2026-10-21 (Steward on gpt-oss, Steward as the face, Steward made capable) never reached the docs.

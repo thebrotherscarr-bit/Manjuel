@@ -16254,6 +16254,108 @@ def test_the_council_carries_its_key_to_the_door(reg, lib, book):
         _os.environ.update(saved)
 
 
+def test_the_council_asks_for_both_kinds_of_answer(reg, lib, book):
+    """The MCP spec's Streamable HTTP transport (2025-06-18) says a client
+    MUST list application/json and text/event-stream in Accept, and MUST read
+    either one back. Until 2026-10-31 the council sent no Accept at all, so a
+    door built on the MCP SDK -- Steward's (worlds/steward, mcp_app.py) --
+    answered 406 to every call from here, and an answer sent back as an event
+    stream would have read as "not JSON".
+
+    A stub on loopback plays that door: it refuses a request that does not
+    ask for both kinds, and answers as a stream when told to. Nothing here
+    reaches a real door.
+    """
+    import http.server as _hs
+    import json as _json
+    import os as _os
+    import threading as _th
+    from manjuel import skills as _sk
+
+    seen: list[dict] = []
+    mode = {"answer": "json"}             # json | stream | empty
+
+    class Stub(_hs.BaseHTTPRequestHandler):
+        def do_POST(self):
+            n = int(self.headers.get("Content-Length") or 0)
+            req = _json.loads(self.rfile.read(n) or b"{}")
+            accept = self.headers.get("Accept") or ""
+            seen.append({"method": req.get("method"), "accept": accept})
+            if not ("application/json" in accept and "text/event-stream" in accept):
+                self.send_response(406)
+                self.send_header("Content-Length", "0")
+                self.end_headers()
+                return
+            if req.get("method") == "tools/list":
+                out = {"jsonrpc": "2.0", "id": 1, "result": {"tools": [{"name": "t"}]}}
+            elif req.get("method") == "tools/call":
+                out = {"jsonrpc": "2.0", "id": 1,
+                       "result": {"content": [{"type": "text", "text": "ok from t"}]}}
+            else:
+                out = {"jsonrpc": "2.0", "id": 1, "result": {}}
+            if mode["answer"] == "json":
+                kind, text = "application/json", _json.dumps(out)
+            else:
+                # A notification first, as a server may send before its answer,
+                # in CRLF framing, which the event-stream format allows.
+                note = {"jsonrpc": "2.0", "method": "notifications/message",
+                        "params": {"level": "info", "data": "working"}}
+                text = "event: message\r\ndata: " + _json.dumps(note) + "\r\n\r\n"
+                if mode["answer"] == "stream":
+                    text += "event: message\r\ndata: " + _json.dumps(out) + "\r\n\r\n"
+                kind = "text/event-stream"
+            body = text.encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", kind)
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *a):        # the stub says nothing on the console
+            pass
+
+    srv = _quiet(_hs.HTTPServer)(("127.0.0.1", 0), Stub)
+    port = srv.server_address[1]
+    _th.Thread(target=srv.serve_forever, daemon=True).start()
+    call = lambda **kw: _sk._HANDLERS["mcp_call"](None, kw)
+    saved = {k: v for k, v in _os.environ.items() if k.startswith("MANJUEL_MCP_")}
+    for k in saved:
+        del _os.environ[k]
+    try:
+        _os.environ["MANJUEL_MCP_LOOP"] = f"http://127.0.0.1:{port}/rpc"
+        out = call(server="loop", tool="t", content="{}")
+        check("every request to an MCP door asks for both kinds of answer, as the spec says it MUST",
+              seen and all("application/json" in r["accept"] and "text/event-stream" in r["accept"]
+                           for r in seen)
+              and {r["method"] for r in seen} >= {"initialize", "tools/call"},
+              str([(r["method"], r["accept"]) for r in seen]))
+        check("   and a door that answers 406 without them answers this one",
+              out == "ok from t", out[:120])
+
+        mode["answer"] = "stream"
+        out = call(server="loop")
+        check("a roster sent back as an event stream is read",
+              "loop carries 1 tools" in out and "- t" in out, out[:120])
+        out = call(server="loop", tool="t", content="{}")
+        check("   and so is a tool's answer, past a notification sent before it",
+              out == "ok from t", out[:120])
+
+        mode["answer"] = "empty"
+        out = call(server="loop", tool="t", content="{}")
+        check("a stream that carries no answer is refused as not JSON",
+              out.startswith("Refused") and "not JSON" in out, out[:200])
+        from manjuel.serve import _FAILED_HEADS
+        check("   and that refusal reads as failed to the wire",
+              out.lstrip().startswith(_FAILED_HEADS))
+        check("one message split over two data lines is read as one",
+              _sk._mcp_sse('data: {"jsonrpc": "2.0", "id": 1,\ndata: "result": {"ok": 1}}\n\n')
+              == {"jsonrpc": "2.0", "id": 1, "result": {"ok": 1}})
+    finally:
+        srv.shutdown()
+        _os.environ.pop("MANJUEL_MCP_LOOP", None)
+        _os.environ.update(saved)
+
+
 def test_the_mcp_skill_never_leaves_this_machine(reg, lib, book):
     """RULE 4 -- the estate is local -- held in code, on the one skill that
     could break it.
@@ -21034,6 +21136,103 @@ def test_model_override(reg, lib, book):
           str([h for n, _, h in _cli.COMMANDS if n == "model"]))
 
 
+def test_a_missing_tag_puts_every_seat_on_one_model(reg, lib, book):
+    """ONE MISSING TAG NO LONGER LOCKS THE GROUND (2026-10-31, his word: "fix the
+    preflight and re-point everything to a small default just for running it";
+    his card: gpt-oss:20b, one model front and back). Six declared tags had left
+    the rack and preflight refused the whole boot. Now every seat and prompt
+    skill sits on MANJUEL_SEAT_MODEL for the sitting, agents/ and skills/
+    unwritten; it still refuses when that model is missing too, or the dial
+    says off. Session.preflight is asked on a stand-in, because a real Session
+    opens a sitting in the ledger."""
+    import contextlib as _ctx
+    import io as _io
+    import os as _os
+    from types import SimpleNamespace
+    from manjuel import cli as _cli
+    from manjuel import skills as _sk
+    from manjuel.registry import AgentRegistry
+
+    class Rack:
+        def __init__(self, installed):
+            self.installed = set(installed)
+
+        def health(self):
+            return True
+
+        def missing(self, required):
+            return sorted(t for t in required if t not in self.installed)
+
+    def sess_on(installed):
+        return SimpleNamespace(runtime=Rack(installed),
+                               registry=AgentRegistry.load(ROOT / "agents"),
+                               skills=lib, model_override="", seat_overrides={})
+
+    def ask(s):
+        out = _io.StringIO()
+        with _ctx.redirect_stdout(out):
+            ok = _cli.Session.preflight(s)
+        return ok, out.getvalue()
+
+    declared = AgentRegistry.load(ROOT / "agents").models() | lib.models()
+    saved = _os.environ.pop(_cli.SEAT_MODEL_DIAL, None)
+    try:
+        s = sess_on(declared | {"gpt-oss:20b"})
+        ok, said = ask(s)
+        check("every declared tag installed: the boot goes on and no seat moves",
+              ok and not s.model_override and not said, said)
+
+        short = declared - {"qwen3.5:4b", "phi4-mini:latest"}
+        s = sess_on(short | {"gpt-oss:20b"})
+        ok, said = ask(s)
+        check("a declared tag missing: the boot goes on, every seat on gpt-oss:20b",
+              ok and s.model_override == "gpt-oss:20b"
+              and {a.model for a in s.registry.all()} == {"gpt-oss:20b"}, said)
+        check("   and it names the missing tags and the dial that chose the model",
+              "qwen3.5:4b" in said and "phi4-mini:latest" in said
+              and _cli.SEAT_MODEL_DIAL in said, said)
+        check("   and what agents/ declares is not moved",
+              s.registry.declared_models() == AgentRegistry.load(ROOT / "agents").declared_models())
+
+        class Heard:
+            model = ""
+
+            def chat(self, agent, prompt):
+                Heard.model = agent.model
+                return "ok"
+
+        spec = next(sp for sp in lib.specs if sp.model)
+        words = {"content": "one two three four five six seven eight nine"}
+        _sk._run_prompt_skill(spec, words, SimpleNamespace(registry=s.registry, runtime=Heard()))
+        check("   and a prompt skill sits on that model with the seats",
+              Heard.model == "gpt-oss:20b", f"{spec.keyword} on {Heard.model}")
+        _sk._run_prompt_skill(spec, words, SimpleNamespace(
+            registry=AgentRegistry.load(ROOT / "agents"), runtime=Heard()))
+        check("   while with no override it sits on its own declared model",
+              Heard.model == spec.model, f"{spec.keyword} on {Heard.model}")
+
+        _os.environ[_cli.SEAT_MODEL_DIAL] = "qwen3-vl:8b"
+        s = sess_on(short | {"qwen3-vl:8b"})
+        ok, said = ask(s)
+        check("the dial names another installed model, and the seats sit on that",
+              ok and s.model_override == "qwen3-vl:8b", said)
+
+        s = sess_on(short)
+        ok, said = ask(s)
+        check("the model the dial names is missing too: the boot is refused and says so",
+              not ok and not s.model_override and "is not installed either" in said, said)
+
+        _os.environ[_cli.SEAT_MODEL_DIAL] = "off"
+        s = sess_on(short | {"gpt-oss:20b"})
+        ok, said = ask(s)
+        check("the dial off: a missing tag refuses the boot, as it always did",
+              not ok and not s.model_override and "ollama pull qwen3.5:4b" in said, said)
+    finally:
+        _os.environ.pop(_cli.SEAT_MODEL_DIAL, None)
+        if saved is not None:
+            _os.environ[_cli.SEAT_MODEL_DIAL] = saved
+
+
 def test_path_gate(reg, lib, book):
     """LAW 8 -- one write-path per chain. Assert the REFUSALS, not the happy
     path: this is how such a gate dies, by being refactored around while the
@@ -25019,6 +25218,7 @@ def main() -> int:
     test_a_run_in_flight_can_be_interrupted(reg, lib, book)
     test_the_mcp_skill_never_leaves_this_machine(reg, lib, book)
     test_the_council_carries_its_key_to_the_door(reg, lib, book)
+    test_the_council_asks_for_both_kinds_of_answer(reg, lib, book)
     test_a_spelled_out_door_call_is_written_by_the_engine(reg, lib, book)
     test_a_refusal_reads_as_failed_everywhere(reg, lib, book)
     test_a_skill_cannot_hang_the_repl(reg, lib, book)
@@ -25027,6 +25227,7 @@ def main() -> int:
     test_a_thinking_router_is_never_silent(reg, lib, book)
     test_write_read_and_speak_about_it(reg, lib, book)
     test_model_override(reg, lib, book)
+    test_a_missing_tag_puts_every_seat_on_one_model(reg, lib, book)
     test_flags_are_not_speech(reg, lib, book)
     test_the_maker(reg, lib, book)
     test_the_maker_runs_the_page_before_it_keeps_it(reg, lib, book)
