@@ -168,7 +168,7 @@ each slow route mended or ruled, one piece at a time. (4) The v0.2.6 cut through
 | D9 | /schedule every 30m\|at 18:00\|cron ".."\|once <time> <drive> | a /drive run by the idle door when due, unattended and as `auto` (every card a no, git the net), while a sitting is open; state/schedules.jsonl | not run live yet (built 2026-10-21, the feature list) | -- |
 | D10 | /goal <drive> \| check: <command>; /schedules [drop <id>] | a goal run every 30 minutes until its check passes (done), three alike failures or its 48 runs (blocked); /schedules lists them and drops one | not run live yet (built 2026-10-21, the feature list) | -- |
 
-## 2. The door's tools (atlas-mcp, 96)
+## 2. The door's tools (atlas-mcp, 97)
 
 Each is called by the glass (a tab, a button, Registry & Docs' Call) or by the council (mcp_call); a writing call from anything but his glass waits on its card.
 
@@ -270,6 +270,7 @@ Each is called by the glass (a tab, a button, Registry & Docs' Call) or by the c
 | T94 | us_to_vc | convert a .us declaration to a W3C Verifiable Credential | glass 17:59: ok, seat_steward.us as a credential | 4 ms |
 | T95 | verify_chain | chain verdict via tools/chain_verify.py, the Python spine: EMPTY/INTACT/FLIP/TAMPER (SKIPPED where rows carry no hash) | glass 17:59: FAULT, FLIP on all 10 links of law/chain.jsonl, where law_status proves the chain whole | 144 ms |
 | T96 | secret_set | the secret card's write: one NAME=value line of the tenant's .env set in place or added, the glass's call only (ServiceOnly), the value never in an answer, a trace or the record; answers `secret NAME set in .env (N chars)` | not run live yet (built 2026-10-21, the feature list) | -- |
+| T97 | notes | his notes in SecondBrain, read through the notes kernel he declared (MANJUEL_MCP_NOTES_CMD): search them, list them by tag, get one whole, or the briefing for a question; nothing is written | not measured here yet (built in the reconcile's stage 2, atlas 7b5bd35) | -- |
 
 ## 3. The glass (atlas-webapp)
 

@@ -812,3 +812,11 @@
 {"suite": "strokes", "at": 1792692748.6397946, "state": "finished", "passed": 4429, "total": 4429, "green": true, "failed": []}
 {"suite": "smoke", "at": 1792693831.829548, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
 {"suite": "strokes", "at": 1792694071.9087086, "state": "finished", "passed": 4429, "total": 4429, "green": true, "failed": []}
+{"suite": "strokes", "at": 1793470514.0355093, "state": "finished", "passed": 4434, "total": 4436, "green": false, "failed": ["the tail is current: a regeneration changes nothing", "   and every door tool is a line of INVENTORY.md"]}
+{"suite": "smoke", "at": 1793470520.2640464, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1793470813.1073961, "state": "finished", "passed": 4435, "total": 4436, "green": false, "failed": ["   and every door tool is a line of INVENTORY.md"]}
+{"suite": "smoke", "at": 1793470818.15651, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1793471923.4839938, "state": "finished", "passed": 4436, "total": 4436, "green": true, "failed": []}
+{"suite": "smoke", "at": 1793471928.578061, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
+{"suite": "strokes", "at": 1793472909.825446, "state": "finished", "passed": 4445, "total": 4445, "green": true, "failed": []}
+{"suite": "smoke", "at": 1793472915.8042254, "state": "finished", "passed": 72, "total": 72, "green": true, "failed": []}
