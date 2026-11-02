@@ -38,7 +38,7 @@ measurement run by name; RULE 4, amended 2026-10-02.)
 | Program | What it is | Where it listens | Where it lives |
 |---|---|---|---|
 | **Ollama** | the rack: every local model the seats and the driver ask | 127.0.0.1:11434 | an installed service |
-| **the door** (`atlas-mcp.exe`) | the tool server: every tool, the hold queue (his Approve cards), the shell gate, and the host of the engine | 127.0.0.1:8090 | `atlas/line/` (Go) |
+| **the door** (`atlas-mcp.exe`) | the tool server: every tool, the hold queue (his Approve cards), the shell gate, and the host of the engine | 127.0.0.1:43111 | `atlas/line/` (Go) |
 | **the glass** (`atlas-webapp.exe`; Aurora in the doctrine) | the web page he works in: one terminal (Agent, Bash, Python, PowerShell, Aider tabs), the dock of cards, the Inspector; this PC only, opened with a PIN | 127.0.0.1:8091 | `atlas/webapp/` (Go, the page embedded) |
 | **the engine** (Manjuel) | the council and the driver, in Python; the door starts one per world as a child process and speaks to it in JSON lines on its stdin and stdout | no port | `manjuel/` |
 
@@ -175,7 +175,7 @@ hearsay until you run it.
 
 1. **Build the door and the glass** (RUNBOOK.md, "Starting the system"), and
    again after any change to atlas's Go code or its page.
-2. **Start** Ollama, then the door on 127.0.0.1:8090 with `--auth`, then the
+2. **Start** Ollama, then the door on 127.0.0.1:43111 with `--auth`, then the
    glass on 127.0.0.1:8091 from `atlas\webapp`. Both read `ATLAS_SERVICE` from
    the shell's environment. Nothing starts by itself after a reboot.
 3. **Open http://127.0.0.1:8091.** The first time it asks for a name and a PIN
