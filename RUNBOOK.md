@@ -135,10 +135,10 @@ and restart it -- editing the file on disk does nothing to a running server.
 
 **Start the door.** `atlas-mcp` is the MCP door: it serves the door's tools
 (atlas's `docs/TOOL_PERMISSIONS.md` lists every one) and it is the only thing
-that spawns a Manjuel engine. It holds `127.0.0.1:8090`.
+that spawns a Manjuel engine. It holds `127.0.0.1:43111`.
 
     cd atlas\line
-    .\atlas-mcp.exe --http 127.0.0.1:8090 --auth --tenant research=<PATH-TO-YOUR-GROUND> --tenant atlas=<PATH-TO-YOUR-GROUND>/atlas --default-project research --manjuel "python <PATH-TO-YOUR-GROUND>/manjuel.py" *> mcp.log
+    .\atlas-mcp.exe --http 127.0.0.1:43111 --auth --tenant research=<PATH-TO-YOUR-GROUND> --tenant atlas=<PATH-TO-YOUR-GROUND>/atlas --default-project research --manjuel "python <PATH-TO-YOUR-GROUND>/manjuel.py" *> mcp.log
 
 `<PATH-TO-YOUR-GROUND>` is the folder holding `manjuel.py` -- an ABSOLUTE
 path, forward slashes, no trailing slash. This line carried the author's own
@@ -179,7 +179,7 @@ each one --
 state the door is in: `auth=true, holds ARMED` or `auth=false, holds off`.
 
 **Start the glass.** `atlas-webapp` serves the dashboard on `:8091` and talks
-to the door at `127.0.0.1:8090`.
+to the door at `127.0.0.1:43111`.
 
     cd atlas\webapp
     .\atlas-webapp.exe *> web.log
@@ -202,10 +202,10 @@ DOOR's (its rack tools read it, loopback only; a host with no port means
 Ollama's own 11434), and goes in the door's shell before it starts.
 
 **Is it up?** The door's boot line (in `atlas\line\mcp.log`) reads
-`atlas-mcp <version> listening on 127.0.0.1:8090 (auth=true, holds ARMED ...)`;
+`atlas-mcp <version> listening on 127.0.0.1:43111 (auth=true, holds ARMED ...)`;
 the glass's (`atlas\webapp\web.log`) reads `atlas-webapp listening on
 127.0.0.1:8091 -- this PC only, opened with a PIN, service wire held`.
-`http://127.0.0.1:8090/health` and `http://127.0.0.1:8091/api/health` answer
+`http://127.0.0.1:43111/health` and `http://127.0.0.1:8091/api/health` answer
 `{"status":"ok", ...}`. After a reboot NOTHING is up -- Ollama, the door and
 the glass are each started again, in that order.
 
@@ -832,7 +832,7 @@ refusal names the law. Read them in Registry & Docs (its documents, the
 skills kind), or `commands.md` for what can be asked for in words.
 
 **Tools** are what ATLAS serves over MCP -- listed in atlas's
-`docs/TOOL_PERMISSIONS.md` and at `http://127.0.0.1:8090/tools` and reachable from the glass through
+`docs/TOOL_PERMISSIONS.md` and at `http://127.0.0.1:43111/tools` and reachable from the glass through
 `POST /api/tools/call`. They are read-only unless their declaration says
 `Writes: true`. The ones the dashboard itself leans on:
 
@@ -926,7 +926,7 @@ downloaded), `MANJUEL_VRAM_GB`, `MANJUEL_KEEP_ALIVE`, `MANJUEL_SEAT_TIMEOUT`,
         (placing a built binary is his act).
 
     "mcp unreachable"
-        The door is not running, or not on 8090. Check `atlas\line\mcp.log`.
+        The door is not running, or not on 43111. Check `atlas\line\mcp.log`.
 
     the glass is locked and the PIN is forgotten
         Delete `atlas\webapp\data\user.json` and reload the page: it asks for

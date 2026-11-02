@@ -3276,3 +3276,64 @@ pins at 0.2.0 in both repositories. The release check, the save, the send and th
 **At close** — No sitting open (428 the last). The door and the glass as his desktop app started them after the 13:22 reboot. The suites from the ship's own check, then the release flow's. The cut is his: the release flow with mark v0.2.6 and its three gates.
 
 **Next session** — the record after the cut (G's item 9), the binaries rebuilt and placed on his card, then the Discord test.
+
+## Session 31 — 2026-10-30 (Friday) to 2026-10-31 (Saturday), sitting 475 from his glass: Steward wired into the stack, and the way of working settled
+
+**Standing** — The same conversation, carried across context resets. Every write to a repository went through the door on his card. main changes in each repository only through a pull request whose checks have passed.
+
+**The plan** — His words:
+- "an agent that does not fail, passes evals, has persistent memory, and can recursively train and rebuild himself ie make slow approved changes gated by human approval";
+- "Steward needs to be able to recursively learn and understand his environment, his abilities, and his goals";
+- and the direction it settled into: "I want the ENTIRE thing to work as steward from the secondbrain using atlas as a sandbox workspace."
+
+**What was done** — HANDOFF's block for 2026-10-31 has the detail.
+- Manjuel's `mcp_call` speaks to MCP servers (#79).
+- Steward's MCP door runs under SecondBrain.
+- The door serves `agent_send` and `agent_read`.
+- The research dive into MAF, the cookbook, mem0, Aider and Nigel is written into SecondBrain.
+- Steward got cheap reads with `.env` kept out, his Charter and notes live, and memory that lasts across sessions (Steward #20).
+
+**Found (not the plan)** — HANDOFF's 2026-10-31 notes, (a) to (f).
+
+**Rulings** — His words, all 2026-10-31:
+- Steward writes his own jobs; that is the entire point.
+- No hand wires itself into anything without his explicit word.
+- He clicks Approve and nothing else: everything else goes through Atlas or Steward.
+- git_pr goes to Steward as a held write ("Yes, give it to him").
+
+**At close** — No sitting open (475 the last). Steward #21 and Jesster #28 are open and green; nothing of them is merged yet.
+
+**Next session** — The open list in HANDOFF's 2026-10-31 block:
+1. Merge #21 and #28.
+2. Merge main into secondbrain-app; the release, then Update.
+3. Restart Steward's service.
+4. The live proof.
+5. Then Steward does the work himself, through the door.
+
+## Session 32 — 2026-11-01 (Sunday), no sitting opened: Steward's rules moved into a MAF workflow
+
+**Standing** — The same conversation, carried across context resets. Every write to a repository went through the door on his card, and main changed only through pull requests whose checks passed.
+
+**The plan** — His words:
+- "the harness makes it actually follow the rules";
+- "there has to be a better way then fiddling with this over and over";
+- "ALWAYS CHECK THE MAF FRAMEWORK FIRST BEFORE SENDING STEWARD ANY COMMANDS ... it's supposed to be small asks."
+
+**What was done** — HANDOFF's block for 2026-11-01 has the detail.
+- Steward became a MAF workflow, served by MAF's own host: plan, his Approve, execute, a model-free check, then the report (#30).
+- Its first live runs found six defects. All were fixed and merged (#31), with a seventh from the gate's Linux runner, then proven live: the plan card, the edit card, "Checks passed".
+- The trace file was cut and capped at 100 MB.
+
+**Found (not the plan)** — HANDOFF's 2026-11-01 notes, (a) to (e).
+
+**Rulings** — His words, all 2026-11-01:
+- "single runs with debugging and tuning to reduce variation between runs. thats the idea of the harness."
+- "secondbrain is a notes repo at the heart of it."
+- "it's supposed to be small asks."
+- The host's state goes in a short folder in the repo (`.as`).
+- "cut the traces file down to a 100MB max".
+- The order of what is next: "5 4 1 3 2".
+
+**At close** — Not closed; the day goes on. Steward #29, #30 and #31 are merged. The trace cap and the `steps` eval are uncommitted on the merged line.
+
+**Next session** — HANDOFF's open list, in his order 5 4 1 3 2.
