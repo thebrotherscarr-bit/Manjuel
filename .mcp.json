@@ -8,6 +8,10 @@
       "command": "python",
       "args": ["C:/Users/novad/Desktop/Research/bin/atlas_bridge.py"]
     },
+    "secondbrain": {
+      "command": "python",
+      "args": ["C:/Users/novad/Desktop/Research/bin/secondbrain_bridge.py"]
+    },
     "creative": {
       "command": "python",
       "args": ["C:/Users/novad/Desktop/Research/bin/creative_mcp.py"]
