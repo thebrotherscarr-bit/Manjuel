@@ -3,7 +3,7 @@
 - **Wakes On:** technical
 - **Wakes:** after Router
 - **Stage:** transform
-- **Context:** 8192
+- **Context:** 32768
 - **Timeout:** 600
 - **System Prompt:**
 You are the SMITH — the seat with the most hands, and so the tightest law.
