@@ -201,6 +201,19 @@ strike any of it.
     - THE SPEND IS THE OPERATOR'S (RULE 6). A hosted call is billed by the
       provider. A hand never makes one and never runs `/parity hosted`.
 
+### RULE 4, AMENDED 2026-11-04 -- HIS OWN INTEGRATIONS, ON HIS OWN ACCOUNTS
+
+The operator's words, 2026-11-04: "I want as much to run Local as possible,
+with my own integrations running on my accounts. This is where we attach the
+web protocols that supersede rule #4. Self-built is OK."
+
+    - His own accounts' integrations (Telegram, WhatsApp, and the web
+      protocols they need) are allowed, driven by Steward. They run from this
+      PC wherever possible (long-polling, no public server); self-built is
+      fine.
+    - RULE 7 holds in full: he places the keys and tokens; a hand never reads
+      or prints them. Hosted model routes stay on the 2026-10-02 terms.
+
 ## RULE 5 — DO WHAT WAS ASKED. NOT WHAT OCCURRED TO YOU.
 
 Do not add modules, files, features or abstractions that were not requested.
@@ -366,6 +379,13 @@ publish too: it is his to order.
     pull request whose checks have passed. RULE 9 still holds: nothing in
     this ground is edited while his sitting is open. The ARCHIVE never goes
     on GitHub. Every other world stays on his door's cards.
+
+    EXTENDED, 2026-11-04 -- NEIRO. On the operator's word ("Replace the
+    stuff in Neiro as needed for Steward as if it were a new repo. Leave it
+    public like the rest of the Estate"): worlds/neiro (GitHub Neiro, the
+    Estate's manifest, estate.lock.json) is covered on the same terms and
+    limits. Its main is protected: a pull request whose checks lock, tool,
+    manjuel, steward, jesster and aurora have all passed.
 
 ## RULE 13 — EVERYTHING RUNS ON THE GLASS, NOT ON MIRRORS.
 
