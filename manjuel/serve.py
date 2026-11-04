@@ -599,7 +599,25 @@ DRIVE_ALWAYS = ("always", "a", "yes always", "always yes")
 # and answers in words -- the routing arithmetic and the hand-offs a small front model
 # needed stay for the REPL and the council path. MANJUEL_FACE=council puts the council
 # back in front; `/face steward` and `/face council` switch it for the sitting.
-FACE = (os.environ.get("MANJUEL_FACE", "").strip().lower() or "steward")
+#
+# STEWARD IS THE MAF AGENT, AND HE IS THE FACE (2026-11-04; his words: "Steward should be
+# the default Agent for Manjuel, as well. There is a central theme here: Steward is the
+# Agent in control of the modules, tools, and skills", and "Fuck the council and its
+# models, thats MAF guide stuff"). The face `maf` is the default: an ordinary turn goes
+# to Steward, the Microsoft Agent Framework agent in worlds/steward, over his MCP server
+# (door_maf, below). `steward` is still this ground's own seat loop (door_face) and
+# `council` the pipeline; each is reached by name only, and neither catches a turn the
+# MAF face could not answer -- an unreachable Steward is said, not swallowed.
+FACES = ("maf", "steward", "council")
+
+
+def face_default() -> str:
+    """Who answers an ordinary turn when nobody has said: MANJUEL_FACE, else `maf`."""
+    want = os.environ.get("MANJUEL_FACE", "").strip().lower()
+    return want if want in FACES else "maf"
+
+
+FACE = face_default()
 FACE_STEPS = int(_drive_dial("MANJUEL_FACE_STEPS", 12))
 FACE_MINUTES = _drive_dial("MANJUEL_FACE_MINUTES", 10)
 FACE_HISTORY_TURNS = 6
@@ -2573,7 +2591,7 @@ def door_face(door, objective: str) -> bool:
         door.wire.emit("refused", text=d.error, notes=[])
         return True
     elif not d.answer:
-        report(f"  Steward could not answer this turn ({d.error or d.verdict}); the council takes it")
+        report(f"  The seat loop could not answer this turn ({d.error or d.verdict}); the council takes it")
         return False
     else:
         text = d.answer
@@ -2605,7 +2623,148 @@ def door_face(door, objective: str) -> bool:
     return True
 
 
-NOTES_CONTEXT_CHARS = 1500     # what his notes may take of the driver's context
+# STEWARD OVER MCP (FACE `maf`, above). His server is worlds/steward's
+# harness/steward/step04_production_ready/mcp_app.py: MAF's AgentMCPTool on loopback, stateless
+# streamable HTTP with JSON answers, unauthenticated (as MAF's sample is). Its one tool is the
+# agent, named by the agent (`Steward`), taking the request as `task` and a `session_id` that keeps
+# one conversation going. The address is the dial `mcp_call` already reads for him,
+# MANJUEL_MCP_STEWARD, and MAF_URL, his server's own port, when that is not declared; a
+# MANJUEL_MCP_STEWARD_KEY rides as the bearer if he ever arms one. The transport is mcp_call's own
+# (skills._mcp_rpc): one way to speak to a door, one loopback wall.
+MAF_DIAL = "steward"
+MAF_URL = "http://127.0.0.1:43121/mcp"
+MAF_TOOL = "Steward"
+
+
+def maf_url() -> str:
+    """Where Steward's MCP server is: the declared dial, else his server's own port."""
+    from .skills import _mcp_servers
+    return _mcp_servers().get(MAF_DIAL) or MAF_URL
+
+
+def maf_ask(url: str, task: str, session_id: str) -> tuple[str, str]:
+    """(Steward's reply, "") or ("", why he did not answer, in plain words).
+
+    The tool and its request argument are read off his server's own roster, so a renamed
+    agent or argument is followed, not guessed."""
+    from urllib.parse import urlparse
+    from .skills import _MCP_LOOPBACK, _mcp_key, _mcp_rpc, _mcp_text
+    try:
+        host = (urlparse(url).hostname or "").lower()
+    except ValueError:
+        host = ""
+    if host not in _MCP_LOOPBACK:
+        return "", ("his address is not on this machine, and the estate is local (RULE 4); "
+                    "nothing was sent")
+    key = _mcp_key(MAF_DIAL)
+    listing, err = _mcp_rpc(url, "tools/list", {}, key=key)
+    if err:
+        return "", f"his MCP server did not answer ({err})"
+    tools = [t for t in (listing.get("tools") or []) if isinstance(t, dict)]
+    tool = next((t for t in tools if t.get("name") == MAF_TOOL), None) or (tools[0] if len(tools) == 1 else None)
+    if tool is None:
+        return "", ("his MCP server carries no Steward tool (it carries: "
+                    + (", ".join(str(t.get("name")) for t in tools) or "nothing") + ")")
+    schema = tool.get("inputSchema") or {}
+    arg = next((a for a in (schema.get("required") or []) if a != "session_id"), "task")
+    args = {arg: task}
+    if "session_id" in (schema.get("properties") or {}):
+        args["session_id"] = session_id
+    result, err = _mcp_rpc(url, "tools/call", {"name": tool.get("name"), "arguments": args}, key=key)
+    if err:
+        return "", f"his MCP server could not run the turn ({err})"
+    text = _mcp_text(result)
+    if result.get("isError"):
+        return "", "he refused: " + (text or "and said nothing about why")
+    if not text:
+        return "", "he answered with nothing"
+    return text, ""
+
+
+def door_maf(door, objective: str) -> bool:
+    """STEWARD, THE FACE (FACE `maf`): one ordinary turn sent to Steward, the MAF agent, over his
+    MCP server; his reply is the delivery. When he cannot be reached that is said, and the turn
+    ends there -- the council does not take it. False only for a session on the suites' stand-in
+    runtime with no server handed to the door (`maf_url`), so no stroke ever dials the real one."""
+    sess = door.sess
+    rt = sess.runtime
+    url = getattr(door, "maf_url", None)
+    if not url:
+        from .runtime import OllamaRuntime
+        if not isinstance(getattr(rt, "_inner", rt), OllamaRuntime):
+            return False
+        url = maf_url()
+    session_id = "manjuel-" + str(getattr(sess, "session", "") or "door")
+    print("\n  Asking Steward (the MAF agent, over MCP)...")
+    door.wire.emit("report", text="Asking Steward (the MAF agent, over MCP)")
+    t0 = time.time()
+    text, why = maf_ask(url, objective, session_id)
+    elapsed = time.time() - t0
+    if why:
+        line = (f"Steward could not be reached: {why}. Nothing else took the turn. Start Steward's "
+                f"MCP server (worlds/steward, mcp_app.py) and ask again, or `/face steward` for the "
+                f"seat loop, `/face council` for the council.")
+        print(f"\n  {line}\n")
+        door.wire.emit("unreachable", text=line)
+        return True
+    import contextlib as _cl
+    with _cl.suppress(Exception):
+        from . import cli as _cli
+        sess.dialogue.append(("operator", objective, time.time()))
+        sess.dialogue.append(("steward", text, time.time()))
+        _cli.save_thread(door.ground, sess.session, sess.dialogue)
+    with _cl.suppress(Exception):
+        sess.sitting.runs.append({
+            "objective": objective[:300], "pipeline": "maf", "stages": 1,
+            "failed": 0, "elapsed": elapsed, "transcript": "",
+            "tools": [], "guards": [], "seats_failed": [], "out_of_time": [],
+            "delivery": text[:200]})
+    print(f"\n--- delivery · {elapsed:.1f}s ---\n")
+    print(text)
+    door.wire.emit("delivery", text=text, elapsed=round(elapsed, 1), transcript="",
+                   pipeline="maf", flags=[], notes=[], failures=[], verdicts=[],
+                   out_of_time=[], project="",
+                   steps=[{"seat": "Steward", "model": "maf", "elapsed": round(elapsed, 1),
+                           "tools": [], "error": "", "skipped": False, "chars": len(text),
+                           "drift": None, "drifted": False}])
+    if getattr(sess, "speaking", False) and text:
+        with _cl.suppress(Exception):
+            from . import voice
+            voice.speak(text, blocking=False)
+    return True
+
+
+def face_says(face: str) -> str:
+    """What the face is, in his words for it."""
+    return {"maf": "Steward answers ordinary turns (the MAF agent, over his MCP server).",
+            "steward": "the seat loop answers ordinary turns (this ground's own Steward seat, on "
+                       "its own loop; the council takes a turn it cannot answer).",
+            "council": "the council pipeline answers ordinary turns."}.get(face, "")
+
+
+def door_face_switch(objective: str) -> str:
+    """`/face [maf|steward|council]`: switch who answers for the sitting; the line that says so."""
+    global FACE
+    want = objective.split(None, 1)[1].strip().lower() if " " in objective.strip() else ""
+    if want in FACES:
+        FACE = want
+    return (f"The face is {FACE}: {face_says(FACE)} `/face maf` (Steward), `/face steward` "
+            f"(the seat loop) or `/face council` switches it.")
+
+
+def door_face_turn(door, objective: str) -> bool:
+    """WHO ANSWERS AN ORDINARY TURN (FACE). True when the face took it; False leaves it to the
+    council pipeline, which runs only when the face is `council`, the seat loop handed it on, or
+    the session is a suite's stand-in."""
+    sess = door.sess
+    if FACE == "maf":
+        return door_maf(door, objective)
+    if FACE == "steward":
+        return bool((sess.rack_ok or sess.rack_check()) and door_face(door, objective))
+    return False
+
+
+NOTES_CONTEXT_CHARS = 1500    # what his notes may take of the driver's context
 NOTES_CALL_SECONDS = 12.0
 
 
@@ -3526,13 +3685,7 @@ class Door:
             return True
         # WHO ANSWERS AN ORDINARY TURN, switched for the sitting (FACE).
         if objective.split(None, 1)[0].lower() == "/face":
-            global FACE
-            want = objective.split(None, 1)[1].strip().lower() if " " in objective else ""
-            if want in ("steward", "council"):
-                FACE = want
-            print(f"\n  The face is {FACE}: " + ("Steward answers ordinary turns himself, on his "
-                  "own loop." if FACE == "steward" else "the council pipeline answers ordinary "
-                  "turns.") + " `/face steward` or `/face council` switches it.\n")
+            print(f"\n  {door_face_switch(objective)}\n")
             return True
 
         if _cli._topic_turn(sess, objective):
@@ -3568,9 +3721,10 @@ class Door:
             self._close("/exit")
             return False
 
-        # THE FACE (FACE, in the driver's section): Steward answers an ordinary turn
-        # himself; the council takes it only when he cannot.
-        if FACE == "steward" and (sess.rack_ok or sess.rack_check()) and door_face(self, objective):
+        # THE FACE (FACE, in the driver's section): Steward, the MAF agent, answers an
+        # ordinary turn by default; `/face steward` is the seat loop, `/face council` the
+        # pipeline below.
+        if door_face_turn(self, objective):
             return True
 
         if not sess.rack_ok and not sess.rack_check():

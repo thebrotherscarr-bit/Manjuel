@@ -24215,6 +24215,131 @@ def test_steward_drives_to_a_check(reg, lib, book):
         _sh.rmtree(tmp, ignore_errors=True)
 
 
+def test_steward_the_maf_agent_is_the_face():
+    """STEWARD, THE MAF AGENT, IS THE FACE (2026-11-04; his words: "Steward should be the default Agent
+    for Manjuel, as well", and "Fuck the council and its models, thats MAF guide stuff"). A stand-in
+    for Steward's MCP server (worlds/steward, mcp_app.py: one tool `Steward`, `task` and `session_id`)
+    on a loopback port of its own; nothing here reaches his real server. The default face sends an
+    ordinary turn to him and his reply is the delivery; a Steward who cannot be reached is said and
+    the council does not take the turn; `/face council` and `/face steward` still switch by name; and
+    a suite's stand-in session never dials the real one."""
+    import contextlib as _cl
+    import http.server as _hs
+    import io as _io
+    import json as _json
+    import os as _os
+    import socket as _so
+    import threading as _th
+    from types import SimpleNamespace as _NS
+    from manjuel import serve as SV
+
+    seen: list[dict] = []
+
+    class FakeSteward(_hs.BaseHTTPRequestHandler):
+        def do_POST(self):
+            n = int(self.headers.get("Content-Length") or 0)
+            req = _json.loads(self.rfile.read(n) or b"{}")
+            seen.append(req)
+            if req.get("method") == "tools/list":
+                result = {"tools": [{"name": "Steward", "inputSchema": {
+                    "type": "object", "required": ["task", "session_id"],
+                    "properties": {"task": {"type": "string"}, "session_id": {"type": "string"}}}}]}
+            elif req.get("method") == "tools/call":
+                a = (req.get("params") or {}).get("arguments") or {}
+                result = {"content": [{"type": "text", "text": f"MAF Steward heard: {a.get('task')}"}]}
+            else:
+                result = {}
+            body = _json.dumps({"jsonrpc": "2.0", "id": req.get("id"), "result": result}).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *a):
+            pass
+
+    srv = _quiet(_hs.HTTPServer)(("127.0.0.1", 0), FakeSteward)
+    url = f"http://127.0.0.1:{srv.server_address[1]}/mcp"
+    _th.Thread(target=srv.serve_forever, daemon=True).start()
+    with _so.socket() as s:                       # a loopback port nobody listens on
+        s.bind(("127.0.0.1", 0))
+        dead = f"http://127.0.0.1:{s.getsockname()[1]}/mcp"
+
+    said: list = []
+    dialogue: list = []
+
+    def door(at):
+        sess = _NS(runtime=_NS(), dialogue=dialogue, sitting=_NS(runs=[]), session="S-face",
+                   speaking=False, rack_ok=False, rack_check=lambda: False)
+        d = _NS(sess=sess, ground=Path(tempfile.mkdtemp()),
+                wire=_NS(emit=lambda kind, **kw: said.append((kind, kw.get("text", "")))))
+        if at:
+            d.maf_url = at
+        return d
+
+    held_face, held_env = SV.FACE, _os.environ.pop("MANJUEL_FACE", None)
+    try:
+        check("maf face: with nothing said, the face is Steward, the MAF agent",
+              SV.face_default() == "maf" and SV.FACES == ("maf", "steward", "council"), SV.face_default())
+        _os.environ["MANJUEL_FACE"] = "council"
+        check("maf face: MANJUEL_FACE=council still names the council", SV.face_default() == "council")
+        _os.environ.pop("MANJUEL_FACE", None)
+        check("maf face: with no dial declared, his server's own port is dialled",
+              SV.MAF_URL == "http://127.0.0.1:43121/mcp"
+              and (SV.maf_url() == SV.MAF_URL or "MANJUEL_MCP_STEWARD" in _os.environ), SV.maf_url())
+
+        SV.FACE = "maf"
+        with _cl.redirect_stdout(_io.StringIO()):
+            took = SV.door_face_turn(door(url), "what is next?")
+        calls = [r for r in seen if r.get("method") == "tools/call"]
+        args = (calls[-1].get("params") or {}) if calls else {}
+        check("maf face: the default turn reaches Steward over MCP, and his reply is the delivery",
+              took and args.get("name") == "Steward"
+              and args.get("arguments") == {"task": "what is next?", "session_id": "manjuel-S-face"}
+              and ("delivery", "MAF Steward heard: what is next?") in said
+              and dialogue and dialogue[-1][1] == "MAF Steward heard: what is next?",
+              str(said)[-300:])
+
+        said.clear()
+        seen.clear()
+        out = _io.StringIO()
+        with _cl.redirect_stdout(out):
+            took = SV.door_face_turn(door(dead), "what is next?")
+        kinds = [k for k, _ in said]
+        check("maf face: an unreachable Steward is said plainly, and nothing else takes the turn",
+              took and "unreachable" in kinds and "delivery" not in kinds
+              and any("Steward could not be reached" in t for k, t in said if k == "unreachable")
+              and "Steward could not be reached" in out.getvalue(), str(said)[-300:])
+
+        said.clear()
+        with _cl.redirect_stdout(_io.StringIO()):
+            took = SV.door_face_turn(door(None), "what is next?")
+        check("maf face: a suite's stand-in session never dials the real Steward",
+              took is False and not seen and not said, str(said))
+
+        line = SV.door_face_switch("/face council")
+        with _cl.redirect_stdout(_io.StringIO()):
+            took = SV.door_face_turn(door(url), "what is next?")
+        check("maf face: `/face council` puts the council in front, and Steward is not asked",
+              SV.FACE == "council" and took is False and not seen and "council pipeline" in line, line)
+        line = SV.door_face_switch("/face steward")
+        check("maf face: `/face steward` is the seat loop, by name", SV.FACE == "steward" and "seat loop" in line, line)
+        line = SV.door_face_switch("/face maf")
+        check("maf face: `/face maf` puts Steward back, and a name it does not know changes nothing",
+              SV.FACE == "maf" and SV.door_face_switch("/face nobody").startswith("The face is maf"), line)
+
+        src = (ROOT / "manjuel" / "serve.py").read_text(encoding="utf-8")
+        check("maf face: Door.turn asks the face before the council, and /face switches it",
+              "door_face_turn(self, objective)" in src and "door_face_switch(objective)" in src
+              and src.index("door_face_turn(self, objective)") < src.index("Running pipeline..."))
+    finally:
+        SV.FACE = held_face
+        if held_env is not None:
+            _os.environ["MANJUEL_FACE"] = held_env
+        srv.shutdown()
+
+
 def test_steward_harness(reg, lib, book):
     """THE HARNESS AROUND STEWARD (2026-10-21; his words: "the harness is the security, not the model", "i
     shouldn't have to have 11 clicks", and "YOU ARE MAKING THE THING CAPABLE AS DESCRIBED"). What the harness
@@ -24550,7 +24675,8 @@ def test_steward_harness(reg, lib, book):
               SV.door_face(fdoor, "hello there") is False)
         src = (ROOT / "manjuel" / "serve.py").read_text(encoding="utf-8")
         check("face: Door.turn hands an ordinary turn to the face first, and /face switches it",
-              'door_face(self, objective)' in src and '"/face"' in src)
+              'door_face_turn(self, objective)' in src and '"/face"' in src
+              and 'door_face(door, objective)' in src)
 
         # THE FEATURE LIST (2026-10-21, his word: "diff the full feature list ... and add them", "build them all").
         SV.DRIVE_DENY.add("write_file")
@@ -25268,6 +25394,7 @@ def main() -> int:
     test_the_pack_is_wired(reg, lib, book)
     test_steward_drives_to_a_check(reg, lib, book)
     test_steward_harness(reg, lib, book)
+    test_steward_the_maf_agent_is_the_face()
     test_ink()
     test_math()
     test_a_commit_is_not_a_tag()
