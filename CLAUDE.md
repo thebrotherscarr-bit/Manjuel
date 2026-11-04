@@ -343,6 +343,19 @@ standing word. He found the name on his repo. Taking such a line out of what
 is already published means rewriting history and force-pushing, which is a
 publish too: it is his to order.
 
+    EXCEPTION, 2026-11-03 -- THE STEWARD REPOSITORY ONLY. On the operator's
+    word ("run the github stuff yourself for this, until steward runs it, you
+    will be handling the branches, pushing, pulling merging, etc. set it up
+    so the repo doesnt go stale from old branches"), and his choice of "My
+    shell, Steward repo only": for worlds/steward, until Steward takes this
+    work over, the hand runs git and GitHub from its own shell -- lines of
+    work, commits, pushes, pull requests, merging into main only when every
+    check has passed, pulling main, and deleting merged branches. No cards
+    for that repository. SIGN holds in full: he is the author and committer,
+    and nothing carries the hand's name. Force-pushing, tags, releases and
+    rewriting history are not covered. Everything else in this rule stands
+    for every other repository (the core, Atlas, SecondBrain, every world).
+
 ## RULE 13 — EVERYTHING RUNS ON THE GLASS, NOT ON MIRRORS.
 
 Recorded 2026-10-05 on the operator's word: "Prove it live in the glass,
