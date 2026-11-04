@@ -33,6 +33,8 @@ Read live at this sync (WHAT'S LEFT H34): the rack plans against these, not a gu
 | `qwen3.5:4b` | 3.4GB | no | Quality Evaluator, Router |
 | `qwen3.5:9b` | 6.6GB | yes | Deep Researcher, Reasoner |
 
+**Superseded 2026-11-04 (the operator):** the council and its models are superseded by MAF; MAF Steward is Manjuel's default face (Manjuel #88).
+
 ## Installed but unused
 
 On disk, named by nothing here — about 20.4GB of weight.
