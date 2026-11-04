@@ -52,7 +52,9 @@ permissions:
 
 jobs:
   gate:
-    runs-on: ubuntu-latest
+    # PINNED, as prove.yml's legs are (2026-11-04): what ubuntu-latest
+    # resolved to that day. The job's name, `gate`, does not move.
+    runs-on: ubuntu-26.04
     timeout-minutes: 10
     env:
       # `handoff` asks for `## HANDOFF FOR <today>`, and today is the RUNNER's
@@ -63,7 +65,7 @@ jobs:
       TZ: UTC
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0 (v4)
         with:
           # ALL OF IT, OR `spec` IS A FALSE GREEN. That check reads SPEC.md as
           # it stood at the previous mark (`git show <tag>:SPEC.md`), so it
@@ -71,12 +73,17 @@ jobs:
           # mark to compare with, and a comparison with nothing passes.
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0 (v5)
         with:
-          python-version: "3.13"
+          python-version: "3.13.17"
 
-      - name: Install (one dependency, plus what the gate imports)
-        run: python -m pip install --upgrade pip && python -m pip install ".[test]"
+      # The same locked install as prove.yml's (its comment says why each part).
+      - name: Install (pip, the locked set by hash, then manjuel with nothing fetched)
+        run: >-
+          python -m pip install pip==26.3 &&
+          python -m pip install --require-hashes -r requirements-py313.lock &&
+          python -m pip install --no-deps --no-build-isolation ".[test]" &&
+          python -m pip check
 
       - name: The record is whole
         # The mark's own name is passed so `last_tag` excludes it: on a tag

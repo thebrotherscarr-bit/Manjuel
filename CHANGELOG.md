@@ -34,6 +34,21 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### ci: every piece CI runs on is pinned -- the Python set by hash, the runners, the interpreters, pip, and every action by its commit (2026-11-04; his words: "all pieces of the estate need to be pinned and versioned for CI")
+
+His choices that day: pip-tools locks with hashes; runner images pinned to what `-latest` resolved to; every action pinned to its commit and gated; no Dependabot or Renovate -- updates by hand.
+
+- **The locks** (`requirements-py310.lock`, `requirements-py313.lock`, new): `pip-compile --extra=test --build-deps-for=wheel --allow-unsafe --generate-hashes` from `pyproject.toml`, one per Python the matrix runs (the command is in each header). The same set CI installed on run 41871959699: ollama 0.6.3, numpy 2.2.6 (3.10) / 2.5.4 (3.13), httpx 0.28.1, httpcore 1.0.9, h11 0.16.0, anyio 4.16.0, idna 3.20, certifi 2026.10.23, pydantic 2.14.2, pydantic-core 2.50.2, annotated-types 0.8.0, typing-extensions 4.16.0, typing-inspection 0.4.5, exceptiongroup 1.3.1 (3.10 only), and the build backend setuptools 84.2.1. Every file of every release is hashed, so one lock serves Windows and Ubuntu; no dependency differs by platform.
+- **pyproject.toml**: ranges, floored at the versions CI proved (`ollama>=0.6.3,<0.7`, `numpy>=2.2.6,<3`); the exact pins live in the locks, pip-tools' own pattern.
+- **The install** (`prove.yml`, `release-gate.yml`): `pip==26.3`; then `--require-hashes -r` the leg's lock; then manjuel with `--no-deps --no-build-isolation` (setuptools from the lock, not fetched by an isolated build); then `pip check`. The pip cache is keyed on the leg's lock.
+- **Runners and interpreters**: `windows-2025-vs2026` and `ubuntu-26.04` (what windows-latest and ubuntu-latest gave that day); Python 3.13.17 on both systems, 3.10.11 on Windows (the last 3.10 with a Windows build) and 3.10.22 on Ubuntu. `.python-version` (new) says 3.13.17 for local use.
+- **Actions by commit**: `actions/checkout@11d5960a326750d5838078e36cf38b85af677262` (v4.4.0, what v4 named), `actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065` (v5.6.0, what v5 named), the tag beside each as a comment.
+- **The gate** (`tests/release.py`, `outside_actions`): GitHub's own `actions/` is no longer exempt; only `./` is. A tag-named `actions/checkout@v4` is now refused by name.
+
+Not changed: the four required check names. `os` and `python` stay the matrix's keys; `include` maps each leg to its image, patch and lock, and the job's `name:` is written out as `prove (${{ matrix.os }}, ${{ matrix.python }})` so "prove (windows-latest, 3.10)" and its siblings stay what main's ruleset asks for. The release gate's job is still `gate`.
+
+What goes red if it comes unplugged: a lock that lacks a file's hash, or a package pyproject.toml gains that no lock carries, fails the install step (`--require-hashes`, `pip check`); an action named by a tag fails `tests/release.py`'s `workflows` check, which passes on both files today ("4 outside actions, each named by its commit"). Nothing in `manjuel/` moved: no restart.
+
 ### ci: the Windows legs of prove.yml, measured and unburdened (2026-11-04; his words: "go ahead and run the CI checks or whatever you need for Manjuel")
 
 GitHub's run 41747691064 of prove.yml took ~305 s over the strokes on windows-latest and 55-74 s on ubuntu-latest, on both Pythons; setup-python and the install added 23-46 s on Windows. Nothing in the run said where the time went.

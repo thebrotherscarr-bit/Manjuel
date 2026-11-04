@@ -11,6 +11,9 @@
 # notes (his notes, tag testing).
 
 [build-system]
+# CI does not let pip fetch this in an isolated build: the locks carry
+# setuptools exact and hashed (pip-compile --build-deps-for=wheel), and CI
+# builds manjuel with --no-build-isolation against that copy.
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
@@ -31,7 +34,16 @@ authors = [{ name = "Kyler" }]
 keywords = ["agents", "local-first", "ollama", "audit", "safety-harness"]
 
 # The whole surface. `ollama` speaks to 127.0.0.1:11434 and nothing else.
-dependencies = ["ollama"]
+#
+# A RANGE HERE, THE EXACT PIN IN THE LOCK (2026-11-04, his word: "all pieces
+# of the estate need to be pinned and versioned for CI"). pip-tools' own
+# pattern: this file says what manjuel works with, floored at the version CI
+# proved on the day; `requirements-py310.lock` and `requirements-py313.lock`
+# (pip-compile --generate-hashes, from this file) carry the exact, hashed set
+# CI installs. An `==` here would make every other install of manjuel take
+# that one build, and the lock already holds it for CI. ollama is 0.x, so a
+# minor release may break it: the ceiling is the next minor.
+dependencies = ["ollama>=0.6.3,<0.7"]
 
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -62,7 +74,9 @@ classifiers = [
 # The offline promise is untouched. The house style's rule (his notes, tag
 # contributing) is "no rack, no network, no GPU, no model"; numpy is none
 # of those.
-test = ["numpy"]
+# Floored at 2.2.6, the last numpy for Python 3.10 and what CI's 3.10 legs
+# install; the 3.13 lock carries a newer one.
+test = ["numpy>=2.2.6,<3"]
 # Voice is Windows-bound (SAPI out, whisper.cpp in) and DEGRADES ALONE --
 # boot.py reports GROUND / RACK / RECORD / GATE / VOICE separately, so a
 # machine with no voice still boots and says so. Kept out of the default

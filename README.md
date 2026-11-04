@@ -113,7 +113,10 @@ and RUNBOOK.md, "Starting the system", builds and starts the door and the glass.
   machine runs 3.14), then `pip install ".[test]"` -- `ollama` to run, `numpy`
   to PROVE (the strokes import it outright, so a plain `pip install .` installs
   and then crashes the suite). It puts `manjuel` on PATH; `python manjuel.py`
-  from a clone works too.
+  from a clone works too. CI installs the exact set instead, hashed:
+  `python -m pip install --require-hashes -r requirements-py313.lock` (or
+  `-py310`), then `python -m pip install --no-deps --no-build-isolation .`;
+  `.python-version` names the 3.13 patch CI runs.
 - **Ollama** on 127.0.0.1:11434, with the models `rack.md` declares:
   `gpt-oss:20b` (the Steward seat and THE DRIVER), `llama3.2` (Security
   Guardian, Neiro, Quartermaster, Morning Reviewer), `qwen3.5:4b` (Router,

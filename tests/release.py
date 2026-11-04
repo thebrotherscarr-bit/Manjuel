@@ -57,7 +57,8 @@ WHAT IT READS (nothing it decides is generated -- LAW 1 for the hands):
     workflows  every .github/workflows/*.yml is tracked (an untracked one is
                one CI never sees), and every python command in it names a
                script in the tree and flags that script knows; every action
-               from outside GitHub's own is named by its commit, and no
+               from outside the repository, GitHub's own included, is named
+               by its commit, and no
                workflow proves a line twice, on its push and its pull request
     status     STATUS.md was printed by tests/status.py AFTER the record it
                reads last moved (CHANGELOG, DAYBOOK, HANDOFF, TASKS, SPEC) --
@@ -1264,9 +1265,12 @@ def run_commands(text: str) -> list[tuple[str, str]]:
 
 
 # AN OUTSIDE ACTION IS NAMED BY ITS COMMIT, AND A LINE IS PROVED ONCE (2026-10-09,
-# WHAT'S LEFT I1's sixth step). A `uses:` from anyone but GitHub's own `actions/`
-# that names a tag runs whatever its owner points that tag at next, so it names the
-# commit, the tag beside it as a comment. And a workflow that runs on pull requests
+# WHAT'S LEFT I1's sixth step). A `uses:` that names a tag runs whatever its owner
+# points that tag at next, so it names the commit, the tag beside it as a comment.
+# GITHUB'S OWN INCLUDED SINCE 2026-11-04 (his word: "all actions pinned to full
+# commit SHAs and gated"): `actions/` was exempt until then, and its tags move
+# like anyone's -- v4 is whichever v4.x.y is newest. Only `./`, this repository's
+# own, is not counted. And a workflow that runs on pull requests
 # does not also run on a push to every line: prove.yml's bare `push:` proved every
 # line with a pull request open twice, the same commit both times. A line is proved
 # by its pull request; main and the marks by their own push. atlas's battery holds
@@ -1278,10 +1282,11 @@ SUB_KEY = re.compile(r"^([\w-]+):\s*(.*)$")
 
 
 def outside_actions(text: str) -> list[str]:
-    """Every action a workflow uses from outside GitHub's own `actions/`, as written
-    (`owner/repo@ref`). `./` is this repository's own and is not counted."""
+    """Every action a workflow uses from outside this repository, GitHub's own
+    `actions/` among them, as written (`owner/repo@ref`). `./` is this
+    repository's own and is not counted."""
     return [m.group(1) for m in map(USES_KEY.match, text.splitlines())
-            if m and not m.group(1).startswith(("./", "actions/"))]
+            if m and not m.group(1).startswith("./")]
 
 
 def triggers(text: str) -> dict[str, list[str]]:
@@ -1338,8 +1343,8 @@ def workflows(root: Path = ROOT) -> Check:
     (an untracked workflow is one CI never sees -- release-gate.yml sat on disk
     untracked the day this was built), every python command naming a script
     that is in the tree, every flag one that script's source knows -- and, since
-    2026-10-09, every action from outside GitHub's own named by its commit, and
-    no line proved twice (USES_KEY, above).
+    2026-10-09, every action from outside named by its commit (GitHub's own
+    `actions/` too, since 2026-11-04), and no line proved twice (USES_KEY, above).
 
     RECORD, NOT RUN. Whether a workflow last went green is GitHub's to say and
     is not asked here (RULE 4: the gate reaches no server). What is asked is
@@ -1378,7 +1383,7 @@ def workflows(root: Path = ROOT) -> Check:
         used = outside_actions(text)
         n_out += len(used)
         bad += [f"{f.name}: {a} names a tag its owner can move -- an action from outside "
-                "GitHub's own is named by its 40-hex commit"
+                "this repository, GitHub's own included, is named by its 40-hex commit"
                 for a in used if not SHA_PIN.match(a.partition("@")[2])]
         on = triggers(text)
         if "pull_request" in on and pushes_every_line(on):
@@ -1389,7 +1394,7 @@ def workflows(root: Path = ROOT) -> Check:
         return Check("workflows", False, "; ".join(bad))
     tracking = "each tracked" if tracked is not None else "tracking not asked (no repository here)"
     outside = (f"{n_out} outside action{'s' if n_out != 1 else ''}, each named by its commit"
-               if n_out else "no action from outside GitHub's own")
+               if n_out else "no action from outside this repository")
     return Check("workflows", True,
                  f"{len(files)} workflow{'s' if len(files) != 1 else ''}, {tracking}; "
                  f"{n_cmd} python command{'s' if n_cmd != 1 else ''}, every script in the tree "
