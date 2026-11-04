@@ -34,6 +34,11 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: the face waits out Steward's turn -- 900 s, not a skill's 295 (2026-11-04; a Steward turn can sit on an approval card up to 660 s plus model time, and the face gave up first)
+
+- **`manjuel/skills.py`: `_mcp_rpc(..., wait=None)`** takes an optional bound for one call; without it every skill waits `_mcp_wait()` as before. **`manjuel/serve.py`: `maf_wait()`** reads `MANJUEL_STEWARD_WAIT` (default 900) and `maf_ask` passes it to the `tools/call` that carries Steward's turn only; the roster read keeps the skill's bound.
+- **Stroke** (`tests/test_manjuel.py`, `test_steward_the_maf_agent_is_the_face`): the turn's call carries 900 s unset and the dial's value when set, the roster read carries none. Dropping the `wait=` from `maf_ask` reddens it. Restart required: `manjuel/` moved.
+
 ### core: the operator's dated notes on rack.md survive a rack_sync (2026-11-04; PR #89 wrote one by hand into a file the next sync regenerates whole)
 
 - **`manjuel/rack.py`: `NOTES`**, a tuple of the operator's dated notes, written by `render` under the "Declared by this ground" table at every sync. It carries the 2026-11-04 note that the council and its models are superseded by MAF. rack.md regenerated from the survey it records comes out byte-identical to the committed file.
