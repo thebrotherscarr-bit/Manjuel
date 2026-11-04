@@ -14,7 +14,7 @@ RUN THE SMOKE SUITE, not just the strokes. It was RED at 34/50 from 14e2711
 to 2026-09-02 because its StubRuntime had not been moved with pipeline.py,
 and nothing noticed: the strokes were green the whole time.
 
-**START AT `## HANDOFF FOR 2026-11-01`**, the newest day's block (since 2026-11-01; earlier it said 2026-10-31) (search for it — the day blocks
+**START AT `## HANDOFF FOR 2026-11-04`**, the newest day's block (since 2026-11-04; earlier it said 2026-11-01) (search for it — the day blocks
 stack newest first above `## Open`). CHANGELOG.md carries the versions;
 DAYBOOK.md's last entry carries the day's intent. Everything between here and
 there is standing reference that has not moved.
@@ -670,6 +670,33 @@ dropped by operator ruling 2026-09-01 — see the fix log.
     5. CHECK THE DISK BEFORE THE TRANSCRIPT. A seat's account of what it did
        is testimony (LAW 5). `WHAT RAN (observed)` and the file itself are
        the facts.
+
+## HANDOFF FOR 2026-11-04 — read this before anything below it
+
+**His direction (2026-11-04).** Steward, the MAF agent (worlds/steward), is THE agent of the Estate (Neiro) and Manjuel's default agent. Manjuel's council and its models are superseded by MAF. Steward gets the Estate's controls, every act on his cards. Telegram reaches Steward. SecondBrain's UI is cut to his rulings. The plan is SecondBrain's `plan-steward-controls-the-estate-under-m-c9f628`. RULE 12's exception now covers Steward, SecondBrain, this ground, Atlas and Neiro; RULE 4 is amended for his own integrations on his own accounts (CLAUDE.md, both dated 2026-11-04).
+
+**No record for 2026-11-02 or 2026-11-03.** Neither day has a block here or an entry in DAYBOOK, and this block does not reconstruct them.
+
+**Merged (GitHub's merge dates, UTC; each through a pull request whose checks passed):**
+- **Manjuel:** #82, #83 (RULE 12's exception); #84, #85 (CI: Windows speed; pinned, the gate enforces it); #86 (Neiro under RULE 12; RULE 4 amended); #87 (actions on their Node-24 releases, SHA-pinned); #88 (Steward, the MAF agent, is Manjuel's default face: the default face goes to MAF Steward over MCP on 43121, an unreachable Steward is said plainly, `/face steward` and `/face council` by name only). Main is `ad2883b`.
+- **Steward:** #52 to #59 (the build order's steps 4 to 6: background agents, skills caching, MAF 1.24.0 pinned, memory across conversations, the diagnosis); #60 to #68 (the hosted Agent tab, observability, the question route, the check, text tool calls); #69 (FIDES records what it would block, observe only); #70 to #78, #80 and #81 (hosted state expiry, `search_code`, `pr_checks`, memory deliberate only, per-step options, evals hardened, an evals history for SecondBrain's shelves); #82 (the estate skill, the map of Neiro); #83 to #89 (one read-only fit, denied commits named, CI pinned, .py writes must parse, `.env` kept from the explorer, honest evals); #90 (Steward controls the Estate: estate reads never ask, `service_control`, `ollama_unload` and `app_update` always ask, git across the five repos with hard refusals); #91 (Node-24 SHAs); #92 (security from the MAF audit).
+- **Jesster (SecondBrain):** #42 (a child's log capped at 100 MB); #43, #44 (the Services window: Servers, Approvals); #46 (Estate names); #47 (the Agent tab's wrapping); #48 (CI pinned); #49 (Ollama under SecondBrain's control: switch, toggle, keep-up); #50 (Telegram reaches Steward: cards as Allow/Deny buttons); #51 (Steward's Estate controls; Steward stopped on quit; approvals history); #52 (the Agent tab is Steward's console; Flows, Capture, Import, the GitHub shelf, Ask Brain and + New Note removed); #53 (Node-24 SHAs); #54 (the chats bar folds); #55 (Steward's MCP door kept up by the main process); #56 (the Notes tab organized: shelves, search, a list and one reader).
+- **Atlas:** #39 (the glass named Aurora); #40 (CI pinned); #41 (Node-24 SHAs).
+- **Neiro:** #8 (Neiro is the Estate: the manifest, its tool, the integration CI); #9 (`estate.lock`: CI fails on drift, hashed installs, council models dropped from the lock); #10 (the lock regenerated from today's mains; `check --remote --strict` reports no drift).
+
+**Restart required.** Manjuel #88 (manjuel/*.py is not hot-reloaded), Steward #90, Jesster #50 and #52 each say so in their bodies.
+
+**Open:**
+1. The first honest eval run on the new harness (Steward #89 made the evals honest; no run is recorded since).
+2. The Ollama switch-over from the desktop app to SecondBrain's control (Jesster #49), on his go.
+3. WhatsApp (allowed by RULE 4's 2026-11-04 amendment; not built).
+4. FIDES enforcement, "later": Steward #69 records what it would block and blocks nothing.
+5. Atlas's `ask_steward` still runs Manjuel's engine, not MAF Steward.
+
+**Found on the way (his to place):**
+- **(a)** Steward #69: MAF's Agent Hooks are not wired. On 1.24.0, `evaluate_only` still buffers streamed replies, and a streamed run inside the harness loop fails; a test measures both.
+- **(b)** Jesster #50 reports `npm test` 232 of 233, the one red a known flaky memory test.
+- **(c)** rack.md, WHAT'S LEFT and older blocks here still describe the council as the Agent tab and its seats' models; each carries a dated note that MAF supersedes it, and nothing older is rewritten.
 
 ## HANDOFF FOR 2026-11-01 — read this before anything below it
 

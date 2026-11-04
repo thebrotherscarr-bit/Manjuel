@@ -43,6 +43,7 @@ all functions are working".
   **Where it stands (2026-10-21, 06:58):** C130 sent and merged (pull request 49), the ground home on main. Today, on
   your word: Steward is the main man, the system's face, with the council as his sub-agents, on gpt-oss:20b; REA to
   be wired into the system; and first, H34, the rack knowing the machine. H33's page and C131 follow.
+  **Superseded 2026-11-04 (the operator):** the council and its models are superseded by MAF; MAF Steward is Manjuel's default face (Manjuel #88).
   **At 13:48 on 2026-10-20 it stood:** H33's plan merged (pull request 48), its three clones in
   worlds/harnesses/ and its four readers back; first, on your word, C130 mended (a job's commit takes what its own
   check rewrote, never what was unsaved when the run began), then the study's page.
@@ -1611,6 +1612,7 @@ Finished lines, newest first. A number is never used again.
   from the page); Bash, Python and Aider are in the bar and say they are not wired. The old Dashboard is at
   `/dashboard`. Proved by three new tests with fifteen reversals and by a live run on a scratch copy against
   the real door; placed and the glass restarted on your word ("go"). *(CHANGELOG, "atlas: the front page")*
+  **Superseded 2026-11-04 (the operator):** the council and its models are superseded by MAF; MAF Steward is Manjuel's default face (Manjuel #88).
 - **B18. Hosted models: your rule says no, your words of 10-02 say yes.** RULED 2026-10-02 in chat ("let's do
   what I said then, set up a second set for parity, why not? I'm not scared of it") and BUILT the same day:
   RULE 4 is amended narrowly in CLAUDE.md (the paragraph stands; an AMENDED section under it says what is now

@@ -3337,3 +3337,31 @@ pins at 0.2.0 in both repositories. The release check, the save, the send and th
 **At close** — Not closed; the day goes on. Steward #29, #30 and #31 are merged. The trace cap and the `steps` eval are uncommitted on the merged line.
 
 **Next session** — HANDOFF's open list, in his order 5 4 1 3 2.
+
+## Session 33 — 2026-11-04 (Wednesday), no sitting opened: Steward made the agent of the Estate, under MAF
+
+**Standing** — 2026-11-02 and 2026-11-03 have no entries here, and the record does not reconstruct them; what landed on those days is in each repository's own history. No sitting was opened (the ledger's last line is sitting 475, ended 2026-10-31). Every merge below went through a pull request whose checks had passed. The dates are GitHub's merge dates (UTC), so the earliest few fall on the evening of 2026-11-03 by the clock here.
+
+**The plan** — His rulings today, recorded in the SecondBrain plan `plan-steward-controls-the-estate-under-m-c9f628`:
+- Steward, the MAF agent (worlds/steward), is THE agent of the Estate (Neiro) and Manjuel's default agent.
+- Manjuel's council and its models are superseded by MAF.
+- Steward gets the Estate's controls, each act on his cards.
+- Telegram reaches Steward.
+- SecondBrain's (Jesster's) UI is cut to his rulings: the console in the Agent tab; Flows, Capture, Import, the GitHub shelf, Ask Brain and + New Note removed; the Notes tab organized.
+
+His words, in CLAUDE.md: "you run the github stuff until he can reliably produce the results we want", then "Same rules for Manjuel, as well" and "Same rules for the Atlas, as well" (RULE 12's extension), and "I want as much to run Local as possible, with my own integrations running on my accounts" (RULE 4, amended 2026-11-04).
+
+**What was done** — HANDOFF's block for 2026-11-04 has the detail.
+- Manjuel: #82 and #83 (RULE 12's exception: Steward, then SecondBrain, this ground and Atlas); #86 (Neiro under RULE 12; RULE 4 amended for his own integrations); #84, #85 and #87 (CI: faster Windows strokes, pinned, then Node-24 action SHAs); #88 (MAF Steward is Manjuel's default face).
+- Steward: #52 to #59 (the build order's steps 4 to 6); #60 to #92 (all but #79), the harness, the evals, memory and the workflow, among them #69 (FIDES records, blocks nothing), #82 (the estate skill), #89 (honest evals), #90 (Steward controls the Estate, on cards), #91 (Node-24 SHAs) and #92 (security from the MAF audit).
+- Jesster (SecondBrain): #42 to #56 (all but #45), among them #49 (Ollama under SecondBrain's control), #50 (Telegram reaches Steward), #51 (Steward's Estate controls), #52 (the Agent tab is Steward's console; the cuts to his rulings), #53 (Node-24 SHAs) and #56 (the Notes tab organized).
+- Atlas: #39 (the glass named Aurora), #40 (CI pinned), #41 (Node-24 SHAs).
+- Neiro: #8 (Neiro is the Estate: the manifest, its tool and the integration CI), #9 (estate.lock: CI fails on drift), #10 (the lock regenerated from today's mains; no drift).
+
+**Found (not the plan)** — HANDOFF's 2026-11-04 notes, (a) to (c).
+
+**Rulings** — His, above, all 2026-11-04.
+
+**At close** — Not closed; the day goes on. No sitting open (475 the last). Every pull request above is merged; Manjuel's main is `ad2883b`. Restart required for the merged code to run: Manjuel #88, Steward #90, Jesster #50 and #52 each say so.
+
+**Next session** — HANDOFF's open list for 2026-11-04: the first honest eval run on the new harness; the Ollama switch-over from the desktop app on his go; WhatsApp; FIDES enforcement ("later"); Atlas's `ask_steward` still runs Manjuel's engine.
