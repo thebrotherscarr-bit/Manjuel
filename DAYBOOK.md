@@ -3365,3 +3365,10 @@ His words, in CLAUDE.md: "you run the github stuff until he can reliably produce
 **At close** — Not closed; the day goes on. No sitting open (475 the last). Every pull request above is merged; Manjuel's main is `ad2883b`. Restart required for the merged code to run: Manjuel #88, Steward #90, Jesster #50 and #52 each say so.
 
 **Next session** — HANDOFF's open list for 2026-11-04: the first honest eval run on the new harness; the Ollama switch-over from the desktop app on his go; WhatsApp; FIDES enforcement ("later"); Atlas's `ask_steward` still runs Manjuel's engine.
+
+**Evening (added after ~14:00 local; GitHub's merge dates, UTC, from 21:00Z)** — The entry above stops at about 14:00 local. HANDOFF's 2026-11-04 block has the evening's detail under "Evening".
+- Merged since 21:00Z: Manjuel #90 (rack.md's dated notes survive a rack_sync); Steward #94 to #104 (#103 recovers a malformed tool call, #102 carries approval cards across the MCP door, #104 skills eval-history and telemetry); Jesster #58 to #65 (#58 the Phone view, #62 Discord, #63 a saved token never overwritten by its mask, #64 WhatsApp, #65 Telegram's token from the ground's .env); Atlas #42 (`ask_steward` asks MAF Steward); Neiro #12 to #14 (the Estate lock to today's mains).
+- SecondBrain builds installed today: 73, 75, 77, a rollback to 69, then 78 and 79; 79 is running.
+- Ollama runs only under SecondBrain. Telegram broke when a masked token box swallowed pastes (fixed by Jesster #63; he re-entered a new token). WhatsApp is linked as chat-and-research only. Discord is parked.
+- The bar: run 1 passed 3/3, 16/16, at 21:37Z. Later runs failed on eval and harness defects (a README task the fixture already satisfied; the tool-call limit's text; an off-topic reply), which are being fixed.
+- His working rules, added today: every task on a subagent; a hard timeout on every test; nothing waits on him; never stop.

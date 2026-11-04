@@ -698,6 +698,19 @@ dropped by operator ruling 2026-09-01 — see the fix log.
 - **(b)** Jesster #50 reports `npm test` 232 of 233, the one red a known flaky memory test.
 - **(c)** rack.md, WHAT'S LEFT and older blocks here still describe the council as the Agent tab and its seats' models; each carries a dated note that MAF supersedes it, and nothing older is rewritten.
 
+**Evening (added after ~14:00 local).** The block above stops at about 14:00 local; nothing above is rewritten.
+- **Merged since 21:00Z (GitHub's merge dates, UTC):**
+  - **Manjuel:** #90 (rack.md's dated notes survive a rack_sync: `rack.NOTES`). Main is `ec75fa8`.
+  - **Steward:** #94 (a read-only question goes to the answer step); #95 (a non-streaming answer after the todo nudge is given once); #96 (a model drifted from the Estate lock is one warning at start); #97 (the older team build path removed); #98 (a console or MCP session keeps its history across a restart); #99 (CHECK and REPAIR emit progress events); #100 (a call cut right after the stale-runner unload is asked once more); #101 (Ollama's timings on each chat call); #102 (`mcp_app`: approval cards cross the MCP door through SecondBrain); #103 (a malformed tool call recovered from Ollama's raw text, or corrected); #104 (skills eval-history and telemetry).
+  - **Jesster (SecondBrain):** #58 (the Phone view; PC and phone kept apart; one-click read-aloud; no nested settings); #59 (the door's `hold_status`); #60 (the phone log keeps a card when it is asked); #61 (`approval_ask`: Steward's cards raised in SecondBrain); #62 (Discord: a DM with his own bot); #63 (a saved token is never overwritten by its mask; Discord off until switched on); #64 (WhatsApp, on his own account linked as a device); #65 (Telegram's token from the ground's .env, `TELEGRAM_STEWARDBOT_KEY`).
+  - **Atlas:** #42 (`ask_steward` asks Steward, the MAF agent, over his MCP server).
+  - **Neiro:** #12, #13, #14 (the Estate lock regenerated from today's mains).
+- **SecondBrain builds installed today:** 73, 75, 77, a rollback to 69, then 78 and 79. 79 is running.
+- **Facts of the evening:** Ollama runs only under SecondBrain. Telegram broke when the masked token box swallowed pastes; Jesster #63 fixed it and he re-entered a new token. WhatsApp is linked as chat-and-research only. Discord is parked.
+- **The bar:** run 1 passed 3/3, 16/16, at 21:37Z. Later runs failed on eval and harness defects, being fixed: a README task the fixture already satisfied, the tool-call limit's text, and an off-topic reply.
+- **His working rules, added today:** every task on a subagent; a hard timeout on every test; nothing waits on him; never stop.
+- **The open list above, as of the evening (annotated, not rewritten):** 2 (the Ollama switch-over) is done: Ollama runs only under SecondBrain. 3 (WhatsApp) is built, Jesster #64. 5 (Atlas's `ask_steward`) is done, Atlas #42. 1 stands: the bar's later runs are red on the defects above.
+
 ## HANDOFF FOR 2026-11-01 — read this before anything below it
 
 **His direction (2026-11-01, his words).** Steward must work end to end in SecondBrain's Agent tab and follow the rules: plan mode by default, a todo list at all times, nothing run without his Approve. "there has to be a better way then fiddling with this over and over", so the rules moved out of nudges and into a MAF workflow. "ALWAYS CHECK THE MAF FRAMEWORK FIRST BEFORE SENDING STEWARD ANY COMMANDS"; one small ask per message, never chains. Evals are single runs; a flip between runs is a harness defect to fix.
