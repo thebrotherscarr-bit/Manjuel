@@ -71,11 +71,31 @@ jobs:
     timeout-minutes: 10
 
     steps:
+      # DEFENDER STANDS ASIDE ON THE WINDOWS LEGS (2026-11-04). GitHub's run
+      # 41747691064 took ~305 s over the strokes on windows-latest and 55-74 s
+      # on ubuntu-latest -- the same code, five times slower. The suite spawns
+      # git and python in temp dirs and writes thousands of small files, and
+      # real-time scanning opens every one of them; that is the classic Windows
+      # runner tax. A hosted runner is a throwaway machine and runs as admin, so
+      # the workspace and both temp roots are excluded before anything is
+      # checked out or written. It changes how fast the legs run, not what they
+      # prove: the steps below are the same steps on both systems.
+      - name: Exclude the workspace and temp from Defender (Windows only)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Add-MpPreference -ExclusionPath "$env:GITHUB_WORKSPACE","$env:RUNNER_TEMP","$env:TEMP"
+
       - uses: actions/checkout@v4
 
+      # THE PIP CACHE (2026-11-04). setup-python and the install cost 23-46 s
+      # a leg on Windows, downloading the same wheels every run. The cache is
+      # keyed on pyproject.toml, the one file that says what is installed, so
+      # a change to the dependencies is a new key and never a stale wheel.
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
 
       - name: Install (one dependency, plus what the suites need)
         run: python -m pip install --upgrade pip && python -m pip install ".[test]"

@@ -24991,6 +24991,36 @@ def main() -> int:
                 setattr(_here, _n, lambda *a, **k: None)
         print(f"\n  running only strokes matching {SELECT!r}\n")
 
+    # WHERE THE TIME GOES (2026-11-04). GitHub's run 41747691064 took ~305 s
+    # over these strokes on windows-latest and 55-74 s on ubuntu-latest, and
+    # the run said nothing about which sections spent it. So each section is
+    # timed where it is called -- wrapped in place, as the selection above
+    # no-ops them, so the roll below stays a plain list of calls -- and the
+    # slowest fifteen are printed above the tally. Only the outermost section
+    # is charged: a stroke that calls another is not counted twice. Printed,
+    # never stamped: last_run.json and run_history keep their shape.
+    _secs: dict[str, float] = {}
+    _depth = [0]
+
+    def _timed(name, fn):
+        def run(*a, **k):
+            _depth[0] += 1
+            t0 = time.perf_counter()
+            try:
+                return fn(*a, **k)
+            finally:
+                _depth[0] -= 1
+                if not _depth[0]:
+                    _secs[name] = _secs.get(name, 0.0) + time.perf_counter() - t0
+        run.__name__, run.__doc__, run.__wrapped__ = name, fn.__doc__, fn
+        return run
+
+    _here_t = sys.modules[__name__]
+    for _n, _o in list(vars(_here_t).items()):
+        if _n.startswith("test_") and callable(_o):
+            setattr(_here_t, _n, _timed(_n, _o))
+    _t_all = time.perf_counter()
+
     test_step_conditions(reg, lib, book)
     test_ground(reg, lib, book)
     test_guard_gating(reg, lib, book)
@@ -25294,6 +25324,13 @@ def main() -> int:
     for name, ok, detail, *_ in STROKES:
         print(f"    [{'PASS' if ok else 'FAIL'}]  {name:<{width}}  {detail if not ok else ''}")
     print()
+    _slow = sorted(_secs.items(), key=lambda kv: kv[1], reverse=True)[:15]
+    if _slow:
+        print(f"  the {len(_slow)} slowest sections, in seconds "
+              f"({time.perf_counter() - _t_all:.1f} s over {len(_secs)} sections):")
+        for _n, _s in _slow:
+            print(f"    {_s:8.2f}  {_n}")
+        print()
     print(f"  {passed}/{len(STROKES)} strokes." +
           ("  PROVEN." if passed == len(STROKES) else "  RED — a stroke failed."))
     print()

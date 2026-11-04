@@ -34,6 +34,18 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### ci: the Windows legs of prove.yml, measured and unburdened (2026-11-04; his words: "go ahead and run the CI checks or whatever you need for Manjuel")
+
+GitHub's run 41747691064 of prove.yml took ~305 s over the strokes on windows-latest and 55-74 s on ubuntu-latest, on both Pythons; setup-python and the install added 23-46 s on Windows. Nothing in the run said where the time went.
+
+- **The strokes say where the time goes** (`tests/test_manjuel.py`, `main`): each section is timed where it is called (wrapped in place, as the selection already no-ops them, so the roll stays a plain list of calls; only the outermost section is charged), and the fifteen slowest are printed with their seconds just above the tally line. Printed only: `tests/last_run.json`, `last_run.md` and `run_history.jsonl` keep their shape, and the tally stays the last line.
+- **Defender stands aside on the Windows legs** (`.github/workflows/prove.yml`): a first step, `if: runner.os == 'Windows'`, runs `Add-MpPreference -ExclusionPath` over the workspace, `RUNNER_TEMP` and `TEMP` before checkout, so real-time scanning does not open every temp file and git and python spawn the suite makes.
+- **The pip cache** (`.github/workflows/prove.yml`): setup-python caches pip on every leg, keyed on `pyproject.toml`.
+
+Not changed: the matrix, the job and its four check names, the triggers, or any step's meaning. `tests/release.py`'s `workflows` check passes over the new file (no outside action, every python command and flag known, no line proved twice); BUILDMAP.md still matches.
+
+What goes red if it comes unplugged: the timing block is a print, read by a person on the CI log -- no stroke holds it, and the meta-strokes ("every stroke function ... is actually run", the duplicate-name check) still read main() as before. The two runner steps are proved by the Windows legs' own minutes on the next run, not by a check.
+
 ### core: a missing model tag no longer locks the engine; every seat sits on one model instead (2026-10-31; his words: "fix the preflight and re-point everything to a small default just for running it"; his card: gpt-oss:20b)
 
 The restart for the `mcp_call` fix failed at preflight: six tags that agents/ and skills/ declare are no longer on the rack (`deepseek-r1:8b`, `llama3.2:latest`, `phi4-mini:latest`, `qwen2.5-coder:14b`, `qwen3.5:4b`, `qwen3.5:9b`), and `Session.preflight` refused the whole boot when any declared tag was missing, even for seats that may never sit in a sitting.
