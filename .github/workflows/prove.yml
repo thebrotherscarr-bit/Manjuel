@@ -58,6 +58,13 @@ permissions:
 
 jobs:
   prove:
+    # THE CHECK NAMES ARE THE RULESET'S, AND THEY DO NOT MOVE. main's ruleset
+    # requires "prove (windows-latest, 3.10)" and its three siblings by name.
+    # `os` and `python` stay the matrix's keys and say which leg this is; the
+    # machine and the interpreter each leg actually gets are pinned in
+    # `include` below. The name is written out so a key added there can never
+    # change it.
+    name: prove (${{ matrix.os }}, ${{ matrix.python }})
     strategy:
       fail-fast: false
       matrix:
@@ -67,7 +74,21 @@ jobs:
         # rules are declared in-repo rather than per-machine.
         os: [windows-latest, ubuntu-latest]
         python: ["3.10", "3.13"]
-    runs-on: ${{ matrix.os }}
+        # EVERY PIECE PINNED (2026-11-04, his word: "all pieces of the estate
+        # need to be pinned and versioned for CI"). `image` is what the
+        # `-latest` label resolved to on run 41871959699 that day:
+        # windows-latest -> windows-2025-vs2026, ubuntu-latest -> ubuntu-26.04
+        # (GitHub was moving ubuntu-latest from 24.04 to 26.04). `exact` is the
+        # patch setup-python gave each leg: 3.13.17 on both systems; 3.10.11 on
+        # Windows, the last 3.10 with a Windows build, and 3.10.22 on Ubuntu.
+        # `lock` is the hashed set that Python installs. Moved by hand, on his
+        # word, never by a bot.
+        include:
+          - { os: windows-latest, python: "3.10", image: windows-2025-vs2026, exact: "3.10.11", lock: requirements-py310.lock }
+          - { os: windows-latest, python: "3.13", image: windows-2025-vs2026, exact: "3.13.17", lock: requirements-py313.lock }
+          - { os: ubuntu-latest, python: "3.10", image: ubuntu-26.04, exact: "3.10.22", lock: requirements-py310.lock }
+          - { os: ubuntu-latest, python: "3.13", image: ubuntu-26.04, exact: "3.13.17", lock: requirements-py313.lock }
+    runs-on: ${{ matrix.image }}
     timeout-minutes: 10
 
     steps:
@@ -85,20 +106,36 @@ jobs:
         shell: pwsh
         run: Add-MpPreference -ExclusionPath "$env:GITHUB_WORKSPACE","$env:RUNNER_TEMP","$env:TEMP"
 
-      - uses: actions/checkout@v4
+      # EVERY ACTION BY ITS COMMIT, the tag beside it (2026-11-04): a tag is
+      # moved by its owner, a commit is not. tests/release.py's `workflows`
+      # check refuses any other form, GitHub's own `actions/` included.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0 (v4)
 
       # THE PIP CACHE (2026-11-04). setup-python and the install cost 23-46 s
       # a leg on Windows, downloading the same wheels every run. The cache is
-      # keyed on pyproject.toml, the one file that says what is installed, so
+      # keyed on the leg's lock, the one file that says what is installed, so
       # a change to the dependencies is a new key and never a stale wheel.
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0 (v5)
         with:
-          python-version: ${{ matrix.python }}
+          python-version: ${{ matrix.exact }}
           cache: pip
-          cache-dependency-path: pyproject.toml
+          cache-dependency-path: ${{ matrix.lock }}
 
-      - name: Install (one dependency, plus what the suites need)
-        run: python -m pip install --upgrade pip && python -m pip install ".[test]"
+      # THE LOCKED INSTALL (2026-11-04). pip at an exact version; then the
+      # leg's lock, every file checked against its hash (pip-compile
+      # --generate-hashes from pyproject.toml with the `test` extra, setuptools
+      # included); then manjuel itself with nothing fetched -- no dependency,
+      # and no isolated build that would pull a setuptools of its own. The
+      # extra is named so the strokes' check reads the extra this install is
+      # for; its packages come from the lock. `pip check` is the wire: a
+      # dependency pyproject.toml gains and the lock does not carry goes red
+      # here. Regenerate the locks with the command in each one's header.
+      - name: Install (pip, the locked set by hash, then manjuel with nothing fetched)
+        run: >-
+          python -m pip install pip==26.3 &&
+          python -m pip install --require-hashes -r ${{ matrix.lock }} &&
+          python -m pip install --no-deps --no-build-isolation ".[test]" &&
+          python -m pip check
 
       - name: The strokes
         run: python tests/test_manjuel.py
