@@ -356,6 +356,15 @@ publish too: it is his to order.
     rewriting history are not covered. Everything else in this rule stands
     for every other repository (the core, Atlas, SecondBrain, every world).
 
+    EXTENDED, 2026-11-04 -- SECONDBRAIN AND THIS GROUND. On the operator's
+    word ("you run the github stuff until he can reliably produce the
+    results we want", his choice of "Steward + SecondBrain", then "Same
+    rules for Manjuel, as well"): the exception above now covers
+    worlds/jesster (SecondBrain) and this ground (Manjuel), on the same
+    terms and with the same limits. RULE 9 still holds: nothing in this
+    ground is edited while his sitting is open. The ARCHIVE never goes on
+    GitHub. Atlas and every other world stay on his door's cards.
+
 ## RULE 13 — EVERYTHING RUNS ON THE GLASS, NOT ON MIRRORS.
 
 Recorded 2026-10-05 on the operator's word: "Prove it live in the glass,
