@@ -2370,6 +2370,15 @@ def test_rack_sync(reg, lib):
           and "16 threads" in page and "| RAM | 34.3GB |" in page, page[:700])
     check("it lists what this ground declares", "Declared by this ground" in body
           and SEAT in body)
+    # THE OPERATOR'S NOTES OUTLIVE A SYNC (2026-11-04): PR #89 wrote a dated note into
+    # rack.md by hand, which the next sync would have dropped. They live in rack.NOTES now.
+    declared = body.split("## Declared by this ground")[-1].split("\n## ")[0]
+    check("every one of the operator's dated notes is written under the declared table",
+          R.NOTES and all(n in declared for n in R.NOTES), declared[-300:])
+    check("   including the 2026-11-04 note that the council is superseded by MAF",
+          any("Superseded 2026-11-04" in n and "superseded by MAF" in n for n in R.NOTES))
+    check("   and the committed rack.md carries them too",
+          all(n in (ROOT / R.RACK_FILE).read_text(encoding="utf-8") for n in R.NOTES))
     check("a declared model that is NOT installed is called out",
           "NOT INSTALLED" in body and "Declared but missing" in body,
           "coder:7b should be missing from this stub's list")

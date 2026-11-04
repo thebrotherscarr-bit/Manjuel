@@ -26,6 +26,15 @@ from . import vram
 
 RACK_FILE = "rack.md"
 
+# THE OPERATOR'S DATED NOTES, carried under the "Declared by this ground" table at every
+# sync. rack.md is regenerated whole, so a note written into it by hand is dropped by the
+# next rack_sync; a note that must outlive a sync lives here (2026-11-04, after PR #89
+# wrote the first one into rack.md). Append a new note; never edit or drop an old one.
+NOTES = (
+    "**Superseded 2026-11-04 (the operator):** the council and its models are superseded "
+    "by MAF; MAF Steward is Manjuel's default face (Manjuel #88).",
+)
+
 
 def _ram_bytes() -> int:
     """The machine's memory in bytes, or 0 where it cannot be read."""
@@ -174,6 +183,8 @@ def render(s: dict) -> str:
         who = ", ".join(sorted(s["declared"][m]))
         flag = "" if m in s["installed"] else "  **NOT INSTALLED**"
         out.append(f"| `{m}`{flag} | {size} | {loaded} | {who} |")
+    for note in NOTES:
+        out += ["", note]
 
     if s["missing"]:
         out += ["", "## Declared but missing", "",

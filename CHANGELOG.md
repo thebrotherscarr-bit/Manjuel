@@ -34,6 +34,11 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: the operator's dated notes on rack.md survive a rack_sync (2026-11-04; PR #89 wrote one by hand into a file the next sync regenerates whole)
+
+- **`manjuel/rack.py`: `NOTES`**, a tuple of the operator's dated notes, written by `render` under the "Declared by this ground" table at every sync. It carries the 2026-11-04 note that the council and its models are superseded by MAF. rack.md regenerated from the survey it records comes out byte-identical to the committed file.
+- **Strokes** (`tests/test_manjuel.py`, `test_rack_sync`): every note is written under the declared table, the 2026-11-04 note is among them, and the committed rack.md carries them. Emptying `NOTES` reddens two. Restart required: `manjuel/` moved.
+
 ### core: Steward, the MAF agent, is the face; the seat loop and the council answer by name only (2026-11-04; his words: "Steward should be the default Agent for Manjuel, as well. There is a central theme here: Steward is the Agent in control of the modules, tools, and skills", and "Fuck the council and its models, thats MAF guide stuff")
 
 - **The face `maf`** (`manjuel/serve.py`: `door_maf`, `maf_ask`, `maf_url`, `MAF_URL`, `MAF_TOOL`, `door_face_turn`, `door_face_switch`, `face_says`, `face_default`, `FACES`). An ordinary turn at the door goes to Steward, the Microsoft Agent Framework agent in worlds/steward, over his MCP server (`harness/steward/step04_production_ready/mcp_app.py`): `tools/list`, then `tools/call` on his tool (`Steward`, read off his roster) with the turn as `task` and `session_id` `manjuel-<session>`, so one sitting is one conversation of his. The address is the dial `mcp_call` already reads, `MANJUEL_MCP_STEWARD`, else `http://127.0.0.1:43121/mcp`; the transport and the loopback wall are `mcp_call`'s own (`skills._mcp_rpc`); his server takes no key, and a `MANJUEL_MCP_STEWARD_KEY` would ride as the bearer. His reply is the delivery, lands in the dialogue and the sitting's runs.
