@@ -34,6 +34,17 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: Steward, the MAF agent, is the face; the seat loop and the council answer by name only (2026-11-04; his words: "Steward should be the default Agent for Manjuel, as well. There is a central theme here: Steward is the Agent in control of the modules, tools, and skills", and "Fuck the council and its models, thats MAF guide stuff")
+
+- **The face `maf`** (`manjuel/serve.py`: `door_maf`, `maf_ask`, `maf_url`, `MAF_URL`, `MAF_TOOL`, `door_face_turn`, `door_face_switch`, `face_says`, `face_default`, `FACES`). An ordinary turn at the door goes to Steward, the Microsoft Agent Framework agent in worlds/steward, over his MCP server (`harness/steward/step04_production_ready/mcp_app.py`): `tools/list`, then `tools/call` on his tool (`Steward`, read off his roster) with the turn as `task` and `session_id` `manjuel-<session>`, so one sitting is one conversation of his. The address is the dial `mcp_call` already reads, `MANJUEL_MCP_STEWARD`, else `http://127.0.0.1:43121/mcp`; the transport and the loopback wall are `mcp_call`'s own (`skills._mcp_rpc`); his server takes no key, and a `MANJUEL_MCP_STEWARD_KEY` would ride as the bearer. His reply is the delivery, lands in the dialogue and the sitting's runs.
+- **Unreachable is said.** When his server does not answer, refuses, or answers with nothing, the door says "Steward could not be reached: <why>" (an `unreachable` event) and the turn ends; the council does not catch it.
+- **The default.** `FACE` is `maf` unless `MANJUEL_FACE` names another. `/face steward` is the seat loop (`door_face`, this ground's own Steward seat; unchanged, the council still takes a turn it cannot answer, and its line now says "the seat loop"); `/face council` is the pipeline; `/face maf` puts Steward back.
+- **The suites never dial him.** A session on a stand-in runtime with no server handed to the door keeps the council in front, as the seat loop already did.
+- **Strokes** (`tests/test_manjuel.py`, `test_steward_the_maf_agent_is_the_face`, against a stand-in for his server on a port of its own): the default turn reaches him and his reply is the delivery; an unreachable Steward is said and nothing else takes the turn; a stand-in session never dials; `/face council` and `/face steward` switch by name; `Door.turn` asks the face before the pipeline. The harness stroke's wiring check now reads `door_face_turn`.
+- **Docs**: RUNBOOK's `MANJUEL_FACE` line and README's routing lines. BUILDMAP.md and REFUSALS.md's tail regenerated (line numbers moved).
+
+Restart required: manjuel/*.py is not hot-reloaded.
+
 ### ci: every piece CI runs on is pinned -- the Python set by hash, the runners, the interpreters, pip, and every action by its commit (2026-11-04; his words: "all pieces of the estate need to be pinned and versioned for CI")
 
 His choices that day: pip-tools locks with hashes; runner images pinned to what `-latest` resolved to; every action pinned to its commit and gated; no Dependabot or Renovate -- updates by hand.

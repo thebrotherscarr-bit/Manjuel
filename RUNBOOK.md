@@ -1200,8 +1200,10 @@ boot report says which took effect) or the shell. Nothing else is a dial.
                                    notes (his second brain), MANJUEL_MCP_REA_CMD the example
     MANJUEL_MCP_<NAME>_ROOT --     the one folder outside the ground that server's script
                                    may live in (mcp_stdio.py)
-    MANJUEL_FACE            steward   who answers an ordinary turn at the door: `steward`,
-                                   or `council` for the pipeline (serve.py; `/face` switches)
+    MANJUEL_FACE            maf    who answers an ordinary turn at the door: `maf` is Steward,
+                                   the MAF agent, over his MCP server (MANJUEL_MCP_STEWARD, else
+                                   http://127.0.0.1:43121/mcp); `steward` the seat loop; `council`
+                                   the pipeline (serve.py; `/face` switches)
     MANJUEL_FACE_STEPS      12     the most tool calls one face turn may make
     MANJUEL_FACE_MINUTES    10     the most minutes one face turn may take
     MANJUEL_CARD_WAIT       1800   seconds a driver's card waits; no answer is a no

@@ -72,12 +72,16 @@ three kinds of line do three different things:
    reads it and no model narrates it: the engine asks the door, says in one
    line what it asked, waits for his click if the door holds the call, and
    says in one line what became of it.
-3. **Anything else -- Steward answers it himself** (the face, `door_face`):
-   he reads and checks with the tools, asks a council seat when he wants a
-   second mind (`delegate`), and answers in words. When he cannot (the model
-   down), or after `/face council` or with `MANJUEL_FACE=council`, the council
-   takes the turn: the seats sit in their running order (below), and the
-   Router is the only one that may use tools.
+3. **Anything else -- Steward answers it** (the face, `door_maf`): the turn
+   goes to Steward, the Microsoft Agent Framework agent in worlds/steward,
+   over his MCP server (`MANJUEL_MCP_STEWARD`, else
+   `http://127.0.0.1:43121/mcp`), and his reply is the delivery. When he
+   cannot be reached that is said, and nothing else takes the turn.
+   `/face steward` puts the seat loop in front instead (`door_face`: this
+   ground's own Steward seat on its own loop, the council taking a turn it
+   cannot answer); `/face council` or `MANJUEL_FACE=council` puts the council
+   in front: the seats sit in their running order (below), and the Router is
+   the only one that may use tools.
 
 The Steward who drives is not the Steward SEAT. The seat (`agents/steward.md`,
 `gpt-oss:20b`) opens and closes a council turn; the driver has its own
@@ -95,8 +99,8 @@ the gate.
    to the driver; a line leading with `mcp_call` goes to `door_call`;
    `/schedule`, `/goal`, `/schedules`, `/undo`, `/notes`, `/rulings`, `/mirror`
    and `/face`; a topic or session cue; "pay the toll"; "remember that";
-   `@<seat>`; a `/command`; then Steward answers (the face); the rack
-   unreachable is said so; otherwise the pipeline runs.
+   `@<seat>`; a `/command`; then the face answers (Steward, by default); the
+   rack unreachable is said so; otherwise the pipeline runs.
 4. The engine answers in JSON-line events on stdout: `seat`, `token`, `think`,
    `tool`, `tool_result`, `report`, `needs_answer` (a card: the question and its
    colour), and one `delivery` at the end. The door streams them to the glass,
