@@ -143,3 +143,13 @@ projects/
 # Never authored, never the core's. `git_commit` stages everything (`git add -A`), so this line is written
 # BEFORE the folder is, or one save would carry a whole environment.
 aider/
+
+# Keys and tokens never go in the record (RULE 7), nor runtime storage, nor the
+# Archive (outside this ground; it never goes on GitHub, RULE 1). Added
+# 2026-11-05 with the repository docs.
+*.pem
+*.key
+*.pfx
+*_token.txt
+storage/
+/Archive/

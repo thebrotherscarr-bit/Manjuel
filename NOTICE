@@ -1,0 +1,9 @@
+Manjuel
+Copyright (c) 2026 Kyler (the operator of this ground)
+Licensed under the MIT License; see LICENSE.
+
+Third-party parts:
+
+- whisper.cpp binaries in bin/ carry their own MIT license
+  (github.com/ggerganov/whisper.cpp).
+- Models served by Ollama carry their own respective licenses.

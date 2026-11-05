@@ -14,6 +14,40 @@ and `REFUSALS.md` (every refusal and the failure that earned it;
 `python tests/refusals.py`). The law is in `law/`, the vision in `foundation/`,
 and the history in `DAYBOOK.md` and `CHANGELOG.md`.
 
+## The Estate today (2026-11-05)
+
+This repository is **Manjuel**, the ground and the record of the Estate: the laws (`law/`), the
+vision (`foundation/`), the history (`DAYBOOK.md`, `CHANGELOG.md`) and the Manjuel engine. The
+Estate's current shape:
+
+- **Steward** ([Steward](https://github.com/thebrotherscarr-bit/Steward)) is the agent and runs
+  everything: a Microsoft Agent Framework agent on local Ollama, every write on an approval card.
+- **SecondBrain** ([Jesster](https://github.com/thebrotherscarr-bit/Jesster)) is his console and
+  the hub: its Agent tab is where the operator works with Steward.
+- **Manjuel** (this repository) is the ground and the record.
+- **Atlas** (Aurora; [Atlas](https://github.com/thebrotherscarr-bit/Atlas)) is parked until Steward
+  has visible computer control. The door and the glass described below are Atlas's.
+- **Neiro** has been retired as a gate.
+
+Much of this book describes the engine's council, the door and the glass as they were built: read
+those parts as the engine's design and history, not as the way the Estate is driven today. The
+hosted model route named below is off unless the operator turns it on; by default nothing leaves
+the PC.
+
+### On another PC
+
+1. Install [Ollama](https://ollama.com), then `ollama pull gpt-oss:20b` and build Steward's model
+   from the Modelfile in a Steward clone: `ollama create steward:1 -f steward.Modelfile`.
+2. Install SecondBrain: download `SecondBrain-win32-x64.zip` from the newest `secondbrain-b<N>`
+   release of [Jesster](https://github.com/thebrotherscarr-bit/Jesster/releases), unzip it and run
+   `SecondBrain.exe`.
+3. Clone Steward and follow its README to install him and start his service; SecondBrain's Agent
+   tab talks to it on 127.0.0.1:43120.
+4. This repository is optional on a new PC: clone it for the record and the engine ("Install",
+   below).
+
+`SECURITY.md` says how to report a vulnerability; `TRADEMARKS.md` is the names policy.
+
 ## What it is, in his words
 
 "we built the recorder, its perfect, now we build the harness on top of it"

@@ -34,6 +34,13 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### the repository docs: the README says the Estate's shape today, SECURITY.md and TRADEMARKS.md join the root, LICENSE reads as MIT (2026-11-05; his word: "keep them all public, just make sure all the docs and licenses and whatnot are all set up properly for everything")
+
+- **README.md**: "The Estate today" opens the book: Steward runs everything, SecondBrain (Jesster) is his console and the hub, Manjuel the ground and the record, Atlas parked until visible computer control, Neiro retired as a gate; the council, door and glass sections read as the engine's design and history, and the hosted route stays off unless he turns it on. "On another PC" gives the install: Ollama and `steward:1`, SecondBrain's release zip, a Steward clone.
+- **SECURITY.md** (report privately, never post keys) and **TRADEMARKS.md** (the Estate's names policy, as in Neiro's) are new root documents, CRLF, and both are listed in **index_roots.txt**, as the every-root-document stroke requires.
+- **LICENSE** is the MIT text alone; the whisper.cpp and Ollama note moved to a new **NOTICE**, so GitHub reads the license as MIT (it read NOASSERTION with the note inside).
+- **.gitignore** adds keys, tokens, `storage/` and the Archive. Nothing in `manjuel/` moved: no restart.
+
 ### core: the council speaks MCP 2026-07-28 to a door that does, and 2025-06-18 to one that does not (2026-11-05; the Estate's doors now answer 2026-07-28, spec https://modelcontextprotocol.io/specification/2026-07-28/changelog)
 
 - **`manjuel/skills.py`: `_mcp_rpc`** asks a door `server/discover` once per address (`_mcp_era`) and keeps the verdict for the process, as basic/versioning says a client SHOULD. A door that names 2026-07-28 gets the `_meta` envelope (`_mcp_meta`: protocolVersion, clientInfo, clientCapabilities) on every request, with the MCP-Protocol-Version, Mcp-Method and Mcp-Name headers (`_mcp_headers`, base64 for a name that is not plain ASCII), and no initialize: `_mcp_call`'s handshake sends nothing there. Any other answer is a 2025-06-18 door and is spoken to as before: an error that is not a modern one, a result naming no modern version, or a 4xx with no JSON-RPC body. A -32022 naming only versions neither era speaks is refused by name. No answer, a 5xx, or a refused key (401, 403) is not a verdict: nothing is kept, and the next call asks again. **`_mcp_post`** is the POST, and now reads a JSON-RPC body off a 4xx.
