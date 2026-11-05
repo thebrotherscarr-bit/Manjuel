@@ -87,7 +87,7 @@ build, which is what a second machine finds first.
 and the core's own `.gitignore` assume that name and that place.
 
     cd <YOUR-GROUND>
-    git clone https://github.com/thebrotherscarr-bit/Atlas.git atlas
+    git clone https://github.com/thebrotherscarr-bit/Aurora.git atlas
 
 The core itself is `https://github.com/thebrotherscarr-bit/Manjuel.git`. Both
 are public. Until 2026-09-11 this page told you atlas was a separate repo and
