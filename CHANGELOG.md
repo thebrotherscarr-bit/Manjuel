@@ -38,6 +38,7 @@ hand that iterates without updating this file is out of line.
 
 - **`manjuel/skills.py`: `_mcp_rpc(..., wait=None)`** takes an optional bound for one call; without it every skill waits `_mcp_wait()` as before. **`manjuel/serve.py`: `maf_wait()`** reads `MANJUEL_STEWARD_WAIT` (default 900) and `maf_ask` passes it to the `tools/call` that carries Steward's turn only; the roster read keeps the skill's bound.
 - **Stroke** (`tests/test_manjuel.py`, `test_steward_the_maf_agent_is_the_face`): the turn's call carries 900 s unset and the dial's value when set, the roster read carries none. Dropping the `wait=` from `maf_ask` reddens it. Restart required: `manjuel/` moved.
+- **REFUSALS.md**'s generated tail regenerated (`tests/refusals.py`): the sites below the edits moved lines.
 
 ### core: the operator's dated notes on rack.md survive a rack_sync (2026-11-04; PR #89 wrote one by hand into a file the next sync regenerates whole)
 
