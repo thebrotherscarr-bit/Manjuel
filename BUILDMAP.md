@@ -958,7 +958,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `write_index` | 631-641 | Rewrite SEAT_LOG_INDEX.md from SEAT_LOG.md, in the log's own line endings. None  |
 | def | `index_is_current` | 644-653 | True when SEAT_LOG_INDEX.md is exactly what a regeneration would write (and wher |
 
-### manjuel/serve.py — 4043 lines
+### manjuel/serve.py — 4058 lines
 
 *The headless door: the REPL's turn over stdin/stdout as JSON lines.*
 
@@ -1051,44 +1051,45 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `face_system` | 2519-2531 | The face's system prompt: his seat's own bearing and weighing (agents/steward.md |
 | def | `face_history` | 2534-2540 | The last turns of this conversation, as the messages the face reads first. |
 | def | `door_face` | 2543-2623 | STEWARD, THE FACE (FACE, above): one ordinary turn answered by Steward's own loo |
-| def | `maf_url` | 2639-2642 | Where Steward's MCP server is: the declared dial, else his server's own port. |
-| def | `maf_ask` | 2645-2681 | (Steward's reply, "") or ("", why he did not answer, in plain words). |
-| def | `door_maf` | 2684-2734 | STEWARD, THE FACE (FACE `maf`): one ordinary turn sent to Steward, the MAF agent |
-| def | `face_says` | 2737-2742 | What the face is, in his words for it. |
-| def | `door_face_switch` | 2745-2752 | `/face [maf|steward|council]`: switch who answers for the sitting; the line that |
-| def | `door_face_turn` | 2755-2764 | WHO ANSWERS AN ORDINARY TURN (FACE). True when the face took it; False leaves it |
-| def | `notes_call` | 2771-2791 | (text, "") or ("", why): one call to his second brain's kernel, the MCP server |
-| def | `notes_context` | 2794-2810 | HIS NOTES, BESIDE EVERY TURN (2026-10-22, his words: the workspace "can also que |
-| def | `sitting_capture_text` | 2816-2841 | A sitting as one entry for his notes, read off its record alone (no model): when |
-| def | `capture_sitting` | 2844-2857 | D, THE BRIDGE FROM THE WORKSPACE TO HIS NOTES (2026-10-22, his words: the second |
-| def | `drive_context` | 2860-2873 | What the driver is handed beside its goal, as every seat is (pipeline's carried |
-| def | `door_drive` | 2876-2976 | The /drive turn: job after job. Each job's report goes on the wire as it |
-| def | `door_undo` | 2979-2997 | /undo (opencode, Cline, Hermes, oh-my-pi): the last Steward turn's own unsaved |
-| def | `door_notes` | 3000-3026 | /notes [words] (2026-10-22, the bridge from the workspace to his second brain):  |
-| def | `notes_session` | 3029-3046 | (work(server), "") or (None, why): one open session on his notes kernel for many |
-| def | `_written` | 3049-3051 |  |
-| def | `door_mirror` | 3054-3070 | /mirror sync (stage 1 of the reconcile, 2026-10-22, his words: "laws, registry a |
-| def | `door_rulings` | 3073-3104 | /rulings sync | /rulings <words> (F, 2026-10-22, his words: "we can tie in the n |
-| def | `capture_job` | 3107-3117 | STEWARD'S SCRATCHPAD (F, 2026-10-22, his words: "allowing steward to have the no |
-| def | `door_schedule` | 3123-3148 | /schedule, /goal, /schedules [drop <id>] (Hermes, Cline, OpenClaw): rows in |
-| def | `door_schedules` | 3151-3176 | The idle door's tick: each due row run once as an unattended /drive job, its |
-| def | `door_hold_wait` | 3198-3220 | Wait on the door's hold logs until the hold is answered: its outcome, or |
-| def | `door_call` | 3223-3278 | The mcp_call turn: one line of what is asked, the call, and -- when the |
-| class | `Door` | 3286-3864 | One sitting, over one wire. `sess` is cli.Session or anything that |
-| def | `Door.__init__` | 3290-3310 |  |
-| def | `Door.ask` | 3314-3365 | Stands where input() stood. One question, one answer, over the |
-| def | `Door._listen` | 3367-3402 | One spoken turn, captured and transcribed, and NOT run. |
-| def | `Door._next` | 3404-3421 |  |
-| def | `Door.serve` | 3425-3539 | cli._loop's shape: take a turn, run it, until close or EOF. |
-| def | `Door._head_plan` | 3543-3596 | Read `model` and `voices` off the wire into a plan, or refuse. |
-| def | `Door._head_words` | 3599-3605 | The plan in the operator's words, for the `note` that says what |
-| def | `Door._close` | 3607-3630 |  |
-| def | `Door.turn` | 3634-3864 | One typed turn, cli._loop's body line for line (the REPL read of |
-| def | `open_wire` | 3872-3889 | The real stdout and stdin as the wire. stdout is swapped for the |
-| def | `main` | 3892-3983 |  |
-| def | `_open_and_serve` | 3986-4036 | Everything after the sitting line: the boot the REPL does, `opened`, |
+| def | `maf_wait` | 2645-2650 | Seconds Steward's turn is waited for: MANJUEL_STEWARD_WAIT, else 900; never unde |
+| def | `maf_url` | 2653-2656 | Where Steward's MCP server is: the declared dial, else his server's own port. |
+| def | `maf_ask` | 2659-2696 | (Steward's reply, "") or ("", why he did not answer, in plain words). |
+| def | `door_maf` | 2699-2749 | STEWARD, THE FACE (FACE `maf`): one ordinary turn sent to Steward, the MAF agent |
+| def | `face_says` | 2752-2757 | What the face is, in his words for it. |
+| def | `door_face_switch` | 2760-2767 | `/face [maf|steward|council]`: switch who answers for the sitting; the line that |
+| def | `door_face_turn` | 2770-2779 | WHO ANSWERS AN ORDINARY TURN (FACE). True when the face took it; False leaves it |
+| def | `notes_call` | 2786-2806 | (text, "") or ("", why): one call to his second brain's kernel, the MCP server |
+| def | `notes_context` | 2809-2825 | HIS NOTES, BESIDE EVERY TURN (2026-10-22, his words: the workspace "can also que |
+| def | `sitting_capture_text` | 2831-2856 | A sitting as one entry for his notes, read off its record alone (no model): when |
+| def | `capture_sitting` | 2859-2872 | D, THE BRIDGE FROM THE WORKSPACE TO HIS NOTES (2026-10-22, his words: the second |
+| def | `drive_context` | 2875-2888 | What the driver is handed beside its goal, as every seat is (pipeline's carried |
+| def | `door_drive` | 2891-2991 | The /drive turn: job after job. Each job's report goes on the wire as it |
+| def | `door_undo` | 2994-3012 | /undo (opencode, Cline, Hermes, oh-my-pi): the last Steward turn's own unsaved |
+| def | `door_notes` | 3015-3041 | /notes [words] (2026-10-22, the bridge from the workspace to his second brain):  |
+| def | `notes_session` | 3044-3061 | (work(server), "") or (None, why): one open session on his notes kernel for many |
+| def | `_written` | 3064-3066 |  |
+| def | `door_mirror` | 3069-3085 | /mirror sync (stage 1 of the reconcile, 2026-10-22, his words: "laws, registry a |
+| def | `door_rulings` | 3088-3119 | /rulings sync | /rulings <words> (F, 2026-10-22, his words: "we can tie in the n |
+| def | `capture_job` | 3122-3132 | STEWARD'S SCRATCHPAD (F, 2026-10-22, his words: "allowing steward to have the no |
+| def | `door_schedule` | 3138-3163 | /schedule, /goal, /schedules [drop <id>] (Hermes, Cline, OpenClaw): rows in |
+| def | `door_schedules` | 3166-3191 | The idle door's tick: each due row run once as an unattended /drive job, its |
+| def | `door_hold_wait` | 3213-3235 | Wait on the door's hold logs until the hold is answered: its outcome, or |
+| def | `door_call` | 3238-3293 | The mcp_call turn: one line of what is asked, the call, and -- when the |
+| class | `Door` | 3301-3879 | One sitting, over one wire. `sess` is cli.Session or anything that |
+| def | `Door.__init__` | 3305-3325 |  |
+| def | `Door.ask` | 3329-3380 | Stands where input() stood. One question, one answer, over the |
+| def | `Door._listen` | 3382-3417 | One spoken turn, captured and transcribed, and NOT run. |
+| def | `Door._next` | 3419-3436 |  |
+| def | `Door.serve` | 3440-3554 | cli._loop's shape: take a turn, run it, until close or EOF. |
+| def | `Door._head_plan` | 3558-3611 | Read `model` and `voices` off the wire into a plan, or refuse. |
+| def | `Door._head_words` | 3614-3620 | The plan in the operator's words, for the `note` that says what |
+| def | `Door._close` | 3622-3645 |  |
+| def | `Door.turn` | 3649-3879 | One typed turn, cli._loop's body line for line (the REPL read of |
+| def | `open_wire` | 3887-3904 | The real stdout and stdin as the wire. stdout is swapped for the |
+| def | `main` | 3907-3998 |  |
+| def | `_open_and_serve` | 4001-4051 | Everything after the sitting line: the boot the REPL does, `opened`, |
 
-### manjuel/skills.py — 5939 lines
+### manjuel/skills.py — 5945 lines
 
 *Skills: markdown declares the interface, Python registers the implementation.*
 
@@ -1199,50 +1200,50 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `_mcp_declared` | 4117-4121 | Every server name this ground declares, loopback dial or stdio command. |
 | def | `_mcp_key` | 4124-4127 | The bearer this ground holds for server `name`, or "". It leaves this |
 | def | `_mcp_hint` | 4130-4137 | What a 401 from `name` is asking for, in words that name the dial and |
-| def | `_mcp_rpc` | 4140-4180 | One JSON-RPC call. Returns (result, error-in-plain-words). |
-| def | `_mcp_sse` | 4183-4199 | The JSON-RPC answer in an event stream: the last event whose data is a |
-| def | `_mcp_text` | 4202-4209 | An MCP result's own words. The content blocks are the answer; the |
-| def | `_mcp_named` | 4212-4234 | The first candidate NAMED IN `text` as a whole word, or "". |
-| def | `_mcp_braced` | 4237-4246 | The `{...}` a sentence carries, first brace to last, or "". |
-| def | `mcp_spelled_out` | 4249-4283 | Does `text` spell a door call out WHOLE -- a declared server named as a |
-| def | `_mcp_call` | 4287-4445 | Call one tool on a local MCP server this ground declares. |
-| def | `_mcp_args` | 4448-4475 | (payload, "") or ({}, refusal): the tool's arguments, read the ONE way |
-| def | `_mcp_stdio_call` | 4478-4541 | `_mcp_call` for a server that is a program (MANJUEL_MCP_<NAME>_CMD). |
-| def | `_one_terminator` | 4567-4573 | CRLF if the file is CRLF, LF if it is LF. Refuses to guess for MIXED. |
-| def | `_edit_file` | 4577-4615 | Replace one exact passage in a workspace file. |
-| def | `_edit_passages` | 4618-4639 | SEVERAL EDITS IN ONE CALL (2026-10-21, the feature list: Pi, OpenClaw, oh-my-pi) |
-| def | `_edit_passage` | 4642-4667 | The two-marker shape, read: (old, new, refusal). ONE READER for every |
-| def | `_apply_passage` | 4670-4760 | Replace `old` with `new` in the file at `path`, or refuse and write |
-| def | `_lint_after` | 4763-4795 | LINT AFTER AN EDIT (Hermes, oh-my-pi), for the kinds a check costs nothing on: a |
-| def | `_locate_passage` | 4810-4849 | Where `old` is in the file: (start, end, how, refusal). THREE TIERS, each tried |
-| def | `_nearest_lines` | 4852-4869 | The file's three lines most like the passage's first line, with the column |
-| class | `DriverMark` | 4951-4952 | The caller mark the driver alone sets on the env, in drive(). |
-| def | `never_written` | 4976-5010 | Why a seat may never write THIS path in the ground, or "" when it may. |
-| def | `repo_of` | 5013-5023 | The nearest repository the path belongs to, inside the ground: the first |
-| def | `line_of_work` | 5026-5045 | (refusal, branch): the branch the file's repository stands on, or why a |
-| def | `terminator_for` | 5048-5058 | The terminator a write must use: the file's own (None when MIXED), or |
-| def | `checked_python` | 5061-5081 | The structural gate for a whole file about to be written: parse, then |
-| def | `_tree_target` | 5084-5099 | The resolved file a tree door was asked for: (path, rel, branch, refusal). |
-| def | `_ground_write` | 5103-5131 | Write one whole file into the ground, on a line of work. |
-| def | `_ground_edit` | 5135-5149 | Replace one exact passage in a file in the ground, on a line of work. |
-| def | `_run_python` | 5308-5389 | Run one Python file from the workspace and report what it said. |
-| class | `SkillLibrary` | 5398-5815 |  |
-| def | `SkillLibrary.__init__` | 5408-5411 |  |
-| def | `SkillLibrary.load` | 5414-5457 |  |
-| def | `SkillLibrary.validate` | 5459-5495 | Return (errors, warnings) for the md <-> handler binding. |
-| def | `SkillLibrary.manifest` | 5497-5508 | Compact by default -- this is what the router reads to pick a tool. |
-| def | `SkillLibrary.shortlist` | 5510-5566 | The manifest, narrowed to what bears on THIS objective. |
-| def | `SkillLibrary.keywords` | 5568-5569 |  |
-| def | `SkillLibrary.spec` | 5571-5573 |  |
-| def | `SkillLibrary.models` | 5575-5577 | Model tags prompt skills depend on, for the startup check. |
-| def | `SkillLibrary.tool_schemas` | 5579-5658 | Ollama `tools=` schemas -- each skill offered ONLY what it declares. |
-| def | `SkillLibrary.hooks_for` | 5660-5669 | Every skill declaring `point`, in NAME ORDER. |
-| def | `SkillLibrary._fire` | 5671-5722 | Run the hooks for one point. They watch and they act; they do not |
-| def | `SkillLibrary.execute` | 5724-5750 | Every skill call in this estate, with its declared hooks around it. |
-| def | `SkillLibrary._call` | 5752-5815 |  |
-| def | `_run_prompt_skill` | 5818-5875 | Send <content> to the skill's own model, with its markdown as the rules. |
-| def | `_json_call` | 5901-5919 |  |
-| def | `extract_tool_call` | 5922-5935 |  |
+| def | `_mcp_rpc` | 4140-4186 | One JSON-RPC call. Returns (result, error-in-plain-words). |
+| def | `_mcp_sse` | 4189-4205 | The JSON-RPC answer in an event stream: the last event whose data is a |
+| def | `_mcp_text` | 4208-4215 | An MCP result's own words. The content blocks are the answer; the |
+| def | `_mcp_named` | 4218-4240 | The first candidate NAMED IN `text` as a whole word, or "". |
+| def | `_mcp_braced` | 4243-4252 | The `{...}` a sentence carries, first brace to last, or "". |
+| def | `mcp_spelled_out` | 4255-4289 | Does `text` spell a door call out WHOLE -- a declared server named as a |
+| def | `_mcp_call` | 4293-4451 | Call one tool on a local MCP server this ground declares. |
+| def | `_mcp_args` | 4454-4481 | (payload, "") or ({}, refusal): the tool's arguments, read the ONE way |
+| def | `_mcp_stdio_call` | 4484-4547 | `_mcp_call` for a server that is a program (MANJUEL_MCP_<NAME>_CMD). |
+| def | `_one_terminator` | 4573-4579 | CRLF if the file is CRLF, LF if it is LF. Refuses to guess for MIXED. |
+| def | `_edit_file` | 4583-4621 | Replace one exact passage in a workspace file. |
+| def | `_edit_passages` | 4624-4645 | SEVERAL EDITS IN ONE CALL (2026-10-21, the feature list: Pi, OpenClaw, oh-my-pi) |
+| def | `_edit_passage` | 4648-4673 | The two-marker shape, read: (old, new, refusal). ONE READER for every |
+| def | `_apply_passage` | 4676-4766 | Replace `old` with `new` in the file at `path`, or refuse and write |
+| def | `_lint_after` | 4769-4801 | LINT AFTER AN EDIT (Hermes, oh-my-pi), for the kinds a check costs nothing on: a |
+| def | `_locate_passage` | 4816-4855 | Where `old` is in the file: (start, end, how, refusal). THREE TIERS, each tried |
+| def | `_nearest_lines` | 4858-4875 | The file's three lines most like the passage's first line, with the column |
+| class | `DriverMark` | 4957-4958 | The caller mark the driver alone sets on the env, in drive(). |
+| def | `never_written` | 4982-5016 | Why a seat may never write THIS path in the ground, or "" when it may. |
+| def | `repo_of` | 5019-5029 | The nearest repository the path belongs to, inside the ground: the first |
+| def | `line_of_work` | 5032-5051 | (refusal, branch): the branch the file's repository stands on, or why a |
+| def | `terminator_for` | 5054-5064 | The terminator a write must use: the file's own (None when MIXED), or |
+| def | `checked_python` | 5067-5087 | The structural gate for a whole file about to be written: parse, then |
+| def | `_tree_target` | 5090-5105 | The resolved file a tree door was asked for: (path, rel, branch, refusal). |
+| def | `_ground_write` | 5109-5137 | Write one whole file into the ground, on a line of work. |
+| def | `_ground_edit` | 5141-5155 | Replace one exact passage in a file in the ground, on a line of work. |
+| def | `_run_python` | 5314-5395 | Run one Python file from the workspace and report what it said. |
+| class | `SkillLibrary` | 5404-5821 |  |
+| def | `SkillLibrary.__init__` | 5414-5417 |  |
+| def | `SkillLibrary.load` | 5420-5463 |  |
+| def | `SkillLibrary.validate` | 5465-5501 | Return (errors, warnings) for the md <-> handler binding. |
+| def | `SkillLibrary.manifest` | 5503-5514 | Compact by default -- this is what the router reads to pick a tool. |
+| def | `SkillLibrary.shortlist` | 5516-5572 | The manifest, narrowed to what bears on THIS objective. |
+| def | `SkillLibrary.keywords` | 5574-5575 |  |
+| def | `SkillLibrary.spec` | 5577-5579 |  |
+| def | `SkillLibrary.models` | 5581-5583 | Model tags prompt skills depend on, for the startup check. |
+| def | `SkillLibrary.tool_schemas` | 5585-5664 | Ollama `tools=` schemas -- each skill offered ONLY what it declares. |
+| def | `SkillLibrary.hooks_for` | 5666-5675 | Every skill declaring `point`, in NAME ORDER. |
+| def | `SkillLibrary._fire` | 5677-5728 | Run the hooks for one point. They watch and they act; they do not |
+| def | `SkillLibrary.execute` | 5730-5756 | Every skill call in this estate, with its declared hooks around it. |
+| def | `SkillLibrary._call` | 5758-5821 |  |
+| def | `_run_prompt_skill` | 5824-5881 | Send <content> to the skill's own model, with its markdown as the rules. |
+| def | `_json_call` | 5907-5925 |  |
+| def | `extract_tool_call` | 5928-5941 |  |
 
 ### manjuel/spelling.py — 171 lines
 
@@ -1460,7 +1461,7 @@ A name that is not on the map is answered by the engine ("none of the names
 | def | `GroundWatch.start` | 197-222 |  |
 | def | `GroundWatch.stop` | 224-230 |  |
 
-manjuel/: 42 files, 36844 lines.
+manjuel/: 42 files, 36865 lines.
 
 ## GUARDS — by the failure that earned them
 
@@ -2006,23 +2007,24 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 | 1183 | `_drive_take_check_files` | """WHAT THE CHECK REWROTE GOES WITH THE JOB (WHAT'S LEFT C130, 2026-10-20, his |
 | 1602 | `_drive_job` | THE WHOLE FILE ON FIRST USE (WHAT'S LEFT H32, his card of 2026-10-19): |
 | 2263 | `drive` | THE RAILS (2026-10-21): the goal passes the gates every ordinary turn passes -- |
-| 2795 | `notes_context` | """HIS NOTES, BESIDE EVERY TURN (2026-10-22, his words: the workspace "can also query the |
-| 2845 | `capture_sitting` | """D, THE BRIDGE FROM THE WORKSPACE TO HIS NOTES (2026-10-22, his words: the second brain |
-| 3001 | `door_notes` | """/notes [words] (2026-10-22, the bridge from the workspace to his second brain): his |
-| 3055 | `door_mirror` | """/mirror sync (stage 1 of the reconcile, 2026-10-22, his words: "laws, registry and |
-| 3074 | `door_rulings` | """/rulings sync | /rulings <words> (F, 2026-10-22, his words: "we can tie in the notes |
-| 3108 | `capture_job` | """STEWARD'S SCRATCHPAD (F, 2026-10-22, his words: "allowing steward to have the notes app |
-| 3179 | `(module)` | A DOOR CALL, SAID PLAINLY (WHAT'S LEFT C77). His words, 2026-10-16: "it |
-| 3430 | `serve` | ...and the colored card's hook beside it (pipeline._ask, 2026-10-12). |
-| 3466 | `serve` | say so is attended, as every turn was before 2026-09-29. |
-| 3468 | `serve` | THE HEAD IS A PROPERTY OF THE TURN (2026-09-23, his ruling: |
-| 3479 | `serve` | `voices` IS THE NARROWER ONE (2026-09-23, "then B underneath |
-| 3609 | `_close` | WHY, ON THE LEDGER LINE AND IN THE TOLL (2026-09-29). The `closed` |
-| 3670 | `turn` | SCHEDULES AND GOALS, and UNDO (the feature list, 2026-10-21). |
-| 3709 | `turn` | WHAT THE COMMAND LEFT TO RUN (WHAT'S LEFT C57, sitting 368): a command of his |
-| 3948 | `main` | A LOCK HELD BY NOBODY IS RELEASED HERE TOO (2026-09-22). cli.main has |
-| 3949 | `main` | reaped since 2026-09-17; this door never did, and it is the one THE LINE |
-| 3959 | `main` | EVERY EXIT FROM HERE ON CLOSES THE SITTING (2026-09-22). The line above |
+| 2637 | `(module)` | HIS TURN OUTLASTS A SKILL'S BOUND (2026-11-04). A Steward turn can sit on an approval card |
+| 2810 | `notes_context` | """HIS NOTES, BESIDE EVERY TURN (2026-10-22, his words: the workspace "can also query the |
+| 2860 | `capture_sitting` | """D, THE BRIDGE FROM THE WORKSPACE TO HIS NOTES (2026-10-22, his words: the second brain |
+| 3016 | `door_notes` | """/notes [words] (2026-10-22, the bridge from the workspace to his second brain): his |
+| 3070 | `door_mirror` | """/mirror sync (stage 1 of the reconcile, 2026-10-22, his words: "laws, registry and |
+| 3089 | `door_rulings` | """/rulings sync | /rulings <words> (F, 2026-10-22, his words: "we can tie in the notes |
+| 3123 | `capture_job` | """STEWARD'S SCRATCHPAD (F, 2026-10-22, his words: "allowing steward to have the notes app |
+| 3194 | `(module)` | A DOOR CALL, SAID PLAINLY (WHAT'S LEFT C77). His words, 2026-10-16: "it |
+| 3445 | `serve` | ...and the colored card's hook beside it (pipeline._ask, 2026-10-12). |
+| 3481 | `serve` | say so is attended, as every turn was before 2026-09-29. |
+| 3483 | `serve` | THE HEAD IS A PROPERTY OF THE TURN (2026-09-23, his ruling: |
+| 3494 | `serve` | `voices` IS THE NARROWER ONE (2026-09-23, "then B underneath |
+| 3624 | `_close` | WHY, ON THE LEDGER LINE AND IN THE TOLL (2026-09-29). The `closed` |
+| 3685 | `turn` | SCHEDULES AND GOALS, and UNDO (the feature list, 2026-10-21). |
+| 3724 | `turn` | WHAT THE COMMAND LEFT TO RUN (WHAT'S LEFT C57, sitting 368): a command of his |
+| 3963 | `main` | A LOCK HELD BY NOBODY IS RELEASED HERE TOO (2026-09-22). cli.main has |
+| 3964 | `main` | reaped since 2026-09-17; this door never did, and it is the one THE LINE |
+| 3974 | `main` | EVERY EXIT FROM HERE ON CLOSES THE SITTING (2026-09-22). The line above |
 
 ### manjuel/skills.py
 
@@ -2117,24 +2119,24 @@ number in SEAT_LOG.md for the toll; the transcript is named there.
 | 4066 | `(module)` | OWN DIAL, not by a number of its own (2026-09-28). This was `_MCP_TIMEOUT |
 | 4086 | `(module)` | THE KEY RIDES BESIDE THE DIAL (2026-09-25, his ruling: the core learns a key |
 | 4109 | `(module)` | A SERVER CAN ALSO BE A PROGRAM (2026-10-21). `MANJUEL_MCP_<NAME>_CMD` in .env |
-| 4152 | `_mcp_rpc` | BOTH KINDS OF ANSWER ARE ASKED FOR (2026-10-31). The MCP spec's Streamable |
-| 4153 | `_mcp_rpc` | HTTP transport (2025-06-18, Transports) says a client MUST list |
-| 4440 | `_mcp_call` | 2026-09-11 (ADR-006 item 2): a tool that fails has usually said why, and |
-| 4619 | `_edit_passages` | """SEVERAL EDITS IN ONE CALL (2026-10-21, the feature list: Pi, OpenClaw, oh-my-pi): |
-| 4729 | `_apply_passage` | HELD TO WHAT IT ADDS (2026-09-29, coder-tree run five): a file |
-| 4798 | `(module)` | THE PLAIN FORMS (2026-10-21, the harness study: opencode's second tier, Pi's and |
-| 4873 | `(module)` | THE TREE DOORS (2026-09-28) |
-| 4916 | `(module)` | beside CRLF files is CRLF (the terminator ruling, 2026-09-03). |
-| 4945 | `(module)` | 2026-10-19: "lets start with it writing up the skills and agents"). Steward's |
-| 5166 | `(module)` | THE CHILD'S WALL (2026-09-22, on his word: "sandbox the python"). |
-| 5441 | `load` | 2026-09-10 `doc_pass` claimed 35 phrases where 8 were declared, |
-| 5762 | `_call` | SAY WHAT WAS CHECKED, AND NOTHING ELSE (sitting 82, built |
-| 5763 | `_call` | 2026-09-29). The gate is an allowlist and that is the whole test: |
-| 5830 | `_run_prompt_skill` | sitting 39 waiting for a <content> nobody was going to type twice. |
-| 5836 | `_run_prompt_skill` | 2026-09-08). Sitting 95: "time align the logs" -- four words, no log |
-| 5849 | `_run_prompt_skill` | AN OVERRIDE MOVES THE PROMPT SKILLS WITH THE SEATS (2026-10-31). `/model |
-| 5891 | `(module)` | `<|python_tag|>`. Sitting 84 (2026-09-04): the closing Steward on llama3.2 |
-| 5937 | `(module)` | THE FEATURE LIST'S HANDS (2026-10-21): registered on import, after `skill` exists. |
+| 4155 | `_mcp_rpc` | BOTH KINDS OF ANSWER ARE ASKED FOR (2026-10-31). The MCP spec's Streamable |
+| 4156 | `_mcp_rpc` | HTTP transport (2025-06-18, Transports) says a client MUST list |
+| 4446 | `_mcp_call` | 2026-09-11 (ADR-006 item 2): a tool that fails has usually said why, and |
+| 4625 | `_edit_passages` | """SEVERAL EDITS IN ONE CALL (2026-10-21, the feature list: Pi, OpenClaw, oh-my-pi): |
+| 4735 | `_apply_passage` | HELD TO WHAT IT ADDS (2026-09-29, coder-tree run five): a file |
+| 4804 | `(module)` | THE PLAIN FORMS (2026-10-21, the harness study: opencode's second tier, Pi's and |
+| 4879 | `(module)` | THE TREE DOORS (2026-09-28) |
+| 4922 | `(module)` | beside CRLF files is CRLF (the terminator ruling, 2026-09-03). |
+| 4951 | `(module)` | 2026-10-19: "lets start with it writing up the skills and agents"). Steward's |
+| 5172 | `(module)` | THE CHILD'S WALL (2026-09-22, on his word: "sandbox the python"). |
+| 5447 | `load` | 2026-09-10 `doc_pass` claimed 35 phrases where 8 were declared, |
+| 5768 | `_call` | SAY WHAT WAS CHECKED, AND NOTHING ELSE (sitting 82, built |
+| 5769 | `_call` | 2026-09-29). The gate is an allowlist and that is the whole test: |
+| 5836 | `_run_prompt_skill` | sitting 39 waiting for a <content> nobody was going to type twice. |
+| 5842 | `_run_prompt_skill` | 2026-09-08). Sitting 95: "time align the logs" -- four words, no log |
+| 5855 | `_run_prompt_skill` | AN OVERRIDE MOVES THE PROMPT SKILLS WITH THE SEATS (2026-10-31). `/model |
+| 5897 | `(module)` | `<|python_tag|>`. Sitting 84 (2026-09-04): the closing Steward on llama3.2 |
+| 5943 | `(module)` | THE FEATURE LIST'S HANDS (2026-10-21): registered on import, after `skill` exists. |
 
 ### manjuel/spelling.py
 
@@ -2473,6 +2475,6 @@ its line range. The suites are the memory (HANDOFF: test discipline).
 | `test_a_change_that_comes_back_unchanged_is_asked_for_once_more` | 23460-23629 | `RunContext`, `maker`, `maker.AGAINS`, `maker.RULES`, `maker.again_prompt`, `maker.forget`, `maker.new_project`, `maker.page_of`, `maker.report_unchanged`, `maker.run_page`, `maker.same_page`, `maker.save_version` |
 | `test_the_door_reads_the_law_chain_as_law_py_writes_it` | 23632-23784 | — |
 | `test_steward_drives_to_a_check` | 23787-24224 | `DriverMark`, `SV`, `SV.DRIVE_IGNORE`, `SV.DRIVE_NEVER`, `SV.DRIVE_STEPS`, `SV.DRIVE_SUITES`, `SV.door_call`, `SV.door_drive`, `SV.drive`, `SV.drive_parse`, `SV.drive_tools`, `WRITING_SKILLS` |
-| `test_steward_the_maf_agent_is_the_face` | 24227-24349 | `SV`, `SV.FACE`, `SV.FACES`, `SV.MAF_URL`, `SV.door_face_switch`, `SV.door_face_turn`, `SV.face_default`, `SV.maf_url`, `_cl`, `_cl.redirect_stdout` |
-| `test_steward_harness` | 24352-25105 | `QuietServer`, `REVIEW_ONLY_SKILLS`, `SV`, `SV.DRIVE_ALLOW`, `SV.DRIVE_CONTEXT_MAX`, `SV.DRIVE_DENY`, `SV.DRIVE_FALLBACK`, `SV.DRIVE_GRANTS`, `SV.DRIVE_MODEL`, `SV.DRIVE_STEPS`, `SV.Door`, `SV.Drive` |
+| `test_steward_the_maf_agent_is_the_face` | 24227-24372 | `SK`, `SK._mcp_rpc`, `SK._mcp_wait`, `SV`, `SV.FACE`, `SV.FACES`, `SV.MAF_URL`, `SV.door_face_switch`, `SV.door_face_turn`, `SV.face_default`, `SV.maf_ask`, `SV.maf_url` |
+| `test_steward_harness` | 24375-25128 | `QuietServer`, `REVIEW_ONLY_SKILLS`, `SV`, `SV.DRIVE_ALLOW`, `SV.DRIVE_CONTEXT_MAX`, `SV.DRIVE_DENY`, `SV.DRIVE_FALLBACK`, `SV.DRIVE_GRANTS`, `SV.DRIVE_MODEL`, `SV.DRIVE_STEPS`, `SV.Door`, `SV.Drive` |
 

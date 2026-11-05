@@ -4137,12 +4137,15 @@ def _mcp_hint(name: str, err: str) -> str:
             f"with auth_key_create).")
 
 
-def _mcp_rpc(url: str, method: str, params: dict, key: str = "") -> tuple[dict | None, str]:
+def _mcp_rpc(url: str, method: str, params: dict, key: str = "",
+             wait: float | None = None) -> tuple[dict | None, str]:
     """One JSON-RPC call. Returns (result, error-in-plain-words).
 
     stdlib only: urllib, because a dependency for one POST is a dependency the
     whole estate then carries (LAW 6, and the atlas law beside it). `key`, when
-    this ground holds one, rides as the bearer and nowhere else.
+    this ground holds one, rides as the bearer and nowhere else. `wait`, when
+    given, is this call's own bound in seconds (Steward's turn, which can sit
+    on an approval card); without it the call waits `_mcp_wait()`.
     """
     import json as _json
     import urllib.error
@@ -4160,7 +4163,8 @@ def _mcp_rpc(url: str, method: str, params: dict, key: str = "") -> tuple[dict |
     if key:
         headers["Authorization"] = "Bearer " + key
     req = urllib.request.Request(url, body, headers)
-    wait = _mcp_wait()
+    bound = wait is not None
+    wait = float(wait) if bound else _mcp_wait()
     try:
         with urllib.request.urlopen(req, timeout=wait) as r:
             kind = (r.headers.get("Content-Type") or "").lower()
@@ -4169,6 +4173,8 @@ def _mcp_rpc(url: str, method: str, params: dict, key: str = "") -> tuple[dict |
     except urllib.error.URLError as exc:
         return None, f"it did not answer ({exc.reason})"
     except TimeoutError:
+        if bound:
+            return None, f"it did not answer inside {wait:.0f}s (this call's own bound)"
         return None, f"it did not answer inside {wait:.0f}s (the skill's bound, less {_MCP_WAIT_MARGIN:.0f})"
     except ValueError:
         return None, "it answered with something that is not JSON"

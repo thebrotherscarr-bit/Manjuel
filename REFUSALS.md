@@ -1169,8 +1169,8 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 | 1699 | this door has no secret card, so no key can be asked for here. |
 | 1717 | {name} is not one of the driver's own tools. |
 | 2574 | there is no seat named {seat}. The seats are: { |
-| 2905 | there is no seat named {seat}. The seats are: { |
-| 3241 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
+| 2920 | there is no seat named {seat}. The seats are: { |
+| 3256 | mcp_call failed in the engine ({type(exc).__name__}: {exc}). |
 
 ### manjuel/skills.py — 91 sites
 
@@ -1206,67 +1206,67 @@ Stroked: `test_an_unattended_turn_is_not_asked` (11), and over the wire in
 | 3637 | pulling reaches the network and can move gigabytes |
 | 3663 | an index build is still running behind an earlier |
 | 3754 | an index build is already running. |
-| 4338 | this ground declares no MCP server. Declare one |
-| 4351 | this ground declares no MCP server called |
-| 4374 | the address declared for {name!r} is not on this |
-| 4395 | {name} could not be read -- {err}. |
-| 4434 | {name} carries no tool called {tool!r}. |
-| 4436 | {name} could not run {tool!r} -- {err}. |
-| 4443 | {name}'s {tool!r} refused -- |
-| 4459 | the arguments for {tool!r} must be a JSON |
-| 4463 | the arguments for {tool!r} must be a JSON |
-| 4471 | {raw[:80]!r} sits in that request |
-| 4506 | {name} could not be read -- {exc}. |
-| 4528 | {name} carries no tool called {tool!r}. |
-| 4536 | {name} could not run {tool!r} -- {exc}. |
-| 4539 | (the words are on the next line) |
-| 4540 | {name}'s |
-| 4599 | edit_file needs the file to edit as <filepath>, and |
-| 4606 | {rel!r} is not a path this skill may touch ({exc}). |
-| 4608 | there is no {path.name!r} in the workspace to edit. |
-| 4628 | several edits in one call go as pairs -- `{_EDIT_OLD}`, the text, |
-| 4651 | the edit needs exactly one `{_EDIT_OLD}` line and |
-| 4664 | the text after `{_EDIT_OLD}` is empty; nothing to find. |
-| 4666 | the old and new text are identical. Nothing to do. |
-| 4688 | {path.name} has MIXED line endings, so an edit |
-| 4703 | two of the edits overlap in {path.name} (around line |
-| 4725 | that edit would leave {path.name} unparseable |
-| 4736 | that edit would leave {path.name} {added}. |
-| 4748 | {path.name} was written but does not read back as written -- |
-| 4774 | that edit would leave {path.name} invalid JSON -- {exc}. |
-| 4793 | that edit would leave {path.name} failing node --check -- |
-| 4822 | that passage appears {hits} times in {name}, |
-| 4831 | with quotes and dashes made plain, that passage |
-| 4844 | with trailing spaces ignored, that passage appears |
-| 4847 | that passage is not in {name}. Nothing was written. |
-| 4983 | '{path}' is outside the ground. Nothing was written. |
-| 4987 | '{rel.as_posix()}' is a secret, and keys are silent -- never |
-| 4990 | that is CLIENT DATA -- tagged protected, never read into the |
-| 4993 | a `.git/` is the history, and the history is git's to write |
-| 5000 | {_NEVER_WRITTEN_TOP[parts[0]]}. Nothing was written. |
-| 5002 | '{rel.as_posix()}' is a proof stamp, written by the suite that |
-| 5006 | {_NEVER_WRITTEN_FILES[path.name.lower()]}. Nothing was written. |
-| 5008 | '{path.name}' is a binary, and a binary is placed on the |
-| 5032 | the ground is not under version control here, so a line of |
-| 5037 | git could not be asked ({g.error}). Nothing was written. |
-| 5041 | the repository at `{repo.name or repo}` stands {where}, and the |
-| 5073 | that content is not parseable Python -- {exc.msg} at line |
-| 5078 | {path.name} {why}. NOTHING WAS WRITTEN. This is the same |
-| 5088 | {verb} needs the file as <filepath>, relative to the |
-| 5092 | '{rel}' is outside the ground. Nothing was written. |
-| 5109 | '{rel}' is a folder, not a file. Nothing was written. |
-| 5111 | '{path.parent.name}/' is not a folder in the ground, and a seat |
-| 5120 | {path.name} has MIXED line endings, so a write cannot keep what |
-| 5141 | there is no '{rel}' in the ground to edit. ground_write makes a |
-| 5332 | run_python needs the file to run as <filepath> -- a |
-| 5337 | {rel!r} is not a path this skill may run ({exc}). |
-| 5339 | run_python runs Python, and {path.name!r} is not a |
-| 5342 | there is no {path.name!r} in the workspace to run. |
-| 5363 | {path.name} did not finish inside {RUN_TIMEOUT:.0f}s |
-| 5368 | {path.name} could not be started -- {type(exc).__name__}: {exc} |
-| 5772 | the table reviews; it does not act. {why} |
-| 5782 | {who} is not cleared to call '{key}'. |
-| 5808 | '{action}' did not finish within |
+| 4344 | this ground declares no MCP server. Declare one |
+| 4357 | this ground declares no MCP server called |
+| 4380 | the address declared for {name!r} is not on this |
+| 4401 | {name} could not be read -- {err}. |
+| 4440 | {name} carries no tool called {tool!r}. |
+| 4442 | {name} could not run {tool!r} -- {err}. |
+| 4449 | {name}'s {tool!r} refused -- |
+| 4465 | the arguments for {tool!r} must be a JSON |
+| 4469 | the arguments for {tool!r} must be a JSON |
+| 4477 | {raw[:80]!r} sits in that request |
+| 4512 | {name} could not be read -- {exc}. |
+| 4534 | {name} carries no tool called {tool!r}. |
+| 4542 | {name} could not run {tool!r} -- {exc}. |
+| 4545 | (the words are on the next line) |
+| 4546 | {name}'s |
+| 4605 | edit_file needs the file to edit as <filepath>, and |
+| 4612 | {rel!r} is not a path this skill may touch ({exc}). |
+| 4614 | there is no {path.name!r} in the workspace to edit. |
+| 4634 | several edits in one call go as pairs -- `{_EDIT_OLD}`, the text, |
+| 4657 | the edit needs exactly one `{_EDIT_OLD}` line and |
+| 4670 | the text after `{_EDIT_OLD}` is empty; nothing to find. |
+| 4672 | the old and new text are identical. Nothing to do. |
+| 4694 | {path.name} has MIXED line endings, so an edit |
+| 4709 | two of the edits overlap in {path.name} (around line |
+| 4731 | that edit would leave {path.name} unparseable |
+| 4742 | that edit would leave {path.name} {added}. |
+| 4754 | {path.name} was written but does not read back as written -- |
+| 4780 | that edit would leave {path.name} invalid JSON -- {exc}. |
+| 4799 | that edit would leave {path.name} failing node --check -- |
+| 4828 | that passage appears {hits} times in {name}, |
+| 4837 | with quotes and dashes made plain, that passage |
+| 4850 | with trailing spaces ignored, that passage appears |
+| 4853 | that passage is not in {name}. Nothing was written. |
+| 4989 | '{path}' is outside the ground. Nothing was written. |
+| 4993 | '{rel.as_posix()}' is a secret, and keys are silent -- never |
+| 4996 | that is CLIENT DATA -- tagged protected, never read into the |
+| 4999 | a `.git/` is the history, and the history is git's to write |
+| 5006 | {_NEVER_WRITTEN_TOP[parts[0]]}. Nothing was written. |
+| 5008 | '{rel.as_posix()}' is a proof stamp, written by the suite that |
+| 5012 | {_NEVER_WRITTEN_FILES[path.name.lower()]}. Nothing was written. |
+| 5014 | '{path.name}' is a binary, and a binary is placed on the |
+| 5038 | the ground is not under version control here, so a line of |
+| 5043 | git could not be asked ({g.error}). Nothing was written. |
+| 5047 | the repository at `{repo.name or repo}` stands {where}, and the |
+| 5079 | that content is not parseable Python -- {exc.msg} at line |
+| 5084 | {path.name} {why}. NOTHING WAS WRITTEN. This is the same |
+| 5094 | {verb} needs the file as <filepath>, relative to the |
+| 5098 | '{rel}' is outside the ground. Nothing was written. |
+| 5115 | '{rel}' is a folder, not a file. Nothing was written. |
+| 5117 | '{path.parent.name}/' is not a folder in the ground, and a seat |
+| 5126 | {path.name} has MIXED line endings, so a write cannot keep what |
+| 5147 | there is no '{rel}' in the ground to edit. ground_write makes a |
+| 5338 | run_python needs the file to run as <filepath> -- a |
+| 5343 | {rel!r} is not a path this skill may run ({exc}). |
+| 5345 | run_python runs Python, and {path.name!r} is not a |
+| 5348 | there is no {path.name!r} in the workspace to run. |
+| 5369 | {path.name} did not finish inside {RUN_TIMEOUT:.0f}s |
+| 5374 | {path.name} could not be started -- {type(exc).__name__}: {exc} |
+| 5778 | the table reviews; it does not act. {why} |
+| 5788 | {who} is not cleared to call '{key}'. |
+| 5814 | '{action}' did not finish within |
 
 ### manjuel/tools_files.py — 11 sites
 

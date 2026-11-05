@@ -24342,6 +24342,29 @@ def test_steward_the_maf_agent_is_the_face():
         check("maf face: Door.turn asks the face before the council, and /face switches it",
               "door_face_turn(self, objective)" in src and "door_face_switch(objective)" in src
               and src.index("door_face_turn(self, objective)") < src.index("Running pipeline..."))
+
+        from manjuel import skills as SK
+        held_wait = _os.environ.pop("MANJUEL_STEWARD_WAIT", None)
+        real_rpc, waits = SK._mcp_rpc, []
+        try:
+            def spy(u, method, params, key="", wait=None):
+                waits.append((method, wait))
+                return real_rpc(u, method, params, key=key, wait=wait)
+            SK._mcp_rpc = spy
+            seen.clear()
+            reply, err = SV.maf_ask(url, "wait for me", "S-wait")
+            dflt = SV.maf_wait()
+            _os.environ["MANJUEL_STEWARD_WAIT"] = "42"
+            dialled = SV.maf_wait()
+        finally:
+            SK._mcp_rpc = real_rpc
+            _os.environ.pop("MANJUEL_STEWARD_WAIT", None)
+            if held_wait is not None:
+                _os.environ["MANJUEL_STEWARD_WAIT"] = held_wait
+        check("maf face: Steward's turn waits MANJUEL_STEWARD_WAIT (900 s unset), past a skill's 295 s; "
+              "the roster read keeps the skill's bound",
+              reply and not err and dflt == 900.0 and dialled == 42.0 and SK._mcp_wait() < 900
+              and waits == [("tools/list", None), ("tools/call", 900.0)], str((waits, dflt, dialled, err)))
     finally:
         SV.FACE = held_face
         if held_env is not None:

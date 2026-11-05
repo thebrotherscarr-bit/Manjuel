@@ -2634,6 +2634,20 @@ def door_face(door, objective: str) -> bool:
 MAF_DIAL = "steward"
 MAF_URL = "http://127.0.0.1:43121/mcp"
 MAF_TOOL = "Steward"
+# HIS TURN OUTLASTS A SKILL'S BOUND (2026-11-04). A Steward turn can sit on an approval card for up
+# to 660 s and then run the model, so the tools/call that carries it waits MANJUEL_STEWARD_WAIT
+# seconds (default 900), not mcp_call's SKILL_TIMEOUT less the margin (295 s), which gave up first.
+# Only that one call: the roster read and every other skill keep the skill's bound.
+MAF_WAIT_DIAL = "MANJUEL_STEWARD_WAIT"
+MAF_WAIT = 900.0
+
+
+def maf_wait() -> float:
+    """Seconds Steward's turn is waited for: MANJUEL_STEWARD_WAIT, else 900; never under one."""
+    try:
+        return max(1.0, float(os.environ.get(MAF_WAIT_DIAL) or MAF_WAIT))
+    except ValueError:
+        return MAF_WAIT
 
 
 def maf_url() -> str:
@@ -2670,7 +2684,8 @@ def maf_ask(url: str, task: str, session_id: str) -> tuple[str, str]:
     args = {arg: task}
     if "session_id" in (schema.get("properties") or {}):
         args["session_id"] = session_id
-    result, err = _mcp_rpc(url, "tools/call", {"name": tool.get("name"), "arguments": args}, key=key)
+    result, err = _mcp_rpc(url, "tools/call", {"name": tool.get("name"), "arguments": args}, key=key,
+                           wait=maf_wait())
     if err:
         return "", f"his MCP server could not run the turn ({err})"
     text = _mcp_text(result)
