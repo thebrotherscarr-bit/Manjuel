@@ -387,6 +387,13 @@ publish too: it is his to order.
     limits. Its main is protected: a pull request whose checks lock, tool,
     manjuel, steward, jesster and aurora have all passed.
 
+    RETIRED, 2026-11-05 -- NEIRO IS NO LONGER A GATE. On the operator's
+    word ("do it, you have authorization to set it all up on github"):
+    each part's own CI and protected main is the gate; the Estate's
+    versions are in Jesster's Estate status. The Neiro repository is
+    archived on GitHub (read-only, kept public for history); its lock is
+    no longer refreshed. Steward runs the Estate; Jesster is the center.
+
 ## RULE 13 — EVERYTHING RUNS ON THE GLASS, NOT ON MIRRORS.
 
 Recorded 2026-10-05 on the operator's word: "Prove it live in the glass,
