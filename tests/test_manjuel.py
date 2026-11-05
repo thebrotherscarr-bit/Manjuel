@@ -16365,6 +16365,138 @@ def test_the_council_asks_for_both_kinds_of_answer(reg, lib, book):
         _os.environ.update(saved)
 
 
+def test_the_council_speaks_both_mcp_eras(reg, lib, book):
+    """MCP 2026-07-28 (https://modelcontextprotocol.io/specification/2026-07-28/changelog)
+    has no initialize: the version and the client's capabilities ride every
+    request's `_meta`, mirrored into the MCP-Protocol-Version, Mcp-Method and
+    Mcp-Name headers, and `server/discover` says what a door speaks. A client
+    that must reach both kinds of door asks first and falls back
+    (basic/versioning, "Backward Compatibility with Initialization-Based
+    Versions").
+
+    A stub on loopback plays three doors at three addresses: a 2026-07-28 one
+    that refuses the handshake and any request without the envelope, a
+    2025-06-18 one that knows no server/discover, and one that speaks only a
+    version nobody here does. Nothing here reaches a real door.
+    """
+    import http.server as _hs
+    import json as _json
+    import os as _os
+    import threading as _th
+    from manjuel import skills as _sk
+
+    V = "io.modelcontextprotocol/protocolVersion"
+    seen: list[dict] = []
+
+    class Stub(_hs.BaseHTTPRequestHandler):
+        def do_POST(self):
+            n = int(self.headers.get("Content-Length") or 0)
+            req = _json.loads(self.rfile.read(n) or b"{}")
+            kind = self.path.strip("/")
+            meta = (req.get("params") or {}).get("_meta") or {}
+            m = req.get("method")
+            seen.append({"door": kind, "method": m, "meta": meta.get(V),
+                         "hv": self.headers.get("MCP-Protocol-Version"),
+                         "hm": self.headers.get("Mcp-Method"),
+                         "hn": self.headers.get("Mcp-Name")})
+            status = 200
+            if kind == "future":
+                status, out = 400, {"jsonrpc": "2.0", "id": 1, "error": {
+                    "code": -32022, "message": "Unsupported protocol version",
+                    "data": {"supported": ["2099-01-01"], "requested": meta.get(V)}}}
+            elif kind == "legacy":
+                if m == "tools/list":
+                    out = {"jsonrpc": "2.0", "id": 1, "result": {"tools": [{"name": "t"}]}}
+                elif m == "tools/call":
+                    out = {"jsonrpc": "2.0", "id": 1, "result": {"content": [
+                        {"type": "text", "text": f"legacy t, envelope={V in meta}"}]}}
+                elif m == "initialize":
+                    out = {"jsonrpc": "2.0", "id": 1, "result": {"protocolVersion": "2025-06-18"}}
+                else:
+                    out = {"jsonrpc": "2.0", "id": 1, "error": {"code": -32601, "message": f"unknown method {m}"}}
+            elif m == "initialize" or meta.get(V) != "2026-07-28" or self.headers.get("MCP-Protocol-Version") != "2026-07-28":
+                status, out = 400, {"jsonrpc": "2.0", "id": 1, "error": {
+                    "code": -32022, "message": "Unsupported protocol version",
+                    "data": {"supported": ["2026-07-28"], "requested": meta.get(V)}}}
+            elif m == "server/discover":
+                out = {"jsonrpc": "2.0", "id": 1, "result": {
+                    "resultType": "complete", "supportedVersions": ["2026-07-28"], "capabilities": {"tools": {}}}}
+            elif m == "tools/list":
+                out = {"jsonrpc": "2.0", "id": 1, "result": {
+                    "resultType": "complete", "tools": [{"name": "t"}], "ttlMs": 0, "cacheScope": "private"}}
+            elif m == "tools/call":
+                name = (req.get("params") or {}).get("name")
+                if self.headers.get("Mcp-Name") != name:
+                    status, out = 400, {"jsonrpc": "2.0", "id": 1, "error": {"code": -32020, "message": "Header mismatch"}}
+                else:
+                    out = {"jsonrpc": "2.0", "id": 1, "result": {"resultType": "complete", "content": [
+                        {"type": "text", "text": f"modern {name} at {meta.get(V)}"}]}}
+            else:
+                status, out = 404, {"jsonrpc": "2.0", "id": 1, "error": {"code": -32601, "message": f"unknown method {m}"}}
+            body = _json.dumps(out).encode("utf-8")
+            self.send_response(status)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *a):        # the stub says nothing on the console
+            pass
+
+    srv = _quiet(_hs.HTTPServer)(("127.0.0.1", 0), Stub)
+    port = srv.server_address[1]
+    _th.Thread(target=srv.serve_forever, daemon=True).start()
+    call = lambda **kw: _sk._HANDLERS["mcp_call"](None, kw)
+    saved = {k: v for k, v in _os.environ.items() if k.startswith("MANJUEL_MCP_")}
+    for k in saved:
+        del _os.environ[k]
+    held_era = dict(_sk._MCP_ERA)
+    _sk._MCP_ERA.clear()
+    try:
+        _os.environ["MANJUEL_MCP_NEW"] = f"http://127.0.0.1:{port}/modern"
+        _os.environ["MANJUEL_MCP_OLD"] = f"http://127.0.0.1:{port}/legacy"
+        _os.environ["MANJUEL_MCP_FAR"] = f"http://127.0.0.1:{port}/future"
+
+        out = call(server="new", tool="t", content="{}")
+        new = [r for r in seen if r["door"] == "modern"]
+        check("a 2026-07-28 door is asked server/discover first, then called with no initialize",
+              out == "modern t at 2026-07-28"
+              and [r["method"] for r in new] == ["server/discover", "tools/call"], str(new))
+        check("   and every request carries the _meta envelope and its headers, Mcp-Name on the call",
+              all(r["meta"] == r["hv"] == "2026-07-28" and r["hm"] == r["method"] for r in new)
+              and new[-1]["hn"] == "t", str(new))
+        seen.clear()
+        out = call(server="new")
+        check("   and the door's era is kept: the next call asks no server/discover again",
+              "new carries 1 tools" in out and [r["method"] for r in seen] == ["tools/list"], str(seen))
+        check("an Mcp-Name outside plain ASCII rides base64, as the spec's Value Encoding says",
+              _sk._mcp_headers("tools/call", {"name": "wetter-é"})["Mcp-Name"]
+              == "=?base64?" + __import__("base64").b64encode("wetter-é".encode()).decode() + "?=")
+
+        seen.clear()
+        out = call(server="old", tool="t", content="{}")
+        old = [r["method"] for r in seen if r["door"] == "legacy"]
+        check("a 2025-06-18 door that knows no server/discover gets the handshake, as before",
+              old == ["server/discover", "initialize", "tools/call"], str(old))
+        check("   and its calls carry no envelope",
+              out == "legacy t, envelope=False" and all(r["meta"] is None for r in seen[1:]), out)
+
+        seen.clear()
+        out = call(server="far", tool="t", content="{}")
+        check("a door that speaks only a version this ground does not is refused by name, and nothing is called",
+              out.startswith("Refused") and "2099-01-01" in out
+              and {r["method"] for r in seen} == {"server/discover"}, out[:200])
+        check("   and that refusal is not kept: the next call asks again",
+              "http://127.0.0.1:%d/future" % port not in _sk._MCP_ERA)
+    finally:
+        srv.shutdown()
+        _sk._MCP_ERA.clear()
+        _sk._MCP_ERA.update(held_era)
+        for k in ("MANJUEL_MCP_NEW", "MANJUEL_MCP_OLD", "MANJUEL_MCP_FAR"):
+            _os.environ.pop(k, None)
+        _os.environ.update(saved)
+
+
 def test_the_mcp_skill_never_leaves_this_machine(reg, lib, book):
     """RULE 4 -- the estate is local -- held in code, on the one skill that
     could break it.
@@ -25407,6 +25539,7 @@ def main() -> int:
     test_the_mcp_skill_never_leaves_this_machine(reg, lib, book)
     test_the_council_carries_its_key_to_the_door(reg, lib, book)
     test_the_council_asks_for_both_kinds_of_answer(reg, lib, book)
+    test_the_council_speaks_both_mcp_eras(reg, lib, book)
     test_a_spelled_out_door_call_is_written_by_the_engine(reg, lib, book)
     test_a_refusal_reads_as_failed_everywhere(reg, lib, book)
     test_a_skill_cannot_hang_the_repl(reg, lib, book)

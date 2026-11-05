@@ -4137,21 +4137,59 @@ def _mcp_hint(name: str, err: str) -> str:
             f"with auth_key_create).")
 
 
-def _mcp_rpc(url: str, method: str, params: dict, key: str = "",
-             wait: float | None = None) -> tuple[dict | None, str]:
-    """One JSON-RPC call. Returns (result, error-in-plain-words).
+# BOTH MCP ERAS (2026-11-05). Spec 2026-07-28
+# (https://modelcontextprotocol.io/specification/2026-07-28/changelog;
+# basic/versioning, "Backward Compatibility with Initialization-Based
+# Versions"; transports/streamable-http, "Backward Compatibility"): there is no
+# initialize. The protocol version and the client's capabilities ride every
+# request's `_meta`, and are mirrored into the MCP-Protocol-Version, Mcp-Method
+# and Mcp-Name headers. A door is asked `server/discover` once per address. One
+# that names 2026-07-28 is spoken to that way. Anything else is a 2025-06-18
+# door and is spoken to as before, handshake included: an error that is not a
+# modern one, a result naming no modern version, or a 4xx with no JSON-RPC body.
+# The verdict is kept per address for the life of this process, as the spec
+# says a client SHOULD, and a door that stops answering is asked again. A
+# refused key (401, 403) is not a verdict, so it is not kept.
+_MCP_MODERN = "2026-07-28"
+_MCP_LEGACY = "2025-06-18"
+_MCP_HANDSHAKE = ("2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05")
+_MCP_UNSUPPORTED = -32022
+_MCP_PROBE_WAIT = 30.0
+_MCP_ERA: dict = {}
+_MCP_NAME_FIELD = {"tools/call": "name", "prompts/get": "name", "resources/read": "uri"}
 
-    stdlib only: urllib, because a dependency for one POST is a dependency the
-    whole estate then carries (LAW 6, and the atlas law beside it). `key`, when
-    this ground holds one, rides as the bearer and nowhere else. `wait`, when
-    given, is this call's own bound in seconds (Steward's turn, which can sit
-    on an approval card); without it the call waits `_mcp_wait()`.
-    """
+
+def _mcp_meta() -> dict:
+    """The 2026-07-28 envelope every modern request carries."""
+    from . import __version__ as _ver
+    return {"io.modelcontextprotocol/protocolVersion": _MCP_MODERN,
+            "io.modelcontextprotocol/clientInfo": {"name": "manjuel", "version": _ver},
+            "io.modelcontextprotocol/clientCapabilities": {}}
+
+
+def _mcp_headers(method: str, params: dict) -> dict:
+    """The request headers a 2026-07-28 Streamable HTTP POST MUST carry. A
+    name that is not plain header-safe ASCII rides as `=?base64?...?=`."""
+    import base64 as _b64
+    h = {"MCP-Protocol-Version": _MCP_MODERN, "Mcp-Method": method}
+    field = _MCP_NAME_FIELD.get(method)
+    if field and params.get(field) is not None:
+        v = str(params[field])
+        if (not all(32 <= ord(c) < 127 for c in v) or v != v.strip()
+                or (v.startswith("=?base64?") and v.endswith("?="))):
+            v = "=?base64?" + _b64.b64encode(v.encode("utf-8")).decode("ascii") + "?="
+        h["Mcp-Name"] = v
+    return h
+
+
+def _mcp_post(url: str, msg: dict, key: str, wait: float, bound: bool,
+              extra: dict | None = None) -> tuple[dict | None, str, int]:
+    """One POST. (answer, "", status) when a JSON-RPC message came back -- a
+    4xx carrying one included -- else (None, error-in-plain-words, status)."""
     import json as _json
     import urllib.error
     import urllib.request
-    body = _json.dumps({"jsonrpc": "2.0", "id": 1,
-                        "method": method, "params": params}).encode("utf-8")
+    body = _json.dumps(msg).encode("utf-8")
     # BOTH KINDS OF ANSWER ARE ASKED FOR (2026-10-31). The MCP spec's Streamable
     # HTTP transport (2025-06-18, Transports) says a client MUST list
     # application/json and text/event-stream in Accept, and MUST read either
@@ -4160,30 +4198,103 @@ def _mcp_rpc(url: str, method: str, params: dict, key: str = "",
     # atlas's door ignores Accept and answers JSON, so it is unchanged.
     headers = {"Content-Type": "application/json",
                "Accept": "application/json, text/event-stream"}
+    headers.update(extra or {})
     if key:
         headers["Authorization"] = "Bearer " + key
     req = urllib.request.Request(url, body, headers)
-    bound = wait is not None
-    wait = float(wait) if bound else _mcp_wait()
+    status = 0
     try:
         with urllib.request.urlopen(req, timeout=wait) as r:
+            status = r.status
             kind = (r.headers.get("Content-Type") or "").lower()
             text = r.read().decode("utf-8", "replace")
         row = _mcp_sse(text) if kind.startswith("text/event-stream") else _json.loads(text)
+    except urllib.error.HTTPError as exc:
+        # A modern door answers a refused version or header with 400 and a
+        # JSON-RPC body; anything else here is still "did not answer".
+        status = exc.code
+        try:
+            row = _json.loads(exc.read().decode("utf-8", "replace"))
+        except Exception:
+            row = None
+        if not (isinstance(row, dict) and row.get("jsonrpc") == "2.0"):
+            return None, f"it did not answer ({exc.reason})", status
     except urllib.error.URLError as exc:
-        return None, f"it did not answer ({exc.reason})"
+        return None, f"it did not answer ({exc.reason})", status
     except TimeoutError:
         if bound:
-            return None, f"it did not answer inside {wait:.0f}s (this call's own bound)"
-        return None, f"it did not answer inside {wait:.0f}s (the skill's bound, less {_MCP_WAIT_MARGIN:.0f})"
+            return None, f"it did not answer inside {wait:.0f}s (this call's own bound)", status
+        return None, f"it did not answer inside {wait:.0f}s (the skill's bound, less {_MCP_WAIT_MARGIN:.0f})", status
     except ValueError:
-        return None, "it answered with something that is not JSON"
+        return None, "it answered with something that is not JSON", status
     except Exception as exc:                     # the transport died
-        return None, f"{type(exc).__name__}: {exc}"
-    if isinstance(row, dict) and row.get("error"):
+        return None, f"{type(exc).__name__}: {exc}", status
+    return (row if isinstance(row, dict) else {}), "", status
+
+
+def _mcp_era(url: str, key: str, wait: float, bound: bool) -> tuple[str, str]:
+    """("modern" | "legacy", "") for the door at `url`, or ("", error) when it
+    did not answer the probe or speaks no version this ground does."""
+    era = _MCP_ERA.get(url)
+    if era:
+        return era, ""
+    params = {"_meta": _mcp_meta()}
+    row, err, status = _mcp_post(
+        url, {"jsonrpc": "2.0", "id": 1, "method": "server/discover", "params": params},
+        key, min(wait, _MCP_PROBE_WAIT), bound, _mcp_headers("server/discover", params))
+    if status in (401, 403):
+        return "legacy", ""                      # a refused key is not a verdict
+    if row is None and not 400 <= status < 500:
+        return "", err                           # no answer, or a 5xx, is not a verdict
+    result = (row or {}).get("result")
+    error = (row or {}).get("error")
+    if isinstance(result, dict) and _MCP_MODERN in (result.get("supportedVersions") or []):
+        era = "modern"
+    else:
+        if isinstance(error, dict) and error.get("code") == _MCP_UNSUPPORTED:
+            supported = [str(v) for v in ((error.get("data") or {}).get("supported") or [])]
+            if supported and not any(v in _MCP_HANDSHAKE for v in supported):
+                return "", (f"it speaks MCP {', '.join(supported)}, and this ground "
+                            f"speaks {_MCP_MODERN} and {_MCP_LEGACY}")
+        era = "legacy"
+    _MCP_ERA[url] = era
+    return era, ""
+
+
+def _mcp_rpc(url: str, method: str, params: dict, key: str = "",
+             wait: float | None = None) -> tuple[dict | None, str]:
+    """One JSON-RPC call. Returns (result, error-in-plain-words).
+
+    stdlib only: urllib, because a dependency for one POST is a dependency the
+    whole estate then carries (LAW 6, and the atlas law beside it). `key`, when
+    this ground holds one, rides as the bearer and nowhere else. `wait`, when
+    given, is this call's own bound in seconds (Steward's turn, which can sit
+    on an approval card); without it the call waits `_mcp_wait()`. The door's
+    era (`_mcp_era`) decides how the call is put: a 2026-07-28 door gets the
+    `_meta` envelope and its headers, and no initialize, which it does not
+    have; a 2025-06-18 door gets the call as it always did.
+    """
+    bound = wait is not None
+    wait = float(wait) if bound else _mcp_wait()
+    era, err = _mcp_era(url, key, wait, bound)
+    if err:
+        return None, err
+    params = dict(params or {})
+    extra = None
+    if era == "modern":
+        if method == "initialize":
+            return {}, ""                        # 2026-07-28 has no handshake
+        params["_meta"] = {**_mcp_meta(), **(params.get("_meta") or {})}
+        extra = _mcp_headers(method, params)
+    row, err, _ = _mcp_post(url, {"jsonrpc": "2.0", "id": 1, "method": method, "params": params},
+                            key, wait, bound, extra)
+    if row is None:
+        _MCP_ERA.pop(url, None)                  # a door that stopped answering is asked again
+        return None, err
+    if row.get("error"):
         err = row["error"]
-        return None, f"it refused: {err.get('message') or err}"
-    return (row or {}).get("result") or {}, ""
+        return None, f"it refused: {(err.get('message') if isinstance(err, dict) else '') or err}"
+    return row.get("result") or {}, ""
 
 
 def _mcp_sse(text: str) -> dict:
@@ -4421,11 +4532,12 @@ def _mcp_call(env: SkillExecutionEnv, args: dict) -> str:
     if refused:
         return refused
 
-    # The handshake first, as the protocol asks. A server that does not need it
-    # is not harmed by it, and one that does would refuse everything without it.
+    # The handshake first, as a 2025-06-18 door asks. A server that does not
+    # need it is not harmed by it, and one that does would refuse everything
+    # without it. To a 2026-07-28 door, which has none, `_mcp_rpc` sends nothing.
     from . import __version__ as _ver
     _mcp_rpc(url, "initialize", {
-        "protocolVersion": "2025-06-18", "capabilities": {},
+        "protocolVersion": _MCP_LEGACY, "capabilities": {},
         "clientInfo": {"name": "manjuel", "version": _ver}}, key=key)
 
     result, err = _mcp_rpc(url, "tools/call",
