@@ -394,6 +394,12 @@ publish too: it is his to order.
     archived on GitHub (read-only, kept public for history); its lock is
     no longer refreshed. Steward runs the Estate; Jesster is the center.
 
+    RENAMED, 2026-11-05 -- ATLAS IS AURORA ON GITHUB. On the operator's
+    word ("Rename atlas - aurora github only. do it."): the repository
+    named Atlas in this rule is thebrotherscarr-bit/Aurora. The local
+    folder atlas/, its binaries and the door's project id "atlas" are
+    unchanged; the old URL redirects.
+
 ## RULE 13 — EVERYTHING RUNS ON THE GLASS, NOT ON MIRRORS.
 
 Recorded 2026-10-05 on the operator's word: "Prove it live in the glass,
