@@ -25,7 +25,7 @@ Estate's current shape:
 - **SecondBrain** ([Jesster](https://github.com/thebrotherscarr-bit/Jesster)) is his console and
   the hub: its Agent tab is where the operator works with Steward.
 - **Manjuel** (this repository) is the ground and the record.
-- **Atlas** (Aurora; [Atlas](https://github.com/thebrotherscarr-bit/Atlas)) is parked until Steward
+- **Atlas** (Aurora; [Aurora](https://github.com/thebrotherscarr-bit/Aurora)) is parked until Steward
   has visible computer control. The door and the glass described below are Atlas's.
 - **Neiro** has been retired as a gate.
 
@@ -80,7 +80,7 @@ measurement run by name; RULE 4, amended 2026-10-02.)
 this repository alone gives the engine and no glass:
 
     core    https://github.com/thebrotherscarr-bit/Manjuel.git
-    atlas   https://github.com/thebrotherscarr-bit/Atlas.git
+    atlas   https://github.com/thebrotherscarr-bit/Aurora.git
 
 ## How it is driven: SITTING LAW 11
 
@@ -205,7 +205,7 @@ README, retire". The whole of it is in his notes, tag `quickstart`.)
 binaries are not source: no `bin/` (whisper; listening is off until you supply
 one), an empty `index/` (`index ground` builds it), no `logs/` or `sessions/`
 (your first boot is sitting 1), no `.env` (copy `.env.example` and fill it in
-by hand), and no `atlas/` (`git clone https://github.com/thebrotherscarr-bit/Atlas.git atlas`).
+by hand), and no `atlas/` (`git clone https://github.com/thebrotherscarr-bit/Aurora.git atlas`).
 **The first boot shows a RED GATE, and that is correct**: it will not call
 proven what you have not proven. Run the strokes, the smoke and the standup
 and it goes quiet. The first brief is the author's (DAYBOOK, HANDOFF and TASKS

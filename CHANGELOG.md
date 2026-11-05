@@ -34,6 +34,10 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### Atlas's GitHub repository is Aurora (2026-11-05; his word: "Rename atlas - aurora github only. do it.")
+
+- **README.md** and **RUNBOOK.md** clone `https://github.com/thebrotherscarr-bit/Aurora.git` into `atlas`, and the Estate list links Aurora. GitHub's name only: the folder `atlas/`, the binaries, the door's tools and its project id `atlas` are unchanged; the old URL redirects. Nothing in `manjuel/` moved: no restart.
+
 ### the repository docs: the README says the Estate's shape today, SECURITY.md and TRADEMARKS.md join the root, LICENSE reads as MIT (2026-11-05; his word: "keep them all public, just make sure all the docs and licenses and whatnot are all set up properly for everything")
 
 - **README.md**: "The Estate today" opens the book: Steward runs everything, SecondBrain (Jesster) is his console and the hub, Manjuel the ground and the record, Atlas parked until visible computer control, Neiro retired as a gate; the council, door and glass sections read as the engine's design and history, and the hosted route stays off unless he turns it on. "On another PC" gives the install: Ollama and `steward:1`, SecondBrain's release zip, a Steward clone.
