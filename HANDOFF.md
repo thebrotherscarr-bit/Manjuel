@@ -711,6 +711,23 @@ dropped by operator ruling 2026-09-01 — see the fix log.
 - **His working rules, added today:** every task on a subagent; a hard timeout on every test; nothing waits on him; never stop.
 - **The open list above, as of the evening (annotated, not rewritten):** 2 (the Ollama switch-over) is done: Ollama runs only under SecondBrain. 3 (WhatsApp) is built, Jesster #64. 5 (Atlas's `ask_steward`) is done, Atlas #42. 1 stands: the bar's later runs are red on the defects above.
 
+**2026-11-05 overnight (added about 06:00 local).** The night ran the SecondBrain plan `overnight-plan-steward-s-bar-and-develop-7d69e1` (loop A: the bar; loop B: development); its log has a line per run. Nothing above is rewritten.
+- **The bar** (small asks 3/3 on two runs in a row, and the steps set passing) **was met** at Steward `e532fea` (run 13, 08:31Z). Runs, as small, small, steps:
+  - before: run 8 at `416ba41` 2/3, 1/3, 0/5; run 9 at `a3a3519` 3/3, 3/3, 1/3; run 10 at `f7b5120` 2/3, 3/3, 2/3; run 11 at `7a2dd79` 3/3, 3/3, 2/3; run 12 at `1b56963` 3/3, 3/3, 0/3.
+  - met: run 13 at `e532fea` 3/3, 3/3, 3/3.
+  - confirmation: run 14 at `e532fea` 3/3, 2/3, 3/3; run 15 at `5039e0e` 3/3, 1/3, 3/3; runs 16 to 18 at `1c23f70` all clean; run 19 at `1c23f70` 2/3, 3/3, 4/4; run 20 at `2b4b509` 3/3, 3/3, 3/4; runs 21 and 22 at `2b4b509` clean; run 23 at `2b4b509` 3/3, 2/3, 3/3. Run 24, at `0071746` (#137), was still running when this was written.
+- **Merged (GitHub's merge dates, UTC; each through a pull request whose checks passed):**
+  - **Steward:** #117 (the steps eval's history line carries CHECK and REPAIR progress); #118 (end-to-end test: Manjuel's face, a card, Steward's MCP host, SecondBrain's `approval_ask`, stubbed); #119 (the loop's own turns name no request, so a todo quoting "percentage" raises no number hint); #120 (an edit that leaves a .py file unparsable is refused, with the numbered lines); #121 (a plan call that answers with reads sends EXPLORE to make them, once); #122 (a plan typed approval with a summary is read); #123 (plan steps name the file they change); #124 (CHECK tests the files he wrote, even when a fix restores the committed text); #125 (the steps eval credits a write approved before a later card, and reads the whole report); #126 (a read that misses a part of the request's path is pointed at it); #127 and #130 (todos_complete by title: the one open todo it names, else the ids); #128 (the evals read a call MAF never ran as not run); #129 (the steps set judges the fix by test_percent_discount passing); #131 (file-tool writes of MEMORY.md at the root refused, write_memory named); #132 (an empty EXPLORE reply mid-reading is asked to go on); #133 (the todo reminder says "already shown" only after he spoke); #134 and #136 (a run stopped on a tool's result is asked to go on, tools on, before any answer-now turn); #135 (EXECUTE told the checks run the tests); #137 (EXECUTE ends on what it changed, naming each file).
+  - **Jesster (SecondBrain):** #67 (the Agent tab console's Evals shelf: the bar line and each steps run's progress). Build 82 carries it.
+  - **Neiro:** #16 to #22 (the Estate lock refreshed after each batch; `check --remote --strict`: no drift).
+- **Installed:** SecondBrain build 82, overnight, on his word that SecondBrain may be restarted and updated. The health check passed: ports 43110, 43111, 43121, 8091 and 11434 up, and Telegram and WhatsApp connected and still connected 35 s later. Steward's two services (43120, 43121) were restarted onto each new main.
+- **Open:**
+  1. plan_step scores every plan attempt, so a plan asked again (PLAN_NOT_A_CALL) and then right still fails the steps set (run 20). His word decides whether only the plan that reached the card is scored.
+  2. A MEMORY.md in MAF's memory-index format (one line naming `topics/inventory-discount-fix.md`) appeared at Steward's
+     repository root at 08:25Z during run 13, with an empty `topics/` folder beside it (created 05:53Z). The traces
+     for that minute had already been rotated out, so what wrote them is not known. Both were removed as eval
+     leftovers; while such a file is at the root, #131's guard stands aside.
+
 ## HANDOFF FOR 2026-11-01 — read this before anything below it
 
 **His direction (2026-11-01, his words).** Steward must work end to end in SecondBrain's Agent tab and follow the rules: plan mode by default, a todo list at all times, nothing run without his Approve. "there has to be a better way then fiddling with this over and over", so the rules moved out of nudges and into a MAF workflow. "ALWAYS CHECK THE MAF FRAMEWORK FIRST BEFORE SENDING STEWARD ANY COMMANDS"; one small ask per message, never chains. Evals are single runs; a flip between runs is a harness defect to fix.

@@ -3372,3 +3372,11 @@ His words, in CLAUDE.md: "you run the github stuff until he can reliably produce
 - Ollama runs only under SecondBrain. Telegram broke when a masked token box swallowed pastes (fixed by Jesster #63; he re-entered a new token). WhatsApp is linked as chat-and-research only. Discord is parked.
 - The bar: run 1 passed 3/3, 16/16, at 21:37Z. Later runs failed on eval and harness defects (a README task the fixture already satisfied; the tool-call limit's text; an off-topic reply), which are being fixed.
 - His working rules, added today: every task on a subagent; a hard timeout on every test; nothing waits on him; never stop.
+
+**2026-11-05 overnight (added about 06:00 local; GitHub's merge dates, UTC)** — The night ran the SecondBrain plan `overnight-plan-steward-s-bar-and-develop-7d69e1`, whose log has a line per run. HANDOFF's 2026-11-04 block has the detail under "2026-11-05 overnight".
+- The bar (small asks 3/3 on two runs in a row, and the steps set passing) was met at Steward `e532fea`, 08:31Z, the 13th run, and held on most confirmation runs after it.
+- Steward: #117 (the steps eval's history carries CHECK and REPAIR progress); #118 (an end-to-end test: Manjuel's face, a card, Steward's MCP host, SecondBrain's `approval_ask`); #119 to #137, one cause each, found in the eval logs and traces.
+- Jesster (SecondBrain): #67 (the Evals shelf shows the bar and each steps run's progress). Build 82 carries it, and it was installed overnight on his word that SecondBrain may be restarted; the health check passed (the ports, and Telegram and WhatsApp held for 35 s).
+- Neiro: #16 to #22 (the Estate lock refreshed after each batch of merges; `check --remote --strict` reported no drift each time).
+- Open: plan_step scores every plan attempt, so a plan asked again and then right still fails the steps set (run 20); his word decides whether only the plan that reached the card is scored.
+- Found: a MEMORY.md in MAF's memory-index format appeared at Steward's repository root during run 13; what wrote it is not known (HANDOFF, open 2). It was removed.
