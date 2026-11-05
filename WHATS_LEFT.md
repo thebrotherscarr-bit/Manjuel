@@ -1,5 +1,10 @@
 # WHAT'S LEFT
 
+> **2026-11-05:** the council is retired (superseded by MAF Steward, the operator, 2026-11-04), and the Estate's
+> design and build plan now live in Steward's repository: `docs/ARCHITECTURE.md` and the decision records in
+> `docs/decisions/` (https://github.com/thebrotherscarr-bit/Steward/tree/main/docs). The lines below are kept as the
+> record; what is open for the Estate today is in that plan.
+
 Everything still open, in one place, in plain words.
 
 Written by hand on 2026-09-29 from the record: TASKS.md (all 35 open boxes), SPEC.md section 4

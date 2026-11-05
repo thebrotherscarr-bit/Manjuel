@@ -1,5 +1,10 @@
 # SPEC — what manjuel is, and when it is done
 
+> **2026-11-05:** the council described below is retired (superseded by MAF Steward, the operator, 2026-11-04), and
+> the Estate's design now lives in Steward's repository: `docs/ARCHITECTURE.md` and the decision records in
+> `docs/decisions/` (https://github.com/thebrotherscarr-bit/Steward/tree/main/docs). Read this file as the engine's
+> contract and history; where it disagrees with those, they win.
+
 Written 2026-09-04 on the operator's word ("getting close to an actual
 product, review missing specs, and write full spec -- 'when done'"), from a
 full read of the code, the record and the laws. This is the one document
