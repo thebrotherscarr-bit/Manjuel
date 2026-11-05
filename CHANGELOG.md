@@ -34,6 +34,12 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### core: the council speaks MCP 2026-07-28 to a door that does, and 2025-06-18 to one that does not (2026-11-05; the Estate's doors now answer 2026-07-28, spec https://modelcontextprotocol.io/specification/2026-07-28/changelog)
+
+- **`manjuel/skills.py`: `_mcp_rpc`** asks a door `server/discover` once per address (`_mcp_era`) and keeps the verdict for the process, as basic/versioning says a client SHOULD. A door that names 2026-07-28 gets the `_meta` envelope (`_mcp_meta`: protocolVersion, clientInfo, clientCapabilities) on every request, with the MCP-Protocol-Version, Mcp-Method and Mcp-Name headers (`_mcp_headers`, base64 for a name that is not plain ASCII), and no initialize: `_mcp_call`'s handshake sends nothing there. Any other answer is a 2025-06-18 door and is spoken to as before: an error that is not a modern one, a result naming no modern version, or a 4xx with no JSON-RPC body. A -32022 naming only versions neither era speaks is refused by name. No answer, a 5xx, or a refused key (401, 403) is not a verdict: nothing is kept, and the next call asks again. **`_mcp_post`** is the POST, and now reads a JSON-RPC body off a 4xx.
+- **Stroke** (`tests/test_manjuel.py`, `test_the_council_speaks_both_mcp_eras`): a stub plays a 2026-07-28 door (it refuses initialize and any request without the envelope), a 2025-06-18 door, and a door that speaks only a future version. Forcing `_mcp_era` to legacy reddens three. The Accept, key, Steward-face and spelled-out-door strokes stay green. Restart required: `manjuel/` moved.
+- **BUILDMAP.md** and **REFUSALS.md**'s generated tail regenerated (`tests/buildmap.py`, `tests/refusals.py`).
+
 ### core: the face waits out Steward's turn -- 900 s, not a skill's 295 (2026-11-04; a Steward turn can sit on an approval card up to 660 s plus model time, and the face gave up first)
 
 - **`manjuel/skills.py`: `_mcp_rpc(..., wait=None)`** takes an optional bound for one call; without it every skill waits `_mcp_wait()` as before. **`manjuel/serve.py`: `maf_wait()`** reads `MANJUEL_STEWARD_WAIT` (default 900) and `maf_ask` passes it to the `tools/call` that carries Steward's turn only; the roster read keeps the skill's bound.
