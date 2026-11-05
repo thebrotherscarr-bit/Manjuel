@@ -3380,3 +3380,11 @@ His words, in CLAUDE.md: "you run the github stuff until he can reliably produce
 - Neiro: #16 to #22 (the Estate lock refreshed after each batch of merges; `check --remote --strict` reported no drift each time).
 - Open: plan_step scores every plan attempt, so a plan asked again and then right still fails the steps set (run 20); his word decides whether only the plan that reached the card is scored.
 - Found: a MEMORY.md in MAF's memory-index format appeared at Steward's repository root during run 13; what wrote it is not known (HANDOFF, open 2). It was removed.
+
+**2026-11-05 daytime (added about 09:00 local; GitHub's merge dates, UTC)** — HANDOFF's 2026-11-04 block has the detail under "2026-11-05 daytime".
+- The T1 held-out bar (v2) was met: 5/5, 24/24 at Steward `2681f88` and again at `6401b56`. The v1 run at `e94cb90` (3/5) was fixed by #144: no `execute_code` into the sandbox's copy, and a wider on-topic check, so the sets moved to v2.
+- One model for everything: Steward #142, the coder is steward:1 by default (his ruling: "one model to rule them all").
+- The transport comparison: Steward #145 fixed the AG-UI host's crash (hosts load their code at start), the Responses reply scoring and `compare-transports` across set versions. A fresh three-way run is going on `6401b56`; the verdict is pending.
+- Steward also merged #138 to #141 and #143 (AG-UI host, versioned sets, transports, ext-bfcl v1 and ext-aider-py v1, run-bar.ps1). Jesster merged #68 to #71 and Atlas #44. His word: long runs go overnight.
+- His rulings: at night the eval runs become WORKFLOW automations in SecondBrain, and by day Steward stays his general-purpose agent. His "Startup" automation is the baseline. Its notes are reported to show it never produced a summary, which is not verified. It is being tuned as a recipe and written up as an `automations` skill; that build is in progress.
+- Open: the AG-UI verdict; the automations build; BFCL and Aider as nightly automations; the SecondBrain install with Jesster #71; AG-UI step 3; the A2UI pilot after AG-UI step 2; dev-path tiers T3 and T4.
