@@ -34,6 +34,12 @@ hand that iterates without updating this file is out of line.
 
 ## Unreleased
 
+### notes: Claude Code's `notes` server is notes-only, and sync.ps1 no longer restarts the dead relay and notes server (2026-11-05; Steward's ADR-0010, "Notes are central in Jesster"; his word: "archive has been reconciled and sorted, no longer needs digging or whatever. the notes should all be coming into jesster and centralized. ADR says? simple and cenral.")
+
+- **.mcp.json**: the `notes` server runs `worlds/jesster/notes/cli.py --vault worlds/notes mcp --only notes`: 11 tools (notes, `index_search`, `context_for`, `context_now`) on the same vault, instead of all 46 (archive digging, ingest, import, llm, live, system, provenance, kernel). Takes effect at Claude Code's next start.
+- **sync.ps1**: the restarts of `cli.py bridge` (the relay, unused since 2026-10-24) and `cli.py serve` (its default port 43111 is now the door's) are dropped with their `Restart` helper, a dated note in the header and where they stood. The relay repository `worlds/secondbrain-relay` stays: SecondBrain's Report back uses it.
+- Left as they are: Manjuel's engine `notes_call` (it reaches the kernel through his own declared command, `MANJUEL_MCP_NOTES_CMD`), and `manjuel/mcp_stdio.py`'s refusal list for `notes`, now a second wall. Nothing in `manjuel/` moved: no restart.
+
 ### Atlas's GitHub repository is Aurora (2026-11-05; his word: "Rename atlas - aurora github only. do it.")
 
 - **README.md** and **RUNBOOK.md** clone `https://github.com/thebrotherscarr-bit/Aurora.git` into `atlas`, and the Estate list links Aurora. GitHub's name only: the folder `atlas/`, the binaries, the door's tools and its project id `atlas` are unchanged; the old URL redirects. Nothing in `manjuel/` moved: no restart.
