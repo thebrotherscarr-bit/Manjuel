@@ -13,8 +13,12 @@
 # Each repository moves only on its own line (Manjuel and Atlas: main; SecondBrain:
 # the branch its checkout follows), only with no unsaved work, and never while a
 # sitting is open (an engine would be running old code under him). When Atlas moved,
-# atlas/update.ps1 rebuilds and restarts the door and the glass. When the notes kernel
-# moved, the relay and the notes server are restarted on it.
+# atlas/update.ps1 rebuilds and restarts the door and the glass.
+# (Until 2026-11-05, when the notes kernel moved, the relay (cli.py bridge) and the notes
+# server (cli.py serve) were restarted on it. Both were dead -- the bridge unused since
+# 2026-10-24, and serve's default port 43111 is now the door's -- and were retired by
+# Steward's ADR-0010, "Notes are central in Jesster". The relay repository
+# worlds/secondbrain-relay stays: SecondBrain's Report back uses it.)
 # Pure ASCII, so PowerShell 5.1 reads it whatever the code page.
 
 param([switch]$Check)
@@ -86,15 +90,6 @@ function State($r) {
     return $s
 }
 
-function Restart([string]$match, [string[]]$argv, [string]$what) {
-    $p = Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match $match } | Select-Object -First 1
-    if (-not $p) { return }
-    Stop-Process -Id $p.ProcessId -Force
-    Start-Sleep -Milliseconds 800
-    Start-Process -FilePath python -ArgumentList $argv -WorkingDirectory (Join-Path $ground 'worlds\jesster') -WindowStyle Hidden
-    Say "  restarted the $what on the new notes kernel"
-}
-
 $states = @($repos | ForEach-Object { State $_ })
 $sitting = SittingOpen
 
@@ -121,18 +116,11 @@ foreach ($s in $states) {
         & (Join-Path $r.Dir 'update.ps1') | ForEach-Object { Say "  $_" }
         continue
     }
-    $before = (G $r.Dir @('rev-parse', 'HEAD')).Out
     $m = G $r.Dir @('merge', '-q', '--ff-only', "origin/$($s.line)")
     if (-not $m.Ok) { Say "$($s.name): could not move forward -- $($m.Out)"; continue }
     Say "$($s.name): $($s.behind) new, now level -- $((G $r.Dir @('log', '--oneline', '-1')).Out)"
     if ($s.name -eq 'SecondBrain') {
-        $kernel = (G $r.Dir @('diff', '--name-only', $before, 'HEAD', '--', 'notes')).Out
-        if ($kernel) {
-            $cli = Join-Path $r.Dir 'notes\cli.py'
-            $vault = Join-Path $ground 'worlds\notes'
-            Restart 'cli\.py.* bridge ' @($cli, '--vault', $vault, 'bridge', (Join-Path $ground 'worlds\secondbrain-relay')) 'relay'
-            Restart 'cli\.py"? serve' @($cli, 'serve') 'notes server'
-        }
+        # the relay and notes-server restarts that stood here were retired 2026-11-05 (ADR-0010; see the header)
         Say '  the SecondBrain app itself updates with its own Update button (its release build)'
     }
     if ($s.name -eq 'Manjuel') { Say '  Manjuel: an engine opened from now on runs the new code' }

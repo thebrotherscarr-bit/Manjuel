@@ -2,7 +2,7 @@
   "mcpServers": {
     "notes": {
       "command": "python",
-      "args": ["worlds/jesster/notes/cli.py", "--vault", "worlds/notes", "mcp"]
+      "args": ["worlds/jesster/notes/cli.py", "--vault", "worlds/notes", "mcp", "--only", "notes"]
     },
     "atlas": {
       "command": "python",
